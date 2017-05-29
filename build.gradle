@@ -1,0 +1,45 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '1.1.2-4'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "io.realm:realm-gradle-plugin:3.3.1"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task generateChangelogMd() {
+    def parsedProjectXml = (new XmlParser()).parse("$project.rootDir/app/src/main/res/xml/changelog.xml")
+    def sw = new StringWriter()
+    sw.append("# Changelog\n")
+    parsedProjectXml.depthFirst().each {
+        switch (it.name()) {
+            case "version":
+                sw.append("\n## ${it.@title}\n")
+                break
+            case "item":
+                if (it.@text?.trim())
+                    sw.append("* ${it.@text}\n")
+        }
+    }
+    def changelogMd = new File("$project.rootDir/docs/Changelog.md")
+    changelogMd.write(sw.toString())
+}

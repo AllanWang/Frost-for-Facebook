@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+    <version title="v"/>
+    <item text="" />
+    -->
+
+    <version title="v0.1" />
+    <item text="Initial" />
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Frost for Facebook</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+
+    <string name="changelog">Changelog</string>
+    <string name="great">Great</string>
+    <string name="u2022">•</string>
+</resources>
