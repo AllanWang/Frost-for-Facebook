@@ -1,30 +1,36 @@
 package com.pitchedapps.frost.utils
 
-import com.pitchedapps.frost.FrostApp
+import android.content.Context
+import android.content.SharedPreferences
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
-val prefs: Prefs by lazy { FrostApp.prefs }
 
-class Prefs(c: android.content.Context) {
-    private companion object {
-        val PREFERENCE_NAME = "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs"
-        val LAST_ACTIVE = "last_active"
+private val PREFERENCE_NAME = "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs"
+private val LAST_ACTIVE = "last_active"
+
+object Prefs {
+
+    val prefs: Prefs by lazy { this }
+
+    lateinit private var c: Context
+    operator fun invoke(c: Context) {
+        this.c = c
     }
 
-    private val prefs: android.content.SharedPreferences by lazy { c.getSharedPreferences(com.pitchedapps.frost.utils.Prefs.Companion.PREFERENCE_NAME, android.content.Context.MODE_PRIVATE) }
+    private val sp: SharedPreferences by lazy { c.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE) }
 
     var lastActive: Long
-        get() = prefs.getLong(com.pitchedapps.frost.utils.Prefs.Companion.LAST_ACTIVE, -1)
-        set(value) = set(com.pitchedapps.frost.utils.Prefs.Companion.LAST_ACTIVE, System.currentTimeMillis())
+        get() = sp.getLong(LAST_ACTIVE, -1)
+        set(value) = set(LAST_ACTIVE, System.currentTimeMillis())
 
     init {
         lastActive = 0
     }
 
-    private fun set(key: String, value: Boolean) = prefs.edit().putBoolean(key, value).apply()
-    private fun set(key: String, value: Int) = prefs.edit().putInt(key, value).apply()
-    private fun set(key: String, value: Long) = prefs.edit().putLong(key, value).apply()
-    private fun set(key: String, value: String) = prefs.edit().putString(key, value).apply()
+    private fun set(key: String, value: Boolean) = sp.edit().putBoolean(key, value).apply()
+    private fun set(key: String, value: Int) = sp.edit().putInt(key, value).apply()
+    private fun set(key: String, value: Long) = sp.edit().putLong(key, value).apply()
+    private fun set(key: String, value: String) = sp.edit().putString(key, value).apply()
 }

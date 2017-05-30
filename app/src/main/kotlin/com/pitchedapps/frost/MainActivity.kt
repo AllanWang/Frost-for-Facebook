@@ -1,5 +1,6 @@
 package com.pitchedapps.frost
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -69,7 +70,10 @@ class MainActivity : AppCompatActivity(), KeyPairObservable {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_settings -> return true
+            R.id.action_settings -> {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
             R.id.action_changelog -> Changelog.show(this)
             else -> return super.onOptionsItemSelected(item)
         }

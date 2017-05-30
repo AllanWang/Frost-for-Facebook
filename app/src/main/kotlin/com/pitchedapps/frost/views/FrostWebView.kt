@@ -68,6 +68,7 @@ class FrostWebView @JvmOverloads constructor(
                 super.onPageFinished(view, url)
                 observable.onNext(WebStatus.LOADED)
 //                CookieManager.getInstance().flush()
+                L.d("Loaded $url")
             }
         })
     }
