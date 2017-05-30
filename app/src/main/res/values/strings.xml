@@ -8,4 +8,11 @@
     <string name="changelog">Changelog</string>
     <string name="great">Great</string>
     <string name="u2022">•</string>
+    <string name="feed">Feed</string>
+    <string name="profile">Profile</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="events">Events</string>
+    <string name="friends">Friends</string>
+    <string name="messages">Messages</string>
+    <string name="notifications">Notifications</string>
 </resources>

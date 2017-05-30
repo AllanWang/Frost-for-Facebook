@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.fragments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +8,10 @@ import android.view.ViewGroup
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.FBURL
+import com.pitchedapps.frost.facebook.FbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.bindView
-import com.pitchedapps.frost.utils.withBundle
+import com.pitchedapps.frost.utils.putString
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.views.SwipeRefreshBase
 import com.pitchedapps.frost.views.WebStatus
@@ -22,7 +21,11 @@ import com.pitchedapps.frost.views.WebStatus
  */
 
 
-class WebFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class WebFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
+
+    override fun onActivityEvent(position: Int, key: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onRefresh() {
         web.reload()
@@ -30,8 +33,8 @@ class WebFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         private val ARG_URL = "arg_url"
-        fun newInstance(url: String) = WebFragment().withBundle { b -> b.putString(ARG_URL, url) }
-        fun newInstance(url: FBURL = FBURL.FEED) = newInstance(url.url)
+        fun newInstance(position: Int, url: String) = BaseFragment.newInstance(WebFragment(), position).putString(ARG_URL, url)
+        fun newInstance(position: Int, url: FbUrl = FbUrl.FEED) = newInstance(position, url.url)
     }
 
     val refresh: SwipeRefreshBase by bindView(R.id.swipe_refresh)
@@ -71,5 +74,13 @@ class WebFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onDestroyView() {
         super.onDestroyView()
         unbinder.unbind()
+    }
+
+    override fun onBackPressed(): Boolean {
+        if (web.canGoBack()) {
+            web.goBack()
+            return true
+        }
+        return false
     }
 }

@@ -13,6 +13,8 @@ class Prefs(c: android.content.Context) {
         val LAST_ACTIVE = "last_active"
     }
 
+    private val prefs: android.content.SharedPreferences by lazy { c.getSharedPreferences(com.pitchedapps.frost.utils.Prefs.Companion.PREFERENCE_NAME, android.content.Context.MODE_PRIVATE) }
+
     var lastActive: Long
         get() = prefs.getLong(com.pitchedapps.frost.utils.Prefs.Companion.LAST_ACTIVE, -1)
         set(value) = set(com.pitchedapps.frost.utils.Prefs.Companion.LAST_ACTIVE, System.currentTimeMillis())
@@ -20,8 +22,6 @@ class Prefs(c: android.content.Context) {
     init {
         lastActive = 0
     }
-
-    private val prefs: android.content.SharedPreferences by lazy { c.getSharedPreferences(com.pitchedapps.frost.utils.Prefs.Companion.PREFERENCE_NAME, android.content.Context.MODE_PRIVATE) }
 
     private fun set(key: String, value: Boolean) = prefs.edit().putBoolean(key, value).apply()
     private fun set(key: String, value: Int) = prefs.edit().putInt(key, value).apply()

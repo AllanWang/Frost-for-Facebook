@@ -15,6 +15,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.ObservableContainer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
@@ -31,14 +32,14 @@ enum class WebStatus {
  */
 class FrostWebView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr), NestedScrollingChild {
+) : WebView(context, attrs, defStyleAttr), NestedScrollingChild, ObservableContainer<WebStatus> {
 
     private val childHelper = NestedScrollingChildHelper(this)
     private var lastY: Int = 0
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
     private var nestedOffsetY: Int = 0
-    val observable: Subject<WebStatus>
+    override val observable: Subject<WebStatus>
 
     init {
         isNestedScrollingEnabled = true
@@ -60,6 +61,7 @@ class FrostWebView @JvmOverloads constructor(
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 observable.onNext(WebStatus.LOADING)
+                L.d("Loading $url")
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {

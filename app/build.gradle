@@ -12,6 +12,7 @@ android {
         targetSdkVersion Integer.parseInt(project.TARGET_SDK)
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -58,7 +59,9 @@ dependencies {
 
     //Icons
     compile "com.mikepenz:iconics-core:${ICONICS}@aar"
-    compile "com.mikepenz:google-material-typeface:${GMD}.original@aar"
+    compile "com.mikepenz:google-material-typeface:${IICON_GOOGLE}.original@aar"
+    compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
+    compile "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
 
     //Butterknife
     compile "com.jakewharton:butterknife:${BUTTERKNIFE}"
@@ -70,6 +73,8 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
 
     compile "com.facebook.stetho:stetho-okhttp3:${STETHO}"
+
+    compile "com.lapism:searchview:${SEARCH_VIEW}"
 
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"

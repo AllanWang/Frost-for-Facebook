@@ -4,22 +4,30 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.*
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
 import butterknife.ButterKnife
+import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.loadFbTab
+import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Changelog
+import com.pitchedapps.frost.utils.KeyPairObservable
 import com.pitchedapps.frost.utils.bindView
+import com.pitchedapps.frost.utils.toDrawable
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KeyPairObservable {
 
-    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    override val observable: Subject<Pair<Int, Int>> = PublishSubject.create<Pair<Int, Int>>()
+
+    lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: ViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
@@ -30,20 +38,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        // Set up the ViewPager with the sections adapter.
-        viewPager.adapter = mSectionsPagerAdapter
+        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTab(this@MainActivity))
+        viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 5
-        tabs.setupWithViewPager(viewPager)
-
+        setupTabs()
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+    }
 
+    fun setupTabs() {
+
+        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
+//        tabs.setupWithViewPager(viewPager)
+        adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this))) }
     }
 
 
@@ -65,63 +76,24 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    class PlaceholderFragment : Fragment() {
-
-        override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
-            val rootView = inflater!!.inflate(R.layout.fragment_main, container, false)
-            (rootView.findViewById(R.id.section_label) as TextView).text = getString(R.string.section_format, arguments.getInt(ARG_SECTION_NUMBER))
-            return rootView
-        }
-
-        companion object {
-            /**
-             * The fragment argument representing the section number for this
-             * fragment.
-             */
-            private val ARG_SECTION_NUMBER = "section_number"
-
-            /**
-             * Returns a new instance of this fragment for the given section
-             * number.
-             */
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
-                val fragment = PlaceholderFragment()
-                val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
-                fragment.arguments = args
-                return fragment
-            }
-        }
+    override fun onBackPressed() {
+        if (currentFragment.onBackPressed()) return
+        super.onBackPressed()
     }
+
+    val currentFragment: BaseFragment
+        get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
 
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return WebFragment.newInstance()
-        }
+        override fun getItem(position: Int) = WebFragment.newInstance(position, pages[position].url)
 
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
+        override fun getCount() = pages.size
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            when (position) {
-                0 -> return "SECTION 1"
-                1 -> return "SECTION 2"
-                2 -> return "SECTION 3"
-            }
-            return null
-        }
+        override fun getPageTitle(position: Int): CharSequence = pages[position].title
     }
 }
