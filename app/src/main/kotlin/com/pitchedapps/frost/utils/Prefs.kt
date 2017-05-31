@@ -17,6 +17,7 @@ object Prefs {
     lateinit private var c: Context
     operator fun invoke(c: Context) {
         this.c = c
+        lastActive = 0
     }
 
     private val sp: SharedPreferences by lazy { c.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE) }
@@ -24,10 +25,6 @@ object Prefs {
     var lastActive: Long
         get() = sp.getLong(LAST_ACTIVE, -1)
         set(value) = set(LAST_ACTIVE, System.currentTimeMillis())
-
-    init {
-        lastActive = 0
-    }
 
     private fun set(key: String, value: Boolean) = sp.edit().putBoolean(key, value).apply()
     private fun set(key: String, value: Int) = sp.edit().putInt(key, value).apply()

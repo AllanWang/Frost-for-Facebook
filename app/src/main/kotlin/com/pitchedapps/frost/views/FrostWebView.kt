@@ -10,10 +10,7 @@ import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.ObservableContainer
 import io.reactivex.subjects.BehaviorSubject
@@ -67,8 +64,9 @@ class FrostWebView @JvmOverloads constructor(
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 observable.onNext(WebStatus.LOADED)
-//                CookieManager.getInstance().flush()
+                val cookie = CookieManager.getInstance().getCookie(url)
                 L.d("Loaded $url")
+                L.d("Cookie $cookie")
             }
         })
     }

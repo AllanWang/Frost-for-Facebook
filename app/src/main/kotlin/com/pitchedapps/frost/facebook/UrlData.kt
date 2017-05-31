@@ -7,12 +7,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.RealmFiles
-import com.pitchedapps.frost.utils.realm
-import io.realm.Realm
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
+import com.pitchedapps.frost.dbflow.FbTab
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -31,36 +26,3 @@ enum class FbUrl(@StringRes val titleId: Int, val icon: IIcon, val url: String) 
 
 //BOOKMARKS("https://touch.facebook.com/bookmarks"),
 //SEARCH("https://touch.facebook.com/search"),
-
-class FbTab(var title: String, var icon: IIcon, var url: String) {
-    constructor(realm: FbTabRealm) : this(realm.title, when (realm.iconCategory) {
-        0 -> GoogleMaterial.Icon.valueOf(realm.iconString)
-        1 -> CommunityMaterial.Icon.valueOf(realm.iconString)
-        2 -> MaterialDesignIconic.Icon.valueOf(realm.iconString)
-        else -> GoogleMaterial.Icon.gmd_error
-    }, realm.url)
-}
-
-open class FbTabRealm(var title: String, var iconCategory: Int, var iconString: String, @PrimaryKey var url: String) : RealmObject() {
-    constructor(tab: FbTab) : this(tab.title, when (tab.icon.typeface) {
-        is GoogleMaterial -> 0
-        is CommunityMaterial -> 1
-        is MaterialDesignIconic -> 2
-        else -> -1
-    }, tab.icon.toString(), tab.url)
-
-    constructor() : this("", -1, "", "")
-}
-
-fun List<FbTab>.save() {
-    val list = RealmList(*this.map { FbTabRealm(it) }.toTypedArray())
-    realm(RealmFiles.TABS, Realm.Transaction { it.copyToRealmOrUpdate(list) })
-}
-
-fun loadFbTab(c: Context): List<FbTab> {
-    val realmList = mutableListOf<FbTabRealm>()
-    realm(RealmFiles.TABS, Realm.Transaction { it.copyFromRealm(realmList) })
-    if (realmList.isNotEmpty()) return realmList.map { FbTab(it) }
-    return listOf(FbUrl.FEED, FbUrl.MESSAGES, FbUrl.NOTIFICATIONS).map { it.tabInfo(c) }
-}
-

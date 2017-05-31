@@ -13,14 +13,13 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.ButterKnife
-import com.pitchedapps.frost.facebook.FbTab
-import com.pitchedapps.frost.facebook.loadFbTab
+import com.pitchedapps.frost.dbflow.FbTab
+import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.facebook.retro.FrostApi.frostApi
+import com.pitchedapps.frost.facebook.retro.enqueueFrost
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.Changelog
-import com.pitchedapps.frost.utils.KeyPairObservable
-import com.pitchedapps.frost.utils.bindView
-import com.pitchedapps.frost.utils.toDrawable
+import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity(), KeyPairObservable {
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
 
-        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTab(this@MainActivity))
+        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs(this@MainActivity))
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 5
         setupTabs()
@@ -75,6 +74,7 @@ class MainActivity : AppCompatActivity(), KeyPairObservable {
                 finish()
             }
             R.id.action_changelog -> Changelog.show(this)
+            R.id.action_call -> frostApi.me().enqueueFrost { call, response ->  L.e(response.toString())}
             else -> return super.onOptionsItemSelected(item)
         }
         return true

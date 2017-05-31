@@ -4,9 +4,9 @@ import android.content.Context
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.GsonBuilder
 import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.utils.L
 import io.reactivex.schedulers.Schedulers
-import okhttp3.Cache
-import okhttp3.OkHttpClient
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -20,7 +20,7 @@ import java.io.File
  */
 object FrostApi {
 
-    internal lateinit var frostApi: IFrost
+    lateinit var frostApi: IFrost
 
     operator fun invoke(context: Context) {
         val cacheDir = File(context.cacheDir, "responses")
@@ -29,6 +29,18 @@ object FrostApi {
 
         val client = OkHttpClient.Builder()
                 .addInterceptor(FrostInterceptor(context))
+                .cookieJar(object : CookieJar {
+                    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                        L.e("COOKIES")
+                        L.e(url.toString())
+                        cookies.forEach { c -> L.e(c.toString()) }
+                    }
+
+                    override fun loadForRequest(url: HttpUrl): List<Cookie> {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                })
                 .cache(cache)
 
 
@@ -42,7 +54,7 @@ object FrostApi {
         val gson = GsonBuilder().setLenient()
 
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://graph.facebook.com/")
+                .baseUrl("https://touch.facebook.com/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .addConverterFactory(GsonConverterFactory.create(gson.create()))
                 .client(client.build())

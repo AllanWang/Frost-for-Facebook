@@ -14,6 +14,7 @@ import com.facebook.AccessToken
 import com.pitchedapps.frost.facebook.FB_KEY
 import com.pitchedapps.frost.facebook.retro.FrostApi.frostApi
 import com.pitchedapps.frost.facebook.retro.Me
+import com.pitchedapps.frost.facebook.retro.enqueueFrost
 import com.pitchedapps.frost.utils.L
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,15 +64,9 @@ class LoginWebView @JvmOverloads constructor(
     fun saveAccessToken(accessToken: String, expiresIn: String, grantedScopes: String?, deniedScopes: String?) {
         L.d("Granted $grantedScopes")
         L.d("Denied $deniedScopes")
-        frostApi.me(accessToken).enqueue(object : Callback<Me> {
-            override fun onFailure(call: Call<Me>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+        frostApi.me().enqueueFrost { call, response ->
 
-            override fun onResponse(call: Call<Me>, response: Response<Me>) {
-                AccessToken.setCurrentAccessToken(AccessToken(accessToken, FB_KEY.toString(), response.body().id, null, null, null, null, null))
-            }
-        })
+        }
 
     }
 

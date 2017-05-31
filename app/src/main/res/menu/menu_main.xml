@@ -12,4 +12,9 @@
         android:orderInCategory="200"
         android:title="@string/changelog"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_call"
+        android:orderInCategory="300"
+        android:title="Call"
+        app:showAsAction="never" />
 </menu>

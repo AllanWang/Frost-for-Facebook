@@ -4,16 +4,13 @@ import android.util.Log
 import timber.log.Timber
 
 
-
 /**
  * Created by Allan Wang on 2017-05-28.
  */
-class L {
-    companion object {
-        val TAG = "Frost: %s"
-        fun e(s: String) = Timber.e(TAG, s)
-        fun d(s: String) = Timber.d(TAG, s)
-    }
+object L {
+    val TAG = "Frost: %s"
+    fun e(s: String) = Timber.e(TAG, s)
+    fun d(s: String) = Timber.d(TAG, s)
 }
 
 internal class CrashReportingTree : Timber.Tree() {
