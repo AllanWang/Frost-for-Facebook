@@ -67,6 +67,7 @@ class FrostWebView @JvmOverloads constructor(
                 val cookie = CookieManager.getInstance().getCookie(url)
                 L.d("Loaded $url")
                 L.d("Cookie $cookie")
+                CookieManager.getInstance().flush()
             }
         })
     }

@@ -57,4 +57,4 @@ data class CookieModel(@PrimaryKey var name: String,
 //}
 
 @Table(database = CookiesDb::class)
-data class Cookies(@PrimaryKey var url: String = "", @ForeignKey var cookie: CookieModel = CookieModel()) : BaseModel(), Serializable
+data class Cookies(@PrimaryKey var url: String = "", @ForeignKey var cookie: CookieModel = CookieModel())

@@ -8,14 +8,14 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FB_KEY
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.replace
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.kotlinextensions.from
 import com.raizlabs.android.dbflow.sql.language.SQLite
-import com.raizlabs.android.dbflow.structure.BaseModel
-import java.io.Serializable
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -31,21 +31,20 @@ data class FbTab(val title: String, val icon: IIcon, val url: String)
 
 @Table(database = FbTabsDb::class, allFields = true)
 data class FbTabModel(
-        var title: String = "Home",
-        @ForeignKey var icon: IIconModel = IIconModel(),
-        @PrimaryKey var url: String = ""
-) : BaseModel(), Serializable {
+        var title: String = "",
+        @ForeignKey(saveForeignKeyModel = true, deleteForeignKeyModel = false) var icon: IIconModel = IIconModel(),
+        @PrimaryKey var url: String = "") {
     constructor(fbTab: FbTab) : this(fbTab.title, IIconModel(fbTab.icon), fbTab.url)
 
     fun toFbTab() = FbTab(title, icon.toIIcon(), url)
 }
 
 @Table(database = FbTabsDb::class, allFields = true)
-data class IIconModel(var type: Int = -1, @PrimaryKey var name: String = "") : BaseModel(), Serializable {
+data class IIconModel(var type: Int = -1, @PrimaryKey var name: String = "") {
     constructor(icon: IIcon) : this(when (icon) {
-        is CommunityMaterial -> 0
-        is GoogleMaterial -> 1
-        is MaterialDesignIconic -> 2
+        is CommunityMaterial.Icon -> 0
+        is GoogleMaterial.Icon -> 1
+        is MaterialDesignIconic.Icon -> 2
         else -> -1
     }, icon.toString())
 
@@ -73,13 +72,14 @@ enum class FbUrl(@StringRes val titleId: Int, val icon: IIcon, val url: String) 
 //SEARCH("https://touch.facebook.com/search"),
 
 fun loadFbTabs(c: Context): List<FbTab> {
-    val tabs = SQLite.select()
-            .from(FbTabModel::class)
-            .queryList()
-    if (tabs.isNotEmpty()) return tabs.map { it.toFbTab() }
+    val tabs: List<FbTabModel>? = SQLite.select().from(FbTabModel::class).queryList()
+    if (tabs?.isNotEmpty() ?: false) return tabs!!.map { it.toFbTab() }
+    L.e("No tabs; loading default")
     return listOf(FbUrl.FEED, FbUrl.MESSAGES, FbUrl.FRIENDS, FbUrl.NOTIFICATIONS).map { it.tabInfo(c) }
 }
 
-fun List<FbTab>.saveAsync() {
-
+fun List<FbTab>.saveAsync(c: Context) {
+    map { FbTabModel(it) }.replace(c, FbTabsDb.NAME, {
+        L.e("Saved successfully")
+    })
 }

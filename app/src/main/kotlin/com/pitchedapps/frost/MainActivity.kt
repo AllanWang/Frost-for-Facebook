@@ -15,6 +15,7 @@ import android.view.MenuItem
 import butterknife.ButterKnife
 import com.pitchedapps.frost.dbflow.FbTab
 import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.facebook.retro.FrostApi.frostApi
 import com.pitchedapps.frost.facebook.retro.enqueueFrost
 import com.pitchedapps.frost.fragments.BaseFragment
@@ -74,7 +75,14 @@ class MainActivity : AppCompatActivity(), KeyPairObservable {
                 finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> frostApi.me().enqueueFrost { call, response ->  L.e(response.toString())}
+            R.id.action_call -> frostApi.me().enqueueFrost { _, response ->  L.e(response.toString())}
+            R.id.action_db -> adapter.pages.saveAsync(this)
+            R.id.action_restart -> {
+                finish();
+                overridePendingTransition(0, 0); //No transitions
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true

@@ -9,10 +9,9 @@ import android.content.SharedPreferences
 
 private val PREFERENCE_NAME = "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs"
 private val LAST_ACTIVE = "last_active"
+private val USER_ID = "user_id"
 
 object Prefs {
-
-    val prefs: Prefs by lazy { this }
 
     lateinit private var c: Context
     operator fun invoke(c: Context) {
@@ -25,6 +24,10 @@ object Prefs {
     var lastActive: Long
         get() = sp.getLong(LAST_ACTIVE, -1)
         set(value) = set(LAST_ACTIVE, System.currentTimeMillis())
+
+    var userId: Int
+        get() = sp.getInt(USER_ID, -1)
+        set(value) = set(USER_ID, value)
 
     private fun set(key: String, value: Boolean) = sp.edit().putBoolean(key, value).apply()
     private fun set(key: String, value: Int) = sp.edit().putInt(key, value).apply()
