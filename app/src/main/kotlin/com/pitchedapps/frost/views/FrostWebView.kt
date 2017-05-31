@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.webkit.*
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.ObservableContainer
 import io.reactivex.subjects.BehaviorSubject
@@ -52,22 +53,19 @@ class FrostWebView @JvmOverloads constructor(
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
                 observable.onNext(WebStatus.ERROR)
-                L.e("Error ${request}")
+                L.e("FWV Error ${request}")
             }
 
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 observable.onNext(WebStatus.LOADING)
-                L.d("Loading $url")
+                L.d("FWV Loading $url")
             }
 
-            override fun onPageFinished(view: WebView?, url: String?) {
+            override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 observable.onNext(WebStatus.LOADED)
-                val cookie = CookieManager.getInstance().getCookie(url)
-                L.d("Loaded $url")
-                L.d("Cookie $cookie")
-                CookieManager.getInstance().flush()
+                FbCookie.checkUserId(url, CookieManager.getInstance().getCookie(url))
             }
         })
     }

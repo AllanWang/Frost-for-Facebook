@@ -2,8 +2,8 @@ package com.pitchedapps.frost.utils
 
 import android.content.Context
 import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.processInTransactionAsync
-import com.raizlabs.android.dbflow.kotlinextensions.save
+import com.raizlabs.android.dbflow.kotlinextensions.*
+import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction
 import com.raizlabs.android.dbflow.structure.database.transaction.Transaction
 
 /**
@@ -18,19 +18,8 @@ object DbUtils {
 
 }
 
-inline fun <reified T : Any> List<T>.replace(context: Context, dbName: String,
-                                             crossinline callback: ((successful: Boolean) -> Unit)) {
+inline fun <reified T : Any> List<T>.replace(context: Context, dbName: String) {
     L.d("Replacing $dbName.db")
     DbUtils.db(dbName).reset(context)
-    this.processInTransactionAsync({
-        t, databaseWrapper ->
-        t.save(databaseWrapper)
-    },
-            Transaction.Success {
-                callback.invoke(true)
-            },
-            Transaction.Error { _, error ->
-                L.e(error.message ?: "DbReplace error")
-                callback.invoke(false)
-            })
+    FastStoreModelTransaction.saveBuilder(FlowManager.getModelAdapter(T::class.java)).addAll(this).build()
 }

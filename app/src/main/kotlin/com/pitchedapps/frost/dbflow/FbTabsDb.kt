@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.kotlinextensions.from
 import com.raizlabs.android.dbflow.sql.language.SQLite
+import com.raizlabs.android.dbflow.structure.BaseModel
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -33,7 +34,7 @@ data class FbTab(val title: String, val icon: IIcon, val url: String)
 data class FbTabModel(
         var title: String = "",
         @ForeignKey(saveForeignKeyModel = true, deleteForeignKeyModel = false) var icon: IIconModel = IIconModel(),
-        @PrimaryKey var url: String = "") {
+        @PrimaryKey var url: String = "") : BaseModel() {
     constructor(fbTab: FbTab) : this(fbTab.title, IIconModel(fbTab.icon), fbTab.url)
 
     fun toFbTab() = FbTab(title, icon.toIIcon(), url)
@@ -56,15 +57,19 @@ data class IIconModel(var type: Int = -1, @PrimaryKey var name: String = "") {
     }
 }
 
-enum class FbUrl(@StringRes val titleId: Int, val icon: IIcon, val url: String) {
-    LOGIN(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, "https://www.facebook.com/v2.9/dialog/oauth?client_id=${FB_KEY}&redirect_uri=https://touch.facebook.com/&response_type=token,granted_scopes"),
-    FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, "https://touch.facebook.com/"),
-    PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "https://touch.facebook.com/me/"),
-    EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event, "https://touch.facebook.com/events/upcoming"),
-    FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_people, "https://touch.facebook.com/friends/center/requests/"),
-    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "https://touch.facebook.com/messages"),
-    NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "https://touch.facebook.com/notifications");
+const val FB_URL_BASE = "https://m.facebook.com/"
+//const val FB_URL_BASE = "https://touch.facebook.com/"
 
+enum class FbUrl(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String) {
+//    LOGIN(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, "https://www.facebook.com/v2.9/dialog/oauth?client_id=${FB_KEY}&redirect_uri=https://touch.facebook.com/&response_type=token,granted_scopes"),
+    FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, ""),
+    PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
+    EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event, "events/upcoming"),
+    FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_people, "friends/center/requests"),
+    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
+    NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications");
+
+    val url = "$FB_URL_BASE$relativeUrl"
     fun tabInfo(c: Context) = FbTab(c.getString(titleId), icon, url)
 }
 
@@ -79,7 +84,5 @@ fun loadFbTabs(c: Context): List<FbTab> {
 }
 
 fun List<FbTab>.saveAsync(c: Context) {
-    map { FbTabModel(it) }.replace(c, FbTabsDb.NAME, {
-        L.e("Saved successfully")
-    })
+    map { FbTabModel(it) }.replace(c, FbTabsDb.NAME)
 }

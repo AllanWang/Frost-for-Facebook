@@ -25,8 +25,9 @@ object Prefs {
         get() = sp.getLong(LAST_ACTIVE, -1)
         set(value) = set(LAST_ACTIVE, System.currentTimeMillis())
 
-    var userId: Int
-        get() = sp.getInt(USER_ID, -1)
+    const val userIdDefault = -1L
+    var userId: Long
+        get() = sp.getLong(USER_ID, userIdDefault)
         set(value) = set(USER_ID, value)
 
     private fun set(key: String, value: Boolean) = sp.edit().putBoolean(key, value).apply()
