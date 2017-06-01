@@ -25,7 +25,7 @@ class WebFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     companion object {
-        private val ARG_URL = "arg_url"
+        private const val ARG_URL = "arg_url"
         fun newInstance(position: Int, url: String) = BaseFragment.newInstance(WebFragment(), position).putString(ARG_URL, url)
     }
 

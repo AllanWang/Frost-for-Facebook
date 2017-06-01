@@ -1,4 +1,7 @@
 # Changelog
 
 ## v0.1
-* Initial
+* Initial Changelog
+* Created core databases
+* Implemented CSS/Js injectors
+* Implemented ripple preferences

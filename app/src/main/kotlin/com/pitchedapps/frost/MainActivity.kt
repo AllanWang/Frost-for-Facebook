@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.ButterKnife
+import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.facebook.FbTab
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     val viewPager: ViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
+    lateinit var drawer: Drawer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +72,8 @@ class MainActivity : AppCompatActivity() {
 //                finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> {}
+            R.id.action_call -> {
+            }
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> {
                 finish();

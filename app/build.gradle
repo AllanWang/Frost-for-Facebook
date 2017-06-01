@@ -56,7 +56,7 @@ dependencies {
     compile "com.jakewharton.timber:timber:${TIMBER}"
 
     //Dialog
-    compile "com.afollestad.material-dialogs:core:${MD}"
+    compile "com.afollestad.material-dialogs:core:${MATERIAL_DIALOG}"
 
     compile "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
@@ -103,11 +103,15 @@ dependencies {
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"
 
-    compile "com.google.auto.value:auto-value:${AUTO}"
-    annotationProcessor "com.google.auto.value:auto-value:${AUTO}"
-    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${AUTO_VALUE_PARCEL}"
+//    compile "com.google.auto.value:auto-value:${AUTO}"
+//    annotationProcessor "com.google.auto.value:auto-value:${AUTO}"
+//    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${AUTO_VALUE_PARCEL}"
 
     compile "com.f2prateek.rx.preferences2:rx-preferences:${RX_PREFS}"
+
+    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
+        transitive = true
+    }
 }
 
 kapt {
