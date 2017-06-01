@@ -1,8 +1,7 @@
-package com.pitchedapps.frost.views
+package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.view.NestedScrollingChild
 import android.support.v4.view.NestedScrollingChildHelper
@@ -10,12 +9,13 @@ import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.webkit.*
-import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.L
+import android.webkit.WebView
+import com.pitchedapps.frost.events.WebEvent
 import com.pitchedapps.frost.utils.ObservableContainer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 enum class WebStatus {
     LOADING, LOADED, ERROR
@@ -37,7 +37,8 @@ class FrostWebView @JvmOverloads constructor(
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
     private var nestedOffsetY: Int = 0
-    override val observable: Subject<WebStatus>
+    override val observable: Subject<WebStatus> //TODO see if we need this
+    var baseUrl: String? = null
 
     init {
         isNestedScrollingEnabled = true
@@ -49,25 +50,12 @@ class FrostWebView @JvmOverloads constructor(
     fun setupWebview() {
         settings.javaScriptEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        setWebViewClient(object : WebViewClient() {
-            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                super.onReceivedError(view, request, error)
-                observable.onNext(WebStatus.ERROR)
-                L.e("FWV Error ${request}")
-            }
+        setWebViewClient(FrostWebViewClient(observable))
+    }
 
-            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                observable.onNext(WebStatus.LOADING)
-                L.d("FWV Loading $url")
-            }
-
-            override fun onPageFinished(view: WebView, url: String) {
-                super.onPageFinished(view, url)
-                observable.onNext(WebStatus.LOADED)
-                FbCookie.checkUserId(url, CookieManager.getInstance().getCookie(url))
-            }
-        })
+    override fun loadUrl(url: String?) {
+        if (url != null)
+            super.loadUrl(url)
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -109,6 +97,19 @@ class FrostWebView @JvmOverloads constructor(
         }
         return returnValue
     }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        EventBus.getDefault().register(this);
+    }
+
+    override fun onDetachedFromWindow() {
+        EventBus.getDefault().unregister(this)
+        super.onDetachedFromWindow()
+    }
+
+    @Subscribe
+    fun webEvent(event: WebEvent) = event.execute(this)
 
     // Nested Scroll implements
     override fun setNestedScrollingEnabled(enabled: Boolean) {

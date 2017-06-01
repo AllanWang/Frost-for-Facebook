@@ -24,9 +24,7 @@ import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
-class MainActivity : AppCompatActivity(), KeyPairObservable {
-
-    override val observable: Subject<Pair<Int, Int>> = PublishSubject.create<Pair<Int, Int>>()
+class MainActivity : AppCompatActivity() {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -75,7 +73,7 @@ class MainActivity : AppCompatActivity(), KeyPairObservable {
                 finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> frostApi.me().enqueueFrost { _, response ->  L.e(response.toString())}
+            R.id.action_call -> frostApi.me().enqueueFrost { _, response -> L.e(response.toString()) }
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> {
                 finish();

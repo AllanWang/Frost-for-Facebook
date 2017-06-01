@@ -30,6 +30,7 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
 }
 
@@ -41,6 +42,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
     compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_LIBS}"
     compile "com.android.support:support-v4:${ANDROID_SUPPORT_LIBS}"
@@ -83,6 +85,8 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
 
+    compile "org.greenrobot:eventbus:${EVENT_BUS}"
+
     compile "com.facebook.stetho:stetho-okhttp3:${STETHO}"
 
     compile "com.lapism:searchview:${SEARCH_VIEW}"
@@ -104,6 +108,8 @@ dependencies {
     compile "com.google.auto.value:auto-value:${AUTO}"
     annotationProcessor "com.google.auto.value:auto-value:${AUTO}"
     annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${AUTO_VALUE_PARCEL}"
+
+    compile "com.f2prateek.rx.preferences2:rx-preferences:${RX_PREFS}"
 }
 
 kapt {

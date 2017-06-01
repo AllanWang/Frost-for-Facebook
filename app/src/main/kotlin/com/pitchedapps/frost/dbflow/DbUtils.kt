@@ -1,10 +1,9 @@
-package com.pitchedapps.frost.utils
+package com.pitchedapps.frost.dbflow
 
 import android.content.Context
+import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.kotlinextensions.*
 import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction
-import com.raizlabs.android.dbflow.structure.database.transaction.Transaction
 
 /**
  * Created by Allan Wang on 2017-05-30.

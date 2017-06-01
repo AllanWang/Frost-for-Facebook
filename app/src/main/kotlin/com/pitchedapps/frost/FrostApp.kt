@@ -4,6 +4,7 @@ import android.app.Application
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.retro.FrostApi
 import com.pitchedapps.frost.utils.CrashReportingTree
+import com.pitchedapps.frost.utils.GlideUtils
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -21,8 +22,9 @@ class FrostApp : Application() {
         else Timber.plant(CrashReportingTree())
         FlowManager.init(FlowConfig.Builder(this).build())
         Prefs(this)
+        GlideUtils(this)
         FrostApi(this)
-        FbCookie.init()
+        FbCookie()
         super.onCreate()
     }
 

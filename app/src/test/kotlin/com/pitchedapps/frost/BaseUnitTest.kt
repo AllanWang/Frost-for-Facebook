@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import timber.log.Timber
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -22,4 +23,14 @@ abstract class BaseUnitTest {
 
     val context: Context
         get() = RuntimeEnvironment.application
+
+    init {
+        Timber.plant(TestTree())
+    }
+
+    internal class TestTree : Timber.Tree() {
+        override fun log(priority: Int, tag: String, message: String, t: Throwable?) {
+            System.out.println("$tag-$priority: $message")
+        }
+    }
 }

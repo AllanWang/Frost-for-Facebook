@@ -7,9 +7,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.FB_KEY
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.replace
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -66,7 +64,7 @@ enum class FbUrl(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Stri
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event, "events/upcoming"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_people, "friends/center/requests"),
-    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
+    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages?disable_interstitial=1"),
     NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications");
 
     val url = "$FB_URL_BASE$relativeUrl"

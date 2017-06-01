@@ -1,11 +1,10 @@
-package com.pitchedapps.frost.views
+package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.webkit.WebView
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Utils
 
 

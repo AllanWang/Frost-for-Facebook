@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.dbflow
 
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.annotation.ConflictAction
@@ -23,10 +22,16 @@ object CookiesDb {
 @Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
 data class CookieModel(@PrimaryKey var id: Long = Prefs.userIdDefault, var cookie: String? = null) : BaseModel()
 
-fun loadFbCookie(): CookieModel? = (select from CookieModel::class where (CookieModel_Table.id eq Prefs.userId)).querySingle()
+fun loadFbCookie(id: Long): CookieModel? = (select from CookieModel::class where (CookieModel_Table.id eq id)).querySingle()
 
-fun saveFbCookie() {
-    CookieModel(FbCookie.userId, FbCookie.webCookie).async save {
+fun saveFbCookie(id: Long, cookie: String?) {
+    CookieModel(id, cookie).async save {
         L.d("Fb cookie saved")
     }
+}
+
+fun removeCookie(id: Long) {
+    loadFbCookie(id)?.async?.delete({
+        L.d("Fb cookie deleted")
+    })
 }
