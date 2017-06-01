@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.facebook
 
 import android.webkit.CookieManager
-import com.pitchedapps.frost.dbflow.FB_URL_BASE
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.removeCookie
 import com.pitchedapps.frost.dbflow.saveFbCookie

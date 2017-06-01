@@ -1,6 +1,5 @@
 package com.pitchedapps.frost
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -13,16 +12,14 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import butterknife.ButterKnife
-import com.pitchedapps.frost.dbflow.FbTab
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.saveAsync
-import com.pitchedapps.frost.facebook.retro.FrostApi.frostApi
-import com.pitchedapps.frost.facebook.retro.enqueueFrost
+import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.*
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
+import com.pitchedapps.frost.utils.Changelog
+import com.pitchedapps.frost.utils.bindView
+import com.pitchedapps.frost.utils.toDrawable
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
 
-        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs(this@MainActivity))
+        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 5
         setupTabs()
@@ -69,11 +66,11 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_settings -> {
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+//                startActivity(Intent(this, LoginActivity::class.java))
+//                finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> frostApi.me().enqueueFrost { _, response -> L.e(response.toString()) }
+            R.id.action_call -> {}
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> {
                 finish();
@@ -104,6 +101,6 @@ class MainActivity : AppCompatActivity() {
 
         override fun getCount() = pages.size
 
-        override fun getPageTitle(position: Int): CharSequence = pages[position].title
+        override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
     }
 }

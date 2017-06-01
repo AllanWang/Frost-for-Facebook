@@ -49,8 +49,10 @@ class FrostWebView @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     fun setupWebview() {
         settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         setWebViewClient(FrostWebViewClient(observable))
+        setWebChromeClient(FrostChromeClient())
     }
 
     override fun loadUrl(url: String?) {

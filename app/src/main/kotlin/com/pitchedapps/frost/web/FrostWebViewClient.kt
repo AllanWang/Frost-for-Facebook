@@ -1,8 +1,11 @@
 package com.pitchedapps.frost.web
 
 import android.graphics.Bitmap
+import android.view.View
 import android.webkit.*
+import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.L
 import io.reactivex.subjects.Subject
 
@@ -11,11 +14,10 @@ import io.reactivex.subjects.Subject
  */
 class FrostWebViewClient(val observable: Subject<WebStatus>) : WebViewClient() {
 
-    private var injectionCount: Int = 0
-
     companion object {
         //Collections of jewels mapped with url match -> id
         val jewelMap: Map<String, String> = mapOf("a" to "b")
+
         fun test() {
 
         }
@@ -29,16 +31,21 @@ class FrostWebViewClient(val observable: Subject<WebStatus>) : WebViewClient() {
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
-        injectionCount = 0
         observable.onNext(WebStatus.LOADING)
         L.d("FWV Loading $url")
+        if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) FbCookie.logout()
+        view.visibility = View.INVISIBLE
     }
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
+        if (!url.contains(FACEBOOK_COM)) return
         observable.onNext(WebStatus.LOADED)
         FbCookie.checkUserId(url, CookieManager.getInstance().getCookie(url))
+        CssAssets.BASE.inject(view, {
+            view.visibility = View.VISIBLE
+        })
     }
 
     fun logout() {

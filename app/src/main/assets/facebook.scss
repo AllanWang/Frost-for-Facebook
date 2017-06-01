@@ -1,0 +1,11 @@
+$text: #fff;
+$background: #000;
+$transparent: transparent;
+
+#header[data-sigil="MTopBlueBarHeader"], #header-notices {
+    display: None !important;
+}
+
+textarea, ._2gn4 {
+  background-color: $transparent !important;
+}

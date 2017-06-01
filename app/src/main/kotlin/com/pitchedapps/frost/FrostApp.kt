@@ -2,7 +2,6 @@ package com.pitchedapps.frost
 
 import android.app.Application
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.facebook.retro.FrostApi
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.GlideUtils
 import com.pitchedapps.frost.utils.Prefs
@@ -23,7 +22,6 @@ class FrostApp : Application() {
         FlowManager.init(FlowConfig.Builder(this).build())
         Prefs(this)
         GlideUtils(this)
-        FrostApi(this)
         FbCookie()
         super.onCreate()
     }
