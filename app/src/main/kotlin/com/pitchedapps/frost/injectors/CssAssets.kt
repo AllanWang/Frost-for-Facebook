@@ -6,9 +6,10 @@ import com.pitchedapps.frost.utils.L
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-enum class CssAssets(val file: String) {
-    BASE("facebook.min.css");
+enum class CssAssets(f: String) {
+    BASE("facebook");
 
+    var file = "$f.compact.css"
     var content: String? = null
     var injector: JsInjector? = null
 

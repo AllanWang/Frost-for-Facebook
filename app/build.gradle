@@ -18,16 +18,39 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.outputFile = new File(output.outputFile.parent,
-                    "${project.APP_ID}-v${variant.versionName}.apk")
+                    "${project.APP_ID}-${variant.buildType.name}.apk")
         }
     }
+
+    signingConfigs {
+        test {
+            storeFile file("../files/test.keystore")
+            storePassword "testkey"
+            keyAlias "testKey"
+            keyPassword "testkey"
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            resValue "string", "app_name", "Frost Debug"
+        }
+        releaseTest {
+            applicationIdSuffix ".test"
+            signingConfig signingConfigs.test
+            versionNameSuffix "-test"
+            resValue "string", "app_name", "Frost Test"
+        }
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "Frost"
         }
     }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
