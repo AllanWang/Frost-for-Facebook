@@ -87,6 +87,9 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".WebOverlayActivity"
+            android:theme="@style/AppTheme.Overlay" />
 
         <receiver
             android:name=".services.NotificationReceiver"

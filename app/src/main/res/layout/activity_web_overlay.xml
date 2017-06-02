@@ -16,6 +16,9 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <include layout="@layout/swipe_webview" />
+    <com.pitchedapps.frost.web.FrostWebView
+        android:id="@+id/frost_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>

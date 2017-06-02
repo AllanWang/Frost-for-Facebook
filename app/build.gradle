@@ -112,6 +112,8 @@ dependencies {
     compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
         transitive = true
     }
+
+    compile 'com.jude:swipebackhelper:3.1.2'
 }
 
 kapt {

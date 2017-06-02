@@ -1,6 +1,6 @@
 package com.pitchedapps.frost.events
 
-import com.pitchedapps.frost.web.FrostWebView
+import com.pitchedapps.frost.web.FrostWebViewCore
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -12,7 +12,7 @@ class WebEvent(val key: Int, val urlMatch: String? = null) {
         const val REFRESH_BASE = 1
     }
 
-    fun execute(webView: FrostWebView) {
+    fun execute(webView: FrostWebViewCore) {
         if (urlMatch != null && !webView.url.contains(urlMatch)) return
         when (key) {
             REFRESH -> webView.reload()

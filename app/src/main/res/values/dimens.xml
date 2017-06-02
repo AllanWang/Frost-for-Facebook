@@ -8,5 +8,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="splash_logo">16dp</dimen>
+    <dimen name="progress_bar_height">1dip</dimen>
 
 </resources>

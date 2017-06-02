@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewTreeObserver
 import butterknife.ButterKnife
 import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.dbflow.loadFbTabs
@@ -18,9 +19,7 @@ import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.Changelog
-import com.pitchedapps.frost.utils.bindView
-import com.pitchedapps.frost.utils.toDrawable
+import com.pitchedapps.frost.utils.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        SwipeBackHelper.onCreate(this)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
@@ -40,11 +41,36 @@ class MainActivity : AppCompatActivity() {
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 5
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
+                (0 until tabs.tabCount).asSequence().forEach {
+                    i ->
+                    tabs.getTabAt(i)?.icon?.alpha = when (i) {
+                        position -> (255.0 - delta).toInt()
+                        position + 1 -> (128.0 + delta).toInt()
+                        else -> 128
+                    }
+                }
+            }
+        })
         setupTabs()
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+    }
+
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+//        SwipeBackHelper.onPostCreate(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        SwipeBackHelper.onDestroy(this)
     }
 
     fun setupTabs() {
@@ -72,8 +98,7 @@ class MainActivity : AppCompatActivity() {
 //                finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> {
-            }
+            R.id.action_call -> WebOverlayActivity.newInstance(this, "https://www.google.ca")
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> {
                 finish();
