@@ -8,7 +8,7 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
 
 enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String) {
-    FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, ""),
+    FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, "feed"),
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event, "events/upcoming"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_people, "friends/center/requests"),

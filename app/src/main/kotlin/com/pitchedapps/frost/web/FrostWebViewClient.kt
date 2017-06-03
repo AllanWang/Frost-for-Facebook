@@ -9,6 +9,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.circularReveal
 import com.pitchedapps.frost.views.fadeOut
 
@@ -32,10 +33,10 @@ class FrostWebViewClient(val position: () -> Int) : WebViewClient() {
         if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) {
             FbCookie.logout(Prefs.userId)
-            LoginActivity.newInstance(view.context)
+            view.context.launchNewTask(LoginActivity::class.java)
         } else if (url.contains("login.php")) {
             FbCookie.reset()
-            LoginActivity.newInstance(view.context)
+            view.context.launchNewTask(LoginActivity::class.java)
         }
         view.fadeOut(duration = 200L)
     }
