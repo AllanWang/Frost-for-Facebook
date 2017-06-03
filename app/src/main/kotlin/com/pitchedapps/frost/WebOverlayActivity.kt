@@ -42,4 +42,7 @@ class WebOverlayActivity : AppCompatActivity() {
         SwipeBackHelper.onDestroy(this)
     }
 
+    override fun onBackPressed() {
+        if (!frostWeb.onBackPressed()) super.onBackPressed()
+    }
 }
