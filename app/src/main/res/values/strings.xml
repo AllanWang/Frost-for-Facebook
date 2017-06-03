@@ -13,4 +13,11 @@
     <string name="friends">Friends</string>
     <string name="messages">Messages</string>
     <string name="notifications">Notifications</string>
+    <string name="activity_log">Activity Log</string>
+    <string name="pages">Pages</string>
+    <string name="groups">Groups</string>
+    <string name="saved">Saved</string>
+    <string name="birthdays">Birthdays</string>
+    <string name="chat">Chat</string>
+    <string name="photos">Photos</string>
 </resources>

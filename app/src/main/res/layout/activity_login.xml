@@ -5,9 +5,8 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     android:fitsSystemWindows="true"
-    tools:context=".WebOverlayActivity">
+    tools:context=".LoginActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,9 +16,6 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <com.pitchedapps.frost.web.FrostWebView
-        android:id="@+id/frost_webview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <include layout="@layout/login_webview" />
 
 </android.support.design.widget.CoordinatorLayout>

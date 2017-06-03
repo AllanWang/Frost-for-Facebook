@@ -5,14 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import butterknife.ButterKnife
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.bindView
 import com.pitchedapps.frost.web.FrostWebView
-import com.pitchedapps.frost.web.FrostWebViewCore
 
 
 /**
@@ -21,7 +20,7 @@ import com.pitchedapps.frost.web.FrostWebViewCore
 class WebOverlayActivity : AppCompatActivity() {
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
-    val frostWeb:FrostWebView by bindView(R.id.frost_webview)
+    val frostWeb: FrostWebView by bindView(R.id.frost_webview)
 
     companion object {
         private const val ARG_URL = "arg_url"
@@ -31,6 +30,8 @@ class WebOverlayActivity : AppCompatActivity() {
             val bundle = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
             ContextCompat.startActivity(context, intent, bundle)
         }
+
+        fun newInstance(context: Context, url: FbTab) = newInstance(context, url.url)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

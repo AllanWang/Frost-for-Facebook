@@ -88,8 +88,8 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${DBFLOW}"
-    compile "net.zetetic:android-database-sqlcipher:${SQL_CIPHER}@aar"
+//    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${DBFLOW}"
+//    compile "net.zetetic:android-database-sqlcipher:${SQL_CIPHER}@aar"
 
     testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
 
@@ -116,7 +116,7 @@ dependencies {
 
     compile "org.jsoup:jsoup:${JSOUP}"
 
-    compile "org.jetbrains.anko:anko:${ANKO}"
+//    compile "org.jetbrains.anko:anko:${ANKO}"
 
 //    compile "com.squareup.retrofit2:retrofit:${RETROFIT}"
 //    compile "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT}"
@@ -132,11 +132,16 @@ dependencies {
 
     compile "com.f2prateek.rx.preferences2:rx-preferences:${RX_PREFS}"
 
-    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
-        transitive = true
-    }
+//    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
+//        transitive = true
+//    }
+    compile "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 
-    compile 'com.jude:swipebackhelper:3.1.2'
+    compile "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
+    compile "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
+    kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
+
+    compile "com.jude:swipebackhelper:${SWIPE_BACK}"
 }
 
 kapt {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="144dp"
+            android:layout_height="144dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Profile Picture"
+            android:scaleType="centerInside"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/profile"
+            android:visibility="gone" />
+
+        <com.pitchedapps.frost.web.LoginWebView
+            android:id="@+id/login_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

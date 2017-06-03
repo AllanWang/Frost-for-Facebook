@@ -2,6 +2,7 @@ package com.pitchedapps.frost.dbflow
 
 import android.content.Context
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.defaultTabs
 import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -32,7 +33,7 @@ fun loadFbTabs(): List<FbTab> {
     val tabs: List<FbTabModel>? = SQLite.select().from(FbTabModel::class).orderBy(FbTabModel_Table.position, true).queryList()
     if (tabs?.isNotEmpty() ?: false) return tabs!!.map { it.tab }
     L.d("No tabs; loading default")
-    return listOf(FbTab.FEED, FbTab.MESSAGES, FbTab.FRIENDS, FbTab.NOTIFICATIONS)
+    return defaultTabs()
 }
 
 fun List<FbTab>.saveAsync(c: Context) {
