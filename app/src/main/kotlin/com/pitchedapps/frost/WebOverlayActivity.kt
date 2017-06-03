@@ -15,14 +15,17 @@ import com.pitchedapps.frost.web.FrostWebView
  */
 class WebOverlayActivity : AppCompatActivity() {
 
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-    val frostWeb: FrostWebView by bindView(R.id.frost_webview)
+    val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
+    val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_overlay)
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
         frostWeb.baseUrl = url()
         frostWeb.web.loadBaseUrl()
         SwipeBackHelper.onCreate(this)
@@ -31,6 +34,7 @@ class WebOverlayActivity : AppCompatActivity() {
                 .setSwipeSensitivity(0.5f)
                 .setSwipeRelateEnable(true)
                 .setSwipeRelateOffset(300)
+        frostWeb.web.addTitleListener({ toolbar.title = it })
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

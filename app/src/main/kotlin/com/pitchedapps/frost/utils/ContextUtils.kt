@@ -30,6 +30,7 @@ fun Activity.cookies(): ArrayList<CookieModel> {
 
 fun Context.launchWebOverlay(url: String) {
     val intent = Intent(this, WebOverlayActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     intent.putExtra(ARG_URL, url)
     val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
     ContextCompat.startActivity(this, intent, bundle)

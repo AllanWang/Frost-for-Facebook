@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewTreeObserver
 import butterknife.ButterKnife
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
@@ -26,9 +27,9 @@ import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
-import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
+import io.reactivex.disposables.Disposable
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     val cookies: ArrayList<CookieModel> by lazy { cookies() }
+    var titleDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 5
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                updateTitleListener()
+            }
+
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
@@ -72,6 +79,17 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+        viewPager.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
+                viewPager.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                updateTitleListener()
+            }
+        })
+    }
+
+    fun updateTitleListener() {
+        titleDisposable?.dispose()
+        titleDisposable = currentFragment.web.addTitleListener({ toolbar.title = it })
     }
 
     fun setupTabs() {
@@ -144,8 +162,8 @@ class MainActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    val currentFragment: BaseFragment
-        get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
+    val currentFragment
+        get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as WebFragment
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 

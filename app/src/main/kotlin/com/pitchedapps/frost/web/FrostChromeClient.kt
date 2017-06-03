@@ -4,20 +4,25 @@ import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.pitchedapps.frost.utils.L
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-class FrostChromeClient(val progressObservable: Subject<Int>) : WebChromeClient() {
+class FrostChromeClient(val progressObservable: Subject<Int>, val titleObservable: BehaviorSubject<String>) : WebChromeClient() {
+
+
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        L.d("Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
+        L.d("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
         return super.onConsoleMessage(consoleMessage)
     }
 
-    override fun onReceivedTitle(view: WebView?, title: String?) {
+    override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
-        L.v("Title $title")
+        if (title.contains("http") || titleObservable.value == title) return
+//        L.v("Title $title")
+        titleObservable.onNext(title)
     }
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {
