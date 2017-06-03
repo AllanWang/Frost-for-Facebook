@@ -6,11 +6,12 @@
   display: none !important;
 }
 
-body, #root, #header, .aclb, ._55wo, ._1upc, input {
+body, #root, #header, .aclb, ._55wo, ._1upc, input, ._2f9r {
   background: $background !important;
 }
 
-button::before, ._56be::before, .btnS, .touch::before {
+button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
+._5xo2, ._5u5a::before {
   background: $background2 !important;
 }
 
@@ -19,11 +20,15 @@ button::before, ._56be::before, .btnS, .touch::before {
   border: 0 !important;
 }
 
+.touch ._56bt {
+  text-shadow: none !important;
+}
+
 .touch .btnS {
   box-shadow: none !important;
 }
 
-input, ._43mh, .touch .btn, a, .fcg, button, ._52j9 {
+input, ._43mh, .touch .btn, a, .fcg, button, ._52j9, ._52jb, h1, h2, h3, h4, h5, h6 {
   color: $text !important;
 }
 

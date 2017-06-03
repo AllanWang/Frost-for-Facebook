@@ -24,6 +24,7 @@ class WebOverlayActivity : AppCompatActivity() {
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
         frostWeb.baseUrl = url()
+        frostWeb.web.loadBaseUrl()
         SwipeBackHelper.onCreate(this)
         SwipeBackHelper.getCurrentPage(this)
                 .setSwipeBackEnable(true)
