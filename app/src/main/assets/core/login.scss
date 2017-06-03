@@ -1,11 +1,17 @@
 @import "colors";
+@import "base";
 
-body, #root,#header,.aclb,._55wo,._1upc,input {
+//Get Android banner
+[data-sigil="m_login_upsell"] {
+  display: none !important;
+}
+
+body, #root, #header, .aclb, ._55wo, ._1upc, input {
   background: $background !important;
 }
 
 button::before, ._56be::before, .btnS, .touch::before {
- background: $background2 !important;
+  background: $background2 !important;
 }
 
 ._56bf, .touch .btn {
@@ -17,16 +23,21 @@ button::before, ._56be::before, .btnS, .touch::before {
   box-shadow: none !important;
 }
 
-input,._43mh, .touch .btn,a, .fcg, button, ._52j9, ::-webkit-input-placeholder,::-moz-placeholder ,::-ms-input-placeholder {
-  color: $text !important
+input, ._43mh, .touch .btn, a, .fcg, button, ._52j9 {
+  color: $text !important;
 }
+
+@include placeholder {
+  color: $text !important;
+}
+
 
 // divider lines
 ._43mh::before, ._43mh::after {
-  background: $text !important
+  background: $text !important;
 }
 
 ._1rrd {
   border: 1px solid $text !important;
-	color: $text !important;
+  color: $text !important;
 }

@@ -2,11 +2,13 @@ package com.pitchedapps.frost.views
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.support.annotation.StringRes
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
+import android.widget.TextView
 
 
 /**
@@ -105,3 +107,13 @@ fun View.fadeOut(offset: Long = 0L, duration: Long = 200L, onStart: (() -> Unit)
     })
     startAnimation(anim)
 }
+
+fun TextView.setTextWithFade(text: String, duration: Long = 200, onFinish: (() -> Unit)? = null) {
+    fadeOut(duration = duration, onFinish = {
+        setText(text)
+        fadeIn(duration = duration, onFinish = onFinish)
+    })
+}
+
+fun TextView.setTextWithFade(@StringRes textId: Int, duration: Long = 200, onFinish: (() -> Unit)? = null) = setTextWithFade(context.getString(textId), duration, onFinish)
+

@@ -3,10 +3,12 @@ package com.pitchedapps.frost.web
 import android.graphics.Bitmap
 import android.view.KeyEvent
 import android.webkit.*
+import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.views.circularReveal
 import com.pitchedapps.frost.views.fadeOut
 
@@ -28,14 +30,19 @@ class FrostWebViewClient(val position: () -> Int) : WebViewClient() {
         super.onPageStarted(view, url, favicon)
         L.i("FWV Loading $url")
         if (!url.contains(FACEBOOK_COM)) return
-        if (url.contains("logout.php")) FbCookie.logout(position.invoke())
+        if (url.contains("logout.php")) {
+            FbCookie.logout(Prefs.userId)
+            LoginActivity.newInstance(view.context)
+        } else if (url.contains("login.php")) {
+            FbCookie.reset()
+            LoginActivity.newInstance(view.context)
+        }
         view.fadeOut(duration = 200L)
     }
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
         if (!url.contains(FACEBOOK_COM)) return
-        FbCookie.checkUserId(url, CookieManager.getInstance().getCookie(url), position.invoke())
         CssAssets.HEADER.inject(view, {
             view.circularReveal(offset = 150L)
         })
