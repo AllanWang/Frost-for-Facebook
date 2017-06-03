@@ -1,9 +1,11 @@
 package com.pitchedapps.frost
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
@@ -24,6 +26,8 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.bindView
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.fadeOut
 import com.pitchedapps.frost.views.setTextWithFade
@@ -55,11 +59,14 @@ class LoginActivity : AppCompatActivity() {
     val usernameObservable = SingleSubject.create<String>()!!
 
     companion object {
-        fun newInstance(context: Context) {
+        const val EXTRA_COOKIES = "extra_cookies"
+        fun newInstance(context: Context, cookies: ArrayList<CookieModel> = arrayListOf()) {
             val intent = Intent(context, LoginActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(EXTRA_COOKIES, cookies)
             val bundle = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
             ContextCompat.startActivity(context, intent, bundle)
+            if (context is Activity) context.finish()
         }
     }
 
@@ -101,6 +108,11 @@ class LoginActivity : AppCompatActivity() {
             L.d("Zip done")
             if (!foundImage) L.e("Could not get profile photo; Invalid id?\n\t$cookie")
             textview.setTextWithFade(String.format(getString(R.string.welcome), name), duration = 500)
+            Handler().postDelayed({
+                val cookies = cookies()
+                cookies.add(cookie)
+                launchNewTask(MainActivity::class.java, cookies)
+            }, 1000)
         }
         loadProfile(cookie.id)
         loadUsername(cookie)
