@@ -19,13 +19,7 @@ class StartActivity : AppCompatActivity() {
         loadFbCookiesAsync {
             cookies ->
             L.d("Cookies loaded ${System.currentTimeMillis()} $cookies")
-            val sorted = ArrayList(cookies)
-            val current = cookies.filter { it.id == Prefs.userId }
-            if (current.isNotEmpty()) {
-                sorted.remove(current[0])
-                sorted.add(0, current[0])
-            }
-            launchNewTask(MainActivity::class.java, sorted)
+            launchNewTask(MainActivity::class.java, ArrayList(cookies))
         }
     }
 }

@@ -19,7 +19,6 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.events.FbAccountEvent
@@ -66,8 +65,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        setupTabs()
         setupDrawer(savedInstanceState)
+        setupTabs()
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
@@ -86,23 +85,19 @@ class MainActivity : AppCompatActivity() {
             savedInstance = savedInstanceState
             translucentStatusBar = false
             drawerHeader = accountHeader {
-                cookies.forEach {
-                    profile(name = it.name ?: "") {
-                        iconUrl = PROFILE_PICTURE_URL(it.id)
+                cookies.forEach { (id, name) ->
+                    profile(name = name ?: "") {
+                        iconUrl = PROFILE_PICTURE_URL(id)
+                        identifier = id
                     }
                 }
                 onProfileChanged { _, profile, current ->
-                    if (current) WebOverlayActivity.newInstance(this@MainActivity, FbTab.PROFILE)
+                    if (current) launchWebOverlay(FbTab.PROFILE.url)
                     else switchUser(profile.name.text)
                     false
                 }
             }
-//            profile("a") {
-//
-//            }
-//            if (Prefs.userId != Prefs.userIdDefault) {
-//                profile("a")
-//            }
+            drawerHeader.setActiveProfile(Prefs.userId)
             primaryItem(FbTab.ACTIVITY_LOG)
             primaryItem(FbTab.PHOTOS)
             primaryItem(FbTab.GROUPS)
