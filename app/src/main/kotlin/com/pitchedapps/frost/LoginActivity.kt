@@ -1,13 +1,8 @@
 package com.pitchedapps.frost
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
@@ -20,13 +15,13 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.dbflow.saveFbCookie
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.bindView
-import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.fadeOut
@@ -57,18 +52,6 @@ class LoginActivity : AppCompatActivity() {
     val progressObservable = BehaviorSubject.create<Int>()!!
     val profileObservable = SingleSubject.create<Boolean>()!!
     val usernameObservable = SingleSubject.create<String>()!!
-
-    companion object {
-        const val EXTRA_COOKIES = "extra_cookies"
-        fun newInstance(context: Context, cookies: ArrayList<CookieModel> = arrayListOf()) {
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(EXTRA_COOKIES, cookies)
-            val bundle = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
-            ContextCompat.startActivity(context, intent, bundle)
-            if (context is Activity) context.finish()
-        }
-    }
 
     // Helper to set and enable swipeRefresh
     var refresh: Boolean
@@ -108,11 +91,16 @@ class LoginActivity : AppCompatActivity() {
             L.d("Zip done")
             if (!foundImage) L.e("Could not get profile photo; Invalid id?\n\t$cookie")
             textview.setTextWithFade(String.format(getString(R.string.welcome), name), duration = 500)
-            Handler().postDelayed({
-                val cookies = cookies()
-                cookies.add(cookie)
-                launchNewTask(MainActivity::class.java, cookies)
-            }, 1000)
+            /*
+             * The user may have logged into an account that is already in the database
+             * We will let the db handle duplicates and load it now after the new account has been saved
+             */
+            loadFbCookiesAsync {
+                cookies ->
+                Handler().postDelayed({
+                    launchNewTask(MainActivity::class.java, ArrayList(cookies))
+                }, 1000)
+            }
         }
         loadProfile(cookie.id)
         loadUsername(cookie)

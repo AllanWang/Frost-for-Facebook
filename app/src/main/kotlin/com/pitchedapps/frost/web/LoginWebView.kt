@@ -81,11 +81,11 @@ class LoginWebView @JvmOverloads constructor(
                 loadLogin()
                 return
             }
+            cookieObservable.onNext(Pair(url, CookieManager.getInstance().getCookie(url)))
             CssAssets.LOGIN.inject(view, {
                 if (view.visibility == View.INVISIBLE)
                     view.circularReveal(offset = 150L)
             })
-            cookieObservable.onNext(Pair(url, CookieManager.getInstance().getCookie(url)))
         }
     }
 
