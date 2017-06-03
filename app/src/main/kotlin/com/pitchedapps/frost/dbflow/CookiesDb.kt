@@ -42,12 +42,12 @@ fun loadFbCookiesAsync(callback: (cookies: List<CookieModel>) -> Unit) {
 
 fun saveFbCookie(cookie: CookieModel) {
     cookie.async save {
-        L.d("Fb cookie saved")
+        L.d("Fb cookie $cookie saved")
     }
 }
 
 fun removeCookie(id: Long) {
     loadFbCookie(id)?.async?.delete({
-        L.d("Fb cookie deleted")
+        L.d("Fb cookie $id deleted")
     })
 }

@@ -39,6 +39,7 @@ class LoginWebView @JvmOverloads constructor(
     lateinit var progressObservable: Subject<Int>
 
     init {
+        FbCookie.reset()
         cookieObservable.filter { (_, cookie) -> cookie?.contains(userMatcher) ?: false }
                 .subscribe {
                     (url, cookie) ->
@@ -46,9 +47,10 @@ class LoginWebView @JvmOverloads constructor(
                     val id = userMatcher.find(cookie!!)?.groups?.get(1)?.value
                     if (id != null) {
                         try {
-                            FbCookie.save(id.toLong(), -1)
+                            FbCookie.save(id.toLong())
                             //TODO proceed to next view
                             cookieObservable.onComplete()
+                            loginObservable.onSuccess(CookieModel(id.toLong(), "", cookie))
                         } catch (e: NumberFormatException) {
                             //todo send report that id has changed
                         }

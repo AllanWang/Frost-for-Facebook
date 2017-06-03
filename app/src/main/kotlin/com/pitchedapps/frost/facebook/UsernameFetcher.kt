@@ -2,9 +2,8 @@ package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.saveFbCookie
-import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.utils.L
-import org.greenrobot.eventbus.EventBus
+import io.reactivex.subjects.SingleSubject
 import org.jsoup.Jsoup
 import kotlin.concurrent.thread
 
@@ -13,22 +12,20 @@ import kotlin.concurrent.thread
  */
 object UsernameFetcher {
 
-    fun fetch(data: CookieModel, sender: Int) {
+    fun fetch(data: CookieModel, callback: SingleSubject<String>) {
         thread {
+            var name = ""
             try {
-                val title = Jsoup.connect(FbTab.PROFILE.url)
+                name = Jsoup.connect(FbTab.PROFILE.url)
                         .cookie(FACEBOOK_COM, data.cookie)
                         .get().title()
-                L.d("User name found: $title")
-                data.name = title
+                L.d("User name found: $name")
             } catch (e: Exception) {
                 L.e("User name fetching failed: ${e.message}")
-                data.name = ""
             } finally {
-                if (data.name != null) {
-                    saveFbCookie(data)
-                    EventBus.getDefault().post(FbAccountEvent(data, sender, FbAccountEvent.FLAG_USER_NAME))
-                }
+                data.name = name
+                saveFbCookie(data)
+                callback.onSuccess(name)
             }
         }
     }

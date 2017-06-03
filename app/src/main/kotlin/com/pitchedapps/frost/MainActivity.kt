@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
 //                finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> WebOverlayActivity.newInstance(this, "https://www.google.ca")
+            R.id.action_call -> LoginActivity.newInstance(this)
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> {
                 finish();

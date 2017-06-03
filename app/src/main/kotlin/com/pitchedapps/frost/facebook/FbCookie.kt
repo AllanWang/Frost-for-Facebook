@@ -32,57 +32,37 @@ object FbCookie {
         }
     }
 
-    private val userMatcher: Regex by lazy { Regex("c_user=([0-9]*);") }
-
-    fun hasLoggedIn(url: String, cookie: String?):Boolean {
-        if (cookie == null || !url.contains("facebook") || !cookie.contains(userMatcher)) return false
-        L.d("Checking cookie for $url\n\t$cookie")
-        val id = userMatcher.find(cookie)?.groups?.get(1)?.value
-        if (id != null) {
-            try {
-                save(id.toLong(), -1)
-                return true
-            } catch (e: NumberFormatException) {
-                //todo send report that id has changed
-            }
-        }
-        return false
-    }
-
-    fun save(id: Long, sender: Int) {
+    fun save(id: Long) {
         L.d("New cookie found for $id")
         Prefs.userId = id
         CookieManager.getInstance().flush()
         val cookie = CookieModel(Prefs.userId, "", webCookie)
-        EventBus.getDefault().post(FbAccountEvent(cookie, sender, FbAccountEvent.FLAG_NEW))
         saveFbCookie(cookie)
     }
 
-    //TODO reset when new account is added; reset and clear when account is logged out
-    fun reset(loggedOut: Boolean = false, sender: Int) {
+    fun reset() {
         Prefs.userId = Prefs.userIdDefault
         with(CookieManager.getInstance()) {
             removeAllCookies(null)
             flush()
         }
-        EventBus.getDefault().post(FbAccountEvent(CookieModel(), sender, if (loggedOut) FbAccountEvent.FLAG_LOGOUT else FbAccountEvent.FLAG_RESET))
     }
 
-    fun switchUser(id: Long, sender: Int) = switchUser(loadFbCookie(id), sender)
+    fun switchUser(id: Long) = switchUser(loadFbCookie(id))
 
-    fun switchUser(name: String, sender: Int) = switchUser(loadFbCookie(name), sender)
+    fun switchUser(name: String) = switchUser(loadFbCookie(name))
 
-    fun switchUser(cookie: CookieModel?, sender: Int) {
+    fun switchUser(cookie: CookieModel?) {
         if (cookie == null) return
         Prefs.userId = cookie.id
         dbCookie = cookie.cookie
         webCookie = dbCookie
-        EventBus.getDefault().post(FbAccountEvent(cookie, sender, FbAccountEvent.FLAG_SWITCH))
+        //TODO add webview refresh event
     }
 
-    fun logout(sender: Int) {
-        L.d("Logging out user ${Prefs.userId}")
-        removeCookie(Prefs.userId)
-        reset(true, sender)
+    fun logout(id:Long) {
+        L.d("Logging out user $id")
+        removeCookie(id)
+        reset()
     }
 }

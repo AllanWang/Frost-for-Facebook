@@ -32,10 +32,10 @@ class FbAccountEvent(val data: CookieModel, val sender: Int, val flag: Int) {
     }
 
     fun execute(webView: FrostWebViewCore) {
-        if (sender != -1 && sender == webView.position) return
-        when (flag) {
-            FLAG_LOGOUT, FLAG_RESET, FLAG_NEW, FLAG_SWITCH -> webView.loadBaseUrl()
-        }
+//        if (sender != -1 && sender == webView.position) return
+//        when (flag) {
+//            FLAG_LOGOUT, FLAG_RESET, FLAG_NEW, FLAG_SWITCH -> webView.loadBaseUrl()
+//        }
     }
 
     /**
@@ -51,8 +51,8 @@ class FbAccountEvent(val data: CookieModel, val sender: Int, val flag: Int) {
                         .withIcon(PROFILE_PICTURE_URL(data.id))
                 accountHeader.addProfile(profile, 0)
                 accountHeader.setActiveProfile(profile, true)
-                if (data.name == null)
-                    UsernameFetcher.fetch(data, sender)
+//                if (data.name == null)
+//                    UsernameFetcher.fetch(data, sender)
             }
             FLAG_USER_NAME -> {
                 if (accountHeader.activeProfile.name == null)

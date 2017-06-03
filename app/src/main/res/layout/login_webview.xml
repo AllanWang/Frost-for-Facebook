@@ -15,15 +15,17 @@
             android:layout_centerInParent="true"
             android:layout_marginBottom="8dp"
             android:contentDescription="Profile Picture"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            android:visibility="invisible" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/profile"
-            android:visibility="gone" />
+            android:layout_centerHorizontal="true"
+            android:text="@string/loading_account"
+            android:visibility="invisible" />
 
         <com.pitchedapps.frost.web.LoginWebView
             android:id="@+id/login_webview"
