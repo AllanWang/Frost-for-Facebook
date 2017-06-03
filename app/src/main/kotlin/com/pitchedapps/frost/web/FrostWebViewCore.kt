@@ -11,7 +11,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
 import com.pitchedapps.frost.events.FbAccountEvent
-import com.pitchedapps.frost.utils.ObservableContainer
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import org.greenrobot.eventbus.EventBus
@@ -27,20 +29,25 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class FrostWebViewCore @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr), NestedScrollingChild, ObservableContainer<Int> {
+) : WebView(context, attrs, defStyleAttr), NestedScrollingChild {
 
     private val childHelper = NestedScrollingChildHelper(this)
     private var lastY: Int = 0
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
     private var nestedOffsetY: Int = 0
-    override val progressObservable: Subject<Int> //TODO see if we need this
+    val progressObservable: Subject<Int>
+    val titleObservable: Subject<String>
+
+    private val chromeClient: FrostChromeClient
     var baseUrl: String? = null
     var position: Int = -1
 
     init {
         isNestedScrollingEnabled = true
         progressObservable = BehaviorSubject.create<Int>()
+        titleObservable = BehaviorSubject.create<String>()
+        chromeClient = FrostChromeClient(progressObservable, titleObservable)
         setupWebview()
     }
 
@@ -49,8 +56,8 @@ class FrostWebViewCore @JvmOverloads constructor(
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        setWebViewClient(FrostWebViewClient({position}))
-        setWebChromeClient(FrostChromeClient(progressObservable))
+        setWebViewClient(FrostWebViewClient({ position }))
+        setWebChromeClient(chromeClient)
     }
 
     override fun loadUrl(url: String?) {
@@ -59,6 +66,9 @@ class FrostWebViewCore @JvmOverloads constructor(
     }
 
     fun loadBaseUrl() = loadUrl(baseUrl)
+
+    fun addTitleListener(subscriber: (title: String) -> Unit, scheduler: Scheduler = AndroidSchedulers.mainThread()): Disposable
+            = titleObservable.observeOn(scheduler).subscribe(subscriber)
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         val event = MotionEvent.obtain(ev)
