@@ -17,7 +17,7 @@ class FrostChromeClient(val progressObservable: Subject<Int>) : WebChromeClient(
 
     override fun onReceivedTitle(view: WebView?, title: String?) {
         super.onReceivedTitle(view, title)
-        L.d("Title $title")
+        L.v("Title $title")
     }
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {

@@ -1,7 +1,5 @@
 package com.pitchedapps.frost
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -30,9 +28,7 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.Changelog
-import com.pitchedapps.frost.utils.bindView
-import com.pitchedapps.frost.utils.toDrawable
+import com.pitchedapps.frost.utils.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -46,24 +42,13 @@ class MainActivity : AppCompatActivity() {
     val tabs: TabLayout by bindView(R.id.tabs)
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
-    lateinit var cookies: ArrayList<CookieModel>
-
-    companion object {
-        const val EXTRA_COOKIES = "extra_cookies"
-        fun launch(activity: Activity, cookies: List<CookieModel>) {
-            val intent = (Intent(activity, MainActivity::class.java))
-            intent.putParcelableArrayListExtra(EXTRA_COOKIES, ArrayList(cookies))
-            activity.startActivity(intent)
-            activity.finish()
-        }
-    }
+    val cookies = cookies()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
-        cookies = intent.extras.getParcelableArrayList<CookieModel>(EXTRA_COOKIES)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = 5
@@ -108,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 onProfileChanged { _, profile, current ->
                     if (current) WebOverlayActivity.newInstance(this@MainActivity, FbTab.PROFILE)
-                    else switchUser(profile.name.text, -1)
+                    else switchUser(profile.name.text)
                     false
                 }
             }
@@ -128,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         iicon = item.icon
         identifier = item.titleId.toLong()
         onClick { _ ->
-            WebOverlayActivity.newInstance(this@MainActivity, item.url)
+            launchWebOverlay(item.url)
             false
         }
     }
@@ -145,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 //                finish()
             }
             R.id.action_changelog -> Changelog.show(this)
-            R.id.action_call -> LoginActivity.newInstance(this)
+            R.id.action_call -> launchNewTask(LoginActivity::class.java)
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> {
                 finish();
