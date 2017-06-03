@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import butterknife.ButterKnife
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.bindView
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -22,11 +21,15 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
         get() = web.baseUrl
         set(value) {
             web.baseUrl = value
-            if (value != null) web.loadUrl(value)
         }
     val refresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     val web: FrostWebViewCore by bindView(R.id.frost_webview_core)
     val progress: ProgressBar by bindView(R.id.progressBar)
+    var position: Int
+        get() = web.position
+        set(value) {
+            web.position = value
+        }
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)

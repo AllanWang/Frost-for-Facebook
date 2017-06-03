@@ -1,11 +1,11 @@
 package com.pitchedapps.frost.facebook
 
 import android.webkit.CookieManager
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.removeCookie
 import com.pitchedapps.frost.dbflow.saveFbCookie
-import com.pitchedapps.frost.events.WebEvent
-import com.pitchedapps.frost.utils.GlideUtils
+import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import org.greenrobot.eventbus.EventBus
@@ -34,48 +34,55 @@ object FbCookie {
 
     private val userMatcher: Regex by lazy { Regex("c_user=([0-9]*);") }
 
-    fun checkUserId(url: String, cookie: String?) {
-        if (Prefs.userId != Prefs.userIdDefault || cookie == null) return
+    fun hasLoggedIn(url: String, cookie: String?):Boolean {
+        if (cookie == null || !url.contains("facebook") || !cookie.contains(userMatcher)) return false
         L.d("Checking cookie for $url\n\t$cookie")
-        if (!url.contains("facebook") || !cookie.contains(userMatcher)) return
         val id = userMatcher.find(cookie)?.groups?.get(1)?.value
         if (id != null) {
             try {
-                save(id.toLong())
+                save(id.toLong(), -1)
+                return true
             } catch (e: NumberFormatException) {
                 //todo send report that id has changed
             }
         }
+        return false
     }
 
-    fun save(id: Long) {
+    fun save(id: Long, sender: Int) {
         L.d("New cookie found for $id")
         Prefs.userId = id
         CookieManager.getInstance().flush()
-        EventBus.getDefault().post(WebEvent(WebEvent.REFRESH_BASE))
-        saveFbCookie(Prefs.userId, webCookie)
-        GlideUtils.downloadProfile(id)
+        val cookie = CookieModel(Prefs.userId, "", webCookie)
+        EventBus.getDefault().post(FbAccountEvent(cookie, sender, FbAccountEvent.FLAG_NEW))
+        saveFbCookie(cookie)
     }
 
     //TODO reset when new account is added; reset and clear when account is logged out
-    fun reset() {
+    fun reset(loggedOut: Boolean = false, sender: Int) {
         Prefs.userId = Prefs.userIdDefault
         with(CookieManager.getInstance()) {
             removeAllCookies(null)
             flush()
         }
+        EventBus.getDefault().post(FbAccountEvent(CookieModel(), sender, if (loggedOut) FbAccountEvent.FLAG_LOGOUT else FbAccountEvent.FLAG_RESET))
     }
 
-    fun switchUser(id: Long) {
-        val cookie = loadFbCookie(id) ?: return
-        Prefs.userId = id
+    fun switchUser(id: Long, sender: Int) = switchUser(loadFbCookie(id), sender)
+
+    fun switchUser(name: String, sender: Int) = switchUser(loadFbCookie(name), sender)
+
+    fun switchUser(cookie: CookieModel?, sender: Int) {
+        if (cookie == null) return
+        Prefs.userId = cookie.id
         dbCookie = cookie.cookie
         webCookie = dbCookie
+        EventBus.getDefault().post(FbAccountEvent(cookie, sender, FbAccountEvent.FLAG_SWITCH))
     }
 
-    fun logout() {
+    fun logout(sender: Int) {
         L.d("Logging out user ${Prefs.userId}")
         removeCookie(Prefs.userId)
-        reset()
+        reset(true, sender)
     }
 }

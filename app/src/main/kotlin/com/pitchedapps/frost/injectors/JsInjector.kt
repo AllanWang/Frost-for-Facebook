@@ -64,7 +64,8 @@ class JsBuilder {
         }
         if (css.isNotBlank()) {
             val name = v.next
-            builder.append("var $name=document.createElement('style');$name.innerHTML='$css';document.head.appendChild($name);")
+            val cssMin = css.replace(Regex("\\s+"), "")
+            builder.append("var $name=document.createElement('style');$name.innerHTML='$cssMin';document.head.appendChild($name);")
         }
         return builder.append("}()").toString()
     }

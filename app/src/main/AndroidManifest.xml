@@ -90,7 +90,9 @@
         <activity
             android:name=".WebOverlayActivity"
             android:theme="@style/AppTheme.Overlay" />
-
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <receiver
             android:name=".services.NotificationReceiver"
             android:enabled="true"

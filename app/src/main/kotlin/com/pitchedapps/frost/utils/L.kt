@@ -11,6 +11,8 @@ object L {
     const val TAG = "Frost: %s"
     fun e(s: String) = Timber.e(TAG, s)
     fun d(s: String) = Timber.d(TAG, s)
+    fun i(s: String) = Timber.i(TAG, s)
+    fun v(s: String) = Timber.v(TAG, s)
 }
 
 internal class CrashReportingTree : Timber.Tree() {

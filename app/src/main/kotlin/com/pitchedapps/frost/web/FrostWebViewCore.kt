@@ -10,12 +10,13 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
-import com.pitchedapps.frost.events.WebEvent
+import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.utils.ObservableContainer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -35,6 +36,7 @@ class FrostWebViewCore @JvmOverloads constructor(
     private var nestedOffsetY: Int = 0
     override val progressObservable: Subject<Int> //TODO see if we need this
     var baseUrl: String? = null
+    var position: Int = -1
 
     init {
         isNestedScrollingEnabled = true
@@ -47,7 +49,7 @@ class FrostWebViewCore @JvmOverloads constructor(
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        setWebViewClient(FrostWebViewClient())
+        setWebViewClient(FrostWebViewClient({position}))
         setWebChromeClient(FrostChromeClient(progressObservable))
     }
 
@@ -55,6 +57,8 @@ class FrostWebViewCore @JvmOverloads constructor(
         if (url != null)
             super.loadUrl(url)
     }
+
+    fun loadBaseUrl() = loadUrl(baseUrl)
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         val event = MotionEvent.obtain(ev)
@@ -106,8 +110,8 @@ class FrostWebViewCore @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    @Subscribe
-    fun webEvent(event: WebEvent) = event.execute(this)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun webEvent(event: FbAccountEvent) = event.execute(this)
 
     // Nested Scroll implements
     override fun setNestedScrollingEnabled(enabled: Boolean) {

@@ -1,9 +1,10 @@
 package com.pitchedapps.frost.views
 
 import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
+import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
@@ -27,4 +28,12 @@ fun ProgressBar.tint(@ColorInt color: Int) {
     progressTintList = sl
     secondaryProgressTintList = sl
     indeterminateTintList = sl
+}
+
+fun View.snackbar(text: String, duration: Int = Snackbar.LENGTH_LONG) {
+    Snackbar.make(this, text, duration).show()
+}
+
+fun View.snackbar(@StringRes textId: Int, duration: Int = Snackbar.LENGTH_LONG) {
+    Snackbar.make(this, textId, duration).show()
 }

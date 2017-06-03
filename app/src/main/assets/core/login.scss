@@ -1,0 +1,32 @@
+@import "colors";
+
+body, #root,#header,.aclb,._55wo,._1upc,input {
+  background: $background !important;
+}
+
+button::before, ._56be::before, .btnS, .touch::before {
+ background: $background2 !important;
+}
+
+._56bf, .touch .btn {
+  border-radius: 0 !important;
+  border: 0 !important;
+}
+
+.touch .btnS {
+  box-shadow: none !important;
+}
+
+input,._43mh, .touch .btn,a, .fcg, button, ._52j9, ::-webkit-input-placeholder,::-moz-placeholder ,::-ms-input-placeholder {
+  color: $text !important
+}
+
+// divider lines
+._43mh::before, ._43mh::after {
+  background: $text !important
+}
+
+._1rrd {
+  border: 1px solid $text !important;
+	color: $text !important;
+}
