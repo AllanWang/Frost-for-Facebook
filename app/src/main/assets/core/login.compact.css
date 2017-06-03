@@ -1,23 +1,25 @@
 [data-sigil="m_login_upsell"] { display: none !important; }
 
-body, #root, #header, .aclb, ._55wo, ._1upc, input { background: #000 !important; }
+body, #root, #header, .aclb, ._55wo, ._1upc, input, ._2f9r { background: #f00 !important; }
 
-button::before, ._56be::before, .btnS, .touch::before { background: #111 !important; }
+button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._5xo2, ._5u5a::before { background: rgba(255, 51, 51, 0.1) !important; }
 
 ._56bf, .touch .btn { border-radius: 0 !important; border: 0 !important; }
 
+.touch ._56bt { text-shadow: none !important; }
+
 .touch .btnS { box-shadow: none !important; }
 
-input, ._43mh, .touch .btn, a, .fcg, button, ._52j9 { color: #fff !important; }
+input, ._43mh, .touch .btn, a, .fcg, button, ._52j9, ._52jb, h1, h2, h3, h4, h5, h6 { color: #f0f !important; }
 
-::-webkit-input-placeholder { color: #fff !important; }
+::-webkit-input-placeholder { color: #f0f !important; }
 
-:-moz-placeholder { color: #fff !important; }
+:-moz-placeholder { color: #f0f !important; }
 
-::-moz-placeholder { color: #fff !important; }
+::-moz-placeholder { color: #f0f !important; }
 
-:-ms-input-placeholder { color: #fff !important; }
+:-ms-input-placeholder { color: #f0f !important; }
 
-._43mh::before, ._43mh::after { background: #fff !important; }
+._43mh::before, ._43mh::after { background: #f0f !important; }
 
-._1rrd { border: 1px solid #fff !important; color: #fff !important; }
+._1rrd { border: 1px solid #f0f !important; color: #f0f !important; }

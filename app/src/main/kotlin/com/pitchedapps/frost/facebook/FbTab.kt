@@ -8,7 +8,9 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
 
 enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String) {
-    FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, "feed"),
+    FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, ""),
+    FEED_MOST_RECENT(R.string.most_recent, GoogleMaterial.Icon.gmd_grade, "/?sk=h_chr"),
+    FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "/?sk=h_nor"),
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event, "events/upcoming"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_people, "friends/center/requests"),
@@ -26,5 +28,5 @@ enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Stri
     val url = "$FB_URL_BASE$relativeUrl"
 }
 
-fun defaultTabs():List<FbTab> = listOf(FbTab.FEED, FbTab.MESSAGES, FbTab.FRIENDS, FbTab.NOTIFICATIONS)
-fun defaultDrawers():List<FbTab> = listOf(FbTab.ACTIVITY_LOG, FbTab.PAGES, FbTab.GROUPS, FbTab.SAVED)
+fun defaultTabs(): List<FbTab> = listOf(FbTab.FEED, FbTab.MESSAGES, FbTab.FRIENDS, FbTab.NOTIFICATIONS)
+fun defaultDrawers(): List<FbTab> = listOf(FbTab.ACTIVITY_LOG, FbTab.PAGES, FbTab.GROUPS, FbTab.SAVED)

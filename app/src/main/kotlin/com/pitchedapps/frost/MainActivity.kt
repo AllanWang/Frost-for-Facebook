@@ -19,6 +19,7 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.events.FbAccountEvent
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     val tabs: TabLayout by bindView(R.id.tabs)
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
-    val cookies = cookies()
+    val cookies: ArrayList<CookieModel> by lazy { cookies() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
