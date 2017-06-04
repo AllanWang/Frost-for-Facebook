@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.utils
 
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import timber.log.Timber
 
 
@@ -20,6 +21,7 @@ internal class CrashReportingTree : Timber.Tree() {
         if (priority == Log.VERBOSE || priority == Log.DEBUG)
             return
         Log.println(priority, tag, message)
+        Crashlytics.log(priority, tag, message)
 //        FakeCrashLibrary.log(priority, tag, message)
 
 //        if (t != null) {
