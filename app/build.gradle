@@ -41,8 +41,9 @@ android {
             resValue "string", "app_name", "Frost Debug"
         }
         releaseTest {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".test"
             signingConfig signingConfigs.test
             versionNameSuffix "-test"
