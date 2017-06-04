@@ -2,15 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
-def FABRIC_API_KEY = System.env.FABRIC_API_KEY
-if (FABRIC_API_KEY == null) {
-    def fabricProps = new Properties()
-    file("../fabric.properties").withInputStream {
-        stream -> fabricProps.load(stream)
-    }
-    FABRIC_API_KEY = fabricProps.getProperty('FABRIC_API_KEY', 'empty')
-}
-println 'Fabric ' + FABRIC_API_KEY
 android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
@@ -23,7 +14,6 @@ android {
         versionName project.VERSION_NAME
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [fabricApiKey: FABRIC_API_KEY]
     }
 
     applicationVariants.all { variant ->
