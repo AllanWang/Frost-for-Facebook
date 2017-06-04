@@ -15,11 +15,12 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.circularReveal
 import com.pitchedapps.frost.views.fadeOut
+import io.reactivex.subjects.Subject
 
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-class FrostWebViewClient(val position: () -> Int) : WebViewClient() {
+class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebViewClient() {
 
     companion object {
         //Collections of jewels mapped with url match -> id
@@ -33,6 +34,7 @@ class FrostWebViewClient(val position: () -> Int) : WebViewClient() {
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         L.i("FWV Loading $url")
+        refreshObservable.onNext(true)
         if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) {
             FbCookie.logout(Prefs.userId)
@@ -46,6 +48,7 @@ class FrostWebViewClient(val position: () -> Int) : WebViewClient() {
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
+        refreshObservable.onNext(false)
         if (!url.contains(FACEBOOK_COM)) return
         CssAssets.HEADER.inject(view, {
             view.circularReveal(offset = 150L)

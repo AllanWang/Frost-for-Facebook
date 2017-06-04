@@ -36,18 +36,18 @@ class FrostWebViewCore @JvmOverloads constructor(
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
     private var nestedOffsetY: Int = 0
-    val progressObservable: Subject<Int>
-    val titleObservable: Subject<String>
+    val progressObservable: BehaviorSubject<Int>    // Keeps track of every progress change
+    val refreshObservable: BehaviorSubject<Boolean> // Only emits on page loads
+    val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
-    private val chromeClient: FrostChromeClient
     var baseUrl: String? = null
     var position: Int = -1
 
     init {
         isNestedScrollingEnabled = true
         progressObservable = BehaviorSubject.create<Int>()
+        refreshObservable = BehaviorSubject.create<Boolean>()
         titleObservable = BehaviorSubject.create<String>()
-        chromeClient = FrostChromeClient(progressObservable, titleObservable)
         setupWebview()
     }
 
@@ -56,8 +56,8 @@ class FrostWebViewCore @JvmOverloads constructor(
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        setWebViewClient(FrostWebViewClient({ position }))
-        setWebChromeClient(chromeClient)
+        setWebViewClient(FrostWebViewClient(refreshObservable))
+        setWebChromeClient(FrostChromeClient(progressObservable, titleObservable))
     }
 
     override fun loadUrl(url: String?) {

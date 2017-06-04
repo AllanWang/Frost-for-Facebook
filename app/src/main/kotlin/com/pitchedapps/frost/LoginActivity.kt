@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.widget.ImageView
@@ -40,7 +39,7 @@ import kotlin.concurrent.thread
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseLeakActivity() {
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val web: LoginWebView by bindView(R.id.login_webview)
@@ -67,6 +66,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
+        setTitle(R.string.login)
         web.loginObservable = loginObservable
         web.progressObservable = progressObservable
         loginObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {

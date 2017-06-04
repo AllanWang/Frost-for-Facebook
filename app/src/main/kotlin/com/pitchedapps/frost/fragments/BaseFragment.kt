@@ -1,7 +1,9 @@
 package com.pitchedapps.frost.fragments
 
+import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import com.pitchedapps.frost.utils.putInt
+import com.pitchedapps.frost.utils.refWatch
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -22,4 +24,8 @@ abstract class BaseFragment : Fragment(), BaseFragmentContract {
         }
     }
 
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        refWatch()
+//    }
 }
