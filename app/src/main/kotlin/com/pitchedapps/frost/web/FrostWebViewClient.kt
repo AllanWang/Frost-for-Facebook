@@ -2,7 +2,10 @@ package com.pitchedapps.frost.web
 
 import android.graphics.Bitmap
 import android.view.KeyEvent
-import android.webkit.*
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie

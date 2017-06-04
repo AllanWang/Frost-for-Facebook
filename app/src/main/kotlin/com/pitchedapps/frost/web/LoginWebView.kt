@@ -11,6 +11,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.circularReveal
+import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.snackbar
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.SingleSubject
@@ -84,7 +85,7 @@ class LoginWebView @JvmOverloads constructor(
             cookieObservable.onNext(Pair(url, CookieManager.getInstance().getCookie(url)))
             CssAssets.LOGIN.inject(view, {
                 if (view.visibility == View.INVISIBLE)
-                    view.circularReveal(offset = 150L)
+                    view.fadeIn(offset = 150L)
             })
         }
     }
