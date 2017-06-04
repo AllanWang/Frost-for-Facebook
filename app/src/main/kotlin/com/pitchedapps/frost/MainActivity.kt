@@ -167,7 +167,7 @@ class MainActivity : BaseLeakActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int) = WebFragment.newInstance(position, pages[position].url)
+        override fun getItem(position: Int) = WebFragment.newInstance(pages[position].url)
 
         override fun getCount() = pages.size
 

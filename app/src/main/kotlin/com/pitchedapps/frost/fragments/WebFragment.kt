@@ -2,6 +2,7 @@ package com.pitchedapps.frost.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +19,11 @@ import io.reactivex.disposables.Disposable
  */
 
 
-class WebFragment : BaseFragment() {
+class WebFragment:Fragment() {
 
     companion object {
         private const val ARG_URL = "arg_url"
-        fun newInstance(position: Int, url: String) = BaseFragment.newInstance(WebFragment(), position).putString(ARG_URL, url)
+        fun newInstance(url: String) = WebFragment().putString(ARG_URL, url)
     }
 
 //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }
@@ -40,7 +41,6 @@ class WebFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
         frostWebView = FrostWebView(context)
-        frostWebView.position = position
         frostWebView.baseUrl = url
         return frostWebView
     }
@@ -78,5 +78,5 @@ class WebFragment : BaseFragment() {
         super.onDetach()
     }
 
-    override fun onBackPressed() = frostWebView.onBackPressed()
+    fun onBackPressed() = frostWebView.onBackPressed()
 }
