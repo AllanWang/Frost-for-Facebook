@@ -93,6 +93,7 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <receiver
             android:name=".services.NotificationReceiver"
             android:enabled="true"
@@ -103,6 +104,9 @@
                 <action android:name="com.pitchedapps.frost.NOTIFICATIONS" />
             </intent-filter>
         </receiver>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabricApiKey}" />
     </application>
 
 </manifest>
