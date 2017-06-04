@@ -85,6 +85,7 @@ dependencies {
     compile "com.jakewharton.timber:timber:${TIMBER}"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
+    releaseTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
 

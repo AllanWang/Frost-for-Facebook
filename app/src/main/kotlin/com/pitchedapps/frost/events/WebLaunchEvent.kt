@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.events
 
 import android.content.Context
-import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**

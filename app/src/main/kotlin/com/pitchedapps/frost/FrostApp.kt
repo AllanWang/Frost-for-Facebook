@@ -29,21 +29,19 @@ import timber.log.Timber.DebugTree
  */
 class FrostApp : Application() {
 
-    companion object {
-        fun refWatcher(c: Context) = (c.applicationContext as FrostApp).refWatcher
-    }
+//    companion object {
+//        fun refWatcher(c: Context) = (c.applicationContext as FrostApp).refWatcher
+//    }
 
     lateinit var refWatcher: RefWatcher
 
     override fun onCreate() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        refWatcher = LeakCanary.install(this);
-        if (BuildConfig.DEBUG) Timber.plant(DebugTree())
-        else {
+        if (LeakCanary.isInAnalyzerProcess(this)) return
+        refWatcher = LeakCanary.install(this)
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+            LeakCanary.enableDisplayLeakActivity(this)
+        } else {
             Fabric.with(this, Crashlytics(), Answers())
             Timber.plant(CrashReportingTree())
         }

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.widget.ImageView
@@ -39,7 +40,7 @@ import kotlin.concurrent.thread
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class LoginActivity : BaseLeakActivity() {
+class LoginActivity : AppCompatActivity() {
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val web: LoginWebView by bindView(R.id.login_webview)

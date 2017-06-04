@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.utils
 
 import android.content.Context
-import android.content.res.Resources
 import android.net.ConnectivityManager
 
 /**
