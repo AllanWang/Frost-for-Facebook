@@ -20,10 +20,7 @@ internal class CrashReportingTree : Timber.Tree() {
     override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
         if (priority == Log.VERBOSE || priority == Log.DEBUG)
             return
-        if (message != null) {
-            Log.println(priority, tag ?: "Frost", message)
-//            Crashlytics.log(priority, tag ?: "Frost", message)
-        }
-//        if (t != null) Crashlytics.logException(t)
+        if (message != null) Crashlytics.log(priority, tag ?: "Frost", message)
+        if (t != null) Crashlytics.logException(t)
     }
 }

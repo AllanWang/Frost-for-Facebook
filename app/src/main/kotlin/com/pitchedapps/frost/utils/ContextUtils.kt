@@ -39,3 +39,10 @@ fun Context.launchWebOverlay(url: String) {
 fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
 }
+
+fun Activity.restart() {
+    finish()
+    overridePendingTransition(0, 0) //No transitions
+    startActivity(intent);
+    overridePendingTransition(0, 0)
+}

@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        viewPager.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+        viewPager.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 viewPager.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 updateTitleListener()
@@ -142,16 +142,13 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> {
 //                startActivity(Intent(this, LoginActivity::class.java))
 //                finish()
+                L.e("Settings")
+                throw IllegalArgumentException("Test")
             }
             R.id.action_changelog -> Changelog.show(this)
             R.id.action_call -> launchNewTask(LoginActivity::class.java)
             R.id.action_db -> adapter.pages.saveAsync(this)
-            R.id.action_restart -> {
-                finish();
-                overridePendingTransition(0, 0); //No transitions
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            }
+            R.id.action_restart -> restart()
             else -> return super.onOptionsItemSelected(item)
         }
         return true

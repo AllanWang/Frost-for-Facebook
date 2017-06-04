@@ -24,6 +24,15 @@ script:
 - "./gradlew assembleReleaseTest"
 notifications:
   email: false
+  slack:
+    rooms:
+    - pitchedapps:G5OB9U1vsDxy9mxt0Nt6gbFu#frost-for-facebook
+    on_success: always
+    on_failure: always
+    template:
+    - "Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) %{result} in %{duration}"
+    - "%{commit_subject}"
+    - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK Download>"
 sudo: false
 cache:
   directories:
