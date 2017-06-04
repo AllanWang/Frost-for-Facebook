@@ -17,19 +17,13 @@ object L {
 }
 
 internal class CrashReportingTree : Timber.Tree() {
-    override fun log(priority: Int, tag: String, message: String, t: Throwable?) {
+    override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
         if (priority == Log.VERBOSE || priority == Log.DEBUG)
             return
-        Log.println(priority, tag, message)
-        Crashlytics.log(priority, tag, message)
-//        FakeCrashLibrary.log(priority, tag, message)
-
-//        if (t != null) {
-//            if (priority == Log.ERROR) {
-//                FakeCrashLibrary.logError(t)
-//            } else if (priority == Log.WARN) {
-//                FakeCrashLibrary.logWarning(t)
-//            }
-//        }
+        if (message != null) {
+            Log.println(priority, tag ?: "Frost", message)
+//            Crashlytics.log(priority, tag ?: "Frost", message)
+        }
+//        if (t != null) Crashlytics.logException(t)
     }
 }

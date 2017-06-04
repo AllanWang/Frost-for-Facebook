@@ -29,12 +29,9 @@ import timber.log.Timber.DebugTree
 class FrostApp : Application() {
 
     override fun onCreate() {
-        val core = CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()
-        Fabric.with(this, core, Answers())
         if (BuildConfig.DEBUG) Timber.plant(DebugTree())
         else {
-
-            Fabric.with(this, Crashlytics())
+            Fabric.with(this, Crashlytics(), Answers())
             Timber.plant(CrashReportingTree())
         }
         FlowManager.init(FlowConfig.Builder(this).build())

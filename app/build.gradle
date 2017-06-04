@@ -34,11 +34,15 @@ android {
 
     buildTypes {
         debug {
+            minifyEnabled false
+            shrinkResources false
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             resValue "string", "app_name", "Frost Debug"
         }
         releaseTest {
+            minifyEnabled true
+            shrinkResources true
             applicationIdSuffix ".test"
             signingConfig signingConfigs.test
             versionNameSuffix "-test"
