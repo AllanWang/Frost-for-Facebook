@@ -106,7 +106,7 @@
         </receiver>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}" />
+            android:value="18b3c223b96b7e7fc1fac372e36b8f4d49a193c7" />
     </application>
 
 </manifest>
