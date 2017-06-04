@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.web
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v4.view.MotionEventCompat
@@ -9,13 +10,14 @@ import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import com.pitchedapps.frost.events.FbAccountEvent
+import com.pitchedapps.frost.utils.L
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -54,7 +56,7 @@ class FrostWebViewCore @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     fun setupWebview() {
         settings.javaScriptEnabled = true
-        settings.domStorageEnabled = true
+//        settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         setWebViewClient(FrostWebViewClient(refreshObservable))
         setWebChromeClient(FrostChromeClient(progressObservable, titleObservable))
@@ -118,6 +120,29 @@ class FrostWebViewCore @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         EventBus.getDefault().unregister(this)
         super.onDetachedFromWindow()
+    }
+
+    /**
+     * If webview is already at the top, refresh
+     * Otherwise scroll to top
+     */
+    fun scrollOrRefresh() {
+        L.d("Scroll or Refresh")
+        if (scrollY < 5) reload()
+        else scrollToTop()
+    }
+
+    fun scrollToTop() {
+        if (scrollY > 1000) scrollTo(0, 0)
+        else {
+            val animator = ValueAnimator.ofInt(scrollY, 0)
+            animator.duration = scrollY.toLong()
+            animator.interpolator = DecelerateInterpolator()
+            animator.addUpdateListener {
+                scrollY = it.animatedValue as Int
+                invalidate()
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
