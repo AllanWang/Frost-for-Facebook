@@ -1,6 +1,7 @@
 package com.pitchedapps.frost
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import butterknife.ButterKnife
 import com.jude.swipbackhelper.SwipeBackHelper
@@ -12,7 +13,7 @@ import com.pitchedapps.frost.web.FrostWebView
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class WebOverlayActivity : BaseLeakActivity() {
+class WebOverlayActivity : AppCompatActivity() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)

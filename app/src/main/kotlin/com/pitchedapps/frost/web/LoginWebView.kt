@@ -10,7 +10,6 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.views.circularReveal
 import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.snackbar
 import io.reactivex.subjects.PublishSubject

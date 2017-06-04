@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -31,7 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
-class MainActivity : BaseLeakActivity() {
+class MainActivity : AppCompatActivity() {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)

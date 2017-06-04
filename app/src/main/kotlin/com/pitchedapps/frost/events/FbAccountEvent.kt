@@ -4,7 +4,6 @@ import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
-import com.pitchedapps.frost.facebook.UsernameFetcher
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewCore
 

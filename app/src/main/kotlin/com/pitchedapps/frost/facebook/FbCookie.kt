@@ -5,10 +5,8 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.removeCookie
 import com.pitchedapps.frost.dbflow.saveFbCookie
-import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by Allan Wang on 2017-05-30.

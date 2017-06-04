@@ -10,9 +10,7 @@ import android.widget.ProgressBar
 import butterknife.ButterKnife
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.bindView
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 
 /**
  * Created by Allan Wang on 2017-06-01.
