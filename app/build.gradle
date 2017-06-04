@@ -41,8 +41,8 @@ android {
             resValue "string", "app_name", "Frost Debug"
         }
         releaseTest {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             applicationIdSuffix ".test"
             signingConfig signingConfigs.test
             versionNameSuffix "-test"
