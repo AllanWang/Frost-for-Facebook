@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.EventBus
  */
 object FbCookie {
 
-    var dbCookie: String? = null
     var webCookie: String?
         get() = CookieManager.getInstance().getCookie(FB_URL_BASE)
         set(value) {
@@ -25,7 +24,7 @@ object FbCookie {
 
     operator fun invoke() {
         L.d("User ${Prefs.userId}")
-        dbCookie = loadFbCookie(Prefs.userId)?.cookie
+        val dbCookie = loadFbCookie(Prefs.userId)?.cookie
         if (dbCookie != null && webCookie == null) {
             L.d("DbCookie found & WebCookie is null; setting webcookie")
             webCookie = dbCookie
@@ -55,8 +54,7 @@ object FbCookie {
     fun switchUser(cookie: CookieModel?) {
         if (cookie == null) return
         Prefs.userId = cookie.id
-        dbCookie = cookie.cookie
-        webCookie = dbCookie
+        webCookie = cookie.cookie
         //TODO add webview refresh event
     }
 

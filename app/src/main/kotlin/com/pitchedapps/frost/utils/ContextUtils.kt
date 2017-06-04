@@ -18,9 +18,9 @@ import com.pitchedapps.frost.facebook.FbTab
 private const val EXTRA_COOKIES = "extra_cookies"
 private const val ARG_URL = "arg_url"
 
-fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf()) {
+fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = true) {
     val intent = (Intent(this, clazz))
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    if (clearStack) intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     startActivity(intent)
     if (this is Activity) finish()

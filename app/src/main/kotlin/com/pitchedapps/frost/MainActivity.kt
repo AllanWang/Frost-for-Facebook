@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -23,16 +22,14 @@ import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.saveAsync
-import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import io.reactivex.subjects.PublishSubject
 
 class MainActivity : BaseLeakActivity() {
 
@@ -45,6 +42,7 @@ class MainActivity : BaseLeakActivity() {
     lateinit var drawerHeader: AccountHeader
     val cookies: ArrayList<CookieModel> by lazy { cookies() }
     var titleDisposable: Disposable? = null
+    var refreshObservable = PublishSubject.create<Unit>().observeOn(AndroidSchedulers.mainThread())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +92,12 @@ class MainActivity : BaseLeakActivity() {
 
     fun setupTabs() {
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
+        tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                super.onTabReselected(tab)
+                currentFragment.web.scrollOrRefresh()
+            }
+        })
         adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this))) }
     }
 
@@ -171,16 +174,4 @@ class MainActivity : BaseLeakActivity() {
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun accountEvent(event: FbAccountEvent) = event.execute(drawerHeader)
-
-    override fun onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    override fun onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
 }
