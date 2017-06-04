@@ -10,3 +10,5 @@
 /app/src/main/res/values/strings_facebook.xml
 /app/src/main/kotlin/com/pitchedapps/frost/facebook/Private.kt
 *.min.css
+/app/src/main/res/values/fabric.xml
+fabric.properties

@@ -1,6 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'io.fabric'
 
+def fabricProps = new Properties()
+file("../fabric.properties").withInputStream {
+    stream -> fabricProps.load(stream)
+}
+def FABRIC_API_KEY = System.env.FABRIC_API_KEY ?: fabricProps.getProperty('FABRIC_API_KEY', 'empty')
+println 'Fabric ' + FABRIC_API_KEY
 android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
@@ -13,6 +20,7 @@ android {
         versionName project.VERSION_NAME
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [fabricApiKey: FABRIC_API_KEY]
     }
 
     applicationVariants.all { variant ->
@@ -142,6 +150,10 @@ dependencies {
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     compile "com.jude:swipebackhelper:${SWIPE_BACK}"
+
+    compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
+        transitive = true;
+    }
 }
 
 kapt {
