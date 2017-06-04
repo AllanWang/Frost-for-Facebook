@@ -37,11 +37,12 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
         inflate(getContext(), R.layout.swipe_webview, this)
         ButterKnife.bind(this)
         web.progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            val loaded = it == 100
-            refresh.isRefreshing = !loaded
-            progress.visibility = if (loaded) View.INVISIBLE else View.VISIBLE
+            progress.visibility = if (it == 100) View.INVISIBLE else View.VISIBLE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) progress.setProgress(it, true)
             else progress.progress = it
+        }
+        web.refreshObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+            refresh.isRefreshing = it
         }
         refresh.setOnRefreshListener(this)
         addOnAttachStateChangeListener(object : OnAttachStateChangeListener {

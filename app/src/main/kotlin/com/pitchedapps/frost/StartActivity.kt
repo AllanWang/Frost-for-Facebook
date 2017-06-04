@@ -9,7 +9,7 @@ import com.pitchedapps.frost.utils.launchNewTask
 /**
  * Created by Allan Wang on 2017-05-28.
  */
-class StartActivity : AppCompatActivity() {
+class StartActivity : BaseLeakActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

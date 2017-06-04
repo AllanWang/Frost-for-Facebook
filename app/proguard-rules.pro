@@ -1,5 +1,5 @@
 -ignorewarnings
-
+-dontwarn kotlin.**
 -keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
 -keepattributes *Annotation*
 #EventBus

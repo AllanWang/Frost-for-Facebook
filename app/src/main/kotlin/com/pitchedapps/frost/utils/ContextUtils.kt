@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import com.pitchedapps.frost.FrostApp
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -46,3 +48,9 @@ fun Activity.restart() {
     startActivity(intent);
     overridePendingTransition(0, 0)
 }
+
+fun Context.refWatch() {
+    FrostApp.refWatcher(this).watch(this)
+}
+
+fun Fragment.refWatch() = context.refWatch()
