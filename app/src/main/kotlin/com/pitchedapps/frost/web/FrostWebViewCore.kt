@@ -43,7 +43,6 @@ class FrostWebViewCore @JvmOverloads constructor(
     val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
     var baseUrl: String? = null
-    var position: Int = -1
 
     init {
         isNestedScrollingEnabled = true

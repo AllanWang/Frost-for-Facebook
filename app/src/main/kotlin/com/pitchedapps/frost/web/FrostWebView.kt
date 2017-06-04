@@ -27,11 +27,6 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
     val refresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     val web: FrostWebViewCore by bindView(R.id.frost_webview_core)
     val progress: ProgressBar by bindView(R.id.progressBar)
-    var position: Int
-        get() = web.position
-        set(value) {
-            web.position = value
-        }
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)
