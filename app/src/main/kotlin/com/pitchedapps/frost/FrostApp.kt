@@ -40,7 +40,7 @@ class FrostApp : Application() {
         refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
-            LeakCanary.enableDisplayLeakActivity(this)
+//            LeakCanary.enableDisplayLeakActivity(this)
         } else {
             Fabric.with(this, Crashlytics(), Answers())
             Timber.plant(CrashReportingTree())
