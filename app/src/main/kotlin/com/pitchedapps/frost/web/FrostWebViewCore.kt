@@ -12,15 +12,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
-import com.pitchedapps.frost.events.FbAccountEvent
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -111,16 +107,6 @@ class FrostWebViewCore @JvmOverloads constructor(
         return returnValue
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        EventBus.getDefault().register(this);
-    }
-
-    override fun onDetachedFromWindow() {
-        EventBus.getDefault().unregister(this)
-        super.onDetachedFromWindow()
-    }
-
     /**
      * If webview is already at the top, refresh
      * Otherwise scroll to top
@@ -143,9 +129,6 @@ class FrostWebViewCore @JvmOverloads constructor(
             }
         }
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun webEvent(event: FbAccountEvent) = event.execute(this)
 
     // Nested Scroll implements
     override fun setNestedScrollingEnabled(enabled: Boolean) {
