@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var titleDisposable: Disposable? = null
-    var refreshObservable = PublishSubject.create<Unit>().observeOn(AndroidSchedulers.mainThread())
+    var refreshObservable = PublishSubject.create<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,6 +133,10 @@ class MainActivity : AppCompatActivity() {
             launchWebOverlay(item.url)
             false
         }
+    }
+
+    fun refreshAll() {
+        refreshObservable.onNext(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

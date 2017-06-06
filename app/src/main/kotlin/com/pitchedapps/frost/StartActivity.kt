@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 
 /**
@@ -17,10 +18,12 @@ class StartActivity : AppCompatActivity() {
         loadFbCookiesAsync {
             cookies ->
             L.d("Cookies loaded ${System.currentTimeMillis()} $cookies")
-            if (cookies.isNotEmpty())
-                launchNewTask(MainActivity::class.java, ArrayList(cookies))
-            else
-                launchNewTask(LoginActivity::class.java)
+            if (cookies.isNotEmpty()) {
+                if (Prefs.userId != Prefs.userIdDefault)
+                    launchNewTask(MainActivity::class.java, ArrayList(cookies))
+                else
+                    launchNewTask(SelectorActivity::class.java, ArrayList(cookies))
+            } else launchNewTask(LoginActivity::class.java)
         }
     }
 }
