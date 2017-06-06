@@ -93,6 +93,9 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SelectorActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".services.NotificationReceiver"

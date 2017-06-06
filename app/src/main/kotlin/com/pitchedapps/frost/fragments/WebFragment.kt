@@ -11,6 +11,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.putString
 import com.pitchedapps.frost.web.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewCore
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 /**
@@ -18,14 +19,14 @@ import io.reactivex.disposables.Disposable
  */
 
 
-class WebFragment:Fragment() {
+class WebFragment : Fragment() {
 
     companion object {
         private const val ARG_URL = "arg_url"
         fun newInstance(url: String) = WebFragment().putString(ARG_URL, url)
     }
 
-//    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }
+    //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }
     val web: FrostWebViewCore by lazy { frostWebView.web }
     lateinit var url: String
     lateinit private var frostWebView: FrostWebView
@@ -65,8 +66,9 @@ class WebFragment:Fragment() {
         super.onAttach(context)
         refreshDisposable?.dispose()
         if (context is MainActivity)
-            refreshDisposable = context.refreshObservable.subscribe {
-                web.clearHistory()
+            refreshDisposable = context.refreshObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                clearHistory ->
+                if (clearHistory) web.clearHistory()
                 web.loadBaseUrl()
             }
     }

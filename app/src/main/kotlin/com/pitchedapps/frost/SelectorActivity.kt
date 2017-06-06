@@ -2,9 +2,11 @@ package com.pitchedapps.frost
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import butterknife.ButterKnife
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.bindView
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.views.AccountItem
@@ -21,7 +23,9 @@ class SelectorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selector)
         ButterKnife.bind(this)
+        recycler.layoutManager = GridLayoutManager(this, 2)
         recycler.adapter = adapter
+        L.d("Selector ${cookies()}")
         adapter.add(cookies().map { AccountItem(it) })
         adapter.add(AccountItem()) // add account
     }
