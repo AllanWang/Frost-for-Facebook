@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.bindView
 
@@ -21,6 +22,7 @@ import com.pitchedapps.frost.utils.bindView
  */
 class AccountItem(val id: Long, val name: String) : AbstractItem<AccountItem, AccountItem.ViewHolder>() {
     constructor() : this(-1L, "")
+    constructor(cookie: CookieModel) : this(cookie.id, cookie.name ?: "")
 
     override fun getType(): Int = R.id.item_account
 
