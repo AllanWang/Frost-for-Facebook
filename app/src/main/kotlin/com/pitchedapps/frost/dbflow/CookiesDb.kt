@@ -36,8 +36,11 @@ data class CookieModel(@PrimaryKey var id: Long = Prefs.userIdDefault, var name:
 fun loadFbCookie(id: Long): CookieModel? = (select from CookieModel::class where (CookieModel_Table.id eq id)).querySingle()
 fun loadFbCookie(name: String): CookieModel? = (select from CookieModel::class where (CookieModel_Table.name eq name)).querySingle()
 
+/**
+ * Loads cookies sorted by name
+ */
 fun loadFbCookiesAsync(callback: (cookies: List<CookieModel>) -> Unit) {
-    (select from CookieModel::class).async().queryListResultCallback { _, tResult -> callback.invoke(tResult) }.execute()
+    (select from CookieModel::class).orderBy(CookieModel_Table.name, true).async().queryListResultCallback { _, tResult -> callback.invoke(tResult) }.execute()
 }
 
 fun saveFbCookie(cookie: CookieModel, callback: (() -> Unit)? = null) {
