@@ -16,6 +16,8 @@ before_install:
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+before_script:
+- echo "apiSecret=$FABRIC_SECRET" > app/fabric.properties
 after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
@@ -30,9 +32,11 @@ notifications:
     on_success: always
     on_failure: always
     template:
-    - "Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) %{result} in %{duration}"
+    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) %{result}
+      in %{duration}
     - "%{commit_subject}"
-    - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK Download>"
+    - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
+      Download>"
 sudo: false
 cache:
   directories:
@@ -40,3 +44,4 @@ cache:
 env:
   global:
   - secure: Sob0b0PXhJ5uq+quf74Vl/jWaJ0RVGqTcn83p45iQI/OCEvCLyLk4FojDrtEuu1wUrWNYnv4EpX2WcAUO8+93e93Y3XIfSltXOWnXtM6usSMm7/2iiT1nR0Q6L1mC0rFLvkkhnm1mlq1DGOZKB3eI6WJKx0+/oX3gWUWgmeTsTln7YjQl/QHIk4tJFt3K+DE0fDJfo561OawC2UUPESULv5O/fd4fbnVIcJYJDBciPqT/PNJ+Rx3DqKO3BKam6+ulv5fByCcPaDXiJ7NfWw+ggpgEBZaIoGy/UL6/it1LiDXRE2yHE1kRTjMOmiCd71pL26J0n4c+o2ldTSMz0dScmbA4c+elQDwCjtnXw21B/pNavRvhGX6iqRl2A3z5/ivVf6foSpCSzLm6FZSizAnMBAa0TxmPiM4F3QWvwtF6Rgo7hD/iuTVUW4i6mOIDfTWRPD4Ha6zdkj6OCRZ1OsIuw3OiYZNtlytX7aTyHIC2aoZw0sUkExbE/3fCP1Ej6632zxGjhof8jlvrnFJZacf921Q0/4O52H6KaQM6L0CV+YpPuctsEkFeoZ6xR0WXS9RTmCyGC3J6Qv+GWlbkFyLsphz43HSaGb8pIrljjmP1N7Q/7Oft54yEwbT6s8pXmBymkVeJQuyKTHzg5yyZgddWbiWM20kN6RA8jnykTMy5FU=
+  - secure: gBv1cAGcw8Nv/n+dprdgG/IFuVqPnyNc+MvJBGTf/s7F6tYRHcP+2l+PUr4I07Ao7XtF1w9xLdeU2JbeM40mjACo/SzIrtOIh6Rehdep/VNO3d5p06qykM3sGL2DlWfA5ALFmtRwFZwKMJ0mZKbOd0kYih85CWw17EL//k+HnIodIHlL81h8ke9Y2AgwDgoXrEqn5Ooz9YtYGKyZhTqyqDOkGuab22twVPBC7SP08XT5zCt7YVPUvKCTizGt2EtttQObqJ0CF9YRB2U9tw4fNqD+yIX8eVw6DGgXLCbFlJ09u7M5UXMTMy0KBl4MYnfLRVWQ3koBzADp6C4wQvBx2j3I4Sea/hIpUZ7QpT+aN6krkKzIiSIPLXgbBeZxaDOcLqllVXxUP8t8uYNejd20AMSXh7MjI105aQ8qsFwGMJXteAZGDN1haiUCdtouqbjkB3ZFsRtAzW5/boutcVyZMyiXXjxekQPPrXdizrPGlI/sKTsAfQBqf4e5JVopRG4FLIEwI8WohU4FqgFN5AHiGDrtNpMtt/S7omXgAZ2s3AaF7Liseu5JzGhtbI4vSEYs55wrXZTeXvZ0s+x7aiMAemHZSDFYSyiOs0xTXdANaTQ6W7nBucmwiQyubl+fRf+NpyrKxdU6pgDNjYCUdrOpU11oAG/KR6IhkRbNVYWf4EY=

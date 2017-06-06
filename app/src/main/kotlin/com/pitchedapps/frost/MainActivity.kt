@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
     val tabs: TabLayout by bindView(R.id.tabs)
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
-    val cookies: ArrayList<CookieModel> by lazy { cookies() }
     var titleDisposable: Disposable? = null
     var refreshObservable = PublishSubject.create<Unit>().observeOn(AndroidSchedulers.mainThread())
 
@@ -108,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             savedInstance = savedInstanceState
             translucentStatusBar = false
             drawerHeader = accountHeader {
-                cookies.forEach { (id, name) ->
+                cookies().forEach { (id, name) ->
                     profile(name = name ?: "") {
                         iconUrl = PROFILE_PICTURE_URL(id)
                         identifier = id
@@ -144,10 +143,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
+                launchNewTask(SelectorActivity::class.java, cookies())
 //                startActivity(Intent(this, LoginActivity::class.java))
 //                finish()
-                L.e("Settings")
-                throw IllegalArgumentException("Test")
             }
             R.id.action_changelog -> Changelog.show(this)
             R.id.action_call -> launchNewTask(LoginActivity::class.java)

@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import butterknife.ButterKnife
-import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.pitchedapps.frost.utils.bindView
+import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.views.AccountItem
 
 /**
@@ -21,6 +22,7 @@ class SelectorActivity : AppCompatActivity() {
         setContentView(R.layout.activity_selector)
         ButterKnife.bind(this)
         recycler.adapter = adapter
-        adapter.addal
+        adapter.add(cookies().map { AccountItem(it) })
+        adapter.add(AccountItem()) // add account
     }
 }
