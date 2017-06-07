@@ -11,9 +11,10 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import android.webkit.CookieManager
 import android.webkit.WebView
+import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.cookies
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -56,6 +57,7 @@ class FrostWebViewCore @JvmOverloads constructor(
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         setWebViewClient(FrostWebViewClient(refreshObservable))
         setWebChromeClient(FrostChromeClient(progressObservable, titleObservable))
+        addJavascriptInterface(FrostJSI(context), "Frost")
     }
 
     override fun loadUrl(url: String?) {

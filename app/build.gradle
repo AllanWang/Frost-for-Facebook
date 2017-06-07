@@ -92,6 +92,7 @@ dependencies {
 
     //Dialog
     compile "com.afollestad.material-dialogs:core:${MATERIAL_DIALOG}"
+    compile "com.afollestad.material-dialogs:commons:${MATERIAL_DIALOG}"
 
     compile "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"

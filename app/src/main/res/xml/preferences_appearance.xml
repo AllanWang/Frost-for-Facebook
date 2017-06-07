@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<com.afollestad.materialdialogs.prefs.MaterialDialogPreference-->
+        <!--android:dialogIcon="@mipmap/ic_launcher"-->
+        <!--android:dialogMessage="@string/preference_dialog_message"-->
+        <!--android:dialogTitle="Title Color"-->
+        <!--android:key="unused_key00"-->
+        <!--android:negativeButtonText="@android:string/cancel"-->
+        <!--android:positiveButtonText="@android:string/ok"-->
+        <!--android:summary="@string/material_dialog_pref_summary"-->
+        <!--android:title="@string/material_dialog_pref_title" />-->
+</PreferenceScreen>
