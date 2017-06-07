@@ -17,9 +17,9 @@ import com.pitchedapps.frost.facebook.FbTab
 private const val EXTRA_COOKIES = "extra_cookies"
 private const val ARG_URL = "arg_url"
 
-fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = true) {
+fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf()) {
     val intent = (Intent(this, clazz))
-    if (clearStack && (clazz != LoginActivity::class.java)) intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    if (clazz != LoginActivity::class.java) intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     startActivity(intent)
     if (this is Activity) finish()
@@ -41,9 +41,15 @@ fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
 }
 
-fun Activity.restart() {
-    finish()
+fun Activity.restart(extras: ((Intent) -> Unit)? = null) {
+    val i = Intent(this, this::class.java)
+    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+    extras?.invoke(i)
+    startActivity(i)
     overridePendingTransition(0, 0) //No transitions
-    startActivity(intent);
+    finish()
     overridePendingTransition(0, 0)
 }
+
+fun Int.toString(c: Context) = c.getString(this)
+fun Int.toColor(c: Context) = ContextCompat.getColor(c, this)

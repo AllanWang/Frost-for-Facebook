@@ -18,12 +18,10 @@ class StartActivity : AppCompatActivity() {
         loadFbCookiesAsync {
             cookies ->
             L.d("Cookies loaded ${System.currentTimeMillis()} $cookies")
-            if (cookies.isNotEmpty()) {
-                if (Prefs.userId != Prefs.userIdDefault)
-                    launchNewTask(MainActivity::class.java, ArrayList(cookies))
-                else
-                    launchNewTask(SelectorActivity::class.java, ArrayList(cookies))
-            } else launchNewTask(LoginActivity::class.java)
+            if (cookies.isNotEmpty())
+                launchNewTask(if (Prefs.userId != Prefs.userIdDefault) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
+            else
+                launchNewTask(LoginActivity::class.java)
         }
     }
 }

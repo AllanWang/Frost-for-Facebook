@@ -48,7 +48,7 @@ class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebViewClien
         if (c is MainActivity && c.cookies().isNotEmpty())
             c.launchNewTask(SelectorActivity::class.java, c.cookies())
         else
-            c.launchNewTask(LoginActivity::class.java, clearStack = false)
+            c.launchNewTask(LoginActivity::class.java)
     }
 
     override fun onPageFinished(view: WebView, url: String) {
