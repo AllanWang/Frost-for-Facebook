@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
+import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -18,7 +19,7 @@ private const val ARG_URL = "arg_url"
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = true) {
     val intent = (Intent(this, clazz))
-    if (clearStack) intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    if (clearStack && (clazz != LoginActivity::class.java)) intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     startActivity(intent)
     if (this is Activity) finish()

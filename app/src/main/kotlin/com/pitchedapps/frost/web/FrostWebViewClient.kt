@@ -1,17 +1,19 @@
 package com.pitchedapps.frost.web
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.view.KeyEvent
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.pitchedapps.frost.LoginActivity
+import com.pitchedapps.frost.MainActivity
+import com.pitchedapps.frost.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.circularReveal
 import com.pitchedapps.frost.views.fadeOut
@@ -34,22 +36,26 @@ class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebViewClien
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         L.i("FWV Loading $url")
+        L.i("Cookies ${CookieManager.getInstance().getCookie(url)}")
         refreshObservable.onNext(true)
         if (!url.contains(FACEBOOK_COM)) return
-        if (url.contains("logout.php")) {
-            FbCookie.logout(Prefs.userId)
-            view.context.launchNewTask(LoginActivity::class.java)
-        } else if (url.contains("login.php")) {
-            FbCookie.reset()
-            view.context.launchNewTask(LoginActivity::class.java)
-        }
+        if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
+        else if (url.contains("login.php")) FbCookie.reset({ launchLogin(view.context) })
         view.fadeOut(duration = 200L)
+    }
+
+    fun launchLogin(c: Context) {
+        if (c is MainActivity && c.cookies().isNotEmpty())
+            c.launchNewTask(SelectorActivity::class.java, c.cookies())
+        else
+            c.launchNewTask(LoginActivity::class.java, clearStack = false)
     }
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
         refreshObservable.onNext(false)
         if (!url.contains(FACEBOOK_COM)) return
+        JsActions.LOGIN_CHECK.inject(view)
         CssAssets.HEADER.inject(view, {
             view.circularReveal(offset = 150L)
         })

@@ -20,7 +20,6 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
@@ -28,7 +27,6 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
@@ -42,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var titleDisposable: Disposable? = null
-    var refreshObservable = PublishSubject.create<Boolean>()
+    var refreshObservable = PublishSubject.create<Boolean>()!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 onProfileChanged { _, profile, current ->
                     if (current) launchWebOverlay(FbTab.PROFILE.url)
-                    else switchUser(profile.name.text)
+                    else switchUser(profile.identifier, { refreshObservable.onNext(true) })
                     false
                 }
             }

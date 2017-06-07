@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.webkit.CookieManager
 import android.webkit.WebView
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Scheduler
@@ -113,7 +114,7 @@ class FrostWebViewCore @JvmOverloads constructor(
      */
     fun scrollOrRefresh() {
         L.d("Scroll or Refresh")
-        if (scrollY < 5) reload()
+        if (scrollY < 5) loadBaseUrl()
         else scrollToTop()
     }
 

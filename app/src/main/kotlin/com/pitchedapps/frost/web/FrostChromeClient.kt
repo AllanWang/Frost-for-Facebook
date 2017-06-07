@@ -12,16 +12,14 @@ import io.reactivex.subjects.Subject
  */
 class FrostChromeClient(val progressObservable: Subject<Int>, val titleObservable: BehaviorSubject<String>) : WebChromeClient() {
 
-
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        L.d("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
+        L.v("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
         return super.onConsoleMessage(consoleMessage)
     }
 
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
         if (title.contains("http") || titleObservable.value == title) return
-//        L.v("Title $title")
         titleObservable.onNext(title)
     }
 
@@ -29,6 +27,5 @@ class FrostChromeClient(val progressObservable: Subject<Int>, val titleObservabl
         super.onProgressChanged(view, newProgress)
         progressObservable.onNext(newProgress)
     }
-
 
 }
