@@ -22,7 +22,11 @@ enum class CssAssets {
             injector = JsBuilder().css(content).build()
         }
         injector!!.inject(webView, callback)
-        L.d("CSS ${injector!!.function}")
+        L.v("CSS ${injector!!.function}")
+    }
+
+    fun reset() {
+        injector = null
     }
 
 }

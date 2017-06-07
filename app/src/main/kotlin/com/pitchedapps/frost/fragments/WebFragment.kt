@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pitchedapps.frost.MainActivity
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.putString
 import com.pitchedapps.frost.web.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewCore
@@ -75,9 +75,27 @@ class WebFragment : Fragment() {
 
     override fun onDetach() {
         refreshDisposable?.dispose()
-        L.d("F Detatch")
         super.onDetach()
     }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onResume() {
+        super.onResume()
+        pauseLoad = false
+        firstLoad()
+    }
+
+    override fun onPause() {
+        pauseLoad = true
+        super.onPause()
+    }
+
+    var pauseLoad: Boolean
+        get() = web.settings.blockNetworkLoads
+        set(value) {
+            web.settings.blockNetworkLoads = value
+        }
+
 
     fun onBackPressed() = frostWebView.onBackPressed()
 }

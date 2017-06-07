@@ -33,11 +33,11 @@ class FrostApp : Application() {
 //        fun refWatcher(c: Context) = (c.applicationContext as FrostApp).refWatcher
 //    }
 
-    lateinit var refWatcher: RefWatcher
+//    lateinit var refWatcher: RefWatcher
 
     override fun onCreate() {
-        if (LeakCanary.isInAnalyzerProcess(this)) return
-        refWatcher = LeakCanary.install(this)
+//        if (LeakCanary.isInAnalyzerProcess(this)) return
+//        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
 //            LeakCanary.enableDisplayLeakActivity(this)

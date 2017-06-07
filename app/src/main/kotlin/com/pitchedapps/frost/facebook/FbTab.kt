@@ -14,7 +14,7 @@ enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Stri
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event, "events/upcoming"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_people, "friends/center/requests"),
-    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages?disable_interstitial=1&rdr"),
+    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
     NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
     PAGES(R.string.pages, GoogleMaterial.Icon.gmd_flag, "pages"),

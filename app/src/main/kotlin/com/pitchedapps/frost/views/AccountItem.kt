@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.views
 
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.RecyclerView
@@ -9,24 +8,23 @@ import android.widget.ImageView
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.bindView
+import com.pitchedapps.frost.utils.toDrawable
 
 /**
  * Created by Allan Wang on 2017-06-05.
  */
-class AccountItem(val id: Long, val name: String) : AbstractItem<AccountItem, AccountItem.ViewHolder>() {
-    constructor() : this(-1L, "")
-    constructor(cookie: CookieModel) : this(cookie.id, cookie.name ?: "")
+class AccountItem(val cookie: CookieModel?) : AbstractItem<AccountItem, AccountItem.ViewHolder>() {
 
     override fun getType(): Int = R.id.item_account
 
@@ -38,10 +36,10 @@ class AccountItem(val id: Long, val name: String) : AbstractItem<AccountItem, Ac
         super.bindView(viewHolder, payloads)
         with(viewHolder) {
             text.visibility = View.INVISIBLE
-            if (id != -1L) {
-                text.text = name
+            if (cookie != null) {
+                text.text = cookie.name
                 val options = RequestOptions().transform(CircleCrop())
-                Glide.with(itemView).load(PROFILE_PICTURE_URL(id)).apply(options).listener(object : RequestListener<Drawable> {
+                Glide.with(itemView).load(PROFILE_PICTURE_URL(cookie.id)).apply(options).listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                         text.fadeIn()
                         return false
@@ -54,6 +52,7 @@ class AccountItem(val id: Long, val name: String) : AbstractItem<AccountItem, Ac
                 }).into(image)
             } else {
                 text.visibility = View.VISIBLE
+                image.setImageDrawable(GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(itemView.context, 100))
                 text.text = itemView.context.getString(R.string.add_account)
                 //todo add plus image
             }
@@ -68,7 +67,7 @@ class AccountItem(val id: Long, val name: String) : AbstractItem<AccountItem, Ac
         }
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
         val image: ImageView by bindView(R.id.account_image)
         val text: AppCompatTextView by bindView(R.id.account_text)
 
