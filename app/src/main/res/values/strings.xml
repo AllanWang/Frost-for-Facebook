@@ -2,10 +2,8 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-
     <string name="changelog">Changelog</string>
     <string name="great">Great</string>
-    <string name="u2022">•</string>
     <string name="feed">Feed</string>
     <string name="most_recent">Most Recent</string>
     <string name="top_stories">Top Stories</string>
