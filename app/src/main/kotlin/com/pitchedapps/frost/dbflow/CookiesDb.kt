@@ -3,7 +3,6 @@ package com.pitchedapps.frost.dbflow
 import android.os.Parcel
 import android.os.Parcelable
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -24,7 +23,7 @@ object CookiesDb {
 
 @PaperParcel
 @Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
-data class CookieModel(@PrimaryKey var id: Long = Prefs.userIdDefault, var name: String? = null, var cookie: String? = null) : BaseModel(), Parcelable {
+data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null, var cookie: String? = null) : BaseModel(), Parcelable {
     companion object {
         @JvmField val CREATOR = PaperParcelCookieModel.CREATOR
     }

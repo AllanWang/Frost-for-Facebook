@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import ca.allanwang.kau.utils.withBundle
 import com.pitchedapps.frost.MainActivity
-import com.pitchedapps.frost.utils.putString
 import com.pitchedapps.frost.web.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewCore
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,7 +23,9 @@ class WebFragment : Fragment() {
 
     companion object {
         private const val ARG_URL = "arg_url"
-        fun newInstance(url: String) = WebFragment().putString(ARG_URL, url)
+        operator fun invoke(url: String) = WebFragment().withBundle {
+            putString(ARG_URL, url)
+        }
     }
 
     //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }

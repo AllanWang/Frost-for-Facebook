@@ -21,7 +21,7 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.bindView
+import ca.allanwang.kau.utils.bindView
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.fadeOut
@@ -65,7 +65,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        ButterKnife.bind(this)
         setSupportActionBar(toolbar)
         setTitle(R.string.login)
         web.loginObservable = loginObservable

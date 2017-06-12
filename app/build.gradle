@@ -61,6 +61,10 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
     }
+
+    packagingOptions {
+        pickFirst 'META-INF/library_release.kotlin_module'
+    }
 }
 
 dependencies {
@@ -70,29 +74,15 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
+    compile "ca.allanwang:kau:${KAU}"
+
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-
-    compile "com.android.support:appcompat-v7:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support:support-v4:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support:support-v13:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support:design:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support:recyclerview-v7:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support:cardview-v7:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support:preference-v14:${ANDROID_SUPPORT_LIBS}"
-    compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT}"
-
-    //Logging
-    compile "com.jakewharton.timber:timber:${TIMBER}"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
     releaseTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
-
-    //Dialog
-    compile "com.afollestad.material-dialogs:core:${MATERIAL_DIALOG}"
-    compile "com.afollestad.material-dialogs:commons:${MATERIAL_DIALOG}"
 
     compile "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
@@ -107,21 +97,14 @@ dependencies {
     testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
 
     //Icons
-    compile "com.mikepenz:iconics-core:${ICONICS}@aar"
     compile "com.mikepenz:google-material-typeface:${IICON_GOOGLE}.original@aar"
     compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
     compile "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
-
-    //Butterknife
-    compile "com.jakewharton:butterknife:${BUTTERKNIFE}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${BUTTERKNIFE}"
 
     compile "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
     compile "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
     compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
-
-//    compile "org.greenrobot:eventbus:${EVENT_BUS}"
 
 //    compile "com.facebook.stetho:stetho-okhttp3:${STETHO}"
 
@@ -145,11 +128,10 @@ dependencies {
 
     compile "com.f2prateek.rx.preferences2:rx-preferences:${RX_PREFS}"
 
-//    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
-//        transitive = true
-//    }
+    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
+        transitive = true
+    }
     compile "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
-    compile "com.mikepenz:fastadapter-commons:${FAST_ADAPTER}@aar"
 
     compile "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
     compile "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"

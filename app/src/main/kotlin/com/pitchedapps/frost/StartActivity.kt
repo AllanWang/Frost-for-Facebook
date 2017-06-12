@@ -19,7 +19,7 @@ class StartActivity : AppCompatActivity() {
             cookies ->
             L.d("Cookies loaded ${System.currentTimeMillis()} $cookies")
             if (cookies.isNotEmpty())
-                launchNewTask(if (Prefs.userId != Prefs.userIdDefault) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
+                launchNewTask(if (Prefs.userId != -1L) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
             else
                 launchNewTask(LoginActivity::class.java)
         }
