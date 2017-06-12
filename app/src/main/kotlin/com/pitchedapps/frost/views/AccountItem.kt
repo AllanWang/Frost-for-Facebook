@@ -5,7 +5,8 @@ import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
-import butterknife.ButterKnife
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.toDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -18,8 +19,6 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
-import com.pitchedapps.frost.utils.bindView
-import com.pitchedapps.frost.utils.toDrawable
 
 /**
  * Created by Allan Wang on 2017-06-05.
@@ -70,9 +69,5 @@ class AccountItem(val cookie: CookieModel?) : AbstractItem<AccountItem, AccountI
     class ViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
         val image: ImageView by bindView(R.id.account_image)
         val text: AppCompatTextView by bindView(R.id.account_text)
-
-        init {
-            ButterKnife.bind(v)
-        }
     }
 }

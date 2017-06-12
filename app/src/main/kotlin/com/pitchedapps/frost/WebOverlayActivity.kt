@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import butterknife.ButterKnife
+import ca.allanwang.kau.utils.bindView
 import com.jude.swipbackhelper.SwipeBackHelper
-import com.pitchedapps.frost.utils.bindView
+import ca.allanwang.kau.utils.bindView
 import com.pitchedapps.frost.utils.url
 import com.pitchedapps.frost.web.FrostWebView
 
@@ -21,7 +22,6 @@ class WebOverlayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_overlay)
-        ButterKnife.bind(this)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -46,7 +46,7 @@ class FrostApp : Application() {
             Timber.plant(CrashReportingTree())
         }
         FlowManager.init(FlowConfig.Builder(this).build())
-        Prefs(this)
+        Prefs.initialize(this, "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs")
         FbCookie()
         super.onCreate()
 

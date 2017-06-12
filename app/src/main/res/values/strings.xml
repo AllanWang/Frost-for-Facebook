@@ -27,4 +27,6 @@
     <string name="login">Login</string>
     <string name="select_facebook_account">Select Facebook Account</string>
     <string name="add_account">Add Account</string>
+    <string name="add_account_desc">Add Facebook Account</string>
+    <string name="manage_account">Manage Account</string>
 </resources>

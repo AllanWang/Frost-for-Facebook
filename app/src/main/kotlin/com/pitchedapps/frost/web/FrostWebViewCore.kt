@@ -3,7 +3,6 @@ package com.pitchedapps.frost.web
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.MotionEventCompat
 import android.support.v4.view.NestedScrollingChild
 import android.support.v4.view.NestedScrollingChildHelper
 import android.support.v4.view.ViewCompat
@@ -12,9 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
-import com.pitchedapps.frost.MainActivity
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -53,6 +50,7 @@ class FrostWebViewCore @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     fun setupWebview() {
         settings.javaScriptEnabled = true
+        settings.userAgentString = USER_AGENT_BASIC
 //        settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         setWebViewClient(FrostWebViewClient(refreshObservable))
@@ -72,7 +70,7 @@ class FrostWebViewCore @JvmOverloads constructor(
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         val event = MotionEvent.obtain(ev)
-        val action = MotionEventCompat.getActionMasked(event)
+        val action = event.action
         if (action == MotionEvent.ACTION_DOWN)
             nestedOffsetY = 0
         val eventY = event.y.toInt()
@@ -115,21 +113,20 @@ class FrostWebViewCore @JvmOverloads constructor(
      * Otherwise scroll to top
      */
     fun scrollOrRefresh() {
-        L.d("Scroll or Refresh")
         if (scrollY < 5) loadBaseUrl()
         else scrollToTop()
     }
 
     fun scrollToTop() {
-        if (scrollY > 1000) scrollTo(0, 0)
-        else {
+        flingScroll(0, 0) // stop fling
+        if (scrollY > 10000) {
+            scrollTo(0, 0)
+        } else {
             val animator = ValueAnimator.ofInt(scrollY, 0)
-            animator.duration = scrollY.toLong()
+            animator.duration = Math.min(scrollY, 500).toLong()
             animator.interpolator = DecelerateInterpolator()
-            animator.addUpdateListener {
-                scrollY = it.animatedValue as Int
-                invalidate()
-            }
+            animator.addUpdateListener { scrollY = it.animatedValue as Int }
+            animator.start()
         }
     }
 

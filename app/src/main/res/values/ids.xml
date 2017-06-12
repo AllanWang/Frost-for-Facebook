@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="item_account" type="id" />
+    <item name="pref_item_header" type="id" />
+    <item name="pref_item_text" type="id" />
+    <item name="pref_item_checkbox" type="id" />
+
+    <item name="pref_view_title" type="id" />
+    <item name="pref_view_desc" type="id" />
+    <item name="pref_view_icon" type="id" />
+    <item name="pref_view_icon_frame" type="id" />
+    <item name="pref_view_inner_frame" type="id" />
+    <item name="pref_view_checkbox" type="id" />
 </resources>

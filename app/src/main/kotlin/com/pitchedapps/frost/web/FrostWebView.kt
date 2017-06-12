@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import butterknife.ButterKnife
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.bindView
+import ca.allanwang.kau.utils.bindView
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
@@ -28,7 +28,6 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)
-        ButterKnife.bind(this)
         web.progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
             progress.visibility = if (it == 100) View.INVISIBLE else View.VISIBLE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) progress.setProgress(it, true)

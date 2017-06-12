@@ -1,5 +1,6 @@
 package com.pitchedapps.frost
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -12,12 +13,18 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewTreeObserver
-import butterknife.ButterKnife
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.restart
+import ca.allanwang.kau.utils.showChangelog
+import ca.allanwang.kau.utils.toDrawable
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
+import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.dbflow.loadFbTabs
@@ -26,7 +33,10 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.launchWebOverlay
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
@@ -45,7 +55,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
@@ -111,9 +120,21 @@ class MainActivity : AppCompatActivity() {
                         identifier = id
                     }
                 }
+                profileSetting(nameRes = R.string.add_account, descriptionRes = R.string.add_account_desc) {
+                    iconDrawable = IconicsDrawable(this@MainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5).colorRes(R.color.material_drawer_primary_text)
+                    identifier = -2L
+                }
+                profileSetting(nameRes = R.string.manage_account) {
+                    iicon = GoogleMaterial.Icon.gmd_settings
+                    identifier = -3L
+                }
                 onProfileChanged { _, profile, current ->
                     if (current) launchWebOverlay(FbTab.PROFILE.url)
-                    else switchUser(profile.identifier, { refreshObservable.onNext(true) })
+                    else when (profile.identifier) {
+                        -2L -> launchNewTask(LoginActivity::class.java, clearStack = false)
+                        -3L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
+                        else -> switchUser(profile.identifier, { refreshObservable.onNext(true) })
+                    }
                     false
                 }
             }
@@ -145,11 +166,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
-                launchNewTask(SelectorActivity::class.java, cookies())
-//                startActivity(Intent(this, LoginActivity::class.java))
-//                finish()
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
-            R.id.action_changelog -> Changelog.show(this)
+            R.id.action_changelog -> showChangelog(R.xml.changelog)
             R.id.action_call -> launchNewTask(LoginActivity::class.java)
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> restart()
@@ -168,7 +187,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int) = WebFragment.newInstance(pages[position].url)
+        override fun getItem(position: Int) = WebFragment(pages[position].url)
 
         override fun getCount() = pages.size
 

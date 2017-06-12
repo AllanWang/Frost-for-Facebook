@@ -59,7 +59,7 @@ object FbCookie {
     }
 
     fun reset(callback: () -> Unit) {
-        Prefs.userId = Prefs.userIdDefault
+        Prefs.userId = -1L
         with(CookieManager.getInstance()) {
             removeAllCookies({
                 flush()
