@@ -1,6 +1,7 @@
 package com.pitchedapps.frost
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -8,15 +9,11 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewTreeObserver
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.restart
-import ca.allanwang.kau.utils.showChangelog
-import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -40,7 +37,7 @@ import com.pitchedapps.frost.utils.launchWebOverlay
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -113,19 +110,27 @@ class MainActivity : AppCompatActivity() {
             toolbar = this@MainActivity.toolbar
             savedInstance = savedInstanceState
             translucentStatusBar = false
+            sliderBackgroundColor = Prefs.bgColor.withMinAlpha(200).toLong()
             drawerHeader = accountHeader {
+                textColor = Prefs.textColor.toLong()
+                backgroundDrawable = ColorDrawable(Prefs.headerColor)
                 cookies().forEach { (id, name) ->
                     profile(name = name ?: "") {
                         iconUrl = PROFILE_PICTURE_URL(id)
+                        textColor = Prefs.textColor.toLong()
+                        selectedTextColor = Prefs.textColor.toLong()
                         identifier = id
                     }
                 }
-                profileSetting(nameRes = R.string.add_account, descriptionRes = R.string.add_account_desc) {
-                    iconDrawable = IconicsDrawable(this@MainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5).colorRes(R.color.material_drawer_primary_text)
+                profileSetting(nameRes = R.string.add_account) {
+                    iconDrawable = IconicsDrawable(this@MainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5).color(Prefs.textColor)
+                    textColor = Prefs.textColor.toLong()
                     identifier = -2L
                 }
                 profileSetting(nameRes = R.string.manage_account) {
                     iicon = GoogleMaterial.Icon.gmd_settings
+                    iconColor = Prefs.textColor.toLong()
+                    textColor = Prefs.textColor.toLong()
                     identifier = -3L
                 }
                 onProfileChanged { _, profile, current ->
@@ -147,6 +152,11 @@ class MainActivity : AppCompatActivity() {
 
     fun Builder.primaryItem(item: FbTab) = this.primaryItem(item.titleId) {
         iicon = item.icon
+        iconColor = Prefs.textColor.toLong()
+        textColor = Prefs.textColor.toLong()
+        selectedIconColor = Prefs.textColor.toLong()
+        selectedTextColor = Prefs.textColor.toLong()
+        selectedColor = 0x00000001.toLong()
         identifier = item.titleId.toLong()
         onClick { _ ->
             launchWebOverlay(item.url)
@@ -187,7 +197,7 @@ class MainActivity : AppCompatActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int) = WebFragment(pages[position].url)
+        override fun getItem(position: Int) = WebFragment(pages[position])
 
         override fun getCount() = pages.size
 

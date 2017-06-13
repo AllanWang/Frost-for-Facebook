@@ -106,8 +106,6 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
     compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
 
-//    compile "com.facebook.stetho:stetho-okhttp3:${STETHO}"
-
     compile "com.lapism:searchview:${SEARCH_VIEW}"
 
     compile "org.jsoup:jsoup:${JSOUP}"

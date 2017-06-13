@@ -23,4 +23,5 @@ object Prefs : KPref() {
 
     var iconColor: Int by kpref("color_icons", Color.WHITE)
 
+    var exitConfirmation: Boolean by kpref("exit_confirmation", true)
 }

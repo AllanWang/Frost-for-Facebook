@@ -3,10 +3,8 @@ package com.pitchedapps.frost
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import butterknife.ButterKnife
 import ca.allanwang.kau.utils.bindView
 import com.jude.swipbackhelper.SwipeBackHelper
-import ca.allanwang.kau.utils.bindView
 import com.pitchedapps.frost.utils.url
 import com.pitchedapps.frost.web.FrostWebView
 
@@ -26,7 +24,7 @@ class WebOverlayActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        frostWeb.baseUrl = url()
+        frostWeb.web.baseUrl = url()
         frostWeb.web.loadBaseUrl()
         SwipeBackHelper.onCreate(this)
         SwipeBackHelper.getCurrentPage(this)

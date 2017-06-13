@@ -9,20 +9,20 @@ import com.pitchedapps.frost.utils.L
  * The enum name must match the css file name
  * //TODO add folder mapping using Prefs
  */
-enum class CssAssets {
-    HEADER, LOGIN
+enum class JsAssets {
+    MENU
     ;
 
-    var file = "${name.toLowerCase()}.compact.css"
+    var file = "${name.toLowerCase()}.min.js"
     var injector: JsInjector? = null
 
     fun inject(webView: WebView, callback: ((String) -> Unit)?) {
         if (injector == null) {
-            val content = webView.context.assets.open("css/core/$file").bufferedReader().use { it.readText() }
-            injector = JsBuilder().css(content).build()
+            val content = webView.context.assets.open("js/$file").bufferedReader().use { it.readText() }
+            injector = JsBuilder().js(content).build()
         }
         injector!!.inject(webView, callback)
-        L.v("CSS ${injector!!.function}")
+        L.v("JS ${injector!!.function}")
     }
 
     fun reset() {

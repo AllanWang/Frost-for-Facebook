@@ -24,15 +24,6 @@ import io.reactivex.subjects.Subject
  */
 class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebViewClient() {
 
-    companion object {
-        //Collections of jewels mapped with url match -> id
-        val jewelMap: Map<String, String> = mapOf("a" to "b")
-
-        fun test() {
-
-        }
-    }
-
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         L.i("FWV Loading $url")
@@ -55,6 +46,15 @@ class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebViewClien
         super.onPageFinished(view, url)
         refreshObservable.onNext(false)
         if (!url.contains(FACEBOOK_COM)) return
+        L.i("Page finished $url")
+        with(view as FrostWebViewCore) {
+            if (url == view.baseUrl && view.baseJavascript != null) {
+                L.i("Base inject ${view.baseJavascript!!.name}")
+                view.baseJavascript!!.inject(view, {
+                    L.i("Base injection done")
+                })
+            }
+        }
         JsActions.LOGIN_CHECK.inject(view)
         CssAssets.HEADER.inject(view, {
             view.circularReveal(offset = 150L)

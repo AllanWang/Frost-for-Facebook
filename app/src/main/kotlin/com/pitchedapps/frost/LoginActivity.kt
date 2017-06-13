@@ -4,11 +4,10 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.widget.ImageView
-import butterknife.ButterKnife
+import ca.allanwang.kau.utils.bindView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -21,7 +20,6 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
-import ca.allanwang.kau.utils.bindView
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.fadeOut
@@ -40,7 +38,7 @@ import kotlin.concurrent.thread
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val web: LoginWebView by bindView(R.id.login_webview)
