@@ -3,10 +3,16 @@ package com.pitchedapps.frost.injectors
 import android.webkit.WebView
 
 class JsBuilder {
-    private val css: StringBuilder by lazy { StringBuilder() }
+    private val css = StringBuilder()
+    private val js = StringBuilder()
 
     fun css(css: String): JsBuilder {
         this.css.append(css)
+        return this
+    }
+
+    fun js(content: String): JsBuilder {
+        this.js.append(content)
         return this
     }
 
@@ -18,6 +24,8 @@ class JsBuilder {
             val cssMin = css.replace(Regex("\\s+"), "")
             builder.append("var a=document.createElement('style');a.innerHTML='$cssMin';document.head.appendChild(a);")
         }
+        if (js.isNotBlank())
+            builder.append(js)
         return builder.append("}()").toString()
     }
 }

@@ -20,11 +20,16 @@
     <string name="birthdays">Birthdays</string>
     <string name="chat">Chat</string>
     <string name="photos">Photos</string>
+    <string name="settings">Settings</string>
+    <string name="menu">Menu</string>
+
     <string name="loading_account">Getting everything ready…</string>
     <string name="welcome">Welcome %s</string>
     <string name="login">Login</string>
     <string name="select_facebook_account">Select Facebook Account</string>
     <string name="add_account">Add Account</string>
-    <string name="add_account_desc">Add Facebook Account</string>
     <string name="manage_account">Manage Account</string>
+    <string name="exit">Exit</string>
+    <string name="exit_confirmation">Are you sure you want to exit Frost?</string>
+    <string name="do_not_show_again">Don\'t show again</string>
 </resources>

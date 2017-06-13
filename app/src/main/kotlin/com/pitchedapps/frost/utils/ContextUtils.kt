@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
+import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.lighten
 import ca.allanwang.kau.utils.startActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
@@ -38,4 +41,17 @@ fun Context.launchWebOverlay(url: String) {
 
 fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
+}
+
+fun Activity.materialDialog(action: MaterialDialog.Builder.() -> Unit) {
+    val builder = MaterialDialog.Builder(this)
+    val dimmerTextColor = Prefs.textColor.adjustAlpha(0.8f)
+    builder.titleColor(Prefs.textColor)
+            .contentColor(dimmerTextColor)
+            .widgetColor(dimmerTextColor)
+            .backgroundColor(Prefs.bgColor.lighten(0.1f))
+            .positiveColor(Prefs.textColor)
+            .negativeColor(Prefs.textColor)
+            .neutralColor(Prefs.textColor)
+    builder.action()
 }

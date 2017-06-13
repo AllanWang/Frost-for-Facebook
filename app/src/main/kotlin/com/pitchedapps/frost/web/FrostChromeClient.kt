@@ -13,7 +13,7 @@ import io.reactivex.subjects.Subject
 class FrostChromeClient(val progressObservable: Subject<Int>, val titleObservable: BehaviorSubject<String>) : WebChromeClient() {
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        L.v("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
+        L.i("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
         return super.onConsoleMessage(consoleMessage)
     }
 

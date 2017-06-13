@@ -12,6 +12,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.injectors.JsAssets
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -38,6 +39,7 @@ class FrostWebViewCore @JvmOverloads constructor(
     val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
     var baseUrl: String? = null
+    var baseJavascript: JsAssets? = null
 
     init {
         isNestedScrollingEnabled = true
@@ -53,8 +55,8 @@ class FrostWebViewCore @JvmOverloads constructor(
         settings.userAgentString = USER_AGENT_BASIC
 //        settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        setWebViewClient(FrostWebViewClient(refreshObservable))
-        setWebChromeClient(FrostChromeClient(progressObservable, titleObservable))
+        webViewClient = FrostWebViewClient(refreshObservable)
+        webChromeClient = FrostChromeClient(progressObservable, titleObservable)
         addJavascriptInterface(FrostJSI(context), "Frost")
     }
 
@@ -63,7 +65,9 @@ class FrostWebViewCore @JvmOverloads constructor(
             super.loadUrl(url)
     }
 
-    fun loadBaseUrl() = loadUrl(baseUrl)
+    fun loadBaseUrl() {
+        loadUrl(baseUrl)
+    }
 
     fun addTitleListener(subscriber: (title: String) -> Unit, scheduler: Scheduler = AndroidSchedulers.mainThread()): Disposable
             = titleObservable.observeOn(scheduler).subscribe(subscriber)

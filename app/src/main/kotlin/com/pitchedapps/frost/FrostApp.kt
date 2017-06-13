@@ -17,8 +17,6 @@ import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
-import com.squareup.leakcanary.LeakCanary
-import com.squareup.leakcanary.RefWatcher
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import timber.log.Timber.DebugTree
