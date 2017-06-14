@@ -1,6 +1,5 @@
 // we will handle click events
 document.onclick = function(e) {
-  e.preventDefault ? e.preventDefault() : e.returnValue = false;
   e = e || window.event;
   var element = e.target || e.srcElement;
   if (element.tagName !== 'A')
