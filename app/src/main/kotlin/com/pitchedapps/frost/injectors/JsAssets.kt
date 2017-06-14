@@ -10,7 +10,7 @@ import com.pitchedapps.frost.utils.L
  * //TODO add folder mapping using Prefs
  */
 enum class JsAssets {
-    MENU
+    MENU, MENU_CLICK
     ;
 
     var file = "${name.toLowerCase()}.min.js"
