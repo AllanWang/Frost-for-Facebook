@@ -1,25 +1,34 @@
 @import "../core/colors";
 @import "../core/base";
 
+#viewport {
+  background: $background !important;
+}
+
 body, #root, #header, .aclb, ._55wo, ._1upc, input, ._2f9r, ._59e9,
-//friend cards
 ._d4i,
 .acw, ._3f50,
-//comment box
-._uww, textarea {
-  background: $background !important;
+._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1 {
+  background: $bg_transparent !important;
+}
+
+.jewel, .flyout {
+  background: $bg_opaque !important;
 }
 
 button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
 ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._2v9s,
-//comment replies
 ._4e8n {
   background: $background2 !important;
 }
 
-input, ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35, ._rnk, ._24u0, ._1g06, ._14ye,
-textarea, .mentions-input, .mentions-placeholder,
+body, input, ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35, ._rnk, ._24u0, ._1g06, ._14ye,
+textarea, .mentions-input, .mentions-placeholder, .fcw, ._5-7t,
 h1, h2, h3, h4, h5, h6 {
+  color: $text !important;
+}
+
+@include placeholder {
   color: $text !important;
 }
 
@@ -27,22 +36,25 @@ a {
   color: $link !important;
 }
 
-
 //border between like and comment
-._15kl::before {
+._15kl::before,
+._5j35::after {
   border-left: 1px solid $divider !important;
 }
 
 //above see more
-._1mx0 {
+._1mx0,
+._15n_, ._52x1 {
   border-top: 1px solid $divider !important;
+}
+
+._15ny::after, ._ap1, ._52x1 {
+  border-bottom: 1px solid $divider !important;
 }
 
 //friend card border
 ._d4i,
-//comment replies
 ._4e8n,
-//comment box
 ._uww {
   border: 1px solid $divider !important;
 }
@@ -67,4 +79,9 @@ a {
 
 .touch .btnS {
   box-shadow: none !important;
+}
+
+//menu spinner
+[data-sigil="m-loading-indicator-animate m-loading-indicator-root"] {
+  display: none !important;
 }

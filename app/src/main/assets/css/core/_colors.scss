@@ -1,4 +1,4 @@
-$transparent: transparent !default;
+$bg_transparent: rgba(#f0f, 0.02) !default;
 
 //Keep above as first line so partials aren't compiled
 //Our default colors are test colors; production files should always import the actual colors
@@ -7,4 +7,5 @@ $text: #d7b0d7 !default;
 $link: #8c8dd6 !default;
 $background: #451515 !default;
 $background2: rgba(lighten($background, 10%), 0.1) !default;
+$bg_opaque: rgba($background, 1.0) !default;
 $divider: rgba($text, 0.3) !default;
