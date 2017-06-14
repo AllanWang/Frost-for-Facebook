@@ -24,7 +24,7 @@ class WebOverlayActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        frostWeb.web.baseUrl = url()
+        frostWeb.web.setupWebview(url())
         frostWeb.web.loadBaseUrl()
         SwipeBackHelper.onCreate(this)
         SwipeBackHelper.getCurrentPage(this)

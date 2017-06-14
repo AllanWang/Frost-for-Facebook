@@ -110,7 +110,7 @@ dependencies {
 
     compile "org.jsoup:jsoup:${JSOUP}"
 
-//    compile "org.jetbrains.anko:anko:${ANKO}"
+    compile "org.jetbrains.anko:anko:${ANKO}"
 
 //    compile "com.squareup.retrofit2:retrofit:${RETROFIT}"
 //    compile "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT}"

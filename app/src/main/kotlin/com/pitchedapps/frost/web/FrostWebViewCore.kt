@@ -11,8 +11,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
+import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.injectors.JsAssets
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -39,25 +39,28 @@ class FrostWebViewCore @JvmOverloads constructor(
     val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
     var baseUrl: String? = null
-    var baseJavascript: JsAssets? = null
+    var baseEnum: FbTab? = null
+    internal var frostWebClient: FrostWebViewClient? = null
 
     init {
         isNestedScrollingEnabled = true
         progressObservable = BehaviorSubject.create<Int>()
         refreshObservable = BehaviorSubject.create<Boolean>()
         titleObservable = BehaviorSubject.create<String>()
-        setupWebview()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview() {
+    fun setupWebview(url: String, enum: FbTab? = null) {
+        baseUrl = url
+        baseEnum = enum
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
 //        settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webViewClient = FrostWebViewClient(refreshObservable)
+        frostWebClient = baseEnum?.webClient?.invoke(refreshObservable) ?: FrostWebViewClient(refreshObservable)
+        webViewClient = frostWebClient
         webChromeClient = FrostChromeClient(progressObservable, titleObservable)
-        addJavascriptInterface(FrostJSI(context), "Frost")
+        addJavascriptInterface(FrostJSI(context, this), "Frost")
     }
 
     override fun loadUrl(url: String?) {
