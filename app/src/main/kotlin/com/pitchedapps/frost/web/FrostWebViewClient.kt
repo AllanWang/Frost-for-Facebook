@@ -10,7 +10,10 @@ import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.injectors.*
+import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.JsActions
+import com.pitchedapps.frost.injectors.JsAssets
+import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
@@ -62,13 +65,14 @@ open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebView
     internal fun onPageFinishedReveal(view: FrostWebViewCore, animate: Boolean) {
         L.d("Page finished reveal")
         view.jsInject(CssHider.HEADER,
-//                CssAssets.MATERIAL_DARK,
+                Prefs.themeInjector,
+                JsAssets.CLICK_INTERCEPTOR,
                 callback = {
-            L.d("Finished ${it.contentToString()}")
-            refreshObservable.onNext(false)
-            if (animate) view.circularReveal(offset = 150L)
-            else view.fadeIn(duration = 100L)
-        })
+                    L.d("Finished ${it.contentToString()}")
+                    refreshObservable.onNext(false)
+                    if (animate) view.circularReveal(offset = 150L)
+                    else view.fadeIn(duration = 100L)
+                })
     }
 
     open fun handleHtml(html: String) {

@@ -2,6 +2,7 @@ package com.pitchedapps.frost
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -11,7 +12,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewTreeObserver
+import android.widget.ImageButton
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
@@ -33,6 +34,7 @@ import com.pitchedapps.frost.services.requestNotifications
 import com.pitchedapps.frost.utils.*
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import org.jetbrains.anko.childrenSequence
 
 class MainActivity : BaseActivity() {
 
@@ -41,6 +43,7 @@ class MainActivity : BaseActivity() {
     val viewPager: ViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
+    val appBar: AppBarLayout by bindView(R.id.appbar)
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var titleDisposable: Disposable? = null
@@ -78,12 +81,23 @@ class MainActivity : BaseActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        viewPager.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                viewPager.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                updateTitleListener()
-            }
-        })
+        viewPager.post { updateTitleListener() }
+        theme()
+    }
+
+    fun theme() {
+        val darkAccent = Prefs.headerColor.darken()
+        statusBarColor = darkAccent.withAlpha(255)
+        navigationBarColor = darkAccent
+        tabs.setBackgroundColor(darkAccent)
+        appBar.setBackgroundColor(darkAccent)
+        toolbar.setBackgroundColor(darkAccent)
+        toolbar.setTitleTextColor(Prefs.iconColor)
+//        toolbar.tint
+        viewPager.setBackgroundColor(Prefs.bgColor)
+        window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
+        toolbar.overflowIcon?.setTint(Prefs.iconColor)
+        drawer
     }
 
     fun updateTitleListener() {
@@ -99,23 +113,27 @@ class MainActivity : BaseActivity() {
                 currentFragment.web.scrollOrRefresh()
             }
         })
-        adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this))) }
+        adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this, color = Prefs.iconColor))) }
     }
 
     fun setupDrawer(savedInstanceState: Bundle?) {
+        val navBg = Prefs.bgColor.withMinAlpha(200).toLong()
+        val navHeader = Prefs.headerColor.withMinAlpha(200)
         drawer = drawer {
             toolbar = this@MainActivity.toolbar
             savedInstance = savedInstanceState
             translucentStatusBar = false
-            sliderBackgroundColor = Prefs.bgColor.withMinAlpha(200).toLong()
+            sliderBackgroundColor = navBg
             drawerHeader = accountHeader {
-                textColor = Prefs.textColor.toLong()
-                backgroundDrawable = ColorDrawable(Prefs.headerColor)
+                textColor = Prefs.iconColor.toLong()
+                backgroundDrawable = ColorDrawable(navHeader)
+                selectionSecondLineShown = false
                 cookies().forEach { (id, name) ->
                     profile(name = name ?: "") {
                         iconUrl = PROFILE_PICTURE_URL(id)
                         textColor = Prefs.textColor.toLong()
                         selectedTextColor = Prefs.textColor.toLong()
+                        selectedColor = 0x00000001.toLong()
                         identifier = id
                     }
                 }
@@ -167,6 +185,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+        toolbar.childrenSequence().forEach { (it as? ImageButton)?.setColorFilter(Prefs.iconColor) }
         return true
     }
 

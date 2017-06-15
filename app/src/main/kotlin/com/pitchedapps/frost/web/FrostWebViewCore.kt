@@ -3,6 +3,7 @@ package com.pitchedapps.frost.web
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.support.v4.view.NestedScrollingChild
 import android.support.v4.view.NestedScrollingChildHelper
 import android.support.v4.view.ViewCompat
@@ -61,6 +62,7 @@ class FrostWebViewCore @JvmOverloads constructor(
         webViewClient = frostWebClient
         webChromeClient = FrostChromeClient(progressObservable, titleObservable)
         addJavascriptInterface(FrostJSI(context, this), "Frost")
+        setBackgroundColor(Color.TRANSPARENT)
     }
 
     override fun loadUrl(url: String?) {

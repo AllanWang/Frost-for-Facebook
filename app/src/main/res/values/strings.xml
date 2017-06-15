@@ -40,4 +40,5 @@
     <string name="glass">Glass</string>
     <string name="custom">Custom</string>
     <string name="frost_notifications">Frost Notifications</string>
+    <string name="requires_custom_theme">Requires custom theme</string>
 </resources>
