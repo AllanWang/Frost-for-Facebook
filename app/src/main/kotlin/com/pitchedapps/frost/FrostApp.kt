@@ -13,6 +13,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerUIUtils
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.services.requestNotifications
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.config.FlowConfig
@@ -47,7 +48,7 @@ class FrostApp : Application() {
         Prefs.initialize(this, "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs")
         FbCookie()
         super.onCreate()
-
+        requestNotifications(Prefs.userId)
         //Drawer profile loading logic
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {

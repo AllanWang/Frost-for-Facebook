@@ -36,7 +36,10 @@
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".WebOverlayActivity"
+            android:theme="@style/AppTheme.Overlay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -88,9 +91,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".WebOverlayActivity"
-            android:theme="@style/AppTheme.Overlay" />
-        <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -100,6 +100,10 @@
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <service
+            android:name=".services.NotificationService"
+            android:enabled="true"
+            android:label="@string/frost_notifications" />
         <receiver
             android:name=".services.NotificationReceiver"
             android:enabled="true"

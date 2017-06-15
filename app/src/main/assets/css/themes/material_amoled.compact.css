@@ -1,10 +1,10 @@
 #viewport { background: #000 !important; }
 
-body, #root, #header, .aclb, ._55wo, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, ._d4i, ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5, ._55wm, .acw, ._3f50, .mentions-placeholder, .mentions, .mentions-shadow, .mentions-measurer, .acg, ._59tu, ._52z5, ._4l9b, ._4gj3, .groupChromeView, ._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1 { background: #000 !important; }
+body, #root, #header, ._55wo, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, ._d4i, ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5, ._55wm, .acw, ._3f50, .mentions-placeholder, .mentions, .mentions-shadow, .mentions-measurer, .acg, ._59tu, ._52z5, ._4l9b, ._4gj3, .groupChromeView, ._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1 { background: #000 !important; }
 
 .jewel, .flyout, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p { background: black !important; }
 
-button, button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._2v9s, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._4e8n, ._5pxa._3uj9, ._4qax { background: rgba(51, 51, 51, 0.2) !important; }
+button, button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._2v9s, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._4e8n, ._5pxa._3uj9, ._4qax, .aclb, ._4756 { background: rgba(51, 51, 51, 0.2) !important; }
 
 body, input, ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35, ._rnk, ._24u0, ._1g06, ._14ye, textarea, .mentions-input, .mentions-placeholder, .fcw, ._5-7t, .fcl, ._4qas, .thread-title, ._46pa, ._336p, h1, h2, h3, h4, h5, h6 { color: #fff !important; }
 
@@ -24,7 +24,7 @@ a, ._5fpq { color: #B3E5FC !important; }
 
 ._15ny::after, ._ap1, ._52x1, ._59tu, ._usq, ._13e_, ._59f6._55so::before, ._4gj3, .jx-result, ._5lp5, ._5pz4, ._5lp4, ._5lp5, ._3on6, ._5h6z, ._5h6x { border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
-._d4i, ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf { border: 1px solid rgba(255, 255, 255, 0.3) !important; }
+._d4i, ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756 { border: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
 ._4o58::after, .acw, .aclb, ._4qax { border-color: rgba(255, 255, 255, 0.3) !important; }
 

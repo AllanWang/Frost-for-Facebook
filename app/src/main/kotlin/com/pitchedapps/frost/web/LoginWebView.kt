@@ -52,7 +52,7 @@ class LoginWebView @JvmOverloads constructor(
                                 cookieObservable.onComplete()
                                 loginObservable.onSuccess(CookieModel(id.toLong(), "", cookie))
                             } catch (e: NumberFormatException) {
-                                //todo send report that id has changed
+                                //todo send report that userId has changed
                             }
                         }
                     }

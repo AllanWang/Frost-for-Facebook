@@ -46,7 +46,7 @@
     <!--app:layout_constraintEnd_toEndOf="parent"-->
     <!--app:layout_constraintHorizontal_bias="0.5"-->
     <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@id/selector_recycler"-->
+    <!--app:layout_constraintTop_toBottomOf="@userId/selector_recycler"-->
     <!--tools:layout_editor_absoluteX="8dp"-->
     <!--tools:layout_editor_absoluteY="0dp" />-->
 </android.support.constraint.ConstraintLayout>

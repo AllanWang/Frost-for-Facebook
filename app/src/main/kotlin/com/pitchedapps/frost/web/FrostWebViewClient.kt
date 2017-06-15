@@ -61,7 +61,9 @@ open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebView
 
     internal fun onPageFinishedReveal(view: FrostWebViewCore, animate: Boolean) {
         L.d("Page finished reveal")
-        view.jsInject(CssHider.HEADER, CssAssets.MATERIAL_DARK, callback = {
+        view.jsInject(CssHider.HEADER,
+//                CssAssets.MATERIAL_DARK,
+                callback = {
             L.d("Finished ${it.contentToString()}")
             refreshObservable.onNext(false)
             if (animate) view.circularReveal(offset = 150L)
