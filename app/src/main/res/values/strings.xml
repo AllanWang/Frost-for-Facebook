@@ -32,4 +32,11 @@
     <string name="exit">Exit</string>
     <string name="exit_confirmation">Are you sure you want to exit Frost?</string>
     <string name="do_not_show_again">Don\'t show again</string>
+
+    <string name="_default">Default</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="amoled">AMOLED</string>
+    <string name="glass">Glass</string>
+    <string name="custom">Custom</string>
 </resources>
