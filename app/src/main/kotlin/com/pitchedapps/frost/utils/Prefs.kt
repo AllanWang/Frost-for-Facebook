@@ -15,6 +15,8 @@ object Prefs : KPref() {
 
     var userId: Long by kpref("user_id", -1L)
 
+    var theme: Int by kpref("theme", 0)
+
     var textColor: Int by kpref("color_text", Color.BLACK)
 
     var bgColor: Int by kpref("color_bg", Color.WHITE)

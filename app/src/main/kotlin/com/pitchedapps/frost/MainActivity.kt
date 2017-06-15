@@ -30,10 +30,7 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.cookies
-import com.pitchedapps.frost.utils.launchNewTask
-import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.*
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
@@ -176,7 +173,9 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
+                startActivitySlideIn(SettingsActivity::class.java, clearStack = true, intentBuilder = {
+                    putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
+                })
             }
             R.id.action_changelog -> showChangelog(R.xml.changelog)
             R.id.action_call -> launchNewTask(LoginActivity::class.java)

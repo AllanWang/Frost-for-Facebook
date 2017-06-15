@@ -9,16 +9,16 @@ import com.pitchedapps.frost.utils.L
  * The enum name must match the css file name
  * //TODO add folder mapping using Prefs
  */
-enum class CssAssets {
-    HEADER, LOGIN
+enum class CssAssets(val folder: String = "themes") : InjectorContract {
+    LOGIN("core"), MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS
     ;
 
     var file = "${name.toLowerCase()}.compact.css"
     var injector: JsInjector? = null
 
-    fun inject(webView: WebView, callback: ((String) -> Unit)?) {
+    override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
         if (injector == null) {
-            val content = webView.context.assets.open("css/core/$file").bufferedReader().use { it.readText() }
+            val content = webView.context.assets.open("css/$folder/$file").bufferedReader().use { it.readText() }
             injector = JsBuilder().css(content).build()
         }
         injector!!.inject(webView, callback)

@@ -18,8 +18,8 @@ import com.pitchedapps.frost.facebook.FbTab
 /**
  * Created by Allan Wang on 2017-06-03.
  */
-private const val EXTRA_COOKIES = "extra_cookies"
-private const val ARG_URL = "arg_url"
+internal const val EXTRA_COOKIES = "extra_cookies"
+internal const val ARG_URL = "arg_url"
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = clazz != LoginActivity::class.java) {
     startActivity(clazz, clearStack, {

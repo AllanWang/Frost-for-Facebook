@@ -13,7 +13,6 @@ class FrostWebViewClientMenu(refreshObservable: Subject<Boolean>) : FrostWebView
 
     var content: String? = null
     var view: FrostWebViewCore? = null
-    var loadingFromBase: Boolean = false
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -22,7 +21,6 @@ class FrostWebViewClientMenu(refreshObservable: Subject<Boolean>) : FrostWebView
                 "https://m.facebook.com/settings",
                 "https://m.facebook.com/settings#",
                 "https://m.facebook.com/settings#!/settings?soft=bookmarks" -> {
-                    loadingFromBase = true
                     L.d("Load from stored $url")
                     view.stopLoading()
                     view.loadDataWithBaseURL("https://touch.facebook.com/notifications", content, "text/html", "utf-8", "https://google.ca/test")
@@ -33,8 +31,6 @@ class FrostWebViewClientMenu(refreshObservable: Subject<Boolean>) : FrostWebView
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
-        L.d("DON $url")
-        loadingFromBase = false
         with(view as FrostWebViewCore) {
             if (url == view.baseUrl) {
                 this@FrostWebViewClientMenu.view = view
