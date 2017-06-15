@@ -1,6 +1,5 @@
 package com.pitchedapps.frost
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -30,6 +29,7 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.services.requestNotifications
 import com.pitchedapps.frost.utils.*
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -178,7 +178,9 @@ class MainActivity : BaseActivity() {
                 })
             }
             R.id.action_changelog -> showChangelog(R.xml.changelog)
-            R.id.action_call -> launchNewTask(LoginActivity::class.java)
+            R.id.action_call -> {
+                requestNotifications(Prefs.userId)
+            }
             R.id.action_db -> adapter.pages.saveAsync(this)
             R.id.action_restart -> restart()
             else -> return super.onOptionsItemSelected(item)

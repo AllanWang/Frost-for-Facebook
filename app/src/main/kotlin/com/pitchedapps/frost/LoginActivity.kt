@@ -87,7 +87,7 @@ class LoginActivity : BaseActivity() {
             (foundImage, name) ->
             refresh = false
             L.d("Zip done")
-            if (!foundImage) L.e("Could not get profile photo; Invalid id?\n\t$cookie")
+            if (!foundImage) L.e("Could not get profile photo; Invalid userId?\n\t$cookie")
             textview.setTextWithFade(String.format(getString(R.string.welcome), name), duration = 500)
             /*
              * The user may have logged into an account that is already in the database
@@ -96,7 +96,7 @@ class LoginActivity : BaseActivity() {
             loadFbCookiesAsync {
                 cookies ->
                 Handler().postDelayed({
-                    launchNewTask(MainActivity::class.java, ArrayList(cookies))
+                    launchNewTask(MainActivity::class.java, ArrayList(cookies), clearStack = true)
                 }, 1000)
             }
         }
