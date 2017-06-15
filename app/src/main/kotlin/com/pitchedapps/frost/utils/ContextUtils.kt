@@ -3,9 +3,11 @@ package com.pitchedapps.frost.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.isColorDark
 import ca.allanwang.kau.utils.lighten
 import ca.allanwang.kau.utils.startActivity
 import com.afollestad.materialdialogs.MaterialDialog
@@ -43,7 +45,8 @@ fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
 }
 
-fun Activity.materialDialog(action: MaterialDialog.Builder.() -> Unit) {
+
+fun Activity.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
     val builder = MaterialDialog.Builder(this)
     val dimmerTextColor = Prefs.textColor.adjustAlpha(0.8f)
     builder.titleColor(Prefs.textColor)
@@ -54,4 +57,13 @@ fun Activity.materialDialog(action: MaterialDialog.Builder.() -> Unit) {
             .negativeColor(Prefs.textColor)
             .neutralColor(Prefs.textColor)
     builder.action()
+    return builder.show()
+}
+
+fun Activity.setFrostTheme() {
+    val isTransparent = Color.alpha(Prefs.bgColor) != 255
+    if (Prefs.bgColor.isColorDark())
+        setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
+    else
+        setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
 }

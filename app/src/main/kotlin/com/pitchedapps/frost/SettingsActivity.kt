@@ -5,10 +5,7 @@ import ca.allanwang.kau.kpref.KPrefActivity
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
-import com.pitchedapps.frost.utils.EXTRA_COOKIES
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.Theme
-import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.*
 
 /**
  * Created by Allan Wang on 2017-06-06.
@@ -20,15 +17,17 @@ class SettingsActivity : KPrefActivity() {
         header(R.string.settings)
         text<Int>(title = R.string.theme, itemBuilder = {
             onClick = {
-                itemView, innerContent, item ->
-                this@SettingsActivity.materialDialog {
+                _, _, item ->
+                this@SettingsActivity.materialDialogThemed {
                     title(R.string.theme)
                     items(Theme.values().map { this@SettingsActivity.string(it.textRes) })
+                    itemsDisabledIndices(Theme.CUSTOM.ordinal)
                     itemsCallbackSingleChoice(item.pref, {
                         _, _, which, _ ->
                         if (item.pref != which) {
                             item.pref = which
                             reload()
+                            setFrostTheme()
                             themeExterior()
                         }
                         true
