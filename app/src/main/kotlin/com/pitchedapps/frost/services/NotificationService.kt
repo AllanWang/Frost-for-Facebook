@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.services
 
 import android.app.IntentService
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -10,10 +11,7 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
-import com.pitchedapps.frost.dbflow.NotificationModel
-import com.pitchedapps.frost.dbflow.lastNotificationTime
-import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.dbflow.saveNotificationTime
+import com.pitchedapps.frost.dbflow.*
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
@@ -46,7 +44,7 @@ class NotificationService : IntentService(NotificationService::class.java.simple
         L.i("Latest Epoch $latestEpoch")
         unreadNotifications.forEach {
             elem ->
-            val notif = parseNotification(data.id, elem)
+            val notif = parseNotification(data, elem)
             if (notif != null) {
                 if (notif.timestamp <= latestEpoch) return@forEach
                 notif.createNotification(this)
@@ -54,11 +52,11 @@ class NotificationService : IntentService(NotificationService::class.java.simple
                 notifCount++
             }
         }
-        saveNotificationTime(NotificationModel(data.id, latestEpoch))
+        if (notifCount > 0) saveNotificationTime(NotificationModel(data.id, latestEpoch))
         summaryNotification(data.id, notifCount)
     }
 
-    fun parseNotification(userId: Long, element: Element): NotificationContent? {
+    fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
         val a = element.getElementsByTag("a").first() ?: return null
         val dataStore = a.attr("data-store")
         val notifId = if (dataStore == null) System.currentTimeMillis()
@@ -70,15 +68,16 @@ class NotificationService : IntentService(NotificationService::class.java.simple
         text = text.trim()
         val abbrData = abbr?.attr("data-store")
         val epoch = if (abbrData == null) -1L else epochMatcher.find(abbrData)?.groups?.get(1)?.value?.toLong() ?: -1L
-        return NotificationContent(userId, notifId.toInt(), a.attr("href"), text, epoch)
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), text, epoch)
     }
 
-    data class NotificationContent(val userId: Long, val notifId: Int, val href: String, val text: String, val timestamp: Long) {
+    data class NotificationContent(val data: CookieModel, val notifId: Int, val href: String, val text: String, val timestamp: Long) {
         fun createNotification(context: Context) {
             val intent = Intent(context, WebOverlayActivity::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or PendingIntent.FLAG_ONE_SHOT)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra(ARG_URL, "$FB_URL_BASE$href")
             intent.action = System.currentTimeMillis().toString() //dummy action
+            val group = "frost_${data.id}"
             val bundle = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT, bundle)
             val notifBuilder = NotificationCompat.Builder(context)
@@ -86,12 +85,15 @@ class NotificationService : IntentService(NotificationService::class.java.simple
                     .setContentTitle(context.string(R.string.app_name))
                     .setContentText(text)
                     .setContentIntent(pendingIntent)
-                    .setGroup("frost_$userId")
+                    .setCategory(Notification.CATEGORY_SOCIAL)
+                    .setSubText(data.name)
+                    .setGroup(group)
                     .setAutoCancel(true)
+//                    .setColor(context.color(R.color.facebook_blue))
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
 
-            NotificationManagerCompat.from(context).notify("frost_$userId", notifId, notifBuilder.build())
+            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
         }
     }
 

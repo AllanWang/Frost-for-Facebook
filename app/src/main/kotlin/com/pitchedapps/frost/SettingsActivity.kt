@@ -5,7 +5,6 @@ import ca.allanwang.kau.kpref.KPrefActivity
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Theme
@@ -30,6 +29,7 @@ class SettingsActivity : KPrefActivity() {
                         if (item.pref != which) {
                             item.pref = which
                             reload()
+                            themeExterior()
                         }
                         true
                     })
@@ -40,42 +40,78 @@ class SettingsActivity : KPrefActivity() {
             setter = { Prefs.theme = it }
         }, textGetter = { this@SettingsActivity.string(Theme(it).textRes) })
         colorPicker(title = R.string.text_color, itemBuilder = {
-            getter = { Prefs.textColor }
-            setter = { Prefs.textColor = it; reload() }
-        }, colorBuilder = {
-            allowCustom = true
-        })
-
-        colorPicker(title = R.string.background_color, coreBuilder = {
-            iicon = GoogleMaterial.Icon.gmd_colorize
-        }, itemBuilder = {
-            getter = { Prefs.bgColor }
-            setter = { Prefs.bgColor = it; bgCanvas.ripple(it, duration = 500L) }
+            getter = { Prefs.customTextColor }
+            setter = { Prefs.customTextColor = it; reload() }
+            enabler = { Prefs.isCustomTheme }
+            onDisabledClick = { itemView, _, _ ->
+                itemView.snackbar(R.string.requires_custom_theme)
+                true
+            }
         }, colorBuilder = {
             allowCustomAlpha = false
             allowCustom = true
         })
 
+        colorPicker(title = R.string.background_color, itemBuilder = {
+            getter = { Prefs.customBackgroundColor }
+            setter = { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }
+            enabler = { Prefs.isCustomTheme }
+            onDisabledClick = { itemView, _, _ ->
+                itemView.snackbar(R.string.requires_custom_theme)
+                true
+            }
+        }, colorBuilder = {
+            allowCustomAlpha = true
+            allowCustom = true
+        })
+
         colorPicker(title = R.string.header_color, itemBuilder = {
-            getter = { Prefs.headerColor }
+            getter = { Prefs.customHeaderColor }
             setter = {
-                Prefs.headerColor = it
+                Prefs.customHeaderColor = it
                 val darkerColor = it.darken()
                 this@SettingsActivity.navigationBarColor = darkerColor
                 toolbarCanvas.ripple(darkerColor, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
             }
+            enabler = { Prefs.isCustomTheme }
+            onDisabledClick = { itemView, _, _ ->
+                itemView.snackbar(R.string.requires_custom_theme)
+                true
+            }
         }, colorBuilder = {
-            allowCustom = false
+            allowCustomAlpha = true
+            allowCustom = true
+        })
+
+        colorPicker(title = R.string.icon_color, itemBuilder = {
+            getter = { Prefs.customIconColor }
+            setter = { Prefs.customIconColor = it; toolbar.setTitleTextColor(it) }
+            enabler = { Prefs.isCustomTheme }
+            onDisabledClick = { itemView, _, _ ->
+                itemView.snackbar(R.string.requires_custom_theme)
+                true
+            }
+        }, colorBuilder = {
+            allowCustomAlpha = false
+            allowCustom = true
         })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bgCanvas.set(Prefs.bgColor)
+        themeExterior(false)
+    }
+
+    fun themeExterior(animate: Boolean = true) {
+        if (animate) bgCanvas.fade(Prefs.bgColor)
+        else bgCanvas.set(Prefs.bgColor)
         val darkAccent = Prefs.headerColor.darken()
-        toolbarCanvas.set(darkAccent)
+        if (animate) toolbarCanvas.ripple(darkAccent, RippleCanvas.MIDDLE, RippleCanvas.END)
+        else toolbarCanvas.set(darkAccent)
         this.navigationBarColor = darkAccent
     }
+
+    private fun relativeDuration(canvas: RippleCanvas): Long = Math.hypot(canvas.height.toDouble(), canvas.width.toDouble() / 2).toLong()
 
     override fun onBackPressed() {
         startActivitySlideOut(MainActivity::class.java, clearStack = true, intentBuilder = {

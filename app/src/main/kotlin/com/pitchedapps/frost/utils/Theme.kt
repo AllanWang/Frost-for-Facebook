@@ -1,19 +1,39 @@
 package com.pitchedapps.frost.utils
 
+import android.graphics.Color
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.InjectorContract
+import com.pitchedapps.frost.injectors.JsActions
 
 /**
  * Created by Allan Wang on 2017-06-14.
  */
-enum class Theme(val textRes: Int) {
-    DEFAULT(R.string._default),
-    LIGHT(R.string.light),
-    DARK(R.string.dark),
-    AMOLED(R.string.amoled),
-    GLASS(R.string.glass),
-    CUSTOM(R.string.custom);
+enum class Theme(val textRes: Int, val injector: InjectorContract,
+                 private val textColorGetter: () -> Int, private val backgroundColorGetter: () -> Int,
+                 private val headerColorGetter: () -> Int, private val iconColorGetter: () -> Int) {
+    DEFAULT(R.string._default, JsActions.EMPTY, { Color.BLACK }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
+    LIGHT(R.string.light, CssAssets.MATERIAL_LIGHT, { Color.BLACK }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
+    DARK(R.string.dark, CssAssets.MATERIAL_DARK, { Color.WHITE }, { 0xff303030.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
+    AMOLED(R.string.amoled, CssAssets.MATERIAL_AMOLED, { Color.WHITE }, { Color.BLACK }, { Color.BLACK }, { Color.WHITE }),
+    GLASS(R.string.glass, CssAssets.MATERIAL_GLASS, { Color.WHITE }, { 0x80000000.toInt() }, { 0xb3000000.toInt() }, { Color.WHITE }),
+    CUSTOM(R.string.custom, JsActions.EMPTY, { Prefs.customTextColor }, { Prefs.customBackgroundColor }, { Prefs.customHeaderColor }, { Prefs.customIconColor });
+    //todo create custom
+
+    val textColor: Int
+        get() = textColorGetter.invoke()
+
+    val bgColor: Int
+        get() = backgroundColorGetter.invoke()
+
+    val headerColor: Int
+        get() = headerColorGetter.invoke()
+
+    val iconColor: Int
+        get() = iconColorGetter.invoke()
 
     companion object {
-        operator fun invoke(index: Int) = values()[index]
+        val values = values() //save one instance
+        operator fun invoke(index: Int) = values[index]
     }
 }

@@ -3,6 +3,7 @@ package com.pitchedapps.frost.utils
 import android.graphics.Color
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.kpref
+import com.pitchedapps.frost.injectors.InjectorContract
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -15,15 +16,39 @@ object Prefs : KPref() {
 
     var userId: Long by kpref("user_id", -1L)
 
-    var theme: Int by kpref("theme", 0)
+    var theme: Int by kpref("theme", 0, postSetter = { value: Int ->
+        loader.invalidate()
+    })
 
-    var textColor: Int by kpref("color_text", Color.BLACK)
+    var customTextColor: Int by kpref("color_text", Color.BLACK)
 
-    var bgColor: Int by kpref("color_bg", Color.WHITE)
+    var customBackgroundColor: Int by kpref("color_bg", 0xfffafafa.toInt())
 
-    var headerColor: Int by kpref("color_header", 0xff3b5998.toInt())
+    var customHeaderColor: Int by kpref("color_header", 0xff3b5998.toInt())
 
-    var iconColor: Int by kpref("color_icons", Color.WHITE)
+    var customIconColor: Int by kpref("color_icons", Color.WHITE)
 
     var exitConfirmation: Boolean by kpref("exit_confirmation", true)
+
+    private val loader = lazyResettable { Theme.values[Prefs.theme] }
+
+    private val t: Theme by loader
+
+    val textColor: Int
+        get() = t.textColor
+
+    val bgColor: Int
+        get() = t.bgColor
+
+    val headerColor: Int
+        get() = t.headerColor
+
+    val iconColor: Int
+        get() = t.iconColor
+
+    val themeInjector: InjectorContract
+        get() = t.injector
+
+    val isCustomTheme: Boolean
+        get() = t == Theme.CUSTOM
 }

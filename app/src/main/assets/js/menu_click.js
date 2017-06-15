@@ -8,8 +8,9 @@ document.onclick = function(e) {
     var url = element.href;
     console.log('Click Intercept');
     console.log(url);
-    if (url !== "https://m.facebook.com/settings" && url !== "https://m.facebook.com/settings#" && url !== "https://m.facebook.com/settings#!/settings?soft=bookmarks")
+    if (url !== "https://m.facebook.com/settings" && url !== "https://m.facebook.com/settings#" && url !== "https://m.facebook.com/settings#!/settings?soft=bookmarks") {
       Frost.loadUrl(url);
       Frost.reloadBaseUrl(); //temporary workaround
+    }
   }
 };

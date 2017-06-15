@@ -9,14 +9,14 @@ import com.pitchedapps.frost.utils.L
  * The enum name must match the css file name
  * //TODO add folder mapping using Prefs
  */
-enum class JsAssets {
-    MENU, MENU_CLICK
+enum class JsAssets : InjectorContract {
+    MENU, MENU_CLICK, CLICK_INTERCEPTOR
     ;
 
     var file = "${name.toLowerCase()}.min.js"
     var injector: JsInjector? = null
 
-    fun inject(webView: WebView, callback: ((String) -> Unit)?) {
+    override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
         if (injector == null) {
             val content = webView.context.assets.open("js/$file").bufferedReader().use { it.readText() }
             injector = JsBuilder().js(content).build()
