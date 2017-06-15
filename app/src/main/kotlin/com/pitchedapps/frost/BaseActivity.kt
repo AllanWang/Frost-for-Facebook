@@ -1,8 +1,10 @@
 package com.pitchedapps.frost
 
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.materialDialog
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.setFrostTheme
 
 /**
  * Created by Allan Wang on 2017-06-12.
@@ -10,7 +12,7 @@ import com.pitchedapps.frost.utils.materialDialog
 open class BaseActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (isTaskRoot && Prefs.exitConfirmation) {
-            materialDialog {
+            materialDialogThemed {
                 title(R.string.exit)
                 content(R.string.exit_confirmation)
                 positiveText(android.R.string.yes)
@@ -20,5 +22,10 @@ open class BaseActivity : AppCompatActivity() {
                 show()
             }
         } else super.onBackPressed()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setFrostTheme()
     }
 }

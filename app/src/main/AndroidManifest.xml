@@ -20,12 +20,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/FrostThemeBase">
         <activity
             android:name=".StartActivity"
             android:configChanges="orientation|screenSize|locale"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Splash">
+            android:theme="@style/FrostTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,10 +36,10 @@
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/FrostTheme" />
         <activity
             android:name=".WebOverlayActivity"
-            android:theme="@style/AppTheme.Overlay">
+            android:theme="@style/FrostTheme.Overlay">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -92,13 +92,13 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/FrostTheme" />
         <activity
             android:name=".SelectorActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/FrostTheme" />
         <activity
             android:name=".SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/FrostTheme" />
 
         <service
             android:name=".services.NotificationService"

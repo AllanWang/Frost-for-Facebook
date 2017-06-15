@@ -8,8 +8,11 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
@@ -23,6 +26,9 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)
+        progress.tint(Prefs.iconColor.withAlpha(180))
+        refresh.setColorSchemeColors(Prefs.iconColor)
+        refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
         web.progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
             progress.visibility = if (it == 100) View.INVISIBLE else View.VISIBLE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) progress.setProgress(it, true)

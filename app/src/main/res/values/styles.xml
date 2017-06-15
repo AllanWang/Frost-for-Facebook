@@ -1,17 +1,31 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.ActionBar">
-        <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+    <style name="FrostThemeBase" parent="MaterialDrawerTheme.ActionBar">
+        <item name="colorPrimary">@color/facebook_blue</item>
+        <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="FrostTheme" parent="@style/FrostThemeBase">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.Overlay" parent="AppTheme.NoActionBar">
+    <style name="FrostTheme.Light" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="colorPrimary">@color/facebook_blue</item>
+        <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
+    </style>
+
+    <style name="FrostTheme.Transparent">
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="FrostTheme.Light.Transparent">
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="FrostTheme.Overlay">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
         <item name="android:activityOpenExitAnimation">@anim/slide_out_right</item>
@@ -23,7 +37,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
-    <style name="Theme.Splash" parent="Theme.AppCompat.NoActionBar">
+    <style name="FrostTheme.Splash" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:navigationBarColor">@color/splashBackground</item>
         <item name="colorPrimaryDark">@color/splashBackground</item>
