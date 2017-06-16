@@ -50,8 +50,8 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
     //Some urls have postJavascript injections so make sure we load the base url
     override fun onRefresh() {
         when (web.baseUrl) {
-            FbTab.MENU.url -> web.loadBaseUrl()
-            else -> web.reload()
+            FbTab.MENU.url -> web.loadBaseUrl(true)
+            else -> web.reload(true)
         }
     }
 

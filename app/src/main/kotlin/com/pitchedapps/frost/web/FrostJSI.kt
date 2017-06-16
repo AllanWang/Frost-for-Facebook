@@ -23,11 +23,11 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
     fun loadUrl(url: String) = context.launchWebOverlay(url)
 
     @JavascriptInterface
-    fun reloadBaseUrl() {
+    fun reloadBaseUrl(animate: Boolean) {
         L.d("FrostJSI reload")
         webView.post {
             webView.stopLoading()
-            webView.loadBaseUrl()
+            webView.loadBaseUrl(animate)
         }
     }
 

@@ -10,7 +10,7 @@ document.onclick = function(e) {
     console.log(url);
     if (url !== "https://m.facebook.com/settings" && url !== "https://m.facebook.com/settings#" && url !== "https://m.facebook.com/settings#!/settings?soft=bookmarks") {
       Frost.loadUrl(url);
-      Frost.reloadBaseUrl(); //temporary workaround
+      Frost.reloadBaseUrl(false); //reinject base view
     }
   }
 };

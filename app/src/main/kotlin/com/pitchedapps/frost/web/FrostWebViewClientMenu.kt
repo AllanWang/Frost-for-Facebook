@@ -45,18 +45,18 @@ class FrostWebViewClientMenu(refreshObservable: Subject<Boolean>) : FrostWebView
 
     override fun emit(flag: Int) {
         super.emit(flag)
-        if (view != null) super.onPageFinishedReveal(view!!, true)
+        if (view != null) super.onPageFinishedActions(view!!)
         view = null
     }
 
-    override fun onPageFinishedReveal(view: FrostWebViewCore, url: String?) {
+    override fun onPageFinishedActions(view: FrostWebViewCore, url: String?) {
         when (url) {
             "https://m.facebook.com/settings",
             "https://m.facebook.com/settings#",
             "https://m.facebook.com/settings#!/settings?soft=bookmarks" -> {
                 //do nothing; we will further inject before revealing
             }
-            else -> super.onPageFinishedReveal(view, false)
+            else -> super.onPageFinishedActions(view)
         }
     }
 
