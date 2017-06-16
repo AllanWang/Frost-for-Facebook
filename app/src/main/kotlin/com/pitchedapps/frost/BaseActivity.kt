@@ -19,7 +19,6 @@ open class BaseActivity : AppCompatActivity() {
                 negativeText(android.R.string.no)
                 onPositive { _, _ -> super.onBackPressed() }
                 checkBoxPromptRes(R.string.do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
-                show()
             }
         } else super.onBackPressed()
     }
