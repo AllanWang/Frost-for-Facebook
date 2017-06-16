@@ -1,8 +1,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
-import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.web.FrostWebViewClient
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.SingleSubject
@@ -43,7 +42,7 @@ interface InjectorContract {
 /**
  * Helper method to inject multiple functions simultaneously with a single callback
  */
-fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit)) {
+fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) {
     val observables = Array(injectors.size, { SingleSubject.create<String>() })
     Observable.zip<String, Array<String>>(observables.map { it.toObservable() }, { it.map { it.toString() }.toTypedArray() }).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
         callback.invoke(it)
@@ -53,6 +52,8 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<Strin
         injectors[i].inject(this, { observables[i].onSuccess(it) })
     }
 }
+
+fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = webCore.jsInject(*injectors, callback = callback)
 
 class JsInjector(val function: String) : InjectorContract {
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
