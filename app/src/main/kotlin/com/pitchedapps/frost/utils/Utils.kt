@@ -12,6 +12,7 @@ import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
 
 /**
@@ -30,10 +31,23 @@ fun Activity.cookies(): ArrayList<CookieModel> {
     return intent?.extras?.getParcelableArrayList<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
 }
 
+val String.formattedFbUrl: String
+    get() {
+        var url = this
+        if (url.startsWith("#!/")) url = url.substring(2)
+        if (url.startsWith('/')) url = FB_URL_BASE + url.substring(1)
+        url = url.replace("/#!/", "/")
+        val ref = url.indexOf("?ref")
+        if (ref != -1) url = url.substring(0, ref)
+        return url
+    }
+
 fun Context.launchWebOverlay(url: String) {
+    val argUrl = url.formattedFbUrl
+    L.i("Launch web overlay: $argUrl")
     val intent = Intent(this, WebOverlayActivity::class.java)
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-    intent.putExtra(ARG_URL, url)
+    intent.putExtra(ARG_URL, argUrl)
     val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
     ContextCompat.startActivity(this, intent, bundle)
 }

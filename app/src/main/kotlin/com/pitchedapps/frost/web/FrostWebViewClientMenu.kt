@@ -15,7 +15,7 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
 
     var content: String? = null
     val progressObservable: Subject<Int> = webCore.progressObservable
-    private val contentBaseUrl = "https://touch.facebook.com/notifications"
+    private val contentBaseUrl = "${FB_URL_BASE}notifications"
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -38,7 +38,10 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
             jsInject(JsAssets.MENU, callback = {
                 jsInject(JsAssets.MENU_CLICK) //menu injection must be after or we will have a loop from the click listener
             })
-        } else if (url == contentBaseUrl) jsInject(JsAssets.MENU_CLICK)
+        } else if (url == contentBaseUrl) {
+            L.i("Inject content")
+            jsInject(JsAssets.MENU_CLICK)
+        }
     }
 
     override fun emit(flag: Int) {
