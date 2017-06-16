@@ -19,14 +19,9 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
     val cookies: ArrayList<CookieModel>
         get() = (context as? MainActivity)?.cookies() ?: arrayListOf()
 
-    var lastUrl: String = ""
-
     @JavascriptInterface
     fun loadUrl(url: String) {
-        if (url != lastUrl) {
-            lastUrl = url
-            context.launchWebOverlay(url)
-        }
+        context.launchWebOverlay(url)
     }
 
     @JavascriptInterface

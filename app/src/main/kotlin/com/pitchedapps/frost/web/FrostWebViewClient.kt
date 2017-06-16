@@ -45,11 +45,11 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
+        L.i("Page finished $url")
         if (!url.contains(FACEBOOK_COM)) {
             refreshObservable.onNext(false)
             return
         }
-        L.i("Page finished $url")
         JsActions.LOGIN_CHECK.inject(view)
         onPageFinishedActions(url)
     }

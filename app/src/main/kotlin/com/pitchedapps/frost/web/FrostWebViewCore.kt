@@ -22,6 +22,7 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -36,8 +37,8 @@ class FrostWebViewCore @JvmOverloads constructor(
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
     private var nestedOffsetY: Int = 0
-    val progressObservable: BehaviorSubject<Int>    // Keeps track of every progress change
-    val refreshObservable: BehaviorSubject<Boolean> // Only emits on page loads
+    val progressObservable: PublishSubject<Int>     // Keeps track of every progress change
+    val refreshObservable: PublishSubject<Boolean>  // Only emits on page loads
     val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
     var baseUrl: String? = null
@@ -46,8 +47,8 @@ class FrostWebViewCore @JvmOverloads constructor(
 
     init {
         isNestedScrollingEnabled = true
-        progressObservable = BehaviorSubject.create<Int>()
-        refreshObservable = BehaviorSubject.create<Boolean>()
+        progressObservable = PublishSubject.create<Int>()
+        refreshObservable = PublishSubject.create<Boolean>()
         titleObservable = BehaviorSubject.create<String>()
     }
 
@@ -79,8 +80,8 @@ class FrostWebViewCore @JvmOverloads constructor(
 
     /**
      * Hook onto the refresh observable for one cycle
-     * Note that this is a behaviour subject so the first 'false' emission should be ignored
      * Animate toggles between the fancy ripple and the basic fade
+     * The cycle only starts on the first load since there may have been another process when this is registered
      */
     fun registerTransition(animate: Boolean) {
         var dispose: Disposable? = null
