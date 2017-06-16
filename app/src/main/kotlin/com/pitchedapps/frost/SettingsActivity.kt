@@ -27,7 +27,7 @@ class SettingsActivity : KPrefActivity() {
                         if (item.pref != which) {
                             item.pref = which
                             reload()
-                            setFrostTheme(true)
+                            setFrostTheme()
                             themeExterior()
                         }
                         true
@@ -99,7 +99,6 @@ class SettingsActivity : KPrefActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         themeExterior(false)
-        setFrostTheme(true)
     }
 
     fun themeExterior(animate: Boolean = true) {
@@ -110,8 +109,6 @@ class SettingsActivity : KPrefActivity() {
         else toolbarCanvas.set(darkAccent)
         this.navigationBarColor = darkAccent
     }
-
-    private fun relativeDuration(canvas: RippleCanvas): Long = Math.hypot(canvas.height.toDouble(), canvas.width.toDouble() / 2).toLong()
 
     override fun onBackPressed() {
         startActivitySlideOut(MainActivity::class.java, clearStack = true, intentBuilder = {

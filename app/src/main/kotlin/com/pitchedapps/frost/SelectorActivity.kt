@@ -1,19 +1,19 @@
 package com.pitchedapps.frost
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.AccountItem
 
 /**
@@ -24,6 +24,7 @@ class SelectorActivity : BaseActivity() {
     val recycler: RecyclerView by bindView(R.id.selector_recycler)
     val adapter = FastItemAdapter<AccountItem>()
     val text: AppCompatTextView by bindView(R.id.text_select_account)
+    val container: ConstraintLayout by bindView(R.id.container)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,17 +41,6 @@ class SelectorActivity : BaseActivity() {
                 else FbCookie.switchUser(item.cookie, { launchNewTask(MainActivity::class.java, cookies()) })
             }
         })
-        theme()
-    }
-
-    fun theme() {
-        val darkAccent = Prefs.headerColor.darken()
-        statusBarColor = darkAccent.darken().withAlpha(255)
-        navigationBarColor = darkAccent
-        text.setTextColor(Prefs.textColor)
-//        toolbar.setBackgroundColor(darkAccent)
-//        toolbar.setTitleTextColor(Prefs.iconColor)
-        window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-//        toolbar.overflowIcon?.setTint(Prefs.iconColor)
+        setFrostColors(texts = arrayOf(text), backgrounds = arrayOf(container))
     }
 }
