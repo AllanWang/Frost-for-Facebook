@@ -32,7 +32,6 @@ import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.services.requestNotifications
 import com.pitchedapps.frost.utils.*
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.childrenSequence
 
@@ -46,8 +45,12 @@ class MainActivity : BaseActivity() {
     val appBar: AppBarLayout by bindView(R.id.appbar)
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
-    var titleDisposable: Disposable? = null
-    var refreshObservable = PublishSubject.create<Boolean>()!!
+    var webFragmentObservable = PublishSubject.create<Int>()!!
+    var lastPosition = -1
+
+    companion object {
+        const val FRAGMENT_REFRESH = 99
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +62,10 @@ class MainActivity : BaseActivity() {
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                updateTitleListener()
+                if (lastPosition == position) return
+                if (lastPosition != -1) webFragmentObservable.onNext(-(lastPosition + 1))
+                webFragmentObservable.onNext(position)
+                lastPosition = position
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -75,13 +81,13 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+        viewPager.post { webFragmentObservable.onNext(0); lastPosition = 0 } //trigger hook so title is set
         setupDrawer(savedInstanceState)
         setupTabs()
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        viewPager.post { updateTitleListener() }
         theme()
     }
 
@@ -98,11 +104,6 @@ class MainActivity : BaseActivity() {
         window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
         toolbar.overflowIcon?.setTint(Prefs.iconColor)
         drawer
-    }
-
-    fun updateTitleListener() {
-        titleDisposable?.dispose()
-        titleDisposable = currentFragment.web.addTitleListener({ toolbar.title = it })
     }
 
     fun setupTabs() {
@@ -154,7 +155,7 @@ class MainActivity : BaseActivity() {
                     else when (profile.identifier) {
                         -2L -> launchNewTask(LoginActivity::class.java, clearStack = false)
                         -3L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
-                        else -> switchUser(profile.identifier, { refreshObservable.onNext(true) })
+                        else -> switchUser(profile.identifier, { refreshAll() })
                     }
                     false
                 }
@@ -181,7 +182,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun refreshAll() {
-        refreshObservable.onNext(true)
+        webFragmentObservable.onNext(FRAGMENT_REFRESH)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -197,7 +198,7 @@ class MainActivity : BaseActivity() {
                     putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
                 })
             }
-            R.id.action_changelog -> showChangelog(R.xml.changelog)
+            R.id.action_changelog -> showChangelog(R.xml.changelog, { theme() })
             R.id.action_call -> {
                 requestNotifications(Prefs.userId)
             }
@@ -218,7 +219,7 @@ class MainActivity : BaseActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int) = WebFragment(pages[position])
+        override fun getItem(position: Int) = WebFragment(pages[position], position)
 
         override fun getCount() = pages.size
 

@@ -3,6 +3,7 @@ package com.pitchedapps.frost.utils
 import android.graphics.Color
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.kpref
+import ca.allanwang.kau.utils.lazyResettable
 import com.pitchedapps.frost.injectors.InjectorContract
 
 /**

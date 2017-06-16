@@ -9,10 +9,10 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-class FrostWebViewClientMenu(refreshObservable: Subject<Boolean>) : FrostWebViewClient(refreshObservable) {
+class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(webCore) {
 
     var content: String? = null
-    var view: FrostWebViewCore? = null
+    val progressObservable: Subject<Int> = webCore.progressObservable
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -31,32 +31,30 @@ class FrostWebViewClientMenu(refreshObservable: Subject<Boolean>) : FrostWebView
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
-        with(view as FrostWebViewCore) {
-            if (url == view.baseUrl) {
-                this@FrostWebViewClientMenu.view = view
-                inject(JsAssets.MENU, view, {
-                    inject(JsAssets.MENU_CLICK, view) //menu injection must be after or we will have a loop from the click listener
-                })
-            } else {
-                inject(JsAssets.MENU_CLICK, view)
-            }
+        if (url == webCore.baseUrl) {
+            progressObservable.onNext(99)
+            inject(JsAssets.MENU, webCore, {
+                inject(JsAssets.MENU_CLICK, webCore) //menu injection must be after or we will have a loop from the click listener
+            })
+        } else {
+            inject(JsAssets.MENU_CLICK, webCore)
         }
     }
 
     override fun emit(flag: Int) {
         super.emit(flag)
-        if (view != null) super.onPageFinishedActions(view!!)
-        view = null
+        progressObservable.onNext(100)
+        super.injectAndFinish()
     }
 
-    override fun onPageFinishedActions(view: FrostWebViewCore, url: String?) {
+    override fun onPageFinishedActions(url: String?) {
         when (url) {
             "https://m.facebook.com/settings",
             "https://m.facebook.com/settings#",
             "https://m.facebook.com/settings#!/settings?soft=bookmarks" -> {
                 //do nothing; we will further inject before revealing
             }
-            else -> super.onPageFinishedActions(view)
+            else -> injectAndFinish()
         }
     }
 

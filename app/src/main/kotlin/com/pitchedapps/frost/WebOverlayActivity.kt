@@ -9,6 +9,7 @@ import com.jude.swipbackhelper.SwipeBackHelper
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.url
 import com.pitchedapps.frost.web.FrostWebView
+import io.reactivex.disposables.Disposable
 
 
 /**
