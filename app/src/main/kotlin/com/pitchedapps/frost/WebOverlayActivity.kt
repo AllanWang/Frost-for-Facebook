@@ -1,10 +1,12 @@
 package com.pitchedapps.frost
 
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.url
 import com.pitchedapps.frost.web.FrostWebView
 
@@ -16,6 +18,7 @@ class WebOverlayActivity : AppCompatActivity() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
+    val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,20 @@ class WebOverlayActivity : AppCompatActivity() {
                 .setSwipeRelateEnable(true)
                 .setSwipeRelateOffset(300)
         frostWeb.web.addTitleListener({ toolbar.title = it })
+        theme()
+    }
+
+    /**
+     * Our theme for the overlay should be fully opaque
+     */
+    fun theme() {
+        val darkAccent = Prefs.headerColor.darken().withAlpha(255)
+        statusBarColor = darkAccent.darken()
+        navigationBarColor = darkAccent
+        toolbar.setBackgroundColor(darkAccent)
+        toolbar.setTitleTextColor(Prefs.iconColor)
+        coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
+        toolbar.overflowIcon?.setTint(Prefs.iconColor)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

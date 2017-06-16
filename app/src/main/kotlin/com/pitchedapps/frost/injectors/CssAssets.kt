@@ -10,7 +10,7 @@ import com.pitchedapps.frost.utils.L
  * //TODO add folder mapping using Prefs
  */
 enum class CssAssets(val folder: String = "themes") : InjectorContract {
-    LOGIN("core"), MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM
+    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM
     ;
 
     var file = "${name.toLowerCase()}.compact.css"

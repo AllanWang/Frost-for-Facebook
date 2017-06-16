@@ -8,8 +8,10 @@ import android.webkit.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.views.fadeIn
 import com.pitchedapps.frost.views.snackbar
 import io.reactivex.subjects.PublishSubject
@@ -19,9 +21,6 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-05-29.
  *
- * Courtesy of takahirom
- *
- * https://github.com/takahirom/webview-in-coordinatorlayout/blob/master/app/src/main/java/com/github/takahirom/webview_in_coodinator_layout/NestedWebView.java
  */
 
 
@@ -64,8 +63,8 @@ class LoginWebView @JvmOverloads constructor(
     fun setupWebview() {
         settings.javaScriptEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        setWebViewClient(LoginClient())
-        setWebChromeClient(LoginChromeClient())
+        webViewClient = LoginClient()
+        webChromeClient = LoginChromeClient()
     }
 
     fun loadLogin() {
@@ -83,10 +82,12 @@ class LoginWebView @JvmOverloads constructor(
                 return
             }
             cookieObservable.onNext(Pair(url, CookieManager.getInstance().getCookie(url)))
-            CssAssets.LOGIN.inject(view, {
-                if (view.visibility == View.INVISIBLE)
-                    view.fadeIn(offset = 150L)
-            })
+            view.jsInject(CssHider.HEADER, CssHider.CORE,
+                    Prefs.themeInjector,
+                    callback = {
+                        if (view.visibility != View.VISIBLE)
+                            view.fadeIn(offset = 150L)
+                    })
         }
     }
 

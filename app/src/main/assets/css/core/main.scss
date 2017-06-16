@@ -25,7 +25,7 @@ button, button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
 }
 
 body, input, ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35, ._rnk, ._24u0, ._1g06, ._14ye,
-textarea, .mentions-input, .mentions-placeholder, .fcw, ._5-7t, .fcl, ._4qas, .thread-title, ._46pa, ._336p,
+textarea, .mentions-input, .mentions-placeholder, .fcw, ._5-7t, .fcl, ._4qas, .thread-title, ._46pa, ._336p, ._1rrd,
 h1, h2, h3, h4, h5, h6 {
   color: $text !important;
 }
@@ -58,7 +58,7 @@ a,
 
 //friend card border
 ._d4i,
-._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756 {
+._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd {
   border: 1px solid $divider !important;
 }
 
@@ -68,7 +68,7 @@ a,
   border-color: $divider !important;
 }
 
-._2ip_ ._2zh4::before, ._2ip_ ._15kk::before, ._2ip_ ._15kk + ._4u3j::before, ._58a0:before {
+._2ip_ ._2zh4::before, ._2ip_ ._15kk::before, ._2ip_ ._15kk + ._4u3j::before, ._58a0:before, ._43mh::before, ._43mh::after {
   background: $divider !important;
 }
 
