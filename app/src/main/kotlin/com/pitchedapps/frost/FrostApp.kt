@@ -48,7 +48,6 @@ class FrostApp : Application() {
         Prefs.initialize(this, "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs")
         FbCookie()
         super.onCreate()
-        requestNotifications(Prefs.userId)
         //Drawer profile loading logic
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {

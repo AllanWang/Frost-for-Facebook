@@ -23,9 +23,6 @@ import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
-import com.pitchedapps.frost.views.fadeIn
-import com.pitchedapps.frost.views.fadeOut
-import com.pitchedapps.frost.views.setTextWithFade
 import com.pitchedapps.frost.web.LoginWebView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers

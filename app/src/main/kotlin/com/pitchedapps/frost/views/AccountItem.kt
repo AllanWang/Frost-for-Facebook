@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.toDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource

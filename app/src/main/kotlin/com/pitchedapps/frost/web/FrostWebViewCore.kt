@@ -12,8 +12,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
+import ca.allanwang.kau.utils.circularReveal
+import ca.allanwang.kau.utils.fadeIn
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.utils.L
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -65,13 +70,38 @@ class FrostWebViewCore @JvmOverloads constructor(
         setBackgroundColor(Color.TRANSPARENT)
     }
 
-    override fun loadUrl(url: String?) {
-        if (url != null)
-            super.loadUrl(url)
+    fun loadUrl(url: String?, animate: Boolean) {
+        if (url == null) return
+        registerTransition(animate)
+        super.loadUrl(url)
     }
 
-    fun loadBaseUrl() {
-        loadUrl(baseUrl)
+    fun reload(animate: Boolean) {
+        registerTransition(animate)
+        super.reload()
+    }
+
+    /**
+     * Hook onto the refresh observable for one cycle
+     * Note that this is a behaviour subject so the first 'false' emission should be ignored
+     */
+    fun registerTransition(animate: Boolean) {
+        var dispose: Disposable? = null
+        var loading = false
+        dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
+            if (it) {
+                loading = true
+                if (isVisible()) fadeOut(duration = 200L)
+            } else if (loading) {
+                dispose?.dispose()
+                if (animate) circularReveal(offset = 150L)
+                else fadeIn(duration = 100L)
+            }
+        }
+    }
+
+    fun loadBaseUrl(animate: Boolean = true) {
+        loadUrl(baseUrl, animate)
     }
 
     fun addTitleListener(subscriber: (title: String) -> Unit, scheduler: Scheduler = AndroidSchedulers.mainThread()): Disposable

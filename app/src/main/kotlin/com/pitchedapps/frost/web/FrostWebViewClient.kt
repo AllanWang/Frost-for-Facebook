@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.view.KeyEvent
 import android.webkit.*
-import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.SelectorActivity
@@ -18,9 +17,6 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
-import com.pitchedapps.frost.views.circularReveal
-import com.pitchedapps.frost.views.fadeIn
-import com.pitchedapps.frost.views.fadeOut
 import io.reactivex.subjects.Subject
 
 /**
@@ -36,7 +32,6 @@ open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebView
         if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
         else if (url.contains("login.php")) FbCookie.reset({ launchLogin(view.context) })
-        view.fadeOut(duration = 200L)
     }
 
     fun launchLogin(c: Context) {
@@ -50,19 +45,18 @@ open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebView
         super.onPageFinished(view, url)
         if (!url.contains(FACEBOOK_COM)) {
             refreshObservable.onNext(false)
-            if (!view.isVisible()) view.fadeIn(duration = 200L)
             return
         }
         L.i("Page finished $url")
         JsActions.LOGIN_CHECK.inject(view)
-        onPageFinishedReveal(view as FrostWebViewCore, url)
+        onPageFinishedActions(view as FrostWebViewCore, url)
     }
 
-    open internal fun onPageFinishedReveal(view: FrostWebViewCore, url: String?) {
-        onPageFinishedReveal(view, true)
+    open internal fun onPageFinishedActions(view: FrostWebViewCore, url: String?) {
+        onPageFinishedActions(view)
     }
 
-    internal fun onPageFinishedReveal(view: FrostWebViewCore, animate: Boolean) {
+    internal fun onPageFinishedActions(view: FrostWebViewCore) {
         L.d("Page finished reveal")
         view.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
@@ -70,8 +64,6 @@ open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebView
                 callback = {
                     L.d("Finished ${it.contentToString()}")
                     refreshObservable.onNext(false)
-                    if (animate) view.circularReveal(offset = 150L)
-                    else view.fadeIn(duration = 100L)
                 })
     }
 
