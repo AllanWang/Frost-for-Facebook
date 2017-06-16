@@ -7,9 +7,9 @@ import android.support.v7.widget.Toolbar
 import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.url
 import com.pitchedapps.frost.web.FrostWebView
-import io.reactivex.disposables.Disposable
 
 
 /**
@@ -37,7 +37,8 @@ class WebOverlayActivity : AppCompatActivity() {
                 .setSwipeRelateEnable(true)
                 .setSwipeRelateOffset(300)
         frostWeb.web.addTitleListener({ toolbar.title = it })
-        theme()
+        setFrostColors(toolbar, themeWindow = false)
+        coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
     }
 
     /**

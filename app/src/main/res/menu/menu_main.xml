@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.pitchedapps.myapplication.MainActivity">
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -11,21 +12,6 @@
         android:id="@+id/action_changelog"
         android:orderInCategory="200"
         android:title="@string/changelog"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_restart"
-        android:orderInCategory="220"
-        android:title="Restart"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_call"
-        android:orderInCategory="300"
-        android:title="Call"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_db"
-        android:orderInCategory="400"
-        android:title="DB"
         app:showAsAction="never" />
 </menu>
 

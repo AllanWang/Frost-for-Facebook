@@ -4,8 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.Toolbar
+import android.view.View
+import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.pitchedapps.frost.LoginActivity
@@ -81,4 +85,18 @@ fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     else
         setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
+}
+
+fun Activity.setFrostColors(toolbar: Toolbar? = null, themeWindow: Boolean = true,
+                            texts: Array<TextView> = arrayOf(), headers: Array<View> = arrayOf(), backgrounds: Array<View> = arrayOf()) {
+    val darkAccent = Prefs.headerColor.darken()
+    statusBarColor = darkAccent.darken().withAlpha(255)
+    navigationBarColor = darkAccent
+    if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
+    toolbar?.setBackgroundColor(darkAccent)
+    toolbar?.setTitleTextColor(Prefs.iconColor)
+    toolbar?.overflowIcon?.setTint(Prefs.iconColor)
+    texts.forEach { it.setTextColor(Prefs.textColor) }
+    headers.forEach { it.setBackgroundColor(darkAccent) }
+    backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
 }

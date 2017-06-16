@@ -25,12 +25,10 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.dbflow.loadFbTabs
-import com.pitchedapps.frost.dbflow.saveAsync
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.services.requestNotifications
 import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.childrenSequence
@@ -88,22 +86,7 @@ class MainActivity : BaseActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        theme()
-    }
-
-    fun theme() {
-        val darkAccent = Prefs.headerColor.darken()
-        statusBarColor = darkAccent.darken().withAlpha(255)
-        navigationBarColor = darkAccent
-        tabs.setBackgroundColor(darkAccent)
-        appBar.setBackgroundColor(darkAccent)
-        toolbar.setBackgroundColor(darkAccent)
-        toolbar.setTitleTextColor(Prefs.iconColor)
-//        toolbar.tint
-        viewPager.setBackgroundColor(Prefs.bgColor)
-        window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-        toolbar.overflowIcon?.setTint(Prefs.iconColor)
-        drawer
+        setFrostColors(toolbar, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
     }
 
     fun setupTabs() {
@@ -199,11 +182,6 @@ class MainActivity : BaseActivity() {
                 })
             }
             R.id.action_changelog -> showChangelog(R.xml.changelog, { theme() })
-            R.id.action_call -> {
-                requestNotifications(Prefs.userId)
-            }
-            R.id.action_db -> adapter.pages.saveAsync(this)
-            R.id.action_restart -> restart()
             else -> return super.onOptionsItemSelected(item)
         }
         return true

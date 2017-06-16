@@ -20,6 +20,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
+import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-06-05.
@@ -36,6 +37,7 @@ class AccountItem(val cookie: CookieModel?) : AbstractItem<AccountItem, AccountI
         super.bindView(viewHolder, payloads)
         with(viewHolder) {
             text.visibility = View.INVISIBLE
+            text.setTextColor(Prefs.textColor)
             if (cookie != null) {
                 text.text = cookie.name
                 val options = RequestOptions().transform(CircleCrop())
@@ -52,7 +54,7 @@ class AccountItem(val cookie: CookieModel?) : AbstractItem<AccountItem, AccountI
                 }).into(image)
             } else {
                 text.visibility = View.VISIBLE
-                image.setImageDrawable(GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(itemView.context, 100))
+                image.setImageDrawable(GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(itemView.context, 100, Prefs.textColor))
                 text.text = itemView.context.getString(R.string.add_account)
                 //todo add plus image
             }

@@ -23,6 +23,7 @@ import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.web.LoginWebView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -64,7 +65,7 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.login)
-        theme()
+        setFrostColors(toolbar)
         web.loginObservable = loginObservable
         web.progressObservable = progressObservable
         loginObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
@@ -77,16 +78,6 @@ class LoginActivity : BaseActivity() {
         }
         progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe { refresh = it != 100 }
         web.loadLogin()
-    }
-
-    fun theme() {
-        val darkAccent = Prefs.headerColor.darken()
-        statusBarColor = darkAccent.darken().withAlpha(255)
-        navigationBarColor = darkAccent
-        toolbar.setBackgroundColor(darkAccent)
-        toolbar.setTitleTextColor(Prefs.iconColor)
-        window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-        toolbar.overflowIcon?.setTint(Prefs.iconColor)
     }
 
     fun loadInfo(cookie: CookieModel) {
