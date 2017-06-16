@@ -1,13 +1,15 @@
 // generic click handler
-document.onclick = function(e) {
+document.on('click', function (e) {
   e = e || window.event;
+  e.preventDefault();
   var element = e.target || e.srcElement;
   if (element.tagName !== 'A')
-    element = element.parentNode;
+      element = element.parentNode;
   if (element.tagName === 'A') {
-    var url = element.href;
-    console.log('Generic Click Intercept');
-    console.log(url);
-    Frost.loadUrl(url);
+      var url = element.href;
+      console.log('Generic Click Intercept');
+      console.log(url);
+      // Frost.loadUrl(url);
   }
-};
+  return false;
+});

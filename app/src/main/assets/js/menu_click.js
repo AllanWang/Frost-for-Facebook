@@ -1,16 +1,15 @@
 // we will handle click events
-document.onclick = function(e) {
-  e = e || window.event;
+console.log('Registering menu click');
+document.addEventListener('click', function(e) {
   var element = e.target || e.srcElement;
   if (element.tagName !== 'A')
     element = element.parentNode;
-  if (element.tagName === 'A') {
+  if (element.tagName === 'A' && element.getAttribute('href') !== '#') {
     var url = element.href;
     console.log('Click Intercept');
     console.log(url);
-    if (url !== "https://m.facebook.com/settings" && url !== "https://m.facebook.com/settings#" && url !== "https://m.facebook.com/settings#!/settings?soft=bookmarks") {
-      Frost.loadUrl(url);
-      Frost.reloadBaseUrl(false); //reinject base view
-    }
+    Frost.loadUrl(url);
+    e.stopPropagation();
+    e.preventDefault();
   }
-};
+}, true);

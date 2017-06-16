@@ -62,7 +62,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
-                JsAssets.CLICK_INTERCEPTOR,
+//                JsAssets.CLICK_INTERCEPTOR,
                 callback = {
                     L.d("Finished ${it.contentToString()}")
                     refreshObservable.onNext(false)
@@ -77,14 +77,6 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Emit $flag")
     }
 
-    fun inject(jsAssets: JsAssets, view: WebView, callback: (String) -> Unit = {}) {
-        L.i("Post inject ${jsAssets.name}")
-        jsAssets.inject(view, {
-            L.i("Post injection done $it")
-            callback.invoke(it)
-        })
-    }
-
     override fun shouldOverrideKeyEvent(view: WebView, event: KeyEvent): Boolean {
         L.d("Key event ${event.keyCode}")
         return super.shouldOverrideKeyEvent(view, event)
@@ -94,6 +86,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Url Loading ${request?.url?.path}")
         return super.shouldOverrideUrlLoading(view, request)
     }
+
+
 
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest?): WebResourceResponse? {
         if (request == null || !(request.url.host?.contains(FACEBOOK_COM) ?: false)) return super.shouldInterceptRequest(view, request)
