@@ -64,7 +64,6 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
                 Prefs.themeInjector,
 //                JsAssets.CLICK_INTERCEPTOR,
                 callback = {
-                    L.d("Finished ${it.contentToString()}")
                     refreshObservable.onNext(false)
                 })
     }
@@ -87,22 +86,10 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         return super.shouldOverrideUrlLoading(view, request)
     }
 
-
-
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest?): WebResourceResponse? {
         if (request == null || !(request.url.host?.contains(FACEBOOK_COM) ?: false)) return super.shouldInterceptRequest(view, request)
         L.v("Url intercept ${request.url.path}")
         return super.shouldInterceptRequest(view, request)
-    }
-
-    override fun onLoadResource(view: WebView, url: String) {
-        if (!url.contains(FACEBOOK_COM)) return super.onLoadResource(view, url)
-        L.v("Resource $url")
-//        FrostWebOverlay.values.forEach {
-//            if (url.contains(it.match))
-//                L.d("Resource Loaded $it")
-//        }
-        super.onLoadResource(view, url)
     }
 
 }

@@ -37,19 +37,25 @@ class JsBuilder {
 interface InjectorContract {
     fun inject(webView: WebView) = inject(webView, null)
     fun inject(webView: WebView, callback: ((String) -> Unit)?)
+    /**
+     * Toggle the injector (usually through Prefs
+     * If false, will fallback to an empty action
+     */
+    fun maybe(enable: Boolean): InjectorContract = if (enable) this else JsActions.EMPTY
 }
 
 /**
  * Helper method to inject multiple functions simultaneously with a single callback
  */
 fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) {
-    val observables = Array(injectors.size, { SingleSubject.create<String>() })
+    val validInjectors = injectors.filter { it != JsActions.EMPTY }
+    val observables = Array(validInjectors.size, { SingleSubject.create<String>() })
     Observable.zip<String, Array<String>>(observables.map { it.toObservable() }, { it.map { it.toString() }.toTypedArray() }).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
         callback.invoke(it)
     })
-    (0 until injectors.size).asSequence().forEach {
+    (0 until validInjectors.size).asSequence().forEach {
         i ->
-        injectors[i].inject(this, { observables[i].onSuccess(it) })
+        validInjectors[i].inject(this, { observables[i].onSuccess(it) })
     }
 }
 
