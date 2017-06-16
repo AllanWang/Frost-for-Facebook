@@ -5,10 +5,13 @@ android:
   components:
   - tools
   - platform-tools
-  - build-tools-25.0.2
-  - android-25
-  - extra-google-m2repository
+  - build-tools-26.0.0
+  - android-26
+  - extra-android-support
   - extra-android-m2repository
+  - extra-google-m2repository
+licenses:
+  - '.+'
 before_install:
 - chmod +x gradlew
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle

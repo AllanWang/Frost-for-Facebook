@@ -75,8 +75,8 @@ fun MaterialDialog.Builder.theme(): MaterialDialog.Builder {
     return this
 }
 
-fun Activity.setFrostTheme() {
-    val isTransparent = Color.alpha(Prefs.bgColor) != 255
+fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
+    val isTransparent = (Color.alpha(Prefs.bgColor) != 255) || forceTransparent
     if (Prefs.bgColor.isColorDark())
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     else
