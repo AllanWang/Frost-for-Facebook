@@ -22,12 +22,14 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebViewClient() {
+open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
+
+    val refreshObservable: Subject<Boolean> = webCore.refreshObservable
 
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         L.i("FWV Loading $url")
-        L.v("Cookies ${CookieManager.getInstance().getCookie(url)}")
+//        L.v("Cookies ${CookieManager.getInstance().getCookie(url)}")
         refreshObservable.onNext(true)
         if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
@@ -49,16 +51,16 @@ open class FrostWebViewClient(val refreshObservable: Subject<Boolean>) : WebView
         }
         L.i("Page finished $url")
         JsActions.LOGIN_CHECK.inject(view)
-        onPageFinishedActions(view as FrostWebViewCore, url)
+        onPageFinishedActions(url)
     }
 
-    open internal fun onPageFinishedActions(view: FrostWebViewCore, url: String?) {
-        onPageFinishedActions(view)
+    open internal fun onPageFinishedActions(url: String?) {
+        injectAndFinish()
     }
 
-    internal fun onPageFinishedActions(view: FrostWebViewCore) {
+    internal fun injectAndFinish() {
         L.d("Page finished reveal")
-        view.jsInject(CssHider.HEADER,
+        webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
                 JsAssets.CLICK_INTERCEPTOR,
                 callback = {

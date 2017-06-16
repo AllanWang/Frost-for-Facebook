@@ -18,7 +18,6 @@ import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.utils.L
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -27,9 +26,6 @@ import io.reactivex.subjects.BehaviorSubject
 /**
  * Created by Allan Wang on 2017-05-29.
  *
- * Courtesy of takahirom
- *
- * https://github.com/takahirom/webview-in-coordinatorlayout/blob/master/app/src/main/java/com/github/takahirom/webview_in_coodinator_layout/NestedWebView.java
  */
 class FrostWebViewCore @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -63,9 +59,9 @@ class FrostWebViewCore @JvmOverloads constructor(
         settings.userAgentString = USER_AGENT_BASIC
 //        settings.domStorageEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        frostWebClient = baseEnum?.webClient?.invoke(refreshObservable) ?: FrostWebViewClient(refreshObservable)
+        frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
-        webChromeClient = FrostChromeClient(progressObservable, titleObservable)
+        webChromeClient = FrostChromeClient(this)
         addJavascriptInterface(FrostJSI(context, this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
     }
@@ -84,6 +80,7 @@ class FrostWebViewCore @JvmOverloads constructor(
     /**
      * Hook onto the refresh observable for one cycle
      * Note that this is a behaviour subject so the first 'false' emission should be ignored
+     * Animate toggles between the fancy ripple and the basic fade
      */
     fun registerTransition(animate: Boolean) {
         var dispose: Disposable? = null
@@ -107,6 +104,12 @@ class FrostWebViewCore @JvmOverloads constructor(
     fun addTitleListener(subscriber: (title: String) -> Unit, scheduler: Scheduler = AndroidSchedulers.mainThread()): Disposable
             = titleObservable.observeOn(scheduler).subscribe(subscriber)
 
+    /**
+     * Handle nested scrolling against SwipeRecyclerView
+     * Courtesy of takahirom
+     *
+     * https://github.com/takahirom/webview-in-coordinatorlayout/blob/master/app/src/main/java/com/github/takahirom/webview_in_coodinator_layout/NestedWebView.java
+     */
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         val event = MotionEvent.obtain(ev)
         val action = event.action

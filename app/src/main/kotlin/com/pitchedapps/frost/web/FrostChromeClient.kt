@@ -10,7 +10,10 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-class FrostChromeClient(val progressObservable: Subject<Int>, val titleObservable: BehaviorSubject<String>) : WebChromeClient() {
+class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
+
+    val progressObservable: Subject<Int> = webCore.progressObservable
+    val titleObservable: BehaviorSubject<String> = webCore.titleObservable
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         L.i("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")

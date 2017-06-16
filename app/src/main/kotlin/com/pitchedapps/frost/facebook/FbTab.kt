@@ -8,9 +8,9 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
-import io.reactivex.subjects.BehaviorSubject
+import com.pitchedapps.frost.web.FrostWebViewCore
 
-enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String, val webClient: ((refreshObservable: BehaviorSubject<Boolean>) -> FrostWebViewClient)? = null) {
+enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String, val webClient: ((webCore: FrostWebViewCore) -> FrostWebViewClient)? = null) {
     FEED(R.string.feed, CommunityMaterial.Icon.cmd_newspaper, ""),
     FEED_MOST_RECENT(R.string.most_recent, GoogleMaterial.Icon.gmd_grade, "/?sk=h_chr"),
     FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "/?sk=h_nor"),
