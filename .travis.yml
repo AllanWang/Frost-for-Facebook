@@ -1,4 +1,4 @@
-language: android
+  language: android
 jdk:
 - oraclejdk8
 android:
@@ -38,9 +38,15 @@ notifications:
     - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
       Download>"
 sudo: false
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - "$HOME/.m2"
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+    - $HOME/.m2s
 env:
   global:
   - secure: Sob0b0PXhJ5uq+quf74Vl/jWaJ0RVGqTcn83p45iQI/OCEvCLyLk4FojDrtEuu1wUrWNYnv4EpX2WcAUO8+93e93Y3XIfSltXOWnXtM6usSMm7/2iiT1nR0Q6L1mC0rFLvkkhnm1mlq1DGOZKB3eI6WJKx0+/oX3gWUWgmeTsTln7YjQl/QHIk4tJFt3K+DE0fDJfo561OawC2UUPESULv5O/fd4fbnVIcJYJDBciPqT/PNJ+Rx3DqKO3BKam6+ulv5fByCcPaDXiJ7NfWw+ggpgEBZaIoGy/UL6/it1LiDXRE2yHE1kRTjMOmiCd71pL26J0n4c+o2ldTSMz0dScmbA4c+elQDwCjtnXw21B/pNavRvhGX6iqRl2A3z5/ivVf6foSpCSzLm6FZSizAnMBAa0TxmPiM4F3QWvwtF6Rgo7hD/iuTVUW4i6mOIDfTWRPD4Ha6zdkj6OCRZ1OsIuw3OiYZNtlytX7aTyHIC2aoZw0sUkExbE/3fCP1Ej6632zxGjhof8jlvrnFJZacf921Q0/4O52H6KaQM6L0CV+YpPuctsEkFeoZ6xR0WXS9RTmCyGC3J6Qv+GWlbkFyLsphz43HSaGb8pIrljjmP1N7Q/7Oft54yEwbT6s8pXmBymkVeJQuyKTHzg5yyZgddWbiWM20kN6RA8jnykTMy5FU=
