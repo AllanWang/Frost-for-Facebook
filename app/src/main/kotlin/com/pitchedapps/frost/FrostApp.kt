@@ -13,7 +13,6 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerUIUtils
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.services.requestNotifications
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.config.FlowConfig
@@ -45,7 +44,7 @@ class FrostApp : Application() {
             Timber.plant(CrashReportingTree())
         }
         FlowManager.init(FlowConfig.Builder(this).build())
-        Prefs.initialize(this, "${com.pitchedapps.frost.BuildConfig.APPLICATION_ID}.prefs")
+        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         FbCookie()
         super.onCreate()
         //Drawer profile loading logic

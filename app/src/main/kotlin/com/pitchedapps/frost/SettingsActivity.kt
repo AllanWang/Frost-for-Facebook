@@ -27,7 +27,7 @@ class SettingsActivity : KPrefActivity() {
                         if (item.pref != which) {
                             item.pref = which
                             reload()
-                            setFrostTheme()
+                            setFrostTheme(true)
                             themeExterior()
                         }
                         true
@@ -99,6 +99,7 @@ class SettingsActivity : KPrefActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         themeExterior(false)
+        setFrostTheme(true)
     }
 
     fun themeExterior(animate: Boolean = true) {
