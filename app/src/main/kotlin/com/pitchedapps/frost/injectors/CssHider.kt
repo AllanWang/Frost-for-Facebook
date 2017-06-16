@@ -6,6 +6,7 @@ import android.webkit.WebView
  * Created by Allan Wang on 2017-05-31.
  */
 enum class CssHider(vararg val items: String) : InjectorContract {
+    CORE("[data-sigil=\"m_login_upsell\"]"),
     HEADER("#header[data-sigil=\"MTopBlueBarHeader\"]", "#header-notices", "[data-sigil*=\"m-promo-jewel-header\"]"),
     ADS("[data-xt*=\"is_sponsored.1\"]")
     ;

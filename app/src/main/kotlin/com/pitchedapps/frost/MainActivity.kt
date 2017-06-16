@@ -87,7 +87,7 @@ class MainActivity : BaseActivity() {
 
     fun theme() {
         val darkAccent = Prefs.headerColor.darken()
-        statusBarColor = darkAccent.withAlpha(255)
+        statusBarColor = darkAccent.darken().withAlpha(255)
         navigationBarColor = darkAccent
         tabs.setBackgroundColor(darkAccent)
         appBar.setBackgroundColor(darkAccent)
@@ -128,6 +128,7 @@ class MainActivity : BaseActivity() {
                 textColor = Prefs.iconColor.toLong()
                 backgroundDrawable = ColorDrawable(navHeader)
                 selectionSecondLineShown = false
+                paddingBelow = false
                 cookies().forEach { (id, name) ->
                     profile(name = name ?: "") {
                         iconUrl = PROFILE_PICTURE_URL(id)
