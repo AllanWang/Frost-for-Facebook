@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.formattedFbUrl
 import com.pitchedapps.frost.utils.setFrostColors
-import com.pitchedapps.frost.utils.url
 import com.pitchedapps.frost.web.FrostWebView
 
 
@@ -21,6 +23,9 @@ class WebOverlayActivity : AppCompatActivity() {
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
+    val url: String
+        get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString)?.formattedFbUrl ?: FbTab.FEED.url
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_overlay)
@@ -28,7 +33,7 @@ class WebOverlayActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        frostWeb.web.setupWebview(url())
+        frostWeb.web.setupWebview(url)
         frostWeb.web.loadBaseUrl()
         SwipeBackHelper.onCreate(this)
         SwipeBackHelper.getCurrentPage(this)
@@ -65,6 +70,9 @@ class WebOverlayActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!frostWeb.onBackPressed()) super.onBackPressed()
+        if (!frostWeb.onBackPressed()) {
+            finish()
+            overridePendingTransition(R.anim.kau_fade_in, R.anim.kau_slide_out_right_top)
+        }
     }
 }

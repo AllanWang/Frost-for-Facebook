@@ -50,10 +50,10 @@ fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.i("Launch web overlay: $argUrl")
     val intent = Intent(this, WebOverlayActivity::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     intent.putExtra(ARG_URL, argUrl)
-    val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
-    ContextCompat.startActivity(this, intent, bundle)
+//    val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
+    ContextCompat.startActivity(this, intent, null)
 }
 
 fun WebOverlayActivity.url(): String {

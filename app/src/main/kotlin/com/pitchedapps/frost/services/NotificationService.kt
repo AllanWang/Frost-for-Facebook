@@ -36,12 +36,12 @@ class NotificationService : IntentService(NotificationService::class.java.simple
         L.i("Handling notifications for $id")
         if (id == -1L) return
         val data = loadFbCookie(id) ?: return
-        L.i("Using data $data")
+        L.v("Using data $data")
         val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
         val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
         var notifCount = 0
         var latestEpoch = lastNotificationTime(data.id)
-        L.i("Latest Epoch $latestEpoch")
+        L.v("Latest Epoch $latestEpoch")
         unreadNotifications.forEach {
             elem ->
             val notif = parseNotification(data, elem)
@@ -108,16 +108,6 @@ class NotificationService : IntentService(NotificationService::class.java.simple
                 .setAutoCancel(true)
 
         NotificationManagerCompat.from(this).notify("frost_$userId", userId.toInt(), notifBuilder.build())
-    }
-
-    private fun log(element: Element) {
-        with(element) {
-            L.i("\n\nElement ${text()}")
-            attributes().forEach {
-                L.i("attr ${it.html()}")
-            }
-            L.i("Content ${html()}")
-        }
     }
 
 }

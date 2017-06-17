@@ -27,10 +27,7 @@
 
     <style name="FrostTheme.Overlay">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityOpenExitAnimation">@anim/slide_out_right</item>
-        <item name="android:activityCloseEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+        <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

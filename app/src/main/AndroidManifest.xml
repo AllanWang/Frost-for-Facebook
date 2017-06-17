@@ -40,8 +40,14 @@
             android:theme="@style/FrostTheme" />
         <activity
             android:name=".WebOverlayActivity"
+            android:autoRemoveFromRecents="true"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity="com.pitchedapps.frost.single.web"
             android:theme="@style/FrostTheme.Overlay">
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -91,6 +97,7 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/FrostTheme" />
