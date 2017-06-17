@@ -15,7 +15,7 @@ class SettingsActivity : KPrefActivity() {
         textColor = { Prefs.textColor }
         accentColor = { Prefs.textColor }
         header(R.string.settings)
-        text<Int>(title = R.string.theme, itemBuilder = {
+        text<Int>(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
             onClick = {
                 _, _, item ->
                 this@SettingsActivity.materialDialogThemed {
@@ -35,65 +35,42 @@ class SettingsActivity : KPrefActivity() {
                 }
                 true
             }
-            getter = { Prefs.theme }
-            setter = { Prefs.theme = it }
-        }, textGetter = { this@SettingsActivity.string(Theme(it).textRes) })
-        colorPicker(title = R.string.text_color, itemBuilder = {
-            getter = { Prefs.customTextColor }
-            setter = { Prefs.customTextColor = it; reload() }
+            textGetter = { this@SettingsActivity.string(Theme(it).textRes) }
+        }
+
+        colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload() }) {
             enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ ->
-                itemView.snackbar(R.string.requires_custom_theme)
-                true
-            }
-        }, colorBuilder = {
+            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
             allowCustomAlpha = false
             allowCustom = true
-        })
+        }
 
-        colorPicker(title = R.string.background_color, itemBuilder = {
-            getter = { Prefs.customBackgroundColor }
-            setter = { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }
+        colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
+                { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }) {
             enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ ->
-                itemView.snackbar(R.string.requires_custom_theme)
-                true
-            }
-        }, colorBuilder = {
+            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
             allowCustomAlpha = true
             allowCustom = true
-        })
+        }
 
-        colorPicker(title = R.string.header_color, itemBuilder = {
-            getter = { Prefs.customHeaderColor }
-            setter = {
-                Prefs.customHeaderColor = it
-                val darkerColor = it.darken()
-                this@SettingsActivity.navigationBarColor = darkerColor
-                toolbarCanvas.ripple(darkerColor, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
-            }
+        colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
+            Prefs.customHeaderColor = it
+            val darkerColor = it.darken()
+            this@SettingsActivity.navigationBarColor = darkerColor
+            toolbarCanvas.ripple(darkerColor, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
+        }) {
             enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ ->
-                itemView.snackbar(R.string.requires_custom_theme)
-                true
-            }
-        }, colorBuilder = {
+            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
             allowCustomAlpha = true
             allowCustom = true
-        })
+        }
 
-        colorPicker(title = R.string.icon_color, itemBuilder = {
-            getter = { Prefs.customIconColor }
-            setter = { Prefs.customIconColor = it; toolbar.setTitleTextColor(it) }
+        colorPicker(R.string.icon_color, { Prefs.customIconColor }, { Prefs.customIconColor = it; toolbar.setTitleTextColor(it) }) {
             enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ ->
-                itemView.snackbar(R.string.requires_custom_theme)
-                true
-            }
-        }, colorBuilder = {
+            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
             allowCustomAlpha = false
             allowCustom = true
-        })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
