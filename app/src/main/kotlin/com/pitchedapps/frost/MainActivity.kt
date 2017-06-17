@@ -97,7 +97,7 @@ class MainActivity : BaseActivity() {
                 currentFragment.web.scrollOrRefresh()
             }
         })
-        adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this, color = Prefs.iconColor))) }
+        adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this, sizeDp = 20, color = Prefs.iconColor))) }
     }
 
     fun setupDrawer(savedInstanceState: Bundle?) {

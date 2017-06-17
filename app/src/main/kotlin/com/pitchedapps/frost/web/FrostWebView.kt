@@ -26,7 +26,7 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)
-        progress.tint(Prefs.iconColor.withAlpha(180))
+        progress.tint(Prefs.textColor.withAlpha(180))
         refresh.setColorSchemeColors(Prefs.iconColor)
         refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
         web.progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
