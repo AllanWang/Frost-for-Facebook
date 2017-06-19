@@ -41,4 +41,11 @@
     <string name="custom">Custom</string>
     <string name="frost_notifications">Frost Notifications</string>
     <string name="requires_custom_theme">Requires custom theme</string>
+
+    <string name="none">None</string>
+    <string name="x_minutes">%d minutes</string>
+    <string name="one_hour">1 hour</string>
+    <string name="x_hours">%d hours</string>
+    <string name="one_day">1 day</string>
+    <string name="x_days">%d days</string>
 </resources>

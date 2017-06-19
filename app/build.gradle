@@ -96,6 +96,8 @@ dependencies {
 
     testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
 
+    compile "org.greenrobot:eventbus:${EVENTBUS}"
+
     //Icons
     compile "com.mikepenz:google-material-typeface:${IICON_GOOGLE}.original@aar"
     compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"

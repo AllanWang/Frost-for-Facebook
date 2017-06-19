@@ -30,8 +30,12 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.childrenSequence
+import org.jsoup.Jsoup
+import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity() {
 
@@ -45,6 +49,7 @@ class MainActivity : BaseActivity() {
     lateinit var drawerHeader: AccountHeader
     var webFragmentObservable = PublishSubject.create<Int>()!!
     var lastPosition = -1
+    val headerBadgeObservable = PublishSubject.create<String>()
 
     companion object {
         const val FRAGMENT_REFRESH = 99
@@ -97,6 +102,22 @@ class MainActivity : BaseActivity() {
                 currentFragment.web.scrollOrRefresh()
             }
         })
+        headerBadgeObservable.throttleFirst(15, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+                .map { Jsoup.parse(it) }
+                .filter { it.select("[data-sigil=\"count\"]").size >= 0 } //ensure headers exist
+                .map {
+                    val feed = it.select("[data-sigil*=\"feed\"] [data-sigil=\"count\"]")
+                    val requests = it.select("[data-sigil*=\"requests\"] [data-sigil=\"count\"]")
+                    val messages = it.select("[data-sigil*=\"messages\"] [data-sigil=\"count\"]")
+                    val notifications = it.select("[data-sigil*=\"notifications\"] [data-sigil=\"count\"]")
+                    return@map arrayOf(feed, requests, messages, notifications).map { it?.getOrNull(0)?.ownText() }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    (feed, requests, messages, notifications) ->
+                    L.d("Header subscription $feed $requests $messages $notifications")
+                    L.d("contained nulls ${feed == null}")
+                }
         adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this, sizeDp = 20, color = Prefs.iconColor))) }
     }
 

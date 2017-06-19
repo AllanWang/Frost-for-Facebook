@@ -1,11 +1,13 @@
 package com.pitchedapps.frost.utils
 
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -18,6 +20,7 @@ import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.services.NotificationService
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -99,4 +102,27 @@ fun Activity.setFrostColors(toolbar: Toolbar? = null, themeWindow: Boolean = tru
     texts.forEach { it.setTextColor(Prefs.textColor) }
     headers.forEach { it.setBackgroundColor(darkAccent) }
     backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+}
+
+
+const val NOTIFICATION_JOB = 7
+/**
+ * [interval] is # of min, which must be at least 15
+ * returns false if an error occurs; true otherwise
+ */
+fun Context.scheduleNotifications(minutes: Long): Boolean {
+    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+    scheduler.cancel(NOTIFICATION_JOB)
+    if (minutes < 0L) return true
+    val serviceComponent = ComponentName(this, NotificationService::class.java)
+    val builder = JobInfo.Builder(NOTIFICATION_JOB, serviceComponent)
+            .setPeriodic(minutes * 60000)
+            .setPersisted(true)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) //TODO add options
+    val result = scheduler.schedule(builder.build())
+    if (result <= 0) {
+        L.e("Notification scheduler failed")
+        return false
+    }
+    return true
 }

@@ -42,6 +42,9 @@ fun loadFbCookiesAsync(callback: (cookies: List<CookieModel>) -> Unit) {
     (select from CookieModel::class).orderBy(CookieModel_Table.name, true).async().queryListResultCallback { _, tResult -> callback.invoke(tResult) }.execute()
 }
 
+fun loadFbCookiesSync(): List<CookieModel> = (select from CookieModel::class).orderBy(CookieModel_Table.name, true).queryList()
+
+
 fun saveFbCookie(cookie: CookieModel, callback: (() -> Unit)? = null) {
     cookie.async save {
         L.d("Fb cookie $cookie saved")

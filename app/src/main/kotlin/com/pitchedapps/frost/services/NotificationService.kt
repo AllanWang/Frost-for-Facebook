@@ -1,14 +1,18 @@
 package com.pitchedapps.frost.services
 
-import android.app.IntentService
 import android.app.Notification
 import android.app.PendingIntent
+import android.app.job.JobParameters
+import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import ca.allanwang.kau.utils.checkThread
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.*
@@ -17,43 +21,58 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.L
+import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-14.
  */
-class NotificationService : IntentService(NotificationService::class.java.simpleName) {
+class NotificationService : JobService() {
+
+    var future: Future<Unit>? = null
+
+    override fun onStopJob(params: JobParameters?): Boolean {
+        future?.cancel(true)
+        future = null
+        return false
+    }
+
+    override fun onStartJob(params: JobParameters?): Boolean {
+        future = doAsync {
+            loadFbCookiesSync().forEach {
+                data ->
+                L.i("Handling notifications for ${data.id}")
+                L.v("Using data $data")
+                val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
+                val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
+                var notifCount = 0
+                var latestEpoch = lastNotificationTime(data.id)
+                L.v("Latest Epoch $latestEpoch")
+                unreadNotifications.forEach unread@ {
+                    elem ->
+                    val notif = parseNotification(data, elem)
+                    if (notif != null) {
+                        if (notif.timestamp <= latestEpoch) return@unread
+                        notif.createNotification(this@NotificationService)
+                        latestEpoch = notif.timestamp
+                        notifCount++
+                    }
+                }
+                if (notifCount > 0) saveNotificationTime(NotificationModel(data.id, latestEpoch))
+                summaryNotification(data.id, notifCount)
+            }
+            L.d("Finished notifications")
+            jobFinished(params, false)
+        }
+        return true
+    }
 
     companion object {
         const val ARG_ID = "arg_id"
         val epochMatcher: Regex by lazy { Regex(":([0-9]*),") }
         val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*),") }
-    }
-
-    override fun onHandleIntent(intent: Intent) {
-        val id = intent.getLongExtra(ARG_ID, -1L)
-        L.i("Handling notifications for $id")
-        if (id == -1L) return
-        val data = loadFbCookie(id) ?: return
-        L.v("Using data $data")
-        val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
-        val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
-        var notifCount = 0
-        var latestEpoch = lastNotificationTime(data.id)
-        L.v("Latest Epoch $latestEpoch")
-        unreadNotifications.forEach {
-            elem ->
-            val notif = parseNotification(data, elem)
-            if (notif != null) {
-                if (notif.timestamp <= latestEpoch) return@forEach
-                notif.createNotification(this)
-                latestEpoch = notif.timestamp
-                notifCount++
-            }
-        }
-        if (notifCount > 0) saveNotificationTime(NotificationModel(data.id, latestEpoch))
-        summaryNotification(data.id, notifCount)
     }
 
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
@@ -69,6 +88,18 @@ class NotificationService : IntentService(NotificationService::class.java.simple
         val abbrData = abbr?.attr("data-store")
         val epoch = if (abbrData == null) -1L else epochMatcher.find(abbrData)?.groups?.get(1)?.value?.toLong() ?: -1L
         return NotificationContent(data, notifId.toInt(), a.attr("href"), text, epoch)
+    }
+
+    private fun Context.debugNotification(text: String) {
+        if (BuildConfig.DEBUG) {
+            val notifBuilder = NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.frost_f_24)
+                    .setContentTitle(string(R.string.app_name))
+                    .setContentText(text)
+                    .setAutoCancel(true)
+
+            NotificationManagerCompat.from(this).notify(999, notifBuilder.build())
+        }
     }
 
     data class NotificationContent(val data: CookieModel, val notifId: Int, val href: String, val text: String, val timestamp: Long) {

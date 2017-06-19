@@ -3,7 +3,10 @@ package com.pitchedapps.frost.web
 import android.content.Context
 import android.graphics.Bitmap
 import android.view.KeyEvent
-import android.webkit.*
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.SelectorActivity
@@ -50,7 +53,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
             refreshObservable.onNext(false)
             return
         }
-        JsActions.LOGIN_CHECK.inject(view)
+        view.jsInject(JsActions.LOGIN_CHECK, JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
         onPageFinishedActions(url)
     }
 
@@ -62,7 +65,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
-//                JsAssets.CLICK_INTERCEPTOR,
+                //                JsAssets.CLICK_INTERCEPTOR,
                 callback = {
                     refreshObservable.onNext(false)
                 })

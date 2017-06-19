@@ -31,6 +31,8 @@ object Prefs : KPref() {
 
     var exitConfirmation: Boolean by kpref("exit_confirmation", true)
 
+    var notificationFreq: Long by kpref("notification_freq", -1L)
+
     private val loader = lazyResettable { Theme.values[Prefs.theme] }
 
     private val t: Theme by loader

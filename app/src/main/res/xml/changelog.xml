@@ -6,18 +6,18 @@
     <item text="" />
     -->
 
+    <version title="v0.2"/>
+    <item text="Removed unnecessary permissions" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v0.1" />
     <item text="Initial Changelog" />
     <item text="Created core databases" />
     <item text="Implemented CSS/Js injectors" />
     <item text="Implemented ripple preferences" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Created multiple account caching" />
+    <item text="Created web overlay" />
 </resources>
