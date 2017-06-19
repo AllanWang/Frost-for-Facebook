@@ -10,12 +10,16 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
+import io.reactivex.subjects.Subject
 
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
 class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
+
+    val headerObservable: Subject<String>? = (context as? MainActivity)?.headerBadgeObservable
+
     val cookies: ArrayList<CookieModel>
         get() = (context as? MainActivity)?.cookies() ?: arrayListOf()
 
@@ -49,6 +53,11 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
     @JavascriptInterface
     fun handleHtml(html: String) {
         webView.post { webView.frostWebClient!!.handleHtml(html) }
+    }
+
+    @JavascriptInterface
+    fun handleHeader(html: String) {
+        headerObservable?.onNext(html)
     }
 
 }

@@ -6,16 +6,18 @@ import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
 import com.pitchedapps.frost.utils.*
+import org.jetbrains.anko.toast
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
 class SettingsActivity : KPrefActivity() {
+
     override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
         textColor = { Prefs.textColor }
         accentColor = { Prefs.textColor }
         header(R.string.settings)
-        text<Int>(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
+        text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
             onClick = {
                 _, _, item ->
                 this@SettingsActivity.materialDialogThemed {
@@ -65,16 +67,40 @@ class SettingsActivity : KPrefActivity() {
             allowCustom = true
         }
 
-        colorPicker(R.string.icon_color, { Prefs.customIconColor }, { Prefs.customIconColor = it; toolbar.setTitleTextColor(it) }) {
-            enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
-            allowCustomAlpha = false
-            allowCustom = true
+        fun Long.timeToText(): String =
+                if (this == -1L) string(R.string.none)
+                else if (this == 60L) string(R.string.one_hour)
+                else if (this == 1440L) string(R.string.one_day)
+                else if (this % 1440L == 0L) String.format(string(R.string.x_days), this / 1440L)
+                else if (this % 60L == 0L) String.format(string(R.string.x_hours), this / 60L)
+                else String.format(string(R.string.x_minutes), this)
+
+        text(R.string.notifications, { Prefs.notificationFreq }, { Prefs.notificationFreq = it; reloadByTitle(R.string.notifications) }) {
+            val options = longArrayOf(-1, 15, 30, 60, 120, 180, 300, 1440, 2880)
+            val texts = options.map { it.timeToText() }
+            onClick = {
+                _, _, item ->
+                this@SettingsActivity.materialDialogThemed {
+                    title(R.string.notifications)
+                    items(texts)
+                    itemsCallbackSingleChoice(options.indexOf(item.pref), {
+                        _, _, which, text ->
+                        item.pref = options[which]
+                        this@SettingsActivity.scheduleNotifications(item.pref)
+                        this@SettingsActivity.toast(text)
+                        true
+                    })
+                }
+                true
+            }
+            textGetter = { it.timeToText() }
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setFrostTheme()
         themeExterior(false)
     }
 

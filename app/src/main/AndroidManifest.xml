@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".FrostApp"
@@ -111,15 +109,13 @@
         <service
             android:name=".services.NotificationService"
             android:enabled="true"
-            android:label="@string/frost_notifications" />
+            android:label="@string/frost_notifications"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <receiver
-            android:name=".services.NotificationReceiver"
-            android:enabled="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            android:name=".services.UpdateReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="com.pitchedapps.frost.NOTIFICATIONS" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
         <meta-data

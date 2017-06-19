@@ -41,6 +41,7 @@ class FrostWebViewCore @JvmOverloads constructor(
     val refreshObservable: PublishSubject<Boolean>  // Only emits on page loads
     val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
+
     var baseUrl: String? = null
     var baseEnum: FbTab? = null
     internal var frostWebClient: FrostWebViewClient? = null
