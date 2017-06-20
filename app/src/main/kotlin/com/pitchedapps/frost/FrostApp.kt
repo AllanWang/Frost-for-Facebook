@@ -48,18 +48,18 @@ class FrostApp : Application() {
         FbCookie()
         super.onCreate()
         //Drawer profile loading logic
-        DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
-            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
-                Glide.with(imageView.context).load(uri).apply(RequestOptions().placeholder(placeholder)).into(imageView)
-            }
-
-            override fun placeholder(ctx: Context, tag: String): Drawable {
-                when (tag) {
-                    DrawerImageLoader.Tags.PROFILE.name, DrawerImageLoader.Tags.ACCOUNT_HEADER.name -> DrawerUIUtils.getPlaceHolder(ctx)
-                }
-                return super.placeholder(ctx, tag);
-            }
-        })
+//        DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
+//            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
+//                Glide.with(imageView.context).load(uri).apply(RequestOptions().placeholder(placeholder)).into(imageView)
+//            }
+//
+//            override fun placeholder(ctx: Context, tag: String): Drawable {
+//                when (tag) {
+//                    DrawerImageLoader.Tags.PROFILE.name, DrawerImageLoader.Tags.ACCOUNT_HEADER.name -> DrawerUIUtils.getPlaceHolder(ctx)
+//                }
+//                return super.placeholder(ctx, tag);
+//            }
+//        })
     }
 
 
