@@ -82,9 +82,9 @@ class MainActivity : BaseActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
-                (0 until tabs.tabCount).asSequence().forEach {
-                    i ->
-                    (tabs.getTabAt(i)!!.customView as BadgedIcon).setAllAlpha(when (i) {
+                tabsForEachView {
+                    position, view ->
+                    view.setAllAlpha(when (position) {
                         position -> 255.0f - delta
                         position + 1 -> 128.0f + delta
                         else -> 128f
@@ -100,6 +100,13 @@ class MainActivity : BaseActivity() {
                     .setAction("Action", null).show()
         }
         setFrostColors(toolbar, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
+    }
+
+    fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
+        (0 until tabs.tabCount).asSequence().forEach {
+            i ->
+            action(i, tabs.getTabAt(i)!!.customView as BadgedIcon)
+        }
     }
 
     fun setupTabs() {
@@ -128,13 +135,13 @@ class MainActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     (feed, requests, messages, notifications) ->
-                    (0 until tabs.tabCount).asSequence().forEach {
-                        val tabBadge = tabs.getTabAt(it)!!.customView as BadgedIcon
-                        when (tabBadge.iicon) {
-                            FbTab.FEED.icon -> tabBadge.badgeText = feed
-                            FbTab.FRIENDS.icon -> tabBadge.badgeText = requests
-                            FbTab.MESSAGES.icon -> tabBadge.badgeText = messages
-                            FbTab.NOTIFICATIONS.icon -> tabBadge.badgeText = notifications
+                    tabsForEachView {
+                        _, view ->
+                        when (view.iicon) {
+                            FbTab.FEED.icon -> view.badgeText = feed
+                            FbTab.FRIENDS.icon -> view.badgeText = requests
+                            FbTab.MESSAGES.icon -> view.badgeText = messages
+                            FbTab.NOTIFICATIONS.icon -> view.badgeText = notifications
                         }
                     }
                 }
@@ -184,7 +191,10 @@ class MainActivity : BaseActivity() {
                     else when (profile.identifier) {
                         -2L -> launchNewTask(LoginActivity::class.java, clearStack = false)
                         -3L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
-                        else -> switchUser(profile.identifier, { refreshAll() })
+                        else -> {
+                            switchUser(profile.identifier, { refreshAll() })
+                            tabsForEachView { _, view -> view.badgeText = null }
+                        }
                     }
                     false
                 }
