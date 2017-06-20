@@ -3,7 +3,8 @@
     <color name="colorPrimary">@color/facebook_blue</color>
     <color name="colorPrimaryDark">@color/facebook_blue_dark</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="splashBackground">@color/facebook_blue</color>
+    <color name="frost_splash_background">@color/facebook_blue</color>
     <color name="facebook_blue">#3b5998</color>
     <color name="facebook_blue_dark">#2e4b86</color>
+    <color name="frost_notification_accent">@color/facebook_blue</color>
 </resources>

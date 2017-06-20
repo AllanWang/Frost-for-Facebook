@@ -18,6 +18,7 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.frostNotification
 import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -90,11 +91,9 @@ class NotificationService : JobService() {
 
     private fun Context.debugNotification(text: String) {
         if (BuildConfig.DEBUG) {
-            val notifBuilder = NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.frost_f_24)
+            val notifBuilder = frostNotification
                     .setContentTitle(string(R.string.app_name))
                     .setContentText(text)
-                    .setAutoCancel(true)
 
             NotificationManagerCompat.from(this).notify(999, notifBuilder.build())
         }
@@ -106,15 +105,13 @@ class NotificationService : JobService() {
             intent.data = Uri.parse("$FB_URL_BASE$href")
             val group = "frost_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-            val notifBuilder = NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.frost_f_24)
+            val notifBuilder = context.frostNotification
                     .setContentTitle(context.string(R.string.app_name))
                     .setContentText(text)
                     .setContentIntent(pendingIntent)
                     .setCategory(Notification.CATEGORY_SOCIAL)
                     .setSubText(data.name)
                     .setGroup(group)
-                    .setAutoCancel(true)
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
 
@@ -124,13 +121,11 @@ class NotificationService : JobService() {
 
     fun summaryNotification(userId: Long, count: Int) {
         if (count <= 1) return
-        val notifBuilder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.frost_f_24)
+        val notifBuilder = frostNotification
                 .setContentTitle(string(R.string.app_name))
                 .setContentText("$count notifications")
                 .setGroup("frost_$userId")
                 .setGroupSummary(true)
-                .setAutoCancel(true)
 
         NotificationManagerCompat.from(this).notify("frost_$userId", userId.toInt(), notifBuilder.build())
     }
