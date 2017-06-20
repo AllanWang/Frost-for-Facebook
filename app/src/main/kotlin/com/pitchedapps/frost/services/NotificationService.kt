@@ -41,6 +41,7 @@ class NotificationService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         future = doAsync {
+            debugNotification("Load notifs")
             loadFbCookiesSync().forEach {
                 data ->
                 L.i("Handling notifications for ${data.id}")

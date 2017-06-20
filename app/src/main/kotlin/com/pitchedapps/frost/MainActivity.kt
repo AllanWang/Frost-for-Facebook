@@ -13,7 +13,10 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.showChangelog
+import ca.allanwang.kau.utils.startActivitySlideIn
+import ca.allanwang.kau.utils.withMinAlpha
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -30,6 +33,7 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -76,11 +80,11 @@ class MainActivity : BaseActivity() {
                 val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
                 (0 until tabs.tabCount).asSequence().forEach {
                     i ->
-                    tabs.getTabAt(i)?.icon?.alpha = when (i) {
-                        position -> (255.0 - delta).toInt()
-                        position + 1 -> (128.0 + delta).toInt()
-                        else -> 128
-                    }
+                    (tabs.getTabAt(i)!!.customView as BadgedIcon).setAllAlpha(when (i) {
+                        position -> 255.0f - delta
+                        position + 1 -> 128.0f + delta
+                        else -> 128f
+                    })
                 }
             }
         })
@@ -101,6 +105,11 @@ class MainActivity : BaseActivity() {
                 super.onTabReselected(tab)
                 currentFragment.web.scrollOrRefresh()
             }
+
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                super.onTabSelected(tab)
+                (tab.customView as BadgedIcon).badgeText = null
+            }
         })
         headerBadgeObservable.throttleFirst(15, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
                 .map { Jsoup.parse(it) }
@@ -115,10 +124,22 @@ class MainActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     (feed, requests, messages, notifications) ->
-                    L.d("Header subscription $feed $requests $messages $notifications")
-                    L.d("contained nulls ${feed == null}")
+                    (0 until tabs.tabCount).asSequence().forEach {
+                        val tabBadge = tabs.getTabAt(it)!!.customView as BadgedIcon
+                        when (tabBadge.iicon) {
+                            FbTab.FEED.icon -> tabBadge.badgeText = feed
+                            FbTab.FRIENDS.icon -> tabBadge.badgeText = requests
+                            FbTab.MESSAGES.icon -> tabBadge.badgeText = messages
+                            FbTab.NOTIFICATIONS.icon -> tabBadge.badgeText = notifications
+                        }
+                    }
                 }
-        adapter.pages.forEach { tabs.addTab(tabs.newTab().setIcon(it.icon.toDrawable(this, sizeDp = 20, color = Prefs.iconColor))) }
+        adapter.pages.forEach {
+            tabs.addTab(tabs.newTab()
+                    .setCustomView(BadgedIcon(this).apply {
+                        iicon = it.icon
+                    }))
+        }
     }
 
     fun setupDrawer(savedInstanceState: Bundle?) {
