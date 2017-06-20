@@ -47,6 +47,7 @@ class BadgedIcon @JvmOverloads constructor(
     var badgeText: String?
         get() = badgeTextView.text.toString()
         set(value) {
+            if (badgeTextView.text == value) return
             badgeTextView.text = value
             if (value != null && value != "0") badgeTextView.visible()
             else badgeTextView.gone()

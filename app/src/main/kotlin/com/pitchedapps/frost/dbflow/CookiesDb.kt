@@ -2,6 +2,8 @@ package com.pitchedapps.frost.dbflow
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.pitchedapps.frost.facebook.FACEBOOK_COM
+import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
@@ -9,6 +11,8 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.kotlinextensions.*
 import com.raizlabs.android.dbflow.structure.BaseModel
+import org.jetbrains.anko.doAsync
+import org.jsoup.Jsoup
 import paperparcel.PaperParcel
 
 /**
@@ -56,4 +60,28 @@ fun removeCookie(id: Long) {
     loadFbCookie(id)?.async?.delete({
         L.d("Fb cookie $id deleted")
     })
+}
+
+fun CookieModel.fetchUsername(callback: (String) -> Unit) {
+    doAsync {
+        var result = ""
+        try {
+            result = Jsoup.connect(FbTab.PROFILE.url)
+                    .cookie(FACEBOOK_COM, cookie)
+                    .get().title()
+            L.d("User name found: $result")
+        } catch (e: Exception) {
+            L.e("User name fetching failed: ${e.message}")
+        } finally {
+            if (result.isBlank() && (name?.isNotBlank() ?: false)) {
+                callback(name!!)
+                return@doAsync
+            }
+            if (name != result) {
+                name = result
+                saveFbCookie(this@fetchUsername)
+            }
+            callback(result)
+        }
+    }
 }

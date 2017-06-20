@@ -7,7 +7,6 @@ import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
@@ -42,8 +41,7 @@ class NotificationService : JobService() {
             debugNotification("Load notifs")
             loadFbCookiesSync().forEach {
                 data ->
-                L.i("Handling notifications for ${data.id}")
-                L.v("Using data $data")
+                L.i("Handle notifications for $data")
                 val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
                 val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
                 var notifCount = 0
@@ -64,6 +62,7 @@ class NotificationService : JobService() {
             }
             L.d("Finished notifications")
             jobFinished(params, false)
+            future = null
         }
         return true
     }
@@ -100,22 +99,30 @@ class NotificationService : JobService() {
     }
 
     data class NotificationContent(val data: CookieModel, val notifId: Int, val href: String, val text: String, val timestamp: Long) {
-        fun createNotification(context: Context) {
-            val intent = Intent(context, FrostWebActivity::class.java)
-            intent.data = Uri.parse("$FB_URL_BASE$href")
-            val group = "frost_${data.id}"
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-            val notifBuilder = context.frostNotification
-                    .setContentTitle(context.string(R.string.app_name))
-                    .setContentText(text)
-                    .setContentIntent(pendingIntent)
-                    .setCategory(Notification.CATEGORY_SOCIAL)
-                    .setSubText(data.name)
-                    .setGroup(group)
+        fun createNotification(context: Context, verifiedUser: Boolean = false) {
+            //in case we haven't found the name, we will try one more time before passing the notification
+            if (!verifiedUser && data.name?.isBlank() ?: true) {
+                data.fetchUsername {
+                    data.name = it
+                    createNotification(context, true)
+                }
+            } else {
+                val intent = Intent(context, FrostWebActivity::class.java)
+                intent.data = Uri.parse("$FB_URL_BASE$href")
+                val group = "frost_${data.id}"
+                val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+                val notifBuilder = context.frostNotification
+                        .setContentTitle(context.string(R.string.app_name))
+                        .setContentText(text)
+                        .setContentIntent(pendingIntent)
+                        .setCategory(Notification.CATEGORY_SOCIAL)
+                        .setSubText(data.name)
+                        .setGroup(group)
 
-            if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
+                if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
 
-            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
+                NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
+            }
         }
     }
 

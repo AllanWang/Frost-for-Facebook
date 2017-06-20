@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.dbflow.saveFbCookie
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
@@ -120,20 +121,8 @@ class LoginActivity : BaseActivity() {
     }
 
     fun loadUsername(cookie: CookieModel) {
-        thread {
-            var name = ""
-            try {
-                name = Jsoup.connect(FbTab.PROFILE.url)
-                        .cookie(FACEBOOK_COM, cookie.cookie)
-                        .get().title()
-                L.d("User name found: $name")
-            } catch (e: Exception) {
-                L.e("User name fetching failed: ${e.message}")
-            } finally {
-                cookie.name = name
-                saveFbCookie(cookie)
-                usernameObservable.onSuccess(name)
-            }
+        cookie.fetchUsername {
+            usernameObservable.onSuccess(it)
         }
     }
 }
