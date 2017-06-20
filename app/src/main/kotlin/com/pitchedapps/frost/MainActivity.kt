@@ -13,10 +13,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.showChangelog
-import ca.allanwang.kau.utils.startActivitySlideIn
-import ca.allanwang.kau.utils.withMinAlpha
+import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -27,6 +24,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
+import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
@@ -176,22 +174,49 @@ class MainActivity : BaseActivity() {
                         identifier = id
                     }
                 }
+                profileSetting(nameRes = R.string.logout) {
+                    iicon = GoogleMaterial.Icon.gmd_exit_to_app
+                    iconColor = Prefs.textColor.toLong()
+                    textColor = Prefs.textColor.toLong()
+                    identifier = -2L
+                }
                 profileSetting(nameRes = R.string.add_account) {
                     iconDrawable = IconicsDrawable(this@MainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5).color(Prefs.textColor)
                     textColor = Prefs.textColor.toLong()
-                    identifier = -2L
+                    identifier = -3L
                 }
                 profileSetting(nameRes = R.string.manage_account) {
                     iicon = GoogleMaterial.Icon.gmd_settings
                     iconColor = Prefs.textColor.toLong()
                     textColor = Prefs.textColor.toLong()
-                    identifier = -3L
+                    identifier = -4L
                 }
                 onProfileChanged { _, profile, current ->
                     if (current) launchWebOverlay(FbTab.PROFILE.url)
                     else when (profile.identifier) {
-                        -2L -> launchNewTask(LoginActivity::class.java, clearStack = false)
-                        -3L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
+                        -2L -> {
+                            val currentCookie = loadFbCookie(Prefs.userId)
+                            if (currentCookie == null) {
+                                toast(R.string.account_not_found)
+                                FbCookie.reset { launchLogin(cookies(), true) }
+                            } else {
+                                materialDialogThemed {
+                                    title(R.string.logout)
+                                    content(String.format(string(R.string.logout_confirm), currentCookie.name ?: Prefs.userId.toString()))
+                                    positiveText(R.string.yes)
+                                    negativeText(R.string.no)
+                                    onPositive { _, _ ->
+                                        FbCookie.logout(Prefs.userId) {
+                                            val allCookies = cookies()
+                                            allCookies.remove(currentCookie)
+                                            launchLogin(allCookies, true)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
+                        -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
                         else -> {
                             switchUser(profile.identifier, { refreshAll() })
                             tabsForEachView { _, view -> view.badgeText = null }
@@ -234,7 +259,7 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
-                startActivitySlideIn(SettingsActivity::class.java, clearStack = true, intentBuilder = {
+                startActivity(SettingsActivity::class.java, clearStack = true, intentBuilder = {
                     putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
                 })
             }

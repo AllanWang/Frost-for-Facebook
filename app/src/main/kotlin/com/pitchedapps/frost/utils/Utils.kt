@@ -15,10 +15,7 @@ import android.view.View
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.LoginActivity
-import com.pitchedapps.frost.R
-import com.pitchedapps.frost.WebOverlayActivity
+import com.pitchedapps.frost.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
@@ -34,6 +31,11 @@ fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<Cook
     startActivity(clazz, clearStack, {
         putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
+}
+
+fun Context.launchLogin(cookieList: ArrayList<CookieModel>, clearStack: Boolean = true) {
+    if (cookieList.isNotEmpty()) launchNewTask(SelectorActivity::class.java, cookieList, clearStack)
+    else launchNewTask(LoginActivity::class.java, clearStack = clearStack)
 }
 
 fun Activity.cookies(): ArrayList<CookieModel> {

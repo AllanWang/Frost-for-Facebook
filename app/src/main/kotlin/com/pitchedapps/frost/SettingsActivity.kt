@@ -6,7 +6,6 @@ import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
 import com.pitchedapps.frost.utils.*
-import org.jetbrains.anko.toast
 
 /**
  * Created by Allan Wang on 2017-06-06.
@@ -29,7 +28,7 @@ class SettingsActivity : KPrefActivity() {
                         if (item.pref != which) {
                             item.pref = which
                             reload()
-                            setFrostTheme()
+                            setFrostTheme(true)
                             themeExterior()
                         }
                         true
@@ -98,8 +97,8 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setFrostTheme(true)
         super.onCreate(savedInstanceState)
-        setFrostTheme()
         themeExterior(false)
     }
 
@@ -113,7 +112,7 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun onBackPressed() {
-        startActivitySlideOut(MainActivity::class.java, clearStack = true, intentBuilder = {
+        startActivity(MainActivity::class.java, clearStack = true, intentBuilder = {
             putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
         })
     }
