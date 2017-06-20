@@ -61,6 +61,10 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
+            Prefs.versionCode = BuildConfig.VERSION_CODE
+            showChangelog(R.xml.changelog, { theme() })
+        }
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())

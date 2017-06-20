@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.pitchedapps.frost">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -38,13 +39,21 @@
             android:theme="@style/FrostTheme" />
         <activity
             android:name=".WebOverlayActivity"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:theme="@style/FrostTheme.Overlay" />
+
+        <activity
+            android:name=".FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
+            android:label="@string/frost_web"
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
             android:taskAffinity="com.pitchedapps.frost.single.web"
             android:theme="@style/FrostTheme.Overlay">
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 

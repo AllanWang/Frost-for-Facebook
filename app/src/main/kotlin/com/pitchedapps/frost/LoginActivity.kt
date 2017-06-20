@@ -87,7 +87,6 @@ class LoginActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe {
             (foundImage, name) ->
             refresh = false
-            L.d("Zip done")
             if (!foundImage) L.e("Could not get profile photo; Invalid userId?\n\t$cookie")
             textview.setTextWithFade(String.format(getString(R.string.welcome), name), duration = 500)
             /*

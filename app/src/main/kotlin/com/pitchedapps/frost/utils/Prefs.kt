@@ -33,6 +33,8 @@ object Prefs : KPref() {
 
     var notificationFreq: Long by kpref("notification_freq", -1L)
 
+    var versionCode:Int by kpref("version_code", -1)
+
     private val loader = lazyResettable { Theme.values[Prefs.theme] }
 
     private val t: Theme by loader

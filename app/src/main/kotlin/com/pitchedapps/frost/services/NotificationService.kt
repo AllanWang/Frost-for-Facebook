@@ -6,20 +6,17 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
-import android.os.Looper
-import android.support.v4.app.ActivityOptionsCompat
+import android.net.Uri
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import ca.allanwang.kau.utils.checkThread
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.FrostWebActivity
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.*
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
-import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.L
 import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
@@ -105,13 +102,10 @@ class NotificationService : JobService() {
 
     data class NotificationContent(val data: CookieModel, val notifId: Int, val href: String, val text: String, val timestamp: Long) {
         fun createNotification(context: Context) {
-            val intent = Intent(context, WebOverlayActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(ARG_URL, "$FB_URL_BASE$href")
-            intent.action = System.currentTimeMillis().toString() //dummy action
+            val intent = Intent(context, FrostWebActivity::class.java)
+            intent.data = Uri.parse("$FB_URL_BASE$href")
             val group = "frost_${data.id}"
-            val bundle = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT, bundle)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val notifBuilder = NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.frost_f_24)
                     .setContentTitle(context.string(R.string.app_name))
@@ -121,7 +115,6 @@ class NotificationService : JobService() {
                     .setSubText(data.name)
                     .setGroup(group)
                     .setAutoCancel(true)
-//                    .setColor(context.color(R.color.facebook_blue))
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
 
