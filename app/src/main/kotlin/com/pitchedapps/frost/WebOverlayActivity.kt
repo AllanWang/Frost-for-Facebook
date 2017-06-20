@@ -8,10 +8,7 @@ import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.ARG_URL
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.formattedFbUrl
-import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
 
 
@@ -32,7 +29,7 @@ open class WebOverlayActivity : AppCompatActivity() {
         get() = intent.extras!!.getString(ARG_URL).formattedFbUrl
 
     val userId: Long
-        get() = intent.extras?.getLong(ARG_USER_ID) ?: Prefs.userId
+        get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +50,7 @@ open class WebOverlayActivity : AppCompatActivity() {
 
         frostWeb.web.setupWebview(url)
         frostWeb.web.addTitleListener({ toolbar.title = it })
-
+        L.d("UU $userId")
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
     }

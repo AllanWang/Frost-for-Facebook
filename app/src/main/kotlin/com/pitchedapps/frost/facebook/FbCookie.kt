@@ -63,7 +63,7 @@ object FbCookie {
         with(CookieManager.getInstance()) {
             removeAllCookies({
                 flush()
-                callback.invoke()
+                callback()
             })
         }
     }
@@ -73,7 +73,10 @@ object FbCookie {
     fun switchUser(name: String, callback: () -> Unit) = switchUser(loadFbCookie(name), callback)
 
     fun switchUser(cookie: CookieModel?, callback: () -> Unit) {
-        if (cookie == null) return
+        if (cookie == null) {
+            callback()
+            return
+        }
         L.d("Switching user to $cookie")
         Prefs.userId = cookie.id
         setWebCookie(cookie.cookie, callback)

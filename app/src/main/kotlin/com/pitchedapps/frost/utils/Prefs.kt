@@ -19,9 +19,7 @@ object Prefs : KPref() {
 
     var prevId: Long by kpref("prev_id", -1L)
 
-    var theme: Int by kpref("theme", 0, postSetter = { value: Int ->
-        loader.invalidate()
-    })
+    var theme: Int by kpref("theme", 0, postSetter = { _: Int -> loader.invalidate() })
 
     var customTextColor: Int by kpref("color_text", Color.BLACK)
 

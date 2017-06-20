@@ -27,11 +27,16 @@
     <string name="welcome">Welcome %s</string>
     <string name="login">Login</string>
     <string name="select_facebook_account">Select Facebook Account</string>
+    <string name="account_not_found">Current account is not in the database</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirm">Are you sure you want to log out as %s?</string>
     <string name="add_account">Add Account</string>
     <string name="manage_account">Manage Account</string>
     <string name="exit">Exit</string>
     <string name="exit_confirmation">Are you sure you want to exit Frost?</string>
     <string name="do_not_show_again">Don\'t show again</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="_default">Default</string>
     <string name="light">Light</string>
