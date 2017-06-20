@@ -36,9 +36,9 @@
 
     <style name="FrostTheme.Splash" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="android:navigationBarColor">@color/splashBackground</item>
-        <item name="colorPrimaryDark">@color/splashBackground</item>
-        <item name="colorAccent">@color/splashBackground</item>
+        <item name="android:navigationBarColor">@color/frost_splash_background</item>
+        <item name="colorPrimaryDark">@color/frost_splash_background</item>
+        <item name="colorAccent">@color/frost_splash_background</item>
     </style>
 
     <style name="FrostProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">

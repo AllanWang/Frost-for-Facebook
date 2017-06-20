@@ -8,12 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.WebOverlayActivity
@@ -53,15 +55,20 @@ fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.i("Launch web overlay: $argUrl")
     val intent = Intent(this, WebOverlayActivity::class.java)
-//    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     intent.putExtra(ARG_URL, argUrl)
-//    val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.slide_in_right, R.anim.slide_out_right).toBundle()
     ContextCompat.startActivity(this, intent, null)
 }
 
 fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
 }
+
+val Context.frostNotification: NotificationCompat.Builder
+    get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
+        setSmallIcon(R.drawable.frost_f_24)
+        setAutoCancel(true)
+        color = color(R.color.frost_notification_accent)
+    }
 
 
 fun Activity.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
