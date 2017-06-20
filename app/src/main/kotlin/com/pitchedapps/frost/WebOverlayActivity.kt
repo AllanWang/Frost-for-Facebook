@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
-import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.formattedFbUrl
@@ -17,14 +16,14 @@ import com.pitchedapps.frost.web.FrostWebView
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class WebOverlayActivity : AppCompatActivity() {
+open class WebOverlayActivity : AppCompatActivity() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
-    val url: String
-        get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString)?.formattedFbUrl ?: FbTab.FEED.url
+    open val url: String
+        get() = intent.extras!!.getString(ARG_URL).formattedFbUrl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

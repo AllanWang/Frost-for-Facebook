@@ -91,12 +91,10 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
-//    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${DBFLOW}"
-//    compile "net.zetetic:android-database-sqlcipher:${SQL_CIPHER}@aar"
 
     testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
 
-    compile "org.greenrobot:eventbus:${EVENTBUS}"
+//    compile "org.greenrobot:eventbus:${EVENTBUS}"
 
     //Icons
     compile "com.mikepenz:google-material-typeface:${IICON_GOOGLE}.original@aar"
@@ -114,17 +112,8 @@ dependencies {
 
     compile "org.jetbrains.anko:anko:${ANKO}"
 
-//    compile "com.squareup.retrofit2:retrofit:${RETROFIT}"
-//    compile "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT}"
-//    compile "com.squareup.retrofit2:converter-gson:${RETROFIT}"
-//    compile "com.squareup.okhttp3:logging-interceptor:${OKHTTP_INTERCEPTOR}"
-
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"
-
-//    compile "com.google.auto.value:auto-value:${AUTO}"
-//    annotationProcessor "com.google.auto.value:auto-value:${AUTO}"
-//    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${AUTO_VALUE_PARCEL}"
 
     compile "com.f2prateek.rx.preferences2:rx-preferences:${RX_PREFS}"
 
