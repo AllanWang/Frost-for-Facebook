@@ -87,7 +87,6 @@ class SettingsActivity : KPrefActivity() {
                         _, _, which, text ->
                         item.pref = options[which]
                         this@SettingsActivity.scheduleNotifications(item.pref)
-                        this@SettingsActivity.toast(text)
                         true
                     })
                 }

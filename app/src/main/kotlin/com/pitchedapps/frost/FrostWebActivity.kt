@@ -1,17 +1,8 @@
 package com.pitchedapps.frost
 
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import ca.allanwang.kau.utils.*
-import com.jude.swipbackhelper.SwipeBackHelper
-import com.pitchedapps.frost.facebook.FbTab
-import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.formattedFbUrl
-import com.pitchedapps.frost.utils.setFrostColors
-import com.pitchedapps.frost.web.FrostWebView
 
 
 /**
@@ -20,8 +11,15 @@ import com.pitchedapps.frost.web.FrostWebView
  * Replica of [WebOverlayActivity] with a different base url
  * Didn't use activity-alias because it causes issues when only one activity has the singleInstance mode
  */
-class FrostWebActivity:WebOverlayActivity() {
+class FrostWebActivity : WebOverlayActivity() {
+
     override val url: String
         get() = intent.dataString!!.formattedFbUrl
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Prefs.prevId = Prefs.userId
+        super.onCreate(savedInstanceState)
+    }
 
 }

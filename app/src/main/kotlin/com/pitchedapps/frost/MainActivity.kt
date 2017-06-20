@@ -28,6 +28,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
@@ -83,8 +84,8 @@ class MainActivity : BaseActivity() {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
                 tabsForEachView {
-                    position, view ->
-                    view.setAllAlpha(when (position) {
+                    tabPosition, view ->
+                    view.setAllAlpha(when (tabPosition) {
                         position -> 255.0f - delta
                         position + 1 -> 128.0f + delta
                         else -> 128f
@@ -241,6 +242,11 @@ class MainActivity : BaseActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FbCookie.switchBackUser { }
     }
 
     override fun onBackPressed() {

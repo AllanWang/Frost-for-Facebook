@@ -8,7 +8,10 @@
 
     <version title="v0.2"/>
     <item text="Removed unnecessary permissions" />
-    <item text="" />
+    <item text="Added notifications" />
+    <item text="Themed more components" />
+    <item text="Separated independent web overlay from in app overlay" />
+    <item text="Allow notifications from any account" />
     <item text="" />
     <item text="" />
     <item text="" />

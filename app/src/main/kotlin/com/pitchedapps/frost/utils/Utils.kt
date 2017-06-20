@@ -30,7 +30,7 @@ import com.pitchedapps.frost.services.NotificationService
 internal const val EXTRA_COOKIES = "extra_cookies"
 internal const val ARG_URL = "arg_url"
 
-fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = clazz != LoginActivity::class.java) {
+fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity(clazz, clearStack, {
         putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
