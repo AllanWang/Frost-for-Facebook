@@ -12,6 +12,7 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.FrostWebActivity
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.*
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
@@ -109,6 +110,7 @@ class NotificationService : JobService() {
             } else {
                 val intent = Intent(context, FrostWebActivity::class.java)
                 intent.data = Uri.parse("$FB_URL_BASE$href")
+                intent.putExtra(WebOverlayActivity.ARG_USER_ID, data.id)
                 val group = "frost_${data.id}"
                 val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
                 val notifBuilder = context.frostNotification

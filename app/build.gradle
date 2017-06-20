@@ -39,6 +39,7 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             resValue "string", "app_name", "Frost Debug"
+            resValue "string", "frost_web", "Frost Web Debug"
         }
         releaseTest {
             minifyEnabled true
@@ -48,12 +49,14 @@ android {
             signingConfig signingConfigs.test
             versionNameSuffix "-test"
             resValue "string", "app_name", "Frost Test"
+            resValue "string", "frost_web", "Frost Web Test"
         }
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "Frost"
+            resValue "string", "frost_web", "Frost Web"
         }
     }
 

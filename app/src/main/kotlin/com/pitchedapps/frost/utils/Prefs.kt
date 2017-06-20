@@ -17,6 +17,8 @@ object Prefs : KPref() {
 
     var userId: Long by kpref("user_id", -1L)
 
+    var prevId: Long by kpref("prev_id", -1L)
+
     var theme: Int by kpref("theme", 0, postSetter = { value: Int ->
         loader.invalidate()
     })

@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.formattedFbUrl
@@ -22,8 +24,15 @@ open class WebOverlayActivity : AppCompatActivity() {
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
+    companion object {
+        const val ARG_USER_ID = "arg_user_id"
+    }
+
     open val url: String
         get() = intent.extras!!.getString(ARG_URL).formattedFbUrl
+
+    val userId: Long
+        get() = intent.extras?.getLong(ARG_USER_ID) ?: Prefs.userId
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,18 +40,22 @@ open class WebOverlayActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-        frostWeb.web.setupWebview(url)
-        frostWeb.web.loadBaseUrl()
+        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
+        toolbar.setNavigationOnClickListener { slideOut() }
         SwipeBackHelper.onCreate(this)
         SwipeBackHelper.getCurrentPage(this)
                 .setSwipeBackEnable(true)
                 .setSwipeSensitivity(0.5f)
                 .setSwipeRelateEnable(true)
                 .setSwipeRelateOffset(300)
-        frostWeb.web.addTitleListener({ toolbar.title = it })
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
+
+        frostWeb.web.setupWebview(url)
+        frostWeb.web.addTitleListener({ toolbar.title = it })
+
+        if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
+        else frostWeb.web.loadBaseUrl()
     }
 
     /**
@@ -70,8 +83,12 @@ open class WebOverlayActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (!frostWeb.onBackPressed()) {
-            finish()
-            overridePendingTransition(R.anim.kau_fade_in, R.anim.kau_slide_out_right_top)
+            slideOut()
         }
+    }
+
+    fun slideOut() {
+        finish()
+        overridePendingTransition(R.anim.kau_fade_in, R.anim.kau_slide_out_right_top)
     }
 }

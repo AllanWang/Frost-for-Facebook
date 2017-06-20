@@ -3,6 +3,7 @@
     <style name="FrostThemeBase" parent="MaterialDrawerTheme.ActionBar">
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
+        <item name="colorAccent">@android:color/white</item>
     </style>
 
     <style name="FrostTheme" parent="@style/FrostThemeBase">
@@ -13,6 +14,7 @@
     <style name="FrostTheme.Light" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
+        <item name="colorAccent">@android:color/black</item>
     </style>
 
     <style name="FrostTheme.Transparent">

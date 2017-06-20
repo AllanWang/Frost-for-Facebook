@@ -84,4 +84,18 @@ object FbCookie {
         removeCookie(id)
         reset(callback)
     }
+
+    /**
+     * Notifications may come from different accounts, and we need to switch the cookies to load them
+     * When coming back to the main app, switch back to our original account before continuing
+     */
+    fun switchBackUser(callback: () -> Unit) {
+        if (Prefs.prevId != -1L && Prefs.prevId != Prefs.userId) {
+            switchUser(Prefs.prevId) {
+                L.d("Switched from ${Prefs.userId} to ${Prefs.prevId}")
+                Prefs.prevId = -1L
+                callback()
+            }
+        } else callback()
+    }
 }
