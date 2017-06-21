@@ -48,8 +48,8 @@ class FrostApp : Application() {
             Timber.plant(DebugTree())
 //            LeakCanary.enableDisplayLeakActivity(this)
         } else {
-            Crashlytics.setUserIdentifier("${Prefs.installDate}-${Prefs.identifier}")
             Fabric.with(this, Crashlytics(), Answers())
+            Crashlytics.setUserIdentifier("${Prefs.installDate}-${Prefs.identifier}")
             Timber.plant(CrashReportingTree())
         }
 
