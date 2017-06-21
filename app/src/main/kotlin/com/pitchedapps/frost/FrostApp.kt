@@ -20,6 +20,7 @@ import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+import java.util.*
 
 
 /**
@@ -34,18 +35,24 @@ class FrostApp : Application() {
 //    lateinit var refWatcher: RefWatcher
 
     override fun onCreate() {
+        FlowManager.init(FlowConfig.Builder(this).build())
+        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        FbCookie()
+        if (Prefs.installDate == -1L) {
+            Prefs.installDate = System.currentTimeMillis()
+            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        }
 //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
 //            LeakCanary.enableDisplayLeakActivity(this)
         } else {
+            Crashlytics.setUserIdentifier("${Prefs.installDate}-${Prefs.identifier}")
             Fabric.with(this, Crashlytics(), Answers())
             Timber.plant(CrashReportingTree())
         }
-        FlowManager.init(FlowConfig.Builder(this).build())
-        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
-        FbCookie()
+
         super.onCreate()
         //Drawer profile loading logic
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
