@@ -1,5 +1,6 @@
 package com.pitchedapps.frost
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.app.AppCompatActivity
@@ -50,9 +51,23 @@ open class WebOverlayActivity : AppCompatActivity() {
 
         frostWeb.web.setupWebview(url)
         frostWeb.web.addTitleListener({ toolbar.title = it })
-        L.d("UU $userId")
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
+    }
+
+    /**
+     * Manage url loadings
+     * This is usually only called when multiple listeners are added and inject the same url
+     * We will avoid reloading if the url is the same
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val newUrl = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        if (url != newUrl) {
+            this.intent = intent
+            frostWeb.web.baseUrl = newUrl
+            frostWeb.web.loadBaseUrl()
+        }
     }
 
     /**
