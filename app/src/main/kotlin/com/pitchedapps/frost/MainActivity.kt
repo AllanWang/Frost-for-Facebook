@@ -239,6 +239,8 @@ class MainActivity : BaseActivity() {
             primaryItem(FbTab.GROUPS)
             primaryItem(FbTab.PAGES)
             primaryItem(FbTab.SAVED)
+            divider()
+
         }
     }
 

@@ -18,6 +18,7 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.frostAnswersCustom
 import com.pitchedapps.frost.utils.frostNotification
 import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
@@ -39,7 +40,7 @@ class NotificationService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         future = doAsync {
-            debugNotification("Load notifs")
+            //            debugNotification("Load notifs")
             loadFbCookiesSync().forEach {
                 data ->
                 L.i("Handle notifications for $data")
@@ -59,6 +60,7 @@ class NotificationService : JobService() {
                     }
                 }
                 if (notifCount > 0) saveNotificationTime(NotificationModel(data.id, latestEpoch))
+                frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
                 summaryNotification(data.id, notifCount)
             }
             L.d("Finished notifications")
@@ -69,7 +71,6 @@ class NotificationService : JobService() {
     }
 
     companion object {
-        const val ARG_ID = "arg_id"
         val epochMatcher: Regex by lazy { Regex(":([0-9]*),") }
         val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*),") }
     }

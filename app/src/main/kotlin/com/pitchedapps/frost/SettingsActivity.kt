@@ -24,12 +24,13 @@ class SettingsActivity : KPrefActivity() {
                     items(Theme.values().map { this@SettingsActivity.string(it.textRes) })
                     itemsDisabledIndices(Theme.CUSTOM.ordinal)
                     itemsCallbackSingleChoice(item.pref, {
-                        _, _, which, _ ->
+                        _, _, which, text ->
                         if (item.pref != which) {
                             item.pref = which
                             reload()
                             setFrostTheme(true)
                             themeExterior()
+                            frostAnswersCustom("Theme") { putCustomAttribute("Count", text.toString()) }
                         }
                         true
                     })
