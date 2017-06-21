@@ -113,7 +113,7 @@
             android:theme="@style/FrostTheme" />
         <activity
             android:name=".SettingsActivity"
-            android:theme="@style/FrostTheme.Transparent" />
+            android:theme="@style/FrostTheme.Settings" />
 
         <service
             android:name=".services.NotificationService"

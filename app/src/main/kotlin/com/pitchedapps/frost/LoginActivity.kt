@@ -63,7 +63,7 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
-        setTitle(R.string.login)
+        setTitle(R.string.kau_login)
         setFrostColors(toolbar)
         web.loginObservable = loginObservable
         web.progressObservable = progressObservable

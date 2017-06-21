@@ -39,7 +39,7 @@ open class WebOverlayActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
-        toolbar.setNavigationOnClickListener { slideOut() }
+        toolbar.setNavigationOnClickListener { finishSlideOut() }
         SwipeBackHelper.onCreate(this)
         SwipeBackHelper.getCurrentPage(this)
                 .setSwipeBackEnable(true)
@@ -95,12 +95,7 @@ open class WebOverlayActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (!frostWeb.onBackPressed()) {
-            slideOut()
+            finishSlideOut()
         }
-    }
-
-    fun slideOut() {
-        finish()
-        overridePendingTransition(R.anim.kau_fade_in, R.anim.kau_slide_out_right_top)
     }
 }

@@ -13,7 +13,7 @@ import com.pitchedapps.frost.injectors.InjectorContract
  */
 object Prefs : KPref() {
 
-    var lastActive: Long by kpref("last_active", -1L)
+    var lastLaunch: Long by kpref("last_launch", -1L)
 
     var userId: Long by kpref("user_id", -1L)
 
@@ -37,7 +37,7 @@ object Prefs : KPref() {
 
     var installDate: Long by kpref("install_date", -1L)
 
-    var identifier: Int by kpref("indentifier", -1)
+    var identifier: Int by kpref("identifier", -1)
 
     private val loader = lazyResettable { Theme.values[Prefs.theme] }
 
