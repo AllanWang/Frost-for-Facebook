@@ -14,7 +14,9 @@ import ca.allanwang.kau.utils.setTextWithFade
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.crashlytics.android.answers.LoginEvent
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -71,7 +73,6 @@ class LoginActivity : BaseActivity() {
             cookie ->
             web.fadeOut(onFinish = {
                 profile.fadeIn()
-                textview.fadeIn()
                 loadInfo(cookie)
             })
         }
@@ -87,7 +88,8 @@ class LoginActivity : BaseActivity() {
             (foundImage, name) ->
             refresh = false
             if (!foundImage) L.e("Could not get profile photo; Invalid userId?\n\t$cookie")
-            textview.setTextWithFade(String.format(getString(R.string.welcome), name), duration = 500)
+            textview.text = String.format(getString(R.string.welcome), name)
+            textview.fadeIn()
             frostAnswers {
                 logLogin(LoginEvent().putMethod("frost_browser").putSuccess(true))
             }
@@ -108,7 +110,8 @@ class LoginActivity : BaseActivity() {
 
 
     fun loadProfile(id: Long) {
-        Glide.with(this@LoginActivity).load(PROFILE_PICTURE_URL(id)).listener(object : RequestListener<Drawable> {
+        val options = RequestOptions().transform(CircleCrop())
+        Glide.with(this@LoginActivity).load(PROFILE_PICTURE_URL(id)).apply(options).listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 profileObservable.onSuccess(true)
                 return false
