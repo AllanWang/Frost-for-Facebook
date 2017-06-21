@@ -21,6 +21,7 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
+import com.crashlytics.android.answers.ContentViewEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
@@ -250,6 +251,11 @@ class MainActivity : BaseActivity() {
         selectedColor = 0x00000001.toLong()
         identifier = item.titleId.toLong()
         onClick { _ ->
+            frostAnswers {
+                logContentView(ContentViewEvent()
+                        .putContentName(item.name)
+                        .putContentType("drawer_item"))
+            }
             launchWebOverlay(item.url)
             false
         }

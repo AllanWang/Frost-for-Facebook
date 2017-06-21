@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.crashlytics.android.answers.Answers
 import com.pitchedapps.frost.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_URL_BASE
@@ -134,4 +135,10 @@ fun Context.scheduleNotifications(minutes: Long): Boolean {
         return false
     }
     return true
+}
+
+fun frostAnswers(action: Answers.() -> Unit) {
+    if (BuildConfig.DEBUG) return
+    //TODO add opt out toggle
+    Answers.getInstance().action()
 }

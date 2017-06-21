@@ -1,6 +1,5 @@
 package com.pitchedapps.frost
 
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
@@ -8,21 +7,22 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.widget.ImageView
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.fadeIn
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.setTextWithFade
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.crashlytics.android.answers.LoginEvent
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
-import com.pitchedapps.frost.dbflow.saveFbCookie
-import com.pitchedapps.frost.facebook.FACEBOOK_COM
-import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostAnswers
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.web.LoginWebView
@@ -32,8 +32,6 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.internal.operators.single.SingleToObservable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.SingleSubject
-import org.jsoup.Jsoup
-import kotlin.concurrent.thread
 
 
 /**
@@ -90,6 +88,9 @@ class LoginActivity : BaseActivity() {
             refresh = false
             if (!foundImage) L.e("Could not get profile photo; Invalid userId?\n\t$cookie")
             textview.setTextWithFade(String.format(getString(R.string.welcome), name), duration = 500)
+            frostAnswers {
+                logLogin(LoginEvent().putMethod("frost_browser").putSuccess(true))
+            }
             /*
              * The user may have logged into an account that is already in the database
              * We will let the db handle duplicates and load it now after the new account has been saved
