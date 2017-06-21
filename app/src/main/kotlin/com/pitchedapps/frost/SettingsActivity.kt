@@ -1,11 +1,16 @@
 package com.pitchedapps.frost
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.kpref.KPrefActivity
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.utils.*
+
 
 /**
  * Created by Allan Wang on 2017-06-06.
@@ -21,15 +26,19 @@ class SettingsActivity : KPrefActivity() {
                 _, _, item ->
                 this@SettingsActivity.materialDialogThemed {
                     title(R.string.theme)
-                    items(Theme.values().map { this@SettingsActivity.string(it.textRes) })
-                    itemsDisabledIndices(Theme.CUSTOM.ordinal)
+                    items(Theme.values()
+                            .filter { it != Theme.CUSTOM || BuildConfig.DEBUG } //TODO actually add custom theme
+                            .map { this@SettingsActivity.string(it.textRes) })
+//                    itemsDisabledIndices(Theme.CUSTOM.ordinal)
                     itemsCallbackSingleChoice(item.pref, {
                         _, _, which, text ->
                         if (item.pref != which) {
                             item.pref = which
+                            shouldRestartMain()
                             reload()
                             setFrostTheme(true)
                             themeExterior()
+                            invalidateOptionsMenu()
                             frostAnswersCustom("Theme") { putCustomAttribute("Count", text.toString()) }
                         }
                         true
@@ -40,44 +49,47 @@ class SettingsActivity : KPrefActivity() {
             textGetter = { this@SettingsActivity.string(Theme(it).textRes) }
         }
 
-        colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload() }) {
-            enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
-            allowCustomAlpha = false
-            allowCustom = true
-        }
+        if (BuildConfig.DEBUG) {
+            colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload() }) {
+                enabler = { Prefs.isCustomTheme }
+                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
+                allowCustomAlpha = false
+                allowCustom = true
+            }
 
-        colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
-                { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }) {
-            enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
-            allowCustomAlpha = true
-            allowCustom = true
-        }
+            colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
+                    { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }) {
+                enabler = { Prefs.isCustomTheme }
+                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
+                allowCustomAlpha = true
+                allowCustom = true
+            }
 
-        colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
-            Prefs.customHeaderColor = it
-            val darkerColor = it.darken()
-            this@SettingsActivity.navigationBarColor = darkerColor
-            toolbarCanvas.ripple(darkerColor, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
-        }) {
-            enabler = { Prefs.isCustomTheme }
-            onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
-            allowCustomAlpha = true
-            allowCustom = true
-        }
+            colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
+                Prefs.customHeaderColor = it
+                val darkerColor = it.darken()
+                this@SettingsActivity.navigationBarColor = darkerColor
+                toolbarCanvas.ripple(darkerColor, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
+            }) {
+                enabler = { Prefs.isCustomTheme }
+                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
+                allowCustomAlpha = true
+                allowCustom = true
+            }
 
-        fun Long.timeToText(): String =
-                if (this == -1L) string(R.string.none)
-                else if (this == 60L) string(R.string.one_hour)
-                else if (this == 1440L) string(R.string.one_day)
-                else if (this % 1440L == 0L) String.format(string(R.string.x_days), this / 1440L)
-                else if (this % 60L == 0L) String.format(string(R.string.x_hours), this / 60L)
-                else String.format(string(R.string.x_minutes), this)
+            colorPicker(R.string.icon_color, { Prefs.customIconColor }, {
+                Prefs.customIconColor = it
+                invalidateOptionsMenu()
+            }) {
+                enabler = { Prefs.isCustomTheme }
+                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
+                allowCustom = true
+            }
+        }
 
         text(R.string.notifications, { Prefs.notificationFreq }, { Prefs.notificationFreq = it; reloadByTitle(R.string.notifications) }) {
             val options = longArrayOf(-1, 15, 30, 60, 120, 180, 300, 1440, 2880)
-            val texts = options.map { it.timeToText() }
+            val texts = options.map { this@SettingsActivity.minuteToText(it) }
             onClick = {
                 _, _, item ->
                 this@SettingsActivity.materialDialogThemed {
@@ -92,9 +104,13 @@ class SettingsActivity : KPrefActivity() {
                 }
                 true
             }
-            textGetter = { it.timeToText() }
+            textGetter = { this@SettingsActivity.minuteToText(it) }
         }
 
+    }
+
+    fun shouldRestartMain() {
+        setResult(MainActivity.REQUEST_RESTART)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,8 +129,26 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun onBackPressed() {
-        startActivity(MainActivity::class.java, clearStack = true, intentBuilder = {
-            putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
-        })
+        finishSlideOut()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_settings, menu)
+        toolbar.tint(Prefs.iconColor)
+        setMenuIcons(menu, Prefs.iconColor,
+                R.id.action_email to GoogleMaterial.Icon.gmd_email,
+                R.id.action_changelog to GoogleMaterial.Icon.gmd_info)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_email -> sendEmail(R.string.dev_email, R.string.frost_feedback) {
+                addItem("Random Frost ID", "${Prefs.installDate}-${Prefs.identifier}")
+            }
+            R.id.action_changelog -> showChangelog(R.xml.changelog, { theme() })
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 }

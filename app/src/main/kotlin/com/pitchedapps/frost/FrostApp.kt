@@ -1,7 +1,6 @@
 package com.pitchedapps.frost
 
 import android.app.Application
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
@@ -11,7 +10,6 @@ import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
-import com.mikepenz.materialdrawer.util.DrawerUIUtils
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.Prefs
@@ -38,10 +36,9 @@ class FrostApp : Application() {
         FlowManager.init(FlowConfig.Builder(this).build())
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         FbCookie()
-        if (Prefs.installDate == -1L) {
-            Prefs.installDate = System.currentTimeMillis()
-            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
-        }
+        if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
+        if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        Prefs.lastLaunch = System.currentTimeMillis()
 //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {

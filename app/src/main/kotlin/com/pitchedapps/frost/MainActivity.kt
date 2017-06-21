@@ -1,11 +1,14 @@
 package com.pitchedapps.frost
 
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
@@ -13,11 +16,13 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
+import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
@@ -58,6 +63,7 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val FRAGMENT_REFRESH = 99
+        const val REQUEST_RESTART = 90909
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,18 +182,18 @@ class MainActivity : BaseActivity() {
                         identifier = id
                     }
                 }
-                profileSetting(nameRes = R.string.logout) {
+                profileSetting(nameRes = R.string.kau_logout) {
                     iicon = GoogleMaterial.Icon.gmd_exit_to_app
                     iconColor = Prefs.textColor.toLong()
                     textColor = Prefs.textColor.toLong()
                     identifier = -2L
                 }
-                profileSetting(nameRes = R.string.add_account) {
+                profileSetting(nameRes = R.string.kau_add_account) {
                     iconDrawable = IconicsDrawable(this@MainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5).color(Prefs.textColor)
                     textColor = Prefs.textColor.toLong()
                     identifier = -3L
                 }
-                profileSetting(nameRes = R.string.manage_account) {
+                profileSetting(nameRes = R.string.kau_manage_account) {
                     iicon = GoogleMaterial.Icon.gmd_settings
                     iconColor = Prefs.textColor.toLong()
                     textColor = Prefs.textColor.toLong()
@@ -203,10 +209,10 @@ class MainActivity : BaseActivity() {
                                 FbCookie.reset { launchLogin(cookies(), true) }
                             } else {
                                 materialDialogThemed {
-                                    title(R.string.logout)
-                                    content(String.format(string(R.string.logout_confirm), currentCookie.name ?: Prefs.userId.toString()))
-                                    positiveText(R.string.yes)
-                                    negativeText(R.string.no)
+                                    title(R.string.kau_logout)
+                                    content(String.format(string(R.string.kau_logout_confirm_as_x), currentCookie.name ?: Prefs.userId.toString()))
+                                    positiveText(R.string.kau_yes)
+                                    negativeText(R.string.kau_no)
                                     onPositive { _, _ ->
                                         FbCookie.logout(Prefs.userId) {
                                             val allCookies = cookies()
@@ -228,23 +234,24 @@ class MainActivity : BaseActivity() {
                 }
             }
             drawerHeader.setActiveProfile(Prefs.userId)
-            primaryItem(FbTab.FEED_MOST_RECENT)
-            primaryItem(FbTab.FEED_TOP_STORIES)
-            primaryItem(FbTab.ACTIVITY_LOG)
+            primaryFrostItem(FbTab.FEED_MOST_RECENT)
+            primaryFrostItem(FbTab.FEED_TOP_STORIES)
+            primaryFrostItem(FbTab.ACTIVITY_LOG)
             divider()
-            primaryItem(FbTab.EVENTS)
-            primaryItem(FbTab.BIRTHDAYS)
+            primaryFrostItem(FbTab.PHOTOS)
+            primaryFrostItem(FbTab.GROUPS)
+            primaryFrostItem(FbTab.PAGES)
             divider()
-            primaryItem(FbTab.PHOTOS)
-            primaryItem(FbTab.GROUPS)
-            primaryItem(FbTab.PAGES)
-            primaryItem(FbTab.SAVED)
+            primaryFrostItem(FbTab.EVENTS)
+            primaryFrostItem(FbTab.BIRTHDAYS)
+            primaryFrostItem(FbTab.ON_THIS_DAY)
             divider()
-
+            primaryFrostItem(FbTab.NOTES)
+            primaryFrostItem(FbTab.SAVED)
         }
     }
 
-    fun Builder.primaryItem(item: FbTab) = this.primaryItem(item.titleId) {
+    fun Builder.primaryFrostItem(item: FbTab) = this.primaryItem(item.titleId) {
         iicon = item.icon
         iconColor = Prefs.textColor.toLong()
         textColor = Prefs.textColor.toLong()
@@ -263,27 +270,42 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) = this.secondaryItem(title) {
+        textColor = Prefs.textColor.toLong()
+        selectedIconColor = Prefs.textColor.toLong()
+        selectedTextColor = Prefs.textColor.toLong()
+        selectedColor = 0x00000001.toLong()
+        identifier = title.toLong()
+        onClick { _ -> onClick(); false }
+    }
+
     fun refreshAll() {
         webFragmentObservable.onNext(FRAGMENT_REFRESH)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        toolbar.childrenSequence().forEach { (it as? ImageButton)?.setColorFilter(Prefs.iconColor) }
+        toolbar.tint(Prefs.iconColor)
+        setMenuIcons(menu, Prefs.iconColor,
+                R.id.action_settings to GoogleMaterial.Icon.gmd_settings)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
-                startActivity(SettingsActivity::class.java, clearStack = true, intentBuilder = {
-                    putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
-                })
+                val intent = Intent(this, SettingsActivity::class.java)
+                val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
+                startActivityForResult(intent, 99, bundle)
             }
-            R.id.action_changelog -> showChangelog(R.xml.changelog, { theme() })
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == REQUEST_RESTART) restart()
     }
 
     override fun onResume() {

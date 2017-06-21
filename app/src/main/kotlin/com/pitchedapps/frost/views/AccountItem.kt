@@ -55,7 +55,7 @@ class AccountItem(val cookie: CookieModel?) : AbstractItem<AccountItem, AccountI
             } else {
                 text.visibility = View.VISIBLE
                 image.setImageDrawable(GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(itemView.context, 100, Prefs.textColor))
-                text.text = itemView.context.getString(R.string.add_account)
+                text.text = itemView.context.getString(R.string.kau_add_account)
                 //todo add plus image
             }
         }

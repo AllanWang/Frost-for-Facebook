@@ -5,13 +5,8 @@
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_changelog"
         android:orderInCategory="200"
-        android:title="@string/changelog"
-        app:showAsAction="never" />
+        android:title="@string/kau_settings"
+        app:showAsAction="always" />
 </menu>
 

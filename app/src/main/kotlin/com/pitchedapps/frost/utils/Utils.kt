@@ -5,18 +5,19 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.support.annotation.ColorInt
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 import android.view.View
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
+import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_URL_BASE
@@ -58,9 +59,9 @@ val String.formattedFbUrl: String
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.i("Launch web overlay: $argUrl")
-    val intent = Intent(this, WebOverlayActivity::class.java)
-    intent.putExtra(ARG_URL, argUrl)
-    ContextCompat.startActivity(this, intent, null)
+    startActivity(WebOverlayActivity::class.java, false, {
+        putExtra(ARG_URL, argUrl)
+    })
 }
 
 fun WebOverlayActivity.url(): String {
