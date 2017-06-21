@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/profile"
             android:layout_centerHorizontal="true"
-            android:text="@string/loading_account"
             android:visibility="invisible" />
 
         <com.pitchedapps.frost.web.LoginWebView
