@@ -18,6 +18,7 @@ import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -226,9 +227,17 @@ class MainActivity : BaseActivity() {
                 }
             }
             drawerHeader.setActiveProfile(Prefs.userId)
+            primaryItem(FbTab.FEED_MOST_RECENT)
+            primaryItem(FbTab.FEED_TOP_STORIES)
             primaryItem(FbTab.ACTIVITY_LOG)
+            divider()
+            primaryItem(FbTab.EVENTS)
+            primaryItem(FbTab.BIRTHDAYS)
+            divider()
             primaryItem(FbTab.PHOTOS)
             primaryItem(FbTab.GROUPS)
+            primaryItem(FbTab.PAGES)
+            primaryItem(FbTab.SAVED)
         }
     }
 

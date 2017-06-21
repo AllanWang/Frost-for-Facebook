@@ -22,8 +22,8 @@
         android:theme="@style/FrostTheme.Splash">
         <activity
             android:name=".StartActivity"
-            android:noHistory="true"
             android:label="@string/app_name"
+            android:noHistory="true"
             android:theme="@style/FrostTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,6 +40,7 @@
             android:name=".WebOverlayActivity"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay" />
 
         <activity
@@ -55,6 +56,7 @@
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
