@@ -118,6 +118,10 @@ class SettingsActivity : KPrefActivity() {
             checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, { Prefs.showSuggestedFriends = it }) {
                 descRes = R.string.suggested_friends_desc
             }
+
+            checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, { Prefs.showFacebookAds = it }) {
+                descRes = R.string.facebook_ads_desc
+            }
         }
 
 
@@ -153,10 +157,8 @@ class SettingsActivity : KPrefActivity() {
                 this@SettingsActivity.materialDialogThemed {
                     title(R.string.notification_keywords)
                     customView(keywordView, false)
-                    canceledOnTouchOutside(false)
+                    dismissListener { keywordView.save() }
                     positiveText(R.string.kau_done)
-                    negativeText(R.string.kau_cancel)
-                    onPositive { _, _ -> keywordView.save() }
                 }
                 true
             }
