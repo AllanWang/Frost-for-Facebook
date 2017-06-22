@@ -91,9 +91,9 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
-//    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
+//    compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
+//    compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
 
 //    compile "org.greenrobot:eventbus:${EVENTBUS}"
 
