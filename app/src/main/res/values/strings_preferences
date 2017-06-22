@@ -1,7 +1,31 @@
 <resources>
+    <!--categories-->
+    <string name="appearance">Appearance</string>
+    <string name="appearance_desc">Theme, Items to display, etc</string>
+
+    <string name="notifications_desc">Frequency, filters, etc</string>
+
+    <!--themes-->
     <string name="theme">Theme</string>
     <string name="text_color">Text Color</string>
     <string name="background_color">Background Color</string>
     <string name="header_color">Header Color</string>
     <string name="icon_color">Icon Color</string>
+
+    <string name="rounded_icons">Rounded Icons</string>
+    <string name="base_customization">Base Customization</string>
+    <string name="feed_customization">Feed Customization</string>
+    <string name="suggested_friends">Suggested Friends</string>
+    <string name="suggested_friends_desc">Show suggested friends in the feed</string>
+
+    <string name="notification_frequency">Notification Frequency</string>
+    <string name="notification_keywords">Keywords</string>
+    <string name="notification_keywords_desc">Does not notify when notification contains any of these keys.</string>
+    <string name="add_keyword">Add Keyword</string>
+    <string name="hint_keyword">Type keyword and press +</string>
+    <string name="empty_keyword">Empty Keyword</string>
+
+    <string name="fancy_animations">Fancy Animations</string>
+    <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
+
 </resources>

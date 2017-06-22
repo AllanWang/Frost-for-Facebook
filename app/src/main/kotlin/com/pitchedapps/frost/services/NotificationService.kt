@@ -18,6 +18,7 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
 import com.pitchedapps.frost.utils.frostNotification
 import org.jetbrains.anko.doAsync
@@ -83,6 +84,7 @@ class NotificationService : JobService() {
         val abbr = element.getElementsByTag("abbr")
         val timeString = abbr?.text()
         var text = a.text().replace("\u00a0", " ") //remove &nbsp;
+        if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
         if (timeString != null) text = text.removeSuffix(timeString)
         text = text.trim()
         val abbrData = abbr?.attr("data-store")

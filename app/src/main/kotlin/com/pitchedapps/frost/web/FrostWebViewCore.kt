@@ -18,6 +18,7 @@ import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -93,7 +94,7 @@ class FrostWebViewCore @JvmOverloads constructor(
                 if (isVisible()) fadeOut(duration = 200L)
             } else if (loading) {
                 dispose?.dispose()
-                if (animate) circularReveal(offset = 150L)
+                if (animate && Prefs.animate) circularReveal(offset = 150L)
                 else fadeIn(duration = 100L)
             }
         }

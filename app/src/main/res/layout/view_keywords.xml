@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/kau_dialog_margin_bottom"
+    android:paddingEnd="@dimen/kau_dialog_margin"
+    android:paddingStart="@dimen/kau_dialog_margin">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edit_text"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:hint="@string/hint_keyword"
+        android:paddingEnd="@dimen/kau_dialog_margin"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/add_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@id/add_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="@id/edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/edit_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text" />
+
+</android.support.constraint.ConstraintLayout>
