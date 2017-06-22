@@ -33,7 +33,7 @@ class AccountItem(val cookie: CookieModel?) : AbstractItem<AccountItem, AccountI
 
     override fun getLayoutRes(): Int = R.layout.view_account
 
-    override fun bindView(viewHolder: ViewHolder, payloads: List<Any>) {
+    override fun bindView(viewHolder: ViewHolder, payloads: List<Any>?) {
         super.bindView(viewHolder, payloads)
         with(viewHolder) {
             text.visibility = View.INVISIBLE

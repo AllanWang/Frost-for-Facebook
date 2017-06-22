@@ -12,10 +12,7 @@ import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.injectors.CssHider
-import com.pitchedapps.frost.injectors.JsActions
-import com.pitchedapps.frost.injectors.JsAssets
-import com.pitchedapps.frost.injectors.jsInject
+import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
@@ -53,7 +50,9 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
             refreshObservable.onNext(false)
             return
         }
-        view.jsInject(JsActions.LOGIN_CHECK, JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
+        view.jsInject(JsActions.LOGIN_CHECK,
+                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
         onPageFinishedActions(url)
     }
 

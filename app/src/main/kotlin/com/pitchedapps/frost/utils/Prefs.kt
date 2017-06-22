@@ -2,6 +2,7 @@ package com.pitchedapps.frost.utils
 
 import android.graphics.Color
 import ca.allanwang.kau.kpref.KPref
+import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
 import ca.allanwang.kau.utils.lazyResettable
 import com.pitchedapps.frost.injectors.InjectorContract
@@ -60,4 +61,12 @@ object Prefs : KPref() {
 
     val isCustomTheme: Boolean
         get() = t == Theme.CUSTOM
+
+    var showRoundedIcons: Boolean by kpref("rounded_icons", true)
+
+    var showSuggestedFriends: Boolean by kpref("suggested_friends_feed", true)
+
+    var animate: Boolean by kpref("fancy_animations", true)
+
+    var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
 }

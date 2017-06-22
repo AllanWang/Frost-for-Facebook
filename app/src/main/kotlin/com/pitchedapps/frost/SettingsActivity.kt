@@ -11,19 +11,37 @@ import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.Keywords
 
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
 class SettingsActivity : KPrefActivity() {
+
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
         textColor = { Prefs.textColor }
-        accentColor = { Prefs.textColor }
+        accentColor = {
+            if (Prefs.headerColor.isColorVisibleOn(Prefs.bgColor, 100)) Prefs.headerColor
+            else Prefs.textColor
+        }
     }
 
     override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
-        header(R.string.settings)
+        subItems(R.string.appearance, subPrefsAppearance()) {
+            descRes = R.string.appearance_desc
+            iicon = GoogleMaterial.Icon.gmd_palette
+        }
+        subItems(R.string.notifications, subPrefsNotifications()) {
+            descRes = R.string.notifications_desc
+            iicon = GoogleMaterial.Icon.gmd_notifications
+        }
+    }
+
+    fun subPrefsAppearance(): KPrefAdapterBuilder.() -> Unit = {
+
+        header(R.string.base_customization)
+
         text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
             onClick = {
                 _, _, item ->
@@ -88,15 +106,32 @@ class SettingsActivity : KPrefActivity() {
                 onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
                 allowCustom = true
             }
+
+            checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, { Prefs.showRoundedIcons = it })
+
+            checkbox(R.string.fancy_animations, { Prefs.animate }, { Prefs.animate = it; animate = it }) {
+                descRes = R.string.fancy_animations_desc
+            }
+
+            header(R.string.feed_customization)
+
+            checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, { Prefs.showSuggestedFriends = it }) {
+                descRes = R.string.suggested_friends_desc
+            }
         }
 
-        text(R.string.notifications, { Prefs.notificationFreq }, { Prefs.notificationFreq = it; reloadByTitle(R.string.notifications) }) {
+
+    }
+
+    fun subPrefsNotifications(): KPrefAdapterBuilder.() -> Unit = {
+
+        text(R.string.notification_frequency, { Prefs.notificationFreq }, { Prefs.notificationFreq = it; reloadByTitle(R.string.notifications) }) {
             val options = longArrayOf(-1, 15, 30, 60, 120, 180, 300, 1440, 2880)
             val texts = options.map { this@SettingsActivity.minuteToText(it) }
             onClick = {
                 _, _, item ->
                 this@SettingsActivity.materialDialogThemed {
-                    title(R.string.notifications)
+                    title(R.string.notification_frequency)
                     items(texts)
                     itemsCallbackSingleChoice(options.indexOf(item.pref), {
                         _, _, which, text ->
@@ -110,6 +145,23 @@ class SettingsActivity : KPrefActivity() {
             textGetter = { this@SettingsActivity.minuteToText(it) }
         }
 
+        text<String?>(R.string.notification_keywords, { null }, { }) {
+            descRes = R.string.notification_keywords_desc
+            onClick = {
+                _, _, _ ->
+                val keywordView = Keywords(this@SettingsActivity)
+                this@SettingsActivity.materialDialogThemed {
+                    title(R.string.notification_keywords)
+                    customView(keywordView, false)
+                    canceledOnTouchOutside(false)
+                    positiveText(R.string.kau_done)
+                    negativeText(R.string.kau_cancel)
+                    onPositive { _, _ -> keywordView.save() }
+                }
+                true
+            }
+        }
+
     }
 
     fun shouldRestartMain() {
@@ -118,6 +170,7 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setFrostTheme(true)
+        animate = Prefs.animate
         super.onCreate(savedInstanceState)
         themeExterior(false)
     }
@@ -132,7 +185,8 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun onBackPressed() {
-        finishSlideOut()
+        if (!super.backPress())
+            finishSlideOut()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
