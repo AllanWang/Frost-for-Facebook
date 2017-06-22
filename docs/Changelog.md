@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3
+* Added rounded icons option
+* Sorted preferences
+* Added adblock
+* Added feed configurations
+* Animated settings panels
+* Add notification filters
+
 ## v0.2
 * Removed unnecessary permissions
 * Added notifications
