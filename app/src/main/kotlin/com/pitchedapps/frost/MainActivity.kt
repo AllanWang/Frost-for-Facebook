@@ -15,8 +15,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
-import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
@@ -43,7 +41,6 @@ import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import org.jetbrains.anko.childrenSequence
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 

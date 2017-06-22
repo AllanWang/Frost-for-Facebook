@@ -7,17 +7,15 @@ import android.content.ComponentName
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.support.annotation.ColorInt
 import android.support.v4.app.NotificationCompat
+import android.support.v7.widget.SimpleItemAnimator
 import android.support.v7.widget.Toolbar
-import android.view.Menu
 import android.view.View
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
-import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_URL_BASE
@@ -91,6 +89,7 @@ fun MaterialDialog.Builder.theme(): MaterialDialog.Builder {
     positiveColor(Prefs.textColor)
     negativeColor(Prefs.textColor)
     neutralColor(Prefs.textColor)
+    SimpleItemAnimator
     return this
 }
 
