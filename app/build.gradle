@@ -91,11 +91,9 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
+//    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
-
-    testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
 
 //    compile "org.greenrobot:eventbus:${EVENTBUS}"
 
@@ -106,10 +104,10 @@ dependencies {
 
     compile "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
     compile "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
-    compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
-    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
+//    compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
+//    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
 
-    compile "com.lapism:searchview:${SEARCH_VIEW}"
+//    compile "com.lapism:searchview:${SEARCH_VIEW}"
 
     compile "org.jsoup:jsoup:${JSOUP}"
 
@@ -117,8 +115,6 @@ dependencies {
 
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"
-
-    compile "com.f2prateek.rx.preferences2:rx-preferences:${RX_PREFS}"
 
     compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
         transitive = true

@@ -9,7 +9,10 @@ import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_URL
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.formattedFbUrl
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.web.FrostWebView
 
 
