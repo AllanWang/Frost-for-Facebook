@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.email.sendEmail
+import ca.allanwang.kau.kpref.CoreAttributeContract
 import ca.allanwang.kau.kpref.KPrefActivity
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.*
@@ -16,10 +17,12 @@ import com.pitchedapps.frost.utils.*
  * Created by Allan Wang on 2017-06-06.
  */
 class SettingsActivity : KPrefActivity() {
-
-    override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
+    override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
         textColor = { Prefs.textColor }
         accentColor = { Prefs.textColor }
+    }
+
+    override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
         header(R.string.settings)
         text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
             onClick = {
@@ -135,6 +138,8 @@ class SettingsActivity : KPrefActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
+        toolbarTitle.textColor = Prefs.iconColor
+        toolbarTitle.invalidate()
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_email to GoogleMaterial.Icon.gmd_email,
                 R.id.action_changelog to GoogleMaterial.Icon.gmd_info)

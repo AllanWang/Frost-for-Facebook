@@ -89,7 +89,6 @@ fun MaterialDialog.Builder.theme(): MaterialDialog.Builder {
     positiveColor(Prefs.textColor)
     negativeColor(Prefs.textColor)
     neutralColor(Prefs.textColor)
-    SimpleItemAnimator
     return this
 }
 
