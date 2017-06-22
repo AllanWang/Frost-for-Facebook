@@ -52,6 +52,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         }
         view.jsInject(JsActions.LOGIN_CHECK,
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
+                CssHider.ADS.maybe(!Prefs.showFacebookAds),
                 JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
         onPageFinishedActions(url)
     }

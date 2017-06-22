@@ -16,7 +16,9 @@
     <string name="base_customization">Base Customization</string>
     <string name="feed_customization">Feed Customization</string>
     <string name="suggested_friends">Suggested Friends</string>
-    <string name="suggested_friends_desc">Show suggested friends in the feed</string>
+    <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>
+    <string name="facebook_ads">Facebook Ads</string>
+    <string name="facebook_ads_desc">Show native Facebook ads</string>
 
     <string name="notification_frequency">Notification Frequency</string>
     <string name="notification_keywords">Keywords</string>
