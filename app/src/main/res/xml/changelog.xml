@@ -6,7 +6,15 @@
     <item text="" />
     -->
 
-    <version title="v0.2"/>
+    <version title="v0.3" />
+    <item text="Added rounded icons option" />
+    <item text="Sorted preferences" />
+    <item text="Added adblock" />
+    <item text="Added feed configurations" />
+    <item text="Animated settings panels" />
+    <item text="Add notification filters" />
+
+    <version title="v0.2" />
     <item text="Removed unnecessary permissions" />
     <item text="Added notifications" />
     <item text="Themed more components" />
@@ -18,8 +26,6 @@
     <item text="Added anonymous analytics" />
     <item text="Moved settings to drawer" />
     <item text="Added feedback option" />
-    <item text="" />
-    <item text="" />
 
     <version title="v0.1" />
     <item text="Initial Changelog" />
