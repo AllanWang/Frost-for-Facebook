@@ -58,7 +58,7 @@ open class WebOverlayActivity : AppCompatActivity() {
             Prefs.firstWebOverlay = false
             coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
                 duration = Snackbar.LENGTH_INDEFINITE
-                setAction(R.string.kau_ok) { _ -> this.dismiss() }
+                setAction(R.string.kau_got_it) { _ -> this.dismiss() }
             }
         }
     }
