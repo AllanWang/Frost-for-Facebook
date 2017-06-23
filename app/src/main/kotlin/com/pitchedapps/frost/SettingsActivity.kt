@@ -125,7 +125,7 @@ class SettingsActivity : KPrefActivity() {
 
     fun subPrefsNotifications(): KPrefAdapterBuilder.() -> Unit = {
 
-        text(R.string.notification_frequency, { Prefs.notificationFreq }, { Prefs.notificationFreq = it; reloadByTitle(R.string.notifications) }) {
+        text(R.string.notification_frequency, { Prefs.notificationFreq }, { Prefs.notificationFreq = it; reloadByTitle(R.string.notification_frequency) }) {
             val options = longArrayOf(-1, 15, 30, 60, 120, 180, 300, 1440, 2880)
             val texts = options.map { this@SettingsActivity.minuteToText(it) }
             onClick = {

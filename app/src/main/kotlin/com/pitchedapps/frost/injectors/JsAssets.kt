@@ -22,7 +22,6 @@ enum class JsAssets : InjectorContract {
             injector = JsBuilder().js(content).build()
         }
         injector!!.inject(webView, callback)
-        L.v("JS ${injector!!.function}")
     }
 
     fun reset() {

@@ -53,10 +53,7 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<Strin
     Observable.zip<String, Array<String>>(observables.map { it.toObservable() }, { it.map { it.toString() }.toTypedArray() }).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
         callback(it)
     })
-    (0 until validInjectors.size).asSequence().forEach {
-        i ->
-        validInjectors[i].inject(this, { observables[i].onSuccess(it) })
-    }
+    (0 until validInjectors.size).forEach { i -> validInjectors[i].inject(this, { observables[i].onSuccess(it) }) }
 }
 
 fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = webCore.jsInject(*injectors, callback = callback)

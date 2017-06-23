@@ -22,7 +22,6 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
             injector = JsBuilder().css(content).build()
         }
         injector!!.inject(webView, callback)
-        L.v("CSS ${injector!!.function}")
     }
 
     fun reset() {
