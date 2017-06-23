@@ -11,6 +11,7 @@ import ca.allanwang.kau.kpref.items.KPrefColorPicker
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.Keywords
 
@@ -76,13 +77,17 @@ class SettingsActivity : KPrefActivity() {
                 allowCustom = true
             }
 
-            colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload() }) {
+            fun invalidateCustomTheme() {
+                CssAssets.CUSTOM.injector = null
+            }
+
+            colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload(); invalidateCustomTheme() }) {
                 dependsOnCustom()
                 allowCustomAlpha = false
             }
 
             colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
-                    { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }) {
+                    { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L); invalidateCustomTheme() }) {
                 dependsOnCustom()
                 allowCustomAlpha = true
             }

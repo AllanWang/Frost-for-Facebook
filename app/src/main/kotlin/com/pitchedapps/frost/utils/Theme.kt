@@ -17,7 +17,7 @@ enum class Theme(val textRes: Int, val injector: InjectorContract,
     DARK(R.string.kau_dark, CssAssets.MATERIAL_DARK, { Color.WHITE }, { 0xff303030.toInt() }, { 0xff2e4b86.toInt() }, { Color.WHITE }),
     AMOLED(R.string.kau_amoled, CssAssets.MATERIAL_AMOLED, { Color.WHITE }, { Color.BLACK }, { Color.BLACK }, { Color.WHITE }),
     GLASS(R.string.kau_glass, CssAssets.MATERIAL_GLASS, { Color.WHITE }, { 0x80000000.toInt() }, { 0xb3000000.toInt() }, { Color.WHITE }),
-    CUSTOM(R.string.kau_custom, JsActions.EMPTY, { Prefs.customTextColor }, { Prefs.customBackgroundColor }, { Prefs.customHeaderColor }, { Prefs.customIconColor })
+    CUSTOM(R.string.kau_custom, CssAssets.CUSTOM, { Prefs.customTextColor }, { Prefs.customBackgroundColor }, { Prefs.customHeaderColor }, { Prefs.customIconColor })
     ;
 
     val textColor: Int

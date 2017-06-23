@@ -25,3 +25,5 @@
 -keepattributes JavascriptInterface
 # Jsoup
 -keeppackagenames org.jsoup.nodes
+# IAB
+-keep class com.android.vending.billing.**

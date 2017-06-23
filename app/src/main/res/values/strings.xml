@@ -35,4 +35,5 @@
     <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
 
     <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
+    <string name="profile_picture">Profile Picture</string>
 </resources>
