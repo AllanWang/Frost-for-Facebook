@@ -2,13 +2,11 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.webkit.JavascriptInterface
-import com.pitchedapps.frost.LoginActivity
 import com.pitchedapps.frost.MainActivity
-import com.pitchedapps.frost.SelectorActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cookies
-import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.launchLogin
 import com.pitchedapps.frost.utils.launchWebOverlay
 import io.reactivex.subjects.Subject
 
@@ -39,10 +37,7 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
 
     @JavascriptInterface
     fun loadLogin() {
-        if (cookies.isNotEmpty())
-            context.launchNewTask(SelectorActivity::class.java, cookies)
-        else
-            context.launchNewTask(LoginActivity::class.java)
+        context.launchLogin(cookies, true)
     }
 
     @JavascriptInterface

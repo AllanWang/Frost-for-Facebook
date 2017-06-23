@@ -3,8 +3,9 @@ console.log('Registering frost_a click');
 
 var _frostAClick = function(e) {
   var element = e.target || e.srcElement;
-  if (element.tagName !== 'A')
-    element = element.parentNode;
+  if (element.tagName !== 'A') element = element.parentNode;
+  //Notifications is two layers under
+  if (element.tagName !== 'A') element = element.parentNode;
   if (element.tagName === 'A' && element.getAttribute('href') !== '#') {
     var url = element.getAttribute('href');
     console.log('Click Intercept', url);

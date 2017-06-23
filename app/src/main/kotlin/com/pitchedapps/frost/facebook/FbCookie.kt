@@ -96,9 +96,9 @@ object FbCookie {
         if (Prefs.prevId != -1L && Prefs.prevId != Prefs.userId) {
             switchUser(Prefs.prevId) {
                 L.d("Switched from ${Prefs.userId} to ${Prefs.prevId}")
-                Prefs.prevId = -1L
                 callback()
             }
         } else callback()
+        if (Prefs.prevId != -1L) Prefs.prevId = -1L
     }
 }
