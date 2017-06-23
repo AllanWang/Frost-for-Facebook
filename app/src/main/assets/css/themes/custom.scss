@@ -1,0 +1,10 @@
+$bg_transparent: transparent;
+$text: unquote('$T$');
+$link: unquote('$TT$');
+$background: unquote('$B$');
+$background2: unquote('$BB$');
+$bg_opaque: unquote('$O$');
+$divider: unquote('$D$');
+
+
+@import "../core/main";

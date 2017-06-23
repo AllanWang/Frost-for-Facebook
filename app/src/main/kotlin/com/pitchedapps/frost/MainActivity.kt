@@ -36,6 +36,7 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -103,7 +104,7 @@ class MainActivity : BaseActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        setFrostColors(toolbar, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
+        setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -302,7 +303,9 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == REQUEST_RESTART) restart()
+        if (resultCode == REQUEST_RESTART) {
+            restart()
+        }
     }
 
     override fun onResume() {
