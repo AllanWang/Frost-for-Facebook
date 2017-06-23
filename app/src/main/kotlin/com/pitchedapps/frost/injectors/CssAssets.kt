@@ -28,7 +28,6 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
                         .replace("\$BB\$", Prefs.bgColor.colorToForeground(0.05f).toRgbaString())
                         .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
                         .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
-                L.d("Content $content")
             }
             injector = JsBuilder().css(content).build()
         }
