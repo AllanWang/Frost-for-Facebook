@@ -66,7 +66,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
-                JsAssets.CLICK_A,
+                JsAssets.CLICK_A.maybe(webCore.baseEnum != null),
                 callback = {
                     refreshObservable.onNext(false)
                 })

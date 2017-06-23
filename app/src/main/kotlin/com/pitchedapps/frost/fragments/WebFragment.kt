@@ -85,7 +85,7 @@ class WebFragment : Fragment() {
                         pauseLoad = false
                     }
                     -(position + 1) -> { //we are moving away from this fragment
-                        pauseLoad = true
+                        if (!frostWebView.refresh.isRefreshing) pauseLoad = true
                     }
                 }
             }
