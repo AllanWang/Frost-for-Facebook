@@ -32,4 +32,7 @@
     <string name="requires_custom_theme">Requires custom theme</string>
 
     <string name="frost_feedback">Frost for Facebook: Feedback</string>
+    <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
+
+    <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
 </resources>

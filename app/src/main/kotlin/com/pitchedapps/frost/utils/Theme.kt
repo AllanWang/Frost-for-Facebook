@@ -14,23 +14,23 @@ enum class Theme(val textRes: Int, val injector: InjectorContract,
                  private val headerColorGetter: () -> Int, private val iconColorGetter: () -> Int) {
     DEFAULT(R.string.kau_default, JsActions.EMPTY, { Color.BLACK }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
     LIGHT(R.string.kau_light, CssAssets.MATERIAL_LIGHT, { Color.BLACK }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
-    DARK(R.string.kau_dark, CssAssets.MATERIAL_DARK, { Color.WHITE }, { 0xff303030.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
+    DARK(R.string.kau_dark, CssAssets.MATERIAL_DARK, { Color.WHITE }, { 0xff303030.toInt() }, { 0xff2e4b86.toInt() }, { Color.WHITE }),
     AMOLED(R.string.kau_amoled, CssAssets.MATERIAL_AMOLED, { Color.WHITE }, { Color.BLACK }, { Color.BLACK }, { Color.WHITE }),
     GLASS(R.string.kau_glass, CssAssets.MATERIAL_GLASS, { Color.WHITE }, { 0x80000000.toInt() }, { 0xb3000000.toInt() }, { Color.WHITE }),
     CUSTOM(R.string.kau_custom, JsActions.EMPTY, { Prefs.customTextColor }, { Prefs.customBackgroundColor }, { Prefs.customHeaderColor }, { Prefs.customIconColor })
     ;
 
     val textColor: Int
-        get() = textColorGetter.invoke()
+        get() = textColorGetter()
 
     val bgColor: Int
-        get() = backgroundColorGetter.invoke()
+        get() = backgroundColorGetter()
 
     val headerColor: Int
-        get() = headerColorGetter.invoke()
+        get() = headerColorGetter()
 
     val iconColor: Int
-        get() = iconColorGetter.invoke()
+        get() = iconColorGetter()
 
     companion object {
         val values = values() //save one instance

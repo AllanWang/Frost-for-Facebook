@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbTab
@@ -18,8 +19,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0)
-    : FrameLayout(context, attrs, defStyleAttr, defStyleRes), SwipeRefreshLayout.OnRefreshListener {
+class FrostWebView @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), SwipeRefreshLayout.OnRefreshListener {
+
     val refresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     val web: FrostWebViewCore by bindView(R.id.frost_webview_core)
     val progress: ProgressBar by bindView(R.id.progressBar)
@@ -40,7 +43,7 @@ class FrostWebView @JvmOverloads constructor(context: Context, attrs: AttributeS
         refresh.setOnRefreshListener(this)
         addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
             override fun onViewDetachedFromWindow(v: View) {
-                web.visibility = View.VISIBLE
+                web.visible()
             }
 
             override fun onViewAttachedToWindow(v: View) {}

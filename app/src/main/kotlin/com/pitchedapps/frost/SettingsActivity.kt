@@ -7,6 +7,7 @@ import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.kpref.CoreAttributeContract
 import ca.allanwang.kau.kpref.KPrefActivity
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
+import ca.allanwang.kau.kpref.items.KPrefColorPicker
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -21,10 +22,7 @@ class SettingsActivity : KPrefActivity() {
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
         textColor = { Prefs.textColor }
-        accentColor = {
-            if (Prefs.headerColor.isColorVisibleOn(Prefs.bgColor, 100)) Prefs.headerColor
-            else Prefs.textColor
-        }
+        accentColor = { Prefs.accentColor }
     }
 
     override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
@@ -71,40 +69,39 @@ class SettingsActivity : KPrefActivity() {
         }
 
         if (BuildConfig.DEBUG) {
-            colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload() }) {
+
+            fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
                 enabler = { Prefs.isCustomTheme }
-                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
-                allowCustomAlpha = false
+                onDisabledClick = { itemView, _, _ -> itemView.frostSnackbar(R.string.requires_custom_theme); true }
                 allowCustom = true
+            }
+
+            colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload() }) {
+                dependsOnCustom()
+                allowCustomAlpha = false
             }
 
             colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
                     { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L) }) {
-                enabler = { Prefs.isCustomTheme }
-                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
+                dependsOnCustom()
                 allowCustomAlpha = true
-                allowCustom = true
             }
 
             colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
                 Prefs.customHeaderColor = it
-                val darkerColor = it.darken()
-                this@SettingsActivity.navigationBarColor = darkerColor
-                toolbarCanvas.ripple(darkerColor, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
+                this@SettingsActivity.navigationBarColor = it
+                toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
             }) {
-                enabler = { Prefs.isCustomTheme }
-                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
+                dependsOnCustom()
                 allowCustomAlpha = true
-                allowCustom = true
             }
 
             colorPicker(R.string.icon_color, { Prefs.customIconColor }, {
                 Prefs.customIconColor = it
                 invalidateOptionsMenu()
             }) {
-                enabler = { Prefs.isCustomTheme }
-                onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
-                allowCustom = true
+                dependsOnCustom()
+                allowCustomAlpha = false
             }
         }
 
@@ -179,10 +176,9 @@ class SettingsActivity : KPrefActivity() {
     fun themeExterior(animate: Boolean = true) {
         if (animate) bgCanvas.fade(Prefs.bgColor)
         else bgCanvas.set(Prefs.bgColor)
-        val darkAccent = Prefs.headerColor.darken()
-        if (animate) toolbarCanvas.ripple(darkAccent, RippleCanvas.MIDDLE, RippleCanvas.END)
-        else toolbarCanvas.set(darkAccent)
-        this.navigationBarColor = darkAccent
+        if (animate) toolbarCanvas.ripple(Prefs.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
+        else toolbarCanvas.set(Prefs.headerColor)
+        this.navigationBarColor = Prefs.headerColor
     }
 
     override fun onBackPressed() {
