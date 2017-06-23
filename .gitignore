@@ -11,3 +11,4 @@
 /app/src/main/kotlin/com/pitchedapps/frost/facebook/Private.kt
 *.min.css
 .sass-cache/
+PrivConstants.kt

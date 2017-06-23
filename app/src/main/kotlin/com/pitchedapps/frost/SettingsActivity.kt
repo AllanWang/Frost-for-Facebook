@@ -13,6 +13,7 @@ import ca.allanwang.kau.views.RippleCanvas
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.iab.openPlayPurchase
 import com.pitchedapps.frost.views.Keywords
 
 
@@ -46,13 +47,13 @@ class SettingsActivity : KPrefActivity() {
                 _, _, item ->
                 this@SettingsActivity.materialDialogThemed {
                     title(R.string.theme)
-                    items(Theme.values()
-                            .filter { it != Theme.CUSTOM || BuildConfig.DEBUG } //TODO actually add custom theme
-                            .map { this@SettingsActivity.string(it.textRes) })
-//                    itemsDisabledIndices(Theme.CUSTOM.ordinal)
+                    items(Theme.values().map { this@SettingsActivity.string(it.textRes) })
                     itemsCallbackSingleChoice(item.pref, {
                         _, _, which, text ->
                         if (item.pref != which) {
+                            if (which == Theme.CUSTOM.ordinal) {
+                                this@SettingsActivity.openPlayPurchase("asdf", 9)
+                            }
                             item.pref = which
                             shouldRestartMain()
                             reload()
@@ -66,48 +67,48 @@ class SettingsActivity : KPrefActivity() {
                 }
                 true
             }
-            textGetter = { this@SettingsActivity.string(Theme(it).textRes) }
+            textGetter = {
+                this@SettingsActivity.string(if (it == Theme.CUSTOM.ordinal)
+                    R.string.kau_custom else Theme(it).textRes)
+            }
         }
 
-        if (BuildConfig.DEBUG) {
+        fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
+            enabler = { Prefs.isCustomTheme }
+            onDisabledClick = { itemView, _, _ -> itemView.frostSnackbar(R.string.requires_custom_theme); true }
+            allowCustom = true
+        }
 
-            fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
-                enabler = { Prefs.isCustomTheme }
-                onDisabledClick = { itemView, _, _ -> itemView.frostSnackbar(R.string.requires_custom_theme); true }
-                allowCustom = true
-            }
+        fun invalidateCustomTheme() {
+            CssAssets.CUSTOM.injector = null
+        }
 
-            fun invalidateCustomTheme() {
-                CssAssets.CUSTOM.injector = null
-            }
+        colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload(); invalidateCustomTheme() }) {
+            dependsOnCustom()
+            allowCustomAlpha = false
+        }
 
-            colorPicker(R.string.text_color, { Prefs.customTextColor }, { Prefs.customTextColor = it; reload(); invalidateCustomTheme() }) {
-                dependsOnCustom()
-                allowCustomAlpha = false
-            }
+        colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
+                { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L); invalidateCustomTheme() }) {
+            dependsOnCustom()
+            allowCustomAlpha = true
+        }
 
-            colorPicker(R.string.background_color, { Prefs.customBackgroundColor },
-                    { Prefs.customBackgroundColor = it; bgCanvas.ripple(it, duration = 500L); invalidateCustomTheme() }) {
-                dependsOnCustom()
-                allowCustomAlpha = true
-            }
+        colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
+            Prefs.customHeaderColor = it
+            this@SettingsActivity.navigationBarColor = it
+            toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
+        }) {
+            dependsOnCustom()
+            allowCustomAlpha = true
+        }
 
-            colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
-                Prefs.customHeaderColor = it
-                this@SettingsActivity.navigationBarColor = it
-                toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
-            }) {
-                dependsOnCustom()
-                allowCustomAlpha = true
-            }
-
-            colorPicker(R.string.icon_color, { Prefs.customIconColor }, {
-                Prefs.customIconColor = it
-                invalidateOptionsMenu()
-            }) {
-                dependsOnCustom()
-                allowCustomAlpha = false
-            }
+        colorPicker(R.string.icon_color, { Prefs.customIconColor }, {
+            Prefs.customIconColor = it
+            invalidateOptionsMenu()
+        }) {
+            dependsOnCustom()
+            allowCustomAlpha = false
         }
 
         checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, { Prefs.showRoundedIcons = it })
@@ -205,7 +206,7 @@ class SettingsActivity : KPrefActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_email -> sendEmail(R.string.dev_email, R.string.frost_feedback) {
-                addItem("Random Frost ID", "${Prefs.installDate}-${Prefs.identifier}")
+                addItem("Random Frost ID", Prefs.frostId)
             }
             R.id.action_changelog -> showChangelog(R.xml.changelog, { theme() })
             else -> return super.onOptionsItemSelected(item)

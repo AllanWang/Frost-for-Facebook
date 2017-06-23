@@ -66,6 +66,9 @@ object Prefs : KPref() {
     val isCustomTheme: Boolean
         get() = t == Theme.CUSTOM
 
+    val frostId: String
+        get() = "${installDate}-${identifier}"
+
     var showRoundedIcons: Boolean by kpref("rounded_icons", true)
 
     var showSuggestedFriends: Boolean by kpref("suggested_friends_feed", true)
@@ -77,5 +80,5 @@ object Prefs : KPref() {
     var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
 
     //check if this is the first time launching the web overlay; show snackbar if true
-    var firstWebOverlay:Boolean by kpref("first_web_overlay", true)
+    var firstWebOverlay: Boolean by kpref("first_web_overlay", true)
 }

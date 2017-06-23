@@ -12,6 +12,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
+import com.pitchedapps.frost.utils.iab.IAB
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -46,11 +47,13 @@ class FrostApp : Application() {
 //            LeakCanary.enableDisplayLeakActivity(this)
         } else {
             Fabric.with(this, Crashlytics(), Answers())
-            Crashlytics.setUserIdentifier("${Prefs.installDate}-${Prefs.identifier}")
+            Crashlytics.setUserIdentifier(Prefs.frostId)
             Timber.plant(CrashReportingTree())
         }
 
         super.onCreate()
+
+        IAB.setupAsync(this)
         //Drawer profile loading logic
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {

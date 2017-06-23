@@ -77,7 +77,7 @@ val Context.frostNotification: NotificationCompat.Builder
     }
 
 
-fun Activity.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
+fun Context.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
     val builder = MaterialDialog.Builder(this).theme()
     builder.action()
     return builder.show()
@@ -159,7 +159,7 @@ fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) 
             messageView.setTextColor(Prefs.textColor)
             actionView.setTextColor(Prefs.accentColor)
             //only set if previous text colors are set
-            view.setBackgroundColor(Prefs.bgColor.colorToForeground(0.1f))
+            view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
         }
         show()
     }
