@@ -3,16 +3,14 @@ package com.pitchedapps.frost
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.ARG_URL
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.formattedFbUrl
-import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
 
 
@@ -56,6 +54,13 @@ open class WebOverlayActivity : AppCompatActivity() {
         frostWeb.web.addTitleListener({ toolbar.title = it })
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
+        if (Prefs.firstWebOverlay) {
+            Prefs.firstWebOverlay = false
+            coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                duration = Snackbar.LENGTH_INDEFINITE
+                setAction(R.string.kau_ok) { _ -> this.dismiss() }
+            }
+        }
     }
 
     /**
@@ -77,10 +82,10 @@ open class WebOverlayActivity : AppCompatActivity() {
      * Our theme for the overlay should be fully opaque
      */
     fun theme() {
-        val darkAccent = Prefs.headerColor.darken().withAlpha(255)
-        statusBarColor = darkAccent.darken()
-        navigationBarColor = darkAccent
-        toolbar.setBackgroundColor(darkAccent)
+        val opaqueAccent = Prefs.headerColor.withAlpha(255)
+        statusBarColor = opaqueAccent.darken()
+        navigationBarColor = opaqueAccent
+        toolbar.setBackgroundColor(opaqueAccent)
         toolbar.setTitleTextColor(Prefs.iconColor)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
         toolbar.overflowIcon?.setTint(Prefs.iconColor)

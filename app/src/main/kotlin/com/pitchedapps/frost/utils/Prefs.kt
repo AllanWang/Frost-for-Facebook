@@ -4,6 +4,7 @@ import android.graphics.Color
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
+import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.lazyResettable
 import com.pitchedapps.frost.injectors.InjectorContract
 
@@ -56,6 +57,9 @@ object Prefs : KPref() {
     val iconColor: Int
         get() = t.iconColor
 
+    val accentColor: Int
+        get() = if (headerColor.isColorVisibleOn(bgColor, 100)) headerColor else textColor
+
     val themeInjector: InjectorContract
         get() = t.injector
 
@@ -71,4 +75,7 @@ object Prefs : KPref() {
     var animate: Boolean by kpref("fancy_animations", true)
 
     var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
+
+    //check if this is the first time launching the web overlay; show snackbar if true
+    var firstWebOverlay:Boolean by kpref("first_web_overlay", true)
 }

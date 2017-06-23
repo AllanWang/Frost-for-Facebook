@@ -7,10 +7,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.support.annotation.StringRes
+import android.support.design.internal.SnackbarContentLayout
+import android.support.design.widget.Snackbar
 import android.support.v4.app.NotificationCompat
-import android.support.v7.widget.SimpleItemAnimator
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
@@ -102,15 +105,14 @@ fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
 
 fun Activity.setFrostColors(toolbar: Toolbar? = null, themeWindow: Boolean = true,
                             texts: Array<TextView> = arrayOf(), headers: Array<View> = arrayOf(), backgrounds: Array<View> = arrayOf()) {
-    val darkAccent = Prefs.headerColor.darken()
-    statusBarColor = darkAccent.darken().withAlpha(255)
-    navigationBarColor = darkAccent
+    statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
+    navigationBarColor = Prefs.headerColor
     if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-    toolbar?.setBackgroundColor(darkAccent)
+    toolbar?.setBackgroundColor(Prefs.headerColor)
     toolbar?.setTitleTextColor(Prefs.iconColor)
     toolbar?.overflowIcon?.setTint(Prefs.iconColor)
     texts.forEach { it.setTextColor(Prefs.textColor) }
-    headers.forEach { it.setBackgroundColor(darkAccent) }
+    headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
     backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
 }
 
@@ -146,5 +148,19 @@ fun frostAnswers(action: Answers.() -> Unit) {
 fun frostAnswersCustom(name: String, action: CustomEvent.() -> Unit = {}) {
     frostAnswers {
         logCustom(CustomEvent("Frost $name").apply { action() })
+    }
+}
+
+fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) {
+    Snackbar.make(this, text, Snackbar.LENGTH_LONG).apply {
+        builder()
+        //hacky workaround, but it has proper checks and shouldn't crash
+        ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
+            messageView.setTextColor(Prefs.textColor)
+            actionView.setTextColor(Prefs.accentColor)
+            //only set if previous text colors are set
+            view.setBackgroundColor(Prefs.bgColor.colorToForeground(0.1f))
+        }
+        show()
     }
 }

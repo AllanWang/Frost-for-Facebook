@@ -7,6 +7,7 @@ import android.view.View
 import android.webkit.*
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.snackbar
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
@@ -14,6 +15,7 @@ import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostSnackbar
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.SingleSubject
 import io.reactivex.subjects.Subject
@@ -77,7 +79,7 @@ class LoginWebView @JvmOverloads constructor(
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             if (!url.contains(FACEBOOK_COM)) {
-                view.snackbar("No longer under facebook; refreshing...")
+                view.frostSnackbar(R.string.no_longer_facebook)
                 loadLogin()
                 return
             }
