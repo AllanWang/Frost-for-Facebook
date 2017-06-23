@@ -106,24 +106,23 @@ class SettingsActivity : KPrefActivity() {
                 onDisabledClick = { itemView, _, _ -> itemView.snackbar(R.string.requires_custom_theme); true }
                 allowCustom = true
             }
-
-            checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, { Prefs.showRoundedIcons = it })
-
-            checkbox(R.string.fancy_animations, { Prefs.animate }, { Prefs.animate = it; animate = it }) {
-                descRes = R.string.fancy_animations_desc
-            }
-
-            header(R.string.feed_customization)
-
-            checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, { Prefs.showSuggestedFriends = it }) {
-                descRes = R.string.suggested_friends_desc
-            }
-
-            checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, { Prefs.showFacebookAds = it }) {
-                descRes = R.string.facebook_ads_desc
-            }
         }
 
+        checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, { Prefs.showRoundedIcons = it })
+
+        checkbox(R.string.fancy_animations, { Prefs.animate }, { Prefs.animate = it; animate = it }) {
+            descRes = R.string.fancy_animations_desc
+        }
+
+        header(R.string.feed_customization)
+
+        checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, { Prefs.showSuggestedFriends = it }) {
+            descRes = R.string.suggested_friends_desc
+        }
+
+        checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, { Prefs.showFacebookAds = it }) {
+            descRes = R.string.facebook_ads_desc
+        }
 
     }
 
