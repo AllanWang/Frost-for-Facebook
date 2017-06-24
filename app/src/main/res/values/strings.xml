@@ -40,7 +40,7 @@
 
     <string name="custom_pro">Custom [Pro]</string>
     <string name="uh_oh">Uh Oh</string>
-    <string name="play_store_not_found">This app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
+    <string name="play_store_not_found">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
     <string name="play_store_billing_error">Something went wrong. Please try again later.</string>
     <string name="play_thank_you">Thank you!</string>
     <string name="play_purchased_pro">Thank you for your support! Enjoy the pro version.</string>

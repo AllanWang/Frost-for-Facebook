@@ -164,3 +164,7 @@ fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) 
         show()
     }
 }
+
+fun Activity.frostNavigationBar() {
+    navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
+}
