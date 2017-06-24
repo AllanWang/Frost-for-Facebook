@@ -6,6 +6,7 @@ import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
 import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.lazyResettable
+import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
 
 /**
@@ -23,11 +24,11 @@ object Prefs : KPref() {
 
     var theme: Int by kpref("theme", 0, postSetter = { _: Int -> loader.invalidate() })
 
-    var customTextColor: Int by kpref("color_text", Color.BLACK)
+    var customTextColor: Int by kpref("color_text", Color.WHITE)
 
-    var customBackgroundColor: Int by kpref("color_bg", 0xfffafafa.toInt())
+    var customBackgroundColor: Int by kpref("color_bg", 0xff37474f.toInt())
 
-    var customHeaderColor: Int by kpref("color_header", 0xff3b5998.toInt())
+    var customHeaderColor: Int by kpref("color_header", 0xff039be5.toInt())
 
     var customIconColor: Int by kpref("color_icons", Color.WHITE)
 
@@ -69,6 +70,10 @@ object Prefs : KPref() {
     val frostId: String
         get() = "${installDate}-${identifier}"
 
+    var tintNavBar: Boolean by kpref("tint_nav_bar", true)
+
+    var feedSort: Int by kpref("feed_sort", FeedSort.DEFAULT.ordinal)
+
     var showRoundedIcons: Boolean by kpref("rounded_icons", true)
 
     var showSuggestedFriends: Boolean by kpref("suggested_friends_feed", true)
@@ -81,4 +86,8 @@ object Prefs : KPref() {
 
     //check if this is the first time launching the web overlay; show snackbar if true
     var firstWebOverlay: Boolean by kpref("first_web_overlay", true)
+
+    var previouslyPro: Boolean by kpref("previously_pro", false)
+
+    var debugPro: Boolean by kpref("debug_pro", false)
 }

@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import ca.allanwang.kau.utils.withBundle
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FeedSort
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.web.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewCore
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,7 +31,15 @@ class WebFragment : Fragment() {
         operator fun invoke(data: FbTab, position: Int) = WebFragment().withBundle {
             putString(ARG_URL, data.url)
             putInt(ARG_POSITION, position)
-            putSerializable(ARG_URL_ENUM, data)
+            putSerializable(ARG_URL_ENUM, when (data) {
+                //If is feed, check if sorting method is specified
+                FbTab.FEED -> when (FeedSort(Prefs.feedSort)) {
+                    FeedSort.DEFAULT -> data
+                    FeedSort.MOST_RECENT -> FbTab.FEED_MOST_RECENT
+                    FeedSort.TOP -> FbTab.FEED_TOP_STORIES
+                }
+                else -> data
+            })
         }
     }
 

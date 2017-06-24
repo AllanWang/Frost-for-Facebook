@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import ca.allanwang.kau.changelog.showChangelog
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
@@ -36,7 +37,6 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -61,14 +61,20 @@ class MainActivity : BaseActivity() {
 
     companion object {
         const val FRAGMENT_REFRESH = 99
+        /*
+         * Possible responses from the SettingsActivity
+         * after the configurations have changed
+         */
         const val REQUEST_RESTART = 90909
+        const val REQUEST_REFRESH = 80808
+        const val REQUEST_NAV = 10101
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.versionCode = BuildConfig.VERSION_CODE
-            showChangelog(R.xml.changelog, { theme() })
+            showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
         }
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -129,12 +135,12 @@ class MainActivity : BaseActivity() {
         })
         headerBadgeObservable.throttleFirst(15, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
                 .map { Jsoup.parse(it) }
-                .filter { it.select("[data-sigil=\"count\"]").size >= 0 } //ensure headers exist
+                .filter { it.select("[data-sigil=count]").size >= 0 } //ensure headers exist
                 .map {
-                    val feed = it.select("[data-sigil*=\"feed\"] [data-sigil=\"count\"]")
-                    val requests = it.select("[data-sigil*=\"requests\"] [data-sigil=\"count\"]")
-                    val messages = it.select("[data-sigil*=\"messages\"] [data-sigil=\"count\"]")
-                    val notifications = it.select("[data-sigil*=\"notifications\"] [data-sigil=\"count\"]")
+                    val feed = it.select("[data-sigil*=feed] [data-sigil=count]")
+                    val requests = it.select("[data-sigil*=requests] [data-sigil=count]")
+                    val messages = it.select("[data-sigil*=messages] [data-sigil=count]")
+                    val notifications = it.select("[data-sigil*=notifications] [data-sigil=count]")
                     return@map arrayOf(feed, requests, messages, notifications).map { it?.getOrNull(0)?.ownText() }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -303,8 +309,10 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == REQUEST_RESTART) {
-            restart()
+        when (requestCode) {
+            REQUEST_RESTART -> restart()
+            REQUEST_REFRESH -> webFragmentObservable.onNext(FRAGMENT_REFRESH)
+            REQUEST_NAV -> frostNavigationBar()
         }
     }
 

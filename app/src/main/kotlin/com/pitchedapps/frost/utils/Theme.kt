@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.utils
 
 import android.graphics.Color
+import android.support.annotation.StringRes
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.InjectorContract
@@ -9,7 +10,7 @@ import com.pitchedapps.frost.injectors.JsActions
 /**
  * Created by Allan Wang on 2017-06-14.
  */
-enum class Theme(val textRes: Int, val injector: InjectorContract,
+enum class Theme(@StringRes val textRes: Int, val injector: InjectorContract,
                  private val textColorGetter: () -> Int, private val backgroundColorGetter: () -> Int,
                  private val headerColorGetter: () -> Int, private val iconColorGetter: () -> Int) {
     DEFAULT(R.string.kau_default, JsActions.EMPTY, { Color.BLACK }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),

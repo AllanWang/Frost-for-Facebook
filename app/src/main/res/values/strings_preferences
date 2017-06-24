@@ -4,6 +4,8 @@
     <string name="appearance_desc">Theme, Items to display, etc</string>
 
     <string name="notifications_desc">Frequency, filters, etc</string>
+    <string name="newsfeed">News Feed</string>
+    <string name="newsfeed_desc">Define what items appear in the newsfeed</string>
 
     <!--themes-->
     <string name="theme">Theme</string>
@@ -13,8 +15,12 @@
     <string name="icon_color">Icon Color</string>
 
     <string name="rounded_icons">Rounded Icons</string>
-    <string name="base_customization">Base Customization</string>
+    <string name="rounded_icons_desc">Profile photos and group conversation icons will be rounded</string>
+    <string name="theme_customization">Theme Customization</string>
+    <string name="global_customization">Global Customization</string>
     <string name="feed_customization">Feed Customization</string>
+    <string name="newsfeed_sort">Newsfeed Order</string>
+    <string name="newsfeed_sort_desc">Defines the order in which the posts are shown</string>
     <string name="suggested_friends">Suggested Friends</string>
     <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>
     <string name="facebook_ads">Facebook Ads</string>
@@ -29,5 +35,7 @@
 
     <string name="fancy_animations">Fancy Animations</string>
     <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
+    <string name="tint_nav">Tint Nav Bar</string>
+    <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
 
 </resources>

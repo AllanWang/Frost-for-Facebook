@@ -7,8 +7,5 @@
 /build
 /captures
 .externalNativeBuild
-/app/src/main/res/values/strings_facebook.xml
-/app/src/main/kotlin/com/pitchedapps/frost/facebook/Private.kt
 *.min.css
 .sass-cache/
-PrivConstants.kt

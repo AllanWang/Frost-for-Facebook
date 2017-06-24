@@ -7,10 +7,7 @@ import ca.allanwang.kau.utils.startPlayStoreLink
 import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostAnswers
-import com.pitchedapps.frost.utils.frostAnswersCustom
-import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.*
 import org.jetbrains.anko.doAsync
 
 /**
@@ -38,8 +35,10 @@ object IAB {
     }
 }
 
-val Context.isFrostPro: Boolean
-    get() = BuildConfig.DEBUG || isFromGooglePlay
+private const val FROST_PRO = "frost_pro"
+
+val IS_FROST_PRO: Boolean
+    get() = (BuildConfig.DEBUG && Prefs.debugPro) || (IAB.helper?.queryInventory()?.getSkuDetails(FROST_PRO) != null)
 
 private fun Context.checkFromPlay(): Boolean {
     val isPlay = isFromGooglePlay
@@ -53,7 +52,7 @@ private fun Context.checkFromPlay(): Boolean {
     return isPlay
 }
 
-fun Activity.openPlayProPurchase(code: Int) = openPlayPurchase("frost_pro", code)
+fun Activity.openPlayProPurchase(code: Int) = openPlayPurchase(FROST_PRO, code)
 
 fun Activity.openPlayPurchase(key: String, code: Int) {
     if (!checkFromPlay()) return
