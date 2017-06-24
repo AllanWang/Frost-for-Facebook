@@ -6,10 +6,20 @@
     <item text="" />
     -->
 
+
+    <version title="v0.x"/>
+    <item text="Added more global preferences" />
+    <item text="Added fully customizable theme engine" />
+    <item text="Added support for in app billing" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v0.3" />
     <item text="Added rounded icons option" />
     <item text="Sorted preferences" />
-    <item text="Added adblock" />
+    <item text="Added adblock base" />
     <item text="Added feed configurations" />
     <item text="Animated settings panels" />
     <item text="Add notification filters" />
