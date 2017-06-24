@@ -1,9 +1,14 @@
 # Changelog
 
+## v0.x
+* Added more global preferences
+* Added fully customizable theme engine
+* Added support for in app billing
+
 ## v0.3
 * Added rounded icons option
 * Sorted preferences
-* Added adblock
+* Added adblock base
 * Added feed configurations
 * Animated settings panels
 * Add notification filters
