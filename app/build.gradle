@@ -95,23 +95,11 @@ dependencies {
 //    compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
 //    compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
 
-//    compile "org.greenrobot:eventbus:${EVENTBUS}"
-
     //Icons
-    compile "com.mikepenz:google-material-typeface:${IICON_GOOGLE}.original@aar"
     compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
     compile "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
 
-    compile "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
-    compile "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
-//    compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
-//    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
-
-//    compile "com.lapism:searchview:${SEARCH_VIEW}"
-
     compile "org.jsoup:jsoup:${JSOUP}"
-
-    compile "org.jetbrains.anko:anko:${ANKO}"
 
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"

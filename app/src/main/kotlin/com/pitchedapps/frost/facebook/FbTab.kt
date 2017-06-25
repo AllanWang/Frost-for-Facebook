@@ -29,7 +29,8 @@ enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Stri
     SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
     MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", { FrostWebViewClientMenu(it) }),
     NOTES(R.string.notes, CommunityMaterial.Icon.cmd_note, "notes"),
-    ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday")
+    ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
+    SEARCH(R.string.search_menu_title, GoogleMaterial.Icon.gmd_search, "search")
     ;
 
     val url = "$FB_URL_BASE$relativeUrl"
