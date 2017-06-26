@@ -70,6 +70,14 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven { url 'https://maven.google.com' }
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -77,7 +85,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-    compile "ca.allanwang:kau:${KAU}"
+    compile("ca.allanwang:kau:${KAU}")
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -92,14 +100,22 @@ dependencies {
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
-//    compile "com.github.Raizlabs.DBFlow:dbflow-rx2:${DBFLOW}"
-//    compile "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${DBFLOW}"
+
+//    compile "org.greenrobot:eventbus:${EVENTBUS}"
 
     //Icons
+    compile "com.mikepenz:google-material-typeface:${IICON_GOOGLE}.original@aar"
     compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
     compile "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
 
+    compile "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
+    compile "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
+//    compile "com.jakewharton.rxbinding2:rxbinding:${RX_BINDING}"
+//    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${RX_BINDING}"
+
     compile "org.jsoup:jsoup:${JSOUP}"
+
+    compile "org.jetbrains.anko:anko:${ANKO}"
 
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"
