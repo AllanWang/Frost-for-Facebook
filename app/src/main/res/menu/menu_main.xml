@@ -4,9 +4,14 @@
     tools:context="com.pitchedapps.myapplication.MainActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:orderInCategory="200"
+        android:title="@string/kau_search"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="200"
         android:title="@string/kau_settings"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>
 

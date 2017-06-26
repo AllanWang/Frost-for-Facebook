@@ -4,10 +4,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
+import android.support.design.widget.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -17,6 +14,9 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.changelog.showChangelog
+import ca.allanwang.kau.searchview.SearchItem
+import ca.allanwang.kau.searchview.SearchView
+import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
@@ -56,6 +56,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
+    val coordinator: CoordinatorLayout by bindView(R.id.main_content)
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var webFragmentObservable = PublishSubject.create<Int>()!!
@@ -71,6 +72,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                 currentFragment.frostWebView.addView(hiddenSearchView)
             }
         }
+    var searchView: SearchView? = null
 
     companion object {
         const val FRAGMENT_REFRESH = 99
@@ -306,9 +308,8 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         //todo remove true searchview and add contract
     }
 
-    //todo add args
-    override fun emitSearchResponse() {
-
+    override fun emitSearchResponse(items: List<SearchItem>) {
+        searchView?.results = items
     }
 
     fun refreshAll() {
@@ -320,6 +321,22 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_settings to GoogleMaterial.Icon.gmd_settings)
+        searchView = coordinator.bindSearchView(menu, R.id.action_search) {
+            textObserver = {
+                observable, _ ->
+                observable.subscribe {
+                    hiddenSearchView?.query(it)
+                }
+            }
+            foregroundColor = Prefs.textColor
+            backgroundColor = Prefs.bgColor
+            openListener = {
+                hiddenSearchView?.pauseLoad = false
+            }
+            closeListener = {
+                hiddenSearchView?.pauseLoad = true
+            }
+        }
         return true
     }
 

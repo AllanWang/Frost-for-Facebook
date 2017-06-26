@@ -6,6 +6,7 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.utils.gone
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
@@ -68,11 +69,11 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                 .subscribe {
                     content: List<Pair<List<String>, String>> ->
                     saveResultFrame(content)
-                    content.forEach {
+                    contract.emitSearchResponse(content.map {
                         (texts, href) ->
                         L.d("Search element $texts $href")
-                    }
-                    contract.emitSearchResponse()
+                        SearchItem(href, texts[0], texts.getOrNull(1))
+                    })
                 }
         reload()
     }
@@ -138,8 +139,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
 
     interface SearchContract {
         fun searchOverlayError()
-        //todo add args
-        fun emitSearchResponse()
+        fun emitSearchResponse(items: List<SearchItem>)
     }
 }
 
