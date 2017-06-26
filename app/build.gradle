@@ -80,15 +80,15 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.3-alpha', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
 
     compile("ca.allanwang:kau:${KAU}")
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN}"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
     releaseTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
