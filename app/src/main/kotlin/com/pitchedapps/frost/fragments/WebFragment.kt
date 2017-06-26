@@ -32,7 +32,7 @@ class WebFragment : Fragment() {
             putString(ARG_URL, data.url)
             putInt(ARG_POSITION, position)
             putSerializable(ARG_URL_ENUM, when (data) {
-                //If is feed, check if sorting method is specified
+            //If is feed, check if sorting method is specified
                 FbTab.FEED -> when (FeedSort(Prefs.feedSort)) {
                     FeedSort.DEFAULT -> data
                     FeedSort.MOST_RECENT -> FbTab.FEED_MOST_RECENT
@@ -48,9 +48,18 @@ class WebFragment : Fragment() {
     val url: String by lazy { arguments.getString(ARG_URL) }
     val urlEnum: FbTab by lazy { arguments.getSerializable(ARG_URL_ENUM) as FbTab }
     val position: Int by lazy { arguments.getInt(ARG_POSITION) }
-    lateinit private var frostWebView: FrostWebView
+    lateinit var frostWebView: FrostWebView
     private var firstLoad = true
     private var activityDisposable: Disposable? = null
+    private var onCreateRunnable: ((fragment: WebFragment) -> Unit)? = null
+
+    /**
+     * Hook to run action once fragment is properly created
+     * This is not saved elsewhere and may not always execute
+     */
+    fun post(action: (fragment: WebFragment) -> Unit) {
+        onCreateRunnable = action
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -61,6 +70,8 @@ class WebFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        onCreateRunnable?.invoke(this)
+        onCreateRunnable = null
         firstLoad()
     }
 

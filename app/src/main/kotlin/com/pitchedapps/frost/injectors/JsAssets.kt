@@ -10,7 +10,7 @@ import com.pitchedapps.frost.utils.L
  * //TODO add folder mapping using Prefs
  */
 enum class JsAssets : InjectorContract {
-    MENU, CLICK_A, CLICK_INTERCEPTOR, HEADER_BADGES
+    MENU, CLICK_A, CLICK_INTERCEPTOR, HEADER_BADGES, SEARCH
     ;
 
     var file = "${name.toLowerCase()}.min.js"

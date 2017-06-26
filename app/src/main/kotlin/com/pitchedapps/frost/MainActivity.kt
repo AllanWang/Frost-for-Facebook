@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
@@ -39,13 +40,15 @@ import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.web.FrostWebViewSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -58,6 +61,16 @@ class MainActivity : BaseActivity() {
     var webFragmentObservable = PublishSubject.create<Int>()!!
     var lastPosition = -1
     val headerBadgeObservable = PublishSubject.create<String>()
+    var hiddenSearchView: FrostWebViewSearch? = null
+    var firstLoadFinished = false
+        set(value) {
+            L.d("First fragment load has finished")
+            field = value
+            if (value && hiddenSearchView == null) {
+                hiddenSearchView = FrostWebViewSearch(this, this)
+                currentFragment.frostWebView.addView(hiddenSearchView)
+            }
+        }
 
     companion object {
         const val FRAGMENT_REFRESH = 99
@@ -283,6 +296,21 @@ class MainActivity : BaseActivity() {
         onClick { _ -> onClick(); false }
     }
 
+
+    /**
+     * Something happened where the normal search function won't work
+     * Fallback to overlay style
+     */
+    override fun searchOverlayError() {
+        hiddenSearchView = null
+        //todo remove true searchview and add contract
+    }
+
+    //todo add args
+    override fun emitSearchResponse() {
+
+    }
+
     fun refreshAll() {
         webFragmentObservable.onNext(FRAGMENT_REFRESH)
     }
@@ -331,7 +359,24 @@ class MainActivity : BaseActivity() {
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int) = WebFragment(pages[position], position)
+        override fun getItem(position: Int): Fragment {
+            val fragment = WebFragment(pages[position], position)
+            //If first load hasn't occurred, add a listener
+            if (!firstLoadFinished) {
+                var disposable: Disposable? = null
+                fragment.post {
+                    disposable = it.web.refreshObservable.subscribe {
+                        if (!it) {
+                            //Ensure first load finisher only happens once
+                            if (!firstLoadFinished) firstLoadFinished = true
+                            disposable?.dispose()
+                            disposable = null
+                        }
+                    }
+                }
+            }
+            return fragment
+        }
 
         override fun getCount() = pages.size
 
