@@ -100,7 +100,7 @@ dependencies {
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
-    
+
     //Icons
     compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
     compile "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
