@@ -69,7 +69,6 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             field = value
             if (value && hiddenSearchView == null) {
                 hiddenSearchView = FrostWebViewSearch(this, this)
-                currentFragment.frostWebView.addView(hiddenSearchView)
             }
         }
     var searchView: SearchView? = null
@@ -321,10 +320,11 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_settings to GoogleMaterial.Icon.gmd_settings)
-        searchView = coordinator.bindSearchView(menu, R.id.action_search) {
+        searchView = bindSearchView(menu, R.id.action_search) {
             textObserver = {
                 observable, _ ->
-                observable.subscribe {
+                observable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    L.d("Input $it")
                     hiddenSearchView?.query(it)
                 }
             }
@@ -335,6 +335,10 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             }
             closeListener = {
                 hiddenSearchView?.pauseLoad = true
+            }
+            onItemClick = {
+                position, key, content, searchView ->
+                launchWebOverlay(key)
             }
         }
         return true
@@ -367,6 +371,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
     }
 
     override fun onBackPressed() {
+        if (searchView?.onBackPressed() ?: false) return
         if (currentFragment.onBackPressed()) return
         super.onBackPressed()
     }
