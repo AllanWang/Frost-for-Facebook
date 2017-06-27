@@ -1,6 +1,7 @@
 <resources>
     <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
     <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
+    <string name="about_frost">About Frost for Facebook</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="feed">Feed</string>

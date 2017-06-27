@@ -27,3 +27,8 @@
 -keeppackagenames org.jsoup.nodes
 # IAB
 -keep class com.android.vending.billing.**
+# About libs
+-keep class .R
+-keep class **.R$* {
+    <fields>;
+}

@@ -85,7 +85,9 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-    compile("ca.allanwang:kau:${KAU}")
+    compile("ca.allanwang:kau:${KAU}") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN}"
 
@@ -109,14 +111,22 @@ dependencies {
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"
 
-    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
-        transitive = true
+//    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
+//        transitive = true
+//    }
+    compile("co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     }
-    compile "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 
-    compile "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
-    compile "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
-    kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
+    compile("nz.bradcampbell:paperparcel:${PAPER_PARCEL}") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
+    compile("nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
+    kapt("nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
 
     compile "com.jude:swipebackhelper:${SWIPE_BACK}"
 
