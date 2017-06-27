@@ -96,6 +96,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
      * Sets the input to have our given text, then dispatches the input event so the webpage recognizes it
      */
     fun query(input: String) {
+        L.d("Searching attempt for $input")
         JsBuilder().js("var e=document.getElementById('main-search-input');if(e){e.value='$input';var n=new Event('input',{bubbles:!0,cancelable:!0});e.dispatchEvent(n)}else console.log('Input field not found')").build().inject(this) {
             L.d("Searching for $input")
         }

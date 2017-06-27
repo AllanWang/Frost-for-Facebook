@@ -88,7 +88,6 @@ dependencies {
     compile("ca.allanwang:kau:${KAU}")
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN}"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
     releaseTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"

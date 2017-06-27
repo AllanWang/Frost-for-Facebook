@@ -25,7 +25,7 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
                         .replace("\$T\$", Prefs.textColor.toRgbaString())
                         .replace("\$TT\$", Prefs.textColor.colorToBackground(0.05f).toRgbaString())
                         .replace("\$B\$", Prefs.bgColor.toRgbaString())
-                        .replace("\$BBT\$", Prefs.bgColor.adjustAlpha(0.2f).colorToForeground(0.05f).toRgbaString())
+                        .replace("\$BBT\$", Prefs.bgColor.adjustAlpha(0.2f).colorToForeground(0.5f).toRgbaString())
                         .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
                         .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
             }
