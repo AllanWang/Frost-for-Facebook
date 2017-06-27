@@ -12,6 +12,8 @@ import ca.allanwang.kau.kpref.items.KPrefColorPicker
 import ca.allanwang.kau.kpref.items.KPrefItemBase
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.facebook.FeedSort
@@ -47,6 +49,20 @@ class SettingsActivity : KPrefActivity() {
             descRes = R.string.notifications_desc
             iicon = GoogleMaterial.Icon.gmd_notifications
         }
+
+        plainText(R.string.about_frost) {
+            onClick = {
+                _, _, _ ->
+                LibsBuilder()
+                        //provide a style (optional) (LIGHT, DARK, LIGHT_DARK_TOOLBAR)
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        //start the activity
+                        .start(this@SettingsActivity)
+                true
+            }
+        }
+
+
         if (BuildConfig.DEBUG) {
             checkbox(R.string.custom_pro, { Prefs.debugPro }, { Prefs.debugPro = it })
         }
