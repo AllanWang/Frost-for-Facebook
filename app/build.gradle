@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
@@ -85,9 +86,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-    compile("ca.allanwang:kau:${KAU}") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-    }
+    compile "ca.allanwang:kau:${KAU}"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:${KOTLIN}"
 
@@ -98,7 +97,6 @@ dependencies {
 
     compile "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
 
@@ -109,32 +107,20 @@ dependencies {
     compile "org.jsoup:jsoup:${JSOUP}"
 
     compile "com.github.bumptech.glide:glide:${GLIDE}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE}"
+    kapt "com.github.bumptech.glide:compiler:${GLIDE}"
 
 //    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
 //        transitive = true
 //    }
-    compile("co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-    }
+    compile "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 
-    compile("nz.bradcampbell:paperparcel:${PAPER_PARCEL}") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-    }
-    compile("nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-    }
-    kapt("nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-    }
+    compile "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
+    compile "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
+    kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     compile "com.jude:swipebackhelper:${SWIPE_BACK}"
 
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
-}
-
-kapt {
-    generateStubs = true
 }
