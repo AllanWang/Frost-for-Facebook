@@ -21,7 +21,7 @@ object UsernameFetcher {
                         .get().title()
                 L.d("User name found: $name")
             } catch (e: Exception) {
-                L.e("User name fetching failed: ${e.message}")
+                L.e(e, "User name fetching failed")
             } finally {
                 data.name = name
                 saveFbCookie(data)
