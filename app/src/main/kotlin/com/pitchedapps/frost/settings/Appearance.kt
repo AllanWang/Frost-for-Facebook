@@ -112,10 +112,6 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.rounded_icons_desc
     }
 
-    checkbox(R.string.fancy_animations, { Prefs.animate }, { Prefs.animate = it; animate = it }) {
-        descRes = R.string.fancy_animations_desc
-    }
-
     checkbox(R.string.tint_nav, { Prefs.tintNavBar }, {
         Prefs.tintNavBar = it
         frostNavigationBar()

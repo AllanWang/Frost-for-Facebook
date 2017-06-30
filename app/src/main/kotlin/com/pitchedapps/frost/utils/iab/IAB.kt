@@ -38,7 +38,7 @@ val IS_FROST_PRO: Boolean
     get() = (BuildConfig.DEBUG && Prefs.debugPro) || (IAB.helper?.queryInventory()?.getSkuDetails(FROST_PRO) != null)
 
 private fun Context.checkFromPlay(): Boolean {
-    val isPlay = isFromGooglePlay
+    val isPlay = isFromGooglePlay || BuildConfig.DEBUG
     if (!isPlay) materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_not_found)
@@ -63,7 +63,7 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
             L.e("IAB error: ${res.message}")
             playStoreErrorDialog()
         } else if (inv == null) {
-            playStoreErrorDialog()
+            playStoreErrorDialog("Empty inventory")
         } else {
             val donation = inv.getSkuDetails(key)
             if (donation != null) {
@@ -73,23 +73,23 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
                         title(R.string.play_thank_you)
                         content(R.string.play_purchased_pro)
                         positiveText(R.string.kau_ok)
-                    } else playStoreErrorDialog()
+                    } else playStoreErrorDialog("Result: ${result.message}")
                     frostAnswers {
                         logPurchase(PurchaseEvent()
                                 .putItemId(key)
                                 .putSuccess(result.isSuccess))
                     }
-                } ?: playStoreErrorDialog()
+                } ?: playStoreErrorDialog("Launch Purchase Flow")
             }
         }
     }
 }
 
-private fun Context.playStoreErrorDialog() {
+private fun Context.playStoreErrorDialog(s: String = "Play Store Error") {
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_billing_error)
         positiveText(R.string.kau_ok)
     }
-    L.eThrow("Play Store Error")
+    L.e(Throwable(s), "Play Store Error")
 }

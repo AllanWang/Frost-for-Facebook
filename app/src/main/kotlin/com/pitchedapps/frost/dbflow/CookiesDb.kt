@@ -51,14 +51,14 @@ fun loadFbCookiesSync(): List<CookieModel> = (select from CookieModel::class).or
 
 fun saveFbCookie(cookie: CookieModel, callback: (() -> Unit)? = null) {
     cookie.async save {
-        L.d("Fb cookie $cookie saved")
+        L.d("Fb cookie saved", cookie.toString())
         callback?.invoke()
     }
 }
 
 fun removeCookie(id: Long) {
     loadFbCookie(id)?.async?.delete({
-        L.d("Fb cookie $id deleted")
+        L.d("Fb cookie deleted", id.toString())
     })
 }
 
@@ -69,9 +69,9 @@ fun CookieModel.fetchUsername(callback: (String) -> Unit) {
             result = Jsoup.connect(FbTab.PROFILE.url)
                     .cookie(FACEBOOK_COM, cookie)
                     .get().title()
-            L.d("User name found: $result")
+            L.d("Fetch username found", result)
         } catch (e: Exception) {
-            L.e("User name fetching failed: ${e.message}")
+            L.e(e, "Fetch username failed")
         } finally {
             if (result.isBlank() && (name?.isNotBlank() ?: false)) {
                 callback(name!!)

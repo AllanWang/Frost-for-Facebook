@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.webkit.*
 import ca.allanwang.kau.utils.fadeIn
-import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
@@ -44,7 +43,7 @@ class LoginWebView @JvmOverloads constructor(
             cookieObservable.filter { (_, cookie) -> cookie?.contains(userMatcher) ?: false }
                     .subscribe {
                         (url, cookie) ->
-                        L.d("Checking cookie for $url\n\t$cookie")
+                        L.d("Checking cookie for login", "$url\n\t$cookie")
                         val id = userMatcher.find(cookie!!)?.groups?.get(1)?.value
                         if (id != null) {
                             try {

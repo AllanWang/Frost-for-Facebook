@@ -24,6 +24,12 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
 }) {
 
     override fun getLibraries(libs: Libs): List<Library> {
+        val include = arrayOf(
+                "materialdialogs",
+                "kotterknife",
+                "glide",
+                "jsoup"
+        )
         /*
          * These are great libraries, but either aren't used directly or are too common to be listed
          * Give more emphasis on the unique libs!
@@ -39,7 +45,7 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
                 "recyclerview_v7",
                 "support_v4"
         )
-        val l = libs.prepareLibraries(this, null, exclude, true, true)
+        val l = libs.prepareLibraries(this, include, exclude, true, true)
 //        l.forEach { KL.d("Lib ${it.definedName}") }
         return l
     }

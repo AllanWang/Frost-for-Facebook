@@ -25,7 +25,7 @@ fun lastNotificationTime(id: Long): Long = (select from NotificationModel::class
 
 fun saveNotificationTime(notificationModel: NotificationModel, callback: (() -> Unit)? = null) {
     notificationModel.async save {
-        L.d("Fb notification $notificationModel saved")
+        L.d("Fb notification model saved", notificationModel.toString())
         callback?.invoke()
     }
 }

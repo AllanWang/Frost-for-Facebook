@@ -15,11 +15,10 @@ class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        L.d("Load cookies ${System.currentTimeMillis()}")
         FbCookie.switchBackUser {
             loadFbCookiesAsync {
                 cookies ->
-                L.d("Cookies loaded ${System.currentTimeMillis()} $cookies")
+                L.d("Cookies loaded ${System.currentTimeMillis()}", cookies.toString())
                 if (cookies.isNotEmpty())
                     launchNewTask(if (Prefs.userId != -1L) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
                 else

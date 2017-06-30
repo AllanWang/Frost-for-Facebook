@@ -26,12 +26,12 @@ object FbCookie {
                     callback?.invoke()
                     return@removeAllCookies
                 }
-                L.d("Setting cookie to $cookie")
+                L.d("Setting cookie", cookie)
                 val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
                 cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie, { callback.onSuccess(it) }) }
                 Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {}).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
                     callback?.invoke()
-                    L.d("Cookies set: $webCookie")
+                    L.d("Cookies set", webCookie)
                     flush()
                 })
             })
@@ -39,7 +39,7 @@ object FbCookie {
     }
 
     operator fun invoke() {
-        L.d("User ${Prefs.userId}")
+        L.d("FbCookie Invoke User", Prefs.userId.toString())
         with(CookieManager.getInstance()) {
             setAcceptCookie(true)
         }
@@ -51,7 +51,7 @@ object FbCookie {
     }
 
     fun save(id: Long) {
-        L.d("New cookie found for $id")
+        L.d("New cookie found", id.toString())
         Prefs.userId = id
         CookieManager.getInstance().flush()
         val cookie = CookieModel(Prefs.userId, "", webCookie)
@@ -74,10 +74,11 @@ object FbCookie {
 
     fun switchUser(cookie: CookieModel?, callback: () -> Unit) {
         if (cookie == null) {
+            L.d("Switching User; null cookie")
             callback()
             return
         }
-        L.d("Switching user to $cookie")
+        L.d("Switching User", cookie.toString())
         Prefs.userId = cookie.id
         setWebCookie(cookie.cookie, callback)
     }
@@ -95,7 +96,7 @@ object FbCookie {
     fun switchBackUser(callback: () -> Unit) {
         if (Prefs.prevId != -1L && Prefs.prevId != Prefs.userId) {
             switchUser(Prefs.prevId) {
-                L.d("Switched from ${Prefs.userId} to ${Prefs.prevId}")
+                L.d("Switch back user", "${Prefs.userId} to ${Prefs.prevId}")
                 callback()
             }
         } else callback()
