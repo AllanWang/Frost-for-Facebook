@@ -53,11 +53,7 @@ class SettingsActivity : KPrefActivity() {
         plainText(R.string.about_frost) {
             onClick = {
                 _, _, _ ->
-                LibsBuilder()
-                        //provide a style (optional) (LIGHT, DARK, LIGHT_DARK_TOOLBAR)
-                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
-                        //start the activity
-                        .start(this@SettingsActivity)
+                startActivity(AboutActivity::class.java, transition = true)
                 true
             }
         }

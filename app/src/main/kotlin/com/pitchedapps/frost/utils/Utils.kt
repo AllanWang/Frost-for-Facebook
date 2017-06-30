@@ -32,7 +32,7 @@ internal const val EXTRA_COOKIES = "extra_cookies"
 internal const val ARG_URL = "arg_url"
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
-    startActivity(clazz, clearStack, {
+    startActivity(clazz, clearStack, intentBuilder = {
         putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
 }
@@ -60,7 +60,7 @@ val String.formattedFbUrl: String
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.i("Launch web overlay: $argUrl")
-    startActivity(WebOverlayActivity::class.java, false, {
+    startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
         putExtra(ARG_URL, argUrl)
     })
 }
