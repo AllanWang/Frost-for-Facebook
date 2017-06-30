@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.x
+## v1.0
 * Added more global preferences
 * Added fully customizable theme engine
 * Added support for in app billing
@@ -10,6 +10,7 @@
 * Added search option
 * Fixed up main layout
 * Fix some theme components
+* Added behaviour settings
 
 ## v0.3
 * Added rounded icons option

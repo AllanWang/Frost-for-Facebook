@@ -24,13 +24,13 @@ object Prefs : KPref() {
 
     var theme: Int by kpref("theme", 0, postSetter = { _: Int -> loader.invalidate() })
 
-    var customTextColor: Int by kpref("color_text", Color.WHITE)
+    var customTextColor: Int by kpref("color_text", 0xffeceff1.toInt())
 
-    var customBackgroundColor: Int by kpref("color_bg", 0xff37474f.toInt())
+    var customBackgroundColor: Int by kpref("color_bg", 0xff212121.toInt())
 
-    var customHeaderColor: Int by kpref("color_header", 0xff039be5.toInt())
+    var customHeaderColor: Int by kpref("color_header", 0xff01579b.toInt())
 
-    var customIconColor: Int by kpref("color_icons", Color.WHITE)
+    var customIconColor: Int by kpref("color_icons", 0xffeceff1.toInt())
 
     var exitConfirmation: Boolean by kpref("exit_confirmation", true)
 
