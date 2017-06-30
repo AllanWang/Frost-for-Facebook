@@ -13,8 +13,8 @@ import com.pitchedapps.frost.injectors.JsActions
 enum class Theme(@StringRes val textRes: Int, val injector: InjectorContract,
                  private val textColorGetter: () -> Int, private val backgroundColorGetter: () -> Int,
                  private val headerColorGetter: () -> Int, private val iconColorGetter: () -> Int) {
-    DEFAULT(R.string.kau_default, JsActions.EMPTY, { 0xddffffff.toInt() }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
-    LIGHT(R.string.kau_light, CssAssets.MATERIAL_LIGHT, { 0xddffffff.toInt() }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
+    DEFAULT(R.string.kau_default, JsActions.EMPTY, { 0xde000000.toInt() }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
+    LIGHT(R.string.kau_light, CssAssets.MATERIAL_LIGHT, { 0xde000000.toInt() }, { 0xfffafafa.toInt() }, { 0xff3b5998.toInt() }, { Color.WHITE }),
     DARK(R.string.kau_dark, CssAssets.MATERIAL_DARK, { Color.WHITE }, { 0xff303030.toInt() }, { 0xff2e4b86.toInt() }, { Color.WHITE }),
     AMOLED(R.string.kau_amoled, CssAssets.MATERIAL_AMOLED, { Color.WHITE }, { Color.BLACK }, { Color.BLACK }, { Color.WHITE }),
     GLASS(R.string.kau_glass, CssAssets.MATERIAL_GLASS, { Color.WHITE }, { 0x80000000.toInt() }, { 0xb3000000.toInt() }, { Color.WHITE }),

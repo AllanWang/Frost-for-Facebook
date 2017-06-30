@@ -4,6 +4,11 @@
 * Added more global preferences
 * Added fully customizable theme engine
 * Added support for in app billing
+* Huge changes internally from KAU
+* Added credits section
+* Added experimental section
+* Added search option
+* Fixed up main layout
 
 ## v0.3
 * Added rounded icons option
