@@ -132,14 +132,21 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.d("Search subject error; reverting to full overlay")
                     searchSubject.onComplete()
-                    contract.searchOverlayError()
+                    contract.searchOverlayDispose()
                 }
             }
         }
     }
 
+    /**
+     * Clear up some components
+     */
+    fun dispose() {
+        searchSubject.onComplete()
+    }
+
     interface SearchContract {
-        fun searchOverlayError()
+        fun searchOverlayDispose()
         fun emitSearchResponse(items: List<SearchItem>)
     }
 }

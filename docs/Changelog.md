@@ -9,6 +9,7 @@
 * Added experimental section
 * Added search option
 * Fixed up main layout
+* Fix some theme components
 
 ## v0.3
 * Added rounded icons option
