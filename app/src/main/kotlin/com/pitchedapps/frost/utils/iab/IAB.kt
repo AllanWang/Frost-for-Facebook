@@ -8,7 +8,6 @@ import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.*
-import org.jetbrains.anko.doAsync
 
 /**
  * Created by Allan Wang on 2017-06-23.
@@ -19,17 +18,15 @@ object IAB {
 
     fun setupAsync(context: Context) {
         if (!context.isFromGooglePlay) return
-        doAsync {
-            if (helper == null) {
-                try {
-                    helper = IabHelper(context.applicationContext, PUBLIC_BILLING_KEY)
-                    helper!!.startSetup {
-                        result ->
-                        if (!result.isSuccess) L.e("IAB Setup error: $result")
-                    }
-                } catch (e: Exception) {
-                    L.e("IAB error: ${e.message}")
+        if (helper == null) {
+            try {
+                helper = IabHelper(context.applicationContext, PUBLIC_BILLING_KEY)
+                helper!!.startSetup {
+                    result ->
+                    if (!result.isSuccess) L.eThrow("IAB Setup error: $result")
                 }
+            } catch (e: Exception) {
+                L.e(e, "IAB error")
             }
         }
     }
@@ -59,10 +56,13 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
     frostAnswersCustom("PLAY_PURCHASE") {
         putCustomAttribute("Key", key)
     }
-    IAB.helper?.flagEndAsync()
+    IAB.helper?.flagEndAsync() ?: playStoreErrorDialog()
     IAB.helper?.queryInventoryAsync {
-        _, inv ->
-        if (inv == null) {
+        res, inv ->
+        if (res.isFailure) {
+            L.e("IAB error: ${res.message}")
+            playStoreErrorDialog()
+        } else if (inv == null) {
             playStoreErrorDialog()
         } else {
             val donation = inv.getSkuDetails(key)
@@ -79,7 +79,7 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
                                 .putItemId(key)
                                 .putSuccess(result.isSuccess))
                     }
-                }
+                } ?: playStoreErrorDialog()
             }
         }
     }
@@ -91,4 +91,5 @@ private fun Context.playStoreErrorDialog() {
         content(R.string.play_store_billing_error)
         positiveText(R.string.kau_ok)
     }
+    L.eThrow("Play Store Error")
 }

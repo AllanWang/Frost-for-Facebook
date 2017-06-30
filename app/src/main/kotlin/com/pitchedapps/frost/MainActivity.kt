@@ -346,7 +346,6 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             searchOverlayDispose()
             menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
         }
-        KL.e("SearchView ${searchView == null} HID ${hiddenSearchView == null}")
         return true
     }
 

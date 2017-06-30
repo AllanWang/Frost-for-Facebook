@@ -86,7 +86,7 @@ class LoginActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe {
             (foundImage, name) ->
             refresh = false
-            if (!foundImage) L.e("Could not get profile photo; Invalid userId?\n\t$cookie")
+            if (!foundImage) L.eThrow("Could not get profile photo; Invalid userId?\n\t$cookie")
             textview.text = String.format(getString(R.string.welcome), name)
             textview.fadeIn()
             frostAnswers {

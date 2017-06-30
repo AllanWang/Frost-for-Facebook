@@ -133,7 +133,7 @@ fun Context.scheduleNotifications(minutes: Long): Boolean {
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) //TODO add options
     val result = scheduler.schedule(builder.build())
     if (result <= 0) {
-        L.e("Notification scheduler failed")
+        L.eThrow("Notification scheduler failed")
         return false
     }
     return true
