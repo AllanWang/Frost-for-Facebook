@@ -75,6 +75,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
 
     companion object {
         const val FRAGMENT_REFRESH = 99
+        const val ACTIVITY_SETTINGS = 97
         /*
          * Possible responses from the SettingsActivity
          * after the configurations have changed
@@ -330,16 +331,9 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             }
             foregroundColor = Prefs.textColor
             backgroundColor = Prefs.bgColor
-            openListener = {
-                hiddenSearchView?.pauseLoad = false
-            }
-            closeListener = {
-                hiddenSearchView?.pauseLoad = true
-            }
-            onItemClick = {
-                position, key, content, searchView ->
-                launchWebOverlay(key)
-            }
+            openListener = { hiddenSearchView?.pauseLoad = false }
+            closeListener = { hiddenSearchView?.pauseLoad = true }
+            onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
         }
         return true
     }
@@ -349,7 +343,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
-                startActivityForResult(intent, 99, bundle)
+                startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }
             else -> return super.onOptionsItemSelected(item)
         }
@@ -358,10 +352,12 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_RESTART -> restart()
-            REQUEST_REFRESH -> webFragmentObservable.onNext(FRAGMENT_REFRESH)
-            REQUEST_NAV -> frostNavigationBar()
+        if (requestCode == ACTIVITY_SETTINGS) {
+            when (resultCode) {
+                REQUEST_RESTART -> restart()
+                REQUEST_REFRESH -> webFragmentObservable.onNext(FRAGMENT_REFRESH)
+                REQUEST_NAV -> frostNavigationBar()
+            }
         }
     }
 

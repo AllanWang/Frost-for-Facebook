@@ -90,4 +90,6 @@ object Prefs : KPref() {
     var previouslyPro: Boolean by kpref("previously_pro", false)
 
     var debugPro: Boolean by kpref("debug_pro", false)
+
+    var searchBar :Boolean by kpref("search_bar", false)
 }

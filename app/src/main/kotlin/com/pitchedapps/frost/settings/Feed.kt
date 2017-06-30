@@ -1,0 +1,55 @@
+package com.pitchedapps.frost.settings
+
+import ca.allanwang.kau.kpref.KPrefAdapterBuilder
+import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.MainActivity
+import com.pitchedapps.frost.R
+import com.pitchedapps.frost.SettingsActivity
+import com.pitchedapps.frost.facebook.FeedSort
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.materialDialogThemed
+
+/**
+ * Created by Allan Wang on 2017-06-29.
+ */
+fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
+
+    text(R.string.newsfeed_sort, { Prefs.feedSort }, { Prefs.feedSort = it }) {
+        descRes = R.string.newsfeed_sort_desc
+        onClick = {
+            _, _, item ->
+            materialDialogThemed {
+                title(R.string.newsfeed_sort)
+                items(FeedSort.values().map { string(it.textRes) })
+                itemsCallbackSingleChoice(item.pref, {
+                    _, _, which, text ->
+                    if (item.pref != which) {
+                        item.pref = which
+                        shouldRestartMain()
+                    }
+                    true
+                })
+            }
+            true
+        }
+        textGetter = { string(FeedSort(it).textRes) }
+    }
+
+    header(R.string.pro_features)
+
+    checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, {
+        Prefs.showSuggestedFriends = it
+        setResult(MainActivity.REQUEST_REFRESH)
+    }) {
+        descRes = R.string.suggested_friends_desc
+        dependsOnPro()
+    }
+
+    checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, {
+        Prefs.showFacebookAds = it
+        setResult(MainActivity.REQUEST_REFRESH)
+    }) {
+        descRes = R.string.facebook_ads_desc
+        dependsOnPro()
+    }
+}

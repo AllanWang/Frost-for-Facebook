@@ -38,4 +38,9 @@
     <string name="tint_nav">Tint Nav Bar</string>
     <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
 
+    <string name="experimental">Experimental</string>
+    <string name="experimental_desc">Enable early access to potentially unstable features</string>
+    <string name="search">Search Type</string>
+    <string name="search_desc">Enable the search bar instead of a search overlay</string>
+
 </resources>

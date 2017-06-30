@@ -34,12 +34,19 @@
     <string name="frost_notifications">Frost Notifications</string>
     <string name="requires_custom_theme">Requires custom theme</string>
 
-    <string name="frost_feedback">Frost for Facebook: Feedback</string>
+    <string name="frost_prefix">Frost for Facebook:</string>
+    <string name="feedback">Feedback</string>
+    <string name="bug_report">Bug Report</string>
+    <string name="theme_issue">Theme Issue</string>
+    <string name="feature_request">Feature Request</string>
+    <string name="subject">Subject</string>
+
     <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
 
     <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
     <string name="profile_picture">Profile Picture</string>
 
+    <string name="pro_features">Pro Features</string>
     <string name="custom_pro">Custom [Pro]</string>
     <string name="uh_oh">Uh Oh</string>
     <string name="play_store_not_found">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>

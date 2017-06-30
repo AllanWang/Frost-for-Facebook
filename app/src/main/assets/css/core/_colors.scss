@@ -6,6 +6,6 @@ $bg_transparent: rgba(#f0f, 0.02) !default;
 $text: #d7b0d7 !default;
 $link: #d59ed5 !default;
 $background: #451515 !default;
-$background2: rgba(lighten($background, 50%), 0.2) !default;
+$background2: rgba(lighten($background, 35%), 0.2) !default;
 $bg_opaque: rgba($background, 1.0) !default;
 $divider: rgba($text, 0.3) !default;
