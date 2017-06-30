@@ -31,7 +31,8 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
         val exclude = arrayOf(
                 "GoogleMaterialDesignIcons",
                 "intellijannotations",
-//                "MaterialDesignIconicIcons",
+                "MaterialDesignIconicIcons",
+                "MaterialDesignIcons",
                 "materialize",
                 "appcompat_v7",
                 "design",
@@ -39,7 +40,7 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
                 "support_v4"
         )
         val l = libs.prepareLibraries(this, null, exclude, true, true)
-        l.forEach { KL.d("Lib ${it.definedName}") }
+//        l.forEach { KL.d("Lib ${it.definedName}") }
         return l
     }
 

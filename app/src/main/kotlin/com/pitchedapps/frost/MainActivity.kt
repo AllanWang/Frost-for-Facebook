@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.changelog.showChangelog
+import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
@@ -83,6 +84,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         const val REQUEST_RESTART = 90909
         const val REQUEST_REFRESH = 80808
         const val REQUEST_NAV = 10101
+        const val REQUEST_SEARCH = 70707
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -303,8 +305,10 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
      * Something happened where the normal search function won't work
      * Fallback to overlay style
      */
-    override fun searchOverlayError() {
+    override fun searchOverlayDispose() {
+        hiddenSearchView?.dispose()
         hiddenSearchView = null
+        searchView = null
         //todo remove true searchview and add contract
     }
 
@@ -320,21 +324,29 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         menuInflater.inflate(R.menu.menu_main, menu)
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_settings to GoogleMaterial.Icon.gmd_settings)
-        searchView = bindSearchView(menu, R.id.action_search) {
-            textObserver = {
-                observable, _ ->
-                observable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    L.d("Input $it")
-                    hiddenSearchView?.query(it)
+                R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
+                R.id.action_search to GoogleMaterial.Icon.gmd_search)
+        if (Prefs.searchBar) {
+            if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = FrostWebViewSearch(this, this)
+            if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
+                textObserver = {
+                    observable, _ ->
+                    observable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        L.d("Input $it")
+                        hiddenSearchView?.query(it)
+                    }
                 }
+                foregroundColor = Prefs.textColor
+                backgroundColor = Prefs.bgColor
+                openListener = { hiddenSearchView?.pauseLoad = false }
+                closeListener = { hiddenSearchView?.pauseLoad = true }
+                onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
-            foregroundColor = Prefs.textColor
-            backgroundColor = Prefs.bgColor
-            openListener = { hiddenSearchView?.pauseLoad = false }
-            closeListener = { hiddenSearchView?.pauseLoad = true }
-            onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
+        } else {
+            searchOverlayDispose()
+            menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
         }
+        KL.e("SearchView ${searchView == null} HID ${hiddenSearchView == null}")
         return true
     }
 
@@ -357,6 +369,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                 REQUEST_RESTART -> restart()
                 REQUEST_REFRESH -> webFragmentObservable.onNext(FRAGMENT_REFRESH)
                 REQUEST_NAV -> frostNavigationBar()
+                REQUEST_SEARCH -> invalidateOptionsMenu()
             }
         }
     }

@@ -40,6 +40,8 @@
 
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
+    <string name="experimental_disclaimer">Disclaimer</string>
+    <string name="experimental_disclaimer_info">Experimental features may be unstable and may never make it to production. Use at your own risk, send feedback, and feel free to disable them if they don\'t work well.</string>
     <string name="search">Search Type</string>
     <string name="search_desc">Enable the search bar instead of a search overlay</string>
 
