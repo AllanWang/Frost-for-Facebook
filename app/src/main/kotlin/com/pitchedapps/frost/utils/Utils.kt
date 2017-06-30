@@ -140,8 +140,7 @@ fun Context.scheduleNotifications(minutes: Long): Boolean {
 }
 
 fun frostAnswers(action: Answers.() -> Unit) {
-    if (BuildConfig.DEBUG) return
-    //TODO add opt out toggle
+    if (BuildConfig.DEBUG || !Prefs.analytics) return
     Answers.getInstance().action()
 }
 

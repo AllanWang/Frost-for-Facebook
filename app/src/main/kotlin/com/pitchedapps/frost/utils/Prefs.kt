@@ -91,5 +91,9 @@ object Prefs : KPref() {
 
     var debugPro: Boolean by kpref("debug_pro", false)
 
-    var searchBar :Boolean by kpref("search_bar", false)
+    var searchBar: Boolean by kpref("search_bar", false)
+
+    var verboseLogging: Boolean by kpref("verbose_logging", false)
+
+    var analytics: Boolean by kpref("analytics", true)
 }

@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.changelog.showChangelog
-import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
@@ -331,10 +330,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
                 textObserver = {
                     observable, _ ->
-                    observable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-                        L.d("Input $it")
-                        hiddenSearchView?.query(it)
-                    }
+                    observable.observeOn(AndroidSchedulers.mainThread()).subscribe { hiddenSearchView?.query(it) }
                 }
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor

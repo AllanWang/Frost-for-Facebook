@@ -7,6 +7,14 @@
     <string name="newsfeed">News Feed</string>
     <string name="newsfeed_desc">Define what items appear in the newsfeed</string>
 
+    <string name="behaviour">Behaviour</string>
+    <string name="behaviour_desc">Define how the app interacts in certain settings</string>
+
+    <string name="exit_confirmation">Exit Confirmation</string>
+    <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
+    <string name="analytics">Analytics</string>
+    <string name="analytics_desc">Enable anonymous analytics and crash reports to help improve the app. No personal information is ever exposed.</string>
+
     <!--themes-->
     <string name="theme">Theme</string>
     <string name="text_color">Text Color</string>
@@ -44,5 +52,7 @@
     <string name="experimental_disclaimer_info">Experimental features may be unstable and may never make it to production. Use at your own risk, send feedback, and feel free to disable them if they don\'t work well.</string>
     <string name="search">Search Type</string>
     <string name="search_desc">Enable the search bar instead of a search overlay</string>
+    <string name="verbose_logging">Verbose Logging</string>
+    <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev.\nAnalytics must also be enabled under the behaviour settings.</string>
 
 </resources>

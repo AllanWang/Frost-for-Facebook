@@ -69,9 +69,10 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                 .subscribe {
                     content: List<Pair<List<String>, String>> ->
                     saveResultFrame(content)
+                    L.d("Search element count ${content.size}")
                     contract.emitSearchResponse(content.map {
                         (texts, href) ->
-                        L.d("Search element $texts $href")
+                        L.i("Search element $texts $href")
                         SearchItem(href, texts[0], texts.getOrNull(1))
                     })
                 }
@@ -96,10 +97,8 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
      * Sets the input to have our given text, then dispatches the input event so the webpage recognizes it
      */
     fun query(input: String) {
-        L.d("Searching attempt for $input")
-        JsBuilder().js("var e=document.getElementById('main-search-input');if(e){e.value='$input';var n=new Event('input',{bubbles:!0,cancelable:!0});e.dispatchEvent(n)}else console.log('Input field not found')").build().inject(this) {
-            L.d("Searching for $input")
-        }
+        L.d("Searching attempt", input)
+        JsBuilder().js("var e=document.getElementById('main-search-input');if(e){e.value='$input';var n=new Event('input',{bubbles:!0,cancelable:!0});e.dispatchEvent(n)}else console.log('Input field not found')").build().inject(this)
     }
 
     /**
@@ -130,7 +129,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                     L.d("Search loaded successfully")
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
-                    L.d("Search subject error; reverting to full overlay")
+                    L.eThrow("Search subject error; reverting to full overlay")
                     searchSubject.onComplete()
                     contract.searchOverlayDispose()
                 }

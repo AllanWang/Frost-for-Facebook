@@ -12,10 +12,7 @@ import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.views.RippleCanvas
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.pitchedapps.frost.settings.getAppearancePrefs
-import com.pitchedapps.frost.settings.getExperimentalPrefs
-import com.pitchedapps.frost.settings.getFeedPrefs
-import com.pitchedapps.frost.settings.getNotificationPrefs
+import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.openPlayProPurchase
@@ -35,6 +32,11 @@ class SettingsActivity : KPrefActivity() {
         subItems(R.string.appearance, getAppearancePrefs()) {
             descRes = R.string.appearance_desc
             iicon = GoogleMaterial.Icon.gmd_palette
+        }
+
+        subItems(R.string.behaviour, getBehaviourPrefs()) {
+            descRes = R.string.behaviour_desc
+            iicon = GoogleMaterial.Icon.gmd_trending_up
         }
 
         subItems(R.string.newsfeed, getFeedPrefs()) {

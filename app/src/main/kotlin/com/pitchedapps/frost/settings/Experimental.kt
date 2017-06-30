@@ -18,4 +18,8 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(R.string.search, { Prefs.searchBar }, { Prefs.searchBar = it; setResult(MainActivity.REQUEST_SEARCH) }) {
         descRes = R.string.search_desc
     }
+
+    checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, { Prefs.verboseLogging = it }) {
+        descRes = R.string.verbose_logging_desc
+    }
 }

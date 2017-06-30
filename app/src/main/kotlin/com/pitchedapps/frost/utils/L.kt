@@ -8,14 +8,36 @@ import timber.log.Timber
 
 /**
  * Created by Allan Wang on 2017-05-28.
+ *
+ * Logging for frost
+ *
+ * To ensure privacy, the following rules are set:
+ *
+ * Debug and Error logs must not reveal person info
+ * Person info logs can be marked as info or verbose
  */
-object L : TimberLogger("Frost")
+object L : TimberLogger("Frost") {
+
+    /**
+     * Helper function to separate private info
+     */
+    fun d(tag: String, personal: String?) {
+        L.d(tag)
+        if (personal != null) L.i(personal)
+    }
+}
 
 internal class CrashReportingTree : Timber.Tree() {
     override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-        if (priority == Log.VERBOSE || priority == Log.DEBUG)
-            return
-        if (message != null) Crashlytics.log(priority, tag ?: "Frost", message)
+        when (priority) {
+            Log.VERBOSE, Log.INFO -> return
+            Log.DEBUG -> if (!Prefs.verboseLogging) return
+        }
+        if (message != null)
+            if (priority == Log.ERROR)
+                Crashlytics.log(Log.ERROR, "Frost", message)
+            else
+                Crashlytics.log(message)
         if (t != null) Crashlytics.logException(t)
     }
 }

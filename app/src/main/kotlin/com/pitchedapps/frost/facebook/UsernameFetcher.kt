@@ -19,7 +19,7 @@ object UsernameFetcher {
                 name = Jsoup.connect(FbTab.PROFILE.url)
                         .cookie(FACEBOOK_COM, data.cookie)
                         .get().title()
-                L.d("User name found: $name")
+                L.d("User name found", name)
             } catch (e: Exception) {
                 L.e(e, "User name fetching failed")
             } finally {
