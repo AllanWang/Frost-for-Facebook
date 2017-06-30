@@ -7,7 +7,7 @@
     -->
 
 
-    <version title="v0.x"/>
+    <version title="v1.0"/>
     <item text="Added more global preferences" />
     <item text="Added fully customizable theme engine" />
     <item text="Added support for in app billing" />
@@ -17,6 +17,9 @@
     <item text="Added search option" />
     <item text="Fixed up main layout" />
     <item text="Fix some theme components" />
+    <item text="Added behaviour settings" />
+    <item text="" />
+    <item text="" />
     <item text="" />
 
     <version title="v0.3" />

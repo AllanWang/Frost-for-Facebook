@@ -23,7 +23,7 @@ object L : TimberLogger("Frost") {
      */
     fun d(tag: String, personal: String?) {
         L.d(tag)
-        if (personal != null) L.i(personal)
+        L.i("-\t$personal")
     }
 }
 
