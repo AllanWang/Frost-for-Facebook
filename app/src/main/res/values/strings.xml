@@ -49,6 +49,8 @@
     <string name="pro_features">Pro Features</string>
     <string name="custom_pro">Custom [Pro]</string>
     <string name="uh_oh">Uh Oh</string>
+    <string name="reload">Reload</string>
+    <string name="play_store_not_pro">It seems like you are a pro user, but we couldn\'t find your purchasing info. If this error persists, please try clearing the Play Store cache and reinstalling the app.</string>
     <string name="play_store_not_found">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
     <string name="play_store_billing_error">Something went wrong. Please try again later.</string>
     <string name="play_thank_you">Thank you!</string>

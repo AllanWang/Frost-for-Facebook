@@ -53,8 +53,8 @@ android {
             resValue "string", "frost_web", "Frost Web Test"
         }
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
@@ -120,6 +120,8 @@ dependencies {
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     compile "com.jude:swipebackhelper:${SWIPE_BACK}"
+
+    compile 'com.android.billingclient:billing:dp-1'
 
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;

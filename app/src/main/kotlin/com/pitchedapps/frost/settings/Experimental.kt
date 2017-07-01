@@ -22,4 +22,14 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, { Prefs.verboseLogging = it }) {
         descRes = R.string.verbose_logging_desc
     }
+
+    plainText(R.string.restart_frost) {
+        descRes = R.string.restart_frost_desc
+        onClick = {
+            _, _, _ ->
+            setResult(MainActivity.REQUEST_RESTART_APPLICATION)
+            finish()
+            true
+        }
+    }
 }

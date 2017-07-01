@@ -2,4 +2,5 @@
 <resources>
     <item name="item_account" type="id" />
     <item name="item_keyword" type="id" />
+    <item name="item_about_links" type="id" />
 </resources>
