@@ -13,7 +13,6 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.iab.IAB
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
@@ -46,6 +45,7 @@ class FrostApp : Application() {
             Crashlytics.setUserIdentifier(Prefs.frostId)
             Timber.plant(CrashReportingTree())
         }
+        Prefs.verboseLogging = false
         FbCookie()
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
         if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)

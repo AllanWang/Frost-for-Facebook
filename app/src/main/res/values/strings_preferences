@@ -53,7 +53,7 @@
     <string name="search">Search Type</string>
     <string name="search_desc">Enable the search bar instead of a search overlay</string>
     <string name="verbose_logging">Verbose Logging</string>
-    <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev.</string>
+    <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev. This will automatically be disabled if the app restarts.</string>
     <string name="restart_frost">Restart Frost</string>
     <string name="restart_frost_desc">Crashlytics will only submit logs when a crash occurs or if errors are found and the app is restarted. Clicking here will restart the app and flush whatever issues are currently found.</string>
 
