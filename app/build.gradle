@@ -120,9 +120,7 @@ dependencies {
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     compile "com.jude:swipebackhelper:${SWIPE_BACK}"
-
-    compile 'com.android.billingclient:billing:dp-1'
-
+    
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
