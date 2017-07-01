@@ -9,6 +9,8 @@ import com.pitchedapps.frost.utils.scheduleNotifications
 
 /**
  * Created by Allan Wang on 2017-05-31.
+ *
+ * Receiver that is triggered whenever the app updates so it can bind the notifications again
  */
 class UpdateReceiver : BroadcastReceiver() {
 

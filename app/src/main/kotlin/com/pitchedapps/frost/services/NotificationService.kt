@@ -28,6 +28,9 @@ import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-14.
+ *
+ * Service to manage notifications
+ * Will periodically check through all accounts in the db and send notifications when appropriate
  */
 class NotificationService : JobService() {
 
@@ -41,7 +44,6 @@ class NotificationService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         future = doAsync {
-            //            debugNotification("Load notifs")
             loadFbCookiesSync().forEach {
                 data ->
                 L.i("Handle notifications for $data")

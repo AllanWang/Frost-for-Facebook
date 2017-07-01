@@ -24,11 +24,6 @@ object FbTabsDb {
 @Table(database = FbTabsDb::class, allFields = true)
 data class FbTabModel(@PrimaryKey var position: Int = -1, var tab: FbTab = FbTab.FEED) : BaseModel()
 
-//const val FB_URL_BASE = "https://touch.facebook.com/"
-
-//BOOKMARKS("https://touch.facebook.com/bookmarks"),
-//SEARCH("https://touch.facebook.com/search"),
-
 fun loadFbTabs(): List<FbTab> {
     val tabs: List<FbTabModel>? = SQLite.select().from(FbTabModel::class).orderBy(FbTabModel_Table.position, true).queryList()
     if (tabs?.isNotEmpty() ?: false) return tabs!!.map { it.tab }

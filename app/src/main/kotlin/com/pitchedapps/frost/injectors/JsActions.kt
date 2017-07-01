@@ -5,6 +5,8 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 
 /**
  * Created by Allan Wang on 2017-05-31.
+ *
+ * Collection of short js functions that are embedded directly
  */
 enum class JsActions(body: String) : InjectorContract {
     /**

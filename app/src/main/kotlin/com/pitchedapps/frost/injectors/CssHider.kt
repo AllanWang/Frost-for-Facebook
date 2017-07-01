@@ -5,6 +5,8 @@ import com.pitchedapps.frost.utils.L
 
 /**
  * Created by Allan Wang on 2017-05-31.
+ *
+ * List of elements to hide
  */
 enum class CssHider(vararg val items: String) : InjectorContract {
     CORE("[data-sigil=m_login_upsell]"),
