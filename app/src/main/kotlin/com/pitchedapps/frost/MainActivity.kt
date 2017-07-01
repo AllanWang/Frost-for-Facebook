@@ -372,7 +372,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                 REQUEST_NAV -> frostNavigationBar()
                 REQUEST_SEARCH -> invalidateOptionsMenu()
                 REQUEST_RESTART_APPLICATION -> { //completely restart application
-                    L.eThrow("Restart Application Requested")
+                    L.d("Restart Application Requested")
                     val intent = packageManager.getLaunchIntentForPackage(packageName)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
