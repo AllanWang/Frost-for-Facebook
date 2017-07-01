@@ -7,7 +7,6 @@ import com.pitchedapps.frost.utils.L
  * Created by Allan Wang on 2017-05-31.
  * Mapping of the available assets
  * The enum name must match the css file name
- * //TODO add folder mapping using Prefs
  */
 enum class JsAssets : InjectorContract {
     MENU, CLICK_A, CLICK_INTERCEPTOR, HEADER_BADGES, SEARCH

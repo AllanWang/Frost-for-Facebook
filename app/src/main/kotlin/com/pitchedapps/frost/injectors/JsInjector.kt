@@ -34,6 +34,9 @@ class JsBuilder {
     }
 }
 
+/**
+ * Contract for all injectors to allow it to interact properly with a webview
+ */
 interface InjectorContract {
     fun inject(webView: WebView) = inject(webView, null)
     fun inject(webView: WebView, callback: ((String) -> Unit)?)
@@ -58,6 +61,9 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<Strin
 
 fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = webCore.jsInject(*injectors, callback = callback)
 
+/**
+ * Wrapper class to convert a function into an injector
+ */
 class JsInjector(val function: String) : InjectorContract {
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
         webView.evaluateJavascript(function, { value -> callback?.invoke(value) })
