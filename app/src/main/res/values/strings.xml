@@ -55,6 +55,8 @@
     <string name="play_store_billing_error">Something went wrong. Please try again later.</string>
     <string name="play_thank_you">Thank you!</string>
     <string name="play_purchased_pro">Thank you for your support! Enjoy the pro version.</string>
+    <string name="play_already_purchased">Already Purchased</string>
+    <string name="play_already_purchased_content">Looks like you\'ve already purchased %s. Enjoy!</string>
 
     <string name="define_dbflow"></string>
     <!-- Author section -->

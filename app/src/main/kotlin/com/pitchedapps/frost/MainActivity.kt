@@ -339,7 +339,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                     observable.observeOn(AndroidSchedulers.mainThread()).subscribe { hiddenSearchView?.query(it) }
                 }
                 foregroundColor = Prefs.textColor
-                backgroundColor = Prefs.bgColor
+                backgroundColor = Prefs.bgColor.withMinAlpha(200)
                 openListener = { hiddenSearchView?.pauseLoad = false }
                 closeListener = { hiddenSearchView?.pauseLoad = true }
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }

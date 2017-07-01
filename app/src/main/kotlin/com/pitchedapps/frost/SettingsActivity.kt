@@ -1,5 +1,6 @@
 package com.pitchedapps.frost
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +15,7 @@ import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.iab.IAB
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.IabBroadcastReceiver
 import com.pitchedapps.frost.utils.iab.openPlayProPurchase
@@ -23,8 +25,15 @@ import com.pitchedapps.frost.utils.iab.openPlayProPurchase
  * Created by Allan Wang on 2017-06-06.
  */
 class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListener {
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!(IAB.helper?.handleActivityResult(requestCode, resultCode, data) ?: false))
+            super.onActivityReenter(resultCode, data)
+    }
+
+
     override fun receivedBroadcast() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        L.d("IAB broadcast")
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {

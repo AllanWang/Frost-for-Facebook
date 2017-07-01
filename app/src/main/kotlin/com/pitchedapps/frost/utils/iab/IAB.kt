@@ -34,6 +34,13 @@ object IAB {
             }
         }
     }
+
+    /**
+     * If user has pro, check if it's valid and destroy the helper
+     */
+    fun validatePro(activity: Activity) {
+
+    }
 }
 
 private const val FROST_PRO = "frost_pro"
@@ -68,19 +75,15 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
         IAB.helper!!.queryInventoryAsync {
             res, inv ->
             if (res.isFailure) return@queryInventoryAsync playStoreGenericError("Query res error")
-            if (inv == null) return@queryInventoryAsync playStoreGenericError("Empty inventory")
+            if (inv?.getSkuDetails(key) != null) return@queryInventoryAsync playStoreAlreadyPurchased(key)
             L.d("IAB: inventory ${inv.allOwnedSkus}")
-            val donation = inv.getSkuDetails(key) ?: return@queryInventoryAsync playStoreGenericError("Donation null")
-            IAB.helper!!.launchPurchaseFlow(this@openPlayPurchase, donation.sku, code) {
+            IAB.helper!!.launchPurchaseFlow(this@openPlayPurchase, key, code) {
                 result, _ ->
-                if (result.isSuccess) materialDialogThemed {
-                    title(R.string.play_thank_you)
-                    content(R.string.play_purchased_pro)
-                    positiveText(R.string.kau_ok)
-                } else playStoreGenericError("Result: ${result.message}")
+                if (result.isSuccess) playStorePurchasedSuccessfully(key)
                 frostAnswers {
                     logPurchase(PurchaseEvent()
                             .putItemId(key)
+                            .putCustomAttribute("result", result.message)
                             .putSuccess(result.isSuccess))
                 }
             }
