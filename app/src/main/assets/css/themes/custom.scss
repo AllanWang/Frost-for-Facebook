@@ -1,4 +1,4 @@
-$bg_transparent: transparent;
+$bg_transparent: unquote('$BT$');
 $text: unquote('$T$');
 $link: unquote('$TT$');
 $background: unquote('$B$');

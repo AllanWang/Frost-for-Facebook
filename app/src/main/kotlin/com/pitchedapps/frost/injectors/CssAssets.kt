@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.injectors
 
+import android.graphics.Color
 import android.webkit.WebView
 import ca.allanwang.kau.utils.*
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 
 /**
@@ -21,11 +21,21 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
         if (injector == null) {
             var content = webView.context.assets.open("css/$folder/$file").bufferedReader().use { it.readText() }
             if (this == CUSTOM) {
+                var bbt = Prefs.bgColor
+                val bt: String
+                if (Color.alpha(bbt) == 255) {
+                    bbt = bbt.adjustAlpha(0.2f).colorToForeground(0.35f)
+                    bt = Prefs.bgColor.toRgbaString()
+                } else {
+                    bbt = bbt.adjustAlpha(0.05f).colorToForeground(0.5f)
+                    bt = "transparent"
+                }
                 content = content
                         .replace("\$T\$", Prefs.textColor.toRgbaString())
                         .replace("\$TT\$", Prefs.textColor.colorToBackground(0.05f).toRgbaString())
                         .replace("\$B\$", Prefs.bgColor.toRgbaString())
-                        .replace("\$BBT\$", Prefs.bgColor.adjustAlpha(0.2f).colorToForeground(0.35f).toRgbaString())
+                        .replace("\$BT\$", bt)
+                        .replace("\$BBT\$", bbt.toRgbaString())
                         .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
                         .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
             }
