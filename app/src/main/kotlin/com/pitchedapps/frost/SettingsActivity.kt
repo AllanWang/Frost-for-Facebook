@@ -15,13 +15,17 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
+import com.pitchedapps.frost.utils.iab.IabBroadcastReceiver
 import com.pitchedapps.frost.utils.iab.openPlayProPurchase
 
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
-class SettingsActivity : KPrefActivity() {
+class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListener {
+    override fun receivedBroadcast() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
         textColor = { Prefs.textColor }

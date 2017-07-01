@@ -22,6 +22,7 @@ object IAB {
             if (!activity.isFromGooglePlay && !BuildConfig.DEBUG) return L.d("IAB not from google play")
             try {
                 helper = IabHelper(activity.applicationContext, PUBLIC_BILLING_KEY)
+                helper!!.enableDebugLogging(BuildConfig.DEBUG, "Frost:")
                 helper!!.startSetup {
                     result ->
                     L.d("IAB result ${result.message}")
@@ -63,24 +64,28 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
     L.d("IAB flag end async")
     IAB.helper?.flagEndAsync() ?: return playStoreGenericError("Null flag end async")
     L.d("IAB query inv async")
-    IAB.helper!!.queryInventoryAsync {
-        res, inv ->
-        if (res.isFailure) return@queryInventoryAsync playStoreGenericError("Query res error")
-        if (inv == null) return@queryInventoryAsync playStoreGenericError("Empty inventory")
-        L.d("IAB: inventory ${inv.allOwnedSkus}")
-        val donation = inv.getSkuDetails(key) ?: return@queryInventoryAsync playStoreGenericError("Donation null")
-        IAB.helper!!.launchPurchaseFlow(this@openPlayPurchase, donation.sku, code) {
-            result, _ ->
-            if (result.isSuccess) materialDialogThemed {
-                title(R.string.play_thank_you)
-                content(R.string.play_purchased_pro)
-                positiveText(R.string.kau_ok)
-            } else playStoreGenericError("Result: ${result.message}")
-            frostAnswers {
-                logPurchase(PurchaseEvent()
-                        .putItemId(key)
-                        .putSuccess(result.isSuccess))
+    try {
+        IAB.helper!!.queryInventoryAsync {
+            res, inv ->
+            if (res.isFailure) return@queryInventoryAsync playStoreGenericError("Query res error")
+            if (inv == null) return@queryInventoryAsync playStoreGenericError("Empty inventory")
+            L.d("IAB: inventory ${inv.allOwnedSkus}")
+            val donation = inv.getSkuDetails(key) ?: return@queryInventoryAsync playStoreGenericError("Donation null")
+            IAB.helper!!.launchPurchaseFlow(this@openPlayPurchase, donation.sku, code) {
+                result, _ ->
+                if (result.isSuccess) materialDialogThemed {
+                    title(R.string.play_thank_you)
+                    content(R.string.play_purchased_pro)
+                    positiveText(R.string.kau_ok)
+                } else playStoreGenericError("Result: ${result.message}")
+                frostAnswers {
+                    logPurchase(PurchaseEvent()
+                            .putItemId(key)
+                            .putSuccess(result.isSuccess))
+                }
             }
         }
+    } catch(e: IabHelper.IabAsyncInProgressException) {
+        L.e(e, "IAB query dup")
     }
 }
