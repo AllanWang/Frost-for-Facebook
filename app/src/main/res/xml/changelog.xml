@@ -18,9 +18,7 @@
     <item text="Fixed up main layout" />
     <item text="Fix some theme components" />
     <item text="Added behaviour settings" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Added about section with links" />
 
     <version title="v0.3" />
     <item text="Added rounded icons option" />

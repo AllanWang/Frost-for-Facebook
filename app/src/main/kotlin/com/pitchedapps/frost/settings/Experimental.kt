@@ -15,8 +15,8 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.experimental_disclaimer_info
     }
 
-    checkbox(R.string.search, { Prefs.searchBar }, { Prefs.searchBar = it; setResult(MainActivity.REQUEST_SEARCH) }) {
-        descRes = R.string.search_desc
+    checkbox(R.string.search_bar, { Prefs.searchBar }, { Prefs.searchBar = it; setResult(MainActivity.REQUEST_SEARCH) }) {
+        descRes = R.string.search_bar_desc
     }
 
     checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, { Prefs.verboseLogging = it }) {

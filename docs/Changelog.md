@@ -11,6 +11,7 @@
 * Fixed up main layout
 * Fix some theme components
 * Added behaviour settings
+* Added about section with links
 
 ## v0.3
 * Added rounded icons option

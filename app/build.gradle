@@ -53,8 +53,8 @@ android {
             resValue "string", "frost_web", "Frost Web Test"
         }
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
