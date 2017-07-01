@@ -1,7 +1,11 @@
 package com.pitchedapps.frost
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.*
@@ -39,6 +43,7 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.iab.IAB
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.web.FrostWebViewSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -84,6 +89,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         const val REQUEST_REFRESH = 80808
         const val REQUEST_NAV = 10101
         const val REQUEST_SEARCH = 70707
+        const val REQUEST_RESTART_APPLICATION = 60606
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -365,6 +371,18 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                 REQUEST_REFRESH -> webFragmentObservable.onNext(FRAGMENT_REFRESH)
                 REQUEST_NAV -> frostNavigationBar()
                 REQUEST_SEARCH -> invalidateOptionsMenu()
+                REQUEST_RESTART_APPLICATION -> { //completely restart application
+                    val intent = packageManager.getLaunchIntentForPackage(packageName)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+                    val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        alarm.setExactAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
+                    else
+                        alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
+                    finish()
+                    System.exit(0)
+                }
             }
         }
     }
@@ -372,6 +390,11 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        IAB.setupAsync(this)
     }
 
     override fun onBackPressed() {

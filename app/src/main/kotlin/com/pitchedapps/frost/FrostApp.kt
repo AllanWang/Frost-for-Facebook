@@ -12,8 +12,8 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
-import com.pitchedapps.frost.utils.iab.IAB
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.iab.IAB
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
@@ -36,11 +36,7 @@ class FrostApp : Application() {
     override fun onCreate() {
         FlowManager.init(FlowConfig.Builder(this).build())
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
-        FbCookie()
-        if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
-        if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
-        Prefs.lastLaunch = System.currentTimeMillis()
-//        if (LeakCanary.isInAnalyzerProcess(this)) return
+        //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
@@ -50,10 +46,15 @@ class FrostApp : Application() {
             Crashlytics.setUserIdentifier(Prefs.frostId)
             Timber.plant(CrashReportingTree())
         }
+        FbCookie()
+        if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
+        if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        Prefs.lastLaunch = System.currentTimeMillis()
+
+
 
         super.onCreate()
 
-        IAB.setupAsync(this)
         //Drawer profile loading logic
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
