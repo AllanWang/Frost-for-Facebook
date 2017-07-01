@@ -2,6 +2,7 @@ package com.pitchedapps.frost
 
 import android.graphics.Color
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintSet
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -91,36 +92,53 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
         override fun bindView(holder: ViewHolder, payloads: MutableList<Any>?) {
             super.bindView(holder, payloads)
             with(holder) {
-                bindIconColor(rate, github)
+                bindIconColor(*icons.toTypedArray())
                 bindBackgroundColor(container)
-            }
-        }
-
-        fun theme(vararg images: ImageView) {
-            val ripple = createSimpleRippleDrawable(accentColor!!, Color.TRANSPARENT)
-            images.forEach {
-                it.background = ripple
-                it.drawable.setTint(textColor!!)
             }
         }
 
         class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             val container: ConstraintLayout by bindView(R.id.about_icons_container)
-            val rate: ImageView by bindView(R.id.about_rate)
-            val github: ImageView by bindView(R.id.about_github)
+            val icons: List<ImageView>
 
+            /**
+             * There are a lot of constraints to be added to each item just to have them chained properly
+             * My as well do it programmatically
+             * Initializing the viewholder will setup the icons, scale type and background of all icons,
+             * link their click listeners and chain them together via a horizontal spread
+             */
             init {
                 val c = itemView.context
-                setup(rate, GoogleMaterial.Icon.gmd_star, { c.startPlayStoreLink(R.string.play_store_package_id) })
-                setup(github, CommunityMaterial.Icon.cmd_github_circle, { c.startLink("https://github.com/AllanWang/Frost-for-Facebook") })
+                val iconData = arrayOf<Pair<Pair<Int, IIcon>, () -> Unit>>(
+                        R.id.about_rate to GoogleMaterial.Icon.gmd_star to { c.startPlayStoreLink(R.string.play_store_package_id) },
+                        R.id.about_reddit to CommunityMaterial.Icon.cmd_reddit to { c.startLink("https://www.reddit.com/r/FrostForFacebook/") },
+                        R.id.about_github to CommunityMaterial.Icon.cmd_github_circle to { c.startLink("https://github.com/AllanWang/Frost-for-Facebook") }
+                ).map {
+                    //decouple and setup, then only return the image
+                    (pair, onClick) ->
+                    val (id, icon: IIcon) = pair
+                    val image = itemView.findViewById<ImageView>(id)
+                    setup(image, icon, onClick)
+                    Pair(image, id)
+                }
+                icons = iconData.map { it.first }
+                val ids = iconData.map { it.second }.toIntArray()
+                val set = ConstraintSet()
+                set.clone(container)
+                set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
+                        ids, null, ConstraintSet.CHAIN_SPREAD_INSIDE)
+                set.applyTo(container)
             }
 
             fun setup(image: ImageView, icon: IIcon, onClick: () -> Unit) {
-                image.setImageDrawable(icon.toDrawable(itemView.context, 32))
-                image.setOnClickListener({ onClick() })
+                with(image) {
+                    setImageDrawable(icon.toDrawable(context, 32))
+                    scaleType = ImageView.ScaleType.CENTER
+                    background = context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
+                    setOnClickListener({ onClick() })
+                }
             }
-
         }
     }
 }
