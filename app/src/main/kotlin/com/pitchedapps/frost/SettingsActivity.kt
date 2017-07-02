@@ -24,14 +24,16 @@ import com.pitchedapps.frost.utils.iab.*
 class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!(IAB.helper?.handleActivityResult(requestCode, resultCode, data) ?: false))
+        if (!IAB.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
-        adapter.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
+        }
     }
 
 
     override fun receivedBroadcast() {
         L.d("IAB broadcast")
+        adapter.notifyDataSetChanged()
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
@@ -68,7 +70,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
         plainText(R.string.restore_purchases) {
             descRes = R.string.restore_purchases
             iicon = GoogleMaterial.Icon.gmd_refresh
-            onClick = { this@SettingsActivity.restorePurchases(); true }
+            onClick = { _, _,_ -> this@SettingsActivity.restorePurchases(); true }
         }
 
         plainText(R.string.about_frost) {

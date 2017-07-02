@@ -51,12 +51,15 @@
     <string name="uh_oh">Uh Oh</string>
     <string name="reload">Reload</string>
     <string name="play_store_not_pro">It seems like you are a pro user, but we couldn\'t find your purchasing info. If this error persists, please try clearing the Play Store cache and reinstalling the app.</string>
-    <string name="play_store_not_found">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
+    <string name="play_store_not_found">This app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
+    <string name="play_store_not_found_pro_query">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
     <string name="play_store_billing_error">Something went wrong. Please try again later.</string>
     <string name="play_thank_you">Thank you!</string>
     <string name="play_purchased_pro">Thank you for your support! Enjoy the pro version.</string>
     <string name="play_already_purchased">Already Purchased</string>
     <string name="play_already_purchased_content">Looks like you\'ve already purchased %s. Enjoy!</string>
+    <string name="found_pro">Found Frost Pro!</string>
+    <string name="found_pro_desc">Looks like you have frost pro! We\'ll reload the app so you can enjoy the awesome features!</string>
 
     <string name="define_dbflow"></string>
     <!-- Author section -->

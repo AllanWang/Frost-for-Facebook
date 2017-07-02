@@ -18,16 +18,18 @@ private fun playStoreLog(text: String) {
     L.e(Throwable(text), "Play Store Exception")
 }
 
+/**
+ * Properly restart an activity
+ */
 private fun Activity.playRestart() {
-    if (this is MainActivity) restart()
-    else if (this is SettingsActivity) {
+    if (this is SettingsActivity) {
         setResult(MainActivity.REQUEST_RESTART)
         finish()
-    }
+    } else restart()
 }
 
+
 fun Activity.playStoreNoLongerPro() {
-    if (!Prefs.previouslyPro) return //never pro to begin with
     Prefs.previouslyPro = false
     playStoreLog("No Longer Pro")
     materialDialogThemed {
@@ -36,6 +38,19 @@ fun Activity.playStoreNoLongerPro() {
         positiveText(R.string.reload)
         dismissListener {
             this@playStoreNoLongerPro.playRestart()
+        }
+    }
+}
+
+fun Activity.playStoreFoundPro() {
+    Prefs.previouslyPro = true
+    L.d("Found pro")
+    materialDialogThemed {
+        title(R.string.found_pro)
+        content(R.string.found_pro_desc)
+        positiveText(R.string.reload)
+        dismissListener {
+            this@playStoreFoundPro.playRestart()
         }
     }
 }
@@ -52,18 +67,18 @@ fun Activity.playStoreNotFound() {
 }
 
 fun Activity.playStoreProNotAvailable() {
-    playStoreLog("Pro found; store not available")
+    playStoreLog("Pro query; store not available")
     materialDialogThemed {
         title(R.string.uh_oh)
-        content(R.string.play_store_not_found)
+        content(R.string.play_store_not_found_pro_query)
         positiveText(R.string.kau_ok)
         neutralText(R.string.kau_play_store)
         onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
     }
 }
 
-fun Activity.playStoreGenericError(text: String = "Store generic error") {
-    playStoreLog("IAB: $text")
+fun Activity.playStoreGenericError(text: String? = "Store generic error") {
+    if (text != null) playStoreLog("IAB: $text")
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_billing_error)
