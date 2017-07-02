@@ -2,6 +2,7 @@ package com.pitchedapps.frost
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.changelog.showChangelog
@@ -70,16 +71,12 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
         plainText(R.string.restore_purchases) {
             descRes = R.string.restore_purchases
             iicon = GoogleMaterial.Icon.gmd_refresh
-            onClick = { _, _,_ -> this@SettingsActivity.restorePurchases(); true }
+            onClick = { _, _, _ -> this@SettingsActivity.restorePurchases(); true }
         }
 
         plainText(R.string.about_frost) {
             iicon = GoogleMaterial.Icon.gmd_info
-            onClick = {
-                _, _, _ ->
-                startActivity(AboutActivity::class.java, transition = true)
-                true
-            }
+            onClick = { _, _, _ -> startActivity(AboutActivity::class.java, transition = true); true }
         }
 
         if (BuildConfig.DEBUG) {
@@ -141,5 +138,10 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    override fun onDestroy() {
+        if (!IAB.isInProgress) IAB.dispose()
+        super.onDestroy()
     }
 }

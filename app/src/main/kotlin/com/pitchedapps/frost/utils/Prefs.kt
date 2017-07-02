@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.utils
 
-import android.graphics.Color
 import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
