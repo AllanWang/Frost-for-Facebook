@@ -15,10 +15,7 @@ import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.IAB
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
-import com.pitchedapps.frost.utils.iab.IabBroadcastReceiver
-import com.pitchedapps.frost.utils.iab.openPlayProPurchase
+import com.pitchedapps.frost.utils.iab.*
 
 
 /**
@@ -28,7 +25,8 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!(IAB.helper?.handleActivityResult(requestCode, resultCode, data) ?: false))
-            super.onActivityReenter(resultCode, data)
+            super.onActivityResult(requestCode, resultCode, data)
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -65,6 +63,12 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
         subItems(R.string.experimental, getExperimentalPrefs()) {
             descRes = R.string.experimental_desc
             iicon = CommunityMaterial.Icon.cmd_flask_outline
+        }
+
+        plainText(R.string.restore_purchases) {
+            descRes = R.string.restore_purchases
+            iicon = GoogleMaterial.Icon.gmd_refresh
+            onClick = { this@SettingsActivity.restorePurchases(); true }
         }
 
         plainText(R.string.about_frost) {

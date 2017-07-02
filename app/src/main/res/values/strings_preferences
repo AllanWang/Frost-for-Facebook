@@ -57,4 +57,7 @@
     <string name="restart_frost">Restart Frost</string>
     <string name="restart_frost_desc">Crashlytics will only submit logs when a crash occurs or if errors are found and the app is restarted. Clicking here will restart the app and flush whatever issues are currently found.</string>
 
+    <string name="restore_purchases">Restore Purchases</string>
+    <string name="restore_purchases_desc">Restore any previous purchases from the Play Store</string>
+
 </resources>

@@ -3,11 +3,13 @@ package com.pitchedapps.frost.utils.iab
 import android.app.Activity
 import android.content.Context
 import ca.allanwang.kau.utils.isFromGooglePlay
-import ca.allanwang.kau.utils.startPlayStoreLink
 import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.SettingsActivity
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostAnswers
+import com.pitchedapps.frost.utils.frostAnswersCustom
 
 /**
  * Created by Allan Wang on 2017-06-23.
@@ -48,23 +50,20 @@ private const val FROST_PRO = "frost_pro"
 val IS_FROST_PRO: Boolean
     get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.previouslyPro
 
-private fun Context.checkFromPlay(): Boolean {
-    val isPlay = isFromGooglePlay || BuildConfig.DEBUG
-    if (!isPlay) materialDialogThemed {
-        title(R.string.uh_oh)
-        content(R.string.play_store_not_found)
-        positiveText(R.string.kau_ok)
-        neutralText(R.string.kau_play_store)
-        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
-    }
-    return isPlay
+private val Context.isFrostPlay: Boolean
+    get() = isFromGooglePlay || BuildConfig.DEBUG
+
+fun SettingsActivity.restorePurchases() {
+
 }
 
-fun Activity.openPlayProPurchase(code: Int) = openPlayPurchase(FROST_PRO, code)
+fun Activity.openPlayProPurchase(code: Int) = openPlayPurchase(FROST_PRO, code) {
+    Prefs.previouslyPro = true
+}
 
-fun Activity.openPlayPurchase(key: String, code: Int) {
+fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -> Unit) {
     L.d("Open play purchase $key $code")
-    if (!checkFromPlay()) return
+    if (!isFrostPlay) return playStoreNotFound()
     frostAnswersCustom("PLAY_PURCHASE") {
         putCustomAttribute("Key", key)
     }
@@ -79,7 +78,10 @@ fun Activity.openPlayPurchase(key: String, code: Int) {
             L.d("IAB: inventory ${inv.allOwnedSkus}")
             IAB.helper!!.launchPurchaseFlow(this@openPlayPurchase, key, code) {
                 result, _ ->
-                if (result.isSuccess) playStorePurchasedSuccessfully(key)
+                if (result.isSuccess) {
+                    onSuccess(key)
+                    playStorePurchasedSuccessfully(key)
+                }
                 frostAnswers {
                     logPurchase(PurchaseEvent()
                             .putItemId(key)
