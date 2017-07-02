@@ -40,8 +40,19 @@ fun Activity.playStoreNoLongerPro() {
     }
 }
 
-fun Activity.playStoreNotAvailable() {
-    playStoreLog("Store not available")
+fun Activity.playStoreNotFound() {
+    L.d("Play store not found")
+    materialDialogThemed {
+        title(R.string.uh_oh)
+        content(R.string.play_store_not_found)
+        positiveText(R.string.kau_ok)
+        neutralText(R.string.kau_play_store)
+        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
+    }
+}
+
+fun Activity.playStoreProNotAvailable() {
+    playStoreLog("Pro found; store not available")
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_not_found)
