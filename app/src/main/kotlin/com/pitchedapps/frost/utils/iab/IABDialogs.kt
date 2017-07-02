@@ -104,3 +104,11 @@ fun Activity.playStorePurchasedSuccessfully(key: String) {
         positiveText(R.string.kau_ok)
     }
 }
+
+fun SettingsActivity.purchaseRestored() {
+    materialDialogThemed {
+        title(R.string.play_thank_you)
+        content(R.string.play_purchased_pro)
+        positiveText(R.string.kau_ok)
+    }
+}

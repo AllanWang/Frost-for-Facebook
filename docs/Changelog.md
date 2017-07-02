@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.1
+
 ## v1.0
 * Added more global preferences
 * Added fully customizable theme engine

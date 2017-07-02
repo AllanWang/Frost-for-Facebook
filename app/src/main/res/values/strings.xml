@@ -60,6 +60,10 @@
     <string name="play_already_purchased_content">Looks like you\'ve already purchased %s. Enjoy!</string>
     <string name="found_pro">Found Frost Pro!</string>
     <string name="found_pro_desc">Looks like you have frost pro! We\'ll reload the app so you can enjoy the awesome features!</string>
+    <string name="restoring_purchases">Restoring purchases…</string>
+    <string name="purchases_restored">Purchases Restored</string>
+    <string name="purchases_restored_with_pro">Frost Pro has been restored. Enjoy the features!</string>
+    <string name="purchases_restored_without_pro">It seems like you don\'t have pro. If this is a persistent issue, contact me and attach your purchase receipt.</string>
 
     <string name="define_dbflow"></string>
     <!-- Author section -->

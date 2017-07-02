@@ -44,6 +44,7 @@ import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IAB
+import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.web.FrostWebViewSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -133,6 +134,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                     .setAction("Action", null).show()
         }
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
+        validatePro()
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -391,11 +393,6 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        IAB.setupAsync(this)
     }
 
     override fun onBackPressed() {
