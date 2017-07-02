@@ -11,6 +11,11 @@ android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
 
+    androidGitVersion {
+        codeFormat = 'MMNNPP'
+        prefix 'v'
+    }
+
     defaultConfig {
         applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase()
         minSdkVersion Integer.parseInt(project.MIN_SDK)
@@ -128,8 +133,4 @@ dependencies {
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
-}
-
-androidGitVersion {
-    prefix 'v'
 }

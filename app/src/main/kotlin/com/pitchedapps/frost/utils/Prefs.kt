@@ -87,6 +87,10 @@ object Prefs : KPref() {
     //check if this is the first time launching the web overlay; show snackbar if true
     var firstWebOverlay: Boolean by kpref("first_web_overlay", true)
 
+    /**
+     * Cache like value to determine if user has or had pro
+     * In most cases, [com.pitchedapps.frost.utils.iab.IS_FROST_PRO] should be looked at instead
+     */
     var previouslyPro: Boolean by kpref("previously_pro", false)
 
     var debugPro: Boolean by kpref("debug_pro", false)

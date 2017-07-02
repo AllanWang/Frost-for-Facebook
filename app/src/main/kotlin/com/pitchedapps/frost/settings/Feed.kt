@@ -22,7 +22,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 title(R.string.newsfeed_sort)
                 items(FeedSort.values().map { string(it.textRes) })
                 itemsCallbackSingleChoice(item.pref, {
-                    _, _, which, text ->
+                    _, _, which, _ ->
                     if (item.pref != which) {
                         item.pref = which
                         shouldRestartMain()
