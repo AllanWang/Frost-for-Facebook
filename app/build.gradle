@@ -8,12 +8,21 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
 
+play {
+    jsonFile = file('../files/gplay-keys.json')
+    track = 'beta'
+    uploadImages = false
+    untrackOld = true
+}
+
 android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
 
+	def offset = System.getenv("TRAVIS_BUILD_NUMBER") ?: 0
+	
     androidGitVersion {
-        baseCode System.getEnv('TRAVIS_BUILD_NUMBER') ?: 0
+        baseCode offset
         codeFormat = 'MMNNPPXX'
         prefix 'v'
     }
@@ -31,7 +40,6 @@ android {
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
-		playAccountConfig = playAccountConfigs.defaultAccountConfig
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -155,8 +163,4 @@ dependencies {
         transitive = true;
     }
 
-}
-
-play {
-    track = 'alpha'
 }
