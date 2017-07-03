@@ -20,7 +20,6 @@ before_install:
 after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
-- "./gradlew app:publishApkRelease"
 deploy:
   provider: script
   script: "./gradlew app:publishApkRelease"

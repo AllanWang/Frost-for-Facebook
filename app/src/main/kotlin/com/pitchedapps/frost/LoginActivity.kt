@@ -46,10 +46,10 @@ class LoginActivity : BaseActivity() {
     val textview: AppCompatTextView by bindView(R.id.textview)
     val profile: ImageView by bindView(R.id.profile)
 
-    val loginObservable = SingleSubject.create<CookieModel>()!!
+    val loginObservable = SingleSubject.create<CookieModel>()
     val progressObservable = BehaviorSubject.create<Int>()!!
-    val profileObservable = SingleSubject.create<Boolean>()!!
-    val usernameObservable = SingleSubject.create<String>()!!
+    val profileObservable = SingleSubject.create<Boolean>()
+    val usernameObservable = SingleSubject.create<String>()
 
     // Helper to set and enable swipeRefresh
     var refresh: Boolean
