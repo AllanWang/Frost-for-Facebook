@@ -66,10 +66,6 @@ object IAB {
     fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean
             = helper?.handleActivityResult(requestCode, resultCode, data) ?: false
 
-    fun cancel() {
-
-    }
-
     /**
      * Call this after any execution to dispose the helper
      * Ensure that async calls have already finished beforehand
