@@ -101,7 +101,8 @@ fun SettingsActivity.restorePurchases() {
         finishRestore(restore, false)
     }
     getInventory(false, true, reset) {
-        val proSku = it.getSkuDetails(FROST_PRO)
+        inv, _ ->
+        val proSku = inv.getSkuDetails(FROST_PRO)
         Prefs.pro = proSku != null
         L.d("Restore found: ${Prefs.pro}")
         finishRestore(restore, Prefs.pro)
@@ -120,10 +121,13 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
 
 /**
  * If user has pro, check if it's valid and destroy the helper
+ * If cache matches result, it finishes silently
  */
 fun Activity.validatePro() {
+    L.d("Validate pro")
     getInventory(Prefs.pro, true, { if (Prefs.pro) playStoreNoLongerPro() }) {
-        val proSku = it.getSkuDetails(FROST_PRO)
+        inv, _ ->
+        val proSku = inv.getSkuDetails(FROST_PRO)
         if (proSku == null && Prefs.pro) playStoreNoLongerPro()
         else if (proSku != null && !Prefs.pro) playStoreFoundPro()
     }
@@ -133,13 +137,13 @@ fun Activity.getInventory(
         mustHavePlayStore: Boolean = true,
         disposeOnFinish: Boolean = true,
         onFailed: () -> Unit = {},
-        onSuccess: (inv: Inventory) -> Unit) {
+        onSuccess: (inv: Inventory, helper: IabHelper) -> Unit) {
     IAB(this, mustHavePlayStore, onFailed) {
         helper ->
         helper.queryInventoryAsync {
             res, inv ->
             if (res.isFailure || inv == null) onFailed()
-            else onSuccess(inv)
+            else onSuccess(inv, helper)
         }
         disposeOnFinish
     }
@@ -155,27 +159,22 @@ fun Activity.openPlayProPurchase(code: Int) {
 
 fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -> Unit) {
     L.d("Open play purchase $key $code")
-    IAB(this, true) {
-        helper ->
-        helper.queryInventoryAsync {
-            res, inv ->
-            if (res.isFailure) return@queryInventoryAsync playStoreGenericError("Query res error")
-            if (inv?.getSkuDetails(key) != null) return@queryInventoryAsync playStoreAlreadyPurchased(key)
-            L.d("IAB: inventory ${inv.allOwnedSkus}")
-            helper.launchPurchaseFlow(this@openPlayPurchase, key, code) {
-                result, _ ->
-                if (result.isSuccess) {
-                    onSuccess(key)
-                    playStorePurchasedSuccessfully(key)
-                }
-                frostAnswers {
-                    logPurchase(PurchaseEvent()
-                            .putItemId(key)
-                            .putCustomAttribute("result", result.message)
-                            .putSuccess(result.isSuccess))
-                }
+    getInventory(true, false, { playStoreGenericError("Query res error") }) {
+        inv, helper ->
+        if (inv.getSkuDetails(key) != null) return@getInventory playStoreAlreadyPurchased(key)
+        L.d("IAB: inventory ${inv.allOwnedSkus}")
+        helper.launchPurchaseFlow(this@openPlayPurchase, key, code) {
+            result, _ ->
+            if (result.isSuccess) {
+                onSuccess(key)
+                playStorePurchasedSuccessfully(key)
+            }
+            frostAnswers {
+                logPurchase(PurchaseEvent()
+                        .putItemId(key)
+                        .putCustomAttribute("result", result.message)
+                        .putSuccess(result.isSuccess))
             }
         }
-        false
     }
 }

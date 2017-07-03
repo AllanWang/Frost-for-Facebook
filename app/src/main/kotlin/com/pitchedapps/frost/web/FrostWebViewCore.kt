@@ -58,9 +58,11 @@ class FrostWebViewCore @JvmOverloads constructor(
     fun setupWebview(url: String, enum: FbTab? = null) {
         baseUrl = url
         baseEnum = enum
-        settings.javaScriptEnabled = true
-        settings.userAgentString = USER_AGENT_BASIC
-//        settings.domStorageEnabled = true
+        with (settings) {
+            javaScriptEnabled = true
+            userAgentString = USER_AGENT_BASIC
+            allowFileAccess = true
+        }
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
