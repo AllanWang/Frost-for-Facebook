@@ -4,14 +4,12 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
-        classpath "gradle.plugin.com.zoltu.gradle.plugin:git-versioning:3.0.3"
 //https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
 //        classpath 'org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r'
     }
