@@ -93,30 +93,30 @@ private val Context.isFrostPlay: Boolean
 
 fun SettingsActivity.restorePurchases() {
     //like validate, but with a snackbar and without other prompts
-    var restore: Snackbar? = null
-    restore = container.snackbar(R.string.restoring_purchases, Snackbar.LENGTH_INDEFINITE) {
-        setAction(R.string.kau_close) { restore?.dismiss() }
-    }
+    val restore = container.snackbar(R.string.restoring_purchases, Snackbar.LENGTH_INDEFINITE)
+    restore.setAction(R.string.kau_close) { restore.dismiss() }
     //called if inventory is not properly retrieved
     val reset = {
+        L.d("Restore reset")
         if (Prefs.pro) {
             Prefs.pro = false
             Prefs.theme = Theme.DEFAULT.ordinal
         }
-        finishRestore(restore)
+        finishRestore(restore, false)
     }
     getInventory(false, true, reset) {
         val proSku = it.getSkuDetails(FROST_PRO)
         Prefs.pro = proSku != null
-        finishRestore(restore)
+        L.d("Restore found: ${Prefs.pro}")
+        finishRestore(restore, Prefs.pro)
     }
 }
 
-private fun SettingsActivity.finishRestore(snackbar: Snackbar?) {
-    snackbar?.dismiss()
+private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) {
+    snackbar.dismiss()
     materialDialogThemed {
         title(R.string.purchases_restored)
-        content(if (Prefs.pro) R.string.purchases_restored_with_pro else R.string.purchases_restored_without_pro)
+        content(if (hasPro) R.string.purchases_restored_with_pro else R.string.purchases_restored_without_pro)
         positiveText(R.string.reload)
         dismissListener { adapter.notifyAdapterDataSetChanged() }
     }
@@ -150,7 +150,7 @@ fun Activity.getInventory(
 }
 
 fun Activity.openPlayProPurchase(code: Int) {
-    if (!IS_FROST_PRO)
+    if (!isFrostPlay)
         playStoreProNotAvailable()
     else openPlayPurchase(FROST_PRO, code) {
         Prefs.pro = true
