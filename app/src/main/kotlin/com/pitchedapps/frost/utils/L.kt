@@ -34,10 +34,7 @@ internal class CrashReportingTree : Timber.Tree() {
             Log.DEBUG -> if (!Prefs.verboseLogging) return
         }
         if (message != null)
-            if (priority == Log.ERROR)
-                Crashlytics.log(Log.ERROR, "Frost", message)
-            else
-                Crashlytics.log(message)
+            Crashlytics.log(priority, "Frost", message)
         if (t != null) Crashlytics.logException(t)
     }
 }
