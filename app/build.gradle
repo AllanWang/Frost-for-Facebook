@@ -10,7 +10,7 @@ apply plugin: 'com.github.triplet.play'
 
 play {
     jsonFile = file('../files/gplay-keys.json')
-    track = 'beta'
+    track = 'alpha'
     uploadImages = false
     untrackOld = true
 }
@@ -19,7 +19,7 @@ android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
 
-	def offset = System.getenv("TRAVIS_BUILD_NUMBER") ?: 0
+	def offset = Integer.parseInt(System.getenv("TRAVIS_BUILD_NUMBER") ?: "0")
 	
     androidGitVersion {
         baseCode offset
