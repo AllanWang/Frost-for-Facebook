@@ -25,6 +25,7 @@ before_install:
 after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
+- "./gradlew publishApkRelease"
 script:
 - cd $TRAVIS_BUILD_DIR/
 - "./gradlew assembleReleaseTest"
