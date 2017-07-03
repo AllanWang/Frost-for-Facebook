@@ -1,5 +1,4 @@
 plugins {
-    id "com.zoltu.git-versioning" version "3.0.3"
     id 'com.gladed.androidgitversion' version '0.3.4'
 }
 
@@ -14,14 +13,14 @@ android {
     buildToolsVersion project.BUILD_TOOLS
 
     androidGitVersion {
-//        baseCode ext.commitCount()
-        codeFormat = 'MMNNPPP'
+        baseCode System.getEnv('TRAVIS_BUILD_NUMBER') ?: 0
+        codeFormat = 'MMNNPPXX'
         prefix 'v'
     }
 
     playAccountConfigs {
         defaultAccountConfig {
-            jsonFile = file('./files/gplay-keys.json')
+            jsonFile = file('../files/gplay-keys.json')
         }
     }
 
@@ -32,6 +31,7 @@ android {
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
+		playAccountConfig = playAccountConfigs.defaultAccountConfig
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

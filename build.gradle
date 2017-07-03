@@ -10,8 +10,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
-//https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
-//        classpath 'org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r'
     }
 }
 
@@ -36,21 +34,3 @@ task generateChangelogMd() {
     def changelogMd = new File("$project.rootDir/docs/Changelog.md")
     changelogMd.write(sw.toString())
 }
-
-//ext.commitCount = { ->
-//    def repo
-//    def count = 0
-//    try {
-//        repo = new FileRepositoryBuilder()
-//                .readEnvironment()
-//                .findGitDir(project.projectDir)
-//                .build()
-//    } catch (IllegalArgumentException ignore) {
-//        // No repo found
-//        return count
-//    }
-//
-//    def git = Git.wrap(repo)
-//    def commits = git.log().call()
-//    return commits.size()
-//}
