@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ca.allanwang.kau.utils.withBundle
+import ca.allanwang.kau.utils.withArguments
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.FeedSort
@@ -28,19 +28,18 @@ class WebFragment : Fragment() {
         private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
 
-        operator fun invoke(data: FbTab, position: Int) = WebFragment().withBundle {
-            putString(ARG_URL, data.url)
-            putInt(ARG_POSITION, position)
-            putSerializable(ARG_URL_ENUM, when (data) {
-            //If is feed, check if sorting method is specified
-                FbTab.FEED -> when (FeedSort(Prefs.feedSort)) {
-                    FeedSort.DEFAULT -> data
-                    FeedSort.MOST_RECENT -> FbTab.FEED_MOST_RECENT
-                    FeedSort.TOP -> FbTab.FEED_TOP_STORIES
-                }
-                else -> data
-            })
-        }
+        operator fun invoke(data: FbTab, position: Int) = WebFragment().withArguments(
+                ARG_URL to data.url,
+                ARG_POSITION to position,
+                ARG_URL_ENUM to when (data) {
+                //If is feed, check if sorting method is specified
+                    FbTab.FEED -> when (FeedSort(Prefs.feedSort)) {
+                        FeedSort.DEFAULT -> data
+                        FeedSort.MOST_RECENT -> FbTab.FEED_MOST_RECENT
+                        FeedSort.TOP -> FbTab.FEED_TOP_STORIES
+                    }
+                    else -> data
+                })
     }
 
     //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }

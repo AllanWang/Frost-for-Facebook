@@ -30,7 +30,7 @@ private fun Activity.playRestart() {
 
 
 fun Activity.playStoreNoLongerPro() {
-    Prefs.previouslyPro = false
+    Prefs.pro = false
     playStoreLog("No Longer Pro")
     materialDialogThemed {
         title(R.string.uh_oh)
@@ -43,7 +43,7 @@ fun Activity.playStoreNoLongerPro() {
 }
 
 fun Activity.playStoreFoundPro() {
-    Prefs.previouslyPro = true
+    Prefs.pro = true
     L.d("Found pro")
     materialDialogThemed {
         title(R.string.found_pro)

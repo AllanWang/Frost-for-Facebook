@@ -69,7 +69,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
         }
 
         plainText(R.string.restore_purchases) {
-            descRes = R.string.restore_purchases
+            descRes = R.string.restore_purchases_desc
             iicon = GoogleMaterial.Icon.gmd_refresh
             onClick = { _, _, _ -> this@SettingsActivity.restorePurchases(); true }
         }
