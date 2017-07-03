@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.web
 
+import android.net.Uri
 import android.webkit.ConsoleMessage
+import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.pitchedapps.frost.utils.L
@@ -31,4 +33,7 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         progressObservable.onNext(newProgress)
     }
 
+    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
+        return super.onShowFileChooser(webView, filePathCallback, fileChooserParams)
+    }
 }
