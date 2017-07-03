@@ -20,7 +20,7 @@ before_install:
 after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
-- "./gradlew app:publishApkRelease"
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew app:publishApkRelease; fi
 script:
 - cd $TRAVIS_BUILD_DIR/
 - "./gradlew assembleReleaseTest"
