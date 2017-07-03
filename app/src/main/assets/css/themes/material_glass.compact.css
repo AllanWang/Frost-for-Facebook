@@ -4,6 +4,8 @@ body, #root, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r
 
 ._cv_, ._2sq8 { background-color: transparent !important; }
 
+#page { background: transparent !important; }
+
 .jewel, .flyout, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p { background: black !important; }
 
 button, button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._590n, ._4g8h, ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj, .excessItem, ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._4qax, .aclb, ._4756, ._w34, ._56bv::before, ._5769, ._34iv, .acbk { background: rgba(128, 128, 128, 0.05) !important; }
