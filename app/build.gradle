@@ -1,7 +1,5 @@
-import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder
-
 plugins {
+    id "com.zoltu.git-versioning" version "3.0.3"
     id 'com.gladed.androidgitversion' version '0.3.4'
 }
 
