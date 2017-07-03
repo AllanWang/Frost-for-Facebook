@@ -19,8 +19,8 @@ before_install:
 - chmod +x gradlew
 after_success:
 - chmod +x ./generate-apk-release.sh
-- "./generate-apk-release.sh"
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew app:publishApkRelease; fi
+# Do one or the other
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew app:publishApkRelease; else ./generate-apk-release.sh; fi
 script:
 - cd $TRAVIS_BUILD_DIR/
 - "./gradlew assembleReleaseTest"

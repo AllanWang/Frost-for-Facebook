@@ -25,7 +25,7 @@ android {
         baseCode offset
         codeFormat = 'MMNNPPXX'
         //since we use travis, all builds will be dirty
-        format = '%tag%%.count%%<commit>%'
+        format = '%tag%%.count%%-commit%'
         prefix 'v'
     }
 
