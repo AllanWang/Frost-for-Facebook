@@ -85,7 +85,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
         Prefs.customHeaderColor = it
-        if (Prefs.tintNavBar) frostNavigationBar()
+        frostNavigationBar()
         toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
         reload()
         shouldRestartMain()

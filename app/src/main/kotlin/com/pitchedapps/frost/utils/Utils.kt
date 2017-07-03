@@ -106,7 +106,7 @@ fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
 fun Activity.setFrostColors(toolbar: Toolbar? = null, themeWindow: Boolean = true,
                             texts: Array<TextView> = arrayOf(), headers: Array<View> = arrayOf(), backgrounds: Array<View> = arrayOf()) {
     statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
-    navigationBarColor = Prefs.headerColor
+    if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
     if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
     toolbar?.setBackgroundColor(Prefs.headerColor)
     toolbar?.setTitleTextColor(Prefs.iconColor)

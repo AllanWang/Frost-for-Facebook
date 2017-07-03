@@ -44,7 +44,7 @@ class FrostWebViewCore @JvmOverloads constructor(
 
 
     var baseUrl: String? = null
-    var baseEnum: FbTab? = null
+    var baseEnum: FbTab? = null //only viewpager items should pass the base enum
     internal var frostWebClient: FrostWebViewClient? = null
 
     init {

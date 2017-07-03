@@ -43,7 +43,6 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.IAB
 import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.web.FrostWebViewSearch
@@ -393,6 +392,14 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
+    }
+
+    override fun onStart() {
+        //validate some pro features
+        if (!Prefs.pro) {
+            if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
+        }
+        super.onStart()
     }
 
     override fun onBackPressed() {

@@ -2,9 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.view.KeyEvent
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.pitchedapps.frost.LoginActivity
@@ -52,8 +50,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         }
         view.jsInject(JsActions.LOGIN_CHECK,
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
-                CssHider.ADS.maybe(!Prefs.showFacebookAds),
+                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && Prefs.pro),
+                CssHider.ADS.maybe(!Prefs.showFacebookAds && Prefs.pro),
                 JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
         onPageFinishedActions(url)
     }
@@ -67,9 +65,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
                 JsAssets.CLICK_A.maybe(webCore.baseEnum != null),
-                callback = {
-                    refreshObservable.onNext(false)
-                })
+                callback = { refreshObservable.onNext(false) })
     }
 
     open fun handleHtml(html: String) {

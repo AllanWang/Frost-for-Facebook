@@ -9,3 +9,5 @@
 .externalNativeBuild
 *.min.css
 .sass-cache/
+files
+!files/secrets.tar.enc

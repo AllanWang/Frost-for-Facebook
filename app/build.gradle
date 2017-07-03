@@ -1,3 +1,6 @@
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+
 plugins {
     id 'com.gladed.androidgitversion' version '0.3.4'
 }
@@ -6,14 +9,22 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
+apply plugin: 'com.github.triplet.play'
 
 android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
 
     androidGitVersion {
-        codeFormat = 'MMNNPP'
+//        baseCode ext.commitCount()
+        codeFormat = 'MMNNPPP'
         prefix 'v'
+    }
+
+    playAccountConfigs {
+        defaultAccountConfig {
+            jsonFile = file('./files/gplay-keys.json')
+        }
     }
 
     defaultConfig {
@@ -34,6 +45,17 @@ android {
     }
 
     signingConfigs {
+
+        def releaseProps = new Properties()
+        file("../files/play.properties").withInputStream { releaseProps.load(it) }
+
+        release {
+            storeFile file("../files/play.keystore")
+            storePassword releaseProps.getProperty('storePassword')
+            keyAlias releaseProps.getProperty('keyAlias')
+            keyPassword releaseProps.getProperty('keyPassword')
+        }
+
         test {
             storeFile file("../files/test.keystore")
             storePassword "testkey"
@@ -65,6 +87,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
             resValue "string", "app_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
         }
@@ -133,4 +156,9 @@ dependencies {
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
+
+}
+
+play {
+    track = 'alpha'
 }

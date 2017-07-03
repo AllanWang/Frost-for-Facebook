@@ -86,7 +86,7 @@ object IAB {
 private const val FROST_PRO = "frost_pro"
 
 val IS_FROST_PRO: Boolean
-    get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.previouslyPro
+    get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.pro
 
 private val Context.isFrostPlay: Boolean
     get() = isFromGooglePlay || BuildConfig.DEBUG
@@ -99,15 +99,15 @@ fun SettingsActivity.restorePurchases() {
     }
     //called if inventory is not properly retrieved
     val reset = {
-        if (Prefs.previouslyPro) {
-            Prefs.previouslyPro = false
+        if (Prefs.pro) {
+            Prefs.pro = false
             Prefs.theme = Theme.DEFAULT.ordinal
         }
         finishRestore(restore)
     }
     getInventory(false, true, reset) {
         val proSku = it.getSkuDetails(FROST_PRO)
-        Prefs.previouslyPro = proSku != null
+        Prefs.pro = proSku != null
         finishRestore(restore)
     }
 }
@@ -116,7 +116,7 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar?) {
     snackbar?.dismiss()
     materialDialogThemed {
         title(R.string.purchases_restored)
-        content(if (Prefs.previouslyPro) R.string.purchases_restored_with_pro else R.string.purchases_restored_without_pro)
+        content(if (Prefs.pro) R.string.purchases_restored_with_pro else R.string.purchases_restored_without_pro)
         positiveText(R.string.reload)
         dismissListener { adapter.notifyAdapterDataSetChanged() }
     }
@@ -126,10 +126,10 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar?) {
  * If user has pro, check if it's valid and destroy the helper
  */
 fun Activity.validatePro() {
-    getInventory(Prefs.previouslyPro, true, { if (Prefs.previouslyPro) playStoreNoLongerPro() }) {
+    getInventory(Prefs.pro, true, { if (Prefs.pro) playStoreNoLongerPro() }) {
         val proSku = it.getSkuDetails(FROST_PRO)
-        if (proSku == null && Prefs.previouslyPro) playStoreNoLongerPro()
-        else if (proSku != null && !Prefs.previouslyPro) playStoreFoundPro()
+        if (proSku == null && Prefs.pro) playStoreNoLongerPro()
+        else if (proSku != null && !Prefs.pro) playStoreFoundPro()
     }
 }
 
@@ -153,7 +153,7 @@ fun Activity.openPlayProPurchase(code: Int) {
     if (!IS_FROST_PRO)
         playStoreProNotAvailable()
     else openPlayPurchase(FROST_PRO, code) {
-        Prefs.previouslyPro = true
+        Prefs.pro = true
     }
 }
 
