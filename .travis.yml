@@ -10,8 +10,8 @@ android:
   - extra-android-support
   - extra-android-m2repository
   - extra-google-m2repository
-licenses:
-- ".+"
+  licenses:
+  - ".+"
 git:
   depth: 99999
 before_install:
@@ -20,11 +20,6 @@ before_install:
 - tar xvf frost.tar
 - printf "Building git tag $(git describe)"
 - chmod +x gradlew
-- export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-- export JAVA_HOME=$JAVA8_HOME
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
