@@ -12,10 +12,13 @@ android:
   - extra-google-m2repository
 licenses:
 - ".+"
+git:
+  depth: 99999
 before_install:
 - openssl aes-256-cbc -K $encrypted_0f269bed3d88_key -iv $encrypted_0f269bed3d88_iv
   -in files/frost.tar.enc -out frost.tar -d
 - tar xvf frost.tar
+- printf "Building git tag $(git describe)"
 - chmod +x gradlew
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
 - export JAVA_HOME=$JAVA8_HOME
