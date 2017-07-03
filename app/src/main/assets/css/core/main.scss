@@ -5,7 +5,7 @@
   background: $background !important;
 }
 
-body, #root, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, .container, .subpage, ._5n_f, #static_templates,
+body, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, .container, .subpage, ._5n_f, #static_templates,
 .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0, .al, ._1gkq, ._5c5b, ._1qxg, ._5luf, ._2new,
 ._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18, ._10c_, ._2jl2, ._5q_r, ._5yt8, ._idb, ._2ip_,
 ._d4i, ._577z, ._2u4w, ._3u9p, ._3u9t, ._2v9s, ._cw4, ._5_y-, ._5_y_, ._5_z3, ._cwy, ._5_z0, ._5_z1, ._5_z2, ._2mtc, ._206a, ._1_-1, ._1ybg, .appCenterCategorySelectorButton,
@@ -19,6 +19,10 @@ body, #root, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r
 //contains images so must have background-color
 ._cv_, ._2sq8 {
   background-color: $bg_transparent !important;
+}
+
+#page, #root {
+  background: transparent !important;
 }
 
 .jewel, .flyout, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p {

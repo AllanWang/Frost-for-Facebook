@@ -12,8 +12,6 @@ android:
   - extra-google-m2repository
   licenses:
   - ".+"
-git:
-  depth: 99999
 before_install:
 - openssl aes-256-cbc -K $encrypted_0f269bed3d88_key -iv $encrypted_0f269bed3d88_iv
   -in files/frost.tar.enc -out frost.tar -d
@@ -23,6 +21,11 @@ after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
 - "./gradlew app:publishApkRelease"
+deploy:
+  provider: script
+  script: "./gradlew app:publishApkRelease"
+  on:
+    branch: master
 script:
 - cd $TRAVIS_BUILD_DIR/
 - "./gradlew assembleReleaseTest"
