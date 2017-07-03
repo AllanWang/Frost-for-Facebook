@@ -34,6 +34,15 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     }
 
     override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
+        L.d("On show file chooser")
+        fileChooserParams?.apply {
+            L.d(filenameHint)
+            L.d("$mode")
+            L.d(acceptTypes.contentToString())
+        }
+
         return super.onShowFileChooser(webView, filePathCallback, fileChooserParams)
     }
+
+
 }

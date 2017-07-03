@@ -20,11 +20,7 @@ before_install:
 after_success:
 - chmod +x ./generate-apk-release.sh
 - "./generate-apk-release.sh"
-deploy:
-  provider: script
-  script: "./gradlew app:publishApkRelease"
-  on:
-    branch: master
+- "./gradlew app:publishApkRelease"
 script:
 - cd $TRAVIS_BUILD_DIR/
 - "./gradlew assembleReleaseTest"
