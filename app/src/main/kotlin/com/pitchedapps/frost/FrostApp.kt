@@ -13,6 +13,7 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.Showcase
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
@@ -35,6 +36,7 @@ class FrostApp : Application() {
     override fun onCreate() {
         FlowManager.init(FlowConfig.Builder(this).build())
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {

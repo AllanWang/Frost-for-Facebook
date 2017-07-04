@@ -54,8 +54,8 @@ open class WebOverlayActivity : AppCompatActivity() {
         frostWeb.web.addTitleListener({ toolbar.title = it })
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
-        if (Prefs.firstWebOverlay) {
-            Prefs.firstWebOverlay = false
+        if (Showcase.firstWebOverlay) {
+            Showcase.firstWebOverlay = false
             coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
                 duration = Snackbar.LENGTH_INDEFINITE
                 setAction(R.string.kau_got_it) { _ -> this.dismiss() }
