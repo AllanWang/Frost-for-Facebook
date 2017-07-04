@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Script to reset dev branch to master
+# Once it is squashed and merged on github
+# Copy this to a sh file, which is gitignored
+# So there won't be save conflicts
+
 git checkout dev
 git cmp hard rebase
 git branch -f dev-bak dev
