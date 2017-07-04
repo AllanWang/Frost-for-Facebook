@@ -1,14 +1,21 @@
 package com.pitchedapps.frost
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.utils.*
 import com.jude.swipbackhelper.SwipeBackHelper
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.pitchedapps.frost.contracts.ActivityWebContract
+import com.pitchedapps.frost.contracts.FileChooserContract
+import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
@@ -17,7 +24,8 @@ import com.pitchedapps.frost.web.FrostWebView
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-open class WebOverlayActivity : AppCompatActivity() {
+open class WebOverlayActivity : AppCompatActivity(),
+        ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
@@ -105,5 +113,18 @@ open class WebOverlayActivity : AppCompatActivity() {
         if (!frostWeb.onBackPressed()) {
             finishSlideOut()
         }
+    }
+
+    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
+        openFileChooser(this, filePathCallback, fileChooserParams)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (onActivityResultWeb(requestCode, resultCode, data)) return
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        kauOnRequestPermissionsResult(permissions, grantResults)
     }
 }
