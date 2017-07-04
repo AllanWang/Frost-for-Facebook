@@ -96,7 +96,7 @@ object Prefs : KPref() {
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", true)
-    
+
     var searchBar: Boolean by kpref("search_bar", false)
 
 }
