@@ -43,6 +43,7 @@ object IAB {
                     helper!!.enableDebugLogging(BuildConfig.DEBUG || Prefs.verboseLogging, "Frost:")
                     helper!!.startSetup {
                         result ->
+                        L.d("IAB setup finished; ${result.isSuccess}")
                         if (result.isSuccess) {
                             L.d("IAB setup success")
                             if (onStart(helper!!))
