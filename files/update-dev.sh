@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 git checkout dev
-git branch -d dev-bak
-git checkout -b dev-bak
+git cmp hard rebase
+git branch -f dev-bak dev
 git checkout master
 git pull origin master
-git branch -d dev
-git checkout -b dev
-git push --set-upstream origin dev
+git branch -f dev master
+git checkout dev
+git push -u -f origin dev

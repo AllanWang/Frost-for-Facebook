@@ -17,6 +17,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.bumptech.glide.GlideBuilder
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.*
@@ -30,6 +33,9 @@ import com.pitchedapps.frost.services.NotificationService
  */
 internal const val EXTRA_COOKIES = "extra_cookies"
 internal const val ARG_URL = "arg_url"
+
+@GlideModule
+class FrostGlideModule : AppGlideModule()
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity(clazz, clearStack, intentBuilder = {
