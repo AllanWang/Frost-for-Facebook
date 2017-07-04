@@ -11,10 +11,7 @@ import com.pitchedapps.frost.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.*
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.cookies
-import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.Subject
 
 /**
@@ -76,8 +73,20 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Emit $flag")
     }
 
-    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest?): Boolean {
-        L.i("Url Loading ${request?.url?.path}")
+    /**
+     * Helper to format the request and launch it
+     * returns true to override the url
+     */
+    private fun launchRequest(request: WebResourceRequest): Boolean {
+        L.d("Launching ${request.url}")
+        webCore.context.launchWebOverlay(request.url.toString())
+        return true
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+        L.i("Url Loading ${request.url}")
+        val path = request.url.path
+        if (path.startsWith("/composer/")) return launchRequest(request)
         return super.shouldOverrideUrlLoading(view, request)
     }
 

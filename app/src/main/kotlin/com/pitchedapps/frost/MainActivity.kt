@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
@@ -17,7 +18,10 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
 import ca.allanwang.kau.changelog.showChangelog
+import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
@@ -35,6 +39,9 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
+import com.pitchedapps.frost.contracts.ActivityWebContract
+import com.pitchedapps.frost.contracts.FileChooserContract
+import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.facebook.FbCookie
@@ -53,7 +60,8 @@ import io.reactivex.subjects.PublishSubject
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
+class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
+        ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -366,7 +374,12 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
         return true
     }
 
+    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
+        openFileChooser(this, filePathCallback, fileChooserParams)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (onActivityResultWeb(requestCode, resultCode, data)) return
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ACTIVITY_SETTINGS) {
             when (resultCode) {
@@ -389,6 +402,11 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
                 }
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        kauOnRequestPermissionsResult(permissions, grantResults)
     }
 
     override fun onResume() {
