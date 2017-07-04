@@ -87,6 +87,7 @@ fun Activity.playStoreGenericError(text: String? = "Store generic error") {
 }
 
 fun Activity.playStoreAlreadyPurchased(key: String) {
+    L.d("Play store already purchased $key")
     materialDialogThemed {
         title(R.string.play_already_purchased)
         content(String.format(string(R.string.play_already_purchased_content), key))
@@ -98,6 +99,7 @@ fun Activity.playStoreAlreadyPurchased(key: String) {
 }
 
 fun Activity.playStorePurchasedSuccessfully(key: String) {
+    L.d("Play store purchased $key successfully")
     materialDialogThemed {
         title(R.string.play_thank_you)
         content(R.string.play_purchased_pro)
@@ -106,6 +108,7 @@ fun Activity.playStorePurchasedSuccessfully(key: String) {
 }
 
 fun SettingsActivity.purchaseRestored() {
+    L.d("Purchase restored")
     materialDialogThemed {
         title(R.string.play_thank_you)
         content(R.string.play_purchased_pro)

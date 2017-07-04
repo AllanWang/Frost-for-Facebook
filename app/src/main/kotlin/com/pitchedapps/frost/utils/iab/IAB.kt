@@ -40,14 +40,16 @@ object IAB {
                 }
                 try {
                     helper = IabHelper(applicationContext, PUBLIC_BILLING_KEY)
-                    helper!!.enableDebugLogging(BuildConfig.DEBUG, "Frost:")
+                    helper!!.enableDebugLogging(BuildConfig.DEBUG || Prefs.verboseLogging, "Frost:")
                     helper!!.startSetup {
                         result ->
                         L.d("IAB setup finished; ${result.isSuccess}")
                         if (result.isSuccess) {
+                            L.d("IAB setup success")
                             if (onStart(helper!!))
                                 helper!!.disposeWhenFinished()
                         } else {
+                            L.d("IAB setup fail")
                             if (mustHavePlayStore)
                                 activity.playStoreGenericError("Setup error: ${result.response} ${result.message}")
                             onFailed()
@@ -103,8 +105,8 @@ fun SettingsActivity.restorePurchases() {
     }
     getInventory(false, true, reset) {
         inv, _ ->
-        val proSku = inv.getSkuDetails(FROST_PRO)
-        Prefs.pro = proSku != null
+        val proSku = inv.hasPurchase(FROST_PRO)
+        Prefs.pro = proSku
         L.d("Restore found: ${Prefs.pro}")
         finishRestore(restore, Prefs.pro)
     }
@@ -128,9 +130,9 @@ fun Activity.validatePro() {
     L.d("Validate pro")
     getInventory(Prefs.pro, true, { if (Prefs.pro) playStoreNoLongerPro() }) {
         inv, _ ->
-        val proSku = inv.getSkuDetails(FROST_PRO)
-        if (proSku == null && Prefs.pro) playStoreNoLongerPro()
-        else if (proSku != null && !Prefs.pro) playStoreFoundPro()
+        val proSku = inv.hasPurchase(FROST_PRO)
+        if (!proSku && Prefs.pro) playStoreNoLongerPro()
+        else if (proSku && !Prefs.pro) playStoreFoundPro()
     }
 }
 
@@ -163,7 +165,11 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
     L.d("Open play purchase $key $code")
     getInventory(true, false, { playStoreGenericError("Query res error") }) {
         inv, helper ->
-        if (inv.getSkuDetails(key) != null) return@getInventory playStoreAlreadyPurchased(key)
+        if (inv.hasPurchase(key)) {
+            playStoreAlreadyPurchased(key)
+            onSuccess(key)
+            return@getInventory
+        }
         L.d("IAB: inventory ${inv.allOwnedSkus}")
         helper.launchPurchaseFlow(this@openPlayPurchase, key, code) {
             result, _ ->
