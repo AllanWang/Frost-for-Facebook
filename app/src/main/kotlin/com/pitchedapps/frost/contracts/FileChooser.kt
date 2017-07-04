@@ -49,6 +49,7 @@ class FileChooserDelegate : FileChooserContract {
         if (resultCode == Activity.RESULT_OK && intent != null) results = Uri.parse(intent.dataString)
         L.d("Callback received; ${filePathCallback != null}")
         filePathCallback?.onReceiveValue(if (results == null) null else arrayOf(results))
+        filePathCallback = null
         return true
     }
 
