@@ -2,7 +2,6 @@ package com.pitchedapps.frost
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.changelog.showChangelog
@@ -129,10 +128,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
             R.id.action_email -> materialDialogThemed {
                 title(R.string.subject)
                 items(Support.values().map { string(it.title) })
-                itemsCallback {
-                    _, _, which, _ ->
-                    Support.values()[which].sendEmail(this@SettingsActivity)
-                }
+                itemsCallback { _, _, which, _ -> Support.values()[which].sendEmail(this@SettingsActivity) }
             }
             R.id.action_changelog -> showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
             else -> return super.onOptionsItemSelected(item)
@@ -141,7 +137,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
     }
 
     override fun onDestroy() {
-        if (!IAB.isInProgress) IAB.dispose()
+        IAB.dispose()
         super.onDestroy()
     }
 }
