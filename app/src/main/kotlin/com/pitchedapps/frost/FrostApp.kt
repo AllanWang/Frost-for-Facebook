@@ -6,6 +6,7 @@ import android.net.Uri
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
@@ -57,10 +58,16 @@ class FrostApp : Application() {
 
         super.onCreate()
 
-        //Drawer profile loading logic
+        /**
+         * Drawer profile loading logic
+         * Reload the image on every version update
+         */
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
-                Glide.with(imageView.context).load(uri).apply(RequestOptions().placeholder(placeholder)).into(imageView)
+                val c = imageView.context
+                val old = Glide.with(c).load(uri).apply(RequestOptions().placeholder(placeholder))
+                Glide.with(c).load(uri).apply(RequestOptions().signature(ApplicationVersionSignature.obtain(c)))
+                        .thumbnail(old).into(imageView)
             }
         })
     }

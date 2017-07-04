@@ -45,4 +45,6 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         super.onGeolocationPermissionsShowPrompt(origin, callback)
         L.d("Geo prompt")
     }
+
+
 }
