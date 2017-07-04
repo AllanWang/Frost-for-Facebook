@@ -14,6 +14,12 @@ import com.pitchedapps.frost.utils.*
 
 /**
  * Created by Allan Wang on 2017-06-23.
+ *
+ * Helper singleton to handle all billing related queries
+ * NOTE
+ * Make sure you call [IAB.dispose] once an operation is done to release the resources
+ * Also make sure that it is called on the very LAST operation if there are a list of async calls.
+ * Otherwise the helper will be prematurely disposed
  */
 object IAB {
 
@@ -24,17 +30,16 @@ object IAB {
      *
      * [mustHavePlayStore] decides if dialogs should be shown if play store errors occur
      *
-     * [onStart] should return true if we wish to dispose the helper after the operation
-     * and false otherwise
      *
      */
-    operator fun invoke(activity: Activity, mustHavePlayStore: Boolean = true, onFailed: () -> Unit = {}, onStart: (helper: IabHelper) -> Boolean) {
+    operator fun invoke(activity: Activity, mustHavePlayStore: Boolean = true, onFailed: () -> Unit = {}, onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
             if (helper?.mDisposed ?: true) {
                 helper = null
                 L.d("IAB setup async")
                 if (!isFrostPlay) {
                     if (mustHavePlayStore) playStoreNotFound()
+                    IAB.dispose()
                     onFailed()
                     return
                 }
@@ -45,13 +50,13 @@ object IAB {
                         result ->
                         if (result.isSuccess) {
                             L.d("IAB setup success")
-                            if (onStart(helper!!))
-                                helper!!.disposeWhenFinished()
+                            onStart(helper!!)
                         } else {
                             L.d("IAB setup fail")
                             if (mustHavePlayStore)
                                 activity.playStoreGenericError("Setup error: ${result.response} ${result.message}")
                             onFailed()
+                            IAB.dispose()
                         }
                     }
                 } catch (e: Exception) {
@@ -59,9 +64,9 @@ object IAB {
                     if (mustHavePlayStore)
                         playStoreGenericError(null)
                     onFailed()
+                    IAB.dispose()
                 }
-            } else if (onStart(helper!!))
-                helper!!.disposeWhenFinished()
+            } else onStart(helper!!)
         }
     }
 
@@ -70,10 +75,10 @@ object IAB {
 
     /**
      * Call this after any execution to dispose the helper
-     * Ensure that async calls have already finished beforehand
      */
     fun dispose() {
-        helper?.dispose()
+        helper?.disposeWhenFinished()
+        helper?.flagEndAsync()
         helper = null
     }
 
@@ -102,7 +107,7 @@ fun SettingsActivity.restorePurchases() {
         }
         finishRestore(restore, false)
     }
-    getInventory(false, true, reset) {
+    getInventory(false, reset) {
         inv, _ ->
         val proSku = inv.hasPurchase(FROST_PRO)
         Prefs.pro = proSku
@@ -119,6 +124,7 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
         positiveText(R.string.reload)
         dismissListener { adapter.notifyAdapterDataSetChanged() }
     }
+    IAB.dispose()
 }
 
 /**
@@ -127,17 +133,18 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
  */
 fun Activity.validatePro() {
     L.d("Validate pro")
-    getInventory(Prefs.pro, true, { if (Prefs.pro) playStoreNoLongerPro() }) {
+    getInventory(Prefs.pro, { if (Prefs.pro) playStoreNoLongerPro() }) {
         inv, _ ->
         val proSku = inv.hasPurchase(FROST_PRO)
+        L.d("Validation finished: ${Prefs.pro} should be $proSku")
         if (!proSku && Prefs.pro) playStoreNoLongerPro()
         else if (proSku && !Prefs.pro) playStoreFoundPro()
+        IAB.dispose()
     }
 }
 
 fun Activity.getInventory(
         mustHavePlayStore: Boolean = true,
-        disposeOnFinish: Boolean = true,
         onFailed: () -> Unit = {},
         onSuccess: (inv: Inventory, helper: IabHelper) -> Unit) {
     IAB(this, mustHavePlayStore, onFailed) {
@@ -148,7 +155,6 @@ fun Activity.getInventory(
             if (res.isFailure || inv == null) onFailed()
             else onSuccess(inv, helper)
         }
-        disposeOnFinish
     }
 }
 
@@ -162,11 +168,12 @@ fun Activity.openPlayProPurchase(code: Int) {
 
 fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -> Unit) {
     L.d("Open play purchase $key $code")
-    getInventory(true, false, { playStoreGenericError("Query res error") }) {
+    getInventory(true, { playStoreGenericError("Query res error") }) {
         inv, helper ->
         if (inv.hasPurchase(key)) {
             playStoreAlreadyPurchased(key)
             onSuccess(key)
+            IAB.dispose()
             return@getInventory
         }
         L.d("IAB: inventory ${inv.allOwnedSkus}")
@@ -182,6 +189,7 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
                         .putCustomAttribute("result", result.message)
                         .putSuccess(result.isSuccess))
             }
+            IAB.dispose()
         }
     }
 }
