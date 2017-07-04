@@ -1,6 +1,13 @@
 # Changelog
 
 ## v1.1
+* Added universal experimental toggle
+* Fixed up billing properties and add auto checker
+* Open status updates in new window
+* Allow for photo uploads
+* Improve search bar to stop when not in view
+* Integrate CI
+* Added more theme fixes
 
 ## v1.0
 * Added more global preferences

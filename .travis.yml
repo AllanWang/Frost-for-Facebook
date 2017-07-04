@@ -21,7 +21,7 @@ after_success:
 - if [[ "$TRAVIS_BRANCH" != "master" ]]; then chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh; fi
 script:
 - cd $TRAVIS_BUILD_DIR/
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew app:publishApkRelease; else ./gradlew assembleReleaseTest; fi
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew app:publishRelease; else ./gradlew assembleReleaseTest; fi
 notifications:
   email: false
   slack:
