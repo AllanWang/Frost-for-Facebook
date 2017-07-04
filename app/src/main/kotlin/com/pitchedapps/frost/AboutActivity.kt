@@ -42,6 +42,7 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
                 "glide",
                 "jsoup"
         )
+
         /*
          * These are great libraries, but either aren't used directly or are too common to be listed
          * Give more emphasis on the unique libs!
