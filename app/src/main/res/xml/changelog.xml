@@ -7,13 +7,13 @@
     -->
 
     <version title="v1.1"/>
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Added universal experimental toggle" />
+    <item text="Fixed up billing properties and add auto checker" />
+    <item text="Open status updates in new window" />
+    <item text="Allow for photo uploads" />
+    <item text="Improve search bar to stop when not in view" />
+    <item text="Integrate CI" />
+    <item text="Added more theme fixes" />
     <item text="" />
     <item text="" />
 
