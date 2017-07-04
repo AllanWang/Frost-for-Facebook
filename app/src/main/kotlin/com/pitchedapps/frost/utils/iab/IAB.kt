@@ -43,6 +43,7 @@ object IAB {
                     helper!!.enableDebugLogging(BuildConfig.DEBUG, "Frost:")
                     helper!!.startSetup {
                         result ->
+                        L.d("IAB setup finished; ${result.isSuccess}")
                         if (result.isSuccess) {
                             if (onStart(helper!!))
                                 helper!!.disposeWhenFinished()
@@ -142,6 +143,7 @@ fun Activity.getInventory(
         helper ->
         helper.queryInventoryAsync {
             res, inv ->
+            L.d("Inventory query finished")
             if (res.isFailure || inv == null) onFailed()
             else onSuccess(inv, helper)
         }
