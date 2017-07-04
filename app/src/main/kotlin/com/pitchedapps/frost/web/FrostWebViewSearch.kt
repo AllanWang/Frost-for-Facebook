@@ -127,6 +127,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
             when (flag) {
                 0 -> {
                     L.d("Search loaded successfully")
+                    if (!contract.isSearchOpened) pauseLoad = true
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.eThrow("Search subject error; reverting to full overlay")
@@ -147,6 +148,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
     interface SearchContract {
         fun searchOverlayDispose()
         fun emitSearchResponse(items: List<SearchItem>)
+        val isSearchOpened: Boolean
     }
 }
 
