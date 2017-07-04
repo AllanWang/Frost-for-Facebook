@@ -37,8 +37,8 @@ class FrostApp : Application() {
 
     override fun onCreate() {
         FlowManager.init(FlowConfig.Builder(this).build())
-        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
+        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
