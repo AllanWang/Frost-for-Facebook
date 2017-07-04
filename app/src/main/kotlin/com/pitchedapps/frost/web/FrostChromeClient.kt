@@ -1,10 +1,7 @@
 package com.pitchedapps.frost.web
 
 import android.net.Uri
-import android.webkit.ConsoleMessage
-import android.webkit.ValueCallback
-import android.webkit.WebChromeClient
-import android.webkit.WebView
+import android.webkit.*
 import com.pitchedapps.frost.utils.L
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -36,7 +33,7 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
         L.d("On show file chooser")
         fileChooserParams?.apply {
-            L.d(filenameHint)
+            L.d(filenameHint ?: "hi")
             L.d("$mode")
             L.d(acceptTypes.contentToString())
         }
@@ -44,6 +41,10 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         return super.onShowFileChooser(webView, filePathCallback, fileChooserParams)
     }
 
+    override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+        super.onGeolocationPermissionsShowPrompt(origin, callback)
+        L.d("Geo prompt")
+    }
 
 
 }
