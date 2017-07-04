@@ -97,6 +97,6 @@ object Prefs : KPref() {
 
     var analytics: Boolean by kpref("analytics", true)
 
-    var searchBar: Boolean by kpref("search_bar", false)
+    var searchBar: Boolean by kpref("search_bar", Showcase.experimentalDefault)
 
 }
