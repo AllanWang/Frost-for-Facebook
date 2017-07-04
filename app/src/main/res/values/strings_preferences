@@ -48,8 +48,6 @@
 
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
-    <string name="experimental_by_default">Experimental by Default</string>
-    <string name="experimental_by_default_desc">Feeling risky or just want to help with debugging? Checking this will enable future experimental functions be default.</string>
     <string name="experimental_disclaimer">Disclaimer</string>
     <string name="experimental_disclaimer_info">Experimental features may be unstable and may never make it to production. Use at your own risk, send feedback, and feel free to disable them if they don\'t work well.</string>
     <string name="search_bar">Search Bar</string>

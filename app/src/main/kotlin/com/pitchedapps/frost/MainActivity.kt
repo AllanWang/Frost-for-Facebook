@@ -77,6 +77,8 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract {
             }
         }
     var searchView: SearchView? = null
+    override val isSearchOpened: Boolean
+        get() = searchView?.isOpen ?: false
 
     companion object {
         const val FRAGMENT_REFRESH = 99
