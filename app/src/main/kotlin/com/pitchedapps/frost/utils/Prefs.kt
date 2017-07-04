@@ -96,13 +96,7 @@ object Prefs : KPref() {
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", true)
-
-    var experimentalDefault:Boolean by kpref("experimental_by_default", false)
-
-    /*
-     * Experimental features must be listed below so the default is initialized
-     */
-
-    var searchBar: Boolean by kpref("search_bar", experimentalDefault)
+    
+    var searchBar: Boolean by kpref("search_bar", false)
 
 }
