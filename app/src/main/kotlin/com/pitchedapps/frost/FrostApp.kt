@@ -13,6 +13,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
+import com.pitchedapps.frost.utils.GlideApp
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import com.raizlabs.android.dbflow.config.FlowConfig
@@ -65,8 +66,8 @@ class FrostApp : Application() {
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
                 val c = imageView.context
-                val old = Glide.with(c).load(uri).apply(RequestOptions().placeholder(placeholder))
-                Glide.with(c).load(uri).apply(RequestOptions().signature(ApplicationVersionSignature.obtain(c)))
+                val old = GlideApp.with(c).load(uri).apply(RequestOptions().placeholder(placeholder))
+                GlideApp.with(c).load(uri).apply(RequestOptions().signature(ApplicationVersionSignature.obtain(c)))
                         .thumbnail(old).into(imageView)
             }
         })
