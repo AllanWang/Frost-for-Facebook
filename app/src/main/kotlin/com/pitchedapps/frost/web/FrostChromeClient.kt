@@ -2,9 +2,12 @@ package com.pitchedapps.frost.web
 
 import android.net.Uri
 import android.webkit.*
+import ca.allanwang.kau.utils.snackbar
+import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.utils.L
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -13,6 +16,7 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
 
     val progressObservable: Subject<Int> = webCore.progressObservable
     val titleObservable: BehaviorSubject<String> = webCore.titleObservable
+    val activityContract = (webCore.context as? ActivityWebContract)
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         L.i("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
@@ -30,15 +34,9 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         progressObservable.onNext(newProgress)
     }
 
-    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
-        L.d("On show file chooser")
-        fileChooserParams?.apply {
-            L.d(filenameHint ?: "hi")
-            L.d("$mode")
-            L.d(acceptTypes.contentToString())
-        }
-
-        return super.onShowFileChooser(webView, filePathCallback, fileChooserParams)
+    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams): Boolean {
+        activityContract?.openFileChooser(filePathCallback, fileChooserParams) ?: webView.snackbar("File chooser not found")
+        return activityContract != null
     }
 
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {

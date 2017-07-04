@@ -16,6 +16,7 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import org.jetbrains.anko.runOnUiThread
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
@@ -61,8 +62,11 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                     Jsoup.parse(it).select("a:not([rel*='keywords(']):not([href=#])[rel]").map {
                         element ->
                         //split text into separate items
+                        L.i("Search element ${element.attr("href")}")
                         val texts = element.select("div").map { (it.ownText()) }.filter { it.isNotBlank() }
-                        Pair(texts, element.attr("href"))
+                        val pair = Pair(texts, element.attr("href"))
+                        L.i("Search element potential $pair")
+                        pair
                     }.filter { it.first.isNotEmpty() }
                 }
                 .filter { content -> Pair(content.lastOrNull()?.second, content.size) != previousResult }
@@ -72,7 +76,6 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                     L.d("Search element count ${content.size}")
                     contract.emitSearchResponse(content.map {
                         (texts, href) ->
-                        L.i("Search element $texts $href")
                         SearchItem(href, texts[0], texts.getOrNull(1))
                     })
                 }
@@ -86,7 +89,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
     var pauseLoad: Boolean
         get() = settings.blockNetworkLoads
         set(value) {
-            settings.blockNetworkLoads = value
+            context.runOnUiThread { settings.blockNetworkLoads = value }
         }
 
     override fun reload() {
@@ -97,8 +100,9 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
      * Sets the input to have our given text, then dispatches the input event so the webpage recognizes it
      */
     fun query(input: String) {
+        pauseLoad = false
         L.d("Searching attempt", input)
-        JsBuilder().js("var e=document.getElementById('main-search-input');if(e){e.value='$input';var n=new Event('input',{bubbles:!0,cancelable:!0});e.dispatchEvent(n)}else console.log('Input field not found')").build().inject(this)
+        JsBuilder().js("var e=document.getElementById('main-search-input');if(e){e.value='$input';var n=new Event('input',{bubbles:!0,cancelable:!0});e.dispatchEvent(n),e.dispatchEvent(new Event('focus'))}else console.log('Input field not found');").build().inject(this)
     }
 
     /**
@@ -118,7 +122,8 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
     inner class SearchJSI {
         @JavascriptInterface
         fun handleHtml(html: String) {
-            L.d("Search received response")
+            L.d("Search received response ${contract.isSearchOpened}")
+            if (!contract.isSearchOpened) pauseLoad = true
             searchSubject.onNext(html)
         }
 
@@ -127,7 +132,6 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
             when (flag) {
                 0 -> {
                     L.d("Search loaded successfully")
-                    if (!contract.isSearchOpened) pauseLoad = true
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.eThrow("Search subject error; reverting to full overlay")
