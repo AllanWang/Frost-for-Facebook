@@ -83,9 +83,6 @@ object Prefs : KPref() {
 
     var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
 
-    //check if this is the first time launching the web overlay; show snackbar if true
-    var firstWebOverlay: Boolean by kpref("first_web_overlay", true)
-
     /**
      * Cache like value to determine if user has or had pro
      * In most cases, [com.pitchedapps.frost.utils.iab.IS_FROST_PRO] should be looked at instead
@@ -96,9 +93,16 @@ object Prefs : KPref() {
 
     var debugPro: Boolean by kpref("debug_pro", false)
 
-    var searchBar: Boolean by kpref("search_bar", false)
-
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", true)
+
+    var experimentalDefault:Boolean by kpref("experimental_by_default", false)
+
+    /*
+     * Experimental features must be listed below so the default is initialized
+     */
+
+    var searchBar: Boolean by kpref("search_bar", experimentalDefault)
+
 }
