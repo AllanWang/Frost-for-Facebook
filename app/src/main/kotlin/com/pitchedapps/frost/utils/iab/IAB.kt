@@ -20,6 +20,9 @@ import com.pitchedapps.frost.utils.*
  * Make sure you call [IAB.dispose] once an operation is done to release the resources
  * Also make sure that it is called on the very LAST operation if there are a list of async calls.
  * Otherwise the helper will be prematurely disposed
+ *
+ * For the most part, billing is handled in the [SettingsActivity] and will be disposed when it is destroyed
+ * It may also be handled elsewhere when validating purchases, so those calls should dispose themselves
  */
 object IAB {
 
@@ -30,16 +33,14 @@ object IAB {
      *
      * [mustHavePlayStore] decides if dialogs should be shown if play store errors occur
      *
-     *
      */
     operator fun invoke(activity: Activity, mustHavePlayStore: Boolean = true, onFailed: () -> Unit = {}, onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
-            if (helper?.mDisposed ?: true) {
+            if (helper?.mDisposed ?: helper?.mDisposeAfterAsync ?: true) {
                 helper = null
                 L.d("IAB setup async")
                 if (!isFrostPlay) {
                     if (mustHavePlayStore) playStoreNotFound()
-                    IAB.dispose()
                     onFailed()
                     return
                 }
@@ -183,6 +184,7 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
             if (result.isSuccess) {
                 onSuccess(key)
                 playStorePurchasedSuccessfully(key)
+                IAB.dispose()
             }
             frostAnswers {
                 logPurchase(PurchaseEvent()
@@ -190,7 +192,6 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
                         .putCustomAttribute("result", result.message)
                         .putSuccess(result.isSuccess))
             }
-            IAB.dispose()
         }
     }
 }
