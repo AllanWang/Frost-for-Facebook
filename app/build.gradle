@@ -21,11 +21,11 @@ android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
 
-	def offset = Integer.parseInt(System.getenv("TRAVIS_BUILD_NUMBER") ?: "0")
+//	def offset = Integer.parseInt(System.getenv("TRAVIS_BUILD_NUMBER") ?: "0")
 	
     androidGitVersion {
-        baseCode offset
-        codeFormat = 'MMNNPPXX'
+//        baseCode offset
+        codeFormat = 'MMNNPPBB'
         //since we use travis, all builds will be dirty
         format = '%tag%%.count%%-commit%'
         prefix 'v'
