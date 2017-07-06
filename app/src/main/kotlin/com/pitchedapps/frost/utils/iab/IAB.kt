@@ -36,7 +36,8 @@ object IAB {
      */
     operator fun invoke(activity: Activity, mustHavePlayStore: Boolean = true, onFailed: () -> Unit = {}, onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
-            if (helper?.mDisposed ?: helper?.mDisposeAfterAsync ?: true) {
+            if (isInProgress) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
+            else if (helper?.mDisposed ?: true || helper?.mDisposeAfterAsync ?: true) {
                 helper = null
                 L.d("IAB setup async")
                 if (!isFrostPlay) {
@@ -80,8 +81,16 @@ object IAB {
      */
     fun dispose() {
         helper?.disposeWhenFinished()
-        helper?.flagEndAsync()
         helper = null
+    }
+
+    /**
+     * Dispose given helper and check if it matches with our own helper
+     */
+    fun dispose(helper: IabHelper) {
+        helper.disposeWhenFinished()
+        if (IAB.helper?.mDisposed ?: true || IAB.helper?.mDisposeAfterAsync ?: true)
+            this.helper = null
     }
 
     val isInProgress: Boolean
@@ -110,7 +119,7 @@ fun SettingsActivity.restorePurchases() {
         finishRestore(restore, false)
     }
     getInventory(false, reset) {
-        inv, _ ->
+        inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         Prefs.pro = proSku
         L.d("Restore found: ${Prefs.pro}")
@@ -126,7 +135,6 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
         positiveText(R.string.reload)
         dismissListener { adapter.notifyAdapterDataSetChanged() }
     }
-    IAB.dispose()
 }
 
 /**
@@ -136,12 +144,12 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
 fun Activity.validatePro() {
     L.d("Validate pro")
     getInventory(Prefs.pro, { if (Prefs.pro) playStoreNoLongerPro() }) {
-        inv, _ ->
+        inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         L.d("Validation finished: ${Prefs.pro} should be $proSku")
         if (!proSku && Prefs.pro) playStoreNoLongerPro()
         else if (proSku && !Prefs.pro) playStoreFoundPro()
-        IAB.dispose()
+        helper.disposeWhenFinished()
     }
 }
 
@@ -175,7 +183,6 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
         if (inv.hasPurchase(key)) {
             playStoreAlreadyPurchased(key)
             onSuccess(key)
-            IAB.dispose()
             return@getInventory
         }
         L.d("IAB: inventory ${inv.allOwnedSkus}")
@@ -184,7 +191,6 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
             if (result.isSuccess) {
                 onSuccess(key)
                 playStorePurchasedSuccessfully(key)
-                IAB.dispose()
             }
             frostAnswers {
                 logPurchase(PurchaseEvent()
