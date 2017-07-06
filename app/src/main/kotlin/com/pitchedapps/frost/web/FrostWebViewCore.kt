@@ -62,6 +62,7 @@ class FrostWebViewCore @JvmOverloads constructor(
             javaScriptEnabled = true
             userAgentString = USER_AGENT_BASIC
             allowFileAccess = true
+            defaultFontSize
         }
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
