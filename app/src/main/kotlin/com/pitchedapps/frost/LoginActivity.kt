@@ -118,6 +118,7 @@ class LoginActivity : BaseActivity() {
             }
 
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                if (e != null) L.e(e, "Profile loading exception")
                 profileObservable.onSuccess(false)
                 return false
             }
