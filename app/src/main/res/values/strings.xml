@@ -40,6 +40,8 @@
     <string name="theme_issue">Theme Issue</string>
     <string name="feature_request">Feature Request</string>
     <string name="subject">Subject</string>
+    <string name="share">Share</string>
+    <string name="copy_link">Copy Link</string>
 
     <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
 
