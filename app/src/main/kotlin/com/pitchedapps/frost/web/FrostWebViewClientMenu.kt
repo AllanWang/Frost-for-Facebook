@@ -35,12 +35,7 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
         if (url == webCore.baseUrl && content == null) {
-            jsInject(JsAssets.MENU, callback = {
-//                jsInject(JsAssets.CLICK_A) //menu injection must be after or we will have a loop from the click listener
-            })
-//        } else if (url == contentBaseUrl) {
-//            L.i("Inject content")
-//            jsInject(JsAssets.CLICK_A)
+            jsInject(JsAssets.MENU)
         }
     }
 

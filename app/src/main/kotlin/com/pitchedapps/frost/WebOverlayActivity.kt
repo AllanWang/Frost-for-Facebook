@@ -81,6 +81,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val newUrl = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        L.d("New intent")
         if (url != newUrl) {
             this.intent = intent
             frostWeb.web.baseUrl = newUrl

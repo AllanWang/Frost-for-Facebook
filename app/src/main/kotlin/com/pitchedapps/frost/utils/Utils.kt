@@ -17,7 +17,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import com.crashlytics.android.answers.Answers
@@ -65,6 +64,7 @@ val String.formattedFbUrl: String
 
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
+    L.v("Launch received $url")
     L.i("Launch web overlay: $argUrl")
     startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
         putExtra(ARG_URL, argUrl)
