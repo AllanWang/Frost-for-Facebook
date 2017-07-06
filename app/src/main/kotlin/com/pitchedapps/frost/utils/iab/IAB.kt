@@ -34,9 +34,13 @@ object IAB {
      * [mustHavePlayStore] decides if dialogs should be shown if play store errors occur
      *
      */
-    operator fun invoke(activity: Activity, mustHavePlayStore: Boolean = true, onFailed: () -> Unit = {}, onStart: (helper: IabHelper) -> Unit) {
+    operator fun invoke(activity: Activity,
+                        mustHavePlayStore: Boolean = true,
+                        userRequest: Boolean = true,
+                        onFailed: () -> Unit = {},
+                        onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
-            if (isInProgress) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
+            if (isInProgress) if (userRequest) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
             else if (helper?.mDisposed ?: true || helper?.mDisposeAfterAsync ?: true) {
                 helper = null
                 L.d("IAB setup async")
@@ -118,7 +122,7 @@ fun SettingsActivity.restorePurchases() {
         }
         finishRestore(restore, false)
     }
-    getInventory(false, reset) {
+    getInventory(false, true, reset) {
         inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         Prefs.pro = proSku
@@ -143,7 +147,7 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
  */
 fun Activity.validatePro() {
     L.d("Validate pro")
-    getInventory(Prefs.pro, { if (Prefs.pro) playStoreNoLongerPro() }) {
+    getInventory(Prefs.pro, false, { if (Prefs.pro) playStoreNoLongerPro() }) {
         inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         L.d("Validation finished: ${Prefs.pro} should be $proSku")
@@ -155,9 +159,10 @@ fun Activity.validatePro() {
 
 fun Activity.getInventory(
         mustHavePlayStore: Boolean = true,
+        userRequest: Boolean = true,
         onFailed: () -> Unit = {},
         onSuccess: (inv: Inventory, helper: IabHelper) -> Unit) {
-    IAB(this, mustHavePlayStore, onFailed) {
+    IAB(this, mustHavePlayStore, userRequest, onFailed) {
         helper ->
         helper.queryInventoryAsync {
             res, inv ->
@@ -178,7 +183,7 @@ fun Activity.openPlayProPurchase(code: Int) {
 
 fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -> Unit) {
     L.d("Open play purchase $key $code")
-    getInventory(true, { playStoreGenericError("Query res error") }) {
+    getInventory(true, true, { playStoreGenericError("Query res error") }) {
         inv, helper ->
         if (inv.hasPurchase(key)) {
             playStoreAlreadyPurchased(key)
