@@ -4,6 +4,7 @@
 * Scale browser on keyboard pop up
 * Clean up web overlay
 * Allow customization of overlay swipe
+* Add sharing menu options in the overlay app
 
 ## v1.1
 * Add universal experimental toggle
