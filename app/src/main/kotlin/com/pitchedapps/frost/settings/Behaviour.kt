@@ -22,4 +22,8 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.analytics_desc
     }
 
+    checkbox(R.string.overlay_full_screen_swipe, { Prefs.overlayFullScreenSwipe }, { Prefs.overlayFullScreenSwipe = it }) {
+        descRes = R.string.overlay_full_screen_swipe_desc
+    }
+
 }

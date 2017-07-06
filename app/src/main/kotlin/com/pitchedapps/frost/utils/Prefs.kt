@@ -99,4 +99,6 @@ object Prefs : KPref() {
 
     var searchBar: Boolean by kpref("search_bar", Showcase.experimentalDefault)
 
+    var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)
+
 }

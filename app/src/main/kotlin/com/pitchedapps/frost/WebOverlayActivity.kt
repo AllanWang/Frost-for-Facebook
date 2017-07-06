@@ -51,7 +51,10 @@ open class WebOverlayActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
-        kauSwipeOnCreate()
+        kauSwipeOnCreate {
+            if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
+            transitionSystemBars = false
+        }
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 

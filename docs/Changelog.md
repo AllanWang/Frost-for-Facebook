@@ -1,52 +1,58 @@
 # Changelog
 
+## v1.2
+* Scale browser on keyboard pop up
+* Clean up web overlay
+* Allow customization of overlay swipe
+
 ## v1.1
-* Added universal experimental toggle
+* Add universal experimental toggle
 * Fixed up billing properties and add auto checker
 * Open status updates in new window
 * Allow for photo uploads
 * Improve search bar to stop when not in view
 * Integrate CI
-* Added more theme fixes
+* Add more theme fixes
+* Initial Reddit beta release
 
 ## v1.0
-* Added more global preferences
-* Added fully customizable theme engine
-* Added support for in app billing
+* Add more global preferences
+* Add fully customizable theme engine
+* Add support for in app billing
 * Huge changes internally from KAU
-* Added credits section
-* Added experimental section
-* Added search option
-* Fixed up main layout
+* Add credits section
+* Add experimental section
+* Add search option
+* Fix up main layout
 * Fix some theme components
-* Added behaviour settings
-* Added about section with links
+* Add behaviour settings
+* Add about section with links
 
 ## v0.3
-* Added rounded icons option
-* Sorted preferences
-* Added adblock base
-* Added feed configurations
+* Add rounded icons option
+* Sort preferences
+* Add adblock base
+* Add feed configurations
 * Animated settings panels
 * Add notification filters
 
 ## v0.2
-* Removed unnecessary permissions
-* Added notifications
-* Themed more components
-* Separated independent web overlay from in app overlay
+* Remove unnecessary permissions
+* Add notifications
+* Theme more components
+* Separate independent web overlay from in app overlay
 * Allow notifications from any account
-* Smoothed transition from Settings and only restart when necessary
+* Smooth transition from Settings and only restart when necessary
 * Add logout option from drawer
-* Added many more drawer urls
-* Added anonymous analytics
-* Moved settings to drawer
-* Added feedback option
+* Add many more drawer urls
+* Add anonymous analytics
+* Move settings to drawer
+* Add feedback option
 
 ## v0.1
 * Initial Changelog
-* Created core databases
-* Implemented CSS/Js injectors
-* Implemented ripple preferences
-* Created multiple account caching
-* Created web overlay
+* Create core databases
+* Implement CSS/Js injectors
+* Implement ripple preferences
+* Create multiple account caching
+* Create web overlay
