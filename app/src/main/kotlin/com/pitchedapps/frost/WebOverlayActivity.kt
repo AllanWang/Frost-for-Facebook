@@ -10,8 +10,10 @@ import android.support.v7.widget.Toolbar
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
+import ca.allanwang.kau.swipe.kauSwipeOnCreate
+import ca.allanwang.kau.swipe.kauSwipeOnDestroy
+import ca.allanwang.kau.swipe.kauSwipeOnPostCreate
 import ca.allanwang.kau.utils.*
-import com.jude.swipbackhelper.SwipeBackHelper
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
@@ -49,12 +51,7 @@ open class WebOverlayActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
-        SwipeBackHelper.onCreate(this)
-        SwipeBackHelper.getCurrentPage(this)
-                .setSwipeBackEnable(true)
-                .setSwipeSensitivity(0.5f)
-                .setSwipeRelateEnable(true)
-                .setSwipeRelateOffset(300)
+        kauSwipeOnCreate()
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
@@ -63,7 +60,6 @@ open class WebOverlayActivity : AppCompatActivity(),
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
         if (Showcase.firstWebOverlay) {
-            Showcase.firstWebOverlay = false
             coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
                 duration = Snackbar.LENGTH_INDEFINITE
                 setAction(R.string.kau_got_it) { _ -> this.dismiss() }
@@ -101,12 +97,12 @@ open class WebOverlayActivity : AppCompatActivity(),
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        SwipeBackHelper.onPostCreate(this)
+        kauSwipeOnPostCreate()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        SwipeBackHelper.onDestroy(this)
+        kauSwipeOnDestroy()
     }
 
     override fun onBackPressed() {

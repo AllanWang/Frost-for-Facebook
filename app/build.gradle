@@ -128,7 +128,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-    compile "ca.allanwang:kau:${KAU}"
+    compile "ca.allanwang.kau:core:${KAU}"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
@@ -160,8 +160,6 @@ dependencies {
     compile "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
     compile "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
-
-    compile "com.jude:swipebackhelper:${SWIPE_BACK}"
 
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
