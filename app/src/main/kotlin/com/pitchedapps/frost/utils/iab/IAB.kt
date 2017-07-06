@@ -34,9 +34,14 @@ object IAB {
      * [mustHavePlayStore] decides if dialogs should be shown if play store errors occur
      *
      */
-    operator fun invoke(activity: Activity, mustHavePlayStore: Boolean = true, onFailed: () -> Unit = {}, onStart: (helper: IabHelper) -> Unit) {
+    operator fun invoke(activity: Activity,
+                        mustHavePlayStore: Boolean = true,
+                        userRequest: Boolean = true,
+                        onFailed: () -> Unit = {},
+                        onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
-            if (helper?.mDisposed ?: helper?.mDisposeAfterAsync ?: true) {
+            if (isInProgress) if (userRequest) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
+            else if (helper?.disposed ?: true) {
                 helper = null
                 L.d("IAB setup async")
                 if (!isFrostPlay) {
@@ -80,8 +85,16 @@ object IAB {
      */
     fun dispose() {
         helper?.disposeWhenFinished()
-        helper?.flagEndAsync()
         helper = null
+    }
+
+    /**
+     * Dispose given helper and check if it matches with our own helper
+     */
+    fun dispose(helper: IabHelper) {
+        helper.disposeWhenFinished()
+        if (IAB.helper?.disposed ?: true)
+            this.helper = null
     }
 
     val isInProgress: Boolean
@@ -89,6 +102,9 @@ object IAB {
 }
 
 private const val FROST_PRO = "frost_pro"
+
+private val IabHelper.disposed: Boolean
+    get() = mDisposed || mDisposeAfterAsync
 
 val IS_FROST_PRO: Boolean
     get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.pro
@@ -109,8 +125,8 @@ fun SettingsActivity.restorePurchases() {
         }
         finishRestore(restore, false)
     }
-    getInventory(false, reset) {
-        inv, _ ->
+    getInventory(false, true, reset) {
+        inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         Prefs.pro = proSku
         L.d("Restore found: ${Prefs.pro}")
@@ -126,7 +142,6 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
         positiveText(R.string.reload)
         dismissListener { adapter.notifyAdapterDataSetChanged() }
     }
-    IAB.dispose()
 }
 
 /**
@@ -135,21 +150,22 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
  */
 fun Activity.validatePro() {
     L.d("Validate pro")
-    getInventory(Prefs.pro, { if (Prefs.pro) playStoreNoLongerPro() }) {
-        inv, _ ->
+    getInventory(Prefs.pro, false, { if (Prefs.pro) playStoreNoLongerPro() }) {
+        inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         L.d("Validation finished: ${Prefs.pro} should be $proSku")
         if (!proSku && Prefs.pro) playStoreNoLongerPro()
         else if (proSku && !Prefs.pro) playStoreFoundPro()
-        IAB.dispose()
+        helper.disposeWhenFinished()
     }
 }
 
 fun Activity.getInventory(
         mustHavePlayStore: Boolean = true,
+        userRequest: Boolean = true,
         onFailed: () -> Unit = {},
         onSuccess: (inv: Inventory, helper: IabHelper) -> Unit) {
-    IAB(this, mustHavePlayStore, onFailed) {
+    IAB(this, mustHavePlayStore, userRequest, onFailed) {
         helper ->
         helper.queryInventoryAsync {
             res, inv ->
@@ -170,12 +186,11 @@ fun Activity.openPlayProPurchase(code: Int) {
 
 fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -> Unit) {
     L.d("Open play purchase $key $code")
-    getInventory(true, { playStoreGenericError("Query res error") }) {
+    getInventory(true, true, { playStoreGenericError("Query res error") }) {
         inv, helper ->
         if (inv.hasPurchase(key)) {
             playStoreAlreadyPurchased(key)
             onSuccess(key)
-            IAB.dispose()
             return@getInventory
         }
         L.d("IAB: inventory ${inv.allOwnedSkus}")
@@ -184,7 +199,6 @@ fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -
             if (result.isSuccess) {
                 onSuccess(key)
                 playStorePurchasedSuccessfully(key)
-                IAB.dispose()
             }
             frostAnswers {
                 logPurchase(PurchaseEvent()

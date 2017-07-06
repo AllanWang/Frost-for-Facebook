@@ -88,4 +88,6 @@
     <string name="library_dbflow_classPath">com.raizlabs.android.dbflow</string>
     <!-- License section -->
     <string name="library_dbflow_licenseId">mit</string>
+    <string name="login_id_failed">Login failed; id not found</string>
+    <string name="iab_still_in_progress">IAB query is still in progress</string>
 </resources>
