@@ -86,12 +86,13 @@ class LoginActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe {
             (foundImage, name) ->
             refresh = false
-            if (!foundImage) L.eThrow("Could not get profile photo; Invalid userId?\n\t$cookie")
+            if (!foundImage) {
+                L.eThrow("Could not get profile photo; Invalid userId?")
+                L.i("-\t$cookie")
+            }
             textview.text = String.format(getString(R.string.welcome), name)
             textview.fadeIn()
-            frostAnswers {
-                logLogin(LoginEvent().putMethod("frost_browser").putSuccess(true))
-            }
+            frostAnswers { logLogin(LoginEvent().putMethod("frost_browser").putSuccess(true)) }
             /*
              * The user may have logged into an account that is already in the database
              * We will let the db handle duplicates and load it now after the new account has been saved
@@ -117,6 +118,7 @@ class LoginActivity : BaseActivity() {
             }
 
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                if (e != null) L.e(e, "Profile loading exception")
                 profileObservable.onSuccess(false)
                 return false
             }
@@ -124,8 +126,6 @@ class LoginActivity : BaseActivity() {
     }
 
     fun loadUsername(cookie: CookieModel) {
-        cookie.fetchUsername {
-            usernameObservable.onSuccess(it)
-        }
+        cookie.fetchUsername { usernameObservable.onSuccess(it) }
     }
 }

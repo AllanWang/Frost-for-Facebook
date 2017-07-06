@@ -44,17 +44,10 @@ class LoginWebView @JvmOverloads constructor(
                     .subscribe {
                         (url, cookie) ->
                         L.d("Checking cookie for login", "$url\n\t$cookie")
-                        val id = userMatcher.find(cookie!!)?.groups?.get(1)?.value
-                        if (id != null) {
-                            try {
-                                FbCookie.save(id.toLong())
-                                //TODO proceed to next view
-                                cookieObservable.onComplete()
-                                loginObservable.onSuccess(CookieModel(id.toLong(), "", cookie))
-                            } catch (e: NumberFormatException) {
-                                //todo send report that userId has changed
-                            }
-                        }
+                        val id = userMatcher.find(cookie!!)?.groups?.get(1)?.value!!
+                        FbCookie.save(id.toLong())
+                        cookieObservable.onComplete()
+                        loginObservable.onSuccess(CookieModel(id.toLong(), "", cookie))
                     }
             setupWebview()
         })
