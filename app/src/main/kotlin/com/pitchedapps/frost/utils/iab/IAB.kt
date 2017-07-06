@@ -41,7 +41,7 @@ object IAB {
                         onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
             if (isInProgress) if (userRequest) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
-            else if (helper?.mDisposed ?: true || helper?.mDisposeAfterAsync ?: true) {
+            else if (helper?.disposed ?: true) {
                 helper = null
                 L.d("IAB setup async")
                 if (!isFrostPlay) {
@@ -93,7 +93,7 @@ object IAB {
      */
     fun dispose(helper: IabHelper) {
         helper.disposeWhenFinished()
-        if (IAB.helper?.mDisposed ?: true || IAB.helper?.mDisposeAfterAsync ?: true)
+        if (IAB.helper?.disposed ?: true)
             this.helper = null
     }
 
@@ -102,6 +102,9 @@ object IAB {
 }
 
 private const val FROST_PRO = "frost_pro"
+
+private val IabHelper.disposed: Boolean
+    get() = mDisposed || mDisposeAfterAsync
 
 val IS_FROST_PRO: Boolean
     get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.pro
