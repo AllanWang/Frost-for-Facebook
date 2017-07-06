@@ -7,6 +7,8 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
@@ -14,6 +16,7 @@ import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
 import ca.allanwang.kau.swipe.kauSwipeOnPostCreate
 import ca.allanwang.kau.utils.*
+import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
@@ -78,6 +81,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val newUrl = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        L.d("New intent")
         if (url != newUrl) {
             this.intent = intent
             frostWeb.web.baseUrl = newUrl
@@ -125,5 +129,28 @@ open class WebOverlayActivity : AppCompatActivity(),
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         kauOnRequestPermissionsResult(permissions, grantResults)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_web, menu)
+        toolbar.tint(Prefs.iconColor)
+        setMenuIcons(menu, Prefs.iconColor,
+                R.id.action_share to CommunityMaterial.Icon.cmd_share,
+                R.id.action_copy_link to GoogleMaterial.Icon.gmd_content_copy)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_copy_link -> copyToClipboard(frostWeb.web.url)
+            R.id.action_share -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT, frostWeb.web.url)
+                startActivity(Intent.createChooser(intent, string(R.string.share)))
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 }
