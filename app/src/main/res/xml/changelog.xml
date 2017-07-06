@@ -6,57 +6,64 @@
     <item text="" />
     -->
 
+    <version title="v1.2"/>
+    <item text="Scale browser on keyboard pop up" />
+    <item text="Clean up web overlay" />
+    <item text="Allow customization of overlay swipe" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.1"/>
-    <item text="Added universal experimental toggle" />
+    <item text="Add universal experimental toggle" />
     <item text="Fixed up billing properties and add auto checker" />
     <item text="Open status updates in new window" />
     <item text="Allow for photo uploads" />
     <item text="Improve search bar to stop when not in view" />
     <item text="Integrate CI" />
-    <item text="Added more theme fixes" />
-    <item text="" />
-    <item text="" />
+    <item text="Add more theme fixes" />
+    <item text="Initial Reddit beta release" />
 
 
     <version title="v1.0"/>
-    <item text="Added more global preferences" />
-    <item text="Added fully customizable theme engine" />
-    <item text="Added support for in app billing" />
+    <item text="Add more global preferences" />
+    <item text="Add fully customizable theme engine" />
+    <item text="Add support for in app billing" />
     <item text="Huge changes internally from KAU" />
-    <item text="Added credits section" />
-    <item text="Added experimental section" />
-    <item text="Added search option" />
-    <item text="Fixed up main layout" />
+    <item text="Add credits section" />
+    <item text="Add experimental section" />
+    <item text="Add search option" />
+    <item text="Fix up main layout" />
     <item text="Fix some theme components" />
-    <item text="Added behaviour settings" />
-    <item text="Added about section with links" />
+    <item text="Add behaviour settings" />
+    <item text="Add about section with links" />
 
     <version title="v0.3" />
-    <item text="Added rounded icons option" />
-    <item text="Sorted preferences" />
-    <item text="Added adblock base" />
-    <item text="Added feed configurations" />
+    <item text="Add rounded icons option" />
+    <item text="Sort preferences" />
+    <item text="Add adblock base" />
+    <item text="Add feed configurations" />
     <item text="Animated settings panels" />
     <item text="Add notification filters" />
 
     <version title="v0.2" />
-    <item text="Removed unnecessary permissions" />
-    <item text="Added notifications" />
-    <item text="Themed more components" />
-    <item text="Separated independent web overlay from in app overlay" />
+    <item text="Remove unnecessary permissions" />
+    <item text="Add notifications" />
+    <item text="Theme more components" />
+    <item text="Separate independent web overlay from in app overlay" />
     <item text="Allow notifications from any account" />
-    <item text="Smoothed transition from Settings and only restart when necessary" />
+    <item text="Smooth transition from Settings and only restart when necessary" />
     <item text="Add logout option from drawer" />
-    <item text="Added many more drawer urls" />
-    <item text="Added anonymous analytics" />
-    <item text="Moved settings to drawer" />
-    <item text="Added feedback option" />
+    <item text="Add many more drawer urls" />
+    <item text="Add anonymous analytics" />
+    <item text="Move settings to drawer" />
+    <item text="Add feedback option" />
 
     <version title="v0.1" />
     <item text="Initial Changelog" />
-    <item text="Created core databases" />
-    <item text="Implemented CSS/Js injectors" />
-    <item text="Implemented ripple preferences" />
-    <item text="Created multiple account caching" />
-    <item text="Created web overlay" />
+    <item text="Create core databases" />
+    <item text="Implement CSS/Js injectors" />
+    <item text="Implement ripple preferences" />
+    <item text="Create multiple account caching" />
+    <item text="Create web overlay" />
 </resources>

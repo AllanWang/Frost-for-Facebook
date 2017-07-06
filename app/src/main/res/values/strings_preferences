@@ -14,6 +14,8 @@
     <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
     <string name="analytics">Analytics</string>
     <string name="analytics_desc">Enable anonymous analytics to help improve the app. No personal information is ever exposed.</string>
+    <string name="overlay_full_screen_swipe">Overlay Full Screen Swipe to Dismiss</string>
+    <string name="overlay_full_screen_swipe_desc">Swipe right from anywhere on the overlaying web to close the browser. If disabled, only swiping from the left edge will move it.</string>
 
     <!--themes-->
     <string name="theme">Theme</string>
