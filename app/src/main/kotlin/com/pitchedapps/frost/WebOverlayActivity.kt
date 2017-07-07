@@ -41,7 +41,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     }
 
     open val url: String
-        get() = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
 
     val userId: Long
         get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
@@ -80,7 +80,7 @@ open class WebOverlayActivity : AppCompatActivity(),
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val newUrl = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
         L.d("New intent")
         if (url != newUrl) {
             this.intent = intent
