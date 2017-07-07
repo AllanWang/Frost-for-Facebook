@@ -2,6 +2,7 @@ package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.items.KPrefColorPicker
+import ca.allanwang.kau.kpref.items.KPrefSeekbar
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.views.RippleCanvas
 import com.pitchedapps.frost.MainActivity
@@ -11,6 +12,7 @@ import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.openPlayProPurchase
+import com.pitchedapps.frost.views.KPrefTextSeekbar
 
 /**
  * Created by Allan Wang on 2017-06-29.
@@ -119,4 +121,9 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }) {
         descRes = R.string.tint_nav_desc
     }
+
+    list.add(KPrefTextSeekbar(
+            KPrefSeekbar.KPrefSeekbarBuilder(
+                    globalOptions,
+                    R.string.web_text_scaling, { Prefs.webTextScaling }, { Prefs.webTextScaling = it; setResult(MainActivity.REQUEST_WEB_ZOOM) })))
 }

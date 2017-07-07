@@ -47,6 +47,8 @@
     <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
     <string name="tint_nav">Tint Nav Bar</string>
     <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
+    <string name="web_text_scaling">Web Text Scaling</string>
+    <string name="web_text_scaling_desc">Text Scaling Example; Long press the percentage text to reset.</string>
 
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>

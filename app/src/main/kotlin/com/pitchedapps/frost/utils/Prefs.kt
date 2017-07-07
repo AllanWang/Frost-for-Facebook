@@ -71,6 +71,8 @@ object Prefs : KPref() {
 
     var tintNavBar: Boolean by kpref("tint_nav_bar", true)
 
+    var webTextScaling: Int by kpref("web_text_scaling", 100)
+
     var feedSort: Int by kpref("feed_sort", FeedSort.DEFAULT.ordinal)
 
     var showRoundedIcons: Boolean by kpref("rounded_icons", true)

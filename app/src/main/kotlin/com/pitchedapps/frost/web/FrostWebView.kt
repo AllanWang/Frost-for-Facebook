@@ -55,7 +55,7 @@ class FrostWebView @JvmOverloads constructor(
 
     @SuppressLint("SetJavaScriptEnabled")
     fun setupWebview(url: String, enum: FbTab? = null) {
-        with (web) {
+        with(web) {
             baseUrl = url
             baseEnum = enum
             with(settings) {
@@ -63,6 +63,7 @@ class FrostWebView @JvmOverloads constructor(
                 userAgentString = com.pitchedapps.frost.facebook.USER_AGENT_BASIC
                 allowFileAccess = true
                 defaultFontSize
+                textZoom = Prefs.webTextScaling
             }
             setLayerType(View.LAYER_TYPE_HARDWARE, null)
             frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
