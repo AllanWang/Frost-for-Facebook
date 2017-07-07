@@ -106,7 +106,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
         super.onCreate(savedInstanceState)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.versionCode = BuildConfig.VERSION_CODE
-            showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
+            if (!BuildConfig.DEBUG) showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
         }
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)

@@ -3,7 +3,14 @@ if (!window.hasOwnProperty('frost_click_a')) {
   console.log('Registering frost_click_a');
   window.frost_click_a = true;
 
+  var prevented = false;
+
   var _frostAClick = function(e) {
+
+
+    /*
+     * Commonality; check for valid target
+     */
     var element = e.target || e.srcElement;
     if (element.tagName !== 'A') element = element.parentNode;
     //Notifications is two layers under
@@ -11,12 +18,37 @@ if (!window.hasOwnProperty('frost_click_a')) {
     if (element.tagName === 'A' && element.getAttribute('href') !== '#') {
       var url = element.getAttribute('href');
       if (url.includes('photoset_token')) return;
-      console.log('Click Intercept', url);
-      Frost.loadUrl(url);
+
+
+
+
+      if (!prevented) {
+        console.log('Click Intercept', url);
+        Frost.loadUrl(url);
+      }
       e.stopPropagation();
       e.preventDefault();
     }
   }
 
+  /*
+   * On top of the click event, we must stop it for long presses
+   * Since that will conflict with the context menu
+   * Note that we only override it on conditions where the context menu
+   * Will occur
+   */
+  var _frostPreventClick = function() {
+    console.log('Click prevented')
+    prevented = true;
+  }
+
   document.addEventListener('click', _frostAClick, true);
+
+  document.addEventListener('touchstart', function _frostStart(e) {
+    setTimeout(_frostPreventClick, 500);
+  }, true);
+
+  document.addEventListener('touchend', function _frostEnd(e) {
+    prevented = false;
+  }, true);
 }
