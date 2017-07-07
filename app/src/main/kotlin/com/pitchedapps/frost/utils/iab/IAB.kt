@@ -170,7 +170,10 @@ fun Activity.getInventory(
         helper.queryInventoryAsync {
             res, inv ->
             L.d("Inventory query finished")
-            if (res.isFailure || inv == null) onFailed()
+            if (res.isFailure || inv == null) {
+                L.e("Res error ${res.message}")
+                onFailed()
+            }
             else onSuccess(inv, helper)
         }
     }

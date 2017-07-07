@@ -80,7 +80,7 @@ open class WebOverlayActivity : AppCompatActivity(),
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
+        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
         L.d("New intent")
         if (url != newUrl) {
             this.intent = intent

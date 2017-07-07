@@ -5,7 +5,6 @@
 * Clean up web overlay
 * Allow customization of overlay swipe
 * Add sharing menu options in the overlay app
-* Allow long press for context menu on links
 * Improved rounding icons
 
 ## v1.1
