@@ -3,7 +3,6 @@ package com.pitchedapps.frost.views
 import android.annotation.SuppressLint
 import android.util.TypedValue
 import ca.allanwang.kau.kpref.items.KPrefSeekbar
-import ca.allanwang.kau.logging.KL
 import com.pitchedapps.frost.R
 
 /**
@@ -33,10 +32,7 @@ class KPrefTextSeekbar(builder: KPrefSeekbarContract) : KPrefSeekbar(builder) {
     override fun onPostBindView(viewHolder: ViewHolder, textColor: Int?, accentColor: Int?) {
         descOriginalSize = viewHolder.desc?.textSize ?: 1f
         viewHolder.desc?.layoutParams
-        KL.d("Text size $descOriginalSize")
-        KL.d("Text size ${viewHolder.title.textSize}")
         builder.toText = {
-            KL.d("Ratio ${it.toFloat() / 100}")
             viewHolder.desc?.setTextSize(TypedValue.COMPLEX_UNIT_PX, descOriginalSize * it.toFloat() / 100)
             "$it%"
         }

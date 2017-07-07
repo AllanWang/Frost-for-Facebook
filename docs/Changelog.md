@@ -6,6 +6,7 @@
 * Allow customization of overlay swipe
 * Add sharing menu options in the overlay app
 * Improved rounding icons
+* Add web text scaling
 
 ## v1.1
 * Add universal experimental toggle

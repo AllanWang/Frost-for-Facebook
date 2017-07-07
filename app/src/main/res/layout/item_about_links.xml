@@ -9,19 +9,4 @@
     android:clickable="false"
     android:padding="@dimen/kau_spacing_normal">
 
-    <ImageView
-        android:id="@+id/about_rate"
-        android:layout_width="@dimen/kau_avatar_bounds"
-        android:layout_height="@dimen/kau_avatar_bounds" />
-
-    <ImageView
-        android:id="@+id/about_reddit"
-        android:layout_width="@dimen/kau_avatar_bounds"
-        android:layout_height="@dimen/kau_avatar_bounds" />
-
-    <ImageView
-        android:id="@+id/about_github"
-        android:layout_width="@dimen/kau_avatar_bounds"
-        android:layout_height="@dimen/kau_avatar_bounds" />
-
 </android.support.constraint.ConstraintLayout>
