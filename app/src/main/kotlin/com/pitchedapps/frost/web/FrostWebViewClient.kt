@@ -62,6 +62,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
                 JsAssets.CLICK_A.maybe(webCore.baseEnum != null),
+                JsAssets.CONTEXT_A,
                 callback = { refreshObservable.onNext(false) })
     }
 

@@ -61,7 +61,7 @@ open class WebOverlayActivity : AppCompatActivity(),
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
-        frostWeb.web.setupWebview(url)
+        frostWeb.setupWebview(url)
         frostWeb.web.addTitleListener({ toolbar.title = it })
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()

@@ -9,7 +9,7 @@ import com.pitchedapps.frost.utils.L
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, CLICK_A, CLICK_INTERCEPTOR, HEADER_BADGES, SEARCH
+    MENU, CLICK_A, CONTEXT_A, CLICK_INTERCEPTOR, HEADER_BADGES, SEARCH
     ;
 
     var file = "${name.toLowerCase()}.min.js"

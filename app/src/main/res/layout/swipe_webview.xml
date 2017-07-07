@@ -22,9 +22,14 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         style="@style/FrostProgressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top" />
+
+    <com.pitchedapps.frost.web.FrostWebContextMenu
+        android:id="@+id/context_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>
