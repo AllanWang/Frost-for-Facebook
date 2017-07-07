@@ -4,17 +4,14 @@ import android.content.Context
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.cookies
-import com.pitchedapps.frost.utils.launchLogin
-import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.Subject
 
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
+class FrostJSI(val context: Context, val webView: FrostWebViewCore, val contextMenu: FrostWebContextMenu) {
 
     val headerObservable: Subject<String>? = (context as? MainActivity)?.headerBadgeObservable
 
@@ -33,6 +30,11 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
             webView.stopLoading()
             webView.loadBaseUrl(animate)
         }
+    }
+
+    @JavascriptInterface
+    fun contextMenu(url: String) {
+        contextMenu.post { contextMenu.show(url) }
     }
 
     @JavascriptInterface
