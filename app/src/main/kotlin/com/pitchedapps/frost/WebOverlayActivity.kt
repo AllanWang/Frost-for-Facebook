@@ -41,7 +41,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     }
 
     open val url: String
-        get() = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
 
     val userId: Long
         get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
@@ -61,7 +61,7 @@ open class WebOverlayActivity : AppCompatActivity(),
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
-        frostWeb.web.setupWebview(url)
+        frostWeb.setupWebview(url)
         frostWeb.web.addTitleListener({ toolbar.title = it })
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
@@ -80,7 +80,7 @@ open class WebOverlayActivity : AppCompatActivity(),
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val newUrl = intent.extras!!.getString(ARG_URL).formattedFbUrl
+        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
         L.d("New intent")
         if (url != newUrl) {
             this.intent = intent

@@ -54,24 +54,6 @@ class FrostWebViewCore @JvmOverloads constructor(
         titleObservable = BehaviorSubject.create<String>()
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview(url: String, enum: FbTab? = null) {
-        baseUrl = url
-        baseEnum = enum
-        with (settings) {
-            javaScriptEnabled = true
-            userAgentString = USER_AGENT_BASIC
-            allowFileAccess = true
-            defaultFontSize
-        }
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
-        webViewClient = frostWebClient
-        webChromeClient = FrostChromeClient(this)
-        addJavascriptInterface(FrostJSI(context, this), "Frost")
-        setBackgroundColor(Color.TRANSPARENT)
-    }
-
     fun loadUrl(url: String?, animate: Boolean) {
         if (url == null) return
         registerTransition(animate)

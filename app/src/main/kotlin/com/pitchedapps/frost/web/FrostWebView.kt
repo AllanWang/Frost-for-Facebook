@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.web
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.AttributeSet
@@ -25,7 +27,8 @@ class FrostWebView @JvmOverloads constructor(
 
     val refresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     val web: FrostWebViewCore by bindView(R.id.frost_webview_core)
-    val progress: ProgressBar by bindView(R.id.progressBar)
+    val progress: ProgressBar by bindView(R.id.progress_bar)
+    val contextMenu: FrostWebContextMenu by bindView(R.id.context_menu)
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)
@@ -48,6 +51,26 @@ class FrostWebView @JvmOverloads constructor(
 
             override fun onViewAttachedToWindow(v: View) {}
         })
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    fun setupWebview(url: String, enum: FbTab? = null) {
+        with (web) {
+            baseUrl = url
+            baseEnum = enum
+            with(settings) {
+                javaScriptEnabled = true
+                userAgentString = com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+                allowFileAccess = true
+                defaultFontSize
+            }
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
+            webViewClient = frostWebClient
+            webChromeClient = FrostChromeClient(this)
+            addJavascriptInterface(FrostJSI(context, this, contextMenu), "Frost")
+            setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     //Some urls have postJavascript injections so make sure we load the base url
