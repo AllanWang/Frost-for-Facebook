@@ -4,6 +4,7 @@ import android.content.Context
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.R
 
 /**
@@ -21,6 +22,10 @@ fun Context.showWebContextMenu(wc: WebContext) {
         itemsCallback {
             _, _, position, _ ->
             WebContextType[position].onClick(this@showWebContextMenu, wc)
+        }
+        dismissListener {
+            //showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
+            (this@showWebContextMenu as? MainActivity)?.viewPager?.enableSwipe = true
         }
     }
 }

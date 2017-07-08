@@ -63,10 +63,10 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                     Jsoup.parse(it).select("a:not([rel*='keywords(']):not([href=#])[rel]").map {
                         element ->
                         //split text into separate items
-                        L.i("Search element ${element.attr("href")}")
+                        L.v("Search element ${element.attr("href")}")
                         val texts = element.select("div").map { (it.ownText()) }.filter { it.isNotBlank() }
                         val pair = Pair(texts, element.attr("href"))
-                        L.i("Search element potential $pair")
+                        L.v("Search element potential $pair")
                         pair
                     }.filter { it.first.isNotEmpty() }
                 }

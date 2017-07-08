@@ -43,7 +43,7 @@ if (!window.hasOwnProperty('frost_click_a')) {
   document.addEventListener('click', _frostAClick, true);
 
   document.addEventListener('touchstart', function _frostStart(e) {
-    setTimeout(_frostPreventClick, 40 me0);
+    setTimeout(_frostPreventClick, 400);
   }, true);
 
   document.addEventListener('touchend', function _frostEnd(e) {

@@ -7,6 +7,7 @@
 * Add sharing menu options in the overlay app
 * Improved rounding icons
 * Add web text scaling
+* Create context menu; long press on a link!
 
 ## v1.1
 * Add universal experimental toggle

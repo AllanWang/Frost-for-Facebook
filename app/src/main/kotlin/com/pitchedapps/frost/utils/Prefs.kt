@@ -103,4 +103,6 @@ object Prefs : KPref() {
 
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)
 
+    var viewpagerSwipe: Boolean by kpref("viewpager_swipe", true)
+
 }

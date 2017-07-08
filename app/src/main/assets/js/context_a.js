@@ -1,11 +1,16 @@
 //context menu for links
 //largely mimics click_a.js
+//we will also bind a listener here to notify the activity not to deal with viewpager scrolls
+//since the long press is also associated witho
 if (!window.hasOwnProperty('frost_context_a')) {
   console.log('frost_context_a frost_click_a');
   window.frost_context_a = true;
 
-  var _frostAContext = function(e) {
+  var longClick = false;
 
+  var _frostAContext = function(e) {
+    Frost.longClick(true);
+    longClick = true;
 
     /*
      * Commonality; check for valid target
@@ -17,6 +22,7 @@ if (!window.hasOwnProperty('frost_context_a')) {
     if (element.tagName !== 'A') element = element.parentNode;
     if (element.tagName === 'A' && element.getAttribute('href') !== '#') {
       var url = element.getAttribute('href');
+      if (!url) return;
       if (url.includes('photoset_token')) return;
 
       var text = element.parentNode.innerText;
@@ -30,4 +36,11 @@ if (!window.hasOwnProperty('frost_context_a')) {
   }
 
   document.addEventListener('contextmenu', _frostAContext, true);
+
+  document.addEventListener('touchend', function _frostEnd(e) {
+    if (longClick) {
+      Frost.longClick(false);
+      longClick = false;
+    }
+  }, true);
 }

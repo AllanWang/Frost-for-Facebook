@@ -52,6 +52,7 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.FrostWebViewSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -65,7 +66,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
-    val viewPager: ViewPager by bindView(R.id.container)
+    val viewPager: FrostViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)

@@ -2,6 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.webkit.JavascriptInterface
+import ca.allanwang.kau.logging.KL
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -38,6 +39,15 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
         webView.post { webView.context.showWebContextMenu(WebContext(url.formattedFbUrl, text)) }
     }
 
+    /**
+     * Get notified when a stationary long click starts or ends
+     * This will be used to toggle the main activities viewpager swipe
+     */
+    @JavascriptInterface
+    fun longClick(start: Boolean) {
+        (webView.context as? MainActivity)?.viewPager?.enableSwipe = !start
+    }
+
     @JavascriptInterface
     fun loadLogin() {
         context.launchLogin(cookies, true)
@@ -45,12 +55,12 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
 
     @JavascriptInterface
     fun emit(flag: Int) {
-        webView.post { webView.frostWebClient!!.emit(flag) }
+        webView.post { webView.frostWebClient.emit(flag) }
     }
 
     @JavascriptInterface
     fun handleHtml(html: String) {
-        webView.post { webView.frostWebClient!!.handleHtml(html) }
+        webView.post { webView.frostWebClient.handleHtml(html) }
     }
 
     @JavascriptInterface
