@@ -1,5 +1,9 @@
 # Changelog
 
+## Beta Updates
+* Create toggle for notifications only from primary account
+* Micro string optimizations
+
 ## v1.2
 * Scale browser on keyboard pop up
 * Clean up web overlay

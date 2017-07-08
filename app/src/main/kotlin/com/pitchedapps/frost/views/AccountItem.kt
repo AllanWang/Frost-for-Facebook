@@ -21,6 +21,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.withRoundIcon
 
 /**
  * Created by Allan Wang on 2017-06-05.
@@ -35,8 +36,7 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
             text.setTextColor(Prefs.textColor)
             if (cookie != null) {
                 text.text = cookie.name
-                val options = RequestOptions().transform(CircleCrop())
-                Glide.with(itemView).load(PROFILE_PICTURE_URL(cookie.id)).apply(options).listener(object : RequestListener<Drawable> {
+                Glide.with(itemView).load(PROFILE_PICTURE_URL(cookie.id)).withRoundIcon().listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                         text.fadeIn()
                         return false
