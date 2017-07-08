@@ -8,6 +8,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
+import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
+import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.GlideApp
@@ -16,6 +18,7 @@ import com.pitchedapps.frost.utils.Showcase
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
+import timber.log.Timber
 import java.util.*
 
 
@@ -37,7 +40,7 @@ class FrostApp : Application() {
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
-            Timber.plant(DebugTree())
+            Timber.plant(Timber.DebugTree())
 //            LeakCanary.enableDisplayLeakActivity(this)
         } else {
             Fabric.with(this, Crashlytics(), Answers())
