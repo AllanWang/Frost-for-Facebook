@@ -37,3 +37,7 @@
     **[] $VALUES;
     public *;
 }
+-assumenosideeffects class ca.allanwang.kau.logging.TimberLogger {
+    public static *** i(...);
+    public static *** v(...);
+}
