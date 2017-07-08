@@ -71,6 +71,8 @@ object Prefs : KPref() {
 
     var tintNavBar: Boolean by kpref("tint_nav_bar", true)
 
+    var webTextScaling: Int by kpref("web_text_scaling", 100)
+
     var feedSort: Int by kpref("feed_sort", FeedSort.DEFAULT.ordinal)
 
     var showRoundedIcons: Boolean by kpref("rounded_icons", true)
@@ -100,5 +102,7 @@ object Prefs : KPref() {
     var searchBar: Boolean by kpref("search_bar", Showcase.experimentalDefault)
 
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)
+
+    var viewpagerSwipe: Boolean by kpref("viewpager_swipe", true)
 
 }

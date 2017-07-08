@@ -2,7 +2,6 @@ package com.pitchedapps.frost
 
 import android.os.Bundle
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.formattedFbUrl
 
 
 /**

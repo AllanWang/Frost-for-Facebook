@@ -22,6 +22,7 @@ import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
 
@@ -80,7 +81,7 @@ open class WebOverlayActivity : AppCompatActivity(),
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
+        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
         L.d("New intent")
         if (url != newUrl) {
             this.intent = intent
@@ -143,12 +144,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_copy_link -> copyToClipboard(frostWeb.web.url)
-            R.id.action_share -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, frostWeb.web.url)
-                startActivity(Intent.createChooser(intent, string(R.string.share)))
-            }
+            R.id.action_share -> shareText(frostWeb.web.url)
             else -> return super.onOptionsItemSelected(item)
         }
         return true

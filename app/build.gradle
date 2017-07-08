@@ -10,7 +10,7 @@ apply plugin: 'com.github.triplet.play'
 
 play {
     jsonFile = file('../files/gplay-keys.json')
-    track = 'alpha'
+    track = 'beta'
     errorOnSizeLimit = true
     uploadImages = false
     untrackOld = true
@@ -20,12 +20,8 @@ android {
     compileSdkVersion Integer.parseInt(project.TARGET_SDK)
     buildToolsVersion project.BUILD_TOOLS
 
-//	def offset = Integer.parseInt(System.getenv("TRAVIS_BUILD_NUMBER") ?: "0")
-	
     androidGitVersion {
-//        baseCode offset
         codeFormat = 'MMNNPPBB'
-        //since we use travis, all builds will be dirty
         format = '%tag%%.count%%-commit%'
         prefix 'v'
     }
@@ -126,6 +122,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
+
 
     compile "ca.allanwang.kau:core:${KAU}"
 
@@ -163,5 +161,4 @@ dependencies {
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
-
 }

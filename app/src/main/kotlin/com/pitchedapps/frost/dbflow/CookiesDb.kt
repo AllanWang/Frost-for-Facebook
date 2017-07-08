@@ -14,6 +14,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
 import paperparcel.PaperParcel
+import java.net.UnknownHostException
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -71,7 +72,8 @@ fun CookieModel.fetchUsername(callback: (String) -> Unit) {
                     .get().title()
             L.d("Fetch username found", result)
         } catch (e: Exception) {
-            L.e(e, "Fetch username failed")
+            if (e !is UnknownHostException)
+                L.e(e, "Fetch username failed")
         } finally {
             if (result.isBlank() && (name?.isNotBlank() ?: false)) {
                 callback(name!!)

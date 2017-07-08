@@ -52,6 +52,7 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.FrostWebViewSearch
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -65,7 +66,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
-    val viewPager: ViewPager by bindView(R.id.container)
+    val viewPager: FrostViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
@@ -89,7 +90,6 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
         get() = searchView?.isOpen ?: false
 
     companion object {
-        const val FRAGMENT_REFRESH = 99
         const val ACTIVITY_SETTINGS = 97
         /*
          * Possible responses from the SettingsActivity
@@ -97,6 +97,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
          */
         const val REQUEST_RESTART = 90909
         const val REQUEST_REFRESH = 80808
+        const val REQUEST_WEB_ZOOM = 50505
         const val REQUEST_NAV = 10101
         const val REQUEST_SEARCH = 70707
         const val REQUEST_RESTART_APPLICATION = 60606
@@ -333,7 +334,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
     }
 
     fun refreshAll() {
-        webFragmentObservable.onNext(FRAGMENT_REFRESH)
+        webFragmentObservable.onNext(WebFragment.REQUEST_REFRESH)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -384,8 +385,9 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
         if (requestCode == ACTIVITY_SETTINGS) {
             when (resultCode) {
                 REQUEST_RESTART -> restart()
-                REQUEST_REFRESH -> webFragmentObservable.onNext(FRAGMENT_REFRESH)
+                REQUEST_REFRESH -> webFragmentObservable.onNext(WebFragment.REQUEST_REFRESH)
                 REQUEST_NAV -> frostNavigationBar()
+                REQUEST_WEB_ZOOM -> webFragmentObservable.onNext(WebFragment.REQUEST_TEXT_ZOOM)
                 REQUEST_SEARCH -> invalidateOptionsMenu()
                 REQUEST_RESTART_APPLICATION -> { //completely restart application
                     L.d("Restart Application Requested")

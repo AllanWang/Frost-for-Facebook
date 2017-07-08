@@ -14,6 +14,7 @@ import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.JsBuilder
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.runOnUiThread
@@ -62,10 +63,10 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                     Jsoup.parse(it).select("a:not([rel*='keywords(']):not([href=#])[rel]").map {
                         element ->
                         //split text into separate items
-                        L.i("Search element ${element.attr("href")}")
+                        L.v("Search element ${element.attr("href")}")
                         val texts = element.select("div").map { (it.ownText()) }.filter { it.isNotBlank() }
                         val pair = Pair(texts, element.attr("href"))
-                        L.i("Search element potential $pair")
+                        L.v("Search element potential $pair")
                         pair
                     }.filter { it.first.isNotEmpty() }
                 }
@@ -135,6 +136,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.eThrow("Search subject error; reverting to full overlay")
+                    Prefs.searchBar = false
                     searchSubject.onComplete()
                     contract.searchOverlayDispose()
                 }

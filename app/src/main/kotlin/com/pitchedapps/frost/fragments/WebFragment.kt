@@ -27,6 +27,8 @@ class WebFragment : Fragment() {
         private const val ARG_URL = "arg_url"
         private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
+        const val REQUEST_TEXT_ZOOM = 17
+        const val REQUEST_REFRESH = 99
 
         operator fun invoke(data: FbTab, position: Int) = WebFragment().withArguments(
                 ARG_URL to data.url,
@@ -96,7 +98,7 @@ class WebFragment : Fragment() {
                  * Flags between -10 and 10 are reserved for viewpager events
                  */
                 when (it) {
-                    MainActivity.FRAGMENT_REFRESH -> {
+                    REQUEST_REFRESH -> {
                         web.clearHistory()
                         web.loadBaseUrl(true)
                     }
@@ -107,6 +109,7 @@ class WebFragment : Fragment() {
                     -(position + 1) -> { //we are moving away from this fragment
                         if (!frostWebView.refresh.isRefreshing) pauseLoad = true
                     }
+                    REQUEST_TEXT_ZOOM -> frostWebView.web.settings.textZoom = Prefs.webTextScaling
                 }
             }
         }
