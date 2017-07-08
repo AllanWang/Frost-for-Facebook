@@ -14,16 +14,20 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.fancy_animations_desc
     }
 
+    checkbox(R.string.overlay_full_screen_swipe, { Prefs.overlayFullScreenSwipe }, { Prefs.overlayFullScreenSwipe = it }) {
+        descRes = R.string.overlay_full_screen_swipe_desc
+    }
+
+    checkbox(R.string.viewpager_swipe, { Prefs.viewpagerSwipe }, { Prefs.viewpagerSwipe = it }) {
+        descRes = R.string.viewpager_swipe_desc
+    }
+
     checkbox(R.string.exit_confirmation, { Prefs.exitConfirmation }, { Prefs.exitConfirmation = it }) {
         descRes = R.string.exit_confirmation_desc
     }
 
     checkbox(R.string.analytics, { Prefs.analytics }, { Prefs.analytics = it }) {
         descRes = R.string.analytics_desc
-    }
-
-    checkbox(R.string.overlay_full_screen_swipe, { Prefs.overlayFullScreenSwipe }, { Prefs.overlayFullScreenSwipe = it }) {
-        descRes = R.string.overlay_full_screen_swipe_desc
     }
 
 }
