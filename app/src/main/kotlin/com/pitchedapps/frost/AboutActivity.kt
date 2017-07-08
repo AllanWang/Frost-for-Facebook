@@ -26,7 +26,7 @@ import com.pitchedapps.frost.utils.Prefs
 /**
  * Created by Allan Wang on 2017-06-26.
  */
-class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
+class AboutActivity : AboutActivityBase(null, {
     textColor = Prefs.textColor
     accentColor = Prefs.accentColor
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
@@ -36,10 +36,16 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
 
     override fun getLibraries(libs: Libs): List<Library> {
         val include = arrayOf(
-                "materialdialogs",
-                "kotterknife",
+                "AboutLibraries",
+                "AndroidIconics",
+                "dbflow",
+                "fastadapter",
                 "glide",
-                "jsoup"
+                "Jsoup",
+                "kau",
+                "kotterknife",
+                "materialdialogs",
+                "materialdrawer"
         )
 
         /*
@@ -57,7 +63,7 @@ class AboutActivity : AboutActivityBase(R.string::class.java, configBuilder = {
                 "recyclerview_v7",
                 "support_v4"
         )
-        val l = libs.prepareLibraries(this, include, exclude, true, true)
+        val l = libs.prepareLibraries(this, include, null, false, true)
 //        l.forEach { KL.d("Lib ${it.definedName}") }
         return l
     }

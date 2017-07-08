@@ -41,8 +41,9 @@
     <string name="feature_request">Feature Request</string>
     <string name="subject">Subject</string>
     <string name="share">Share</string>
-    <string name="copy_link_address">Copy Link Address</string>
-    <string name="copy_link_text">Copy Link Text</string>
+    <string name="share_link">Share Link</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="copy_text">Copy Text</string>
 
     <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
 

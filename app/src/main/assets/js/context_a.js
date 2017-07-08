@@ -10,7 +10,8 @@ if (!window.hasOwnProperty('frost_context_a')) {
     /*
      * Commonality; check for valid target
      */
-    var element = e.target || e.srcElement;
+    var element = e.target || e.currentTarget || e.srcElement;
+    if (!element) return;
     if (element.tagName !== 'A') element = element.parentNode;
     //Notifications is two layers under
     if (element.tagName !== 'A') element = element.parentNode;
@@ -18,10 +19,11 @@ if (!window.hasOwnProperty('frost_context_a')) {
       var url = element.getAttribute('href');
       if (url.includes('photoset_token')) return;
 
+      var text = element.parentNode.innerText;
 
-
-      console.log('Context Intercept', url);
-      Frost.contextMenu(url, null);
+      // console.log('Context Intercept', element.tagName, element.id, element.className)
+      console.log('Context Content', url, text);
+      Frost.contextMenu(url, text);
       e.stopPropagation();
       e.preventDefault();
     }

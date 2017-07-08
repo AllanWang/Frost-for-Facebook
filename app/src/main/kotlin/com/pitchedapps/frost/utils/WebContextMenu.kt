@@ -2,34 +2,39 @@ package com.pitchedapps.frost.utils
 
 import android.content.Context
 import ca.allanwang.kau.utils.copyToClipboard
+import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 
 /**
  * Created by Allan Wang on 2017-07-07.
  */
-fun Context.showWebContextMenu(context: WebContext) {
+fun Context.showWebContextMenu(wc: WebContext) {
 
-    val contextItems = mutableListOf<WebContextType>()
-    contextItems.add(WebContextType.COPY_LINK_ADDRESS)
-    if (context.text != null)
-        contextItems.add(WebContextType.COPY_LINK_TEXT)
-    var title = context.url
+    var title = wc.url
     title = title.substring(title.indexOf("m/") + 1) //just so if defaults to 0 in case it's not .com/
+    if (title.length > 100) title = title.substring(0, 100) + '\u2026'
 
     materialDialogThemed {
         title(title)
-        items(contextItems.map { this@showWebContextMenu.string(it.textId) })
+        items(WebContextType.values.map { this@showWebContextMenu.string(it.textId) })
         itemsCallback {
             _, _, position, _ ->
-            contextItems[position].onClick(this@showWebContextMenu, context)
+            WebContextType[position].onClick(this@showWebContextMenu, wc)
         }
     }
 }
 
-class WebContext(val url: String, val text: String?)
+class WebContext(val url: String, val text: String)
 
-enum class WebContextType(val textId: Int, val onClick: (c: Context, context: WebContext) -> Unit) {
-    COPY_LINK_ADDRESS(R.string.copy_link_address, { c, content -> c.copyToClipboard(content.url) }),
-    COPY_LINK_TEXT(R.string.copy_link_text, { c, content -> c.copyToClipboard(content.text!!) })
+enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebContext) -> Unit) {
+    COPY_LINK(R.string.copy_link, { c, wc -> c.copyToClipboard(wc.url) }),
+    COPY_TEXT(R.string.copy_text, { c, wc -> c.copyToClipboard(wc.text) }),
+    SHARE_LINK(R.string.share_link, { c, wc -> c.shareText(wc.url) })
+    ;
+
+    companion object {
+        val values = values()
+        operator fun get(index: Int) = values[index]
+    }
 }

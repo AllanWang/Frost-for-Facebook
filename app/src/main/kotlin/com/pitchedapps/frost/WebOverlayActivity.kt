@@ -144,12 +144,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_copy_link -> copyToClipboard(frostWeb.web.url)
-            R.id.action_share -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT, frostWeb.web.url)
-                startActivity(Intent.createChooser(intent, string(R.string.share)))
-            }
+            R.id.action_share -> shareText(frostWeb.web.url)
             else -> return super.onOptionsItemSelected(item)
         }
         return true
