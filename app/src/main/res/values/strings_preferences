@@ -44,6 +44,8 @@
     <string name="add_keyword">Add Keyword</string>
     <string name="hint_keyword">Type keyword and press +</string>
     <string name="empty_keyword">Empty Keyword</string>
+    <string name="notification_all_accounts">Notify from all accounts</string>
+    <string name="notification_all_accounts_desc">Get notifications for every account that is logged in. Disabling this will only fetch notifications form the currently selected account.</string>
 
     <string name="fancy_animations">Fancy Animations</string>
     <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>

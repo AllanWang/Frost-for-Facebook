@@ -49,4 +49,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         }
     }
 
+    checkbox(R.string.notification_all_accounts, { Prefs.notificationAllAccounts }, { Prefs.notificationAllAccounts = it }) {
+        descRes = R.string.notification_all_accounts_desc
+    }
+
 }

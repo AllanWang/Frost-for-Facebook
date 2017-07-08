@@ -36,6 +36,11 @@ class NotificationService : JobService() {
 
     var future: Future<Unit>? = null
 
+    companion object {
+        val epochMatcher: Regex by lazy { Regex(":([0-9]*),") }
+        val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*),") }
+    }
+
     override fun onStopJob(params: JobParameters?): Boolean {
         future?.cancel(true)
         future = null
@@ -44,27 +49,15 @@ class NotificationService : JobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         future = doAsync {
-            loadFbCookiesSync().forEach {
-                data ->
-                L.i("Handle notifications for $data")
-                val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
-                val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
-                var notifCount = 0
-                var latestEpoch = lastNotificationTime(data.id)
-                L.v("Latest Epoch $latestEpoch")
-                unreadNotifications.forEach unread@ {
-                    elem ->
-                    val notif = parseNotification(data, elem)
-                    if (notif != null) {
-                        if (notif.timestamp <= latestEpoch) return@unread
-                        notif.createNotification(this@NotificationService)
-                        latestEpoch = notif.timestamp
-                        notifCount++
-                    }
+            if (Prefs.notificationAllAccounts) {
+                loadFbCookiesSync().forEach {
+                    data ->
+                    fetchNotifications(data)
                 }
-                if (notifCount > 0) saveNotificationTime(NotificationModel(data.id, latestEpoch))
-                frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
-                summaryNotification(data.id, notifCount)
+            } else {
+                val currentCookie = loadFbCookie(Prefs.userId)
+                if (currentCookie != null)
+                    fetchNotifications(currentCookie)
             }
             L.d("Finished notifications")
             jobFinished(params, false)
@@ -73,10 +66,28 @@ class NotificationService : JobService() {
         return true
     }
 
-    companion object {
-        val epochMatcher: Regex by lazy { Regex(":([0-9]*),") }
-        val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*),") }
+    fun fetchNotifications(data: CookieModel) {
+        L.i("Handle notifications for $data")
+        val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
+        val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
+        var notifCount = 0
+        var latestEpoch = lastNotificationTime(data.id)
+        L.v("Latest Epoch $latestEpoch")
+        unreadNotifications.forEach unread@ {
+            elem ->
+            val notif = parseNotification(data, elem)
+            if (notif != null) {
+                if (notif.timestamp <= latestEpoch) return@unread
+                notif.createNotification(this@NotificationService)
+                latestEpoch = notif.timestamp
+                notifCount++
+            }
+        }
+        if (notifCount > 0) saveNotificationTime(NotificationModel(data.id, latestEpoch))
+        frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
+        summaryNotification(data.id, notifCount)
     }
+
 
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
         val a = element.getElementsByTag("a").first() ?: return null
