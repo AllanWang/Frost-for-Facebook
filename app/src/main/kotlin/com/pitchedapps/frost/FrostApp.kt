@@ -4,13 +4,10 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
-import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
-import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.CrashReportingTree
 import com.pitchedapps.frost.utils.GlideApp
@@ -19,8 +16,6 @@ import com.pitchedapps.frost.utils.Showcase
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
-import timber.log.Timber
-import timber.log.Timber.DebugTree
 import java.util.*
 
 
