@@ -2,11 +2,13 @@ package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.minuteToText
+import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.SettingsActivity
+import com.pitchedapps.frost.services.fetchNotifications
+import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.materialDialogThemed
-import com.pitchedapps.frost.utils.scheduleNotifications
 import com.pitchedapps.frost.views.Keywords
 
 /**
@@ -48,5 +50,19 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             true
         }
     }
+
+    checkbox(R.string.notification_all_accounts, { Prefs.notificationAllAccounts }, { Prefs.notificationAllAccounts = it }) {
+        descRes = R.string.notification_all_accounts_desc
+    }
+
+    plainText(R.string.notification_fetch_now) {
+        descRes = R.string.notification_fetch_now_desc
+        onClick = {
+            _, _, _ ->
+            snackbar(if (fetchNotifications()) R.string.notification_fetch_success else R.string.notification_fetch_fail)
+            true
+        }
+    }
+
 
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## Beta Updates
+* Create toggle for notifications only from primary account
+* Micro string optimizations
+* Add profile icons to notifications
+* Make notifications expandable
+* Add notification trigger in settings
+* Fix bug where only single latest notification is showing
+
 ## v1.2
 * Scale browser on keyboard pop up
 * Clean up web overlay
