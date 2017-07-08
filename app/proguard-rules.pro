@@ -3,11 +3,11 @@
 -keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
 -keepattributes *Annotation*
 # Enums
--keepclassmembers class * extends java.lang.Enum {
-    public *;
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
+#-keepclassmembers class * extends java.lang.Enum {
+#    public *;
+#    public static **[] values();
+#    public static ** valueOf(java.lang.String);
+#}
 # Crashlytics
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
@@ -29,7 +29,6 @@
 #}
 -keepclasseswithmembers class **.R$* {
     public static final int define_*;
-    public static final int library_*;
 }
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
