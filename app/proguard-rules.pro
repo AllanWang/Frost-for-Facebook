@@ -23,9 +23,13 @@
 # IAB
 -keep class com.android.vending.billing.**
 # About libs
--keep class .R
--keep class **.R$* {
-    <fields>;
+#-keep class .R
+#-keep class **.R$* {
+#    <fields>;
+#}
+-keepclasseswithmembers class **.R$* {
+    public static final int define_*;
+    public static final int library_*;
 }
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
