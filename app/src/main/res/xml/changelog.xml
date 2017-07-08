@@ -14,10 +14,8 @@
     <item text="Improved rounding icons" />
     <item text="Add web text scaling" />
     <item text="Create context menu; long press on a link!" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Intelligently stop horizontal page scrolling on long press" />
+    <item text="More theming" />
 
     <version title="v1.1"/>
     <item text="Add universal experimental toggle" />

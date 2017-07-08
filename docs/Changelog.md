@@ -8,6 +8,8 @@
 * Improved rounding icons
 * Add web text scaling
 * Create context menu; long press on a link!
+* Intelligently stop horizontal page scrolling on long press
+* More theming
 
 ## v1.1
 * Add universal experimental toggle
