@@ -11,7 +11,7 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class FrostJSI(val context: Context, val webView: FrostWebViewCore, val contextMenu: FrostWebContextMenu) {
+class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
 
     val headerObservable: Subject<String>? = (context as? MainActivity)?.headerBadgeObservable
 
@@ -34,7 +34,9 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore, val contextM
 
     @JavascriptInterface
     fun contextMenu(url: String) {
-        contextMenu.post { contextMenu.show(url) }
+        webView.post {
+            webView.context.showWebContextMenu(url)
+        }
     }
 
     @JavascriptInterface

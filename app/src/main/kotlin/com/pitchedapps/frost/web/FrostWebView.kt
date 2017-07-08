@@ -28,7 +28,6 @@ class FrostWebView @JvmOverloads constructor(
     val refresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     val web: FrostWebViewCore by bindView(R.id.frost_webview_core)
     val progress: ProgressBar by bindView(R.id.progress_bar)
-    val contextMenu: FrostWebContextMenu by bindView(R.id.context_menu)
 
     init {
         inflate(getContext(), R.layout.swipe_webview, this)
@@ -69,7 +68,7 @@ class FrostWebView @JvmOverloads constructor(
             frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
             webViewClient = frostWebClient
             webChromeClient = FrostChromeClient(this)
-            addJavascriptInterface(FrostJSI(context, this, contextMenu), "Frost")
+            addJavascriptInterface(FrostJSI(context, this), "Frost")
             setBackgroundColor(Color.TRANSPARENT)
         }
     }
