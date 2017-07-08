@@ -21,7 +21,7 @@ if (!window.hasOwnProperty('frost_context_a')) {
 
 
       console.log('Context Intercept', url);
-      Frost.contextMenu(url);
+      Frost.contextMenu(url, null);
       e.stopPropagation();
       e.preventDefault();
     }
