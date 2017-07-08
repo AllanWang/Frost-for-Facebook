@@ -20,8 +20,6 @@ if (!window.hasOwnProperty('frost_click_a')) {
       if (url.includes('photoset_token')) return;
 
 
-
-
       if (!prevented) {
         console.log('Click Intercept', url);
         Frost.loadUrl(url);
@@ -45,7 +43,7 @@ if (!window.hasOwnProperty('frost_click_a')) {
   document.addEventListener('click', _frostAClick, true);
 
   document.addEventListener('touchstart', function _frostStart(e) {
-    setTimeout(_frostPreventClick, 400);
+    setTimeout(_frostPreventClick, 40 me0);
   }, true);
 
   document.addEventListener('touchend', function _frostEnd(e) {
