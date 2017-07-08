@@ -1,27 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-    A greatly compacted link layout with just the ids
-    The constraints are handled programmatically in AboutActivity
--->
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--Just the container core so we can bind it to an AdapterItem-->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/about_icons_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="false"
-    android:padding="@dimen/kau_spacing_normal">
-
-    <ImageView
-        android:id="@+id/about_rate"
-        android:layout_width="@dimen/kau_avatar_bounds"
-        android:layout_height="@dimen/kau_avatar_bounds" />
-
-    <ImageView
-        android:id="@+id/about_reddit"
-        android:layout_width="@dimen/kau_avatar_bounds"
-        android:layout_height="@dimen/kau_avatar_bounds" />
-
-    <ImageView
-        android:id="@+id/about_github"
-        android:layout_width="@dimen/kau_avatar_bounds"
-        android:layout_height="@dimen/kau_avatar_bounds" />
-
-</android.support.constraint.ConstraintLayout>
+    android:padding="@dimen/kau_spacing_normal" />

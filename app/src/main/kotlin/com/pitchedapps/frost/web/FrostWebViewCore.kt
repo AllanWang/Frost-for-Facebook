@@ -1,15 +1,12 @@
 package com.pitchedapps.frost.web
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.view.NestedScrollingChild
 import android.support.v4.view.NestedScrollingChildHelper
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import ca.allanwang.kau.utils.circularReveal
@@ -17,7 +14,6 @@ import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.facebook.FbTab
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,7 +41,7 @@ class FrostWebViewCore @JvmOverloads constructor(
 
     var baseUrl: String? = null
     var baseEnum: FbTab? = null //only viewpager items should pass the base enum
-    internal var frostWebClient: FrostWebViewClient? = null
+    internal lateinit var frostWebClient: FrostWebViewClient
 
     init {
         isNestedScrollingEnabled = true

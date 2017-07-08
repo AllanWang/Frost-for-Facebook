@@ -10,4 +10,6 @@
     <dimen name="splash_logo">16dp</dimen>
     <dimen name="progress_bar_height">1dip</dimen>
     <dimen name="account_image_size">100dp</dimen>
+
+    <dimen name="context_menu_height">60dp</dimen>
 </resources>

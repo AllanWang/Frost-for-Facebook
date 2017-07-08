@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kau_shadow_overlay"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:padding="@dimen/kau_padding_normal">
+
+    <TextView
+        android:id="@+id/menu_url"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/kau_padding_normal" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/menu_recycler"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+</LinearLayout>

@@ -23,8 +23,8 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.*
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.services.NotificationService
 
 /**
@@ -50,17 +50,6 @@ fun Context.launchLogin(cookieList: ArrayList<CookieModel>, clearStack: Boolean 
 fun Activity.cookies(): ArrayList<CookieModel> {
     return intent?.extras?.getParcelableArrayList<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
 }
-
-val String.formattedFbUrl: String
-    get() {
-        var url = this
-        if (url.startsWith("#!/")) url = url.substring(2)
-        if (url.startsWith('/')) url = FB_URL_BASE + url.substring(1)
-        url = url.replace("/#!/", "/")
-        val ref = url.indexOf("?ref")
-        if (ref != -1) url = url.substring(0, ref)
-        return url
-    }
 
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
@@ -173,3 +162,4 @@ fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) 
 fun Activity.frostNavigationBar() {
     navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
 }
+

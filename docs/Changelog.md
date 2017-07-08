@@ -5,8 +5,11 @@
 * Clean up web overlay
 * Allow customization of overlay swipe
 * Add sharing menu options in the overlay app
-* Allow long press for context menu on links
 * Improved rounding icons
+* Add web text scaling
+* Create context menu; long press on a link!
+* Intelligently stop horizontal page scrolling on long press
+* More theming
 
 ## v1.1
 * Add universal experimental toggle

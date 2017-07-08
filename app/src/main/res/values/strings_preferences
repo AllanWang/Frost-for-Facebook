@@ -16,6 +16,8 @@
     <string name="analytics_desc">Enable anonymous analytics to help improve the app. No personal information is ever exposed.</string>
     <string name="overlay_full_screen_swipe">Overlay Full Screen Swipe to Dismiss</string>
     <string name="overlay_full_screen_swipe_desc">Swipe right from anywhere on the overlaying web to close the browser. If disabled, only swiping from the left edge will move it.</string>
+    <string name="viewpager_swipe">Viewpager Swipe</string>
+    <string name="viewpager_swipe_desc">Allow swiping between the pages in the main view to switch tabs. By default, the swiping automatically stops when you long press on an item, such as the like button. Disabling this will prevent page swiping altogether.</string>
 
     <!--themes-->
     <string name="theme">Theme</string>
@@ -47,6 +49,8 @@
     <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
     <string name="tint_nav">Tint Nav Bar</string>
     <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
+    <string name="web_text_scaling">Web Text Scaling</string>
+    <string name="web_text_scaling_desc">Text Scaling Example; Long press the percentage text to reset.</string>
 
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
