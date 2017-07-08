@@ -36,9 +36,8 @@ class FbUrlFormatter(url: String) {
         if (queries.isNotEmpty()) {
             builder.append("?")
             queries.forEach { (k, v) -> builder.append("$k=$v&") }
-            builder.removeSuffix("&")
         }
-        return builder.toString()
+        return builder.removeSuffix("&").toString()
     }
 
     fun toLogList(): List<String> {

@@ -4,8 +4,13 @@ import android.content.Context
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.Subject
+import jp.wasabeef.blurry.Blurry
+import android.view.ViewGroup
+
+
 
 
 /**
@@ -33,9 +38,10 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
     }
 
     @JavascriptInterface
-    fun contextMenu(url: String) {
+    fun contextMenu(url: String, text:String?) {
+        Blurry.with(context).radius(25).sampling(2).onto(webView)
         webView.post {
-            webView.context.showWebContextMenu(url)
+            webView.context.showWebContextMenu(WebContext(url.formattedFbUrl, text))
         }
     }
 
