@@ -4,6 +4,7 @@ import android.content.Context
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.formattedFbUrl
 
 /**
  * Created by Allan Wang on 2017-07-07.
