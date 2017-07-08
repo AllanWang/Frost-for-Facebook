@@ -4,7 +4,6 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
@@ -20,7 +19,6 @@ import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
-import timber.log.Timber.DebugTree
 import java.util.*
 
 
@@ -42,7 +40,7 @@ class FrostApp : Application() {
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (BuildConfig.DEBUG) {
-            Timber.plant(DebugTree())
+            Timber.plant(Timber.DebugTree())
 //            LeakCanary.enableDisplayLeakActivity(this)
         } else {
             Fabric.with(this, Crashlytics(), Answers())

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.scheduleNotifications
 
 /**
  * Created by Allan Wang on 2017-05-31.

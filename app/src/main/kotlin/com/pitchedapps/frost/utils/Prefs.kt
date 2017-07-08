@@ -85,6 +85,8 @@ object Prefs : KPref() {
 
     var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
 
+    var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
+
     /**
      * Cache like value to determine if user has or had pro
      * In most cases, [com.pitchedapps.frost.utils.iab.IS_FROST_PRO] should be looked at instead

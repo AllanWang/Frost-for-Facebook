@@ -13,19 +13,14 @@ import ca.allanwang.kau.utils.fadeOut
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.crashlytics.android.answers.LoginEvent
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostAnswers
-import com.pitchedapps.frost.utils.launchNewTask
-import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.LoginWebView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -110,8 +105,7 @@ class LoginActivity : BaseActivity() {
 
 
     fun loadProfile(id: Long) {
-        val options = RequestOptions().transform(CircleCrop())
-        Glide.with(this@LoginActivity).load(PROFILE_PICTURE_URL(id)).apply(options).listener(object : RequestListener<Drawable> {
+        Glide.with(this@LoginActivity).load(PROFILE_PICTURE_URL(id)).withRoundIcon().listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 profileObservable.onSuccess(true)
                 return false

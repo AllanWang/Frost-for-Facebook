@@ -49,6 +49,7 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
@@ -58,6 +59,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
@@ -145,6 +147,15 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
         }
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
         validatePro()
+
+        doAsync {
+            val debugIcon = "https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/cp0/e15/q65/p120x120/12994387_243040309382307_4586627375882013710_n.jpg?efg=eyJpIjoidCJ9&oh=4f99b56bb3dab33d1312bd502ff91974&oe=59C8F9AB"
+            NotificationContent(loadFbCookie(Prefs.userId)!!, 1234,
+                    "https://www.google.ca/",
+                    this@MainActivity.string(R.string.kau_lorem_ipsum),
+                    System.currentTimeMillis(), debugIcon)
+                    .createNotification(this@MainActivity, true)
+        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
