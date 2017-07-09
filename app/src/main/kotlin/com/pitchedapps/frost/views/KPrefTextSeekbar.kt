@@ -2,7 +2,7 @@ package com.pitchedapps.frost.views
 
 import android.annotation.SuppressLint
 import android.util.TypedValue
-import ca.allanwang.kau.kpref.items.KPrefSeekbar
+import ca.allanwang.kau.kpref.activity.items.KPrefSeekbar
 import com.pitchedapps.frost.R
 
 /**

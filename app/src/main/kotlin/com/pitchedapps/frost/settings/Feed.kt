@@ -1,6 +1,6 @@
 package com.pitchedapps.frost.settings
 
-import ca.allanwang.kau.kpref.KPrefAdapterBuilder
+import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.R
