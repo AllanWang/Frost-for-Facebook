@@ -45,27 +45,29 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
             refreshObservable.onNext(false)
             return
         }
-        view.jsInject(JsActions.LOGIN_CHECK,
+        view.jsInject(
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
                 CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && Prefs.pro),
-                CssHider.ADS.maybe(!Prefs.showFacebookAds && Prefs.pro),
-                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
+                CssHider.ADS.maybe(!Prefs.showFacebookAds && Prefs.pro)
+        )
         onPageFinishedActions(url)
     }
 
     open internal fun onPageFinishedActions(url: String) {
-        injectAndFinish(url)
+        injectAndFinish()
     }
 
-    internal fun injectAndFinish(url: String) {
+    internal fun injectAndFinish() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
-                Prefs.themeInjector.maybe(url.contains(FACEBOOK_COM)),
+                Prefs.themeInjector,
                 callback = {
                     refreshObservable.onNext(false)
                     webCore.jsInject(
+                            JsActions.LOGIN_CHECK,
                             JsAssets.CLICK_A.maybe(webCore.baseEnum != null),
-                            JsAssets.CONTEXT_A
+                            JsAssets.CONTEXT_A,
+                            JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
                     )
                 })
     }
