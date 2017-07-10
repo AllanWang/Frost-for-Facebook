@@ -15,8 +15,9 @@ class FbUrlFormatter(url: String) {
     init {
         var cleanedUrl = url
         discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "") }
+        val changed = cleanedUrl != url //note that discardables strip away the first ?
         decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v) }
-        val qm = cleanedUrl.indexOf("?")
+        val qm =  cleanedUrl.indexOf(if (changed)"&" else "?")
         if (qm > -1) {
             cleanedUrl.substring(qm + 1).split("&").forEach {
                 val p = it.split("=")
@@ -58,7 +59,8 @@ class FbUrlFormatter(url: String) {
                 "http://m.facebook.com/l.php?u=",
                 "https://m.facebook.com/l.php?u=",
                 "http://touch.facebook.com/l.php?u=",
-                "https://touch.facebook.com/l.php?u="
+                "https://touch.facebook.com/l.php?u=",
+                "/video_redirect/?src="
         )
 
         @JvmStatic val discardableQueries = arrayOf("ref", "refid")
