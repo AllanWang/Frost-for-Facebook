@@ -1,6 +1,10 @@
 # Changelog
 
 ## Beta Updates
+* Reduce Menu loading logic
+* Load js injectors after showing webview
+
+## v1.3
 * Create toggle for notifications only from primary account
 * Micro string optimizations
 * Add profile icons to notifications

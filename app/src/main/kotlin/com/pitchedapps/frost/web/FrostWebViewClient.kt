@@ -92,7 +92,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         L.i("Url Loading ${request.url}")
-        val path = request.url.path
+        val path = request.url.path ?: return super.shouldOverrideUrlLoading(view, request)
         if (path.startsWith("/composer/")) return launchRequest(request)
         return super.shouldOverrideUrlLoading(view, request)
     }
