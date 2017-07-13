@@ -60,6 +60,11 @@ class NotificationService : JobService() {
         return true
     }
 
+    fun logNotif(text: String): NotificationContent? {
+        L.eThrow("NotificationService: $text")
+        return null
+    }
+
     fun fetchNotifications(data: CookieModel) {
         L.i("Notif fetch for $data")
         val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
@@ -82,29 +87,27 @@ class NotificationService : JobService() {
             notifCount++
         }
         if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epoch = newLatestEpoch))
-        frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
+        frostAnswersCustom("Notifications") {
+            putCustomAttribute("Type", "General")
+            putCustomAttribute("Count", notifCount)
+        }
         summaryNotification(data.id, notifCount)
+        fetchMessageNotifications(data)
     }
 
 
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
-        val a = element.getElementsByTag("a").first() ?: return null
-        //fetch id
-        val dataStore = a.attr("data-store")
-        val notifId = if (dataStore == null) System.currentTimeMillis()
-        else notifIdMatcher.find(dataStore)?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val a = element.getElementsByTag("a").first() ?: return logNotif("IM No a tag")
         val abbr = element.getElementsByTag("abbr")
-        val timeString = abbr?.text()
-        var text = a.text().replace("\u00a0", " ") //remove &nbsp;
+        val epoch = epochMatcher.find(abbr.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: return logNotif("IM No epoch")
+        //fetch id
+        val notifId = notifIdMatcher.find(a.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val timeString = abbr.text()
+        val text = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
-        if (timeString != null) text = text.removeSuffix(timeString)
-        text = text.trim()
-        //fetch epoch
-        val abbrData = abbr?.attr("data-store")
-        val epoch = if (abbrData == null) -1L else epochMatcher.find(abbrData)?.groups?.get(1)?.value?.toLong() ?: -1L
         //fetch profpic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.getOrNull(0)?.attr("style") ?: "")?.groups?.get(1)?.value ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
 
@@ -128,25 +131,26 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epoch = newLatestEpoch))
-        frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
+//        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epochIm = newLatestEpoch))
+        frostAnswersCustom("Notifications") {
+            putCustomAttribute("Type", "Message")
+            putCustomAttribute("Count", notifCount)
+        }
         summaryNotification(data.id, notifCount)
     }
 
     fun parseMessageNotification(data: CookieModel, element: Element): NotificationContent? {
         val a = element.getElementsByTag("a").first() ?: return null
+        val abbr = element.getElementsByTag("abbr")
+        val epoch = epochMatcher.find(abbr.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: return logNotif("No epoch")
+        val thread = element.getElementsByAttributeValueContaining("id", "thread_fbid_").first() ?: return null
         //fetch id
-        val thread = element.getElementsByAttributeValueContaining("id", "thread_fbid_").firstOrNull() ?: return null
         val notifId = messageNotifIdMatcher.find(thread.id())?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
         val text = element.select("span.snippet").firstOrNull()?.text()?.trim() ?: getString(R.string.new_message)
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
-        //fetch epoch
-        val abbr = element.getElementsByTag("abbr")
-        val abbrData = abbr.attr("data-store")
-        val epoch = epochMatcher.find(abbrData)?.groups?.get(1)?.value?.toLong() ?: -1L
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.getOrNull(0)?.attr("style") ?: "")?.groups?.get(1)?.value ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
         return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
