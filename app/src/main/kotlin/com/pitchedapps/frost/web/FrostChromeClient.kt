@@ -41,37 +41,4 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         return activityContract != null
     }
 
-    override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
-        super.onGeolocationPermissionsShowPrompt(origin, callback)
-        L.d("Geo prompt")
-    }
-
-    override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
-        L.d("ASDF $resultMsg")
-        return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg)
-    }
-
-    override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-        L.d("ASDF JS $message")
-        return super.onJsAlert(view, url, message, result)
-    }
-
-    override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
-        L.d("ASDF CV")
-        super.onShowCustomView(view, callback)
-    }
-
-    override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-        L.d("ASDF JSC $message")
-        return super.onJsConfirm(view, url, message, result)
-    }
-
-    override fun onJsPrompt(view: WebView?, url: String?, message: String?, defaultValue: String?, result: JsPromptResult?): Boolean {
-        L.d("ASDF JSP $message")
-        return super.onJsPrompt(view, url, message, defaultValue, result)
-    }
-
-
-
-
 }

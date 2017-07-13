@@ -102,10 +102,10 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         super.onPageCommitVisible(view, url)
     }
 
-    override fun onLoadResource(view: WebView, url: String) {
-        L.v("Load resource $url")
-        super.onLoadResource(view, url)
-    }
+//    override fun onLoadResource(view: WebView, url: String) {
+//        L.v("Load resource $url")
+//        super.onLoadResource(view, url)
+//    }
 
 
 }
