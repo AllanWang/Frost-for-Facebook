@@ -45,15 +45,15 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
             refreshObservable.onNext(false)
             return
         }
-        view.jsInject(JsActions.LOGIN_CHECK,
+        view.jsInject(
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
                 CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && Prefs.pro),
-                CssHider.ADS.maybe(!Prefs.showFacebookAds && Prefs.pro),
-                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null))
+                CssHider.ADS.maybe(!Prefs.showFacebookAds && Prefs.pro)
+        )
         onPageFinishedActions(url)
     }
 
-    open internal fun onPageFinishedActions(url: String?) {
+    open internal fun onPageFinishedActions(url: String) {
         injectAndFinish()
     }
 
@@ -61,9 +61,15 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
                 Prefs.themeInjector,
-                JsAssets.CLICK_A.maybe(webCore.baseEnum != null),
-                JsAssets.CONTEXT_A,
-                callback = { refreshObservable.onNext(false) })
+                callback = {
+                    refreshObservable.onNext(false)
+                    webCore.jsInject(
+                            JsActions.LOGIN_CHECK,
+                            JsAssets.CLICK_A.maybe(webCore.baseEnum != null),
+                            JsAssets.CONTEXT_A,
+                            JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
+                    )
+                })
     }
 
     open fun handleHtml(html: String) {
@@ -86,7 +92,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         L.i("Url Loading ${request.url}")
-        val path = request.url.path
+        val path = request.url.path ?: return super.shouldOverrideUrlLoading(view, request)
         if (path.startsWith("/composer/")) return launchRequest(request)
         return super.shouldOverrideUrlLoading(view, request)
     }

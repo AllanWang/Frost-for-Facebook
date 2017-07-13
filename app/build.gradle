@@ -26,12 +26,6 @@ android {
         prefix 'v'
     }
 
-    playAccountConfigs {
-        defaultAccountConfig {
-            jsonFile = file('../files/gplay-keys.json')
-        }
-    }
-
     defaultConfig {
         applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase()
         minSdkVersion Integer.parseInt(project.MIN_SDK)
@@ -124,8 +118,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
 
-
-    compile "ca.allanwang.kau:core:${KAU}"
+    compile "ca.allanwang.kau:about:$KAU"
+    compile "ca.allanwang.kau:colorpicker:$KAU"
+//    compile "ca.allanwang.kau:imagepicker:$KAU"
+    compile "ca.allanwang.kau:kpref-activity:$KAU"
+    compile "ca.allanwang.kau:searchview:$KAU"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"

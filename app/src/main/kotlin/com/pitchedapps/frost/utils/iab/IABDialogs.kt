@@ -67,7 +67,7 @@ fun Activity.playStoreNotFound() {
 }
 
 fun Activity.playStoreProNotAvailable() {
-    playStoreLog("Pro query; store not available")
+    L.d("Pro query; store not available")
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_not_found_pro_query)

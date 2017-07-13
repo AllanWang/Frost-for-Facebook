@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="null_url_overlay">Empty url given to overlay; exiting</string>
+</resources>

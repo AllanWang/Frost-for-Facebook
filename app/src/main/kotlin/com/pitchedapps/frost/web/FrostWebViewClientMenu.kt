@@ -1,42 +1,26 @@
 package com.pitchedapps.frost.web
 
-import android.graphics.Bitmap
 import android.webkit.WebView
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.jsInject
-import com.pitchedapps.frost.utils.L
-import io.reactivex.subjects.Subject
 
 /**
  * Created by Allan Wang on 2017-05-31.
  */
 class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(webCore) {
 
-    var content: String? = null
-    val progressObservable: Subject<Int> = webCore.progressObservable
-    private val contentBaseUrl = "${FB_URL_BASE}notifications"
-
-    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
-        if (content != null) {
-            when (url.removePrefix(FB_URL_BASE)) {
-                "settings",
-                "settings#",
-                "settings#!/settings?soft=bookmarks" -> {
-                    L.d("Load from stored $url")
-                    view.stopLoading()
-                    view.loadDataWithBaseURL(contentBaseUrl, content, "text/html", "utf-8", "https://google.ca/test")
-                }
-            }
-        }
+    private val String.shouldInjectMenu
+    get() = when (removePrefix(FB_URL_BASE)) {
+        "settings",
+        "settings#",
+        "settings#!/settings?soft=bookmarks" -> true
+        else -> false
     }
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
-        if (url == webCore.baseUrl && content == null) {
-            jsInject(JsAssets.MENU)
-        }
+        if (url.shouldInjectMenu) jsInject(JsAssets.MENU)
     }
 
     override fun emit(flag: Int) {
@@ -44,19 +28,8 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
         super.injectAndFinish()
     }
 
-    override fun onPageFinishedActions(url: String?) {
-        when (url?.removePrefix(FB_URL_BASE)) {
-            "settings",
-            "settings#",
-            "settings#!/settings?soft=bookmarks" -> {
-                //do nothing; we will further inject before revealing
-            }
-            else -> injectAndFinish()
-        }
+    override fun onPageFinishedActions(url: String) {
+        if (!url.shouldInjectMenu) injectAndFinish()
     }
 
-    override fun handleHtml(html: String) {
-        super.handleHtml(html)
-        content = html //we will not save this locally in case things change
-    }
 }

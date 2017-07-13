@@ -22,14 +22,6 @@
 -keeppackagenames org.jsoup.nodes
 # IAB
 -keep class com.android.vending.billing.**
-# About libs
-#-keep class .R
-#-keep class **.R$* {
-#    <fields>;
-#}
--keepclasseswithmembers class **.R$* {
-    public static final int define_*;
-}
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.AppGlideModule

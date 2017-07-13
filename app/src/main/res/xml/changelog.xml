@@ -9,17 +9,22 @@
     -->
 
     <version title="Beta Updates"/>
+    <item text="Reduce Menu loading logic" />
+    <item text="Load js injectors after showing webview" />
+    <item text="Add notifications for messages" />
     <item text="" />
-    <!--<version title="v1.3"/>-->
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
+    <version title="v1.3"/>
     <item text="Create toggle for notifications only from primary account" />
     <item text="Micro string optimizations" />
     <item text="Add profile icons to notifications" />
     <item text="Make notifications expandable" />
     <item text="Add notification trigger in settings" />
     <item text="Fix bug where only single latest notification is showing" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v1.2"/>
     <item text="Scale browser on keyboard pop up" />

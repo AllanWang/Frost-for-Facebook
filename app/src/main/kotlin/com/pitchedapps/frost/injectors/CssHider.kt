@@ -15,7 +15,8 @@ enum class CssHider(vararg val items: String) : InjectorContract {
             "article[data-xt*=sponsor]",
             "article[data-store*=sponsor]"
     ),
-    PEOPLE_YOU_MAY_KNOW("article._d2r")
+    PEOPLE_YOU_MAY_KNOW("article._d2r"),
+    MESSENGER("._s15", "[data-testid=info_panel]", "js_i")
     ;
 
     val injector: JsInjector by lazy { JsBuilder().css("${items.joinToString(separator = ",")}{display:none!important}").build() }

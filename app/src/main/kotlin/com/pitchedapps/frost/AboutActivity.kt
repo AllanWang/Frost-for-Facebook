@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import ca.allanwang.kau.about.AboutActivityBase
+import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
-import ca.allanwang.kau.iitems.LibraryIItem
 import ca.allanwang.kau.utils.*
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library

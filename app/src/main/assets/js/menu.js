@@ -27,7 +27,6 @@ if (!window.hasOwnProperty('frost_menu')) {
       setTimeout(function() {
         y.disconnect();
         console.log('Unhook styler');
-        Frost.handleHtml(document.documentElement.outerHTML);
       }, 500);
     }
   });
