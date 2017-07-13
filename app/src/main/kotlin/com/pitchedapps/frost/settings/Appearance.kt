@@ -1,10 +1,10 @@
 package com.pitchedapps.frost.settings
 
-import ca.allanwang.kau.kpref.KPrefAdapterBuilder
-import ca.allanwang.kau.kpref.items.KPrefColorPicker
-import ca.allanwang.kau.kpref.items.KPrefSeekbar
+import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.kpref.activity.items.KPrefColorPicker
+import ca.allanwang.kau.kpref.activity.items.KPrefSeekbar
+import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.string
-import ca.allanwang.kau.views.RippleCanvas
 import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.SettingsActivity

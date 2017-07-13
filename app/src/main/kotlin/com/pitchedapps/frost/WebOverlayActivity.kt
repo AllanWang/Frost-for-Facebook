@@ -41,6 +41,9 @@ open class WebOverlayActivity : AppCompatActivity(),
         const val ARG_USER_ID = "arg_user_id"
     }
 
+    val urlTest: String?
+        get() = intent.extras?.getString(ARG_URL) ?: intent.dataString
+
     open val url: String
         get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
 
@@ -49,6 +52,12 @@ open class WebOverlayActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (urlTest == null) {
+            L.eThrow("Empty link on web overlay")
+            toast(R.string.null_url_overlay)
+            finish()
+            return
+        }
         setContentView(R.layout.activity_web_overlay)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)

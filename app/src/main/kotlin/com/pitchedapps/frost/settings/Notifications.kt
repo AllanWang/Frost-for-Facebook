@@ -1,6 +1,6 @@
 package com.pitchedapps.frost.settings
 
-import ca.allanwang.kau.kpref.KPrefAdapterBuilder
+import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.minuteToText
 import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.R

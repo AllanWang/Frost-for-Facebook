@@ -1,16 +1,10 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+/.idea
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 *.min.css
 .sass-cache/
-files/gplay-keys.json
-files/play.keystore
-files/play.properties
-files/test.keystore
-files/update-dev.sh

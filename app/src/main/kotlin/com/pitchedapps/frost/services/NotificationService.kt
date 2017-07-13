@@ -7,9 +7,13 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.*
+import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.dbflow.lastNotificationTime
+import com.pitchedapps.frost.dbflow.loadFbCookie
+import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
@@ -31,6 +35,7 @@ class NotificationService : JobService() {
     companion object {
         val epochMatcher: Regex by lazy { Regex(":([0-9]*?),") }
         val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*?),") }
+        val messageNotifIdMatcher: Regex by lazy { Regex("thread_fbid_([0-9]+)") }
         val profMatcher: Regex by lazy { Regex("url\\(\"(.*?)\"\\)") }
     }
 
@@ -59,14 +64,26 @@ class NotificationService : JobService() {
         return true
     }
 
+    fun logNotif(text: String): NotificationContent? {
+        L.eThrow("NotificationService: $text")
+        return null
+    }
+
     fun fetchNotifications(data: CookieModel) {
+        fetchGeneralNotifications(data)
+//        fetchMessageNotifications(data)
+        debugNotification("Hello")
+    }
+
+    fun fetchGeneralNotifications(data: CookieModel) {
         L.i("Notif fetch for $data")
-        val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
+        val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
         //aclb for unread, acw for read
-        val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
+        val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
         var notifCount = 0
 //        val prevLatestEpoch = 1498931565L // for testing
-        val prevLatestEpoch = lastNotificationTime(data.id)
+        val prevNotifTime = lastNotificationTime(data.id)
+        val prevLatestEpoch = prevNotifTime.epoch
         L.v("Notif Prev Latest Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
         unreadNotifications.forEach unread@ {
@@ -79,31 +96,77 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(data.id, newLatestEpoch))
-        frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
+        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).update()
+        frostAnswersCustom("Notifications") {
+            putCustomAttribute("Type", "General")
+            putCustomAttribute("Count", notifCount)
+        }
         summaryNotification(data.id, notifCount)
     }
 
 
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
-        val a = element.getElementsByTag("a").first() ?: return null
-        //fetch id
-        val dataStore = a.attr("data-store")
-        val notifId = if (dataStore == null) System.currentTimeMillis()
-        else notifIdMatcher.find(dataStore)?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val a = element.getElementsByTag("a").first() ?: return logNotif("IM No a tag")
         val abbr = element.getElementsByTag("abbr")
-        val timeString = abbr?.text()
-        var text = a.text().replace("\u00a0", " ") //remove &nbsp;
+        val epoch = epochMatcher.find(abbr.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: return logNotif("IM No epoch")
+        //fetch id
+        val notifId = notifIdMatcher.find(a.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val timeString = abbr.text()
+        val text = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
-        if (timeString != null) text = text.removeSuffix(timeString)
-        text = text.trim()
-        //fetch epoch
-        val abbrData = abbr?.attr("data-store")
-        val epoch = if (abbrData == null) -1L else epochMatcher.find(abbrData)?.groups?.get(1)?.value?.toLong() ?: -1L
         //fetch profpic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.getOrNull(0)?.attr("style") ?: "")?.groups?.get(1)?.value ?: ""
-        return NotificationContent(data, notifId.toInt(), a.attr("href"), text, epoch, pUrl)
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
+    }
+
+    fun fetchMessageNotifications(data: CookieModel) {
+        if (!Prefs.notificationsInstantMessages) return
+        L.i("Notif IM fetch for $data")
+        val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
+        val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
+        var notifCount = 0
+        L.d("IM notif count ${unreadNotifications.size}")
+        unreadNotifications.forEach {
+            with(it) {
+                L.d("notif ${id()} ${className()}")
+            }
+        }
+        val prevNotifTime = lastNotificationTime(data.id)
+        val prevLatestEpoch = prevNotifTime.epochIm
+        L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
+        var newLatestEpoch = prevLatestEpoch
+        unreadNotifications.forEach unread@ {
+            elem ->
+            val notif = parseMessageNotification(data, elem) ?: return@unread
+            L.v("Notif im timestamp ${notif.timestamp}")
+            if (notif.timestamp <= prevLatestEpoch) return@unread
+            notif.createNotification(this@NotificationService)
+            if (notif.timestamp > newLatestEpoch)
+                newLatestEpoch = notif.timestamp
+            notifCount++
+        }
+//        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).update()
+        frostAnswersCustom("Notifications") {
+            putCustomAttribute("Type", "Message")
+            putCustomAttribute("Count", notifCount)
+        }
+        summaryNotification(data.id, notifCount)
+    }
+
+    fun parseMessageNotification(data: CookieModel, element: Element): NotificationContent? {
+        val a = element.getElementsByTag("a").first() ?: return null
+        val abbr = element.getElementsByTag("abbr")
+        val epoch = epochMatcher.find(abbr.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: return logNotif("No epoch")
+        val thread = element.getElementsByAttributeValueContaining("id", "thread_fbid_").first() ?: return null
+        //fetch id
+        val notifId = messageNotifIdMatcher.find(thread.id())?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val text = element.select("span.snippet").firstOrNull()?.text()?.trim() ?: getString(R.string.new_message)
+        if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
+        //fetch convo pic
+        val p = element.select("i.img[style*=url]")
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
     private fun Context.debugNotification(text: String) {
