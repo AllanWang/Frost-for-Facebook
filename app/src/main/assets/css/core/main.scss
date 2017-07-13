@@ -25,7 +25,7 @@ body, #root, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r
   background: transparent !important;
 }
 
-.jewel, .flyout, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p {
+.jewel, .flyout, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p, .mentions-suggest-item, .mentions-suggest {
   background: $bg_opaque !important;
 }
 
@@ -73,7 +73,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 //friend card border
-._d4i, ._f6s,
+._d4i, ._f6s, .mentions-suggest-item, .mentions-suggest,
 ._1_y5, ._lr0, ._5hgt,
 ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd, ._5n_f {
   border: 1px solid $divider !important;

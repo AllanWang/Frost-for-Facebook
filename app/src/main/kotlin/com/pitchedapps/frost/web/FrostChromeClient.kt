@@ -60,4 +60,18 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         L.d("ASDF CV")
         super.onShowCustomView(view, callback)
     }
+
+    override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
+        L.d("ASDF JSC $message")
+        return super.onJsConfirm(view, url, message, result)
+    }
+
+    override fun onJsPrompt(view: WebView?, url: String?, message: String?, defaultValue: String?, result: JsPromptResult?): Boolean {
+        L.d("ASDF JSP $message")
+        return super.onJsPrompt(view, url, message, defaultValue, result)
+    }
+
+
+
+
 }
