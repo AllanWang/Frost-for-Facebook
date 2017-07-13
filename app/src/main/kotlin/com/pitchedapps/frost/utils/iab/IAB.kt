@@ -40,10 +40,12 @@ object IAB {
                         onFailed: () -> Unit = {},
                         onStart: (helper: IabHelper) -> Unit) {
         with(activity) {
-            if (isInProgress) if (userRequest) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
-            else if (helper?.disposed ?: true) {
+            if (isInProgress) {
+                if (userRequest) snackbar(R.string.iab_still_in_progress, Snackbar.LENGTH_LONG)
+                L.d("Play Store IAB in progress")
+            } else if (helper?.disposed ?: true) {
                 helper = null
-                L.d("IAB setup async")
+                L.d("Play Store IAB setup async")
                 if (!isFrostPlay) {
                     if (mustHavePlayStore) playStoreNotFound()
                     onFailed()
@@ -54,12 +56,12 @@ object IAB {
                     helper!!.enableDebugLogging(BuildConfig.DEBUG || Prefs.verboseLogging, "Frost:")
                     helper!!.startSetup {
                         result ->
-                        L.d("IAB setup finished; ${result.isSuccess}")
+                        L.d("Play Store IAB setup finished; ${result.isSuccess}")
                         if (result.isSuccess) {
-                            L.d("IAB setup success")
+                            L.d("Play Store IAB setup success")
                             onStart(helper!!)
                         } else {
-                            L.d("IAB setup fail")
+                            L.d("Play Store IAB setup fail")
                             if (mustHavePlayStore)
                                 activity.playStoreGenericError("Setup error: ${result.response} ${result.message}")
                             onFailed()
@@ -67,7 +69,7 @@ object IAB {
                         }
                     }
                 } catch (e: Exception) {
-                    L.e(e, "IAB error")
+                    L.e(e, "Play Store IAB error")
                     if (mustHavePlayStore)
                         playStoreGenericError(null)
                     onFailed()
@@ -84,17 +86,23 @@ object IAB {
      * Call this after any execution to dispose the helper
      */
     fun dispose() {
-        helper?.disposeWhenFinished()
-        helper = null
+        synchronized(this) {
+            L.d("Play Store IAB dispose")
+            helper?.disposeWhenFinished()
+            helper = null
+        }
     }
 
     /**
      * Dispose given helper and check if it matches with our own helper
      */
     fun dispose(helper: IabHelper) {
-        helper.disposeWhenFinished()
-        if (IAB.helper?.disposed ?: true)
-            this.helper = null
+        synchronized(this) {
+            L.d("Play Store IAB helper dispose")
+            helper.disposeWhenFinished()
+            if (IAB.helper?.disposed ?: true)
+                this.helper = null
+        }
     }
 
     val isInProgress: Boolean
@@ -118,7 +126,7 @@ fun SettingsActivity.restorePurchases() {
     restore.setAction(R.string.kau_close) { restore.dismiss() }
     //called if inventory is not properly retrieved
     val reset = {
-        L.d("Restore reset")
+        L.d("Play Store Restore reset")
         if (Prefs.pro) {
             Prefs.pro = false
             Prefs.theme = Theme.DEFAULT.ordinal
@@ -129,7 +137,7 @@ fun SettingsActivity.restorePurchases() {
         inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
         Prefs.pro = proSku
-        L.d("Restore found: ${Prefs.pro}")
+        L.d("Play Store Restore found: ${Prefs.pro}")
         finishRestore(restore, Prefs.pro)
     }
 }
@@ -149,11 +157,11 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
  * If cache matches result, it finishes silently
  */
 fun Activity.validatePro() {
-    L.d("Validate pro")
+    L.d("Play Store Validate pro")
     getInventory(Prefs.pro, false, { if (Prefs.pro) playStoreNoLongerPro() }) {
         inv, helper ->
         val proSku = inv.hasPurchase(FROST_PRO)
-        L.d("Validation finished: ${Prefs.pro} should be $proSku")
+        L.d("Play Store Validation finished: ${Prefs.pro} should be $proSku")
         if (!proSku && Prefs.pro) playStoreNoLongerPro()
         else if (proSku && !Prefs.pro) playStoreFoundPro()
         helper.disposeWhenFinished()
@@ -169,12 +177,11 @@ fun Activity.getInventory(
         helper ->
         helper.queryInventoryAsync {
             res, inv ->
-            L.d("Inventory query finished")
+            L.d("Play Store Inventory query finished")
             if (res.isFailure || inv == null) {
-                L.e("Res error ${res.message}")
+                L.e("Play Store Res error ${res.message}")
                 onFailed()
-            }
-            else onSuccess(inv, helper)
+            } else onSuccess(inv, helper)
         }
     }
 }
@@ -188,7 +195,7 @@ fun Activity.openPlayProPurchase(code: Int) {
 }
 
 fun Activity.openPlayPurchase(key: String, code: Int, onSuccess: (key: String) -> Unit) {
-    L.d("Open play purchase $key $code")
+    L.d("Play Store open purchase $key $code")
     getInventory(true, true, { playStoreGenericError("Query res error") }) {
         inv, helper ->
         if (inv.hasPurchase(key)) {

@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.web
 
 import android.net.Uri
+import android.os.Message
+import android.view.View
 import android.webkit.*
 import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.contracts.ActivityWebContract
@@ -44,5 +46,18 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         L.d("Geo prompt")
     }
 
+    override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
+        L.d("ASDF $resultMsg")
+        return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg)
+    }
 
+    override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
+        L.d("ASDF JS $message")
+        return super.onJsAlert(view, url, message, result)
+    }
+
+    override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+        L.d("ASDF CV")
+        super.onShowCustomView(view, callback)
+    }
 }
