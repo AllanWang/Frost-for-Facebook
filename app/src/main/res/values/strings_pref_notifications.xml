@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_frequency">Notification Frequency</string>
+    <string name="notification_keywords">Keywords</string>
+    <string name="notification_keywords_desc">Does not notify when notification contains any of these keys.</string>
+    <string name="add_keyword">Add Keyword</string>
+    <string name="hint_keyword">Type keyword and press +</string>
+    <string name="empty_keyword">Empty Keyword</string>
+    <string name="notification_all_accounts">Notify from all accounts</string>
+    <string name="notification_all_accounts_desc">Get notifications for every account that is logged in. Disabling this will only fetch notifications form the currently selected account.</string>
+    <string name="notification_fetch_now">Fetch Notifications Now</string>
+    <string name="notification_fetch_now_desc">Trigger the notification fetcher one time.</string>
+    <string name="notification_fetch_success">Fetching Notifications…</string>
+    <string name="notification_fetch_fail">Couldn\'t fetch notifications</string>
+    <string name="notification_sound">Notification sound</string>
+    <string name="notification_vibrate">Notification vibration</string>
+    <string name="notification_lights">Notification lights</string>
+
+
+</resources>

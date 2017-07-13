@@ -25,6 +25,7 @@ import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.utils.GlideApp
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.withRoundIcon
 import org.jetbrains.anko.runOnUiThread
 
@@ -37,6 +38,12 @@ val Context.frostNotification: NotificationCompat.Builder
         setAutoCancel(true)
         color = color(R.color.frost_notification_accent)
     }
+
+fun Notification.frostConfig() = apply {
+    if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
+    if (Prefs.notificationSound) defaults = defaults or Notification.DEFAULT_SOUND
+    if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
+}
 
 val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
     get() = NotificationCompat.BigTextStyle(this)
@@ -54,7 +61,7 @@ class FrostNotificationTarget(val context: Context,
 
     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>) {
         builder.setLargeIcon(resource)
-        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.withBigText.build())
+        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.withBigText.build().frostConfig())
     }
 }
 
@@ -91,7 +98,7 @@ data class NotificationContent(val data: CookieModel,
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
             L.v("Notif load $this")
-            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build())
+            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build().frostConfig())
 
             if (profileUrl.isNotBlank()) {
                 context.runOnUiThread {

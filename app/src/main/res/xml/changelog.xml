@@ -11,9 +11,8 @@
     <version title="Beta Updates"/>
     <item text="Reduce Menu loading logic" />
     <item text="Load js injectors after showing webview" />
-    <item text="Add notifications for messages" />
-    <item text="" />
-    <item text="" />
+    <item text="Add toggles for sound, vibration, and lights" />
+    <item text="Avoid restricting facebook features (such as user tagging)" />
     <item text="" />
     <item text="" />
     <item text="" />

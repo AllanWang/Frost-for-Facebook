@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="theme_customization">Theme Customization</string>
+
+    <string name="theme">Theme</string>
+    <string name="text_color">Text Color</string>
+    <string name="background_color">Background Color</string>
+    <string name="header_color">Header Color</string>
+    <string name="icon_color">Icon Color</string>
+
+    <string name="global_customization">Global Customization</string>
+
+    <string name="rounded_icons">Rounded Icons</string>
+    <string name="rounded_icons_desc">Profile photos and group conversation icons will be rounded</string>
+
+    <string name="tint_nav">Tint Nav Bar</string>
+    <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
+    <string name="web_text_scaling">Web Text Scaling</string>
+    <string name="web_text_scaling_desc">Text Scaling Example; Long press the percentage text to reset.</string>
+
+</resources>

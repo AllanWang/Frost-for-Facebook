@@ -3,7 +3,8 @@
 ## Beta Updates
 * Reduce Menu loading logic
 * Load js injectors after showing webview
-* Add notifications for messages
+* Add toggles for sound, vibration, and lights
+* Avoid restricting facebook features (such as user tagging)
 
 ## v1.3
 * Create toggle for notifications only from primary account
