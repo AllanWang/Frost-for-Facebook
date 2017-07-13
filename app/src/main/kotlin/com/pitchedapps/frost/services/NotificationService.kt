@@ -13,6 +13,7 @@ import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
@@ -70,14 +71,15 @@ class NotificationService : JobService() {
 
     fun fetchNotifications(data: CookieModel) {
         fetchGeneralNotifications(data)
-        fetchMessageNotifications(data)
+//        fetchMessageNotifications(data)
+        debugNotification("Hello")
     }
 
     fun fetchGeneralNotifications(data: CookieModel) {
         L.i("Notif fetch for $data")
-        val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
+        val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
         //aclb for unread, acw for read
-        val unreadNotifications = doc.getElementById("notifications_list")?.getElementsByClass("aclb") ?: return L.eThrow("Notification list not found")
+        val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
         var notifCount = 0
 //        val prevLatestEpoch = 1498931565L // for testing
         val prevNotifTime = lastNotificationTime(data.id)
@@ -121,17 +123,22 @@ class NotificationService : JobService() {
     fun fetchMessageNotifications(data: CookieModel) {
         if (!Prefs.notificationsInstantMessages) return
         L.i("Notif IM fetch for $data")
-        val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).get()
-        L.d(doc.html())
-        val unreadNotifications = doc.getElementById("threadlist_rows")?.getElementsByClass("aclb") ?: return L.eThrow("Notification messages not found")
+        val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
+        val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
         var notifCount = 0
+        L.d("IM notif count ${unreadNotifications.size}")
+        unreadNotifications.forEach {
+            with(it) {
+                L.d("notif ${id()} ${className()}")
+            }
+        }
         val prevNotifTime = lastNotificationTime(data.id)
         val prevLatestEpoch = prevNotifTime.epochIm
         L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
         unreadNotifications.forEach unread@ {
             elem ->
-            val notif = parseNotification(data, elem) ?: return@unread
+            val notif = parseMessageNotification(data, elem) ?: return@unread
             L.v("Notif im timestamp ${notif.timestamp}")
             if (notif.timestamp <= prevLatestEpoch) return@unread
             notif.createNotification(this@NotificationService)
