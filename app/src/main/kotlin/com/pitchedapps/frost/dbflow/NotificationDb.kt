@@ -14,7 +14,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 @Database(name = NotificationDb.NAME, version = NotificationDb.VERSION)
 object NotificationDb {
     const val NAME = "Notifications"
-    const val VERSION = 1
+    const val VERSION = 2
 }
 
 @Migration(version = 2, database = NotificationDb::class)
@@ -22,6 +22,7 @@ class NotificationMigration2(modelClass: Class<NotificationModel>) : AlterTableM
     override fun onPreMigrate() {
         super.onPreMigrate()
         addColumn(SQLiteType.INTEGER, "epochIm")
+        L.d("Added column")
     }
 }
 

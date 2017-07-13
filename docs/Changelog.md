@@ -3,6 +3,7 @@
 ## Beta Updates
 * Reduce Menu loading logic
 * Load js injectors after showing webview
+* Add notifications for messages
 
 ## v1.3
 * Create toggle for notifications only from primary account

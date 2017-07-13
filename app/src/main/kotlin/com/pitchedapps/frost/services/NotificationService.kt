@@ -7,7 +7,10 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.*
+import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.dbflow.lastNotificationTime
+import com.pitchedapps.frost.dbflow.loadFbCookie
+import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
@@ -66,10 +69,15 @@ class NotificationService : JobService() {
     }
 
     fun fetchNotifications(data: CookieModel) {
+        fetchGeneralNotifications(data)
+        fetchMessageNotifications(data)
+    }
+
+    fun fetchGeneralNotifications(data: CookieModel) {
         L.i("Notif fetch for $data")
         val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).get()
         //aclb for unread, acw for read
-        val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
+        val unreadNotifications = doc.getElementById("notifications_list")?.getElementsByClass("aclb") ?: return L.eThrow("Notification list not found")
         var notifCount = 0
 //        val prevLatestEpoch = 1498931565L // for testing
         val prevNotifTime = lastNotificationTime(data.id)
@@ -86,13 +94,12 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epoch = newLatestEpoch))
+        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).update()
         frostAnswersCustom("Notifications") {
             putCustomAttribute("Type", "General")
             putCustomAttribute("Count", notifCount)
         }
         summaryNotification(data.id, notifCount)
-        fetchMessageNotifications(data)
     }
 
 
@@ -115,7 +122,8 @@ class NotificationService : JobService() {
         if (!Prefs.notificationsInstantMessages) return
         L.i("Notif IM fetch for $data")
         val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).get()
-        val unreadNotifications = doc.getElementById("threadlist_rows").getElementsByClass("aclb")
+        L.d(doc.html())
+        val unreadNotifications = doc.getElementById("threadlist_rows")?.getElementsByClass("aclb") ?: return L.eThrow("Notification messages not found")
         var notifCount = 0
         val prevNotifTime = lastNotificationTime(data.id)
         val prevLatestEpoch = prevNotifTime.epochIm
@@ -131,7 +139,7 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-//        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epochIm = newLatestEpoch))
+//        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).update()
         frostAnswersCustom("Notifications") {
             putCustomAttribute("Type", "Message")
             putCustomAttribute("Count", notifCount)
