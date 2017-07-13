@@ -94,4 +94,5 @@
     <string name="library_dbflow_licenseId">mit</string>
     <string name="login_id_failed">Login failed; id not found</string>
     <string name="iab_still_in_progress">IAB query is still in progress</string>
+    <string name="new_message">New Message</string>
 </resources>

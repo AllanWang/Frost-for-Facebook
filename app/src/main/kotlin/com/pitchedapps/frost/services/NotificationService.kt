@@ -31,6 +31,7 @@ class NotificationService : JobService() {
     companion object {
         val epochMatcher: Regex by lazy { Regex(":([0-9]*?),") }
         val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*?),") }
+        val messageNotifIdMatcher: Regex by lazy { Regex("thread_fbid_([0-9]+)") }
         val profMatcher: Regex by lazy { Regex("url\\(\"(.*?)\"\\)") }
     }
 
@@ -66,7 +67,8 @@ class NotificationService : JobService() {
         val unreadNotifications = doc.getElementById("notifications_list").getElementsByClass("aclb")
         var notifCount = 0
 //        val prevLatestEpoch = 1498931565L // for testing
-        val prevLatestEpoch = lastNotificationTime(data.id)
+        val prevNotifTime = lastNotificationTime(data.id)
+        val prevLatestEpoch = prevNotifTime.epoch
         L.v("Notif Prev Latest Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
         unreadNotifications.forEach unread@ {
@@ -79,7 +81,7 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(data.id, newLatestEpoch))
+        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epoch = newLatestEpoch))
         frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
         summaryNotification(data.id, notifCount)
     }
@@ -103,7 +105,49 @@ class NotificationService : JobService() {
         //fetch profpic
         val p = element.select("i.img[style*=url]")
         val pUrl = profMatcher.find(p.getOrNull(0)?.attr("style") ?: "")?.groups?.get(1)?.value ?: ""
-        return NotificationContent(data, notifId.toInt(), a.attr("href"), text, epoch, pUrl)
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
+    }
+
+    fun fetchMessageNotifications(data: CookieModel) {
+        if (!Prefs.notificationsInstantMessages) return
+        L.i("Notif IM fetch for $data")
+        val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).get()
+        val unreadNotifications = doc.getElementById("threadlist_rows").getElementsByClass("aclb")
+        var notifCount = 0
+        val prevNotifTime = lastNotificationTime(data.id)
+        val prevLatestEpoch = prevNotifTime.epochIm
+        L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
+        var newLatestEpoch = prevLatestEpoch
+        unreadNotifications.forEach unread@ {
+            elem ->
+            val notif = parseNotification(data, elem) ?: return@unread
+            L.v("Notif im timestamp ${notif.timestamp}")
+            if (notif.timestamp <= prevLatestEpoch) return@unread
+            notif.createNotification(this@NotificationService)
+            if (notif.timestamp > newLatestEpoch)
+                newLatestEpoch = notif.timestamp
+            notifCount++
+        }
+        if (newLatestEpoch != prevLatestEpoch) saveNotificationTime(NotificationModel(epoch = newLatestEpoch))
+        frostAnswersCustom("Notifications") { putCustomAttribute("Count", notifCount) }
+        summaryNotification(data.id, notifCount)
+    }
+
+    fun parseMessageNotification(data: CookieModel, element: Element): NotificationContent? {
+        val a = element.getElementsByTag("a").first() ?: return null
+        //fetch id
+        val thread = element.getElementsByAttributeValueContaining("id", "thread_fbid_").firstOrNull() ?: return null
+        val notifId = messageNotifIdMatcher.find(thread.id())?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val text = element.select("span.snippet").firstOrNull()?.text()?.trim() ?: getString(R.string.new_message)
+        if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
+        //fetch epoch
+        val abbr = element.getElementsByTag("abbr")
+        val abbrData = abbr.attr("data-store")
+        val epoch = epochMatcher.find(abbrData)?.groups?.get(1)?.value?.toLong() ?: -1L
+        //fetch convo pic
+        val p = element.select("i.img[style*=url]")
+        val pUrl = profMatcher.find(p.getOrNull(0)?.attr("style") ?: "")?.groups?.get(1)?.value ?: ""
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
     private fun Context.debugNotification(text: String) {

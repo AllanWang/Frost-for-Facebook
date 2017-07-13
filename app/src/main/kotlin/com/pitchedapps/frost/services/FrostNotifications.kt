@@ -64,6 +64,7 @@ class FrostNotificationTarget(val context: Context,
 data class NotificationContent(val data: CookieModel,
                                val notifId: Int,
                                val href: String,
+                               val title: String? = null,
                                val text: String,
                                val timestamp: Long,
                                val profileUrl: String) {
@@ -81,7 +82,7 @@ data class NotificationContent(val data: CookieModel,
             val group = "frost_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val notifBuilder = context.frostNotification
-                    .setContentTitle(context.string(R.string.app_name))
+                    .setContentTitle(title ?: context.string(R.string.app_name))
                     .setContentText(text)
                     .setContentIntent(pendingIntent)
                     .setCategory(Notification.CATEGORY_SOCIAL)
@@ -133,7 +134,7 @@ const val NOTIFICATION_JOB_NOW = 6
 /**
  * Run notification job right now
  */
-fun Context.fetchNotifications():Boolean {
+fun Context.fetchNotifications(): Boolean {
     val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
     val serviceComponent = ComponentName(this, NotificationService::class.java)
     val builder = JobInfo.Builder(NOTIFICATION_JOB_NOW, serviceComponent)
