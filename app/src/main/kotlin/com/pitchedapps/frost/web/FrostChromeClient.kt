@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.web
 
 import android.net.Uri
+import android.os.Message
+import android.view.View
 import android.webkit.*
 import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.contracts.ActivityWebContract
@@ -38,11 +40,5 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         activityContract?.openFileChooser(filePathCallback, fileChooserParams) ?: webView.snackbar("File chooser not found")
         return activityContract != null
     }
-
-    override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
-        super.onGeolocationPermissionsShowPrompt(origin, callback)
-        L.d("Geo prompt")
-    }
-
 
 }

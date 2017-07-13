@@ -97,4 +97,15 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         return super.shouldOverrideUrlLoading(view, request)
     }
 
+    override fun onPageCommitVisible(view: WebView?, url: String?) {
+        L.d("ASDF PCV")
+        super.onPageCommitVisible(view, url)
+    }
+
+//    override fun onLoadResource(view: WebView, url: String) {
+//        L.v("Load resource $url")
+//        super.onLoadResource(view, url)
+//    }
+
+
 }
