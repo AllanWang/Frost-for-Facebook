@@ -1,7 +1,5 @@
-package com.pitchedapps.frost.utils
+package com.pitchedapps.frost.facebook
 
-import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FbUrlFormatter
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -20,13 +18,12 @@ class FbUrlTest {
     @Test
     fun relative() {
         val url = "/relative/?asdf=1234&hjkl=7890"
-        assertFbFormat("$FB_URL_BASE$url", url)
+        assertFbFormat("$FB_URL_BASE${url.substring(1)}", url)
     }
 
     @Test
     fun redirect() {
-        val url = "/relative/?asdf=1234&hjkl=7890"
-        assertFbFormat("$FB_URL_BASE$url", "https://touch.facebook.com/l.php?u=$url")
+        assertFbFormat("$FB_URL_BASE/relative/?asdf=1234&hjkl=7890", "https://touch.facebook.com/l.php?u=$FB_URL_BASE/relative/&asdf=1234&hjkl=7890")
     }
 
     @Test fun discard() {
