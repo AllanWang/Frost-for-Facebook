@@ -18,7 +18,7 @@ object NotificationDb {
 }
 
 @Migration(version = 2, database = NotificationDb::class)
-class NotificationMigration2(model: NotificationModel) : AlterTableMigration<NotificationModel>(NotificationModel::class.java) {
+class NotificationMigration2(modelClass: Class<NotificationModel>) : AlterTableMigration<NotificationModel>(modelClass) {
     override fun onPreMigrate() {
         super.onPreMigrate()
         addColumn(SQLiteType.INTEGER, "epochIm")
