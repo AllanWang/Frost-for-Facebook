@@ -64,7 +64,7 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
                         element ->
                         //split text into separate items
                         L.v("Search element ${element.attr("href")}")
-                        val texts = element.select("div").map { (it.ownText()) }.filter { it.isNotBlank() }
+                        val texts = element.select("div").map { (it.text()) }.filter { it.isNotBlank() }
                         val pair = Pair(texts, element.attr("href"))
                         L.v("Search element potential $pair")
                         pair

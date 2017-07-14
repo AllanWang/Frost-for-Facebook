@@ -8,16 +8,17 @@
     <item text="" />
     -->
 
-    <version title="Beta Updates"/>
+    <version title="Beta Updates" />
     <item text="Reduce Menu loading logic" />
     <item text="Load js injectors after showing webview" />
     <item text="Add toggles for sound, vibration, and lights" />
     <item text="Avoid restricting facebook features (such as user tagging)" />
-    <item text="Slightly decrease wait time before making webview visible" />
     <item text="Add option to disable loading in overlays" />
+    <item text="Fixed experimental search result text" />
+    <item text="" />
     <item text="" />
 
-    <version title="v1.3"/>
+    <version title="v1.3" />
     <item text="Create toggle for notifications only from primary account" />
     <item text="Micro string optimizations" />
     <item text="Add profile icons to notifications" />
@@ -25,7 +26,7 @@
     <item text="Add notification trigger in settings" />
     <item text="Fix bug where only single latest notification is showing" />
 
-    <version title="v1.2"/>
+    <version title="v1.2" />
     <item text="Scale browser on keyboard pop up" />
     <item text="Clean up web overlay" />
     <item text="Allow customization of overlay swipe" />
@@ -36,7 +37,7 @@
     <item text="Intelligently stop horizontal page scrolling on long press" />
     <item text="More theming" />
 
-    <version title="v1.1"/>
+    <version title="v1.1" />
     <item text="Add universal experimental toggle" />
     <item text="Fixed up billing properties and add auto checker" />
     <item text="Open status updates in new window" />
@@ -47,7 +48,7 @@
     <item text="Initial Reddit beta release" />
 
 
-    <version title="v1.0"/>
+    <version title="v1.0" />
     <item text="Add more global preferences" />
     <item text="Add fully customizable theme engine" />
     <item text="Add support for in app billing" />
