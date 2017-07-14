@@ -143,6 +143,8 @@ dependencies {
 
     compile "org.jsoup:jsoup:${JSOUP}"
 
+    compile "com.squareup.okhttp3:okhttp:${OKHTTP}"
+
     compile "com.github.bumptech.glide:glide:${GLIDE}"
     kapt "com.github.bumptech.glide:compiler:${GLIDE}"
 

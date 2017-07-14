@@ -5,8 +5,8 @@
 * Load js injectors after showing webview
 * Add toggles for sound, vibration, and lights
 * Avoid restricting facebook features (such as user tagging)
-* Slightly decrease wait time before making webview visible
 * Add option to disable loading in overlays
+* Fixed experimental search result text
 
 ## v1.3
 * Create toggle for notifications only from primary account

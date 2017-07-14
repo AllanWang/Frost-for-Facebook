@@ -4,8 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.webkit.JavascriptInterface
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.utils.gone
 import com.pitchedapps.frost.facebook.FbTab
@@ -111,13 +112,16 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
      *
      * Barebones client that does what [FrostWebViewSearch] needs
      */
-    inner class FrostWebViewClientSearch : WebViewClient() {
+    inner class FrostWebViewClientSearch : BaseWebViewClient() {
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             L.i("Search Page finished $url")
             view.jsInject(JsAssets.SEARCH)
         }
+
+        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
+                = super.shouldInterceptRequest(view, request).filterCss(request)
     }
 
     inner class SearchJSI {

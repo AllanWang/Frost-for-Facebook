@@ -66,7 +66,7 @@ class LoginWebView @JvmOverloads constructor(
     }
 
 
-    inner class LoginClient : WebViewClient() {
+    inner class LoginClient : BaseWebViewClient() {
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)

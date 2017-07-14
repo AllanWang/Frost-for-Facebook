@@ -3,6 +3,7 @@ package com.pitchedapps.frost.web
 import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.pitchedapps.frost.LoginActivity
@@ -17,7 +18,7 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
+open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient() {
 
     val refreshObservable: Subject<Boolean> = webCore.refreshObservable
 
@@ -106,6 +107,5 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
 //        L.v("Load resource $url")
 //        super.onLoadResource(view, url)
 //    }
-
 
 }
