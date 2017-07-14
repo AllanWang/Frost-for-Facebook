@@ -28,8 +28,9 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 /**
  * Created by Allan Wang on 2017-06-03.
  */
-internal const val EXTRA_COOKIES = "extra_cookies"
-internal const val ARG_URL = "arg_url"
+const val EXTRA_COOKIES = "extra_cookies"
+const val ARG_URL = "arg_url"
+const val ARG_USER_ID = "arg_user_id"
 
 @GlideModule
 class FrostGlideModule : AppGlideModule()

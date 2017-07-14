@@ -19,14 +19,10 @@ import com.bumptech.glide.request.transition.Transition
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.FrostWebActivity
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.utils.GlideApp
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.withRoundIcon
+import com.pitchedapps.frost.utils.*
 import org.jetbrains.anko.runOnUiThread
 
 /**
@@ -85,7 +81,7 @@ data class NotificationContent(val data: CookieModel,
         } else {
             val intent = Intent(context, FrostWebActivity::class.java)
             intent.data = Uri.parse("${FB_URL_BASE}$href")
-            intent.putExtra(WebOverlayActivity.ARG_USER_ID, data.id)
+            intent.putExtra(ARG_USER_ID, data.id)
             val group = "frost_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val notifBuilder = context.frostNotification

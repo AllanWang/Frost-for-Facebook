@@ -13,8 +13,8 @@
     <item text="Load js injectors after showing webview" />
     <item text="Add toggles for sound, vibration, and lights" />
     <item text="Avoid restricting facebook features (such as user tagging)" />
-    <item text="" />
-    <item text="" />
+    <item text="Slightly decrease wait time before making webview visible" />
+    <item text="Add option to disable loading in overlays" />
     <item text="" />
 
     <version title="v1.3"/>

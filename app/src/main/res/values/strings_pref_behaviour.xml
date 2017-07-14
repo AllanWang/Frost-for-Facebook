@@ -3,6 +3,8 @@
 
     <string name="fancy_animations">Fancy Animations</string>
     <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
+    <string name="overlay_swipe">Enable Overlays</string>
+    <string name="overlay_swipe_desc">Pressing most links will launch in a new overlay so you can easily swipe back to the original page. Note that this does result in slightly longer loads given that the whole page is reloaded.</string>
     <string name="overlay_full_screen_swipe">Overlay Full Screen Swipe to Dismiss</string>
     <string name="overlay_full_screen_swipe_desc">Swipe right from anywhere on the overlaying web to close the browser. If disabled, only swiping from the left edge will move it.</string>
     <string name="viewpager_swipe">Viewpager Swipe</string>
