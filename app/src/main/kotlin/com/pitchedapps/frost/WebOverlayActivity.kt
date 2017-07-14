@@ -37,10 +37,6 @@ open class WebOverlayActivity : AppCompatActivity(),
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
-    companion object {
-        const val ARG_USER_ID = "arg_user_id"
-    }
-
     val urlTest: String?
         get() = intent.extras?.getString(ARG_URL) ?: intent.dataString
 

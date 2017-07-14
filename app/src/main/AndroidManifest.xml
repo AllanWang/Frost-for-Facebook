@@ -44,7 +44,6 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay" />
-
         <activity
             android:name=".FrostWebActivity"
             android:autoRemoveFromRecents="true"

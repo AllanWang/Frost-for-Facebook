@@ -89,6 +89,12 @@ object Prefs : KPref() {
 
     var notificationsInstantMessages: Boolean by kpref("notification_im", true)
 
+    var notificationVibrate: Boolean by kpref("notification_vibrate", true)
+
+    var notificationSound: Boolean by kpref("notification_sound", true)
+
+    var notificationLights: Boolean by kpref("notification_lights", true)
+
     /**
      * Cache like value to determine if user has or had pro
      * In most cases, [com.pitchedapps.frost.utils.iab.IS_FROST_PRO] should be looked at instead
@@ -104,6 +110,8 @@ object Prefs : KPref() {
     var analytics: Boolean by kpref("analytics", true)
 
     var searchBar: Boolean by kpref("search_bar", Showcase.experimentalDefault)
+
+    var overlayEnabled: Boolean by kpref("overlay_enabled", true)
 
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)
 

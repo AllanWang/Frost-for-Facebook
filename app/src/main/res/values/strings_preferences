@@ -1,75 +1,17 @@
 <resources>
-    <!--categories-->
     <string name="appearance">Appearance</string>
     <string name="appearance_desc">Theme, Items to display, etc</string>
 
     <string name="notifications_desc">Frequency, filters, etc</string>
+
     <string name="newsfeed">News Feed</string>
     <string name="newsfeed_desc">Define what items appear in the newsfeed</string>
 
     <string name="behaviour">Behaviour</string>
     <string name="behaviour_desc">Define how the app interacts in certain settings</string>
 
-    <string name="exit_confirmation">Exit Confirmation</string>
-    <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
-    <string name="analytics">Analytics</string>
-    <string name="analytics_desc">Enable anonymous analytics to help improve the app. No personal information is ever exposed.</string>
-    <string name="overlay_full_screen_swipe">Overlay Full Screen Swipe to Dismiss</string>
-    <string name="overlay_full_screen_swipe_desc">Swipe right from anywhere on the overlaying web to close the browser. If disabled, only swiping from the left edge will move it.</string>
-    <string name="viewpager_swipe">Viewpager Swipe</string>
-    <string name="viewpager_swipe_desc">Allow swiping between the pages in the main view to switch tabs. By default, the swiping automatically stops when you long press on an item, such as the like button. Disabling this will prevent page swiping altogether.</string>
-
-    <!--themes-->
-    <string name="theme">Theme</string>
-    <string name="text_color">Text Color</string>
-    <string name="background_color">Background Color</string>
-    <string name="header_color">Header Color</string>
-    <string name="icon_color">Icon Color</string>
-
-    <string name="rounded_icons">Rounded Icons</string>
-    <string name="rounded_icons_desc">Profile photos and group conversation icons will be rounded</string>
-    <string name="theme_customization">Theme Customization</string>
-    <string name="global_customization">Global Customization</string>
-    <string name="feed_customization">Feed Customization</string>
-    <string name="newsfeed_sort">Newsfeed Order</string>
-    <string name="newsfeed_sort_desc">Defines the order in which the posts are shown</string>
-    <string name="suggested_friends">Suggested Friends</string>
-    <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>
-    <string name="facebook_ads">Facebook Ads</string>
-    <string name="facebook_ads_desc">Show native Facebook ads</string>
-
-    <string name="notification_frequency">Notification Frequency</string>
-    <string name="notification_keywords">Keywords</string>
-    <string name="notification_keywords_desc">Does not notify when notification contains any of these keys.</string>
-    <string name="add_keyword">Add Keyword</string>
-    <string name="hint_keyword">Type keyword and press +</string>
-    <string name="empty_keyword">Empty Keyword</string>
-    <string name="notification_all_accounts">Notify from all accounts</string>
-    <string name="notification_all_accounts_desc">Get notifications for every account that is logged in. Disabling this will only fetch notifications form the currently selected account.</string>
-    <string name="notification_fetch_now">Fetch Notifications Now</string>
-    <string name="notification_fetch_now_desc">Trigger the notification fetcher one time.</string>
-    <string name="notification_fetch_success">Fetching Notifications…</string>
-    <string name="notification_fetch_fail">Couldn\'t fetch notifications</string>
-
-    <string name="fancy_animations">Fancy Animations</string>
-    <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
-    <string name="tint_nav">Tint Nav Bar</string>
-    <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
-    <string name="web_text_scaling">Web Text Scaling</string>
-    <string name="web_text_scaling_desc">Text Scaling Example; Long press the percentage text to reset.</string>
-
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
-    <string name="experimental_disclaimer">Disclaimer</string>
-    <string name="experimental_disclaimer_info">Experimental features may be unstable and may never make it to production. Use at your own risk, send feedback, and feel free to disable them if they don\'t work well.</string>
-    <string name="experimental_by_default">Experimental by Default</string>
-    <string name="experimental_by_default_desc">Feeling risky or just want to help with debugging? Checking this will enable future experimental functions be default.</string>
-    <string name="search_bar">Search Bar</string>
-    <string name="search_bar_desc">Enable the search bar instead of a search overlay</string>
-    <string name="verbose_logging">Verbose Logging</string>
-    <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev. This will automatically be disabled if the app restarts.</string>
-    <string name="restart_frost">Restart Frost</string>
-    <string name="restart_frost_desc">Crashlytics will only submit logs when a crash occurs or if errors are found and the app is restarted. Clicking here will restart the app and flush whatever issues are currently found.</string>
 
     <string name="restore_purchases">Restore Purchases</string>
     <string name="restore_purchases_desc">Restore any previous purchases from the Play Store</string>

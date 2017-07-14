@@ -174,7 +174,7 @@ class NotificationService : JobService() {
         val notifBuilder = frostNotification
                 .setContentTitle(string(R.string.app_name))
                 .setContentText(text)
-        NotificationManagerCompat.from(this).notify(999, notifBuilder.build())
+        NotificationManagerCompat.from(this).notify(999, notifBuilder.build().frostConfig())
     }
 
     fun summaryNotification(userId: Long, count: Int) {
@@ -185,7 +185,7 @@ class NotificationService : JobService() {
                 .setGroup("frost_$userId")
                 .setGroupSummary(true)
 
-        NotificationManagerCompat.from(this).notify("frost_$userId", userId.toInt(), notifBuilder.build())
+        NotificationManagerCompat.from(this).notify("frost_$userId", userId.toInt(), notifBuilder.build().frostConfig())
     }
 
 }
