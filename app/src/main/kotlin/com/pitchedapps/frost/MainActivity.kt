@@ -49,7 +49,6 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
@@ -59,7 +58,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 

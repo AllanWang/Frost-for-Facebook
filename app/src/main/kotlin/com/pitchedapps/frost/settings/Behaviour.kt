@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import com.pitchedapps.frost.MainActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.SettingsActivity
 import com.pitchedapps.frost.utils.Prefs
@@ -12,6 +13,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.fancy_animations, { Prefs.animate }, { Prefs.animate = it; animate = it }) {
         descRes = R.string.fancy_animations_desc
+    }
+
+    checkbox(R.string.overlay_swipe, { Prefs.overlayEnabled }, { Prefs.overlayEnabled = it; setResult(MainActivity.REQUEST_REFRESH) }) {
+        descRes = R.string.overlay_swipe_desc
     }
 
     checkbox(R.string.overlay_full_screen_swipe, { Prefs.overlayFullScreenSwipe }, { Prefs.overlayFullScreenSwipe = it }) {
