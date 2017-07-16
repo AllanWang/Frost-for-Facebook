@@ -21,6 +21,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.*
+import com.pitchedapps.frost.activities.LoginActivity
+import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl

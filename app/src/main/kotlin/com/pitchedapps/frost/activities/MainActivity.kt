@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -39,6 +39,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate

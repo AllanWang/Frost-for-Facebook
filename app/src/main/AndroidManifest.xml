@@ -33,19 +33,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:theme="@style/FrostTheme" />
         <activity
-            android:name=".WebOverlayActivity"
+            android:name=".activities.WebOverlayActivity"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay" />
         <activity
-            android:name=".FrostWebActivity"
+            android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -107,16 +107,16 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:theme="@style/FrostTheme" />
         <activity
-            android:name=".SelectorActivity"
+            android:name=".activities.SelectorActivity"
             android:theme="@style/FrostTheme" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".activities.AboutActivity"
             android:theme="@style/Kau.Translucent.About" />
 
         <service

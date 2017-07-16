@@ -2,8 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.webkit.JavascriptInterface
-import ca.allanwang.kau.logging.KL
-import com.pitchedapps.frost.MainActivity
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
@@ -13,12 +12,18 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
+class FrostJSI(val webView: FrostWebViewCore) {
 
-    val headerObservable: Subject<String>? = (context as? MainActivity)?.headerBadgeObservable
+    val context: Context
+        get() = webView.context
+
+    val activity: MainActivity?
+        get() = (context as? MainActivity)
+
+    val headerObservable: Subject<String>? = activity?.headerBadgeObservable
 
     val cookies: ArrayList<CookieModel>
-        get() = (context as? MainActivity)?.cookies() ?: arrayListOf()
+        get() = activity?.cookies() ?: arrayListOf()
 
     @JavascriptInterface
     fun loadUrl(url: String) {
@@ -35,8 +40,8 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
     }
 
     @JavascriptInterface
-    fun contextMenu(url: String, text: String) {
-        webView.post { webView.context.showWebContextMenu(WebContext(url.formattedFbUrl, text)) }
+    fun contextMenu(url: String, text: String?) {
+        webView.post { context.showWebContextMenu(WebContext(url.formattedFbUrl, text)) }
     }
 
     /**
@@ -45,12 +50,20 @@ class FrostJSI(val context: Context, val webView: FrostWebViewCore) {
      */
     @JavascriptInterface
     fun longClick(start: Boolean) {
-        (webView.context as? MainActivity)?.viewPager?.enableSwipe = !start
+        activity?.viewPager?.enableSwipe = !start
     }
 
     @JavascriptInterface
     fun loadLogin() {
         context.launchLogin(cookies, true)
+    }
+
+    /**
+     * Launch image overlay
+     */
+    @JavascriptInterface
+    fun loadImage(imageUrl: String, text: String?) {
+
     }
 
     @JavascriptInterface

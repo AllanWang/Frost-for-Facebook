@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.os.Bundle
 import com.pitchedapps.frost.utils.Prefs

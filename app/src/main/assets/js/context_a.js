@@ -9,7 +9,7 @@ if (!window.hasOwnProperty('frost_context_a')) {
   var longClick = false;
 
   var _frostAContext = function(e) {
-    Frost.longClick(true);
+    if (typeof Frost !== 'undefined') Frost.longClick(true);
     longClick = true;
 
     /*
@@ -23,13 +23,19 @@ if (!window.hasOwnProperty('frost_context_a')) {
     if (element.tagName === 'A' && element.getAttribute('href') !== '#') {
       var url = element.getAttribute('href');
       if (!url) return;
-      if (url.includes('photoset_token')) return;
-
       var text = element.parentNode.innerText;
 
-      // console.log('Context Intercept', element.tagName, element.id, element.className)
-      console.log('Context Content', url, text);
-      Frost.contextMenu(url, text);
+      //check if image item exists
+      var image = element.parentNode.querySelector('[style*="background-image: url("]');
+      if (image) {
+        var imageUrl = window.getComputedStyle(image, null).backgroundImage.slice(4, -1);
+        console.log('Context image', imageUrl);
+        if (typeof Frost !== 'undefined') Frost.loadImage(imageUrl, text);
+      } else {
+        if (url.includes('photoset_token')) return;
+        console.log('Context Content', url, text);
+        if (typeof Frost !== 'undefined') Frost.contextMenu(url, text);
+      }
       e.stopPropagation();
       e.preventDefault();
     }
@@ -39,7 +45,7 @@ if (!window.hasOwnProperty('frost_context_a')) {
 
   document.addEventListener('touchend', function _frostEnd(e) {
     if (longClick) {
-      Frost.longClick(false);
+      if (typeof Frost !== 'undefined') Frost.longClick(false);
       longClick = false;
     }
   }, true);

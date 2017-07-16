@@ -3,12 +3,10 @@ package com.pitchedapps.frost.web
 import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import com.pitchedapps.frost.LoginActivity
-import com.pitchedapps.frost.MainActivity
-import com.pitchedapps.frost.SelectorActivity
+import com.pitchedapps.frost.activities.LoginActivity
+import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.*

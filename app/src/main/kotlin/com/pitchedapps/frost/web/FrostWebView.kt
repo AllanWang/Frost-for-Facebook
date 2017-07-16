@@ -69,7 +69,7 @@ class FrostWebView @JvmOverloads constructor(
             frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
             webViewClient = frostWebClient
             webChromeClient = FrostChromeClient(this)
-            addJavascriptInterface(FrostJSI(context, this), "Frost")
+            addJavascriptInterface(FrostJSI(this), "Frost")
             setBackgroundColor(Color.TRANSPARENT)
         }
     }

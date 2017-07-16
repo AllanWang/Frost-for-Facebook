@@ -1,7 +1,8 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostTheme

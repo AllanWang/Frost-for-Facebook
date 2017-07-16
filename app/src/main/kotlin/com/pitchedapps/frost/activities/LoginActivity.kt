@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.crashlytics.android.answers.LoginEvent
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync

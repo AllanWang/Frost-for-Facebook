@@ -160,4 +160,8 @@ dependencies {
     compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
+
+    compile "com.github.chrisbanes:PhotoView:${PHOTO_VIEW}"
+
+    compile "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 }
