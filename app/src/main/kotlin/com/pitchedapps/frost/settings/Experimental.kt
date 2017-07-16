@@ -20,9 +20,17 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.experimental_by_default_desc
     }
 
+    // Experimental content starts here ------------------
+
     checkbox(R.string.search_bar, { Prefs.searchBar }, { Prefs.searchBar = it; setResult(MainActivity.REQUEST_SEARCH) }) {
         descRes = R.string.search_bar_desc
     }
+
+    checkbox(R.string.custom_web_cache, { Prefs.customImageCache }, { Prefs.customImageCache = it }) {
+        descRes = R.string.custom_web_cache_desc
+    }
+
+    // Experimental content ends here --------------------
 
     checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, { Prefs.verboseLogging = it }) {
         descRes = R.string.verbose_logging_desc

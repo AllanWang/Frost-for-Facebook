@@ -1,9 +1,10 @@
 package com.pitchedapps.frost.web
 
 import android.net.Uri
-import android.os.Message
-import android.view.View
-import android.webkit.*
+import android.webkit.ConsoleMessage
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.utils.L
@@ -20,7 +21,14 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     val titleObservable: BehaviorSubject<String> = webCore.titleObservable
     val activityContract = (webCore.context as? ActivityWebContract)
 
+    companion object {
+        val consoleBlacklist = setOf(
+                "edge-chat"
+        )
+    }
+
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+        if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return super.onConsoleMessage(consoleMessage)
         L.i("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
         return super.onConsoleMessage(consoleMessage)
     }

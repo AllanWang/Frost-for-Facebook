@@ -12,4 +12,6 @@
     <string name="restart_frost">Restart Frost</string>
     <string name="restart_frost_desc">Crashlytics will only submit logs when a crash occurs or if errors are found and the app is restarted. Clicking here will restart the app and flush whatever issues are currently found.</string>
 
+    <string name="custom_web_cache">Custom web cache</string>
+    <string name="custom_web_cache_desc">Allow Frost to manage all image caching. This should save data and improve loading speeds for native views such as viewing an fullscreen image.</string>
 </resources>

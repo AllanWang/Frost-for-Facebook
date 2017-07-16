@@ -9,6 +9,11 @@ import kotlin.test.assertEquals
  */
 class FbUrlTest {
 
+    fun assertFbFormat(expected: String, url: String) {
+        val fbUrl = FbUrlFormatter(url)
+        assertEquals(expected, fbUrl.toString(), "FbUrl Mismatch:\n${fbUrl.toLogList().joinToString("\n\t")}")
+    }
+
     @Test
     fun base() {
         val url = "https://touch.facebook.com/relative/?asdf=1234&hjkl=7890"
@@ -32,8 +37,9 @@ class FbUrlTest {
         assertFbFormat("$prefix$suffix", "$prefix&ref=hello$suffix")
     }
 
-    fun assertFbFormat(expected: String, url: String) {
-        val fbUrl = FbUrlFormatter(url)
-        assertEquals(expected, fbUrl.toString(), "FbUrl Mismatch:\n${fbUrl.toLogList().joinToString("\n\t")}")
+    @Test fun css() {
+        val expected = "https://test.com?efg=hi&oh=bye&oe=apple"
+        val orig = "https\\3a //test.com?efg\\3d hi\\26 oh\\3d bye\\26 oe\\3d apple"
+        assertFbFormat(expected, orig)
     }
 }
