@@ -38,7 +38,7 @@
     </style>
 
     <style name="FrostTheme.Overlay.Fade">
-        <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
+        <item name="android:windowAnimationStyle">@style/KauFadeInFadeOut</item>
     </style>
 
     <style name="FrostTheme.Settings" parent="FrostTheme">

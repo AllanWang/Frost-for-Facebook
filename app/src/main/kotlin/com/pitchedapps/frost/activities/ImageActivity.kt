@@ -7,11 +7,10 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.setIcon
-import ca.allanwang.kau.utils.withAlpha
-import ca.allanwang.kau.utils.withMinAlpha
+import ca.allanwang.kau.utils.*
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
@@ -28,9 +27,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
  */
 class ImageActivity : AppCompatActivity() {
 
-    val panel: SlidingUpPanelLayout by bindView(R.id.image_panel)
+    val container: FrameLayout by bindView(R.id.image_container)
+    val panel: SlidingUpPanelLayout? by bindOptionalView(R.id.image_panel)
     val photo: SubsamplingScaleImageView by bindView(R.id.image_photo)
-    val caption: TextView by bindView(R.id.image_text)
+    val caption: TextView? by bindOptionalView(R.id.image_text)
     val fab: FloatingActionButton by bindView(R.id.image_fab)
 
     val imageUrl: String
@@ -41,15 +41,18 @@ class ImageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image)
-        caption.setTextColor(Prefs.textColor)
-        panel.setBackgroundColor(Prefs.bgColor.withMinAlpha(200))
-        if (!text.isNullOrBlank()) {
-            caption.text = text
-        } else {
-            panel.removeView(caption)
-        }
-        L.d("Load Image Activity", imageUrl)
+        setContentView(if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless)
+        container.setBackgroundColor(Prefs.bgColor.withMinAlpha(200))
+        caption?.setTextColor(Prefs.textColor)
+        caption?.text = text
+        panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
+
+            override fun onPanelSlide(panel: View, slideOffset: Float) {
+                if (slideOffset == 0f && !fab.isShown) fab.show()
+                else if (slideOffset != 0f && fab.isShown) fab.hide()
+            }
+
+        })
         GlideApp.with(this).asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
     }
 

@@ -72,7 +72,7 @@ class FrostWebViewCore @JvmOverloads constructor(
         dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
             if (it) {
                 loading = true
-                if (isVisible()) fadeOut(duration = 200L)
+                if (isVisible) fadeOut(duration = 200L)
             } else if (loading) {
                 dispose?.dispose()
                 if (animate && Prefs.animate) circularReveal(offset = 150L)
