@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.facebook
 
+import okhttp3.HttpUrl
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -42,4 +43,5 @@ class FbUrlTest {
         val orig = "https\\3a //test.com?efg\\3d hi\\26 oh\\3d bye\\26 oe\\3d apple"
         assertFbFormat(expected, orig)
     }
+
 }

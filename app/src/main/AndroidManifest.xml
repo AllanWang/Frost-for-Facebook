@@ -120,7 +120,7 @@
             android:theme="@style/Kau.Translucent.About" />
         <activity
             android:name=".activities.ImageActivity"
-            android:theme="@style/FrostTheme.Overlay" />
+            android:theme="@style/FrostTheme.Overlay.Fade" />
 
         <service
             android:name=".services.NotificationService"

@@ -162,6 +162,7 @@ dependencies {
     }
 
     compile "com.github.chrisbanes:PhotoView:${PHOTO_VIEW}"
+    compile "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     compile "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 }

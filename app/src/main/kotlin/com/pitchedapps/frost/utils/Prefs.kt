@@ -5,6 +5,7 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
 import ca.allanwang.kau.utils.isColorVisibleOn
+import ca.allanwang.kau.utils.lighten
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
 
@@ -59,6 +60,9 @@ object Prefs : KPref() {
 
     val accentColor: Int
         get() = if (headerColor.isColorVisibleOn(bgColor, 100)) headerColor else textColor
+
+    val accentBackgroundColor: Int
+        get() = if (headerColor.isColorVisibleOn(textColor, 100)) headerColor else bgColor.lighten(0.2f)
 
     val themeInjector: InjectorContract
         get() = t.injector

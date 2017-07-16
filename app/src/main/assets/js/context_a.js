@@ -28,7 +28,7 @@ if (!window.hasOwnProperty('frost_context_a')) {
       //check if image item exists
       var image = element.parentNode.querySelector('[style*="background-image: url("]');
       if (image) {
-        var imageUrl = window.getComputedStyle(image, null).backgroundImage.slice(4, -1);
+        var imageUrl = window.getComputedStyle(image, null).backgroundImage.slice(5, -2);
         console.log('Context image', imageUrl);
         if (typeof Frost !== 'undefined') Frost.loadImage(imageUrl, text);
       } else {
