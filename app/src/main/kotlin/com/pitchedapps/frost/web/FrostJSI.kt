@@ -2,6 +2,8 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.webkit.JavascriptInterface
+import ca.allanwang.kau.utils.startActivity
+import com.pitchedapps.frost.activities.ImageActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -63,7 +65,7 @@ class FrostJSI(val webView: FrostWebViewCore) {
      */
     @JavascriptInterface
     fun loadImage(imageUrl: String, text: String?) {
-
+        context.launchImageActivity(imageUrl, text)
     }
 
     @JavascriptInterface

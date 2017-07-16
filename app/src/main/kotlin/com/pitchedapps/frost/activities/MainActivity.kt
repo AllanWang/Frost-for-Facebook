@@ -109,7 +109,15 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
         super.onCreate(savedInstanceState)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.versionCode = BuildConfig.VERSION_CODE
-            if (!BuildConfig.DEBUG) showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
+            if (!BuildConfig.DEBUG) {
+                showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
+                frostAnswersCustom("Version") {
+                    putCustomAttribute("Version code", BuildConfig.VERSION_CODE)
+                    putCustomAttribute("Version name", BuildConfig.VERSION_NAME)
+                    putCustomAttribute("Build type", BuildConfig.BUILD_TYPE)
+                    putCustomAttribute("Frost id", Prefs.frostId)
+                }
+            }
         }
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)

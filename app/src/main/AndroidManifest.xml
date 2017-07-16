@@ -118,6 +118,9 @@
         <activity
             android:name=".activities.AboutActivity"
             android:theme="@style/Kau.Translucent.About" />
+        <activity
+            android:name=".activities.ImageActivity"
+            android:theme="@style/FrostTheme" />
 
         <service
             android:name=".services.NotificationService"

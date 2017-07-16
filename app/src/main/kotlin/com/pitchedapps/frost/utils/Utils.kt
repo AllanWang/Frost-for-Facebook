@@ -20,7 +20,9 @@ import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
-import com.pitchedapps.frost.*
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.ImageActivity
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
@@ -34,6 +36,8 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 const val EXTRA_COOKIES = "extra_cookies"
 const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
+const val ARG_IMAGE_URL = "arg_image_url"
+const val ARG_TEXT = "arg_text"
 
 @GlideModule
 class FrostGlideModule : AppGlideModule()
@@ -59,6 +63,13 @@ fun Context.launchWebOverlay(url: String) {
     L.i("Launch web overlay: $argUrl")
     startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
         putExtra(ARG_URL, argUrl)
+    })
+}
+
+fun Context.launchImageActivity(imageUrl: String, text: String?) {
+    startActivity(ImageActivity::class.java, intentBuilder = {
+        putExtra(ARG_IMAGE_URL, imageUrl)
+        putExtra(ARG_TEXT, text)
     })
 }
 
