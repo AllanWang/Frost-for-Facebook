@@ -28,9 +28,9 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     }
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return super.onConsoleMessage(consoleMessage)
+        if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return true
         L.i("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
-        return super.onConsoleMessage(consoleMessage)
+        return true
     }
 
     override fun onReceivedTitle(view: WebView, title: String) {

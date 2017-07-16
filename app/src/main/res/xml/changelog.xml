@@ -9,12 +9,13 @@
     -->
 
     <version title="Beta Updates" />
-    <item text="Reduce Menu loading logic" />
-    <item text="Load js injectors after showing webview" />
-    <item text="Add toggles for sound, vibration, and lights" />
-    <item text="Avoid restricting facebook features (such as user tagging)" />
-    <item text="Add option to disable loading in overlays" />
-    <item text="Fixed experimental search result text" />
+    <item text="Update IAB helper" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
     <item text="" />
     <item text="" />
 
@@ -25,6 +26,12 @@
     <item text="Make notifications expandable" />
     <item text="Add notification trigger in settings" />
     <item text="Fix bug where only single latest notification is showing" />
+    <item text="Reduce Menu loading logic" />
+    <item text="Load js injectors after showing webview" />
+    <item text="Add toggles for sound, vibration, and lights" />
+    <item text="Avoid restricting facebook features (such as user tagging)" />
+    <item text="Add option to disable loading in overlays" />
+    <item text="Fixed experimental search result text" />
 
     <version title="v1.2" />
     <item text="Scale browser on keyboard pop up" />

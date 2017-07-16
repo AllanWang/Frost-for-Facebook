@@ -88,7 +88,7 @@ class LoginWebView @JvmOverloads constructor(
     inner class LoginChromeClient : WebChromeClient() {
         override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
             L.d("Login Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
-            return super.onConsoleMessage(consoleMessage)
+            return true
         }
 
         override fun onProgressChanged(view: WebView, newProgress: Int) {
