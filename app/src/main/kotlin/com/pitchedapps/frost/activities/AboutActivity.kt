@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
@@ -20,6 +20,8 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 
 

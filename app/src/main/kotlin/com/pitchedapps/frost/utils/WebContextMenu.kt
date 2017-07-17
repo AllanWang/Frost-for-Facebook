@@ -4,7 +4,8 @@ import android.content.Context
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
-import com.pitchedapps.frost.MainActivity
+import ca.allanwang.kau.utils.toast
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.R
 
 /**
@@ -18,7 +19,10 @@ fun Context.showWebContextMenu(wc: WebContext) {
 
     materialDialogThemed {
         title(title)
-        items(WebContextType.values.map { this@showWebContextMenu.string(it.textId) })
+        items(WebContextType.values.map {
+            if (it == WebContextType.COPY_TEXT && wc.text == null) return@map null
+            this@showWebContextMenu.string(it.textId)
+        }.filterNotNull())
         itemsCallback {
             _, _, position, _ ->
             WebContextType[position].onClick(this@showWebContextMenu, wc)
@@ -30,11 +34,11 @@ fun Context.showWebContextMenu(wc: WebContext) {
     }
 }
 
-class WebContext(val url: String, val text: String)
+class WebContext(val url: String, val text: String?)
 
 enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebContext) -> Unit) {
     COPY_LINK(R.string.copy_link, { c, wc -> c.copyToClipboard(wc.url) }),
-    COPY_TEXT(R.string.copy_text, { c, wc -> c.copyToClipboard(wc.text) }),
+    COPY_TEXT(R.string.copy_text, { c, wc -> if (wc.text != null) c.copyToClipboard(wc.text) else c.toast(R.string.no_text) }),
     SHARE_LINK(R.string.share_link, { c, wc -> c.shareText(wc.url) })
     ;
 

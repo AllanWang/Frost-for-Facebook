@@ -1,12 +1,8 @@
 # Changelog
 
 ## Beta Updates
-* Reduce Menu loading logic
-* Load js injectors after showing webview
-* Add toggles for sound, vibration, and lights
-* Avoid restricting facebook features (such as user tagging)
-* Slightly decrease wait time before making webview visible
-* Add option to disable loading in overlays
+* Update IAB helper
+* Implemented image viewing and downloading; long press any image!
 
 ## v1.3
 * Create toggle for notifications only from primary account
@@ -15,6 +11,12 @@
 * Make notifications expandable
 * Add notification trigger in settings
 * Fix bug where only single latest notification is showing
+* Reduce Menu loading logic
+* Load js injectors after showing webview
+* Add toggles for sound, vibration, and lights
+* Avoid restricting facebook features (such as user tagging)
+* Add option to disable loading in overlays
+* Fixed experimental search result text
 
 ## v1.2
 * Scale browser on keyboard pop up

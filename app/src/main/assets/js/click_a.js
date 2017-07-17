@@ -22,7 +22,7 @@ if (!window.hasOwnProperty('frost_click_a')) {
 
       if (!prevented) {
         console.log('Click Intercept', url);
-        Frost.loadUrl(url);
+        if (typeof Frost !== 'undefined') Frost.loadUrl(url);
       }
       e.stopPropagation();
       e.preventDefault();

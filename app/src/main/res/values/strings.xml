@@ -68,30 +68,11 @@
     <string name="purchases_restored_with_pro">Frost Pro has been restored. Enjoy the features!</string>
     <string name="purchases_restored_without_pro">It seems like you don\'t have pro. If this is a persistent issue, contact me and attach your purchase receipt.</string>
 
-    <string name="define_dbflow"></string>
-    <!-- Author section -->
-    <string name="library_dbflow_author">Raizlabs</string>
-    <string name="library_dbflow_authorWebsite">https://www.raizlabs.com/</string>
-    <!-- Library section -->
-    <string name="library_dbflow_libraryName">DbFlow</string>
-    <string name="library_dbflow_libraryDescription">
-        <![CDATA[
-        A robust, powerful, and very simple ORM android database library with <b>annotation processing</b>.
-        <br/><br/>
-        The library is built on speed, performance, and approachability. It not only eliminates most boiler-plate code for dealing with databases, but also provides a powerful and simple API to manage interactions.
-        Let DBFlow make SQL code <i>flow</i> like a steady stream so you can focus on writing amazing apps.
-        ]]>
-    </string>
-    <string name="library_dbflow_libraryWebsite">https://github.com/Raizlabs/DBFlow</string>
-    <string name="library_dbflow_libraryVersion">4.0.4</string>
-    <!-- OpenSource section -->
-    <string name="library_dbflow_isOpenSource">true</string>
-    <string name="library_dbflow_repositoryLink">https://github.com/Raizlabs/DBFlow</string>
-    <!-- ClassPath for autoDetect section -->
-    <string name="library_dbflow_classPath">com.raizlabs.android.dbflow</string>
-    <!-- License section -->
-    <string name="library_dbflow_licenseId">mit</string>
     <string name="login_id_failed">Login failed; id not found</string>
     <string name="iab_still_in_progress">IAB query is still in progress</string>
     <string name="new_message">New Message</string>
+    <string name="no_text">No text</string>
+    <string name="image_download_success">Image downloaded</string>
+    <string name="image_download_fail">Image failed to download</string>
+    <string name="image_share_failed">Failed to share image</string>
 </resources>

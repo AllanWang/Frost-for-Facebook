@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -10,6 +10,7 @@ import ca.allanwang.kau.utils.bindView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask

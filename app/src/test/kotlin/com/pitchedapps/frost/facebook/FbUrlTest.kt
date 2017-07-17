@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.facebook
 
+import okhttp3.HttpUrl
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -8,6 +9,11 @@ import kotlin.test.assertEquals
  * Created by Allan Wang on 2017-07-07.
  */
 class FbUrlTest {
+
+    fun assertFbFormat(expected: String, url: String) {
+        val fbUrl = FbUrlFormatter(url)
+        assertEquals(expected, fbUrl.toString(), "FbUrl Mismatch:\n${fbUrl.toLogList().joinToString("\n\t")}")
+    }
 
     @Test
     fun base() {
@@ -32,8 +38,10 @@ class FbUrlTest {
         assertFbFormat("$prefix$suffix", "$prefix&ref=hello$suffix")
     }
 
-    fun assertFbFormat(expected: String, url: String) {
-        val fbUrl = FbUrlFormatter(url)
-        assertEquals(expected, fbUrl.toString(), "FbUrl Mismatch:\n${fbUrl.toLogList().joinToString("\n\t")}")
+    @Test fun css() {
+        val expected = "https://test.com?efg=hi&oh=bye&oe=apple"
+        val orig = "https\\3a //test.com?efg\\3d hi\\26 oh\\3d bye\\26 oe\\3d apple"
+        assertFbFormat(expected, orig)
     }
+
 }

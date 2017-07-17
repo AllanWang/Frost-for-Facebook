@@ -72,7 +72,7 @@ class FrostWebViewCore @JvmOverloads constructor(
         dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
             if (it) {
                 loading = true
-                if (isVisible()) fadeOut(duration = 200L)
+                if (isVisible) fadeOut(duration = 200L)
             } else if (loading) {
                 dispose?.dispose()
                 if (animate && Prefs.animate) circularReveal(offset = 150L)
@@ -148,11 +148,12 @@ class FrostWebViewCore @JvmOverloads constructor(
         if (scrollY > 10000) {
             scrollTo(0, 0)
         } else {
-            val animator = ValueAnimator.ofInt(scrollY, 0)
-            animator.duration = Math.min(scrollY, 500).toLong()
-            animator.interpolator = DecelerateInterpolator()
-            animator.addUpdateListener { scrollY = it.animatedValue as Int }
-            animator.start()
+            ValueAnimator.ofInt(scrollY, 0).apply {
+                duration = Math.min(scrollY, 500).toLong()
+                interpolator = DecelerateInterpolator()
+                addUpdateListener { scrollY = it.animatedValue as Int }
+                start()
+            }
         }
     }
 

@@ -3,9 +3,7 @@ package com.pitchedapps.frost.web
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import android.webkit.JavascriptInterface
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.utils.gone
 import com.pitchedapps.frost.facebook.FbTab
@@ -56,7 +54,8 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webViewClient = FrostWebViewClientSearch()
+        webViewClient = SearchWebViewClient()
+        webChromeClient = SearchChromeClient()
         addJavascriptInterface(SearchJSI(), "Frost")
         searchSubject.debounce(300, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.newThread())
                 .map {
@@ -111,13 +110,22 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
      *
      * Barebones client that does what [FrostWebViewSearch] needs
      */
-    inner class FrostWebViewClientSearch : WebViewClient() {
+    inner class SearchWebViewClient : BaseWebViewClient() {
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             L.i("Search Page finished $url")
             view.jsInject(JsAssets.SEARCH)
         }
+
+        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
+                = super.shouldInterceptRequest(view, request).filterCss(request)
+    }
+
+    class SearchChromeClient : WebChromeClient() {
+
+        //mute console
+        override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
     }
 
     inner class SearchJSI {

@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -39,6 +39,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
@@ -107,7 +109,15 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
         super.onCreate(savedInstanceState)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.versionCode = BuildConfig.VERSION_CODE
-            if (!BuildConfig.DEBUG) showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
+            if (!BuildConfig.DEBUG) {
+                showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
+                frostAnswersCustom("Version") {
+                    putCustomAttribute("Version code", BuildConfig.VERSION_CODE)
+                    putCustomAttribute("Version name", BuildConfig.VERSION_NAME)
+                    putCustomAttribute("Build type", BuildConfig.BUILD_TYPE)
+                    putCustomAttribute("Frost id", Prefs.frostId)
+                }
+            }
         }
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
