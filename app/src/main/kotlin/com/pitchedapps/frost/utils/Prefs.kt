@@ -65,16 +65,10 @@ object Prefs : KPref() {
         get() = if (headerColor.isColorVisibleOn(bgColor, 100)) headerColor else textColor
 
     /**
-     * Ensures that the color is visible against both the foreground and background
+     * Ensures that the color is visible against the background
      */
-    val accentBackgroundColor: Int
-        get() {
-            if (headerColor.isColorVisibleOn(textColor, 100)) {
-                if (headerColor.isColorVisibleOn(bgColor, 100)) return headerColor
-                else return headerColor.colorToForeground(0.2f)
-            }
-            return bgColor.colorToForeground(0.2f)
-        }
+    val iconBackgroundColor: Int
+        get() = if (headerColor.isColorVisibleOn(bgColor)) headerColor else headerColor.colorToForeground(0.2f)
 
     val themeInjector: InjectorContract
         get() = t.injector

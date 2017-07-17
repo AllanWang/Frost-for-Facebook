@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.activities
 
+import android.Manifest
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -17,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
@@ -85,7 +85,7 @@ class ImageActivity : AppCompatActivity() {
         setContentView(if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
         caption?.setTextColor(Prefs.textColor)
-        caption?.setBackgroundColor(Prefs.bgColor.colorToForeground(0.1f).withAlpha(255))
+        caption?.setBackgroundColor(Prefs.bgColor.colorToForeground(0.2f).withAlpha(255))
         caption?.text = text
         progress.tint(Prefs.accentColor)
         panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
@@ -174,16 +174,13 @@ class ImageActivity : AppCompatActivity() {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = "Frost_" + timeStamp + "_"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-                imageFileName, /* prefix */
-                ".png", /* suffix */
-                storageDir      /* directory */
-        )
+        return File.createTempFile(imageFileName, ".png", storageDir)
     }
 
     internal fun downloadImage() {
-        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) {
+        kauRequestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
             granted, _ ->
+            L.d("Download image callback granted: $granted")
             if (granted) {
                 doAsync {
                     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
@@ -199,6 +196,7 @@ class ImageActivity : AppCompatActivity() {
                     } catch (e: Exception) {
                         success = false
                     } finally {
+                        L.d("Download image async finished: $success")
                         uiThread {
                             snackbar(if (success) R.string.image_download_success else R.string.image_download_fail)
                             if (success) {
@@ -230,7 +228,7 @@ class ImageActivity : AppCompatActivity() {
     }
 }
 
-internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.textColor, val backgroundTint: Int = Prefs.accentBackgroundColor.withAlpha(255)) {
+internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconColor, val backgroundTint: Int = Prefs.iconBackgroundColor.withAlpha(255)) {
     ERROR(GoogleMaterial.Icon.gmd_error, Color.WHITE, Color.RED) {
         override fun onClick(activity: ImageActivity) {
             //todo add something
@@ -240,9 +238,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.textC
         override fun onClick(activity: ImageActivity) {}
     },
     DOWNLOAD(GoogleMaterial.Icon.gmd_file_download) {
-        override fun onClick(activity: ImageActivity) {
-            activity.downloadImage()
-        }
+        override fun onClick(activity: ImageActivity) = activity.downloadImage()
     },
     SHARE(GoogleMaterial.Icon.gmd_share) {
         override fun onClick(activity: ImageActivity) {
