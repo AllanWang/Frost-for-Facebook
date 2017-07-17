@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.activities
 
-import android.Manifest
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -18,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
@@ -178,7 +178,7 @@ class ImageActivity : AppCompatActivity() {
     }
 
     internal fun downloadImage() {
-        kauRequestPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) {
             granted, _ ->
             L.d("Download image callback granted: $granted")
             if (granted) {
