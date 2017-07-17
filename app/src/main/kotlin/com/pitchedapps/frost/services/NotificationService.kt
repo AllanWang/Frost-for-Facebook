@@ -53,22 +53,22 @@ class NotificationService : JobService() {
             if (Prefs.notificationAllAccounts) {
                 val cookies = loadFbCookiesSync()
                 cookies.forEach { fetchGeneralNotifications(it) }
-                if (Prefs.notificationsInstantMessages) {
-                    Prefs.prevId = Prefs.userId
-                    uiThread {
-                        val messageWebView = MessageWebView(this@NotificationService, params)
-                        cookies.forEach { messageWebView.request(it) }
-                    }
-                    return@doAsync
-                }
+//                if (Prefs.notificationsInstantMessages) {
+//                    Prefs.prevId = Prefs.userId
+//                    uiThread {
+//                        val messageWebView = MessageWebView(this@NotificationService, params)
+//                        cookies.forEach { messageWebView.request(it) }
+//                    }
+//                    return@doAsync
+//                }
             } else {
                 val currentCookie = loadFbCookie(Prefs.userId)
                 if (currentCookie != null) {
                     fetchGeneralNotifications(currentCookie)
-                    if (Prefs.notificationsInstantMessages) {
-                        uiThread { MessageWebView(this@NotificationService, params).request(currentCookie) }
-                        return@doAsync
-                    }
+//                    if (Prefs.notificationsInstantMessages) {
+//                        uiThread { MessageWebView(this@NotificationService, params).request(currentCookie) }
+//                        return@doAsync
+//                    }
                 }
             }
             L.d("Finished notifications")
