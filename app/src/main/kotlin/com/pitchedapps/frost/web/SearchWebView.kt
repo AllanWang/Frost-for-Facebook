@@ -3,14 +3,14 @@ package com.pitchedapps.frost.web
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import android.webkit.*
+import android.webkit.JavascriptInterface
+import android.webkit.WebView
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.utils.gone
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.JsBuilder
-import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.schedulers.Schedulers
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
  * This should be hidden
  * Having a single webview allows us to avoid loading the whole page with each query
  */
-class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebView(context) {
+class SearchWebView(context: Context, val contract: SearchContract) : WebView(context) {
 
     val searchSubject = PublishSubject.create<String>()
 
@@ -54,8 +54,8 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webViewClient = SearchWebViewClient()
-        webChromeClient = SearchChromeClient()
+        webViewClient = HeadlessWebViewClient("Search", JsAssets.SEARCH)
+        webChromeClient = QuietChromeClient()
         addJavascriptInterface(SearchJSI(), "Frost")
         searchSubject.debounce(300, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.newThread())
                 .map {
@@ -103,29 +103,6 @@ class FrostWebViewSearch(context: Context, val contract: SearchContract) : WebVi
         pauseLoad = false
         L.d("Searching attempt", input)
         JsBuilder().js("var e=document.getElementById('main-search-input');if(e){e.value='$input';var n=new Event('input',{bubbles:!0,cancelable:!0});e.dispatchEvent(n),e.dispatchEvent(new Event('focus'))}else console.log('Input field not found');").build().inject(this)
-    }
-
-    /**
-     * Created by Allan Wang on 2017-05-31.
-     *
-     * Barebones client that does what [FrostWebViewSearch] needs
-     */
-    inner class SearchWebViewClient : BaseWebViewClient() {
-
-        override fun onPageFinished(view: WebView, url: String) {
-            super.onPageFinished(view, url)
-            L.i("Search Page finished $url")
-            view.jsInject(JsAssets.SEARCH)
-        }
-
-        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
-                = super.shouldInterceptRequest(view, request).filterCss(request)
-    }
-
-    class SearchChromeClient : WebChromeClient() {
-
-        //mute console
-        override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
     }
 
     inner class SearchJSI {

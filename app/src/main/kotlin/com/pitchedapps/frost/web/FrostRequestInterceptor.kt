@@ -1,17 +1,12 @@
 package com.pitchedapps.frost.web
 
-import android.graphics.Bitmap.CompressFormat
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import ca.allanwang.kau.utils.use
-import com.pitchedapps.frost.utils.GlideApp
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import okhttp3.HttpUrl
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 
 /**
@@ -62,6 +57,23 @@ fun shouldFrostInterceptRequest(view: WebView, request: WebResourceRequest): Web
     return null
 }
 
+/**
+ * Wrapper to ensure that null exceptions are not reached
+ */
+fun WebResourceRequest.query(action: (url: String) -> Boolean): Boolean {
+    return action(url?.path ?: return false)
+}
+
+/**
+ * Generic filter passthrough
+ * If Resource is already nonnull, pass it, otherwise check if filter is met and override the response accordingly
+ */
+fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean): WebResourceResponse?
+        = this ?: if (request.query { filter(it) }) blankResource else null
+
 fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse?
-        = this ?: if (request.url.path.endsWith(".css")) blankResource else null
+        = filter(request) { it.endsWith(".css") }
+
+fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse?
+        = filter(request) { it.contains(".jpg") || it.contains(".png") }
 

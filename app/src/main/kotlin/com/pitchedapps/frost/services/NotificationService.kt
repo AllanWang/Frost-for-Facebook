@@ -122,8 +122,12 @@ class NotificationService : JobService() {
 
     fun fetchMessageNotifications(data: CookieModel) {
         if (!Prefs.notificationsInstantMessages) return
+
+    }
+
+    fun fetchMessageNotifications(data: CookieModel, content: String) {
         L.i("Notif IM fetch for $data")
-        val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
+        val doc = Jsoup.parseBodyFragment(content)
         val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
         var notifCount = 0
         L.d("IM notif count ${unreadNotifications.size}")
