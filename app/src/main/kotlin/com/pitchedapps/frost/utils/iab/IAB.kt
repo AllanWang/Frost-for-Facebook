@@ -158,13 +158,18 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
  */
 fun Activity.validatePro() {
     L.d("Play Store Validate pro")
-    getInventory(Prefs.pro, false, { if (Prefs.pro) playStoreNoLongerPro() }) {
-        inv, helper ->
-        val proSku = inv.hasPurchase(FROST_PRO)
-        L.d("Play Store Validation finished: ${Prefs.pro} should be $proSku")
-        if (!proSku && Prefs.pro) playStoreNoLongerPro()
-        else if (proSku && !Prefs.pro) playStoreFoundPro()
-        helper.disposeWhenFinished()
+    try {
+        getInventory(Prefs.pro, false, { if (Prefs.pro) playStoreNoLongerPro() }) {
+            inv, helper ->
+            val proSku = inv.hasPurchase(FROST_PRO)
+            L.d("Play Store Validation finished: ${Prefs.pro} should be $proSku")
+            if (!proSku && Prefs.pro) playStoreNoLongerPro()
+            else if (proSku && !Prefs.pro) playStoreFoundPro()
+            IAB.dispose(helper)
+        }
+    } catch (e: Exception) {
+        L.e(e, "Play store validation exception")
+        IAB.dispose()
     }
 }
 
