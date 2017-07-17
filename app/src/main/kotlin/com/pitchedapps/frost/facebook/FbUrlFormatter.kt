@@ -14,10 +14,10 @@ class FbUrlFormatter(url: String) {
 
     init {
         var cleanedUrl = url
-        discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "") }
+        discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
         val changed = cleanedUrl != url //note that discardables strip away the first ?
-        decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v) }
-        val qm =  cleanedUrl.indexOf(if (changed)"&" else "?")
+        decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+        val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
         if (qm > -1) {
             cleanedUrl.substring(qm + 1).split("&").forEach {
                 val p = it.split("=")
@@ -72,7 +72,15 @@ class FbUrlFormatter(url: String) {
                 "%60" to "`", "%3B" to ";", "%2F" to "/", "%3F" to "?",
                 "%3A" to ":", "%40" to "@", "%3D" to "=", "%26" to "&",
                 "%24" to "$", "%2B" to "+", "%22" to "\"", "%2C" to ",",
-                "%20" to " "
+                "%20" to " ",
+                //css
+                "\\3C " to "<", "\\3E " to ">", "\\23 " to "#", "\\25 " to "%",
+                "\\7B " to "{", "\\7D " to "}", "\\7C " to "|", "\\5C " to "\\",
+                "\\5E " to "^", "\\7E " to "~", "\\5B " to "[", "\\5D " to "]",
+                "\\60 " to "`", "\\3B " to ";", "\\2F " to "/", "\\3F " to "?",
+                "\\3A " to ":", "\\40 " to "@", "\\3D " to "=", "\\26 " to "&",
+                "\\24 " to "$", "\\2B " to "+", "\\22 " to "\"", "\\2C " to ",",
+                "\\20 " to " "
         )
     }
 }

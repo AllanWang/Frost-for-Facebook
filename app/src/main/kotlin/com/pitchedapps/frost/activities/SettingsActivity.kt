@@ -1,4 +1,4 @@
-package com.pitchedapps.frost
+package com.pitchedapps.frost.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +13,8 @@ import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.*
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.*

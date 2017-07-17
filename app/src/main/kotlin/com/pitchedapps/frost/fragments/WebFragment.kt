@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
-import com.pitchedapps.frost.MainActivity
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.utils.Prefs

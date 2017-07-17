@@ -2,6 +2,9 @@ package com.pitchedapps.frost
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.pitchedapps.frost.activities.LoginActivity
+import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L

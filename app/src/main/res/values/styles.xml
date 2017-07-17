@@ -31,7 +31,14 @@
 
     <style name="FrostTheme.Overlay">
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="FrostTheme.Overlay.Slide">
         <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
+    </style>
+
+    <style name="FrostTheme.Overlay.Fade">
+        <item name="android:windowAnimationStyle">@style/KauFadeInFadeOut</item>
     </style>
 
     <style name="FrostTheme.Settings" parent="FrostTheme">

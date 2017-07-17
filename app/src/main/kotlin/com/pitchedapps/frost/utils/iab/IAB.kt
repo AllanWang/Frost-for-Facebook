@@ -9,7 +9,7 @@ import ca.allanwang.kau.utils.snackbar
 import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.SettingsActivity
+import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.*
 
 /**

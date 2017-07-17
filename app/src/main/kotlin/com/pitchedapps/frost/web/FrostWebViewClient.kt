@@ -4,10 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import com.pitchedapps.frost.LoginActivity
-import com.pitchedapps.frost.MainActivity
-import com.pitchedapps.frost.SelectorActivity
+import com.pitchedapps.frost.activities.LoginActivity
+import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.*
@@ -17,7 +16,7 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Allan Wang on 2017-05-31.
  */
-open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
+open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient() {
 
     val refreshObservable: Subject<Boolean> = webCore.refreshObservable
 
@@ -97,15 +96,9 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : WebViewClient() {
         return super.shouldOverrideUrlLoading(view, request)
     }
 
-    override fun onPageCommitVisible(view: WebView?, url: String?) {
-        L.d("ASDF PCV")
-        super.onPageCommitVisible(view, url)
-    }
-
-//    override fun onLoadResource(view: WebView, url: String) {
-//        L.v("Load resource $url")
-//        super.onLoadResource(view, url)
+//    override fun onPageCommitVisible(view: WebView?, url: String?) {
+//        L.d("ASDF PCV")
+//        super.onPageCommitVisible(view, url)
 //    }
-
 
 }

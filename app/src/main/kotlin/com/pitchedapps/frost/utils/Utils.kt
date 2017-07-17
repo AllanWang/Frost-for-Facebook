@@ -8,19 +8,27 @@ import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.annotation.GlideExtension
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
-import com.pitchedapps.frost.*
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.ImageActivity
+import com.pitchedapps.frost.activities.LoginActivity
+import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -31,6 +39,8 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 const val EXTRA_COOKIES = "extra_cookies"
 const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
+const val ARG_IMAGE_URL = "arg_image_url"
+const val ARG_TEXT = "arg_text"
 
 @GlideModule
 class FrostGlideModule : AppGlideModule()
@@ -56,6 +66,13 @@ fun Context.launchWebOverlay(url: String) {
     L.i("Launch web overlay: $argUrl")
     startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
         putExtra(ARG_URL, argUrl)
+    })
+}
+
+fun Context.launchImageActivity(imageUrl: String, text: String?) {
+    startActivity(ImageActivity::class.java, intentBuilder = {
+        putExtra(ARG_IMAGE_URL, imageUrl)
+        putExtra(ARG_TEXT, text)
     })
 }
 

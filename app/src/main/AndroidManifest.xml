@@ -33,26 +33,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:theme="@style/FrostTheme" />
         <activity
-            android:name=".WebOverlayActivity"
+            android:name=".activities.WebOverlayActivity"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/FrostTheme.Overlay" />
+            android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
-            android:name=".FrostWebActivity"
+            android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"
             android:launchMode="singleInstance"
             android:taskAffinity="com.pitchedapps.frost.single.web"
-            android:theme="@style/FrostTheme.Overlay">
+            android:theme="@style/FrostTheme.Overlay.Slide">
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
@@ -107,17 +107,20 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:theme="@style/FrostTheme" />
         <activity
-            android:name=".SelectorActivity"
+            android:name=".activities.SelectorActivity"
             android:theme="@style/FrostTheme" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".activities.AboutActivity"
             android:theme="@style/Kau.Translucent.About" />
+        <activity
+            android:name=".activities.ImageActivity"
+            android:theme="@style/FrostTheme.Overlay.Fade" />
 
         <service
             android:name=".services.NotificationService"
@@ -131,6 +134,15 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="18b3c223b96b7e7fc1fac372e36b8f4d49a193c7" />

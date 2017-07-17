@@ -17,7 +17,7 @@ import ca.allanwang.kau.utils.string
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.FrostWebActivity
+import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
