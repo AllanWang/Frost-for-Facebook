@@ -150,7 +150,12 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
  * Headless client that injects content after a page load
  * The JSI is meant to handle everything else
  */
-class HeadlessWebViewClient(val tag:String, val postInjection: InjectorContract) : BaseWebViewClient() {
+class HeadlessWebViewClient(val tag: String, val postInjection: InjectorContract) : BaseWebViewClient() {
+
+    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+        L.d("Headless Page $tag Started", url)
+    }
 
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)

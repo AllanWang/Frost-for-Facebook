@@ -23,8 +23,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by Allan Wang on 2017-06-25.
  *
- * A bare bone search view meant solely to extract data from the web
- * This should be hidden
+ * A bare bone headless search view meant solely to extract search results from the web
  * Having a single webview allows us to avoid loading the whole page with each query
  */
 class SearchWebView(context: Context, val contract: SearchContract) : WebView(context) {
@@ -50,10 +49,9 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview() {
+    private fun setupWebview() {
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = HeadlessWebViewClient("Search", JsAssets.SEARCH)
         webChromeClient = QuietChromeClient()
         addJavascriptInterface(SearchJSI(), "Frost")
