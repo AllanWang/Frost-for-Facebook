@@ -4,8 +4,8 @@ import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
+import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
-import ca.allanwang.kau.utils.lighten
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
 
@@ -58,11 +58,23 @@ object Prefs : KPref() {
     val iconColor: Int
         get() = t.iconColor
 
+    /**
+     * Ensures that the color is visible against the background
+     */
     val accentColor: Int
         get() = if (headerColor.isColorVisibleOn(bgColor, 100)) headerColor else textColor
 
+    /**
+     * Ensures that the color is visible against both the foreground and background
+     */
     val accentBackgroundColor: Int
-        get() = if (headerColor.isColorVisibleOn(textColor, 100)) headerColor else bgColor.lighten(0.2f)
+        get() {
+            if (headerColor.isColorVisibleOn(textColor, 100)) {
+                if (headerColor.isColorVisibleOn(bgColor, 100)) return headerColor
+                else return headerColor.colorToForeground(0.2f)
+            }
+            return bgColor.colorToForeground(0.2f)
+        }
 
     val themeInjector: InjectorContract
         get() = t.injector

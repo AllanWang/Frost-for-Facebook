@@ -2,6 +2,7 @@
 
 ## Beta Updates
 * Update IAB helper
+* Implemented image viewing and downloading; long press any image!
 
 ## v1.3
 * Create toggle for notifications only from primary account

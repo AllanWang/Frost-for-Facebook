@@ -72,4 +72,7 @@
     <string name="iab_still_in_progress">IAB query is still in progress</string>
     <string name="new_message">New Message</string>
     <string name="no_text">No text</string>
+    <string name="image_download_success">Image downloaded</string>
+    <string name="image_download_fail">Image failed to download</string>
+    <string name="image_share_failed">Failed to share image</string>
 </resources>

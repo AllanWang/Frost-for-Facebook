@@ -148,11 +148,12 @@ class FrostWebViewCore @JvmOverloads constructor(
         if (scrollY > 10000) {
             scrollTo(0, 0)
         } else {
-            val animator = ValueAnimator.ofInt(scrollY, 0)
-            animator.duration = Math.min(scrollY, 500).toLong()
-            animator.interpolator = DecelerateInterpolator()
-            animator.addUpdateListener { scrollY = it.animatedValue as Int }
-            animator.start()
+            ValueAnimator.ofInt(scrollY, 0).apply {
+                duration = Math.min(scrollY, 500).toLong()
+                interpolator = DecelerateInterpolator()
+                addUpdateListener { scrollY = it.animatedValue as Int }
+                start()
+            }
         }
     }
 
