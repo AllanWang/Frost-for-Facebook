@@ -40,6 +40,7 @@ class AboutActivity : AboutActivityBase(null, {
         val include = arrayOf(
                 "AboutLibraries",
                 "AndroidIconics",
+                "androidslidinguppanel",
                 "dbflow",
                 "fastadapter",
                 "glide",
@@ -47,7 +48,8 @@ class AboutActivity : AboutActivityBase(null, {
                 "kau",
                 "kotterknife",
                 "materialdialogs",
-                "materialdrawer"
+                "materialdrawer",
+                "subsamplingscaleimageview"
         )
 
         val l = libs.prepareLibraries(this, include, null, false, true)
