@@ -1,6 +1,10 @@
 # Changelog
 
 ## Beta Updates
+* Fix notification duplicates
+* Fix long pressing album images
+
+## v1.4
 * Update IAB helper
 * Create image viewing and downloading; long press any image!
 * Start filtering out unnecessary loads
