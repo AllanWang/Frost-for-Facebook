@@ -127,8 +127,6 @@ object Prefs : KPref() {
 
     var searchBar: Boolean by kpref("search_bar", Showcase.experimentalDefault)
 
-    var customImageCache: Boolean by kpref("custom_image_cache", Showcase.experimentalDefault)
-
     var overlayEnabled: Boolean by kpref("overlay_enabled", true)
 
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)

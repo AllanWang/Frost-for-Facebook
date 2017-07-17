@@ -59,25 +59,9 @@ fun shouldFrostInterceptRequest(view: WebView, request: WebResourceRequest): Web
         if (adblock?.any { url.contains(it) } ?: false) return blankResource
     }
     L.v("Intercept Request ${host} ${url}")
-    if (url.contains("sea1") && (url.contains(".jpg") || url.contains(".png"))) return imageRequest(view, httpUrl)
     return null
 }
 
 fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse?
         = this ?: if (request.url.path.endsWith(".css")) blankResource else null
-
-fun imageRequest(view: WebView, url: HttpUrl): WebResourceResponse?
-        = if (Prefs.customImageCache) FrostImageResponse(view, url.toString()) else null
-
-class FrostImageResponse(view: WebView, url: String) : WebResourceResponse("", "", null) {
-
-    val futureBitmap = GlideApp.with(view).asBitmap().load(url).submit()
-
-    override fun getData(): InputStream {
-        val bos = ByteArrayOutputStream()
-        futureBitmap.get().compress(CompressFormat.PNG, 0 /*ignored for PNG*/, bos)
-        val bitmapdata = bos.toByteArray()
-        return ByteArrayInputStream(bitmapdata)
-    }
-}
 
