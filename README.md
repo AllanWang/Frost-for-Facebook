@@ -8,6 +8,7 @@ It contains many features, including:
 * Full theming across all activities
 * Overlaying browser to read posts and get right back to your previous task
 * Extensive notification support, with bundling, filtering, battery friendly scheduling, icons, and multi user support
-* Context menu from any link through long press
+* Context menu from any link via long press
+* Native image viewer and downloader via long press
 * Reactive based loading
 * The transparency of open sourced development

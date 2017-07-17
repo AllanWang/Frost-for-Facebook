@@ -55,7 +55,7 @@ import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.validatePro
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
-import com.pitchedapps.frost.web.FrostWebViewSearch
+import com.pitchedapps.frost.web.SearchWebView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -63,7 +63,7 @@ import io.reactivex.subjects.PublishSubject
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
+class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     lateinit var adapter: SectionsPagerAdapter
@@ -78,13 +78,13 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
     var webFragmentObservable = PublishSubject.create<Int>()!!
     var lastPosition = -1
     val headerBadgeObservable = PublishSubject.create<String>()
-    var hiddenSearchView: FrostWebViewSearch? = null
+    var hiddenSearchView: SearchWebView? = null
     var firstLoadFinished = false
         set(value) {
             L.d("First fragment load has finished")
             field = value
             if (value && hiddenSearchView == null) {
-                hiddenSearchView = FrostWebViewSearch(this, this)
+                hiddenSearchView = SearchWebView(this, this)
             }
         }
     var searchView: SearchView? = null
@@ -354,7 +354,7 @@ class MainActivity : BaseActivity(), FrostWebViewSearch.SearchContract,
                 R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
         if (Prefs.searchBar) {
-            if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = FrostWebViewSearch(this, this)
+            if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
                 textObserver = {
                     observable, _ ->

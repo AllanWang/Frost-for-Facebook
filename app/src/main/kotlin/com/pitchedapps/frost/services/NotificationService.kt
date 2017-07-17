@@ -17,7 +17,9 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
+import com.pitchedapps.frost.web.MessageWebView
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.Future
@@ -45,17 +47,29 @@ class NotificationService : JobService() {
         return false
     }
 
+
     override fun onStartJob(params: JobParameters?): Boolean {
         future = doAsync {
             if (Prefs.notificationAllAccounts) {
-                loadFbCookiesSync().forEach {
-                    data ->
-                    fetchNotifications(data)
-                }
+                val cookies = loadFbCookiesSync()
+                cookies.forEach { fetchGeneralNotifications(it) }
+//                if (Prefs.notificationsInstantMessages) {
+//                    Prefs.prevId = Prefs.userId
+//                    uiThread {
+//                        val messageWebView = MessageWebView(this@NotificationService, params)
+//                        cookies.forEach { messageWebView.request(it) }
+//                    }
+//                    return@doAsync
+//                }
             } else {
                 val currentCookie = loadFbCookie(Prefs.userId)
-                if (currentCookie != null)
-                    fetchNotifications(currentCookie)
+                if (currentCookie != null) {
+                    fetchGeneralNotifications(currentCookie)
+//                    if (Prefs.notificationsInstantMessages) {
+//                        uiThread { MessageWebView(this@NotificationService, params).request(currentCookie) }
+//                        return@doAsync
+//                    }
+                }
             }
             L.d("Finished notifications")
             jobFinished(params, false)
@@ -67,12 +81,6 @@ class NotificationService : JobService() {
     fun logNotif(text: String): NotificationContent? {
         L.eThrow("NotificationService: $text")
         return null
-    }
-
-    fun fetchNotifications(data: CookieModel) {
-        fetchGeneralNotifications(data)
-//        fetchMessageNotifications(data)
-        debugNotification("Hello")
     }
 
     fun fetchGeneralNotifications(data: CookieModel) {
@@ -96,7 +104,8 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).update()
+        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).save()
+        L.d("Notif new latest epoch ${lastNotificationTime(data.id).epoch}")
         frostAnswersCustom("Notifications") {
             putCustomAttribute("Type", "General")
             putCustomAttribute("Count", notifCount)
@@ -120,10 +129,9 @@ class NotificationService : JobService() {
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
 
-    fun fetchMessageNotifications(data: CookieModel) {
-        if (!Prefs.notificationsInstantMessages) return
+    fun fetchMessageNotifications(data: CookieModel, content: String) {
         L.i("Notif IM fetch for $data")
-        val doc = Jsoup.connect(FbTab.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
+        val doc = Jsoup.parseBodyFragment(content)
         val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
         var notifCount = 0
         L.d("IM notif count ${unreadNotifications.size}")
@@ -146,7 +154,8 @@ class NotificationService : JobService() {
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-//        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).update()
+        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).save()
+        L.d("Notif new latest im epoch ${lastNotificationTime(data.id).epochIm}")
         frostAnswersCustom("Notifications") {
             putCustomAttribute("Type", "Message")
             putCustomAttribute("Count", notifCount)

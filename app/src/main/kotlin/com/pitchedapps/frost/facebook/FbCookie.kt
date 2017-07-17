@@ -94,12 +94,14 @@ object FbCookie {
      * When coming back to the main app, switch back to our original account before continuing
      */
     fun switchBackUser(callback: () -> Unit) {
-        if (Prefs.prevId != -1L && Prefs.prevId != Prefs.userId) {
-            switchUser(Prefs.prevId) {
-                L.d("Switch back user", "${Prefs.userId} to ${Prefs.prevId}")
+        if (Prefs.prevId == -1L) return callback()
+        val prevId = Prefs.prevId
+        Prefs.prevId = -1L
+        if (prevId != Prefs.userId) {
+            switchUser(prevId) {
+                L.d("Switch back user", "${Prefs.userId} to ${prevId}")
                 callback()
             }
         } else callback()
-        if (Prefs.prevId != -1L) Prefs.prevId = -1L
     }
 }

@@ -25,8 +25,9 @@ if (!window.hasOwnProperty('frost_context_a')) {
       if (!url) return;
       var text = element.parentNode.innerText;
 
-      //check if image item exists
-      var image = element.parentNode.querySelector('[style*="background-image: url("]');
+      //check if image item exists, first in children and then in parent
+      var image = element.querySelector('[style*="background-image: url("]');
+      if (!image) image = element.parentNode.querySelector('[style*="background-image: url("]');
       if (image) {
         var imageUrl = window.getComputedStyle(image, null).backgroundImage.slice(5, -2);
         console.log('Context image', imageUrl);
