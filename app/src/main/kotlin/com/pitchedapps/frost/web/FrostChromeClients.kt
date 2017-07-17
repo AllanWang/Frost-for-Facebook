@@ -14,6 +14,19 @@ import io.reactivex.subjects.Subject
 
 /**
  * Created by Allan Wang on 2017-05-31.
+ *
+ * Collection of chrome clients
+ */
+
+/**
+ * Nothing more than a client without logging
+ */
+class QuietChromeClient : WebChromeClient() {
+    override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
+}
+
+/**
+ * The default chrome client
  */
 class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
 

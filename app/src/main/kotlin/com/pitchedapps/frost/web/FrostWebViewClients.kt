@@ -3,11 +3,14 @@ package com.pitchedapps.frost.web
 import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
+import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
@@ -15,6 +18,23 @@ import io.reactivex.subjects.Subject
 
 /**
  * Created by Allan Wang on 2017-05-31.
+ *
+ * Collection of webview clients
+ */
+
+/**
+ * The base of all webview clients
+ * Used to ensure that resources are properly intercepted
+ */
+open class BaseWebViewClient : WebViewClient() {
+
+    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
+            = shouldFrostInterceptRequest(view, request)
+
+}
+
+/**
+ * The default webview client
  */
 open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient() {
 
@@ -96,9 +116,57 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         return super.shouldOverrideUrlLoading(view, request)
     }
 
-//    override fun onPageCommitVisible(view: WebView?, url: String?) {
-//        L.d("ASDF PCV")
-//        super.onPageCommitVisible(view, url)
-//    }
+}
+
+/**
+ * Client variant for the menu view
+ */
+class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(webCore) {
+
+    private val String.shouldInjectMenu
+        get() = when (removePrefix(FB_URL_BASE)) {
+            "settings",
+            "settings#",
+            "settings#!/settings?soft=bookmarks" -> true
+            else -> false
+        }
+
+    override fun onPageFinished(view: WebView, url: String) {
+        super.onPageFinished(view, url)
+        if (url.shouldInjectMenu) jsInject(JsAssets.MENU)
+    }
+
+    override fun emit(flag: Int) {
+        super.emit(flag)
+        super.injectAndFinish()
+    }
+
+    override fun onPageFinishedActions(url: String) {
+        if (!url.shouldInjectMenu) injectAndFinish()
+    }
+}
+
+/**
+ * Headless client that injects content after a page load
+ * The JSI is meant to handle everything else
+ */
+class HeadlessWebViewClient(val tag: String, val postInjection: InjectorContract) : BaseWebViewClient() {
+
+    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+        L.d("Headless Page $tag Started", url)
+    }
+
+    override fun onPageFinished(view: WebView, url: String) {
+        super.onPageFinished(view, url)
+        L.d("Headless Page $tag Finished", url)
+        postInjection.inject(view)
+    }
+
+    /**
+     * In addition to general filtration, we will also strip away css and images
+     */
+    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
+            = super.shouldInterceptRequest(view, request).filterCss(request).filterImage(request)
 
 }

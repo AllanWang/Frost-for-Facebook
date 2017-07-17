@@ -3,6 +3,7 @@ While being a web wrapper, Frost contains many unique and native features such a
 
 • True multi user interactions - More than just an option in a settings menu, Frost's account switcher is right in the drawer. You are one tap away from switching accounts, and everything refreshes on the switch so that you can view other accounts instantaneously. Furthermore, the notification service will fetch notifications from all accounts, and will let you know which account has the new notification.
 • Better multitasking - Frost contains an overlaying web browser that can be drawn on top of your foreground task. Open links and notifications with a full screen view, then swipe away to get back to your previous task.
+• Contextual awareness - Frost integrates additional features via long presses. Need to copy a block of text or share a link? Long press the text. Need to zoom into an image or download it? Long press the image!
 • Material Design - Built for lollipop and up, Frost focuses strongly on a good UI, and embraces material transitions and dimensions.
 • Complete theme engine - Frost contains very comprehensive themes that customize all components of the app. Frost is also the only app to support transparent themes.
 • Fully opened - Nothing speaks for privacy more than being open sourced. Frost is proud to be one of those apps, and can be found on github (Link in the app's about section)
@@ -11,7 +12,9 @@ Permissions used and why:
 
 • Internet, Network State, Wifi State - Frost fetches the pages from Facebook's mobile website. It also needs the network state so as to limit internet usage when you are on a metered network.
 • Receive Boot Completed - Frost notifications persist on reboot, and need this permission to be added each time.
-• Read external storage - Needed to upload photos in a new status
+• Read/write external storage - Needed to upload photos in a new status and save photos when prompted
+• Vibrate - Needed to vibrate phone for notifications; this can be toggled in the settings
+• Billing - For purchasing pro and unlocking all of Frost's features
 • That's it! No privacy intrusion and no extra demands.
 
 Permissions NOT used and why:
