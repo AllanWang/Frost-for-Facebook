@@ -105,15 +105,25 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
      * returns true to override the url
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
-        L.d("Launching ${request.url}")
+        L.d("Launching Url", request.url.toString())
         webCore.context.launchWebOverlay(request.url.toString())
+        return true
+    }
+
+    private fun launchImage(request: WebResourceRequest, text: String? = null): Boolean {
+        L.d("Launching Image", request.url.toString())
+        webCore.context.launchImageActivity(request.url.toString(), text)
+        if (webCore.canGoBack()) webCore.goBack()
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         L.i("Url Loading ${request.url}")
         val path = request.url.path ?: return super.shouldOverrideUrlLoading(view, request)
+        L.v("Url Loading Path $path")
         if (path.startsWith("/composer/")) return launchRequest(request)
+        if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
+            return launchImage(request)
         return super.shouldOverrideUrlLoading(view, request)
     }
 
