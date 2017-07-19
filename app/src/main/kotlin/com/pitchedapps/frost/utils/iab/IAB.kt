@@ -134,7 +134,7 @@ fun SettingsActivity.restorePurchases() {
         finishRestore(restore, false)
     }
     getInventory(false, true, reset) {
-        inv, helper ->
+        inv, _ ->
         val proSku = inv.hasPurchase(FROST_PRO)
         Prefs.pro = proSku
         L.d("Play Store Restore found: ${Prefs.pro}")

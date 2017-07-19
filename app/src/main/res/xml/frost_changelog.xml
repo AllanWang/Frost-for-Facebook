@@ -9,17 +9,18 @@
     -->
 
     <version title="Beta Updates" />
-    <item text="Fix notification duplicates" />
-    <item text="Fix long pressing album images" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+   
+    <item text="Add friend request tab in nav bar" />
+    <item text="Aggressively filter nonrecent posts in recents mode" />
+    <item text="Add download option for full sized images" />
     <item text="" />
 
     <version title="v1.4" />
     <item text="Update IAB helper" />
     <item text="Create image viewing and downloading; long press any image!" />
     <item text="Start filtering out unnecessary loads" />
+	<item text="Fix notification duplicates" />
+    <item text="Fix long pressing album images" />
 
     <version title="v1.3" />
     <item text="Create toggle for notifications only from primary account" />

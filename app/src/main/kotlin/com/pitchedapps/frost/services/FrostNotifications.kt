@@ -35,6 +35,8 @@ val Context.frostNotification: NotificationCompat.Builder
         color = color(R.color.frost_notification_accent)
     }
 
+@Suppress("DEPRECATION")
+//The update feature is for Android O and seems to still be in beta
 fun Notification.frostConfig() = apply {
     if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
     if (Prefs.notificationSound) defaults = defaults or Notification.DEFAULT_SOUND

@@ -43,6 +43,15 @@ android {
         }
     }
 
+    lintOptions {
+        warningsAsErrors true
+        disable 'LogNotTimber',
+                'TrustAllX509TrustManager',
+                'UnusedResources',
+                'ContentDescription',
+                'RtlSymmetry'
+    }
+
     signingConfigs {
 
         def releaseProps = new Properties()

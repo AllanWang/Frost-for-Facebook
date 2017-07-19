@@ -19,7 +19,7 @@ task clean(type: Delete) {
 }
 
 task generateChangelogMd() {
-    def parsedProjectXml = (new XmlParser()).parse("$project.rootDir/app/src/main/res/xml/changelog.xml")
+    def parsedProjectXml = (new XmlParser()).parse("$project.rootDir/app/src/main/res/xml/frost_changelog.xml")
     def sw = new StringWriter()
     sw.append("# Changelog\n")
     parsedProjectXml.depthFirst().each {
