@@ -3,6 +3,7 @@
 ## Beta Updates
 * Add friend request tab in nav bar
 * Aggressively filter nonrecent posts in recents mode
+* Add download option for full sized images
 
 ## v1.4
 * Update IAB helper

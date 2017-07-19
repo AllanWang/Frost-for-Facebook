@@ -166,11 +166,9 @@ class ImageActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("SIMPLE_DATE_FORMAT")
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
-        @SuppressLint("SimpleDateFormat")
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = "Frost_" + timeStamp + "_"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -264,27 +262,9 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
      * If it's in view, give it some animations
      */
     fun update(fab: FloatingActionButton) {
-        if (!fab.isShown) {
-            fab.setIcon(iicon, color = iconColor)
-            fab.backgroundTintList = ColorStateList.valueOf(backgroundTint)
-        } else {
-            var switched = false
-            ValueAnimator.ofFloat(1.0f, 0.0f, 1.0f).apply {
-                duration = 500L
-                addUpdateListener {
-                    val x = it.animatedValue as Float
-                    val scale = x * 0.3f + 0.7f
-                    fab.scaleX = scale
-                    fab.scaleY = scale
-                    fab.imageAlpha = (x * 255).toInt()
-                    if (it.animatedFraction > 0.5f && !switched) {
-                        switched = true
-                        fab.setIcon(iicon, color = iconColor)
-                        fab.backgroundTintList = ColorStateList.valueOf(backgroundTint)
-                    }
-                }
-                start()
-            }
+        fab.transition {
+            setIcon(iicon, color = iconColor)
+            backgroundTintList = ColorStateList.valueOf(backgroundTint)
         }
     }
 
