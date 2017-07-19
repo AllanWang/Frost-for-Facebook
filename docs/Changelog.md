@@ -1,9 +1,9 @@
 # Changelog
 
 ## Beta Updates
-* Add friend request tab in nav bar
-* Aggressively filter nonrecent posts in recents mode
-* Add download option for full sized images
+* Fix regex bug for some devices
+* Fix notification text
+* Update round icons
 
 ## v1.4
 * Update IAB helper
@@ -11,6 +11,10 @@
 * Start filtering out unnecessary loads
 * Fix notification duplicates
 * Fix long pressing album images
+* Add friend request tab in nav bar
+* Aggressively filter nonrecent posts in recents mode
+* Add download option for full sized images
+* Fix rounded icons
 
 ## v1.3
 * Create toggle for notifications only from primary account
