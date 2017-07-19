@@ -4,6 +4,7 @@
 * Add friend request tab in nav bar
 * Aggressively filter nonrecent posts in recents mode
 * Add download option for full sized images
+* Fix rounded icons
 
 ## v1.4
 * Update IAB helper

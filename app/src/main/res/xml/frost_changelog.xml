@@ -10,9 +10,14 @@
 
     <version title="Beta Updates" />
    
-    <item text="Add friend request tab in nav bar" />
-    <item text="Aggressively filter nonrecent posts in recents mode" />
-    <item text="Add download option for full sized images" />
+    
+    <item text="Fix regex bug for some devices" />
+    <item text="Fix notification text" />
+    <item text="Update round icons" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
     <item text="" />
 
     <version title="v1.4" />
@@ -21,6 +26,10 @@
     <item text="Start filtering out unnecessary loads" />
 	<item text="Fix notification duplicates" />
     <item text="Fix long pressing album images" />
+	<item text="Add friend request tab in nav bar" />
+    <item text="Aggressively filter nonrecent posts in recents mode" />
+    <item text="Add download option for full sized images" />
+    <item text="Fix rounded icons" />
 
     <version title="v1.3" />
     <item text="Create toggle for notifications only from primary account" />
