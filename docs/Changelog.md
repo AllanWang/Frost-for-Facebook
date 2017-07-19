@@ -1,14 +1,15 @@
 # Changelog
 
 ## Beta Updates
-* Fix notification duplicates
-* Fix long pressing album images
 * Add friend request tab in nav bar
+* Aggressively filter nonrecent posts in recents mode
 
 ## v1.4
 * Update IAB helper
 * Create image viewing and downloading; long press any image!
 * Start filtering out unnecessary loads
+* Fix notification duplicates
+* Fix long pressing album images
 
 ## v1.3
 * Create toggle for notifications only from primary account
