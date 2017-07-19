@@ -40,6 +40,8 @@ class AboutActivity : AboutActivityBase(null, {
         val include = arrayOf(
                 "AboutLibraries",
                 "AndroidIconics",
+                "androidslidinguppanel",
+                "Crashlytics",
                 "dbflow",
                 "fastadapter",
                 "glide",
@@ -47,24 +49,10 @@ class AboutActivity : AboutActivityBase(null, {
                 "kau",
                 "kotterknife",
                 "materialdialogs",
-                "materialdrawer"
+                "materialdrawer",
+                "subsamplingscaleimageview"
         )
 
-        /*
-         * These are great libraries, but either aren't used directly or are too common to be listed
-         * Give more emphasis on the unique libs!
-         */
-        val exclude = arrayOf(
-                "GoogleMaterialDesignIcons",
-                "intellijannotations",
-                "MaterialDesignIconicIcons",
-                "MaterialDesignIcons",
-                "materialize",
-                "appcompat_v7",
-                "design",
-                "recyclerview_v7",
-                "support_v4"
-        )
         val l = libs.prepareLibraries(this, include, null, false, true)
 //        l.forEach { KL.d("Lib ${it.definedName}") }
         return l

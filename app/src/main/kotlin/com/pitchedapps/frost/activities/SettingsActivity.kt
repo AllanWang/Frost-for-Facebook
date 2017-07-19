@@ -132,7 +132,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
                 items(Support.values().map { string(it.title) })
                 itemsCallback { _, _, which, _ -> Support.values()[which].sendEmail(this@SettingsActivity) }
             }
-            R.id.action_changelog -> showChangelog(R.xml.changelog, Prefs.textColor) { theme() }
+            R.id.action_changelog -> showChangelog(R.xml.frost_changelog, Prefs.textColor) { theme() }
             else -> return super.onOptionsItemSelected(item)
         }
         return true

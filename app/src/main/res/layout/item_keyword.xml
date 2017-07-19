@@ -21,5 +21,4 @@
         android:background="?android:attr/selectableItemBackground"
         android:scaleType="center" />
 
-
 </LinearLayout>

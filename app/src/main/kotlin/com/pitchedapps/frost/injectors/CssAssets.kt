@@ -3,6 +3,7 @@ package com.pitchedapps.frost.injectors
 import android.graphics.Color
 import android.webkit.WebView
 import ca.allanwang.kau.utils.*
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 
 /**

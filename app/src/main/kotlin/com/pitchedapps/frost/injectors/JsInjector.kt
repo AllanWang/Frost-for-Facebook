@@ -25,7 +25,7 @@ class JsBuilder {
     override fun toString(): String {
         val builder = StringBuilder().append("!function(){")
         if (css.isNotBlank()) {
-            val cssMin = css.replace(Regex("\\s+"), "")
+            val cssMin = css.replace(Regex("[\\r\\n\\t\\f\\v]\\s*"), "")
             builder.append("var a=document.createElement('style');a.innerHTML='$cssMin';document.head.appendChild(a);")
         }
         if (js.isNotBlank())

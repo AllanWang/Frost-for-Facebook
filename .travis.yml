@@ -23,7 +23,7 @@ script:
 - cd $TRAVIS_BUILD_DIR/
 - printf "Starting script\n"
 - ./gradlew --quiet androidGitVersion
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew publishRelease; else ./gradlew testReleaseUnitTest assembleReleaseTest; fi
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew lintRelease publishRelease; else ./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest; fi
 notifications:
   email: false
   slack:

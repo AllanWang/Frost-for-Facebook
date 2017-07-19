@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
-import com.pitchedapps.frost.utils.L
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -16,7 +15,8 @@ enum class CssHider(vararg val items: String) : InjectorContract {
             "article[data-store*=sponsor]"
     ),
     PEOPLE_YOU_MAY_KNOW("article._d2r"),
-    MESSENGER("._s15", "[data-testid=info_panel]", "js_i")
+    MESSENGER("._s15", "[data-testid=info_panel]", "js_i"),
+    NON_RECENT("article:not([data-store*=actor_name])")
     ;
 
     val injector: JsInjector by lazy { JsBuilder().css("${items.joinToString(separator = ",")}{display:none!important}").build() }
