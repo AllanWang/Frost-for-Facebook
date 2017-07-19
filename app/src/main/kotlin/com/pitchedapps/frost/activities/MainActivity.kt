@@ -288,6 +288,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             divider()
             primaryFrostItem(FbTab.PHOTOS)
             primaryFrostItem(FbTab.GROUPS)
+            primaryFrostItem(FbTab.FRIENDS)
             primaryFrostItem(FbTab.PAGES)
             divider()
             primaryFrostItem(FbTab.EVENTS)

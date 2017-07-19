@@ -41,6 +41,7 @@ class AboutActivity : AboutActivityBase(null, {
                 "AboutLibraries",
                 "AndroidIconics",
                 "androidslidinguppanel",
+                "Crashlytics",
                 "dbflow",
                 "fastadapter",
                 "glide",

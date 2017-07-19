@@ -3,6 +3,7 @@
 ## Beta Updates
 * Fix notification duplicates
 * Fix long pressing album images
+* Add friend request tab in nav bar
 
 ## v1.4
 * Update IAB helper
