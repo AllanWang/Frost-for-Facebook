@@ -12,7 +12,6 @@ import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.Subject
@@ -80,7 +79,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     internal fun injectAndFinish() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
-                CssHider.NON_RECENT.maybe(webCore.url.contains(FbTab.FEED_MOST_RECENT.relativeUrl)),
+                CssHider.NON_RECENT.maybe(webCore.url.contains("?sk=h_chr")),
                 Prefs.themeInjector,
                 callback = {
                     refreshObservable.onNext(false)
