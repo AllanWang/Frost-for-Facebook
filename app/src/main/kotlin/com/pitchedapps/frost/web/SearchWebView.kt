@@ -2,7 +2,6 @@ package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import ca.allanwang.kau.searchview.SearchItem

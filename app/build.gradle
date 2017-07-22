@@ -130,11 +130,10 @@ dependencies {
 
     compile "ca.allanwang.kau:about:$KAU"
     compile "ca.allanwang.kau:colorpicker:$KAU"
-//    compile "ca.allanwang.kau:imagepicker:$KAU"
+    compile "ca.allanwang.kau:imagepicker:$KAU"
     compile "ca.allanwang.kau:kpref-activity:$KAU"
     compile "ca.allanwang.kau:searchview:$KAU"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
@@ -154,9 +153,6 @@ dependencies {
     compile "org.jsoup:jsoup:${JSOUP}"
 
     compile "com.squareup.okhttp3:okhttp:${OKHTTP}"
-
-    compile "com.github.bumptech.glide:glide:${GLIDE}"
-    kapt "com.github.bumptech.glide:compiler:${GLIDE}"
 
 //    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
 //        transitive = true

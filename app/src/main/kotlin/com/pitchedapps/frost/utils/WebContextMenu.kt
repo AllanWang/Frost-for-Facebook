@@ -5,8 +5,8 @@ import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.MainActivity
 
 /**
  * Created by Allan Wang on 2017-07-07.

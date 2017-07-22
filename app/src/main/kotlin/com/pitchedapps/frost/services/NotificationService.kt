@@ -17,9 +17,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
-import com.pitchedapps.frost.web.MessageWebView
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.Future

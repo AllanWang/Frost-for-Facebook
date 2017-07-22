@@ -1,7 +1,5 @@
 package com.pitchedapps.frost.activities
 
-import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -21,6 +19,7 @@ import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
@@ -31,7 +30,10 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_IMAGE_URL
+import com.pitchedapps.frost.utils.ARG_TEXT
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -82,7 +84,8 @@ class ImageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless)
+        val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
+        setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
         caption?.setTextColor(Prefs.textColor)
         caption?.setBackgroundColor(Prefs.bgColor.colorToForeground(0.2f).withAlpha(255))
@@ -104,7 +107,7 @@ class ImageActivity : AppCompatActivity() {
                 imageCallback(null, false)
             }
         })
-        GlideApp.with(this).asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
+        Glide.with(this).asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
     }
 
     /**
@@ -196,7 +199,8 @@ class ImageActivity : AppCompatActivity() {
                     } finally {
                         L.d("Download image async finished: $success")
                         uiThread {
-                            snackbar(if (success) R.string.image_download_success else R.string.image_download_fail)
+                            val text = if (success) R.string.image_download_success else R.string.image_download_fail
+                            snackbar(text)
                             if (success) {
                                 deleteTempFile()
                                 fabAction = FabStates.SHARE

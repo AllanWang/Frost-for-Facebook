@@ -14,15 +14,19 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_USER_ID
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.withRoundIcon
 import org.jetbrains.anko.runOnUiThread
 
 /**
@@ -100,7 +104,7 @@ data class NotificationContent(val data: CookieModel,
 
             if (profileUrl.isNotBlank()) {
                 context.runOnUiThread {
-                    GlideApp.with(context)
+                    Glide.with(context)
                             .asBitmap()
                             .load(profileUrl)
                             .withRoundIcon()

@@ -12,9 +12,7 @@ import ca.allanwang.kau.utils.toDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R

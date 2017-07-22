@@ -146,7 +146,8 @@ private fun SettingsActivity.finishRestore(snackbar: Snackbar, hasPro: Boolean) 
     snackbar.dismiss()
     materialDialogThemed {
         title(R.string.purchases_restored)
-        content(if (hasPro) R.string.purchases_restored_with_pro else R.string.purchases_restored_without_pro)
+        val text = if (hasPro) R.string.purchases_restored_with_pro else R.string.purchases_restored_without_pro
+        content(text)
         positiveText(R.string.reload)
         dismissListener { adapter.notifyAdapterDataSetChanged() }
     }
