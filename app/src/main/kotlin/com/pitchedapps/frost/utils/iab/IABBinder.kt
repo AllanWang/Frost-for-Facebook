@@ -113,6 +113,9 @@ class IABSettings : IABBinder() {
         activity?.playStoreGenericError(null)
     }
 
+    /**
+     * Attempts to get pro, or launch purchase flow if user doesn't have it
+     */
     override fun restorePurchases() {
         if (bp == null) return
         doAsync {
