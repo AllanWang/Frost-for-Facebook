@@ -40,8 +40,9 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     val refreshObservable: Subject<Boolean> = webCore.refreshObservable
 
-    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
+        if (url == null) return
         L.i("FWV Loading $url")
 //        L.v("Cookies ${CookieManager.getInstance().getCookie(url)}")
         refreshObservable.onNext(true)
@@ -57,8 +58,9 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
             c.launchNewTask(LoginActivity::class.java)
     }
 
-    override fun onPageFinished(view: WebView, url: String) {
+    override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
+        if (url == null) return
         L.i("Page finished $url")
         if (!url.contains(FACEBOOK_COM)) {
             refreshObservable.onNext(false)
@@ -142,8 +144,9 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
             else -> false
         }
 
-    override fun onPageFinished(view: WebView, url: String) {
+    override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
+        if (url == null) return
         if (url.shouldInjectMenu) jsInject(JsAssets.MENU)
     }
 
@@ -163,13 +166,15 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
  */
 class HeadlessWebViewClient(val tag: String, val postInjection: InjectorContract) : BaseWebViewClient() {
 
-    override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
+        if (url == null) return
         L.d("Headless Page $tag Started", url)
     }
 
-    override fun onPageFinished(view: WebView, url: String) {
+    override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
+        if (url == null) return
         L.d("Headless Page $tag Finished", url)
         postInjection.inject(view)
     }

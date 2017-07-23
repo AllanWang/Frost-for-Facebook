@@ -24,10 +24,7 @@ import io.reactivex.subjects.Subject
 
 /**
  * Created by Allan Wang on 2017-05-29.
- *
  */
-
-
 class LoginWebView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
@@ -71,9 +68,9 @@ class LoginWebView @JvmOverloads constructor(
 
     inner class LoginClient : BaseWebViewClient() {
 
-        override fun onPageFinished(view: WebView, url: String) {
+        override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
-            if (!url.contains(FACEBOOK_COM)) {
+            if (url == null || !url.contains(FACEBOOK_COM)) {
                 view.frostSnackbar(R.string.no_longer_facebook)
                 loadLogin()
                 return
