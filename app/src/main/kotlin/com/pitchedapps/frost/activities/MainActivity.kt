@@ -1,12 +1,12 @@
 package com.pitchedapps.frost.activities
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.AppBarLayout
@@ -392,9 +392,10 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        openFileChooser(this, filePathCallback, fileChooserParams)
+        openImagePicker(filePathCallback, fileChooserParams)
     }
 
+    @SuppressLint("NewApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (onActivityResultWeb(requestCode, resultCode, data)) return
         super.onActivityResult(requestCode, resultCode, data)
@@ -405,7 +406,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
                 val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                if (buildIsMarshmallowAndUp)
                     alarm.setExactAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
                 else
                     alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
