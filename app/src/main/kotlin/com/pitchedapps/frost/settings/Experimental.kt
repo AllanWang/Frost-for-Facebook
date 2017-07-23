@@ -22,9 +22,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     // Experimental content starts here ------------------
 
-    checkbox(R.string.search_bar, { Prefs.searchBar }, { Prefs.searchBar = it; setFrostResult(MainActivity.REQUEST_SEARCH) }) {
-        descRes = R.string.search_bar_desc
-    }
+
 
     // Experimental content ends here --------------------
 

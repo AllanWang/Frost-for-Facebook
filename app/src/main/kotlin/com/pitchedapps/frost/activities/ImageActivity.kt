@@ -201,10 +201,7 @@ class ImageActivity : AppCompatActivity() {
                         uiThread {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             snackbar(text)
-                            if (success) {
-                                deleteTempFile()
-                                fabAction = FabStates.SHARE
-                            }
+                            if (success) fabAction = FabStates.SHARE
                         }
                     }
                 }
