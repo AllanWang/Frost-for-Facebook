@@ -65,7 +65,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.notification_fetch_now_desc
         onClick = {
             _, _, _ ->
-            snackbar(if (fetchNotifications()) R.string.notification_fetch_success else R.string.notification_fetch_fail)
+            val text = if (fetchNotifications()) R.string.notification_fetch_success else R.string.notification_fetch_fail
+            snackbar(text)
             true
         }
     }

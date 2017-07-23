@@ -5,13 +5,12 @@ import ca.allanwang.kau.kpref.activity.items.KPrefColorPicker
 import ca.allanwang.kau.kpref.activity.items.KPrefSeekbar
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.string
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
-import com.pitchedapps.frost.utils.iab.openPlayProPurchase
 import com.pitchedapps.frost.views.KPrefTextSeekbar
 
 /**
@@ -33,7 +32,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                     _, _, which, text ->
                     if (item.pref != which) {
                         if (which == Theme.CUSTOM.ordinal && !IS_FROST_PRO) {
-                            openPlayProPurchase(9)
+                            purchasePro()
                             return@itemsCallbackSingleChoice true
                         }
                         item.pref = which

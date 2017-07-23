@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.webkit.*
+import android.webkit.ConsoleMessage
+import android.webkit.CookieManager
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import ca.allanwang.kau.utils.fadeIn
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel

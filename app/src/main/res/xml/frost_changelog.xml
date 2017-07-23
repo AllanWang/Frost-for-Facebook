@@ -9,7 +9,7 @@
     -->
 
     <version title="Beta Updates" />
-       
+
     <item text="Fix regex bug for some devices" />
     <item text="Fix notification text" />
     <item text="Update round icons" />
@@ -25,7 +25,7 @@
     <item text="Start filtering out unnecessary loads" />
 	<item text="Fix notification duplicates" />
     <item text="Fix long pressing album images" />
-	  <item text="Add friend request tab in nav bar" />
+	<item text="Add friend request tab in nav bar" />
     <item text="Aggressively filter nonrecent posts in recents mode" />
     <item text="Add download option for full sized images" />
     <item text="Fix rounded icons" />

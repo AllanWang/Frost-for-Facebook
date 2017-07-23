@@ -4,8 +4,8 @@ import android.app.Activity
 import ca.allanwang.kau.utils.restart
 import ca.allanwang.kau.utils.startPlayStoreLink
 import ca.allanwang.kau.utils.string
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -14,6 +14,7 @@ import com.pitchedapps.frost.utils.materialDialogThemed
 /**
  * Created by Allan Wang on 2017-06-30.
  */
+
 private fun playStoreLog(text: String) {
     L.e(Throwable(text), "Play Store Exception")
 }
@@ -27,7 +28,6 @@ private fun Activity.playRestart() {
         finish()
     } else restart()
 }
-
 
 fun Activity.playStoreNoLongerPro() {
     Prefs.pro = false
@@ -55,11 +55,11 @@ fun Activity.playStoreFoundPro() {
     }
 }
 
-fun Activity.playStoreNotFound() {
+fun Activity.playStorePurchaseUnsupported() {
     L.d("Play store not found")
     materialDialogThemed {
         title(R.string.uh_oh)
-        content(R.string.play_store_not_found)
+        content(R.string.play_store_unsupported)
         positiveText(R.string.kau_ok)
         neutralText(R.string.kau_play_store)
         onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
@@ -107,7 +107,7 @@ fun Activity.playStorePurchasedSuccessfully(key: String) {
     }
 }
 
-fun SettingsActivity.purchaseRestored() {
+fun Activity.purchaseRestored() {
     L.d("Purchase restored")
     materialDialogThemed {
         title(R.string.play_thank_you)

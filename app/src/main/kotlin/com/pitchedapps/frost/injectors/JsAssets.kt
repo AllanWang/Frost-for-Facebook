@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
-import com.pitchedapps.frost.utils.L
 
 /**
  * Created by Allan Wang on 2017-05-31.

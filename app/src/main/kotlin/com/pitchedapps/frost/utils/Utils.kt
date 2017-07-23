@@ -8,18 +8,13 @@ import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.annotation.GlideExtension
-import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
@@ -41,9 +36,6 @@ const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
-
-@GlideModule
-class FrostGlideModule : AppGlideModule()
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity(clazz, clearStack, intentBuilder = {
