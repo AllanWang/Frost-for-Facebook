@@ -9,6 +9,7 @@ import ca.allanwang.kau.imagepicker.kauLaunchImagePicker
 import ca.allanwang.kau.imagepicker.kauOnImagePickerResult
 import com.pitchedapps.frost.activities.ImagePickerActivity
 import com.pitchedapps.frost.utils.L
+import java.io.File
 
 /**
  * Created by Allan Wang on 2017-07-04.
@@ -37,8 +38,9 @@ class FileChooserDelegate : FileChooserContract {
     override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
         L.d("FileChooser On activity results web $requestCode")
         if (requestCode != IMAGE_CHOOSER_REQUEST) return false
-        val results = kauOnImagePickerResult(resultCode, intent).map { Uri.parse(it.data) }.toTypedArray()
+        val results = kauOnImagePickerResult(resultCode, intent).map { it.uri }.toTypedArray()
         L.d("FileChooser result ${results.contentToString()}")
+        //proper path content://com.android.providers.media.documents/document/image%3A36341
         L.d("FileChooser Callback received; ${filePathCallback != null}")
         filePathCallback?.onReceiveValue(results)
         filePathCallback = null
