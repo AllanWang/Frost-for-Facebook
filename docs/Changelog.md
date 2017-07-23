@@ -1,9 +1,7 @@
 # Changelog
 
 ## Beta Updates
-* Fix regex bug for some devices
-* Fix notification text
-* Update round icons
+* Allow for multiple result flags in settings to better reload the main view
 
 ## v1.4
 * Update IAB helper
@@ -15,6 +13,9 @@
 * Aggressively filter nonrecent posts in recents mode
 * Add download option for full sized images
 * Fix rounded icons
+* Fix regex bug for some devices
+* Fix notification text
+* Update round icons
 
 ## v1.3
 * Create toggle for notifications only from primary account
