@@ -17,25 +17,21 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.*
+import com.pitchedapps.frost.utils.iab.FrostBilling
+import com.pitchedapps.frost.utils.iab.IABSettings
+import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
-class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListener {
+class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!IAB.handleActivityResult(requestCode, resultCode, data)) {
+        if (!onActivityResultBilling(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
             adapter.notifyDataSetChanged()
         }
-    }
-
-
-    override fun receivedBroadcast() {
-        L.d("IAB broadcast")
-        adapter.notifyDataSetChanged()
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
@@ -72,7 +68,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
         plainText(R.string.restore_purchases) {
             descRes = R.string.restore_purchases_desc
             iicon = GoogleMaterial.Icon.gmd_refresh
-            onClick = { _, _, _ -> this@SettingsActivity.restorePurchases(); true }
+            onClick = { _, _, _ -> restorePurchases(false); true }
         }
 
         plainText(R.string.about_frost) {
@@ -86,7 +82,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
     }
 
     fun KPrefItemBase.BaseContract<*>.dependsOnPro() {
-        onDisabledClick = { _, _, _ -> openPlayProPurchase(0); true }
+        onDisabledClick = { _, _, _ -> purchasePro(); true }
         enabler = { IS_FROST_PRO }
     }
 
@@ -99,6 +95,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
         super.onCreate(savedInstanceState)
         animate = Prefs.animate
         themeExterior(false)
+        onCreateBilling()
     }
 
     fun themeExterior(animate: Boolean = true) {
@@ -139,7 +136,7 @@ class SettingsActivity : KPrefActivity(), IabBroadcastReceiver.IabBroadcastListe
     }
 
     override fun onDestroy() {
-        IAB.dispose()
+        onDestroyBilling()
         super.onDestroy()
     }
 }
