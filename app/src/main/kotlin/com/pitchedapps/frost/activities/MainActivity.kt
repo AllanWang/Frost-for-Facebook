@@ -9,7 +9,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.design.widget.*
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -52,7 +55,8 @@ import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.validatePro
+import com.pitchedapps.frost.utils.iab.FrostBilling
+import com.pitchedapps.frost.utils.iab.IABMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.SearchWebView
@@ -64,7 +68,8 @@ import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(), SearchWebView.SearchContract,
-        ActivityWebContract, FileChooserContract by FileChooserDelegate() {
+        ActivityWebContract, FileChooserContract by FileChooserDelegate(),
+        FrostBilling by IABMain() {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -97,12 +102,12 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
          * Possible responses from the SettingsActivity
          * after the configurations have changed
          */
-        const val REQUEST_RESTART = 90909
-        const val REQUEST_REFRESH = 80808
-        const val REQUEST_WEB_ZOOM = 50505
-        const val REQUEST_NAV = 10101
-        const val REQUEST_SEARCH = 70707
-        const val REQUEST_RESTART_APPLICATION = 60606
+        const val REQUEST_RESTART_APPLICATION = 1 shl 1
+        const val REQUEST_RESTART = 1 shl 2
+        const val REQUEST_REFRESH = 1 shl 3
+        const val REQUEST_WEB_ZOOM = 1 shl 4
+        const val REQUEST_NAV = 1 shl 5
+        const val REQUEST_SEARCH = 1 shl 6
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,12 +154,12 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         viewPager.post { webFragmentObservable.onNext(0); lastPosition = 0 } //trigger hook so title is set
         setupDrawer(savedInstanceState)
         setupTabs()
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+//        }
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
-        validatePro()
+        onCreateBilling()
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -394,26 +399,28 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         if (onActivityResultWeb(requestCode, resultCode, data)) return
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ACTIVITY_SETTINGS) {
-            when (resultCode) {
-                REQUEST_RESTART -> restart()
-                REQUEST_REFRESH -> webFragmentObservable.onNext(WebFragment.REQUEST_REFRESH)
-                REQUEST_NAV -> frostNavigationBar()
-                REQUEST_WEB_ZOOM -> webFragmentObservable.onNext(WebFragment.REQUEST_TEXT_ZOOM)
-                REQUEST_SEARCH -> invalidateOptionsMenu()
-                REQUEST_RESTART_APPLICATION -> { //completely restart application
-                    L.d("Restart Application Requested")
-                    val intent = packageManager.getLaunchIntentForPackage(packageName)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-                    val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        alarm.setExactAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
-                    else
-                        alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
-                    finish()
-                    System.exit(0)
-                }
+            if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
+                L.d("Restart Application Requested")
+                val intent = packageManager.getLaunchIntentForPackage(packageName)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+                val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
+                else
+                    alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
+                finish()
+                System.exit(0)
+                return
             }
+            if (resultCode and REQUEST_RESTART > 0) return restart()
+            /*
+             * These results can be stacked
+             */
+            if (resultCode and REQUEST_REFRESH > 0) webFragmentObservable.onNext(WebFragment.REQUEST_REFRESH)
+            if (resultCode and REQUEST_NAV > 0) frostNavigationBar()
+            if (resultCode and REQUEST_WEB_ZOOM > 0) webFragmentObservable.onNext(WebFragment.REQUEST_TEXT_ZOOM)
+            if (resultCode and REQUEST_SEARCH > 0) invalidateOptionsMenu()
         }
     }
 
@@ -433,6 +440,11 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
         }
         super.onStart()
+    }
+
+    override fun onDestroy() {
+        onDestroyBilling()
+        super.onDestroy()
     }
 
     override fun onBackPressed() {

@@ -117,7 +117,7 @@
             android:theme="@style/FrostTheme.Settings" />
         <activity
             android:name=".activities.AboutActivity"
-            android:theme="@style/Kau.Translucent.About" />
+            android:theme="@style/Kau.About" />
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Overlay.Fade" />
