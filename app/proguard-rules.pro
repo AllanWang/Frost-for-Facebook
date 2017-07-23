@@ -21,7 +21,7 @@
 # Jsoup
 -keeppackagenames org.jsoup.nodes
 # IAB
-#-keep class com.android.vending.billing.**
+-keep class com.android.vending.billing.**
 # Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.AppGlideModule
