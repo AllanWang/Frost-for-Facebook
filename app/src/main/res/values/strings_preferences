@@ -13,7 +13,7 @@
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
 
-    <string name="restore_purchases">Restore Purchases</string>
-    <string name="restore_purchases_desc">Restore any previous purchases from the Play Store</string>
+    <string name="get_pro">Get Frost Pro</string>
+    <string name="get_pro_desc">Purchase or restore pro and unlock all the full potential of Frost! Includes ad blockers, custom themes, full configurations, and much more to come.</string>
 
 </resources>
