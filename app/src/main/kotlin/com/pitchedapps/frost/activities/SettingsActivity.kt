@@ -68,7 +68,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         plainText(R.string.restore_purchases) {
             descRes = R.string.restore_purchases_desc
             iicon = GoogleMaterial.Icon.gmd_refresh
-            onClick = { _, _, _ -> restorePurchases(false); true }
+            onClick = { _, _, _ -> restorePurchases(); true }
         }
 
         plainText(R.string.about_frost) {
