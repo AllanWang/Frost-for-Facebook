@@ -151,20 +151,16 @@ class IABMain : IABBinder() {
      * given that this is only called with bp is ready
      */
     override fun restorePurchases() {
-        if (restored) return
-        synchronized(this) {
-            if (restored || bp == null) return
-            restored = true
-            doAsync {
-                val load = bp!!.loadOwnedPurchasesFromGoogle()
-                L.d("IAB main load from google $load")
-                if (!bp!!.isPurchased(FROST_PRO)) {
-                    if (Prefs.pro) uiThread { activity!!.playStoreNoLongerPro() }
-                } else {
-                    if (!Prefs.pro) uiThread { activity!!.playStoreFoundPro() }
-                }
-                onDestroyBilling()
-            }
+        if (restored || bp == null) return
+        restored = true
+        val load = bp!!.loadOwnedPurchasesFromGoogle()
+        L.d("IAB main load from google $load")
+        if (!bp!!.isPurchased(FROST_PRO)) {
+            if (Prefs.pro) activity!!.playStoreNoLongerPro()
+        } else {
+            if (!Prefs.pro) activity!!.playStoreFoundPro()
         }
+        onDestroyBilling()
+
     }
 }
