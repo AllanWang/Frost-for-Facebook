@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -27,11 +28,12 @@ import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
  */
 class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
 
+    var resultFlag = Activity.RESULT_CANCELED
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!onActivityResultBilling(requestCode, resultCode, data)) {
+        if (!onActivityResultBilling(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data)
-            adapter.notifyDataSetChanged()
-        }
+        adapter.notifyDataSetChanged()
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
@@ -87,7 +89,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     }
 
     fun shouldRestartMain() {
-        setResult(MainActivity.REQUEST_RESTART)
+        setFrostResult(MainActivity.REQUEST_RESTART)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,9 +109,13 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     }
 
     override fun onBackPressed() {
-        if (!super.backPress())
+        if (!super.backPress()) {
+            setResult(resultFlag)
             finishSlideOut()
+        }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
@@ -133,6 +139,10 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    fun setFrostResult(flag: Int) {
+        resultFlag = resultFlag and flag
     }
 
     override fun onDestroy() {

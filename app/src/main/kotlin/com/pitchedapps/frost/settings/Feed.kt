@@ -39,7 +39,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, {
         Prefs.showSuggestedFriends = it
-        setResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(MainActivity.REQUEST_REFRESH)
     }) {
         descRes = R.string.suggested_friends_desc
         dependsOnPro()
@@ -47,7 +47,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, {
         Prefs.showFacebookAds = it
-        setResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(MainActivity.REQUEST_REFRESH)
     }) {
         descRes = R.string.facebook_ads_desc
         dependsOnPro()
