@@ -9,8 +9,7 @@
     -->
 
     <version title="Beta Updates" />
-   
-    
+
     <item text="Fix regex bug for some devices" />
     <item text="Fix notification text" />
     <item text="Update round icons" />
