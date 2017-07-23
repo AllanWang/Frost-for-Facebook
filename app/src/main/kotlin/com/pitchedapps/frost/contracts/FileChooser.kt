@@ -30,15 +30,17 @@ class FileChooserDelegate : FileChooserContract {
     override var filePathCallback: ValueCallback<Array<Uri>>? = null
 
     override fun Activity.openImagePicker(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
+        this@FileChooserDelegate.filePathCallback = filePathCallback
         kauLaunchImagePicker(ImagePickerActivity::class.java, IMAGE_CHOOSER_REQUEST)
     }
 
     override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
-        L.d("On activity results web $requestCode")
+        L.d("FileChooser On activity results web $requestCode")
         if (requestCode != IMAGE_CHOOSER_REQUEST) return false
-        val results = kauOnImagePickerResult(resultCode, intent).map { Uri.parse(it.data) }
-        L.d("Callback received; ${filePathCallback != null}")
-        filePathCallback?.onReceiveValue(results.toTypedArray())
+        val results = kauOnImagePickerResult(resultCode, intent).map { Uri.parse(it.data) }.toTypedArray()
+        L.d("FileChooser result ${results.contentToString()}")
+        L.d("FileChooser Callback received; ${filePathCallback != null}")
+        filePathCallback?.onReceiveValue(results)
         filePathCallback = null
         return true
     }
