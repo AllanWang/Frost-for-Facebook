@@ -32,7 +32,7 @@ notifications:
     on_success: always
     on_failure: always
     template:
-    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) %{result}
+    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository}@%{branch} %{result}
       in %{duration}
     - "%{commit_subject}"
     - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
