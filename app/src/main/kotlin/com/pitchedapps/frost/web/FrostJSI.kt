@@ -41,7 +41,8 @@ class FrostJSI(val webView: FrostWebViewCore) {
 
     @JavascriptInterface
     fun contextMenu(url: String, text: String?) {
-        webView.post { context.showWebContextMenu(WebContext(url.formattedFbUrl, text)) }
+        //url will be formatted through webcontext
+        webView.post { context.showWebContextMenu(WebContext(url, text)) }
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.pitchedapps.frost.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import ca.allanwang.kau.about.kauLaunchAbout
 import ca.allanwang.kau.changelog.showChangelog
 import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
@@ -27,11 +29,12 @@ import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
  */
 class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
 
+    var resultFlag = Activity.RESULT_CANCELED
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!onActivityResultBilling(requestCode, resultCode, data)) {
+        if (!onActivityResultBilling(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data)
-            adapter.notifyDataSetChanged()
-        }
+        adapter.notifyDataSetChanged()
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
@@ -65,15 +68,15 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             iicon = CommunityMaterial.Icon.cmd_flask_outline
         }
 
-        plainText(R.string.restore_purchases) {
-            descRes = R.string.restore_purchases_desc
-            iicon = GoogleMaterial.Icon.gmd_refresh
-            onClick = { _, _, _ -> restorePurchases(false); true }
+        plainText(R.string.get_pro) {
+            descRes = R.string.get_pro_desc
+            iicon = GoogleMaterial.Icon.gmd_star
+            onClick = { _, _, _ -> restorePurchases(); true }
         }
 
         plainText(R.string.about_frost) {
             iicon = GoogleMaterial.Icon.gmd_info
-            onClick = { _, _, _ -> startActivity(AboutActivity::class.java, transition = true); true }
+            onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
         }
 
         if (BuildConfig.DEBUG) {
@@ -87,7 +90,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     }
 
     fun shouldRestartMain() {
-        setResult(MainActivity.REQUEST_RESTART)
+        setFrostResult(MainActivity.REQUEST_RESTART)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,9 +110,13 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     }
 
     override fun onBackPressed() {
-        if (!super.backPress())
+        if (!super.backPress()) {
+            setResult(resultFlag)
             finishSlideOut()
+        }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
@@ -133,6 +140,10 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    fun setFrostResult(flag: Int) {
+        resultFlag = resultFlag and flag
     }
 
     override fun onDestroy() {

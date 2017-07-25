@@ -5,7 +5,7 @@ android:
   components:
   - tools
   - platform-tools
-  - build-tools-26.0.0
+  - build-tools-26.0.1
   - android-26
   - extra-android-support
   - extra-android-m2repository
@@ -32,7 +32,7 @@ notifications:
     on_success: always
     on_failure: always
     template:
-    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) %{result}
+    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository}@%{branch} %{result}
       in %{duration}
     - "%{commit_subject}"
     - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK

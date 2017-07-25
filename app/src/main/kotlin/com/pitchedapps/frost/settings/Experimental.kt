@@ -22,9 +22,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     // Experimental content starts here ------------------
 
-    checkbox(R.string.search_bar, { Prefs.searchBar }, { Prefs.searchBar = it; setResult(MainActivity.REQUEST_SEARCH) }) {
-        descRes = R.string.search_bar_desc
-    }
+
 
     // Experimental content ends here --------------------
 
@@ -36,7 +34,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.restart_frost_desc
         onClick = {
             _, _, _ ->
-            setResult(MainActivity.REQUEST_RESTART_APPLICATION)
+            setFrostResult(MainActivity.REQUEST_RESTART_APPLICATION)
             finish()
             true
         }

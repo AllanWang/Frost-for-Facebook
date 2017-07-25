@@ -4,11 +4,13 @@ import android.app.Activity
 import ca.allanwang.kau.utils.restart
 import ca.allanwang.kau.utils.startPlayStoreLink
 import ca.allanwang.kau.utils.string
+import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostAnswers
 import com.pitchedapps.frost.utils.materialDialogThemed
 
 /**
@@ -16,7 +18,7 @@ import com.pitchedapps.frost.utils.materialDialogThemed
  */
 
 private fun playStoreLog(text: String) {
-    L.e(Throwable(text), "Play Store Exception")
+    L.e(Throwable(text), "IAB Play Store Exception")
 }
 
 /**
@@ -31,7 +33,12 @@ private fun Activity.playRestart() {
 
 fun Activity.playStoreNoLongerPro() {
     Prefs.pro = false
-    playStoreLog("No Longer Pro")
+    L.d("IAB No longer pro")
+    frostAnswers {
+        logPurchase(PurchaseEvent()
+                .putCustomAttribute("result", "no longer pro")
+                .putSuccess(false))
+    }
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_not_pro)

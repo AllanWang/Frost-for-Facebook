@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.permissions.kauRequestPermissions
@@ -30,10 +31,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.ARG_IMAGE_URL
-import com.pitchedapps.frost.utils.ARG_TEXT
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -194,6 +192,7 @@ class ImageActivity : AppCompatActivity() {
                     var success = true
                     try {
                         File(tempFilePath).copyTo(destination, true)
+                        scanFile(destination)
                     } catch (e: Exception) {
                         success = false
                     } finally {
@@ -201,15 +200,23 @@ class ImageActivity : AppCompatActivity() {
                         uiThread {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             snackbar(text)
-                            if (success) {
-                                deleteTempFile()
-                                fabAction = FabStates.SHARE
-                            }
+                            if (success) fabAction = FabStates.SHARE
                         }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * See <a href="https://developer.android.com/training/camera/photobasics.html#TaskGallery">Docs</a>
+     */
+    internal fun scanFile(file: File) {
+        if (!file.exists()) return
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val contentUri = Uri.fromFile(file)
+        mediaScanIntent.data = contentUri
+        this.sendBroadcast(mediaScanIntent)
     }
 
     internal fun deleteTempFile() {
@@ -233,7 +240,17 @@ class ImageActivity : AppCompatActivity() {
 internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconColor, val backgroundTint: Int = Prefs.iconBackgroundColor.withAlpha(255)) {
     ERROR(GoogleMaterial.Icon.gmd_error, Color.WHITE, Color.RED) {
         override fun onClick(activity: ImageActivity) {
-            //todo add something
+            activity.materialDialogThemed {
+                title(R.string.kau_error)
+                content(R.string.bad_image_overlay)
+                positiveText(R.string.kau_yes)
+                onPositive { _, _ ->
+                    activity.sendEmail(R.string.dev_email, R.string.debug_image_link_subject) {
+                        addItem("Url", activity.imageUrl)
+                    }
+                }
+                negativeText(R.string.kau_no)
+            }
         }
     },
     NOTHING(GoogleMaterial.Icon.gmd_adjust) {

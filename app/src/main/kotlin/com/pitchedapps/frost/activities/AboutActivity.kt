@@ -40,6 +40,7 @@ class AboutActivity : AboutActivityBase(null, {
         val include = arrayOf(
                 "AboutLibraries",
                 "AndroidIconics",
+                "androidin_appbillingv3",
                 "androidslidinguppanel",
                 "Crashlytics",
                 "dbflow",
