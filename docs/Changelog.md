@@ -2,6 +2,8 @@
 
 ## Beta Updates
 * Allow for multiple result flags in settings to better reload the main view
+* :adapter: Make KauAnimator extensible
+* :imagepicker: Create single image picker counterpart with overlay
 
 ## v1.4
 * Update IAB helper
