@@ -9,8 +9,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswers
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 2017-07-22.
@@ -24,18 +22,18 @@ interface FrostBilling : BillingProcessor.IBillingHandler {
     fun Activity.onCreateBilling()
     fun onDestroyBilling()
     fun purchasePro()
-    fun restorePurchases(once: Boolean)
+    fun restorePurchases()
     fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean
 }
 
-open class IABBinder : FrostBilling {
+abstract class IABBinder : FrostBilling {
 
     var bp: BillingProcessor? = null
     var activity: Activity? = null
 
     override fun Activity.onCreateBilling() {
-        bp = BillingProcessor.newBillingProcessor(this, PUBLIC_BILLING_KEY, this@IABBinder)
         activity = this
+        bp = BillingProcessor.newBillingProcessor(this, PUBLIC_BILLING_KEY, this@IABBinder)
         bp!!.initialize()
     }
 
@@ -45,15 +43,11 @@ open class IABBinder : FrostBilling {
         activity = null
     }
 
-    override fun onBillingInitialized() {
-        L.d("IAB initialized")
-    }
+    override fun onBillingInitialized() = L.d("IAB initialized")
 
-    override fun onPurchaseHistoryRestored() {
-        L.d("IAB restored")
-    }
+    override fun onPurchaseHistoryRestored() = L.d("IAB restored")
 
-    override fun onProductPurchased(productId: String, details: TransactionDetails) {
+    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
         L.d("IAB $productId purchased")
         frostAnswers {
             logPurchase(PurchaseEvent()
@@ -63,7 +57,7 @@ open class IABBinder : FrostBilling {
         }
     }
 
-    override fun onBillingError(errorCode: Int, error: Throwable) {
+    override fun onBillingError(errorCode: Int, error: Throwable?) {
         frostAnswers {
             logPurchase(PurchaseEvent()
                     .putCustomAttribute("result", errorCode.toString())
@@ -76,52 +70,49 @@ open class IABBinder : FrostBilling {
             = bp?.handleActivityResult(requestCode, resultCode, data) ?: false
 
     override fun purchasePro() {
-        if (bp == null) return
+        if (bp == null) {
+            frostAnswers {
+                logPurchase(PurchaseEvent()
+                        .putCustomAttribute("result", "null bp")
+                        .putSuccess(false))
+            }
+            L.eThrow("IAB null bp on purchase attempt")
+            return
+        }
         if (!bp!!.isOneTimePurchaseSupported)
             activity!!.playStorePurchaseUnsupported()
         else
             bp!!.purchase(activity, FROST_PRO)
     }
 
-    override fun restorePurchases(once: Boolean) {
-        if (bp == null) return
-        doAsync {
-            bp?.loadOwnedPurchasesFromGoogle()
-            if (bp?.isPurchased(FROST_PRO) ?: false) {
-                uiThread {
-                    if (Prefs.pro) activity!!.playStoreNoLongerPro()
-                    else if (!once) purchasePro()
-                    if (once) onDestroyBilling()
-                }
-            } else {
-                uiThread {
-                    if (!Prefs.pro) activity!!.playStoreFoundPro()
-                    else if (!once) activity!!.purchaseRestored()
-                    if (once) onDestroyBilling()
-                }
-            }
-        }
-    }
 }
 
 class IABSettings : IABBinder() {
 
-    override fun onBillingInitialized() {
-        super.onBillingInitialized()
-
-    }
-
-    override fun onPurchaseHistoryRestored() {
-        super.onPurchaseHistoryRestored()
-    }
-
-    override fun onProductPurchased(productId: String, details: TransactionDetails) {
+    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
         super.onProductPurchased(productId, details)
+        activity?.playStorePurchasedSuccessfully(productId)
     }
 
-    override fun onBillingError(errorCode: Int, error: Throwable) {
+    override fun onBillingError(errorCode: Int, error: Throwable?) {
         super.onBillingError(errorCode, error)
         activity?.playStoreGenericError(null)
+    }
+
+    /**
+     * Attempts to get pro, or launch purchase flow if user doesn't have it
+     */
+    override fun restorePurchases() {
+        if (bp == null) return
+        val load = bp!!.loadOwnedPurchasesFromGoogle()
+        L.d("IAB settings load from google $load")
+        if (!bp!!.isPurchased(FROST_PRO)) {
+            if (Prefs.pro) activity!!.playStoreNoLongerPro()
+            else purchasePro()
+        } else {
+            if (!Prefs.pro) activity!!.playStoreFoundPro()
+            else activity!!.purchaseRestored()
+        }
     }
 }
 
@@ -129,11 +120,31 @@ class IABMain : IABBinder() {
 
     override fun onBillingInitialized() {
         super.onBillingInitialized()
-        restorePurchases(true)
+        restorePurchases()
     }
 
     override fun onPurchaseHistoryRestored() {
         super.onPurchaseHistoryRestored()
-        restorePurchases(true)
+        restorePurchases()
+    }
+
+    private var restored = false
+
+    /**
+     * Checks for pro and only does so once
+     * A null check is added but it should never happen
+     * given that this is only called with bp is ready
+     */
+    override fun restorePurchases() {
+        if (restored || bp == null) return
+        restored = true
+        val load = bp!!.loadOwnedPurchasesFromGoogle()
+        L.d("IAB main load from google $load")
+        if (!bp!!.isPurchased(FROST_PRO)) {
+            if (Prefs.pro) activity!!.playStoreNoLongerPro()
+        } else {
+            if (!Prefs.pro) activity!!.playStoreFoundPro()
+        }
+        onDestroyBilling()
     }
 }

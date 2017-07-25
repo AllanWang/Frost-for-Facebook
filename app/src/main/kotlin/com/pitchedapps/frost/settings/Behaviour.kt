@@ -15,7 +15,7 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.fancy_animations_desc
     }
 
-    checkbox(R.string.overlay_swipe, { Prefs.overlayEnabled }, { Prefs.overlayEnabled = it; setResult(MainActivity.REQUEST_REFRESH) }) {
+    checkbox(R.string.overlay_swipe, { Prefs.overlayEnabled }, { Prefs.overlayEnabled = it; setFrostResult(MainActivity.REQUEST_REFRESH) }) {
         descRes = R.string.overlay_swipe_desc
     }
 
@@ -25,6 +25,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.viewpager_swipe, { Prefs.viewpagerSwipe }, { Prefs.viewpagerSwipe = it }) {
         descRes = R.string.viewpager_swipe_desc
+    }
+
+    checkbox(R.string.search_bar, { Prefs.searchBar }, { Prefs.searchBar = it; setFrostResult(MainActivity.REQUEST_SEARCH) }) {
+        descRes = R.string.search_bar_desc
     }
 
     checkbox(R.string.exit_confirmation, { Prefs.exitConfirmation }, { Prefs.exitConfirmation = it }) {

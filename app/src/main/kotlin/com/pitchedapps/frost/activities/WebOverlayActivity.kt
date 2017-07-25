@@ -126,7 +126,7 @@ open class WebOverlayActivity : AppCompatActivity(),
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        openFileChooser(this, filePathCallback, fileChooserParams)
+        openImagePicker(filePathCallback, fileChooserParams)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

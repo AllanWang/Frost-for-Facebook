@@ -32,11 +32,26 @@ if (!window.hasOwnProperty('frost_context_a')) {
         var imageUrl = window.getComputedStyle(image, null).backgroundImage.slice(5, -2);
         console.log('Context image', imageUrl);
         if (typeof Frost !== 'undefined') Frost.loadImage(imageUrl, text);
-      } else {
-        if (url.includes('photoset_token')) return;
-        console.log('Context Content', url, text);
-        if (typeof Frost !== 'undefined') Frost.contextMenu(url, text);
+        e.stopPropagation();
+        e.preventDefault();
+        return;
       }
+
+      //check if true img exists
+      var img = element.querySelector('img[src*=scontent]')
+      if (img) {
+        var imgUrl = img.src;
+        console.log('Context img', imgUrl);
+        if (typeof Frost !== 'undefined') Frost.loadImage(imgUrl, text);
+        e.stopPropagation();
+        e.preventDefault();
+        return;
+      }
+
+      if (url.includes('photoset_token')) return;
+      console.log('Context Content', url, text);
+      if (typeof Frost !== 'undefined') Frost.contextMenu(url, text);
+
       e.stopPropagation();
       e.preventDefault();
     }

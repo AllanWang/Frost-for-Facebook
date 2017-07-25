@@ -106,7 +106,7 @@ class LoginActivity : BaseActivity() {
 
 
     fun loadProfile(id: Long) {
-        Glide.with(this@LoginActivity).load(PROFILE_PICTURE_URL(id)).withRoundIcon().listener(object : RequestListener<Drawable> {
+        Glide.with(profile).load(PROFILE_PICTURE_URL(id)).withRoundIcon().listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 profileObservable.onSuccess(true)
                 return false

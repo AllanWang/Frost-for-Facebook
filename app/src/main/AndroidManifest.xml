@@ -120,7 +120,10 @@
             android:theme="@style/Kau.About" />
         <activity
             android:name=".activities.ImageActivity"
-            android:theme="@style/FrostTheme.Overlay.Fade" />
+            android:theme="@style/Kau.ImagePicker.Overlay" />
+        <activity
+            android:name=".activities.ImagePickerActivity"
+            android:theme="@style/FrostTheme.Overlay.Slide" />
 
         <service
             android:name=".services.NotificationService"
@@ -135,8 +138,8 @@
             </intent-filter>
         </receiver>
         <provider
-            android:authorities="${applicationId}.provider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
