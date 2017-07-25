@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.web
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -9,6 +11,7 @@ import android.webkit.WebViewClient
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
@@ -105,9 +108,11 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     /**
      * Helper to format the request and launch it
      * returns true to override the url
+     * returns false if we are already in an overlaying activity
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
         L.d("Launching Url", request.url.toString())
+        if (webCore.context is WebOverlayActivity) return false
         webCore.context.launchWebOverlay(request.url.toString())
         return true
     }
@@ -126,6 +131,13 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
             return launchImage(request)
+        if (!request.url.toString().contains(FACEBOOK_COM)) {
+            val intent = Intent(Intent.ACTION_VIEW, request.url)
+            if (intent.resolveActivity(view.context.packageManager) != null) {
+                view.context.startActivity(Intent(Intent.ACTION_VIEW, request.url))
+                return true
+            }
+        }
         return super.shouldOverrideUrlLoading(view, request)
     }
 
