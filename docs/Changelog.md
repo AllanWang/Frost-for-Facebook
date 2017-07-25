@@ -5,6 +5,8 @@
 * Add custom image picker
 * Check if activities can open intent before loading in browser
 * Add url debugging. Long press a button and press debug link to send me an email
+* Update theme
+* Move search bar style to default
 
 ## v1.4
 * Update IAB helper

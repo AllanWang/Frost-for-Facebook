@@ -48,6 +48,8 @@
     <string name="debug_link_desc">If a link isn\'t loading properly, you can email me so I can help debug it. Clicking okay will open an email request</string>
     <string name="copy_link">Copy Link</string>
     <string name="copy_text">Copy Text</string>
+    <string name="debug_image_link_subject">Frost for Facebook: Image Link Debug</string>
+
 
     <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
 

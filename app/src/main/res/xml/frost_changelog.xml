@@ -14,7 +14,9 @@
     <item text="Add custom image picker" />
     <item text="Check if activities can open intent before loading in browser" />
     <item text="Add url debugging. Long press a button and press debug link to send me an email" />
-    <item text="" />
+    <item text="Update theme" />
+    <item text="Move search bar style to default" />
+    <item text="Allow for image downloads in messages" />
     <item text="" />
 
     <version title="v1.4" />
