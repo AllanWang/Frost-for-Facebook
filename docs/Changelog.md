@@ -1,13 +1,5 @@
 # Changelog
 
-## Beta Updates
-* Allow for multiple result flags in settings to better reload the main view
-* Add custom image picker
-* Check if activities can open intent before loading in browser
-* Add url debugging. Long press a button and press debug link to send me an email
-* Update theme
-* Move search bar style to default
-
 ## v1.4
 * Update IAB helper
 * Create image viewing and downloading; long press any image!
@@ -21,6 +13,13 @@
 * Fix regex bug for some devices
 * Fix notification text
 * Update round icons
+* Allow for multiple result flags in settings to better reload the main view
+* Add custom image picker
+* Check if activities can open intent before loading in browser
+* Add url debugging. Long press a button and press debug link to send me an email
+* Update theme
+* Move search bar style to default
+* Allow for image downloads in messages
 
 ## v1.3
 * Create toggle for notifications only from primary account
