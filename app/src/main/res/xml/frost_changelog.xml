@@ -13,7 +13,7 @@
     <item text="Allow for multiple result flags in settings to better reload the main view" />
     <item text="Add custom image picker" />
     <item text="Check if activities can open intent before loading in browser" />
-    <item text="" />
+    <item text="Add url debugging. Long press a button and press debug link to send me an email" />
     <item text="" />
     <item text="" />
 
