@@ -194,6 +194,7 @@ class ImageActivity : AppCompatActivity() {
                     var success = true
                     try {
                         File(tempFilePath).copyTo(destination, true)
+                        scanFile(destination)
                     } catch (e: Exception) {
                         success = false
                     } finally {
@@ -207,6 +208,17 @@ class ImageActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * See <a href="https://developer.android.com/training/camera/photobasics.html#TaskGallery">Docs</a>
+     */
+    internal fun scanFile(file: File) {
+        if (!file.exists()) return
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val contentUri = Uri.fromFile(file)
+        mediaScanIntent.data = contentUri
+        this.sendBroadcast(mediaScanIntent)
     }
 
     internal fun deleteTempFile() {
