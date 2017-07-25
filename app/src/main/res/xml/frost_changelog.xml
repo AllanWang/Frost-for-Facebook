@@ -11,8 +11,8 @@
     <version title="Beta Updates" />
 	
     <item text="Allow for multiple result flags in settings to better reload the main view" />
-    <item text=":adapter: Make KauAnimator extensible" />
-    <item text=":imagepicker: Create single image picker counterpart with overlay" />
+    <item text="Add custom image picker" />
+    <item text="Check if activities can open intent before loading in browser" />
     <item text="" />
     <item text="" />
     <item text="" />

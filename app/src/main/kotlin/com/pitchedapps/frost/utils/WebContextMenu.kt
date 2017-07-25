@@ -1,12 +1,14 @@
 package com.pitchedapps.frost.utils
 
 import android.content.Context
+import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.facebook.formattedFbUrl
 
 /**
  * Created by Allan Wang on 2017-07-07.
@@ -34,12 +36,28 @@ fun Context.showWebContextMenu(wc: WebContext) {
     }
 }
 
-class WebContext(val url: String, val text: String?)
+class WebContext(val unformattedUrl: String, val text: String?) {
+    val url = unformattedUrl.formattedFbUrl
+}
 
 enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebContext) -> Unit) {
     COPY_LINK(R.string.copy_link, { c, wc -> c.copyToClipboard(wc.url) }),
     COPY_TEXT(R.string.copy_text, { c, wc -> if (wc.text != null) c.copyToClipboard(wc.text) else c.toast(R.string.no_text) }),
-    SHARE_LINK(R.string.share_link, { c, wc -> c.shareText(wc.url) })
+    SHARE_LINK(R.string.share_link, { c, wc -> c.shareText(wc.url) }),
+    DEBUG_LINK(R.string.debug_link, { c, wc ->
+        c.materialDialogThemed {
+            title(R.string.debug_link)
+            content(R.string.debug_link_desc)
+            positiveText(R.string.kau_ok)
+            onPositive { _, _ ->
+                c.sendEmail(R.string.dev_email, R.string.debug_link_subject) {
+                    message = c.string(R.string.debug_link_content)
+                    addItem("Unformatted url", wc.unformattedUrl)
+                    addItem("Formatted url", wc.url)
+                }
+            }
+        }
+    })
     ;
 
     companion object {

@@ -2,8 +2,8 @@
 
 ## Beta Updates
 * Allow for multiple result flags in settings to better reload the main view
-* :adapter: Make KauAnimator extensible
-* :imagepicker: Create single image picker counterpart with overlay
+* Add custom image picker
+* Check if activities can open intent before loading in browser
 
 ## v1.4
 * Update IAB helper

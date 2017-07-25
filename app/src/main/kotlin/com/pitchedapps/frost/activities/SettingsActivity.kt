@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import ca.allanwang.kau.about.kauLaunchAbout
 import ca.allanwang.kau.changelog.showChangelog
 import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
@@ -75,7 +76,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
 
         plainText(R.string.about_frost) {
             iicon = GoogleMaterial.Icon.gmd_info
-            onClick = { _, _, _ -> startActivity(AboutActivity::class.java, transition = true); true }
+            onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
         }
 
         if (BuildConfig.DEBUG) {
