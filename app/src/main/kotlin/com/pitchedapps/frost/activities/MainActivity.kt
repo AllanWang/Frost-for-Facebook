@@ -86,10 +86,14 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     var hiddenSearchView: SearchWebView? = null
     var firstLoadFinished = false
         set(value) {
+            if (field && value) return //both vals are already true
             L.d("First fragment load has finished")
             field = value
             if (value && hiddenSearchView == null) {
                 hiddenSearchView = SearchWebView(this, this)
+            }
+            showcaseView(currentFragment.web, null) {
+                setTitleText("test")
             }
         }
     var searchView: SearchView? = null
@@ -210,6 +214,13 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                     .setCustomView(BadgedIcon(this).apply {
                         iicon = it.icon
                     }))
+        }
+        val firstTabView = tabs.getTabAt(0)?.customView ?: return
+        firstTabView.post {
+            showcaseView(firstTabView, null) {
+                setDismissText(R.string.kau_got_it)
+                setContentText(R.string.showcase_tab_icon)
+            }
         }
     }
 

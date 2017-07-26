@@ -27,6 +27,9 @@ import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -140,4 +143,18 @@ fun Activity.frostNavigationBar() {
     navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
 }
 
-fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))
+fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!
+
+inline fun Activity.showcaseView(view: View, singleUseTag: String?, action: MaterialShowcaseView.Builder.() -> Unit) {
+    val builder = MaterialShowcaseView.Builder(this)
+            .setTarget(view)
+            .setMaskColour(Prefs.bgColor.withAlpha(222))
+            .setTitleTextColor(Prefs.textColor)
+            .setContentTextColor(Prefs.textColor)
+            .setDismissTextColor(Prefs.accentColor)
+            .renderOverNavigationBar()
+
+    builder.action()
+    if (singleUseTag != null) builder.singleUse(singleUseTag)
+    builder.show()
+}

@@ -172,4 +172,8 @@ dependencies {
     compile "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     compile "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+
+    compile "com.github.deano2390:MaterialShowcaseView:${SHOWCASE}"
+
+    compile 'com.github.apl-devs:appintro:v4.2.0'
 }

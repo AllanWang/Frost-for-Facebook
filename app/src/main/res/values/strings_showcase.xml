@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="showcase_tab_icon">Click on the focused tab to scroll back to the top, or refresh the webview if you\'re already at the top.</string>
+</resources>

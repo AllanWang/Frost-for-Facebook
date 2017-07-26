@@ -12,4 +12,6 @@
     <dimen name="account_image_size">100dp</dimen>
 
     <dimen name="context_menu_height">60dp</dimen>
+
+    <dimen name="intro_bar_height">64dp</dimen>
 </resources>

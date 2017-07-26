@@ -116,8 +116,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         }
     }
 
-
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
@@ -143,7 +141,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     }
 
     fun setFrostResult(flag: Int) {
-        resultFlag = resultFlag and flag
+        resultFlag = resultFlag or flag
     }
 
     override fun onDestroy() {
