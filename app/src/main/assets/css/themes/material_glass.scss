@@ -1,7 +1,7 @@
 $text: #fff;
 $link: #eee;
-$bluePaint: rgba(#000, 0.3);
-$background2: rgba(lighten($bluePaint, 50%), 0.05) !default;
+$background: rgba(#000, 0.3);
+$background2: rgba(lighten($background, 50%), 0.05) !default;
 $bg_transparent: transparent;
 
 @import "../core/main";
