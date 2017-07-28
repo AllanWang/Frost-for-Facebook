@@ -38,6 +38,7 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
                         .replace("\$BT\$", bt)
                         .replace("\$BBT\$", bbt.toRgbaString())
                         .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
+                        .replace("\$OO\$", Prefs.bgColor.colorToForeground(0.35f).withAlpha(255).toRgbaString())
                         .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
             }
             injector = JsBuilder().css(content).build()
