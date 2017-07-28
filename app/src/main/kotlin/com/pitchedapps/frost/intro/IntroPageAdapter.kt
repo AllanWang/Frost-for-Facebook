@@ -12,7 +12,7 @@ class IntroPageAdapter(fm: FragmentManager, val fragments: List<BaseIntroFragmen
 
     val retainedFragments: MutableMap<Int, BaseIntroFragment> = mutableMapOf()
 
-    operator fun get(index: Int) = getItem(index) as BaseIntroFragment
+    operator fun get(index: Int) = retainedFragments[index]
 
     override fun getItem(position: Int): Fragment = retainedFragments.getOrDefault(position, fragments[position])
 

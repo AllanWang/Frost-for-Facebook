@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="skip">Skip</string>
+    <string name="intro_welcome_to_frost">Welcome to Frost</string>
+    <string name="intro_slide_to_continue">Slide to continue</string>
+    <string name="intro_select_theme">Select a theme</string>
+    <string name="intro_true_multitasking">True Multitasking</string>
+    <string name="intro_true_multitasking_desc">Add and switch accounts directly from the navigation bar.\nTap the current avatar to jump to your profile.</string>
 </resources>

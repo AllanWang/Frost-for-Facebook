@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@id/intro_phone">
+        <shape>
+            <corners android:radius="5dp" />
+            <size
+                android:width="96dp"
+                android:height="166dp" />
+            <solid android:color="#fff" />
+        </shape>
+    </item>
+    <item
+        android:id="@id/intro_phone_screen"
+        android:bottom="10dp"
+        android:left="3dp"
+        android:right="3dp"
+        android:top="10dp">
+        <shape>
+            <solid android:color="#000" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_tab"
+        android:bottom="134dp"
+        android:left="3dp"
+        android:right="3dp"
+        android:top="10dp">
+        <shape>
+            <solid android:color="#f0f" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_icon_1"
+        android:left="13dp"
+        android:top="14dp"
+        android:right="69dp"
+        android:bottom="138dp">
+        <shape android:shape="oval">
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_icon_2"
+        android:left="13dp"
+        android:top="14dp"
+        android:right="69dp"
+        android:bottom="138dp">
+        <shape android:shape="oval">
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+</layer-list>

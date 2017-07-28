@@ -3,4 +3,6 @@
     <item name="item_account" type="id" />
     <item name="item_keyword" type="id" />
     <item name="item_about_links" type="id" />
+    <item name="intro_phone" type="id" />
+    <item name="intro_phone_screen" type="id" />
 </resources>
