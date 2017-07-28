@@ -9,23 +9,25 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
+import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.ui.widgets.InkPageIndicator
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.color
-import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.*
 import com.github.paolorotolo.appintro.AppIntroFragment
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.intro.IntroPageAdapter
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 
 
 /**
  * Created by Allan Wang on 2017-07-25.
  */
-class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer {
+class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
 
-    val viewpager: ViewPager by bindView(R.id.intro_pager)
+    val ripple: RippleCanvas by bindView(R.id.intro_ripple)
+    val viewpager: ViewPager by bindView(R.id.intro_viewpager)
+    lateinit var adapter: IntroPageAdapter
     val indicator: InkPageIndicator by bindView(R.id.intro_indicator)
     val next: ImageButton by bindView(R.id.intro_next)
 
@@ -40,14 +42,18 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        statusBarColor = 0x30000000
+        navigationBarColor = Prefs.bgColor
+        adapter = IntroPageAdapter(supportFragmentManager, fragments)
         viewpager.apply {
             setPageTransformer(false, this@IntroActivity)
-            adapter = IntroPageAdapter(supportFragmentManager, fragments)
+            adapter = this@IntroActivity.adapter
         }
         indicator.setViewPager(viewpager)
         next.setIcon(GoogleMaterial.Icon.gmd_navigate_next)
         next.setOnClickListener { viewpager.currentItem = viewpager.currentItem + 1 }
-
+        ripple.setBackgroundColor(Prefs.bgColor)
     }
 
     /**
@@ -94,4 +100,17 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer {
     }
 
     fun sigmoidAlpha(position: Float): Float = (1 / (1 + Math.exp((Math.abs(position) - 0.5) * 50))).toFloat()
+
+    override fun onPageScrollStateChanged(state: Int) {
+
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        adapter[position].onPageScrolled(positionOffset, positionOffsetPixels)
+    }
+
+    override fun onPageSelected(position: Int) {
+        adapter[position].onPageSelected()
+    }
+
 }

@@ -102,7 +102,7 @@ class AboutActivity : AboutActivityBase(null, {
             /**
              * There are a lot of constraints to be added to each item just to have them chained properly
              * My as well do it programmatically
-             * Initializing the viewholder will setup the icons, scale type and background of all icons,
+             * Initializing the viewholder will setup the icons, scale type and bluePaint of all icons,
              * link their click listeners and chain them together via a horizontal spread
              */
             init {

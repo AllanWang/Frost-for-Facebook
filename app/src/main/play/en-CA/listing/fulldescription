@@ -19,7 +19,7 @@ Permissions used and why:
 
 Permissions NOT used and why:
 
-• Wakelock - Frost takes advantage of Android's Job Scheduler, and lets the framework decide when to run background services. Frost therefore doesn't need to constantly run in the background, nor does it force your phone to stay awake.
+• Wakelock - Frost takes advantage of Android's Job Scheduler, and lets the framework decide when to run bluePaint services. Frost therefore doesn't need to constantly run in the bluePaint, nor does it force your phone to stay awake.
 • Retrieve running apps - Frost has no need to access external apps or see what else is running
 • Identity - Frost manages its accounts internally and uses it solely to give you access to your account. We don't depend on other personal information and we don't even save your email.
 • Camera - While the camera permission can be added to allow you to directly take photos and upload them, we've decided that it would be best to allow you to do so externally and then share the photo with Frost

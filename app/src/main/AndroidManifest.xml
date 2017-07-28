@@ -105,7 +105,9 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.IntroActivity" />
+        <activity
+            android:name=".activities.IntroActivity"
+            android:theme="@style/FrostTheme.Transparent" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/FrostTheme" />
