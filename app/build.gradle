@@ -173,7 +173,4 @@ dependencies {
 
     compile "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 
-    compile "com.github.deano2390:MaterialShowcaseView:${SHOWCASE}"
-
-    compile 'com.github.apl-devs:appintro:v4.2.0'
 }
