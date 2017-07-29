@@ -107,6 +107,7 @@
         </activity>
         <activity
             android:name=".activities.IntroActivity"
+            android:hardwareAccelerated="true"
             android:theme="@style/FrostTheme.Transparent" />
         <activity
             android:name=".activities.LoginActivity"

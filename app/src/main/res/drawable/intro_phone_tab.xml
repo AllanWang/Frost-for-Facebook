@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@id/intro_phone">
-        <shape>
-            <corners android:radius="5dp" />
-            <size
-                android:width="96dp"
-                android:height="166dp" />
-            <solid android:color="#fff" />
-        </shape>
-    </item>
+    <item
+        android:id="@id/intro_phone"
+        android:drawable="@drawable/intro_phone_case" />
     <item
         android:id="@id/intro_phone_screen"
-        android:bottom="10dp"
-        android:left="3dp"
-        android:right="3dp"
-        android:top="10dp">
-        <shape>
-            <solid android:color="#000" />
-        </shape>
-    </item>
+        android:drawable="@drawable/intro_phone_screen" />
     <item
         android:id="@+id/intro_phone_tab"
-        android:bottom="134dp"
+        android:bottom="135dp"
         android:left="3dp"
         android:right="3dp"
         android:top="10dp">
@@ -31,22 +18,56 @@
     </item>
     <item
         android:id="@+id/intro_phone_icon_1"
-        android:left="13dp"
-        android:top="14dp"
-        android:right="69dp"
-        android:bottom="138dp">
-        <shape android:shape="oval">
+        android:bottom="140dp"
+        android:left="11dp"
+        android:right="74dp"
+        android:top="15dp">
+        <shape>
+            <corners android:radius="1.5dp" />
             <solid android:color="#f00" />
         </shape>
     </item>
     <item
         android:id="@+id/intro_phone_icon_2"
-        android:left="13dp"
-        android:top="14dp"
-        android:right="69dp"
-        android:bottom="138dp">
-        <shape android:shape="oval">
+        android:bottom="140dp"
+        android:left="32dp"
+        android:right="53dp"
+        android:top="15dp">
+        <shape>
+            <corners android:radius="1.5dp" />
             <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_icon_3"
+        android:bottom="140dp"
+        android:left="53dp"
+        android:right="32dp"
+        android:top="15dp">
+        <shape>
+            <corners android:radius="1.5dp" />
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_icon_4"
+        android:bottom="140dp"
+        android:left="74dp"
+        android:right="11dp"
+        android:top="15dp">
+        <shape>
+            <corners android:radius="1.5dp" />
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_icon_ripple"
+        android:bottom="129dp"
+        android:left="0dp"
+        android:right="63dp"
+        android:top="4dp">
+        <shape android:shape="oval">
+            <solid android:color="#800000ff" />
         </shape>
     </item>
 </layer-list>

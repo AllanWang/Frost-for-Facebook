@@ -35,7 +35,7 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
         if (currentTheme in 0..3) {
             themeList.forEachIndexed {
                 index, v ->
-                val scale = if (index == currentTheme) 1.2f else 0.8f
+                val scale = if (index == currentTheme) 1.6f else 0.8f
                 v.scaleX = scale
                 v.scaleY = scale
             }

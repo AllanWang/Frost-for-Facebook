@@ -14,23 +14,25 @@ import org.jetbrains.anko.childrenSequence
  */
 abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
 
-    var bounded = false
-
     val screenWidth
         get() = resources.displayMetrics.widthPixels
 
     val Float.defaultTranslation
-        get() = -Math.abs(this) * screenWidth * 0.4f
+        get() = -Math.abs(this) * screenWidth * 0.8f
 
     fun translate(offset: Float, views: Array<Array<out View>>) {
-        val maxTranslation = Math.abs(offset) * screenWidth * 0.3f
-        val increment = 2 * maxTranslation / views.size
-        views.forEachIndexed { i, group -> group.forEach { it.translationX = -maxTranslation + i * increment } }
+        val maxTranslation = offset * screenWidth
+        val increment = maxTranslation / views.size
+        views.forEachIndexed { i, group ->
+            group.forEach {
+                it.translationX = if (offset > 0) -maxTranslation + i * increment else -(i + 1) * increment
+                it.alpha = 1 - Math.abs(offset)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutRes, container, false)
-        bounded = true
         return view
     }
 
@@ -40,26 +42,13 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     }
 
     open fun themeFragment() {
-        view?.childrenSequence()?.forEach {
-            (it as? TextView)?.setTextColor(Prefs.textColor)
-//            (it as? Button)?.setRippleBackground(Prefs.accentColor, Color.TRANSPARENT)
-        }
+        view?.childrenSequence()?.forEach { (it as? TextView)?.setTextColor(Prefs.textColor) }
     }
 
     fun View.scale(position: Float, offset: Double) {
         val scale = (0.3 / (1 + Math.exp(10.0 * (Math.abs(position) - 1 + offset))) + 0.7).toFloat()
         scaleX = scale
         scaleY = scale
-    }
-
-    override fun onStart() {
-        super.onStart()
-        bounded = true
-    }
-
-    override fun onStop() {
-        bounded = false
-        super.onStop()
     }
 
     val viewArray: Array<Array<out View>> by lazy { viewArray() }
