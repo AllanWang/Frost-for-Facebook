@@ -56,6 +56,10 @@
         <item name="colorAccent">@color/frost_splash_background</item>
     </style>
 
+    <style name="FrostTheme.Intro" parent="FrostTheme.Transparent">
+        <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
+    </style>
+
     <style name="FrostProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
@@ -80,6 +84,7 @@
 
     <style name="IntroButton" parent="TextAppearance.AppCompat.Button">
         <item name="android:elevation">0dp</item>
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
         <item name="android:padding">@dimen/kau_padding_large</item>
     </style>
 

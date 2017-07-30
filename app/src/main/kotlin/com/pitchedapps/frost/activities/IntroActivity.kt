@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.activities
 
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -8,8 +10,10 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.ui.widgets.InkPageIndicator
 import ca.allanwang.kau.utils.*
@@ -17,6 +21,9 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.intro.*
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.launchNewTask
+import org.jetbrains.anko.find
 
 
 /**
@@ -52,7 +59,13 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         }
         indicator.setViewPager(viewpager)
         next.setIcon(GoogleMaterial.Icon.gmd_navigate_next)
-        next.setOnClickListener { viewpager.currentItem = viewpager.currentItem + 1 }
+        next.setOnClickListener {
+            if (barHasNext) {
+                viewpager.currentItem = viewpager.currentItem + 1
+            } else {
+                finish(next.x + next.pivotX, next.y + next.pivotY)
+            }
+        }
         ripple.set(Prefs.bgColor)
         theme()
     }
@@ -86,7 +99,30 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
 
     }
 
-    fun sigmoid(value: Float) = 1 / (1 + Math.exp((value - 0.5) * 10))
+    fun finish(x: Float, y: Float) {
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        ripple.ripple(color(R.color.facebook_blue), x, y, 600) {
+            postDelayed(1000) { finish() }
+        }
+        arrayOf(skip, indicator, next, fragments.last().view!!.find<View>(R.id.intro_title), fragments.last().view!!.find<View>(R.id.intro_desc)).forEach {
+            it.animate().alpha(0f).setDuration(600).start()
+        }
+        if (Prefs.textColor != Color.WHITE) {
+            val f = fragments.last().view!!.find<ImageView>(R.id.intro_image).drawable
+            ValueAnimator.ofFloat(0f, 1f).apply {
+                addUpdateListener {
+                    f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                }
+                duration = 600
+                start()
+            }
+        }
+    }
+
+    override fun finish() {
+        launchNewTask(MainActivity::class.java, cookies())
+        super.finish()
+    }
 
     override fun onPageScrollStateChanged(state: Int) {
 

@@ -20,10 +20,7 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.ImageActivity
-import com.pitchedapps.frost.activities.LoginActivity
-import com.pitchedapps.frost.activities.SelectorActivity
-import com.pitchedapps.frost.activities.WebOverlayActivity
+import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -65,6 +62,12 @@ fun Context.launchImageActivity(imageUrl: String, text: String?) {
     startActivity(ImageActivity::class.java, intentBuilder = {
         putExtra(ARG_IMAGE_URL, imageUrl)
         putExtra(ARG_TEXT, text)
+    })
+}
+
+fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>){
+    startActivity(IntroActivity::class.java, false, intentBuilder = {
+        putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
 }
 

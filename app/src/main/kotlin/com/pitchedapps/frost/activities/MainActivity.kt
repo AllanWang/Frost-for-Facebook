@@ -384,6 +384,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         when (item.itemId) {
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
+                intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
                 val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
                 startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }

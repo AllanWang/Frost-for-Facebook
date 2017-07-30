@@ -79,6 +79,11 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
         }
 
+        plainText(R.string.replay_intro) {
+            iicon = GoogleMaterial.Icon.gmd_replay
+            onClick = {_,_,_-> launchIntroActivity(cookies()); true}
+        }
+
         if (BuildConfig.DEBUG) {
             checkbox(R.string.custom_pro, { Prefs.debugPro }, { Prefs.debugPro = it })
         }

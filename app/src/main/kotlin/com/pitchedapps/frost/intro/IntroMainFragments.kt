@@ -10,10 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.kotlin.LazyResettableRegistry
-import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.utils.Kotterknife
 import ca.allanwang.kau.utils.bindViewResettable
-import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.setOnSingleTapListener
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
@@ -129,7 +127,7 @@ class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         container.setOnSingleTapListener { _, event ->
-            (activity as IntroActivity).ripple.ripple(context.color(R.color.facebook_blue), event.x, event.y)
+            (activity as IntroActivity).finish(event.x, event.y)
         }
     }
 }
