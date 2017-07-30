@@ -20,10 +20,7 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.ImageActivity
-import com.pitchedapps.frost.activities.LoginActivity
-import com.pitchedapps.frost.activities.SelectorActivity
-import com.pitchedapps.frost.activities.WebOverlayActivity
+import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -67,6 +64,9 @@ fun Context.launchImageActivity(imageUrl: String, text: String?) {
         putExtra(ARG_TEXT, text)
     })
 }
+
+fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)
+        = launchNewTask(IntroActivity::class.java, cookieList, true)
 
 fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
@@ -140,4 +140,4 @@ fun Activity.frostNavigationBar() {
     navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
 }
 
-fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))
+fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!

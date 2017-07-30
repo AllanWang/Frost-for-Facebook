@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/intro_phone"
+        android:drawable="@drawable/intro_phone_case" />
+    <item
+        android:id="@id/intro_phone_screen"
+        android:drawable="@drawable/intro_phone_screen" />
+    <item
+        android:id="@+id/intro_phone_toolbar"
+        android:bottom="135dp"
+        android:left="3dp"
+        android:right="3dp"
+        android:top="10dp">
+        <shape>
+            <solid android:color="#f0f" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_image"
+        android:bottom="65dp"
+        android:left="3dp"
+        android:right="3dp"
+        android:top="30dp">
+        <shape>
+            <solid android:color="#f0f" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_image_indicator"
+        android:bottom="95.5dp"
+        android:left="43dp"
+        android:right="43dp"
+        android:top="60.5dp">
+        <shape android:shape="oval">
+            <solid android:color="#800000ff" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_like"
+        android:bottom="57dp"
+        android:left="3dp"
+        android:right="60dp"
+        android:top="95dp">
+        <shape>
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_comment"
+        android:bottom="57dp"
+        android:left="30dp"
+        android:right="30dp"
+        android:top="95dp">
+        <shape>
+            <solid android:color="#ddff0000" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_share"
+        android:bottom="57dp"
+        android:left="60dp"
+        android:right="3dp"
+        android:top="95dp">
+        <shape>
+            <solid android:color="#aaff0000" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_comment_indicator"
+        android:bottom="59dp"
+        android:left="43dp"
+        android:right="43dp"
+        android:top="97dp">
+        <shape android:shape="oval">
+            <solid android:color="#800000ff" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_card_1"
+        android:bottom="10dp"
+        android:left="3dp"
+        android:right="31dp"
+        android:top="115dp">
+        <shape>
+            <solid android:color="#aaff0000" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_card_2"
+        android:bottom="10dp"
+        android:left="61dp"
+        android:right="3dp"
+        android:top="115dp">
+        <shape>
+            <solid android:color="#aaff0000" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_card_indicator"
+        android:bottom="25.5dp"
+        android:left="43dp"
+        android:right="43dp"
+        android:top="130.5dp">
+        <shape android:shape="oval">
+            <solid android:color="#800000ff" />
+        </shape>
+    </item>
+</layer-list>

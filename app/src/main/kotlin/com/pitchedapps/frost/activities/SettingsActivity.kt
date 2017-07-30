@@ -79,6 +79,11 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
         }
 
+        plainText(R.string.replay_intro) {
+            iicon = GoogleMaterial.Icon.gmd_replay
+            onClick = {_,_,_-> launchIntroActivity(cookies()); true}
+        }
+
         if (BuildConfig.DEBUG) {
             checkbox(R.string.custom_pro, { Prefs.debugPro }, { Prefs.debugPro = it })
         }
@@ -116,8 +121,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         }
     }
 
-
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
@@ -143,7 +146,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     }
 
     fun setFrostResult(flag: Int) {
-        resultFlag = resultFlag and flag
+        resultFlag = resultFlag or flag
     }
 
     override fun onDestroy() {
