@@ -34,7 +34,7 @@ abstract class IABBinder : FrostBilling {
     override fun Activity.onCreateBilling() {
         activity = this
         bp = BillingProcessor.newBillingProcessor(this, PUBLIC_BILLING_KEY, this@IABBinder)
-        bp!!.initialize()
+        bp?.initialize()
     }
 
     override fun onDestroyBilling() {
@@ -79,10 +79,10 @@ abstract class IABBinder : FrostBilling {
             L.eThrow("IAB null bp on purchase attempt")
             return
         }
-        if (!bp!!.isOneTimePurchaseSupported)
-            activity!!.playStorePurchaseUnsupported()
+        if (!(bp?.isOneTimePurchaseSupported ?: false))
+            activity?.playStorePurchaseUnsupported()
         else
-            bp!!.purchase(activity, FROST_PRO)
+            bp?.purchase(activity, FROST_PRO)
     }
 
 }
@@ -104,14 +104,14 @@ class IABSettings : IABBinder() {
      */
     override fun restorePurchases() {
         if (bp == null) return
-        val load = bp!!.loadOwnedPurchasesFromGoogle()
+        val load = bp?.loadOwnedPurchasesFromGoogle() ?: return
         L.d("IAB settings load from google $load")
-        if (!bp!!.isPurchased(FROST_PRO)) {
-            if (Prefs.pro) activity!!.playStoreNoLongerPro()
+        if (!(bp?.isPurchased(FROST_PRO) ?: return)) {
+            if (Prefs.pro) activity.playStoreNoLongerPro()
             else purchasePro()
         } else {
-            if (!Prefs.pro) activity!!.playStoreFoundPro()
-            else activity!!.purchaseRestored()
+            if (!Prefs.pro) activity.playStoreFoundPro()
+            else activity?.purchaseRestored()
         }
     }
 }
@@ -138,12 +138,12 @@ class IABMain : IABBinder() {
     override fun restorePurchases() {
         if (restored || bp == null) return
         restored = true
-        val load = bp!!.loadOwnedPurchasesFromGoogle()
+        val load = bp?.loadOwnedPurchasesFromGoogle() ?: false
         L.d("IAB main load from google $load")
-        if (!bp!!.isPurchased(FROST_PRO)) {
-            if (Prefs.pro) activity!!.playStoreNoLongerPro()
+        if (!(bp?.isPurchased(FROST_PRO) ?: false)) {
+            if (Prefs.pro) activity.playStoreNoLongerPro()
         } else {
-            if (!Prefs.pro) activity!!.playStoreFoundPro()
+            if (!Prefs.pro) activity.playStoreFoundPro()
         }
         onDestroyBilling()
     }

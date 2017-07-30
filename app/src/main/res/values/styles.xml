@@ -56,9 +56,7 @@
         <item name="colorAccent">@color/frost_splash_background</item>
     </style>
 
-    <style name="FrostTheme.Intro" parent="FrostTheme.Transparent">
-        <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
-    </style>
+    <style name="FrostTheme.Intro" parent="FrostTheme.Transparent" />
 
     <style name="FrostProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:minHeight">@dimen/progress_bar_height</item>

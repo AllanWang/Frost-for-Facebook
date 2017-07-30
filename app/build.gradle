@@ -10,7 +10,7 @@ apply plugin: 'com.github.triplet.play'
 
 play {
     jsonFile = file('../files/gplay-keys.json')
-    track = 'beta'
+    track = 'alpha'
     errorOnSizeLimit = true
     uploadImages = false
     untrackOld = true

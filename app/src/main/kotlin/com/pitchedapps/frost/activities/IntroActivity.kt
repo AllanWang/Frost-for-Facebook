@@ -60,11 +60,8 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         indicator.setViewPager(viewpager)
         next.setIcon(GoogleMaterial.Icon.gmd_navigate_next)
         next.setOnClickListener {
-            if (barHasNext) {
-                viewpager.currentItem = viewpager.currentItem + 1
-            } else {
-                finish(next.x + next.pivotX, next.y + next.pivotY)
-            }
+            if (barHasNext) viewpager.setCurrentItem(viewpager.currentItem + 1, true)
+            else finish(next.x + next.pivotX, next.y + next.pivotY)
         }
         ripple.set(Prefs.bgColor)
         theme()
@@ -77,7 +74,7 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
         indicator.setColour(Prefs.textColor)
         indicator.invalidate()
-        adapter.fragments.forEach { it.themeFragment() }
+        fragments.forEach { it.themeFragment() }
     }
 
     /**
@@ -100,8 +97,9 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
     }
 
     fun finish(x: Float, y: Float) {
+        val blue = color(R.color.facebook_blue)
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        ripple.ripple(color(R.color.facebook_blue), x, y, 600) {
+        ripple.ripple(blue, x, y, 600) {
             postDelayed(1000) { finish() }
         }
         arrayOf(skip, indicator, next, fragments.last().view!!.find<View>(R.id.intro_title), fragments.last().view!!.find<View>(R.id.intro_desc)).forEach {
@@ -117,6 +115,17 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
                 start()
             }
         }
+        if (Prefs.headerColor != blue) {
+            ValueAnimator.ofFloat(0f, 1f).apply {
+                addUpdateListener {
+                    val c = Prefs.headerColor.blendWith(blue, it.animatedValue as Float)
+                    statusBarColor = c
+                    navigationBarColor = c
+                }
+                duration = 600
+                start()
+            }
+        }
     }
 
     override fun finish() {
@@ -124,19 +133,24 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         super.finish()
     }
 
+    override fun onBackPressed() {
+        if (viewpager.currentItem > 0) viewpager.setCurrentItem(viewpager.currentItem - 1, true)
+        else finish()
+    }
+
     override fun onPageScrollStateChanged(state: Int) {
 
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        adapter[position].onPageScrolled(positionOffset)
-        if (position + 1 < adapter.fragments.size)
-            adapter[position + 1].onPageScrolled(positionOffset - 1)
+        fragments[position].onPageScrolled(positionOffset)
+        if (position + 1 < fragments.size)
+            fragments[position + 1].onPageScrolled(positionOffset - 1)
     }
 
     override fun onPageSelected(position: Int) {
-        adapter[position].onPageSelected()
-        val hasNext = position != adapter.fragments.size - 1
+        fragments[position].onPageSelected()
+        val hasNext = position != fragments.size - 1
         if (barHasNext == hasNext) return
         barHasNext = hasNext
         next.fadeScaleTransition {
@@ -145,14 +159,11 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         skip.animate().scaleXY(if (barHasNext) 1f else 0f)
     }
 
-    class IntroPageAdapter(fm: FragmentManager, val fragments: List<BaseIntroFragment>) : FragmentPagerAdapter(fm) {
-
-        operator fun get(index: Int) = fragments[index]
+    class IntroPageAdapter(fm: FragmentManager, private val fragments: List<BaseIntroFragment>) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment = fragments[position]
 
         override fun getCount(): Int = fragments.size
-
     }
 
 }

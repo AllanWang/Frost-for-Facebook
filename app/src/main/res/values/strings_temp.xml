@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intro_title">Frost now has an intro screen</string>
+    <string name="intro_desc">Would you like to see it? You can always replay it under settings</string>
+
+</resources>

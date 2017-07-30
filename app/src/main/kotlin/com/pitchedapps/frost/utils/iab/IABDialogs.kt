@@ -31,7 +31,7 @@ private fun Activity.playRestart() {
     } else restart()
 }
 
-fun Activity.playStoreNoLongerPro() {
+fun Activity?.playStoreNoLongerPro() {
     Prefs.pro = false
     L.d("IAB No longer pro")
     frostAnswers {
@@ -39,6 +39,7 @@ fun Activity.playStoreNoLongerPro() {
                 .putCustomAttribute("result", "no longer pro")
                 .putSuccess(false))
     }
+    if (this == null) return
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_not_pro)
@@ -49,9 +50,10 @@ fun Activity.playStoreNoLongerPro() {
     }
 }
 
-fun Activity.playStoreFoundPro() {
+fun Activity?.playStoreFoundPro() {
     Prefs.pro = true
     L.d("Found pro")
+    if (this == null) return
     materialDialogThemed {
         title(R.string.found_pro)
         content(R.string.found_pro_desc)

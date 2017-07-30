@@ -161,6 +161,14 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
 //        }
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
         onCreateBilling()
+        if (Prefs.installDate < 1501454310304 && Showcase.intro)
+            materialDialogThemed {
+                title(R.string.intro_title)
+                content(R.string.intro_desc)
+                positiveText(R.string.kau_yes)
+                negativeText(R.string.kau_no)
+                onPositive { _, _ -> launchIntroActivity(cookies()) }
+            }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {

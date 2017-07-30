@@ -65,11 +65,8 @@ fun Context.launchImageActivity(imageUrl: String, text: String?) {
     })
 }
 
-fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>){
-    startActivity(IntroActivity::class.java, false, intentBuilder = {
-        putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
-    })
-}
+fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)
+        = launchNewTask(IntroActivity::class.java, cookieList, true)
 
 fun WebOverlayActivity.url(): String {
     return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
