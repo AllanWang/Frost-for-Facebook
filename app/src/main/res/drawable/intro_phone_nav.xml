@@ -11,7 +11,7 @@
         android:bottom="10dp"
         android:left="3dp"
         android:right="23dp"
-        android:top="10dp">
+        android:top="50dp">
         <shape>
             <solid android:color="#f0f" />
         </shape>

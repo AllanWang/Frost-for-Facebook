@@ -62,12 +62,11 @@
     </style>
 
     <style name="IntroBarButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
         <item name="android:elevation">0dp</item>
         <item name="android:minWidth">100dp</item>
         <item name="android:layout_marginStart">@dimen/kau_padding_small</item>
         <item name="android:layout_marginEnd">@dimen/kau_padding_small</item>
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="IntroTitle" parent="TextAppearance.AppCompat.Title">

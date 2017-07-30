@@ -4,9 +4,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withAlpha
@@ -18,12 +15,9 @@ import com.pitchedapps.frost.utils.Prefs
  */
 abstract class BaseImageIntroFragment(val titleRes: Int, val imageRes: Int, val descRes: Int) : BaseIntroFragment(R.layout.intro_image) {
 
-    val title: TextView by bindView(R.id.intro_title)
-    val image: ImageView by bindView(R.id.intro_image)
-    val desc: TextView by bindView(R.id.intro_desc)
-    val imageDrawable: LayerDrawable by lazy { image.drawable as LayerDrawable }
-    val phone: Drawable by lazy { imageDrawable.findDrawableByLayerId(R.id.intro_phone) }
-    val screen: Drawable by lazy { imageDrawable.findDrawableByLayerId(R.id.intro_phone_screen) }
+    val imageDrawable: LayerDrawable by lazyResettableRegistered { image.drawable as LayerDrawable }
+    val phone: Drawable by lazyResettableRegistered { imageDrawable.findDrawableByLayerId(R.id.intro_phone) }
+    val screen: Drawable by lazyResettableRegistered { imageDrawable.findDrawableByLayerId(R.id.intro_phone_screen) }
 
     override fun viewArray(): Array<Array<out View>>
             = arrayOf(arrayOf(title), arrayOf(desc))
@@ -35,8 +29,8 @@ abstract class BaseImageIntroFragment(val titleRes: Int, val imageRes: Int, val 
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun themeFragment() {
-        super.themeFragment()
+    override fun themeFragmentImpl() {
+        super.themeFragmentImpl()
         title.setTextColor(Prefs.textColor)
         desc.setTextColor(Prefs.textColor)
         phone.tint(Prefs.textColor)
@@ -47,8 +41,8 @@ abstract class BaseImageIntroFragment(val titleRes: Int, val imageRes: Int, val 
         id.forEach { imageDrawable.findDrawableByLayerId(it).tint(color) }
     }
 
-    override fun onPageScrolled(positionOffset: Float) {
-        super.onPageScrolled(positionOffset)
+    override fun onPageScrolledImpl(positionOffset: Float) {
+        super.onPageScrolledImpl(positionOffset)
         val alpha = ((1 - Math.abs(positionOffset)) * 255).toInt()
         //apply alpha to all layers except the phone base
         (0 until imageDrawable.numberOfLayers).forEach {
@@ -72,15 +66,15 @@ class IntroAccountFragment : BaseImageIntroFragment(
         R.string.intro_multiple_accounts, R.drawable.intro_phone_nav, R.string.intro_multiple_accounts_desc
 ) {
 
-    override fun themeFragment() {
-        super.themeFragment()
+    override fun themeFragmentImpl() {
+        super.themeFragmentImpl()
         themeImageComponent(Prefs.iconColor, R.id.intro_phone_avatar_1, R.id.intro_phone_avatar_2)
         themeImageComponent(Prefs.bgColor.colorToForeground(), R.id.intro_phone_nav)
         themeImageComponent(Prefs.headerColor, R.id.intro_phone_header)
     }
 
-    override fun onPageScrolled(positionOffset: Float) {
-        super.onPageScrolled(positionOffset)
+    override fun onPageScrolledImpl(positionOffset: Float) {
+        super.onPageScrolledImpl(positionOffset)
         firstImageFragmentTransition(positionOffset)
     }
 }
@@ -89,8 +83,8 @@ class IntroTabTouchFragment : BaseImageIntroFragment(
         R.string.intro_easy_navigation, R.drawable.intro_phone_tab, R.string.intro_easy_navigation_desc
 ) {
 
-    override fun themeFragment() {
-        super.themeFragment()
+    override fun themeFragmentImpl() {
+        super.themeFragmentImpl()
         themeImageComponent(Prefs.iconColor, R.id.intro_phone_icon_1, R.id.intro_phone_icon_2, R.id.intro_phone_icon_3, R.id.intro_phone_icon_4)
         themeImageComponent(Prefs.headerColor, R.id.intro_phone_tab)
         themeImageComponent(Prefs.textColor.withAlpha(80), R.id.intro_phone_icon_ripple)
@@ -101,8 +95,8 @@ class IntroTabContextFragment : BaseImageIntroFragment(
         R.string.intro_context_aware, R.drawable.intro_phone_long_press, R.string.intro_context_aware_desc
 ) {
 
-    override fun themeFragment() {
-        super.themeFragment()
+    override fun themeFragmentImpl() {
+        super.themeFragmentImpl()
         themeImageComponent(Prefs.headerColor, R.id.intro_phone_toolbar)
         themeImageComponent(Prefs.bgColor.colorToForeground(0.1f), R.id.intro_phone_image)
         themeImageComponent(Prefs.bgColor.colorToForeground(0.2f), R.id.intro_phone_like, R.id.intro_phone_share)
@@ -111,8 +105,8 @@ class IntroTabContextFragment : BaseImageIntroFragment(
         themeImageComponent(Prefs.textColor, R.id.intro_phone_image_indicator, R.id.intro_phone_comment_indicator, R.id.intro_phone_card_indicator)
     }
 
-    override fun onPageScrolled(positionOffset: Float) {
-        super.onPageScrolled(positionOffset)
+    override fun onPageScrolledImpl(positionOffset: Float) {
+        super.onPageScrolledImpl(positionOffset)
         lastImageFragmentTransition(positionOffset)
     }
 }

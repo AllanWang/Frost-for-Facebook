@@ -92,9 +92,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             if (value && hiddenSearchView == null) {
                 hiddenSearchView = SearchWebView(this, this)
             }
-            showcaseView(currentFragment.web, null) {
-                setTitleText("test")
-            }
         }
     var searchView: SearchView? = null
     override val isSearchOpened: Boolean
@@ -214,13 +211,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                     .setCustomView(BadgedIcon(this).apply {
                         iicon = it.icon
                     }))
-        }
-        val firstTabView = tabs.getTabAt(0)?.customView ?: return
-        firstTabView.post {
-            showcaseView(firstTabView, null) {
-                setDismissText(R.string.kau_got_it)
-                setContentText(R.string.showcase_tab_icon)
-            }
         }
     }
 

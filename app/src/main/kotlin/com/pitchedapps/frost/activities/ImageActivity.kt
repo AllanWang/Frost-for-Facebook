@@ -122,7 +122,7 @@ class ImageActivity : AppCompatActivity() {
                 } else {
                     photo.setImage(ImageSource.uri(it))
                     fabAction = FabStates.DOWNLOAD
-                    photo.animate().alpha(1f).scaleX(1f).scaleY(1f).withEndAction { fab.show() }.start()
+                    photo.animate().alpha(1f).scaleXY(1f).withEndAction { fab.show() }.start()
                 }
             })
         } else {
@@ -283,9 +283,15 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
      * If it's in view, give it some animations
      */
     fun update(fab: FloatingActionButton) {
-        fab.transition {
-            setIcon(iicon, color = iconColor)
-            backgroundTintList = ColorStateList.valueOf(backgroundTint)
+        if (fab.isHidden) {
+            fab.setIcon(iicon, color = iconColor)
+            fab.backgroundTintList = ColorStateList.valueOf(backgroundTint)
+            fab.show()
+        } else {
+            fab.fadeScaleTransition {
+                setIcon(iicon, color = iconColor)
+                backgroundTintList = ColorStateList.valueOf(backgroundTint)
+            }
         }
     }
 

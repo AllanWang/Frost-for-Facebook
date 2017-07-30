@@ -2,6 +2,9 @@ package com.pitchedapps.frost.activities
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -9,10 +12,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.ui.widgets.InkPageIndicator
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.navigationBarColor
-import ca.allanwang.kau.utils.setIcon
-import ca.allanwang.kau.utils.statusBarColor
+import ca.allanwang.kau.utils.*
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.intro.*
@@ -31,13 +31,15 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
     val skip: Button by bindView(R.id.intro_skip)
     val done: Button by bindView(R.id.intro_done)
     val next: ImageButton by bindView(R.id.intro_next)
+    private var barHasNext = true
 
     val fragments = listOf(
             IntroFragmentWelcome(),
             IntroFragmentTheme(),
             IntroAccountFragment(),
             IntroTabTouchFragment(),
-            IntroTabContextFragment()
+            IntroTabContextFragment(),
+            IntroFragmentEnd()
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +50,6 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
             setPageTransformer(true, this@IntroActivity)
             addOnPageChangeListener(this@IntroActivity)
             adapter = this@IntroActivity.adapter
-            offscreenPageLimit = 8
         }
         indicator.setViewPager(viewpager)
         next.setIcon(GoogleMaterial.Icon.gmd_navigate_next)
@@ -65,12 +66,12 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
         indicator.setColour(Prefs.textColor)
         indicator.invalidate()
-        adapter.retainedFragments.values.forEach { it.themeFragment() }
+        adapter.fragments.forEach { it.themeFragment() }
     }
 
     /**
      * Transformations are mainly handled on a per view basis
-     * This simplifies it by making the first fragment fade out as the second fragment comes in
+     * This sifies it by making the first fragment fade out as the second fragment comes in
      * All fragments are locked in position
      */
     override fun transformPage(page: View, position: Float) {
@@ -79,9 +80,7 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
             val pageWidth = page.width
             val translateValue = position * -pageWidth
             page.translationX = (if (translateValue > -pageWidth) translateValue else 0f)
-            page.alpha = if (position < 0) 1 + position else
-//                if (position > 0.9f) (1 - position) * 10 else
-                    1f
+            page.alpha = if (position < 0) 1 + position else 1f
         } else {
             page.alpha = 1f
             page.translationX = 0f
@@ -96,12 +95,30 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        adapter[position]?.onPageScrolled(positionOffset)
-        adapter[position + 1]?.onPageScrolled(positionOffset - 1)
+        adapter[position].onPageScrolled(positionOffset)
+        if (position + 1 < adapter.fragments.size)
+            adapter[position + 1].onPageScrolled(positionOffset - 1)
     }
 
     override fun onPageSelected(position: Int) {
-        adapter[position]?.onPageSelected()
+        adapter[position].onPageSelected()
+        val hasNext = position != adapter.fragments.size - 1
+        if (barHasNext == hasNext) return
+        barHasNext = hasNext
+        next.fadeScaleTransition {
+            setIcon(if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done, color = Prefs.textColor)
+        }
+        skip.animate().scaleXY(if (barHasNext) 1f else 0f)
+    }
+
+    class IntroPageAdapter(fm: FragmentManager, val fragments: List<BaseIntroFragment>) : FragmentPagerAdapter(fm) {
+
+        operator fun get(index: Int) = fragments[index]
+
+        override fun getItem(position: Int): Fragment = fragments[position]
+
+        override fun getCount(): Int = fragments.size
+
     }
 
 }

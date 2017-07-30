@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/intro_theme_select"
+        android:id="@id/intro_title"
         style="@style/IntroTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intro_theme_select"
+        app:layout_constraintTop_toBottomOf="@id/intro_title"
         app:layout_constraintVertical_bias="0.33"
         tools:layout_editor_absoluteX="112dp" />
 
@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intro_theme_select"
+        app:layout_constraintTop_toBottomOf="@id/intro_title"
         app:layout_constraintVertical_bias="0.33"
         tools:layout_editor_absoluteX="112dp" />
 
@@ -56,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intro_theme_select"
+        app:layout_constraintTop_toBottomOf="@id/intro_title"
         app:layout_constraintVertical_bias="0.66"
         tools:layout_editor_absoluteX="112dp" />
 
@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intro_theme_select"
+        app:layout_constraintTop_toBottomOf="@id/intro_title"
         app:layout_constraintVertical_bias="0.66"
         tools:layout_editor_absoluteX="112dp" />
 
