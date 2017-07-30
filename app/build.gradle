@@ -10,7 +10,7 @@ apply plugin: 'com.github.triplet.play'
 
 play {
     jsonFile = file('../files/gplay-keys.json')
-    track = 'beta'
+    track = 'alpha'
     errorOnSizeLimit = true
     uploadImages = false
     untrackOld = true
@@ -172,4 +172,5 @@ dependencies {
     compile "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     compile "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+
 }

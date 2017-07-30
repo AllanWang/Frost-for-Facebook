@@ -86,6 +86,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     var hiddenSearchView: SearchWebView? = null
     var firstLoadFinished = false
         set(value) {
+            if (field && value) return //both vals are already true
             L.d("First fragment load has finished")
             field = value
             if (value && hiddenSearchView == null) {
@@ -160,6 +161,14 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
 //        }
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
         onCreateBilling()
+        if (Prefs.installDate < 1501454310304 && Showcase.intro)
+            materialDialogThemed {
+                title(R.string.intro_title)
+                content(R.string.intro_desc)
+                positiveText(R.string.kau_yes)
+                negativeText(R.string.kau_no)
+                onPositive { _, _ -> launchIntroActivity(cookies()) }
+            }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -383,6 +392,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         when (item.itemId) {
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
+                intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
                 val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
                 startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }

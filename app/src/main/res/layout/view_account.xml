@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin">
+    android:padding="@dimen/kau_activity_vertical_margin">
 
     <ImageView
         android:id="@+id/account_image"

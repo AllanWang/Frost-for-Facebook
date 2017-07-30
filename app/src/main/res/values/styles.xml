@@ -56,8 +56,34 @@
         <item name="colorAccent">@color/frost_splash_background</item>
     </style>
 
+    <style name="FrostTheme.Intro" parent="FrostTheme.Transparent" />
+
     <style name="FrostProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:minHeight">@dimen/progress_bar_height</item>
         <item name="android:maxHeight">@dimen/progress_bar_height</item>
     </style>
+
+    <style name="IntroBarButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:elevation">0dp</item>
+        <item name="android:minWidth">100dp</item>
+        <item name="android:layout_marginStart">@dimen/kau_padding_small</item>
+        <item name="android:layout_marginEnd">@dimen/kau_padding_small</item>
+    </style>
+
+    <style name="IntroTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="IntroSubTitle" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="IntroButton" parent="TextAppearance.AppCompat.Button">
+        <item name="android:elevation">0dp</item>
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:padding">@dimen/kau_padding_large</item>
+    </style>
+
 </resources>

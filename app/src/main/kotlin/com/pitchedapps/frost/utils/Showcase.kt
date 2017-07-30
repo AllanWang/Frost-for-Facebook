@@ -14,6 +14,8 @@ object Showcase : KPref() {
     //check if this is the first time launching the web overlay; show snackbar if true
     val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
 
+    val intro: Boolean by kprefSingle("intro_pages")
+
     //not a showcase but cannot be in the same file as Prefs
     var experimentalDefault: Boolean by kpref("experimental_by_default", false)
 }

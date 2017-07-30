@@ -1,17 +1,35 @@
 @mixin placeholder {
-    ::-webkit-input-placeholder {
-        @content
-    }
+  ::-webkit-input-placeholder {
+    @content;
+  }
 
-    :-moz-placeholder {
-        @content
-    }
+  :-moz-placeholder {
+    @content;
+  }
 
-    ::-moz-placeholder {
-        @content
-    }
+  ::-moz-placeholder {
+    @content;
+  }
 
-    :-ms-input-placeholder {
-        @content
-    }
+  :-ms-input-placeholder {
+    @content;
+  }
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+
+  @keyframes #{$name} {
+    @content;
+  }
 }

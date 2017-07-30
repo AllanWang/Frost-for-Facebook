@@ -96,7 +96,8 @@ class LoginActivity : BaseActivity() {
             loadFbCookiesAsync {
                 cookies ->
                 Handler().postDelayed({
-                    launchNewTask(MainActivity::class.java, ArrayList(cookies), clearStack = true)
+                    launchNewTask(if (Showcase.intro) IntroActivity::class.java else MainActivity::class.java,
+                            ArrayList(cookies), clearStack = true)
                 }, 1000)
             }
         }
