@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.intro
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -124,6 +125,7 @@ class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
         image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         container.setOnSingleTapListener { _, event ->
