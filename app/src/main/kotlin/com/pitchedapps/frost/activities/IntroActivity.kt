@@ -29,7 +29,6 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
     lateinit var adapter: IntroPageAdapter
     val indicator: InkPageIndicator by bindView(R.id.intro_indicator)
     val skip: Button by bindView(R.id.intro_skip)
-    val done: Button by bindView(R.id.intro_done)
     val next: ImageButton by bindView(R.id.intro_next)
     private var barHasNext = true
 
@@ -62,7 +61,6 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         statusBarColor = Prefs.headerColor
         navigationBarColor = Prefs.headerColor
         skip.setTextColor(Prefs.textColor)
-        done.setTextColor(Prefs.textColor)
         next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
         indicator.setColour(Prefs.textColor)
         indicator.invalidate()

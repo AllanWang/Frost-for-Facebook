@@ -36,7 +36,6 @@
         style="@style/IntroBarButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:background="@drawable/blue_borderless_ripple"
         android:text="@string/skip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,19 +57,6 @@
         style="@style/IntroBarButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:background="@drawable/blue_borderless_ripple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intro_bar_guide" />
-
-    <Button
-        android:id="@+id/intro_done"
-        style="@style/IntroBarButton"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:background="@drawable/blue_borderless_ripple"
-        android:text="@string/kau_done"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/intro_bar_guide" />

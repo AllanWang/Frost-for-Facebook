@@ -44,7 +44,7 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
                 ripple.ripple(Prefs.bgColor, v.x + v.pivotX, v.y + v.pivotY)
                 theme()
             }
-            themeList.forEach { it.animate().scaleXY(if (it == this) 1.2f else 0.8f).start() }
+            themeList.forEach { it.animate().scaleXY(if (it == this) 1.6f else 0.8f).start() }
         }
     }
 
