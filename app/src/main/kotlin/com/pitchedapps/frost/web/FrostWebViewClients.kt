@@ -91,6 +91,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                     webCore.jsInject(
                             JsActions.LOGIN_CHECK,
                             JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
+                            JsAssets.TEXTAREA_LISTENER,
                             JsAssets.CONTEXT_A,
                             JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
                     )
