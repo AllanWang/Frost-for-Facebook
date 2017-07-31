@@ -10,6 +10,14 @@
 
     <!--<version title="Beta Updates" />-->
 	
+	<version title="v1.5"/>
+    <item text="Add intro pages" />
+    <item text="Style new comment highlights" />
+    <item text="Style reaction background" />
+    <item text="Disable pull to refresh when typing is detected" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
 
     <version title="v1.4" />
     <item text="Update IAB helper" />

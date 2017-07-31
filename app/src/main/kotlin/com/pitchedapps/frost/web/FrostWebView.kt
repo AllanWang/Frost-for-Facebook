@@ -42,6 +42,7 @@ class FrostWebView @JvmOverloads constructor(
         }
         web.refreshObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
             refresh.isRefreshing = it
+            refresh.isEnabled = true
         }
         refresh.setOnRefreshListener(this)
         addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
