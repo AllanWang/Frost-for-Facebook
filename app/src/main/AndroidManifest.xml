@@ -122,10 +122,10 @@
             android:theme="@style/Kau.About" />
         <activity
             android:name=".activities.ImageActivity"
-            android:theme="@style/Kau.ImagePicker.Overlay" />
+            android:theme="@style/FrostTheme.Transparent" />
         <activity
-            android:name=".activities.ImagePickerActivity"
-            android:theme="@style/FrostTheme.Overlay.Slide" />
+            android:name=".activities.MediaPickerActivity"
+            android:theme="@style/Kau.MediaPicker.Overlay" />
 
         <service
             android:name=".services.NotificationService"

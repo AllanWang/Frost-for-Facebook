@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5
+* Add intro pages
+* Style new comment highlights
+* Style reaction background
+* Disable pull to refresh when typing is detected
+
 ## v1.4
 * Update IAB helper
 * Create image viewing and downloading; long press any image!

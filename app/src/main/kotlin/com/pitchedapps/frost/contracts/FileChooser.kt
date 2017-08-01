@@ -7,9 +7,8 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import ca.allanwang.kau.imagepicker.kauLaunchImagePicker
 import ca.allanwang.kau.imagepicker.kauOnImagePickerResult
-import com.pitchedapps.frost.activities.ImagePickerActivity
+import com.pitchedapps.frost.activities.MediaPickerActivity
 import com.pitchedapps.frost.utils.L
-import java.io.File
 
 /**
  * Created by Allan Wang on 2017-07-04.
@@ -32,7 +31,7 @@ class FileChooserDelegate : FileChooserContract {
 
     override fun Activity.openImagePicker(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
         this@FileChooserDelegate.filePathCallback = filePathCallback
-        kauLaunchImagePicker(ImagePickerActivity::class.java, IMAGE_CHOOSER_REQUEST)
+        kauLaunchImagePicker(MediaPickerActivity::class.java, IMAGE_CHOOSER_REQUEST)
     }
 
     override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
