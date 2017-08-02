@@ -1,18 +1,16 @@
 package com.pitchedapps.frost.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import ca.allanwang.kau.internal.KauBaseActivity
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostTheme
-import org.jetbrains.anko.contentView
 
 /**
  * Created by Allan Wang on 2017-06-12.
  */
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : KauBaseActivity() {
     override fun onBackPressed() {
         if (isTaskRoot && Prefs.exitConfirmation) {
             materialDialogThemed {

@@ -23,12 +23,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import ca.allanwang.kau.changelog.showChangelog
-import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.xml.showChangelog
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -388,6 +387,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         return true
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
@@ -433,11 +433,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             if (resultCode and REQUEST_WEB_ZOOM > 0) webFragmentObservable.onNext(WebFragment.REQUEST_TEXT_ZOOM)
             if (resultCode and REQUEST_SEARCH > 0) invalidateOptionsMenu()
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        kauOnRequestPermissionsResult(permissions, grantResults)
     }
 
     override fun onResume() {

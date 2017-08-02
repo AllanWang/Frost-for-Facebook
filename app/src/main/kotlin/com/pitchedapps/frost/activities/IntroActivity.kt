@@ -8,12 +8,12 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.ui.widgets.InkPageIndicator
 import ca.allanwang.kau.utils.*
@@ -29,7 +29,7 @@ import org.jetbrains.anko.find
 /**
  * Created by Allan Wang on 2017-07-25.
  */
-class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
+class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
 
     val ripple: RippleCanvas by bindView(R.id.intro_ripple)
     val viewpager: ViewPager by bindView(R.id.intro_viewpager)

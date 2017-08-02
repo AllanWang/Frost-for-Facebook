@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import ca.allanwang.kau.imagepicker.kauLaunchImagePicker
-import ca.allanwang.kau.imagepicker.kauOnImagePickerResult
+import ca.allanwang.kau.mediapicker.kauLaunchMediaPicker
+import ca.allanwang.kau.mediapicker.kauOnMediaPickerResult
 import com.pitchedapps.frost.activities.MediaPickerActivity
 import com.pitchedapps.frost.utils.L
 
@@ -31,13 +31,13 @@ class FileChooserDelegate : FileChooserContract {
 
     override fun Activity.openImagePicker(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
         this@FileChooserDelegate.filePathCallback = filePathCallback
-        kauLaunchImagePicker(MediaPickerActivity::class.java, IMAGE_CHOOSER_REQUEST)
+        kauLaunchMediaPicker(MediaPickerActivity::class.java, IMAGE_CHOOSER_REQUEST)
     }
 
     override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
         L.d("FileChooser On activity results web $requestCode")
         if (requestCode != IMAGE_CHOOSER_REQUEST) return false
-        val results = kauOnImagePickerResult(resultCode, intent).map { it.uri }.toTypedArray()
+        val results = kauOnMediaPickerResult(resultCode, intent).map { it.uri }.toTypedArray()
         L.d("FileChooser result ${results.contentToString()}")
         //proper path content://com.android.providers.media.documents/document/image%3A36341
         L.d("FileChooser Callback received; ${filePathCallback != null}")

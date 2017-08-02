@@ -126,14 +126,13 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:${ROBOELECTRIC}"
 
-    compile "ca.allanwang.kau:core:$KAU"
-    api "ca.allanwang.kau:core-ui:$KAU"
-    api "ca.allanwang.kau:adapter:$KAU"
-    api "ca.allanwang.kau:about:$KAU"
-    api "ca.allanwang.kau:colorpicker:$KAU"
-    api "ca.allanwang.kau:mediapicker:$KAU"
-    api "ca.allanwang.kau:kpref-activity:$KAU"
-    api "ca.allanwang.kau:searchview:$KAU"
+    implementation "ca.allanwang.kau:core-ui:$KAU"
+    implementation "ca.allanwang.kau:adapter:$KAU"
+    implementation "ca.allanwang.kau:about:$KAU"
+    implementation "ca.allanwang.kau:colorpicker:$KAU"
+    implementation "ca.allanwang.kau:mediapicker:$KAU"
+    implementation "ca.allanwang.kau:kpref-activity:$KAU"
+    implementation "ca.allanwang.kau:searchview:$KAU"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
 

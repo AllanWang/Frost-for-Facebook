@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.web
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
