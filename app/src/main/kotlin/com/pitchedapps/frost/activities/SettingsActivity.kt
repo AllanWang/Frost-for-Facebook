@@ -15,6 +15,7 @@ import ca.allanwang.kau.utils.finishSlideOut
 import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.xml.showChangelog
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig

@@ -28,6 +28,9 @@ import org.jetbrains.anko.find
 
 /**
  * Created by Allan Wang on 2017-07-25.
+ *
+ * A beautiful intro activity
+ * Phone showcases are drawn via layers
  */
 class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
 
@@ -63,6 +66,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             if (barHasNext) viewpager.setCurrentItem(viewpager.currentItem + 1, true)
             else finish(next.x + next.pivotX, next.y + next.pivotY)
         }
+        skip.setOnClickListener { finish() }
         ripple.set(Prefs.bgColor)
         theme()
     }

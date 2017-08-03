@@ -41,46 +41,9 @@ class AboutActivity : AboutActivityBase(null, {
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
     cutoutForeground = if (0xff3b5998.toInt().isColorVisibleOn(Prefs.bgColor)) 0xff3b5998.toInt() else Prefs.accentColor
     cutoutDrawableRes = R.drawable.frost_f_256
+    faqXmlRes = R.xml.frost_faq
+    faqParseNewLine = false
 }) {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        faqAdapter = FastItemThemedAdapter(configs)
-    }
-
-    override val pageCount: Int = 3
-
-    override fun getPage(position: Int, layoutInflater: LayoutInflater, parent: ViewGroup): View {
-        return when (position) {
-            0 -> inflateMainPage(layoutInflater, parent, position)
-            1 -> inflateLibPage(layoutInflater, parent, position)
-            else -> throw InvalidParameterException()
-        }
-    }
-
-    private var faqPage:Int = -1
-    private var faqRecycler: RecyclerView?=null
-    private lateinit var faqAdapter:FastItemThemedAdapter<IItem<*, *>>
-
-    fun inflateFaqPage(layoutInflater: LayoutInflater, parent: ViewGroup, position: Int): View {
-        faqPage = position
-        val v = layoutInflater.inflate(R.layout.kau_recycler_detached_background, parent, false)
-        val recycler = v.findViewById<RecyclerView>(R.id.kau_recycler_detached)
-        faqRecycler = recycler
-        recycler.withMarginDecoration(16, KAU_BOTTOM)
-        recycler.adapter = libAdapter
-        recycler.itemAnimator = KauAnimator(addAnimator = FadeScaleAnimatorAdd(scaleFactor = 0.7f, itemDelayFactor = 0.2f)).apply { addDuration = 300; interpolator = AnimHolder.decelerateInterpolator(this@AboutActivityBase) }
-        val background = v.findViewById<View>(R.id.kau_recycler_detached_background)
-        if (configs.backgroundColor != null) background.setBackgroundColor(configs.backgroundColor!!.colorToForeground())
-        doAsync {
-            libItems = getLibraries(
-                    if (rClass == null) Libs(this@AboutActivityBase) else Libs(this@AboutActivityBase, Libs.toStringArray(rClass.fields))
-            ).map { LibraryIItem(it) }
-            if (libPage >= 0 && pageStatus[libPage] == 1)
-                uiThread { addLibItems() }
-        }
-        return v
-    }
 
     override fun getLibraries(libs: Libs): List<Library> {
         val include = arrayOf(
