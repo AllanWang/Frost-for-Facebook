@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/AllanWang/Frost-for-Facebook.png?label=ready&title=Ready)](https://waffle.io/AllanWang/Frost-for-Facebook?utm_source=badge)
 # Frost-for-Facebook
 
 <a href='https://play.google.com/store/apps/details?id=com.pitchedapps.frost&utm_source=github'><img alt='Get it on Google Play' width="30%" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
