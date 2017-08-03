@@ -16,5 +16,8 @@
     <string name="get_pro">Get Frost Pro</string>
     <string name="get_pro_desc">Purchase or restore pro and unlock the full potential of Frost! Includes ad blockers, custom themes, full configurations, and much more to come!</string>
 
+    <string name="about_frost">About Frost for Facebook</string>
+
+
     <string name="replay_intro">Replay Introduction</string>
 </resources>
