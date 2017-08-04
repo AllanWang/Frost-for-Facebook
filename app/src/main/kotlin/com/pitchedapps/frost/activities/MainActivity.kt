@@ -116,12 +116,11 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 showChangelog(R.xml.frost_changelog, Prefs.textColor) { theme() }
-                frostAnswersCustom("Version") {
-                    putCustomAttribute("Version code", BuildConfig.VERSION_CODE)
-                    putCustomAttribute("Version name", BuildConfig.VERSION_NAME)
-                    putCustomAttribute("Build type", BuildConfig.BUILD_TYPE)
-                    putCustomAttribute("Frost id", Prefs.frostId)
-                }
+                frostAnswersCustom("Version",
+                        "Version code" to BuildConfig.VERSION_CODE,
+                        "Version name" to BuildConfig.VERSION_NAME,
+                        "Build type" to BuildConfig.BUILD_TYPE,
+                        "Frost id" to Prefs.frostId)
             }
         }
         setContentView(R.layout.activity_main)
@@ -402,7 +401,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        openImagePicker(filePathCallback, fileChooserParams)
+        openMediaPicker(filePathCallback, fileChooserParams)
     }
 
     @SuppressLint("NewApi")

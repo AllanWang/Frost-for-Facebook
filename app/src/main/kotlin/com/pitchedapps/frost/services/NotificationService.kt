@@ -14,10 +14,13 @@ import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
+import com.pitchedapps.frost.web.MessageWebView
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.Future
@@ -32,6 +35,8 @@ class NotificationService : JobService() {
 
     var future: Future<Unit>? = null
 
+    val startTime = System.currentTimeMillis()
+
     companion object {
         val epochMatcher: Regex by lazy { Regex(":([0-9]*?),") }
         val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*?),") }
@@ -40,9 +45,27 @@ class NotificationService : JobService() {
     }
 
     override fun onStopJob(params: JobParameters?): Boolean {
+        val time = System.currentTimeMillis() - startTime
+        L.d("Notification service has finished abruptly in $time ms")
+        frostAnswersCustom("NotificationTime",
+                "Type" to "Service force stop",
+                "IM Included" to Prefs.notificationsInstantMessages,
+                "Duration" to time)
         future?.cancel(true)
         future = null
         return false
+    }
+
+    fun finish(params: JobParameters?) {
+        val time = System.currentTimeMillis() - startTime
+        L.d("Notification service has finished in $time ms")
+        frostAnswersCustom("NotificationTime",
+                "Type" to "Service",
+                "IM Included" to Prefs.notificationsInstantMessages,
+                "Duration" to time)
+        jobFinished(params, false)
+        future?.cancel(true)
+        future = null
     }
 
 
@@ -51,27 +74,18 @@ class NotificationService : JobService() {
             if (Prefs.notificationAllAccounts) {
                 val cookies = loadFbCookiesSync()
                 cookies.forEach { fetchGeneralNotifications(it) }
-//                if (Prefs.notificationsInstantMessages) {
-//                    Prefs.prevId = Prefs.userId
-//                    uiThread {
-//                        val messageWebView = MessageWebView(this@NotificationService, params)
-//                        cookies.forEach { messageWebView.request(it) }
-//                    }
-//                    return@doAsync
-//                }
             } else {
                 val currentCookie = loadFbCookie(Prefs.userId)
                 if (currentCookie != null) {
                     fetchGeneralNotifications(currentCookie)
-//                    if (Prefs.notificationsInstantMessages) {
-//                        uiThread { MessageWebView(this@NotificationService, params).request(currentCookie) }
-//                        return@doAsync
-//                    }
                 }
             }
-            L.d("Finished notifications")
-            jobFinished(params, false)
-            future = null
+            L.d("Finished main notifications")
+            if (Prefs.notificationsInstantMessages) {
+                val currentCookie = loadFbCookie(Prefs.userId)
+                if (currentCookie != null)
+                    uiThread { MessageWebView(this@NotificationService, params, currentCookie) }
+            } else finish(params)
         }
         return true
     }
@@ -104,10 +118,7 @@ class NotificationService : JobService() {
         }
         if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).save()
         L.d("Notif new latest epoch ${lastNotificationTime(data.id).epoch}")
-        frostAnswersCustom("Notifications") {
-            putCustomAttribute("Type", "General")
-            putCustomAttribute("Count", notifCount)
-        }
+        frostAnswersCustom("Notifications", "Type" to "General", "Count" to notifCount)
         summaryNotification(data.id, notifCount)
     }
 
@@ -132,12 +143,6 @@ class NotificationService : JobService() {
         val doc = Jsoup.parseBodyFragment(content)
         val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
         var notifCount = 0
-        L.d("IM notif count ${unreadNotifications.size}")
-        unreadNotifications.forEach {
-            with(it) {
-                L.d("notif ${id()} ${className()}")
-            }
-        }
         val prevNotifTime = lastNotificationTime(data.id)
         val prevLatestEpoch = prevNotifTime.epochIm
         L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
@@ -154,10 +159,7 @@ class NotificationService : JobService() {
         }
         if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).save()
         L.d("Notif new latest im epoch ${lastNotificationTime(data.id).epochIm}")
-        frostAnswersCustom("Notifications") {
-            putCustomAttribute("Type", "Message")
-            putCustomAttribute("Count", notifCount)
-        }
+        frostAnswersCustom("Notifications", "Type" to "Message", "Count" to notifCount)
         summaryNotification(data.id, notifCount)
     }
 
@@ -173,7 +175,8 @@ class NotificationService : JobService() {
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
         val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
-        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
+        L.v("url ${a.attr("href")}")
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl.formattedFbUrl)
     }
 
     private fun Context.debugNotification(text: String) {

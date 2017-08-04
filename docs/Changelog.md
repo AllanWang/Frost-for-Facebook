@@ -1,6 +1,10 @@
 # Changelog
 
-## v1.5
+## v1.4.2
+* Experimental: Add notifications for messages; report to me if this drains your battery
+* Add FAQ in the about section
+
+## v1.4.1
 * Add intro pages
 * Style new comment highlights
 * Style reaction background

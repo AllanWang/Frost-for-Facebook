@@ -125,7 +125,7 @@ open class WebOverlayActivity : KauBaseActivity(),
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        openImagePicker(filePathCallback, fileChooserParams)
+        openMediaPicker(filePathCallback, fileChooserParams)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

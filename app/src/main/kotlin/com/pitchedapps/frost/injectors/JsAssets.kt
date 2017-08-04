@@ -8,7 +8,7 @@ import android.webkit.WebView
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, CLICK_A, CONTEXT_A, HEADER_BADGES, SEARCH, TEXTAREA_LISTENER
+    MENU, CLICK_A, CONTEXT_A, HEADER_BADGES, SEARCH, TEXTAREA_LISTENER, NOTIF_MSG
     ;
 
     var file = "${name.toLowerCase()}.min.js"

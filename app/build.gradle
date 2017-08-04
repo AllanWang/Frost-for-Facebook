@@ -78,7 +78,7 @@ android {
             shrinkResources false
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
-            resValue "string", "app_name", "Frost Debug"
+            resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableCrashlytics = false
         }
@@ -89,7 +89,7 @@ android {
             applicationIdSuffix ".test"
             signingConfig signingConfigs.test
             versionNameSuffix "-test"
-            resValue "string", "app_name", "Frost Test"
+            resValue "string", "frost_name", "Frost Test"
             resValue "string", "frost_web", "Frost Web Test"
         }
         release {
@@ -97,7 +97,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            resValue "string", "app_name", "Frost"
+            resValue "string", "frost_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
         }
     }
@@ -126,13 +126,20 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:${ROBOELECTRIC}"
 
-    implementation "ca.allanwang.kau:core-ui:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:adapter:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:about:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:colorpicker:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:mediapicker:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:kpref-activity:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:searchview:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:core-ui:$KAU"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
 
@@ -156,9 +163,6 @@ dependencies {
 
     implementation "com.anjlab.android.iab.v3:library:${IAB}"
 
-//    implementation("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
-//        transitive = true
-//    }
     implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 
     implementation "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"

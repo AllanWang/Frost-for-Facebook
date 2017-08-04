@@ -18,13 +18,13 @@
         android:allowBackup="true"
         android:fullBackupContent="@xml/frost_backup_rules"
         android:icon="@mipmap/ic_launcher_round"
-        android:label="@string/app_name"
+        android:label="@string/frost_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FrostTheme.Splash">
         <activity
             android:name=".StartActivity"
-            android:label="@string/app_name"
+            android:label="@string/frost_name"
             android:noHistory="true"
             android:theme="@style/FrostTheme.Splash">
             <intent-filter>
@@ -36,12 +36,12 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
-            android:label="@string/app_name"
+            android:label="@string/frost_name"
             android:theme="@style/FrostTheme" />
         <activity
             android:name=".activities.WebOverlayActivity"
             android:hardwareAccelerated="true"
-            android:label="@string/app_name"
+            android:label="@string/frost_name"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
@@ -124,9 +124,11 @@
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
         <activity
-            android:name=".activities.MediaPickerActivity"
+            android:name=".activities.ImagePickerActivity"
             android:theme="@style/Kau.MediaPicker.Overlay" />
-
+        <activity
+            android:name=".activities.VideoPickerActivity"
+            android:theme="@style/Kau.MediaPicker.Overlay" />
         <service
             android:name=".services.NotificationService"
             android:enabled="true"

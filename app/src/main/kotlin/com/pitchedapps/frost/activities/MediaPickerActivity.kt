@@ -6,4 +6,5 @@ import ca.allanwang.kau.mediapicker.MediaType
 /**
  * Created by Allan Wang on 2017-07-23.
  */
-class MediaPickerActivity : MediaPickerActivityOverlayBase(MediaType.IMAGE)
+class ImagePickerActivity : MediaPickerActivityOverlayBase(MediaType.IMAGE)
+class VideoPickerActivity : MediaPickerActivityOverlayBase(MediaType.VIDEO)

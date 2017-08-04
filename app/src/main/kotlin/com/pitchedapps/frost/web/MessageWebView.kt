@@ -6,23 +6,24 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import ca.allanwang.kau.utils.gone
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.injectors.JsActions
+import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.services.NotificationService
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostAnswersCustom
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 
-@SuppressLint("ViewConstructor")
 /**
  * Created by Allan Wang on 2017-07-17.
  *
  * Bare boned headless view made solely to extract conversation info
  */
-class MessageWebView(val service: NotificationService, val params: JobParameters?) : WebView(service) {
+@SuppressLint("ViewConstructor")
+class MessageWebView(val service: NotificationService, val params: JobParameters?, val cookie: CookieModel) : WebView(service) {
+
+    private val startTime = System.currentTimeMillis()
+    private var isCancelled = false
 
     init {
         gone()
@@ -33,48 +34,33 @@ class MessageWebView(val service: NotificationService, val params: JobParameters
     private fun setupWebview() {
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
-        webViewClient = HeadlessWebViewClient("MessageNotifs", JsActions.GET_MESSAGES)
+        webViewClient = HeadlessWebViewClient("MessageNotifs", JsAssets.NOTIF_MSG)
         webChromeClient = QuietChromeClient()
         addJavascriptInterface(MessageJSI(), "Frost")
+        loadUrl(FbTab.MESSAGES.url)
     }
 
-    private val startTime = System.currentTimeMillis()
-    private val endTime: Long by lazy { System.currentTimeMillis() }
-    private var inProgress = false
-    private val pendingRequests: MutableList<CookieModel> = mutableListOf()
-    private lateinit var data: CookieModel
-
-    fun request(data: CookieModel) {
-        pendingRequests.add(data)
-        if (inProgress) return
-        inProgress = true
-        load(data)
+    fun finish() {
+        if (isCancelled) return
+        isCancelled = true
+        post { destroy() }
+        service.finish(params)
     }
 
-    private fun load(data: CookieModel) {
-        L.d("Notif retrieving messages", data.toString())
-        this.data = data
-        FbCookie.setWebCookie(data.cookie) { context.runOnUiThread { L.d("Notif messages load"); loadUrl(FbTab.MESSAGES.url) } }
+    override fun destroy() {
+        L.d("MessageWebView destroyed")
+        super.destroy()
     }
 
     inner class MessageJSI {
         @JavascriptInterface
         fun handleHtml(html: String) {
-            L.d("Notif messages received", data.toString())
-            doAsync { service.fetchMessageNotifications(data, html) }
-            pendingRequests.remove(data)
-            if (pendingRequests.isEmpty()) {
-                val time = endTime - startTime
-                L.d("Notif messages finished $time")
-                frostAnswersCustom("Notifications") {
-                    putCustomAttribute("Message retrieval duration", time)
-                }
-                post { destroy() }
-                service.jobFinished(params, false)
-                service.future = null
-            } else {
-                load(pendingRequests.first())
-            }
+            if (isCancelled) return
+            if (html.length < 10) return finish()
+            val time = System.currentTimeMillis() - startTime
+            L.d("Notif messages fetched in $time ms")
+            frostAnswersCustom("NotificationTime", "Type" to "IM Headless", "Duration" to time)
+            doAsync { service.fetchMessageNotifications(cookie, html); finish() }
         }
     }
 

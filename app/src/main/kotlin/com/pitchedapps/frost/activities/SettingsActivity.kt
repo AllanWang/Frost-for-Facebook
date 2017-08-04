@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -78,13 +79,14 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         }
 
         plainText(R.string.about_frost) {
+            descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
         }
 
         plainText(R.string.replay_intro) {
             iicon = GoogleMaterial.Icon.gmd_replay
-            onClick = {_,_,_-> launchIntroActivity(cookies()); true}
+            onClick = { _, _, _ -> launchIntroActivity(cookies()); true }
         }
 
         if (BuildConfig.DEBUG) {
@@ -101,6 +103,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         setFrostResult(MainActivity.REQUEST_RESTART)
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         setFrostTheme(true)
         super.onCreate(savedInstanceState)
