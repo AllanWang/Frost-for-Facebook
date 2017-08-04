@@ -15,6 +15,10 @@ import com.pitchedapps.frost.utils.frostAnswers
  */
 private const val FROST_PRO = "frost_pro"
 
+/**
+ * Implemented pro checker with a hook for debug builds
+ * Use this when checking if the pro feature is enabled
+ */
 val IS_FROST_PRO: Boolean
     get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.pro
 

@@ -56,6 +56,7 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IABMain
+import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.SearchWebView
@@ -441,7 +442,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
 
     override fun onStart() {
         //validate some pro features
-        if (!Prefs.pro) {
+        if (!IS_FROST_PRO) {
             if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
         }
         super.onStart()
