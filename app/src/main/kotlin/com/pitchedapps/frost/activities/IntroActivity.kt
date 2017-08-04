@@ -106,18 +106,19 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         ripple.ripple(blue, x, y, 600) {
             postDelayed(1000) { finish() }
         }
-        arrayOf(skip, indicator, next, fragments.last().view!!.find<View>(R.id.intro_title), fragments.last().view!!.find<View>(R.id.intro_desc)).forEach {
-            it.animate().alpha(0f).setDuration(600).start()
+        arrayOf(skip, indicator, next, fragments.last().view?.find<View>(R.id.intro_title), fragments.last().view?.find<View>(R.id.intro_desc)).forEach {
+            it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
         if (Prefs.textColor != Color.WHITE) {
-            val f = fragments.last().view!!.find<ImageView>(R.id.intro_image).drawable
-            ValueAnimator.ofFloat(0f, 1f).apply {
-                addUpdateListener {
-                    f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+            val f = fragments.last().view?.find<ImageView>(R.id.intro_image)?.drawable
+            if (f != null)
+                ValueAnimator.ofFloat(0f, 1f).apply {
+                    addUpdateListener {
+                        f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                    }
+                    duration = 600
+                    start()
                 }
-                duration = 600
-                start()
-            }
         }
         if (Prefs.headerColor != blue) {
             ValueAnimator.ofFloat(0f, 1f).apply {
