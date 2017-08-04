@@ -1,5 +1,7 @@
 package com.pitchedapps.frost.facebook
 
+import com.pitchedapps.frost.utils.L
+
 /**
  * Created by Allan Wang on 2017-07-07.
  *
@@ -13,22 +15,27 @@ class FbUrlFormatter(url: String) {
     val cleaned: String
 
     init {
-        var cleanedUrl = url
-        discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
-        val changed = cleanedUrl != url //note that discardables strip away the first ?
-        decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-        val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
-        if (qm > -1) {
-            cleanedUrl.substring(qm + 1).split("&").forEach {
-                val p = it.split("=")
-                queries.put(p[0], p.elementAtOrNull(1) ?: "")
+        if (url.isNullOrBlank()) cleaned = ""
+        else {
+            var cleanedUrl = url
+            discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
+            val changed = cleanedUrl != url //note that discardables strip away the first ?
+            decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+            val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
+            if (qm > -1) {
+                cleanedUrl.substring(qm + 1).split("&").forEach {
+                    val p = it.split("=")
+                    queries.put(p[0], p.elementAtOrNull(1) ?: "")
+                }
+                cleanedUrl = cleanedUrl.substring(0, qm)
             }
-            cleanedUrl = cleanedUrl.substring(0, qm)
+            discardableQueries.forEach { queries.remove(it) }
+            if (cleanedUrl.startsWith("#!/")) cleanedUrl = cleanedUrl.substring(2)
+            if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
+            cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
+            L.v("Formatted url from $url to $cleanedUrl")
+            cleaned = cleanedUrl
         }
-        discardableQueries.forEach { queries.remove(it) }
-        if (cleanedUrl.startsWith("#!/")) cleanedUrl = cleanedUrl.substring(2)
-        if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
-        cleaned = cleanedUrl
     }
 
     override fun toString(): String {

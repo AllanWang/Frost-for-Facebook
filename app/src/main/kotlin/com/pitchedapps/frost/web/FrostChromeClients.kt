@@ -1,10 +1,9 @@
 package com.pitchedapps.frost.web
 
 import android.net.Uri
-import android.webkit.ConsoleMessage
-import android.webkit.ValueCallback
-import android.webkit.WebChromeClient
-import android.webkit.WebView
+import android.webkit.*
+import ca.allanwang.kau.permissions.PERMISSION_ACCESS_FINE_LOCATION
+import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.utils.L
@@ -33,6 +32,7 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     val progressObservable: Subject<Int> = webCore.progressObservable
     val titleObservable: BehaviorSubject<String> = webCore.titleObservable
     val activityContract = (webCore.context as? ActivityWebContract)
+    val context = webCore.context!!
 
     companion object {
         val consoleBlacklist = setOf(
@@ -62,4 +62,12 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         return activityContract != null
     }
 
+    override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+        L.d("Requesting geolocation")
+        context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) {
+            granted, _ ->
+            L.d("Geolocation response received; ${if (granted) "granted" else "denied"}")
+            callback(origin, granted, true)
+        }
+    }
 }

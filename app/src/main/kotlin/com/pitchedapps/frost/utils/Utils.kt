@@ -116,9 +116,14 @@ fun frostAnswers(action: Answers.() -> Unit) {
     Answers.getInstance().action()
 }
 
-fun frostAnswersCustom(name: String, action: CustomEvent.() -> Unit = {}) {
+fun frostAnswersCustom(name: String, vararg events: Pair<String, Any>) {
     frostAnswers {
-        logCustom(CustomEvent("Frost $name").apply { action() })
+        logCustom(CustomEvent("Frost $name").apply {
+            events.forEach { (key, value) ->
+                if (value is Number) putCustomAttribute(key, value)
+                else putCustomAttribute(key, value.toString())
+            }
+        })
     }
 }
 

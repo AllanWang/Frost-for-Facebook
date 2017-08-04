@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <question><![CDATA[Can you add feature xxx?]]></question>
+    <answer><![CDATA[I&apos;m always opened to suggestions,
+        and if a feature will enhance your experience, I&apos;d like to hear it.
+        However, please consider taking a look at my
+        <a href="https://github.com/AllanWang/Frost-for-Facebook/issues">issue tracker</a> first to avoid duplicate requests.]]></answer>
+
+    <question><![CDATA[I can&apos;t scroll horizontally in the webviews.]]></question>
+    <answer><![CDATA[This is known since the viewpager takes priority for horizontal scrolling.
+    Frost has addressed this by allowing horizontal web scrolls if you tap and hold before scrolling.]]></answer>
+
+    <question><![CDATA[Can I get more frequent notifications?]]></question>
+    <answer><![CDATA[I made the decision to prioritize battery life by using a newer job scheduler for Android.
+    This means that your framework picks the best time to fetch the notifications, and the lowest window is 15 minutes.
+    This is also why I don&apos;t require the wakelock permission]]></answer>
+</resources>

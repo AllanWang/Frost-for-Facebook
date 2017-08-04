@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.4.2
+* Experimental: Add notifications for messages; report to me if this drains your battery
+* Add FAQ in the about section
+* Add video uploading
+* Add open link option in context menu
+
+## v1.4.1
+* Add intro pages
+* Style new comment highlights
+* Style reaction background
+* Disable pull to refresh when typing is detected
+
 ## v1.4
 * Update IAB helper
 * Create image viewing and downloading; long press any image!

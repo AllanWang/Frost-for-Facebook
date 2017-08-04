@@ -10,14 +10,13 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.FileProvider
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import ca.allanwang.kau.email.sendEmail
+import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
-import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
 import com.bumptech.glide.Glide
@@ -44,7 +43,7 @@ import java.util.*
 /**
  * Created by Allan Wang on 2017-07-15.
  */
-class ImageActivity : AppCompatActivity() {
+class ImageActivity : KauBaseActivity() {
 
     val progress: ProgressBar by bindView(R.id.image_progress)
     val container: ViewGroup by bindView(R.id.image_container)
@@ -229,11 +228,6 @@ class ImageActivity : AppCompatActivity() {
     override fun onDestroy() {
         deleteTempFile()
         super.onDestroy()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        kauOnRequestPermissionsResult(permissions, grantResults)
     }
 }
 

@@ -16,6 +16,7 @@ import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -61,7 +62,7 @@ class FrostWebView @JvmOverloads constructor(
             baseEnum = enum
             with(settings) {
                 javaScriptEnabled = true
-                if (url.contains("com/message"))
+                if (url.contains("/message"))
                     userAgentString = USER_AGENT_BASIC
                 allowFileAccess = true
                 textZoom = Prefs.webTextScaling

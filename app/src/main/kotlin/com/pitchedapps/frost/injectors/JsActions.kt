@@ -15,7 +15,9 @@ enum class JsActions(body: String) : InjectorContract {
      */
     LOGIN_CHECK("document.getElementById('signup-button')&&Frost.loadLogin();"),
     BASE_HREF("document.write(\"<base href='$FB_URL_BASE'/>\");"),
-    GET_MESSAGES("setTimeout(function(){Frost.handleHtml(document.getElementById('threadlist_rows').outerHtml)},1000)"),
+    /**
+     * Used as a pseudoinjector for maybe functions
+     */
     EMPTY("");
 
     val function = "!function(){$body}();"

@@ -1,8 +1,6 @@
 package com.pitchedapps.frost.views
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet

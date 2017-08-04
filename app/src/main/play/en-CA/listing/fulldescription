@@ -8,13 +8,18 @@ While being a web wrapper, Frost contains many unique and native features such a
 • Complete theme engine - Frost contains very comprehensive themes that customize all components of the app. Frost is also the only app to support transparent themes.
 • Fully opened - Nothing speaks for privacy more than being open sourced. Frost is proud to be one of those apps, and can be found on github (Link in the app's about section)
 
-Permissions used and why:
+Mandatory permissions used and why:
 
 • Internet, Network State, Wifi State - Frost fetches the pages from Facebook's mobile website. It also needs the network state so as to limit internet usage when you are on a metered network.
 • Receive Boot Completed - Frost notifications persist on reboot, and need this permission to be added each time.
-• Read/write external storage - Needed to upload photos in a new status and save photos when prompted
 • Vibrate - Needed to vibrate phone for notifications; this can be toggled in the settings
 • Billing - For purchasing pro and unlocking all of Frost's features
+
+Optional permissions used and why:
+(these are only requested when they have to be, and are disabled until then)
+• Read/write external storage - Needed to upload photos in a new status and save photos when prompted
+• Fine/coarse location - Needed for the check in option if users wish to search for their location
+
 • That's it! No privacy intrusion and no extra demands.
 
 Permissions NOT used and why:

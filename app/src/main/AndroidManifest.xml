@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--<uses-permission android:name="android.permission.USE_FINGERPRINT" />-->
     <uses-permission android:name="com.android.vending.BILLING" />
 
@@ -18,13 +20,13 @@
         android:allowBackup="true"
         android:fullBackupContent="@xml/frost_backup_rules"
         android:icon="@mipmap/ic_launcher_round"
-        android:label="@string/app_name"
+        android:label="@string/frost_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FrostTheme.Splash">
         <activity
             android:name=".StartActivity"
-            android:label="@string/app_name"
+            android:label="@string/frost_name"
             android:noHistory="true"
             android:theme="@style/FrostTheme.Splash">
             <intent-filter>
@@ -36,12 +38,12 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
-            android:label="@string/app_name"
+            android:label="@string/frost_name"
             android:theme="@style/FrostTheme" />
         <activity
             android:name=".activities.WebOverlayActivity"
             android:hardwareAccelerated="true"
-            android:label="@string/app_name"
+            android:label="@string/frost_name"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
@@ -122,10 +124,13 @@
             android:theme="@style/Kau.About" />
         <activity
             android:name=".activities.ImageActivity"
-            android:theme="@style/Kau.ImagePicker.Overlay" />
+            android:theme="@style/FrostTheme.Transparent" />
         <activity
             android:name=".activities.ImagePickerActivity"
-            android:theme="@style/FrostTheme.Overlay.Slide" />
+            android:theme="@style/Kau.MediaPicker.Overlay" />
+        <activity
+            android:name=".activities.VideoPickerActivity"
+            android:theme="@style/Kau.MediaPicker.Overlay" />
 
         <service
             android:name=".services.NotificationService"

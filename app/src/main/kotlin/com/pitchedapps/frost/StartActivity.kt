@@ -1,7 +1,7 @@
 package com.pitchedapps.frost
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import ca.allanwang.kau.internal.KauBaseActivity
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
@@ -14,7 +14,7 @@ import com.pitchedapps.frost.utils.launchNewTask
 /**
  * Created by Allan Wang on 2017-05-28.
  */
-class StartActivity : AppCompatActivity() {
+class StartActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
