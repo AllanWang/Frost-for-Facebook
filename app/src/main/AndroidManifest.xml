@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--<uses-permission android:name="android.permission.USE_FINGERPRINT" />-->
     <uses-permission android:name="com.android.vending.BILLING" />
 
@@ -129,6 +131,7 @@
         <activity
             android:name=".activities.VideoPickerActivity"
             android:theme="@style/Kau.MediaPicker.Overlay" />
+
         <service
             android:name=".services.NotificationService"
             android:enabled="true"

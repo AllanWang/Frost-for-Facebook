@@ -13,9 +13,9 @@
 	<version title="v1.4.2"/>
     <item text="Experimental: Add notifications for messages; report to me if this drains your battery" />
     <item text="Add FAQ in the about section" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Add video uploading" />
+    <item text="Add open link option in context menu" />
+    <item text="Add geolocation" />
     <item text="" />
 	
 	<version title="v1.4.1"/>
