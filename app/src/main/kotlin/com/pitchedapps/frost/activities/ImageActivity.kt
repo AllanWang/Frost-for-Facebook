@@ -148,7 +148,7 @@ class ImageActivity : KauBaseActivity() {
     private fun saveTempImage(resource: Bitmap, callback: (uri: Uri?) -> Unit) {
         var photoFile: File? = null
         try {
-            photoFile = createImageFile()
+            photoFile = createPrivateMediaFile(".png")
         } catch (ignored: IOException) {
         } finally {
             if (photoFile == null) {
@@ -166,27 +166,13 @@ class ImageActivity : KauBaseActivity() {
         }
     }
 
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val imageFileName = "Frost_" + timeStamp + "_"
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(imageFileName, ".png", storageDir)
-    }
-
     internal fun downloadImage() {
         kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) {
             granted, _ ->
             L.d("Download image callback granted: $granted")
             if (granted) {
                 doAsync {
-                    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                    val imageFileName = "Frost_" + timeStamp + "_"
-                    val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    val frostDir = File(storageDir, "Frost")
-                    if (!frostDir.exists()) frostDir.mkdirs()
-                    val destination = File.createTempFile(imageFileName, ".png", frostDir)
+                    val destination = createMediaFile(".png")
                     downloadPath = destination.absolutePath
                     var success = true
                     try {

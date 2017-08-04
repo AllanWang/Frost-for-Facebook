@@ -5,6 +5,8 @@
 * Add FAQ in the about section
 * Add video uploading
 * Add open link option in context menu
+* Add geolocation
+* Update theme
 
 ## v1.4.1
 * Add intro pages

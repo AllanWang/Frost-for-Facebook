@@ -70,4 +70,6 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
             callback(origin, granted, true)
         }
     }
+
+
 }

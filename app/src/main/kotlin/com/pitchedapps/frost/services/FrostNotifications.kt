@@ -22,7 +22,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
-import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -40,7 +40,7 @@ val Context.frostNotification: NotificationCompat.Builder
     }
 
 @Suppress("DEPRECATION")
-//The update feature is for Android O and seems to still be in beta
+        //The update feature is for Android O and seems to still be in beta
 fun Notification.frostConfig() = apply {
     if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
     if (Prefs.notificationSound) defaults = defaults or Notification.DEFAULT_SOUND
@@ -86,12 +86,12 @@ data class NotificationContent(val data: CookieModel,
             }
         } else {
             val intent = Intent(context, FrostWebActivity::class.java)
-            intent.data = Uri.parse("${FB_URL_BASE}$href")
+            intent.data = Uri.parse(href.formattedFbUrl)
             intent.putExtra(ARG_USER_ID, data.id)
             val group = "frost_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val notifBuilder = context.frostNotification
-                    .setContentTitle(title ?: context.string(R.string.app_name))
+                    .setContentTitle(title ?: context.string(R.string.frost_name))
                     .setContentText(text)
                     .setContentIntent(pendingIntent)
                     .setCategory(Notification.CATEGORY_SOCIAL)
