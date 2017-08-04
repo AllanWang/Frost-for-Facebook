@@ -8,12 +8,12 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.ui.widgets.InkPageIndicator
 import ca.allanwang.kau.utils.*
@@ -28,8 +28,11 @@ import org.jetbrains.anko.find
 
 /**
  * Created by Allan Wang on 2017-07-25.
+ *
+ * A beautiful intro activity
+ * Phone showcases are drawn via layers
  */
-class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
+class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
 
     val ripple: RippleCanvas by bindView(R.id.intro_ripple)
     val viewpager: ViewPager by bindView(R.id.intro_viewpager)
@@ -63,6 +66,7 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
             if (barHasNext) viewpager.setCurrentItem(viewpager.currentItem + 1, true)
             else finish(next.x + next.pivotX, next.y + next.pivotY)
         }
+        skip.setOnClickListener { finish() }
         ripple.set(Prefs.bgColor)
         theme()
     }
@@ -102,18 +106,19 @@ class IntroActivity : AppCompatActivity(), ViewPager.PageTransformer, ViewPager.
         ripple.ripple(blue, x, y, 600) {
             postDelayed(1000) { finish() }
         }
-        arrayOf(skip, indicator, next, fragments.last().view!!.find<View>(R.id.intro_title), fragments.last().view!!.find<View>(R.id.intro_desc)).forEach {
-            it.animate().alpha(0f).setDuration(600).start()
+        arrayOf(skip, indicator, next, fragments.last().view?.find<View>(R.id.intro_title), fragments.last().view?.find<View>(R.id.intro_desc)).forEach {
+            it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
         if (Prefs.textColor != Color.WHITE) {
-            val f = fragments.last().view!!.find<ImageView>(R.id.intro_image).drawable
-            ValueAnimator.ofFloat(0f, 1f).apply {
-                addUpdateListener {
-                    f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+            val f = fragments.last().view?.find<ImageView>(R.id.intro_image)?.drawable
+            if (f != null)
+                ValueAnimator.ofFloat(0f, 1f).apply {
+                    addUpdateListener {
+                        f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                    }
+                    duration = 600
+                    start()
                 }
-                duration = 600
-                start()
-            }
         }
         if (Prefs.headerColor != blue) {
             ValueAnimator.ofFloat(0f, 1f).apply {

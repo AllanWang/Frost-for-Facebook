@@ -1,18 +1,22 @@
 package com.pitchedapps.frost.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.about.kauLaunchAbout
-import ca.allanwang.kau.changelog.showChangelog
 import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefItemBase
 import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.finishSlideOut
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.xml.showChangelog
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
@@ -75,13 +79,14 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         }
 
         plainText(R.string.about_frost) {
+            descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
         }
 
         plainText(R.string.replay_intro) {
             iicon = GoogleMaterial.Icon.gmd_replay
-            onClick = {_,_,_-> launchIntroActivity(cookies()); true}
+            onClick = { _, _, _ -> launchIntroActivity(cookies()); true }
         }
 
         if (BuildConfig.DEBUG) {
@@ -98,6 +103,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         setFrostResult(MainActivity.REQUEST_RESTART)
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         setFrostTheme(true)
         super.onCreate(savedInstanceState)

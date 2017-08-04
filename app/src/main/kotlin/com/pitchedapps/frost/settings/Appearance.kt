@@ -41,7 +41,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                         setFrostTheme(true)
                         themeExterior()
                         invalidateOptionsMenu()
-                        frostAnswersCustom("Theme") { putCustomAttribute("Count", text.toString()) }
+                        frostAnswersCustom("Theme", "Count" to text)
                     }
                     true
                 }

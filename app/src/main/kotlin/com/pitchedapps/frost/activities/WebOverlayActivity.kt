@@ -5,13 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
+import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
 import ca.allanwang.kau.swipe.kauSwipeOnPostCreate
@@ -31,7 +30,7 @@ import com.pitchedapps.frost.web.FrostWebView
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-open class WebOverlayActivity : AppCompatActivity(),
+open class WebOverlayActivity : KauBaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -126,16 +125,11 @@ open class WebOverlayActivity : AppCompatActivity(),
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        openImagePicker(filePathCallback, fileChooserParams)
+        openMediaPicker(filePathCallback, fileChooserParams)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (onActivityResultWeb(requestCode, resultCode, data)) return
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        kauOnRequestPermissionsResult(permissions, grantResults)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

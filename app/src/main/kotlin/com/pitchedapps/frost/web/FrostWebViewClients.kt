@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.web
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -17,6 +16,7 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import io.reactivex.subjects.Subject
 
 /**
@@ -71,8 +71,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         }
         view.jsInject(
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && Prefs.pro),
-                CssHider.ADS.maybe(!Prefs.showFacebookAds && Prefs.pro)
+                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
+                CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO)
         )
         onPageFinishedActions(url)
     }

@@ -23,12 +23,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import ca.allanwang.kau.changelog.showChangelog
-import ca.allanwang.kau.permissions.kauOnRequestPermissionsResult
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.xml.showChangelog
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -57,6 +56,7 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IABMain
+import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.SearchWebView
@@ -117,12 +117,11 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 showChangelog(R.xml.frost_changelog, Prefs.textColor) { theme() }
-                frostAnswersCustom("Version") {
-                    putCustomAttribute("Version code", BuildConfig.VERSION_CODE)
-                    putCustomAttribute("Version name", BuildConfig.VERSION_NAME)
-                    putCustomAttribute("Build type", BuildConfig.BUILD_TYPE)
-                    putCustomAttribute("Frost id", Prefs.frostId)
-                }
+                frostAnswersCustom("Version",
+                        "Version code" to BuildConfig.VERSION_CODE,
+                        "Version name" to BuildConfig.VERSION_NAME,
+                        "Build type" to BuildConfig.BUILD_TYPE,
+                        "Frost id" to Prefs.frostId)
             }
         }
         setContentView(R.layout.activity_main)
@@ -388,6 +387,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         return true
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> {
@@ -402,7 +402,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        openImagePicker(filePathCallback, fileChooserParams)
+        openMediaPicker(filePathCallback, fileChooserParams)
     }
 
     @SuppressLint("NewApi")
@@ -435,11 +435,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        kauOnRequestPermissionsResult(permissions, grantResults)
-    }
-
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
@@ -447,7 +442,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
 
     override fun onStart() {
         //validate some pro features
-        if (!Prefs.pro) {
+        if (!IS_FROST_PRO) {
             if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
         }
         super.onStart()

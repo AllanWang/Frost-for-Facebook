@@ -33,13 +33,13 @@ android {
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
+        buildTypeMatching 'release'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(output.outputFile.parent,
-                    "${project.APP_ID}-${variant.buildType.name}.apk")
+        variant.outputs.all {
+            outputFileName = "${project.APP_ID}-${variant.buildType.name}.apk"
         }
     }
 
@@ -78,7 +78,7 @@ android {
             shrinkResources false
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
-            resValue "string", "app_name", "Frost Debug"
+            resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableCrashlytics = false
         }
@@ -89,7 +89,7 @@ android {
             applicationIdSuffix ".test"
             signingConfig signingConfigs.test
             versionNameSuffix "-test"
-            resValue "string", "app_name", "Frost Test"
+            resValue "string", "frost_name", "Frost Test"
             resValue "string", "frost_web", "Frost Web Test"
         }
         release {
@@ -97,7 +97,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            resValue "string", "app_name", "Frost"
+            resValue "string", "frost_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
         }
     }
@@ -113,64 +113,68 @@ android {
 }
 
 repositories {
+    google()
     jcenter()
-    mavenCentral()
     maven { url "https://jitpack.io" }
-    maven { url 'https://maven.google.com' }
     maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.3-alpha', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.3-alpha', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:${ROBOELECTRIC}"
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.robolectric:robolectric:${ROBOELECTRIC}"
 
-    compile "ca.allanwang.kau:about:$KAU"
-    compile "ca.allanwang.kau:colorpicker:$KAU"
-    compile "ca.allanwang.kau:imagepicker:$KAU"
-    compile "ca.allanwang.kau:kpref-activity:$KAU"
-    compile "ca.allanwang.kau:searchview:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:adapter:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:about:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:colorpicker:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:mediapicker:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:kpref-activity:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:searchview:$KAU"
+    //noinspection GradleDependency
+    implementation "ca.allanwang.kau:core-ui:$KAU"
 
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
 
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
-    releaseTestCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
+    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
 
-    compile "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
 
     //Icons
-    compile "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
-    compile "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
+    implementation "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
+    implementation "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
 
-    compile "org.jsoup:jsoup:${JSOUP}"
+    implementation "org.jsoup:jsoup:${JSOUP}"
 
-    compile "com.squareup.okhttp3:okhttp:${OKHTTP}"
+    implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
 
-    compile "com.anjlab.android.iab.v3:library:${IAB}"
+    implementation "com.anjlab.android.iab.v3:library:${IAB}"
 
-//    compile("com.mikepenz:materialdrawer:${MATERIAL_DRAWER}@aar") {
-//        transitive = true
-//    }
-    compile "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
+    implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 
-    compile "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
-    compile "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
+    implementation "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
+    implementation "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
-    compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
+    implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true;
     }
 
-    compile "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
-    compile "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+    implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 
 }

@@ -22,7 +22,9 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     // Experimental content starts here ------------------
 
-
+    checkbox(R.string.notification_messages, { Prefs.notificationsInstantMessages }, { Prefs.notificationsInstantMessages = it }) {
+        descRes = R.string.notification_messages_desc
+    }
 
     // Experimental content ends here --------------------
 
