@@ -1,20 +1,18 @@
 package com.pitchedapps.frost.utils
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Environment
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.content.FileProvider
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
+import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.FrostWebActivity
-import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.services.frostConfig
 import com.pitchedapps.frost.services.frostNotification
 import com.pitchedapps.frost.services.getNotificationPendingCancelIntent
@@ -28,8 +26,6 @@ import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Created by Allan Wang on 2017-08-04.
@@ -38,8 +34,8 @@ import java.util.*
  */
 fun Context.frostDownload(url: String) {
     L.d("Received download request", "Download $url")
-    val type: DownloadType = if (url.contains("video-seal-1")) DownloadType.VIDEO
-    else return
+    val type = if (url.contains("video")) DownloadType.VIDEO
+    else return L.d("Download request does not match any type")
     kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) {
         granted, _ ->
         if (granted) doAsync { frostDownloadImpl(url, type) }
@@ -47,30 +43,39 @@ fun Context.frostDownload(url: String) {
 }
 
 private const val MAX_PROGRESS = 1000
+//private val DOWNLOAD_GROUP: String? = null
 private const val DOWNLOAD_GROUP = "frost_downloads"
 
-private enum class DownloadType(val titleRes: Int) {
-    VIDEO(R.string.downloading_video),
-    FILE(R.string.downloading_file)
+private enum class DownloadType(val downloadingRes: Int, val downloadedRes: Int) {
+    VIDEO(R.string.downloading_video, R.string.downloaded_video),
+    FILE(R.string.downloading_file, R.string.downloaded_file);
+
+    fun getPendingIntent(context: Context, file: File): PendingIntent {
+        val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+        val type = context.contentResolver.getType(uri)
+        L.d("DownloadType: retrieved pending intent - $uri $type")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .setDataAndType(uri, type)
+        return PendingIntent.getActivity(context, 0, intent, 0)
+    }
 }
 
 private fun AnkoAsyncContext<Context>.frostDownloadImpl(url: String, type: DownloadType) {
     L.d("Starting download request")
-    val c = weakRef.get() ?: return
-    val intent = Intent(c, FrostWebActivity::class.java)
-    intent.data = Uri.parse(url.formattedFbUrl)
-    val notifId = url.hashCode()
-    val pendingIntent = PendingIntent.getActivity(c, 0, intent, 0)
-    val notifBuilder = c.frostNotification
-            .setContentTitle(c.string(type.titleRes))
-            .setContentIntent(pendingIntent)
-            .setCategory(Notification.CATEGORY_PROGRESS)
-            .setWhen(System.currentTimeMillis())
-            .setProgress(MAX_PROGRESS, 0, false)
-            .setOngoing(true)
-            .addAction(R.drawable.ic_action_cancel, c.string(R.string.kau_cancel), c.getNotificationPendingCancelIntent(notifId))
-            .setGroup(DOWNLOAD_GROUP)
-
+    val notifId = Math.abs(url.hashCode() + System.currentTimeMillis().toInt())
+    var notifBuilderAttempt: NotificationCompat.Builder? = null
+    weakRef.get()?.apply {
+        notifBuilderAttempt = frostNotification
+                .setContentTitle(string(type.downloadingRes))
+                .setCategory(Notification.CATEGORY_PROGRESS)
+                .setWhen(System.currentTimeMillis())
+                .setProgress(MAX_PROGRESS, 0, false)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_action_cancel, string(R.string.kau_cancel), getNotificationPendingCancelIntent(DOWNLOAD_GROUP, notifId))
+                .setGroup(DOWNLOAD_GROUP)
+    }
+    val notifBuilder = notifBuilderAttempt ?: return
     notifBuilder.show(weakRef, notifId)
 
     val request: Request = Request.Builder()
@@ -89,33 +94,37 @@ private fun AnkoAsyncContext<Context>.frostDownloadImpl(url: String, type: Downl
                     if (weakRef.get() == null) {
                         client?.cancel(url)
                     }
-                    weakRef.get() ?: return@ProgressResponseBody client?.cancel(url) ?: Unit
+                    val ctx = weakRef.get() ?: return@ProgressResponseBody client?.cancel(url) ?: Unit
                     val percentage = bytesRead.toFloat() / contentLength.toFloat() * MAX_PROGRESS
                     L.v("Download request progress: $percentage")
                     notifBuilder.setProgress(MAX_PROGRESS, percentage.toInt(), false)
                     if (done) {
-                        notifBuilder.setOngoing(false)
+                        notifBuilder.setFinished(ctx, type)
                         L.d("Download request finished")
                     }
                     notifBuilder.show(weakRef, notifId)
                 }).build()
             }
             .build()
-    try {
-        val response = client.newCall(request).execute()
+    client.newCall(request).execute().use {
+        response ->
         if (!response.isSuccessful) throw IOException("Unexpected code $response")
-        val destination = createMediaFile(".mp4")
-        response.body()?.byteStream()?.use {
-            input ->
-            destination.outputStream().use {
-                output ->
-                input.copyTo(output)
+        val stream = response.body()?.byteStream()
+        if (stream != null) {
+            val destination = createMediaFile(".mp4")
+            destination.copyFromInputStream(stream)
+            weakRef.get()?.apply {
+                notifBuilder.setContentIntent(type.getPendingIntent(this, destination))
+                notifBuilder.show(weakRef, notifId)
             }
         }
-    } catch (e: Exception) {
-
     }
 }
+
+private fun NotificationCompat.Builder.setFinished(context: Context, type: DownloadType)
+        = setContentTitle(context.string(type.downloadedRes))
+        .setProgress(0, 0, false).setOngoing(false).setAutoCancel(true)
+        .apply { mActions.clear() }
 
 private fun OkHttpClient.cancel(url: String) {
     val call = dispatcher().runningCalls().firstOrNull { it.request().tag() == url }
@@ -123,11 +132,6 @@ private fun OkHttpClient.cancel(url: String) {
 }
 
 private fun NotificationCompat.Builder.show(weakRef: WeakReference<Context>, notifId: Int) {
-    val c = weakRef.get() ?: return
-    NotificationManagerCompat.from(c).notify(DOWNLOAD_GROUP, notifId, build().frostConfig())
-}
-
-private fun NotificationCompat.Builder.finish(weakRef: WeakReference<Context>, notifId: Int) {
     val c = weakRef.get() ?: return
     NotificationManagerCompat.from(c).notify(DOWNLOAD_GROUP, notifId, build().frostConfig())
 }

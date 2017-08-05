@@ -70,7 +70,7 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
-            if (url == null || !url.contains(FACEBOOK_COM)) {
+            if (url == null || (!url.contains(FACEBOOK_COM) && !url.contains("intent"))) {
                 view.frostSnackbar(R.string.no_longer_facebook)
                 loadLogin()
                 return

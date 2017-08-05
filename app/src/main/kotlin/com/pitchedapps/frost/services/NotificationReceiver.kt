@@ -12,19 +12,23 @@ import com.pitchedapps.frost.utils.L
  *
  * Cancels a notification
  */
+private const val NOTIF_TAG_TO_CANCEL = "notif_tag_to_cancel"
 private const val NOTIF_ID_TO_CANCEL = "notif_id_to_cancel"
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        L.d("NotificationReceiver triggered")
+        val notifTag = intent.getStringExtra(NOTIF_TAG_TO_CANCEL)
         val notifId = intent.getIntExtra(NOTIF_ID_TO_CANCEL, -1)
         if (notifId != -1) {
-            L.d("NotificationReceiver: Cancelling $notifId")
-            NotificationManagerCompat.from(context).cancel(notifId)
+            L.d("NotificationReceiver: Cancelling $notifTag $notifId")
+            NotificationManagerCompat.from(context).cancel(notifTag, notifId)
         }
     }
 }
 
-fun Context.getNotificationPendingCancelIntent(notifId: Int): PendingIntent {
-    val cancelIntent = Intent(this, NotificationReceiver::class.java).putExtra(NOTIF_ID_TO_CANCEL, notifId)
+fun Context.getNotificationPendingCancelIntent(tag: String?, notifId: Int): PendingIntent {
+    val cancelIntent = Intent(this, NotificationReceiver::class.java)
+            .putExtra(NOTIF_TAG_TO_CANCEL, tag).putExtra(NOTIF_ID_TO_CANCEL, notifId)
     return PendingIntent.getBroadcast(this, 0, cancelIntent, 0)
 }

@@ -1,11 +1,9 @@
 package com.pitchedapps.frost.utils
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Environment
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
@@ -26,9 +24,7 @@ import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -154,20 +150,7 @@ fun Activity.frostNavigationBar() {
 fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!
 
 @Throws(IOException::class)
-fun createMediaFile(extension: String): File {
-    @SuppressLint("SimpleDateFormat")
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val imageFileName = "Frost_" + timeStamp + "_"
-    val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-    val frostDir = File(storageDir, "Frost")
-    if (!frostDir.exists()) frostDir.mkdirs()
-    return File.createTempFile(imageFileName, extension, frostDir)
-}
+fun createMediaFile(extension: String) = createMediaFile("Frost", extension)
 
-@Throws
-fun Context.createPrivateMediaFile(extension: String): File {
-    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-    val imageFileName = "Frost_" + timeStamp + "_"
-    val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    return File.createTempFile(imageFileName, extension, storageDir)
-}
+@Throws(IOException::class)
+fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("Frost", extension)
