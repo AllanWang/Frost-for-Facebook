@@ -62,6 +62,7 @@ class LoginActivity : BaseActivity() {
         setFrostColors(toolbar)
         web.loadLogin({ refresh = it != 100 }) {
             cookie ->
+            L.d("Login found")
             web.fadeOut(onFinish = {
                 profile.fadeIn()
                 loadInfo(cookie)

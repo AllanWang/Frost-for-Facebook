@@ -70,7 +70,7 @@ class LoginWebView @JvmOverloads constructor(
                 if (url == null || !url.contains(FACEBOOK_COM)) return@doAsync
                 val cookie = CookieManager.getInstance().getCookie(url) ?: return@doAsync
                 L.d("Checking cookie for login", cookie)
-                val id = userMatcher.find(cookie)?.groups?.get(0)?.value?.toLong() ?: return@doAsync
+                val id = userMatcher.find(cookie)?.groups?.get(1)?.value?.toLong() ?: return@doAsync
                 uiThread { onFound(id, cookie) }
             }
         }
