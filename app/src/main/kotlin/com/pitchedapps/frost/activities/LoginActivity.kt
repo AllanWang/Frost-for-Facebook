@@ -42,8 +42,6 @@ class LoginActivity : BaseActivity() {
     val textview: AppCompatTextView by bindView(R.id.textview)
     val profile: ImageView by bindView(R.id.profile)
 
-    val loginObservable = SingleSubject.create<CookieModel>()
-    val progressObservable = BehaviorSubject.create<Int>()!!
     val profileObservable = SingleSubject.create<Boolean>()
     val usernameObservable = SingleSubject.create<String>()
 
@@ -62,17 +60,13 @@ class LoginActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
         setFrostColors(toolbar)
-        web.loginObservable = loginObservable
-        web.progressObservable = progressObservable
-        loginObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+        web.loadLogin({ refresh = it != 100 }) {
             cookie ->
             web.fadeOut(onFinish = {
                 profile.fadeIn()
                 loadInfo(cookie)
             })
         }
-        progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe { refresh = it != 100 }
-        web.loadLogin()
     }
 
     fun loadInfo(cookie: CookieModel) {
