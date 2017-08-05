@@ -2,12 +2,10 @@ package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.View
-import android.webkit.ConsoleMessage
-import android.webkit.CookieManager
-import android.webkit.WebChromeClient
-import android.webkit.WebView
+import android.webkit.*
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -81,6 +79,17 @@ class LoginWebView @JvmOverloads constructor(
                     CssHider.CORE.maybe(containsFacebook),
                     Prefs.themeInjector.maybe(containsFacebook),
                     callback = { if (!view.isVisible) view.fadeIn(offset = 150L) })
+        }
+
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+            if (!request.url.toString().contains(FACEBOOK_COM)) {
+                val intent = Intent(Intent.ACTION_VIEW, request.url)
+                if (intent.resolveActivity(view.context.packageManager) != null) {
+                    view.context.startActivity(Intent(Intent.ACTION_VIEW, request.url))
+                    return true
+                }
+            }
+            return super.shouldOverrideUrlLoading(view, request)
         }
     }
 
