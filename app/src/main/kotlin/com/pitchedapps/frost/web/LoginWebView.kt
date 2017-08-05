@@ -76,9 +76,10 @@ class LoginWebView @JvmOverloads constructor(
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            return view.context.resolveActivityForUri(request.url) {
-                (view.context as Activity).startActivityForResult(it, 999)
-            } || super.shouldOverrideUrlLoading(view, request)
+            if (request.url.scheme == "intent" || request.url.scheme == "android-app") {
+                return true
+            }
+            return super.shouldOverrideUrlLoading(view, request)
         }
     }
 
