@@ -7,7 +7,6 @@
 RELEASE_REPO=AllanWang/Frost-for-Facebook-APK-Builder
 USER_AUTH=AllanWang
 EMAIL=me@allanwang.ca
-APK_NAME=Frost-releaseTest
 MODULE_NAME=app
 VERSION_KEY=Frost
 # Make version key different from module name
@@ -15,7 +14,8 @@ VERSION_KEY=Frost
 # create a new directory that will contain our generated apk
 mkdir $HOME/$VERSION_KEY/
 # copy generated apk from build folder to the folder just created
-cp -R $MODULE_NAME/build/outputs/apk/$APK_NAME.apk $HOME/$VERSION_KEY/
+cp -a $MODULE_NAME/build/outputs/apk/. $HOME/$VERSION_KEY/
+ls -a $HOME/${VERSION_KEY}
 
 # go to home and setup git
 echo "Clone Git"
@@ -43,7 +43,10 @@ rID="$(echo "$newRelease" | jq ".id")"
 
 cd $HOME
 echo "Push apk to $rID"
-curl "https://uploads.github.com/repos/${RELEASE_REPO}/releases/${rID}/assets?access_token=${GITHUB_API_KEY}&name=${APK_NAME}-v${TRAVIS_BUILD_NUMBER}.apk" --header 'Content-Type: application/zip' --upload-file $VERSION_KEY/$APK_NAME.apk -X POST
-
+for apk in $(find *.apk -type f); do
+  apkName="${apk::-4}"
+  printf "Apk $apkName\n"
+  curl "https://uploads.github.com/repos/${RELEASE_REPO}/releases/${rID}/assets?access_token=${GITHUB_API_KEY}&name=${apkName}-v${TRAVIS_BUILD_NUMBER}.apk" --header 'Content-Type: application/zip' --upload-file $apkName.apk -X POST
+done
 
 echo -e "Done\n"

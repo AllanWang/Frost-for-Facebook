@@ -1,6 +1,10 @@
 # Changelog
 
-## v1.4.2
+## Beta Updates
+* Fixed notification titles
+* Added support for downloading videos
+
+## v1.5.0
 * Experimental: Add notifications for messages; report to me if this drains your battery
 * Add FAQ in the about section
 * Add video uploading
