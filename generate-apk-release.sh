@@ -3,6 +3,7 @@
 # config
 # make sure the GITHUB_API_KEY is encrypted and inside the travis file
 # travis encrypt GITHUB_API_KEY=super_secret --add env.global
+# Note - gradle 3.0.0 generates outputs in their own folders - ctrl + f > releaseTest
 
 RELEASE_REPO=AllanWang/Frost-for-Facebook-APK-Builder
 USER_AUTH=AllanWang
@@ -14,7 +15,8 @@ VERSION_KEY=Frost
 # create a new directory that will contain our generated apk
 mkdir $HOME/$VERSION_KEY/
 # copy generated apk from build folder to the folder just created
-cp -a $MODULE_NAME/build/outputs/apk/. $HOME/$VERSION_KEY/
+cp -a $MODULE_NAME/build/outputs/apk/releaseTest/. $HOME/$VERSION_KEY/
+printf "Moved apks\n"
 ls -a $HOME/${VERSION_KEY}
 
 # go to home and setup git
@@ -41,7 +43,7 @@ API_JSON="$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s
 newRelease="$(curl --data "$API_JSON" https://api.github.com/repos/$RELEASE_REPO/releases?access_token=$GITHUB_API_KEY)"
 rID="$(echo "$newRelease" | jq ".id")"
 
-cd $HOME
+cd $HOME/${VERSION_KEY}
 echo "Push apk to $rID"
 for apk in $(find *.apk -type f); do
   apkName="${apk::-4}"
