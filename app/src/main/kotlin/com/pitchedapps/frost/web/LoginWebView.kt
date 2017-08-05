@@ -30,10 +30,10 @@ class LoginWebView @JvmOverloads constructor(
 
     companion object {
         const val LOGIN_URL = "https://touch.facebook.com/login"
-        private val userMatcher: Regex by lazy { Regex("c_user=([0-9]*);") }
+        private val userMatcher: Regex = Regex("c_user=([0-9]*);")
     }
 
-    val cookieObservable = PublishSubject.create<String?>()
+    val cookieObservable = PublishSubject.create<String>()!!
     lateinit var loginObservable: SingleSubject<CookieModel>
     lateinit var progressObservable: Subject<Int>
 
@@ -44,7 +44,7 @@ class LoginWebView @JvmOverloads constructor(
                     .subscribe {
                         cookie ->
                         L.d("Checking cookie for login", cookie)
-                        val id = userMatcher.find(cookie)?.groups?.get(1)?.value!!.toLong()
+                        val id = userMatcher.find(cookie)!!.groups[1]!!.value.toLong()
                         FbCookie.save(id)
                         cookieObservable.onComplete()
                         loginObservable.onSuccess(CookieModel(id, "", cookie))
@@ -65,7 +65,6 @@ class LoginWebView @JvmOverloads constructor(
         loadUrl(LOGIN_URL)
     }
 
-
     inner class LoginClient : BaseWebViewClient() {
 
         override fun onPageFinished(view: WebView, url: String?) {
@@ -81,10 +80,7 @@ class LoginWebView @JvmOverloads constructor(
             view.jsInject(CssHider.HEADER.maybe(containsFacebook),
                     CssHider.CORE.maybe(containsFacebook),
                     Prefs.themeInjector.maybe(containsFacebook),
-                    callback = {
-                        if (!view.isVisible)
-                            view.fadeIn(offset = 150L)
-                    })
+                    callback = { if (!view.isVisible) view.fadeIn(offset = 150L) })
         }
     }
 

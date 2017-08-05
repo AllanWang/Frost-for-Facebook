@@ -350,7 +350,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         hiddenSearchView?.dispose()
         hiddenSearchView = null
         searchView = null
-        //todo remove true searchview and add contract
     }
 
     override fun emitSearchResponse(items: List<SearchItem>) {
