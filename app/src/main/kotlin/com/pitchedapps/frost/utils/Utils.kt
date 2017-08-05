@@ -24,6 +24,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import java.io.IOException
@@ -162,6 +163,7 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
  * @returns {@code true} if activity is resolved, {@code false} otherwise
  */
 fun Context.resolveActivityForUri(uri: Uri, action: (Intent) -> Unit = { startActivity(it) }): Boolean {
+    if (uri.toString().contains(FACEBOOK_COM) && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
     val intent = Intent(Intent.ACTION_VIEW, uri)
     if (intent.resolveActivity(packageManager) == null) return false
     action(intent)
