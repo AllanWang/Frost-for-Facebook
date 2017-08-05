@@ -2,8 +2,10 @@ package com.pitchedapps.frost.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
@@ -154,3 +156,15 @@ fun createMediaFile(extension: String) = createMediaFile("Frost", extension)
 
 @Throws(IOException::class)
 fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("Frost", extension)
+
+/**
+ * Tries to send the uri to the proper activity via an intent
+ * @returns {@code true} if activity is resolved, {@code false} otherwise
+ */
+fun Context.resolveActivityForUri(uri: Uri): Boolean {
+    val intent = Intent(Intent.ACTION_VIEW, uri)
+    if (intent.resolveActivity(packageManager) == null) return false
+    startActivity(intent)
+    return true
+}
+

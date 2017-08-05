@@ -15,6 +15,7 @@ import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.resolveActivityForUri
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.SingleSubject
 import io.reactivex.subjects.Subject
@@ -82,19 +83,7 @@ class LoginWebView @JvmOverloads constructor(
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            if (!request.url.toString().contains(FACEBOOK_COM)) {
-                val intent = Intent(Intent.ACTION_VIEW, request.url)
-                if (intent.resolveActivity(view.context.packageManager) != null) {
-                    view.context.startActivity(Intent(Intent.ACTION_VIEW, request.url))
-                    return true
-                }
-            }
-            return super.shouldOverrideUrlLoading(view, request)
-        }
-
-        override fun onLoadResource(view: WebView?, url: String?) {
-            super.onLoadResource(view, url)
-            L.d("Loading resource $url")
+            return view.context.resolveActivityForUri(request.url) || super.shouldOverrideUrlLoading(view, request)
         }
     }
 
