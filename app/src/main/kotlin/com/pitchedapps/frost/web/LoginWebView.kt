@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -16,7 +17,6 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.resolveActivityForUri
-import io.reactivex.subjects.Subject
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -33,7 +33,7 @@ class LoginWebView @JvmOverloads constructor(
     }
 
     private lateinit var loginCallback: (CookieModel) -> Unit
-    private lateinit var progressCallback:(Int)->Unit
+    private lateinit var progressCallback: (Int) -> Unit
 
     init {
         FbCookie.reset { setupWebview() }
@@ -47,7 +47,7 @@ class LoginWebView @JvmOverloads constructor(
         webChromeClient = LoginChromeClient()
     }
 
-    fun loadLogin(progressCallback:(Int)->Unit, loginCallback: (CookieModel) -> Unit) {
+    fun loadLogin(progressCallback: (Int) -> Unit, loginCallback: (CookieModel) -> Unit) {
         this.progressCallback = progressCallback
         this.loginCallback = loginCallback
         loadUrl(LOGIN_URL)
@@ -76,7 +76,9 @@ class LoginWebView @JvmOverloads constructor(
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            return view.context.resolveActivityForUri(request.url) || super.shouldOverrideUrlLoading(view, request)
+            return view.context.resolveActivityForUri(request.url) {
+                (view.context as Activity).startActivityForResult(it, 999)
+            } || super.shouldOverrideUrlLoading(view, request)
         }
     }
 

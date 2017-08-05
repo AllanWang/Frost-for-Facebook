@@ -161,10 +161,10 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
  * Tries to send the uri to the proper activity via an intent
  * @returns {@code true} if activity is resolved, {@code false} otherwise
  */
-fun Context.resolveActivityForUri(uri: Uri): Boolean {
+fun Context.resolveActivityForUri(uri: Uri, action: (Intent) -> Unit = { startActivity(it) }): Boolean {
     val intent = Intent(Intent.ACTION_VIEW, uri)
     if (intent.resolveActivity(packageManager) == null) return false
-    startActivity(intent)
+    action(intent)
     return true
 }
 
