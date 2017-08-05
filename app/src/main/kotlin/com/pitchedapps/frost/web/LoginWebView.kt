@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -16,7 +15,6 @@ import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.resolveActivityForUri
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -76,9 +74,9 @@ class LoginWebView @JvmOverloads constructor(
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            if (request.url.scheme == "intent" || request.url.scheme == "android-app") {
+            //For now, we will ignore all attempts to launch external apps during login
+            if (request.url == null || request.url.scheme == "intent" || request.url.scheme == "android-app")
                 return true
-            }
             return super.shouldOverrideUrlLoading(view, request)
         }
     }
