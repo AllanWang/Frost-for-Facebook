@@ -39,8 +39,8 @@ class LoginWebView @JvmOverloads constructor(
 
     init {
         FbCookie.reset({
-            cookieObservable.map { CookieManager.getInstance().getCookie(it) }
-                    .filter { cookie: String? -> cookie?.contains(userMatcher) ?: false }
+            cookieObservable.map { CookieManager.getInstance().getCookie(it) ?: "" }
+                    .filter { it.contains(userMatcher) }
                     .subscribe {
                         cookie ->
                         L.d("Checking cookie for login", cookie)
