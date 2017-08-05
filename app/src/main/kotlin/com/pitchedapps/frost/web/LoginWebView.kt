@@ -91,6 +91,11 @@ class LoginWebView @JvmOverloads constructor(
             }
             return super.shouldOverrideUrlLoading(view, request)
         }
+
+        override fun onLoadResource(view: WebView?, url: String?) {
+            super.onLoadResource(view, url)
+            L.d("Loading resource $url")
+        }
     }
 
     inner class LoginChromeClient : WebChromeClient() {
