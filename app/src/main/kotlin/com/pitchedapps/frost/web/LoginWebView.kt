@@ -9,7 +9,7 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import ca.allanwang.kau.utils.fadeIn
-import com.pitchedapps.frost.R
+import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
@@ -17,7 +17,6 @@ import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.frostSnackbar
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.SingleSubject
 import io.reactivex.subjects.Subject
@@ -34,20 +33,21 @@ class LoginWebView @JvmOverloads constructor(
         private val userMatcher: Regex by lazy { Regex("c_user=([0-9]*);") }
     }
 
-    val cookieObservable = PublishSubject.create<Pair<String, String?>>()
+    val cookieObservable = PublishSubject.create<String?>()
     lateinit var loginObservable: SingleSubject<CookieModel>
     lateinit var progressObservable: Subject<Int>
 
     init {
         FbCookie.reset({
-            cookieObservable.filter { (_, cookie) -> cookie?.contains(userMatcher) ?: false }
+            cookieObservable.map { CookieManager.getInstance().getCookie(it) }
+                    .filter { cookie: String? -> cookie?.contains(userMatcher) ?: false }
                     .subscribe {
-                        (url, cookie) ->
-                        L.d("Checking cookie for login", "$url\n\t$cookie")
-                        val id = userMatcher.find(cookie!!)?.groups?.get(1)?.value!!
-                        FbCookie.save(id.toLong())
+                        cookie ->
+                        L.d("Checking cookie for login", cookie)
+                        val id = userMatcher.find(cookie)?.groups?.get(1)?.value!!.toLong()
+                        FbCookie.save(id)
                         cookieObservable.onComplete()
-                        loginObservable.onSuccess(CookieModel(id.toLong(), "", cookie))
+                        loginObservable.onSuccess(CookieModel(id, "", cookie))
                     }
             setupWebview()
         })
@@ -70,16 +70,19 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
-            if (url == null || (!url.contains(FACEBOOK_COM) && !url.contains("intent"))) {
-                view.frostSnackbar(R.string.no_longer_facebook)
-                loadLogin()
-                return
-            }
-            cookieObservable.onNext(Pair(url, CookieManager.getInstance().getCookie(url)))
-            view.jsInject(CssHider.HEADER, CssHider.CORE,
-                    Prefs.themeInjector,
+//            if (url == null || (!url.contains(FACEBOOK_COM) && !url.contains("intent"))) {
+//                view.frostSnackbar(R.string.no_longer_facebook)
+//                loadLogin()
+//                return
+//            }
+            val containsFacebook = url?.contains(FACEBOOK_COM) ?: false
+            if (containsFacebook)
+                cookieObservable.onNext(url!!)
+            view.jsInject(CssHider.HEADER.maybe(containsFacebook),
+                    CssHider.CORE.maybe(containsFacebook),
+                    Prefs.themeInjector.maybe(containsFacebook),
                     callback = {
-                        if (view.visibility != View.VISIBLE)
+                        if (!view.isVisible)
                             view.fadeIn(offset = 150L)
                     })
         }

@@ -52,6 +52,7 @@ interface InjectorContract {
  */
 fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) {
     val validInjectors = injectors.filter { it != JsActions.EMPTY }
+    if (validInjectors.isEmpty()) return callback(emptyArray())
     val observables = Array(validInjectors.size, { SingleSubject.create<String>() })
     Observable.zip<String, Array<String>>(observables.map { it.toObservable() }, { it.map { it.toString() }.toTypedArray() }).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
         callback(it)
