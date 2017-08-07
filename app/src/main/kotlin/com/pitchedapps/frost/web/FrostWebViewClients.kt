@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.web
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse

@@ -369,10 +369,11 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         if (Prefs.searchBar) {
             if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textObserver = {
-                    observable, _ ->
-                    observable.observeOn(AndroidSchedulers.mainThread()).subscribe { hiddenSearchView?.query(it) }
+                textCallback = {
+                    query, _ ->
+                    hiddenSearchView?.query(query)
                 }
+                textDebounceInterval = 200L
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor.withMinAlpha(200)
                 openListener = { hiddenSearchView?.pauseLoad = false }

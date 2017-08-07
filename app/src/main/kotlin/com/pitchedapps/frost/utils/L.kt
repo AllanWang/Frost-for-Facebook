@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.utils
 
-import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
 import com.crashlytics.android.Crashlytics
 import com.pitchedapps.frost.BuildConfig
