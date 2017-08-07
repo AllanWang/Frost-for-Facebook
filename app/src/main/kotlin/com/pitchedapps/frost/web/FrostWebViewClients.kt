@@ -132,13 +132,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
             return launchImage(request)
-        if (!request.url.toString().contains(FACEBOOK_COM)) {
-            val intent = Intent(Intent.ACTION_VIEW, request.url)
-            if (intent.resolveActivity(view.context.packageManager) != null) {
-                view.context.startActivity(Intent(Intent.ACTION_VIEW, request.url))
-                return true
-            }
-        }
+        if (view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
 

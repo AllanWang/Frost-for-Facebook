@@ -9,15 +9,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.tint
-import ca.allanwang.kau.utils.visible
-import ca.allanwang.kau.utils.withAlpha
+import ca.allanwang.kau.utils.*
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostDownload
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
@@ -37,7 +34,7 @@ class FrostWebView @JvmOverloads constructor(
         refresh.setColorSchemeColors(Prefs.iconColor)
         refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
         web.progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            progress.visibility = if (it == 100) View.INVISIBLE else View.VISIBLE
+            progress.invisibleIf(it == 100)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) progress.setProgress(it, true)
             else progress.progress = it
         }
@@ -62,7 +59,7 @@ class FrostWebView @JvmOverloads constructor(
             baseEnum = enum
             with(settings) {
                 javaScriptEnabled = true
-                if (url.contains("/message"))
+                if (url.contains("facebook.com/message"))
                     userAgentString = USER_AGENT_BASIC
                 allowFileAccess = true
                 textZoom = Prefs.webTextScaling
@@ -73,6 +70,7 @@ class FrostWebView @JvmOverloads constructor(
             webChromeClient = FrostChromeClient(this)
             addJavascriptInterface(FrostJSI(this), "Frost")
             setBackgroundColor(Color.TRANSPARENT)
+            setDownloadListener { downloadUrl, _, _, _, _ -> context.frostDownload(downloadUrl) }
         }
     }
 

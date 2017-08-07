@@ -182,7 +182,7 @@ class NotificationService : JobService() {
     private fun Context.debugNotification(text: String) {
         if (!BuildConfig.DEBUG) return
         val notifBuilder = frostNotification
-                .setContentTitle(string(R.string.app_name))
+                .setContentTitle(string(R.string.frost_name))
                 .setContentText(text)
         NotificationManagerCompat.from(this).notify(999, notifBuilder.build().frostConfig())
     }
@@ -190,7 +190,7 @@ class NotificationService : JobService() {
     fun summaryNotification(userId: Long, count: Int) {
         if (count <= 1) return
         val notifBuilder = frostNotification
-                .setContentTitle(string(R.string.app_name))
+                .setContentTitle(string(R.string.frost_name))
                 .setContentText("$count notifications")
                 .setGroup("frost_$userId")
                 .setGroupSummary(true)

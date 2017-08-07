@@ -2,8 +2,10 @@ package com.pitchedapps.frost.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
@@ -22,8 +24,11 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import java.io.IOException
+import java.util.*
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -146,3 +151,22 @@ fun Activity.frostNavigationBar() {
 }
 
 fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!
+
+@Throws(IOException::class)
+fun createMediaFile(extension: String) = createMediaFile("Frost", extension)
+
+@Throws(IOException::class)
+fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("Frost", extension)
+
+/**
+ * Tries to send the uri to the proper activity via an intent
+ * @returns {@code true} if activity is resolved, {@code false} otherwise
+ */
+fun Context.resolveActivityForUri(uri: Uri): Boolean {
+    if (uri.toString().contains(FACEBOOK_COM) && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
+    val intent = Intent(Intent.ACTION_VIEW, uri)
+    if (intent.resolveActivity(packageManager) == null) return false
+    startActivity(intent)
+    return true
+}
+

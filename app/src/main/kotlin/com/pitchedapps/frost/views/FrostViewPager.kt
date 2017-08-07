@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
@@ -16,5 +17,6 @@ class FrostViewPager @JvmOverloads constructor(context: Context, attrs: Attribut
 
     override fun onInterceptTouchEvent(ev: MotionEvent?) = Prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent?): Boolean = Prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
 }

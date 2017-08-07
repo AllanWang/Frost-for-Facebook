@@ -6,9 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import ca.allanwang.kau.iitems.KauIItem
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.fadeIn
-import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -30,7 +28,7 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
     override fun bindView(viewHolder: ViewHolder, payloads: List<Any>?) {
         super.bindView(viewHolder, payloads)
         with(viewHolder) {
-            text.visibility = View.INVISIBLE
+            text.invisible()
             text.setTextColor(Prefs.textColor)
             if (cookie != null) {
                 text.text = cookie.name
@@ -46,10 +44,9 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
                     }
                 }).into(image)
             } else {
-                text.visibility = View.VISIBLE
+                text.visible()
                 image.setImageDrawable(GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(itemView.context, 100, Prefs.textColor))
                 text.text = itemView.context.getString(R.string.kau_add_account)
-                //todo add plus image
             }
         }
     }

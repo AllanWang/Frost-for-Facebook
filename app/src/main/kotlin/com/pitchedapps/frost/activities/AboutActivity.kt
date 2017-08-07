@@ -73,7 +73,7 @@ class AboutActivity : AboutActivityBase(null, {
          * Frost may not be a library but we're conveying the same info
          */
         val frost = Library().apply {
-            libraryName = string(R.string.app_name)
+            libraryName = string(R.string.frost_name)
             author = "Pitched Apps"
             libraryWebsite = "https://github.com/AllanWang/Frost-for-Facebook"
             isOpenSource = true
