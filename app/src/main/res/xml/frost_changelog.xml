@@ -13,7 +13,7 @@
 	<version title="Beta Updates"/>
     <item text="Fixed notification titles" />
     <item text="Added support for downloading videos" />
-    <item text="" />
+    <item text="Deny intents for login so the page loads properly (thank you @Zenexer)" />
     <item text="" />
     <item text="" />
 	

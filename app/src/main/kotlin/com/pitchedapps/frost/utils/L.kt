@@ -1,9 +1,9 @@
 package com.pitchedapps.frost.utils
 
 import android.util.Log
-import ca.allanwang.kau.logging.TimberLogger
+import ca.allanwang.kau.logging.KauLogger
 import com.crashlytics.android.Crashlytics
-import timber.log.Timber
+import com.pitchedapps.frost.BuildConfig
 
 
 /**
@@ -16,25 +16,15 @@ import timber.log.Timber
  * Debug and Error logs must not reveal person info
  * Person info logs can be marked as info or verbose
  */
-object L : TimberLogger("Frost") {
+object L : KauLogger("Frost") {
 
-    /**
-     * Helper function to separate private info
-     */
-    fun d(tag: String, personal: String?) {
-        L.d(tag)
-        L.i("-\t$personal")
-    }
-}
-
-internal class CrashReportingTree : Timber.Tree() {
-    override fun log(priority: Int, tag: String?, message: String?, t: Throwable?) {
-        when (priority) {
-            Log.VERBOSE, Log.INFO -> return
-            Log.DEBUG -> if (!Prefs.verboseLogging) return
+    override fun logImpl(priority: Int, message: String?, privateMessage: String?, t: Throwable?) {
+        if (BuildConfig.DEBUG) {
+            super.logImpl(priority, message, privateMessage, t)
+        } else {
+            if (message != null)
+                Crashlytics.log(priority, "Frost", message)
+            if (t != null) Crashlytics.logException(t)
         }
-        if (message != null)
-            Crashlytics.log(priority, "Frost", message)
-        if (t != null) Crashlytics.logException(t)
     }
 }
