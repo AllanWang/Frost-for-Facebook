@@ -48,9 +48,6 @@
     <string name="copy_text">Copy Text</string>
     <string name="debug_image_link_subject">Frost for Facebook: Image Link Debug</string>
 
-
-    <string name="no_longer_facebook">No longer under facebook; refreshing…</string>
-
     <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
     <string name="profile_picture">Profile Picture</string>
 
@@ -79,4 +76,9 @@
     <string name="image_download_success">Image downloaded</string>
     <string name="image_download_fail">Image failed to download</string>
     <string name="image_share_failed">Failed to share image</string>
+
+    <string name="downloading_video">Downloading Video</string>
+    <string name="downloaded_video">Video Downloaded</string>
+    <string name="downloading_file">Downloading File</string>
+    <string name="downloaded_file">File Downloaded</string>
 </resources>

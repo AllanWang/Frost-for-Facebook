@@ -137,6 +137,7 @@
             android:enabled="true"
             android:label="@string/frost_notifications"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <receiver
             android:name=".services.UpdateReceiver"
             android:enabled="true">
@@ -144,6 +145,10 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".services.NotificationReceiver"
+            android:enabled="true" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.activities
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
@@ -27,7 +28,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.internal.operators.single.SingleToObservable
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.SingleSubject
 
 
@@ -42,8 +42,6 @@ class LoginActivity : BaseActivity() {
     val textview: AppCompatTextView by bindView(R.id.textview)
     val profile: ImageView by bindView(R.id.profile)
 
-    val loginObservable = SingleSubject.create<CookieModel>()
-    val progressObservable = BehaviorSubject.create<Int>()!!
     val profileObservable = SingleSubject.create<Boolean>()
     val usernameObservable = SingleSubject.create<String>()
 
@@ -62,17 +60,14 @@ class LoginActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
         setFrostColors(toolbar)
-        web.loginObservable = loginObservable
-        web.progressObservable = progressObservable
-        loginObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
+        web.loadLogin({ refresh = it != 100 }) {
             cookie ->
+            L.d("Login found")
             web.fadeOut(onFinish = {
                 profile.fadeIn()
                 loadInfo(cookie)
             })
         }
-        progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe { refresh = it != 100 }
-        web.loadLogin()
     }
 
     fun loadInfo(cookie: CookieModel) {
@@ -123,5 +118,13 @@ class LoginActivity : BaseActivity() {
 
     fun loadUsername(cookie: CookieModel) {
         cookie.fetchUsername { usernameObservable.onSuccess(it) }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 999) {
+            L.d("Result found for activity with result $resultCode")
+            L.d("Intent data ${data?.extras.toString()}")
+        } else
+            super.onActivityResult(requestCode, resultCode, data)
     }
 }
