@@ -370,11 +370,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         if (Prefs.searchBar) {
             if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textCallback = {
-                    query, _ ->
-                    hiddenSearchView?.query(query)
-                }
-                textDebounceInterval = 200L
+                textCallback = { query, _ -> runOnUiThread { hiddenSearchView?.query(query) } }
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor.withMinAlpha(200)
                 openListener = { hiddenSearchView?.pauseLoad = false }

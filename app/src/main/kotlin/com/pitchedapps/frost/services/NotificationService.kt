@@ -175,7 +175,7 @@ class NotificationService : JobService() {
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
         val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
-        L.v("url ${a.attr("href")}")
+        L.v("url", a.attr("href"))
         return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl.formattedFbUrl)
     }
 

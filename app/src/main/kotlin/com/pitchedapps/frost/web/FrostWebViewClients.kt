@@ -136,7 +136,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         L.i("Url Loading", request.url?.toString())
         val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
-        L.v("Url Loading Path $path")
+        L.v("Url Loading Path", path)
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
             return launchImage(request.url.toString())

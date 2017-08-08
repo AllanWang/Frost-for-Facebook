@@ -56,13 +56,17 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
         addJavascriptInterface(SearchJSI(), "Frost")
         searchSubject.debounce(300, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.newThread())
                 .map {
-                    Jsoup.parse(it).select("a:not([rel*='keywords(']):not([href=#])[rel]").map {
+                    val doc = Jsoup.parse(it)
+                    L.d(doc.getElementById("main-search_input")?.html())
+                    val searchQuery = doc.getElementById("main-search-input")?.text() ?: "Null input"
+                    L.d("Search query", searchQuery)
+                    doc.select("a:not([rel*='keywords(']):not([href=#])[rel]").map {
                         element ->
                         //split text into separate items
-                        L.v("Search element ${element.attr("href")}")
+                        L.v("Search element", element.attr("href"))
                         val texts = element.select("div").map { it.text() }.filter { !it.isNullOrBlank() }
                         val pair = Pair(texts, element.attr("href"))
-                        L.v("Search element potential $pair")
+                        L.v("Search element potential", pair.toString())
                         pair
                     }.filter { it.first.isNotEmpty() }
                 }
@@ -123,6 +127,9 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
                     Prefs.searchBar = false
                     searchSubject.onComplete()
                     contract.searchOverlayDispose()
+                }
+                2 -> {
+                    L.v("Search emission received")
                 }
             }
         }
