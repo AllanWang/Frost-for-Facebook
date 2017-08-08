@@ -80,6 +80,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
             return
         }
         view.jsInject(
+                Prefs.themeInjector,
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
                 CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO)
@@ -95,7 +96,6 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
                 CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false),
-                Prefs.themeInjector,
                 callback = {
                     refreshObservable.onNext(false)
                     injectBackgroundColor()

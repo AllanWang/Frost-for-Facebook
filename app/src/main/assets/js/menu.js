@@ -4,6 +4,8 @@ if (!window.hasOwnProperty('frost_menu')) {
   window.frost_menu = true;
   var viewport = document.querySelector('#viewport');
   var root = document.querySelector('#root');
+  if (!viewport) console.log('Menu.js: viewport is null');
+  if (!root) console.log('Menu.js: root is null');
   var y = new MutationObserver(function(mutations) {
     viewport.removeAttribute('style');
     root.removeAttribute('style');
@@ -21,18 +23,24 @@ if (!window.hasOwnProperty('frost_menu')) {
       console.log('Found side menu');
       while (root.firstChild)
         root.removeChild(root.firstChild);
-      while (menu.childNodes.length)
-        root.appendChild(menu.childNodes[0]);
-      Frost.emit(0);
+      while (menu.childNodes.length) {
+        console.log('append');
+        viewport.appendChild(menu.childNodes[0]);
+      }
+      if (typeof Frost !== 'undefined') Frost.emit(0);
       setTimeout(function() {
         y.disconnect();
         console.log('Unhook styler');
       }, 500);
     }
   });
-  x.observe(document.querySelector('#mJewelNav'), {
+  var jewel = document.querySelector('#mJewelNav');
+  if (!jewel) console.log('Menu.js: jewel is null');
+  x.observe(jewel, {
     childList: true,
     subtree: true
   });
-  document.querySelector('#bookmarks_jewel').querySelector('a').click();
+  var menuA = document.querySelector('#bookmarks_jewel').querySelector('a');
+  if (!menuA) console.log('Menu.js: jewel is null')
+  menuA.click();
 }
