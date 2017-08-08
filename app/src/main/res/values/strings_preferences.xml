@@ -10,6 +10,9 @@
     <string name="behaviour">Behaviour</string>
     <string name="behaviour_desc">Define how the app interacts in certain settings</string>
 
+    <string name="network">Network</string>
+    <string name="network_desc">Define options that affect metered networks</string>
+
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
 

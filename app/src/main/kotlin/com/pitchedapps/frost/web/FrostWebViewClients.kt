@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.web
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -18,6 +18,7 @@ import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import io.reactivex.subjects.Subject
+import org.jetbrains.anko.withAlpha
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -42,17 +43,18 @@ open class BaseWebViewClient : WebViewClient() {
 open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient() {
 
     val refreshObservable: Subject<Boolean> = webCore.refreshObservable
+    val isMain = webCore.baseEnum != null
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
-        L.i("FWV Loading $url")
-//        L.v("Cookies ${CookieManager.getInstance().getCookie(url)}")
+        L.i("FWV Loading", url)
         refreshObservable.onNext(true)
         if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
         else if (url.contains("login.php")) FbCookie.reset({ launchLogin(view.context) })
     }
+
 
     fun launchLogin(c: Context) {
         if (c is MainActivity && c.cookies().isNotEmpty())
@@ -61,19 +63,28 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
             c.launchNewTask(LoginActivity::class.java)
     }
 
+    fun injectBackgroundColor()
+            = webCore.setBackgroundColor(if (isMain) Color.TRANSPARENT else Prefs.bgColor.withAlpha(255))
+
+
+    override fun onPageCommitVisible(view: WebView, url: String?) {
+        super.onPageCommitVisible(view, url)
+        injectBackgroundColor()
+        view.jsInject(
+                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+                CssHider.HEADER,
+                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
+                Prefs.themeInjector,
+                CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))
+    }
+
     override fun onPageFinished(view: WebView, url: String?) {
-        super.onPageFinished(view, url)
-        if (url == null) return
-        L.i("Page finished $url")
+        url ?: return
+        L.i("Page finished", url)
         if (!url.contains(FACEBOOK_COM)) {
             refreshObservable.onNext(false)
             return
         }
-        view.jsInject(
-                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
-                CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO)
-        )
         onPageFinishedActions(url)
     }
 
@@ -83,22 +94,19 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     internal fun injectAndFinish() {
         L.d("Page finished reveal")
-        webCore.jsInject(CssHider.HEADER,
-                CssHider.NON_RECENT.maybe(webCore.url.contains("?sk=h_chr")),
-                Prefs.themeInjector,
-                callback = {
-                    refreshObservable.onNext(false)
-                    webCore.jsInject(
-                            JsActions.LOGIN_CHECK,
-                            JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
-                            JsAssets.TEXTAREA_LISTENER,
-                            JsAssets.CONTEXT_A,
-                            JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
-                    )
-                })
+        refreshObservable.onNext(false)
+        injectBackgroundColor()
+        webCore.jsInject(
+                JsActions.LOGIN_CHECK,
+                JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
+                JsAssets.TEXTAREA_LISTENER,
+                CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
+                JsAssets.CONTEXT_A,
+                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
+        )
     }
 
-    open fun handleHtml(html: String) {
+    open fun handleHtml(html: String?) {
         L.d("Handle Html")
     }
 
@@ -112,26 +120,26 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
      * returns false if we are already in an overlaying activity
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
-        L.d("Launching Url", request.url.toString())
+        L.d("Launching Url", request.url?.toString() ?: "null")
         if (webCore.context is WebOverlayActivity) return false
         webCore.context.launchWebOverlay(request.url.toString())
         return true
     }
 
-    private fun launchImage(request: WebResourceRequest, text: String? = null): Boolean {
-        L.d("Launching Image", request.url.toString())
-        webCore.context.launchImageActivity(request.url.toString(), text)
+    private fun launchImage(url: String, text: String? = null): Boolean {
+        L.d("Launching Image", url)
+        webCore.context.launchImageActivity(url, text)
         if (webCore.canGoBack()) webCore.goBack()
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-        L.i("Url Loading ${request.url}")
-        val path = request.url.path ?: return super.shouldOverrideUrlLoading(view, request)
-        L.v("Url Loading Path $path")
+        L.i("Url Loading", request.url?.toString())
+        val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
+        L.v("Url Loading Path", path)
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
-            return launchImage(request)
+            return launchImage(request.url.toString())
         if (view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
@@ -163,6 +171,7 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
     }
 
     override fun onPageFinishedActions(url: String) {
+        L.d("Should inject ${url.shouldInjectMenu}")
         if (!url.shouldInjectMenu) injectAndFinish()
     }
 }

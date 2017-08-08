@@ -60,6 +60,7 @@ import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.SearchWebView
+import com.pitchedapps.frost.web.shouldLoadImages
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -160,14 +161,10 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
 //        }
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
         onCreateBilling()
-        if (Prefs.installDate < 1501454310304 && Showcase.intro)
-            materialDialogThemed {
-                title(R.string.intro_title)
-                content(R.string.intro_desc)
-                positiveText(R.string.kau_yes)
-                negativeText(R.string.kau_no)
-                onPositive { _, _ -> launchIntroActivity(cookies()) }
-            }
+        setNetworkObserver {
+            connectivity ->
+            shouldLoadImages = !connectivity.isRoaming
+        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -349,6 +346,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     override fun searchOverlayDispose() {
         hiddenSearchView?.dispose()
         hiddenSearchView = null
+        searchView?.unBind { launchWebOverlay(FbTab.SEARCH.url); true }
         searchView = null
     }
 
@@ -369,10 +367,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         if (Prefs.searchBar) {
             if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textObserver = {
-                    observable, _ ->
-                    observable.observeOn(AndroidSchedulers.mainThread()).subscribe { hiddenSearchView?.query(it) }
-                }
+                textCallback = { query, _ -> runOnUiThread { hiddenSearchView?.query(query) } }
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor.withMinAlpha(200)
                 openListener = { hiddenSearchView?.pauseLoad = false }
@@ -380,8 +375,8 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
         } else {
-            searchOverlayDispose()
-            menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
+            if (searchView != null) searchOverlayDispose()
+            else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
         }
         return true
     }

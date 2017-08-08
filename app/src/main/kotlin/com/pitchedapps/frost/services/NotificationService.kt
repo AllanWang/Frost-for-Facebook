@@ -96,7 +96,7 @@ class NotificationService : JobService() {
     }
 
     fun fetchGeneralNotifications(data: CookieModel) {
-        L.i("Notif fetch for $data")
+        L.i("Notif fetch", data.toString())
         val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
         //aclb for unread, acw for read
         val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
@@ -139,7 +139,7 @@ class NotificationService : JobService() {
     }
 
     fun fetchMessageNotifications(data: CookieModel, content: String) {
-        L.i("Notif IM fetch for $data")
+        L.i("Notif IM fetch", data.toString())
         val doc = Jsoup.parseBodyFragment(content)
         val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
         var notifCount = 0
@@ -175,7 +175,7 @@ class NotificationService : JobService() {
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
         val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
-        L.v("url ${a.attr("href")}")
+        L.v("url", a.attr("href"))
         return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl.formattedFbUrl)
     }
 

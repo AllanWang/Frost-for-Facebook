@@ -11,9 +11,13 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
-    <item text="Fixed notification titles" />
-    <item text="Added support for downloading videos" />
-    <item text="" />
+    <item text="Fix notification titles" />
+    <item text="ALPHA: Add support for downloading videos (hit the download button)" />
+    <item text="Deny intents for login so the page loads properly (thank you @Zenexer)" />
+    <item text="Reduce injection offset and move injectors to an earlier method" />
+    <item text="Add option to disable media loading on metered network" />
+    <item text="Fix menu section" />
+    <item text="Add more background setters to help transparent themes" />
     <item text="" />
     <item text="" />
 	

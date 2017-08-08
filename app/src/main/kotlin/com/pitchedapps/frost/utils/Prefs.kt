@@ -128,4 +128,6 @@ object Prefs : KPref() {
 
     var viewpagerSwipe: Boolean by kpref("viewpager_swipe", true)
 
+    var loadMediaOnMeteredNetwork: Boolean by kpref("media_on_metered_network", true)
+
 }
