@@ -76,7 +76,7 @@ class FrostWebViewCore @JvmOverloads constructor(
                 if (isVisible) fadeOut(duration = 200L)
             } else if (loading) {
                 dispose?.dispose()
-                if (animate && Prefs.animate) circularReveal(offset = 150L)
+                if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
                 else fadeIn(duration = 100L)
             }
         }

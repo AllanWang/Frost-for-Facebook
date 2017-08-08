@@ -67,6 +67,11 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             iicon = GoogleMaterial.Icon.gmd_notifications
         }
 
+        subItems(R.string.network, getNetworkPrefs()) {
+            descRes = R.string.network_desc
+            iicon = GoogleMaterial.Icon.gmd_network_cell
+        }
+
         subItems(R.string.experimental, getExperimentalPrefs()) {
             descRes = R.string.experimental_desc
             iicon = CommunityMaterial.Icon.cmd_flask_outline

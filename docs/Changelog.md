@@ -4,6 +4,7 @@
 * Fixed notification titles
 * Added support for downloading videos
 * Deny intents for login so the page loads properly (thank you @Zenexer)
+* Reduce injection offset and move injectors to an earlier method
 
 ## v1.5.0
 * Experimental: Add notifications for messages; report to me if this drains your battery

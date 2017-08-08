@@ -33,7 +33,7 @@ class FbUrlFormatter(url: String) {
             if (cleanedUrl.startsWith("#!/")) cleanedUrl = cleanedUrl.substring(2)
             if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
             cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
-            L.v("Formatted url from $url to $cleanedUrl")
+            L.v(null, "Formatted url from $url to $cleanedUrl")
             cleaned = cleanedUrl
         }
     }
