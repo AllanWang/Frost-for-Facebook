@@ -57,10 +57,10 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     }
 
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
-        L.d("Requesting geolocation")
+        L.i("Requesting geolocation")
         context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) {
             granted, _ ->
-            L.d("Geolocation response received; ${if (granted) "granted" else "denied"}")
+            L.i("Geolocation response received; ${if (granted) "granted" else "denied"}")
             callback(origin, granted, true)
         }
     }
