@@ -99,7 +99,7 @@ data class NotificationContent(val data: CookieModel,
                     .setGroup(group)
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
-            L.v("Notif load $this")
+            L.v("Notif load", this.toString())
             NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build().frostConfig())
 
             if (profileUrl.isNotBlank()) {

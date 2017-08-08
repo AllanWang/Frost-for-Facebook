@@ -57,13 +57,13 @@ abstract class IABBinder : FrostBilling {
         activityRef.clear()
     }
 
-    override fun onBillingInitialized() = L.d("IAB initialized")
+    override fun onBillingInitialized() = L.i("IAB initialized")
 
     override fun onPurchaseHistoryRestored() = L.d("IAB restored")
 
     override fun onProductPurchased(productId: String, details: TransactionDetails?) {
         bp.doAsync {
-            L.d("IAB $productId purchased")
+            L.i("IAB $productId purchased")
             val listing = weakRef.get()?.getPurchaseListingDetails(productId) ?: return@doAsync
             val currency = try {
                 Currency.getInstance(listing.currency)
