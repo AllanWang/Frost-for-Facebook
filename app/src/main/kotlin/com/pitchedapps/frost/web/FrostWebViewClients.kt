@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.web
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -98,7 +97,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                 })
     }
 
-    open fun handleHtml(html: String) {
+    open fun handleHtml(html: String?) {
         L.d("Handle Html")
     }
 

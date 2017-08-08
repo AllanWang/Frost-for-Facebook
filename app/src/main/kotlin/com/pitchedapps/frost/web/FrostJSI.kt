@@ -81,12 +81,14 @@ class FrostJSI(val webView: FrostWebViewCore) {
     }
 
     @JavascriptInterface
-    fun handleHtml(html: String) {
+    fun handleHtml(html: String?) {
+        html ?: return
         webView.post { webView.frostWebClient.handleHtml(html) }
     }
 
     @JavascriptInterface
-    fun handleHeader(html: String) {
+    fun handleHeader(html: String?) {
+        html ?: return
         headerObservable?.onNext(html)
     }
 

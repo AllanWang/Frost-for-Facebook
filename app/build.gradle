@@ -45,8 +45,7 @@ android {
 
     lintOptions {
         warningsAsErrors true
-        disable 'LogNotTimber',
-                'TrustAllX509TrustManager',
+        disable 'TrustAllX509TrustManager',
                 'UnusedResources',
                 'ContentDescription',
                 'RtlSymmetry'
@@ -176,5 +175,9 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+
+    //Reactive Libs
+    compile "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
+    compile "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
 
 }
