@@ -56,8 +56,8 @@ fun Activity.cookies(): ArrayList<CookieModel> {
 
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
-    L.v("Launch received $url")
-    L.i("Launch web overlay: $argUrl")
+    L.v("Launch received", url)
+    L.i("Launch web overlay", argUrl)
     startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
         putExtra(ARG_URL, argUrl)
     })

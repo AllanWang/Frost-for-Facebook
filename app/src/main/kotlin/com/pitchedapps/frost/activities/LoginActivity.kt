@@ -79,7 +79,7 @@ class LoginActivity : BaseActivity() {
             refresh = false
             if (!foundImage) {
                 L.eThrow("Could not get profile photo; Invalid userId?")
-                L.i("-\t$cookie")
+                L.i(null, "-\t$cookie")
             }
             textview.text = String.format(getString(R.string.welcome), name)
             textview.fadeIn()

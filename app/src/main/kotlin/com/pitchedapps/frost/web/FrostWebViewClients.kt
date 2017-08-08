@@ -45,8 +45,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
-        L.i("FWV Loading $url")
-//        L.v("Cookies ${CookieManager.getInstance().getCookie(url)}")
+        L.i("FWV Loading", url)
         refreshObservable.onNext(true)
         if (!url.contains(FACEBOOK_COM)) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
@@ -62,8 +61,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
-        if (url == null) return
-        L.i("Page finished $url")
+        url ?: return
+        L.i("Page finished", url)
         if (!url.contains(FACEBOOK_COM)) {
             refreshObservable.onNext(false)
             return
@@ -83,7 +82,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     internal fun injectAndFinish() {
         L.d("Page finished reveal")
         webCore.jsInject(CssHider.HEADER,
-                CssHider.NON_RECENT.maybe(webCore.url.contains("?sk=h_chr")),
+                CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false),
                 Prefs.themeInjector,
                 callback = {
                     refreshObservable.onNext(false)
@@ -111,26 +110,26 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
      * returns false if we are already in an overlaying activity
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
-        L.d("Launching Url", request.url.toString())
+        L.d("Launching Url", request.url?.toString() ?: "null")
         if (webCore.context is WebOverlayActivity) return false
         webCore.context.launchWebOverlay(request.url.toString())
         return true
     }
 
-    private fun launchImage(request: WebResourceRequest, text: String? = null): Boolean {
-        L.d("Launching Image", request.url.toString())
-        webCore.context.launchImageActivity(request.url.toString(), text)
+    private fun launchImage(url: String, text: String? = null): Boolean {
+        L.d("Launching Image", url)
+        webCore.context.launchImageActivity(url, text)
         if (webCore.canGoBack()) webCore.goBack()
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-        L.i("Url Loading ${request.url}")
-        val path = request.url.path ?: return super.shouldOverrideUrlLoading(view, request)
+        L.i("Url Loading", request.url?.toString())
+        val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
         L.v("Url Loading Path $path")
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
-            return launchImage(request)
+            return launchImage(request.url.toString())
         if (view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
