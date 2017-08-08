@@ -3,6 +3,7 @@
 ## Beta Updates
 * Fixed notification titles
 * Added support for downloading videos
+* Deny intents for login so the page loads properly (thank you @Zenexer)
 
 ## v1.5.0
 * Experimental: Add notifications for messages; report to me if this drains your battery

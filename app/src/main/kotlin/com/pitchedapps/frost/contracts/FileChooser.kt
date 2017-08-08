@@ -5,8 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import ca.allanwang.kau.mediapicker.MediaPickerActivityOverlayBase
-import ca.allanwang.kau.mediapicker.MediaType
 import ca.allanwang.kau.mediapicker.kauLaunchMediaPicker
 import ca.allanwang.kau.mediapicker.kauOnMediaPickerResult
 import com.pitchedapps.frost.activities.ImagePickerActivity

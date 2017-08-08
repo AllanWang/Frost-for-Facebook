@@ -54,7 +54,8 @@ class MessageWebView(val service: NotificationService, val params: JobParameters
 
     inner class MessageJSI {
         @JavascriptInterface
-        fun handleHtml(html: String) {
+        fun handleHtml(html: String?) {
+            html ?: return
             if (isCancelled) return
             if (html.length < 10) return finish()
             val time = System.currentTimeMillis() - startTime

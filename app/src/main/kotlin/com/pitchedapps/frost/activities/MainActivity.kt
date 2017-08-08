@@ -349,6 +349,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     override fun searchOverlayDispose() {
         hiddenSearchView?.dispose()
         hiddenSearchView = null
+        searchView?.unBind { launchWebOverlay(FbTab.SEARCH.url); true }
         searchView = null
     }
 
@@ -369,10 +370,11 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         if (Prefs.searchBar) {
             if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textObserver = {
-                    observable, _ ->
-                    observable.observeOn(AndroidSchedulers.mainThread()).subscribe { hiddenSearchView?.query(it) }
+                textCallback = {
+                    query, _ ->
+                    hiddenSearchView?.query(query)
                 }
+                textDebounceInterval = 200L
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor.withMinAlpha(200)
                 openListener = { hiddenSearchView?.pauseLoad = false }
@@ -380,8 +382,8 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
         } else {
-            searchOverlayDispose()
-            menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
+            if (searchView != null) searchOverlayDispose()
+            else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
         }
         return true
     }

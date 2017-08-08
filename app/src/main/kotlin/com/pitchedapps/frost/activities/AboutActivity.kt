@@ -1,10 +1,8 @@
 package com.pitchedapps.frost.activities
 
-import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,8 +11,6 @@ import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
-import ca.allanwang.kau.animators.FadeScaleAnimatorAdd
-import ca.allanwang.kau.animators.KauAnimator
 import ca.allanwang.kau.utils.*
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
@@ -27,9 +23,6 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.security.InvalidParameterException
 
 
 /**
