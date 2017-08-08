@@ -5,6 +5,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import ca.allanwang.kau.utils.use
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import okhttp3.HttpUrl
 import java.io.ByteArrayInputStream
 
@@ -53,7 +54,8 @@ fun shouldFrostInterceptRequest(view: WebView, request: WebResourceRequest): Web
         if (adblock == null) adblock = view.context.assets.open("adblock.txt").bufferedReader().use { it.readLines().toSet() }
         if (adblock?.any { url.contains(it) } ?: false) return blankResource
     }
-    L.v("Intercept Request ${host} ${url}")
+    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
+    L.v("Intercept Request", "$host $url")
     return null
 }
 
@@ -64,16 +66,25 @@ fun WebResourceRequest.query(action: (url: String) -> Boolean): Boolean {
     return action(url?.path ?: return false)
 }
 
+val WebResourceRequest.isImage: Boolean
+    get() = query { it.contains(".jpg") || it.contains(".png") }
+
+val WebResourceRequest.isMedia: Boolean
+    get() = query { it.contains(".jpg") || it.contains(".png") || it.contains("video") }
+
 /**
  * Generic filter passthrough
  * If Resource is already nonnull, pass it, otherwise check if filter is met and override the response accordingly
  */
-fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean): WebResourceResponse?
-        = this ?: if (request.query { filter(it) }) blankResource else null
+fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean)
+        = filter(request.query { filter(it) })
+
+fun WebResourceResponse?.filter(filter: Boolean): WebResourceResponse?
+        = this ?: if (filter) blankResource else null
 
 fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse?
         = filter(request) { it.endsWith(".css") }
 
 fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse?
-        = filter(request) { it.contains(".jpg") || it.contains(".png") }
+        = filter(request.isImage)
 

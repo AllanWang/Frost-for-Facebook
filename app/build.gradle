@@ -177,7 +177,8 @@ dependencies {
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 
     //Reactive Libs
-    compile "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
-    compile "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
+    implementation "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
+    implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
+    implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
 
 }
