@@ -2,6 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -17,6 +18,7 @@ import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import io.reactivex.subjects.Subject
+import org.jetbrains.anko.withAlpha
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -41,6 +43,7 @@ open class BaseWebViewClient : WebViewClient() {
 open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient() {
 
     val refreshObservable: Subject<Boolean> = webCore.refreshObservable
+    val isMain = webCore.baseEnum != null
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -57,6 +60,15 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
             c.launchNewTask(SelectorActivity::class.java, c.cookies())
         else
             c.launchNewTask(LoginActivity::class.java)
+    }
+
+    fun injectBackgroundColor()
+            = webCore.setBackgroundColor(if (isMain) Color.TRANSPARENT else Prefs.bgColor.withAlpha(255))
+
+
+    override fun onPageCommitVisible(view: WebView, url: String?) {
+        super.onPageCommitVisible(view, url)
+        injectBackgroundColor()
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
@@ -86,6 +98,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                 Prefs.themeInjector,
                 callback = {
                     refreshObservable.onNext(false)
+                    injectBackgroundColor()
                     webCore.jsInject(
                             JsActions.LOGIN_CHECK,
                             JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
@@ -161,6 +174,7 @@ class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(web
     }
 
     override fun onPageFinishedActions(url: String) {
+        L.d("Should inject ${url.shouldInjectMenu}")
         if (!url.shouldInjectMenu) injectAndFinish()
     }
 }
