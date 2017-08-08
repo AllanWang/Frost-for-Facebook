@@ -34,12 +34,6 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
     val activityContract = (webCore.context as? ActivityWebContract)
     val context = webCore.context!!
 
-    companion object {
-        val consoleBlacklist = setOf(
-                "edge-chat"
-        )
-    }
-
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return true
         L.d("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")

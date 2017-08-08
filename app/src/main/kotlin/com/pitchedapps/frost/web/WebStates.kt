@@ -7,3 +7,5 @@ package com.pitchedapps.frost.web
  */
 const val WEB_LOAD_DELAY = 50L
 var shouldLoadImages = false
+
+val consoleBlacklist = setOf("edge-chat")

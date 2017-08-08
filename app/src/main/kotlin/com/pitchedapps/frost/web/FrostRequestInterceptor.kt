@@ -16,17 +16,17 @@ import java.io.ByteArrayInputStream
  * Handler to decide when a request should be done by us
  * This is the crux of Frost's optimizations for the web browser
  */
-val blankResource: WebResourceResponse by lazy { WebResourceResponse("text/plain", "utf-8", ByteArrayInputStream("".toByteArray())) }
+private val blankResource: WebResourceResponse by lazy { WebResourceResponse("text/plain", "utf-8", ByteArrayInputStream("".toByteArray())) }
 
 //these hosts will redirect to a blank resource
-val blacklistHost: Set<String> by lazy {
+private val blacklistHost: Set<String> by lazy {
     setOf(
             "edge-chat.facebook.com"
     )
 }
 
 //these hosts will return null and skip logging
-val whitelistHost: Set<String> by lazy {
+private val whitelistHost: Set<String> by lazy {
     setOf(
             "static.xx.fbcdn.net",
             "m.facebook.com",
@@ -36,13 +36,13 @@ val whitelistHost: Set<String> by lazy {
 
 //these hosts will skip ad inspection
 //this list does not have to include anything from the two above
-val adWhitelistHost: Set<String> by lazy {
+private val adWhitelistHost: Set<String> by lazy {
     setOf(
             "scontent-sea1-1.xx.fbcdn.net"
     )
 }
 
-var adblock: Set<String>? = null
+private var adblock: Set<String>? = null
 
 fun shouldFrostInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
     val httpUrl = HttpUrl.parse(request.url?.toString() ?: return null) ?: return null
