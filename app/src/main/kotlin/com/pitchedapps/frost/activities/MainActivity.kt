@@ -349,6 +349,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     override fun searchOverlayDispose() {
         hiddenSearchView?.dispose()
         hiddenSearchView = null
+        searchView?.unBind { launchWebOverlay(FbTab.SEARCH.url); true }
         searchView = null
     }
 
@@ -381,8 +382,8 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
         } else {
-            searchOverlayDispose()
-            menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
+            if (searchView != null) searchOverlayDispose()
+            else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
         }
         return true
     }

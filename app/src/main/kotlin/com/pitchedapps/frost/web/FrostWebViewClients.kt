@@ -97,7 +97,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                 })
     }
 
-    open fun handleHtml(html: String) {
+    open fun handleHtml(html: String?) {
         L.d("Handle Html")
     }
 

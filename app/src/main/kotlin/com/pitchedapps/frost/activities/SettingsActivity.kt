@@ -38,7 +38,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!onActivityResultBilling(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data)
-        adapter.notifyDataSetChanged()
+        reload()
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
@@ -130,8 +130,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
-        toolbarTitle.textColor = Prefs.iconColor
-        toolbarTitle.invalidate()
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_email to GoogleMaterial.Icon.gmd_email,
                 R.id.action_changelog to GoogleMaterial.Icon.gmd_info)
