@@ -9,6 +9,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswers
+import com.pitchedapps.frost.utils.logFrostAnswers
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.onComplete
 import org.jetbrains.anko.uiThread
@@ -52,9 +53,9 @@ abstract class IABBinder : FrostBilling {
     }
 
     override fun onDestroyBilling() {
+        activityRef.clear()
         bp?.release()
         bp = null
-        activityRef.clear()
     }
 
     override fun onBillingInitialized() = L.i("IAB initialized")
@@ -90,7 +91,7 @@ abstract class IABBinder : FrostBilling {
                     .putCustomAttribute("result", errorCode.toString())
                     .putSuccess(false))
         }
-        L.e(error, "IAB error $errorCode")
+        error.logFrostAnswers("IAB error $errorCode")
     }
 
     override fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean
