@@ -72,7 +72,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         injectBackgroundColor()
         view.jsInject(
                 CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                CssHider.HEADER, CssAssets.BB,
+                CssHider.HEADER,
                 CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
                 Prefs.themeInjector,
                 CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))

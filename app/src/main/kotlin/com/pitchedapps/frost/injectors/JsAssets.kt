@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import com.pitchedapps.frost.utils.L
+import java.io.FileNotFoundException
 import java.util.*
 
 /**
@@ -17,8 +19,13 @@ enum class JsAssets : InjectorContract {
 
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
         if (injector == null) {
-            val content = webView.context.assets.open("js/$file").bufferedReader().use { it.readText() }
-            injector = JsBuilder().js(content).build()
+            try {
+                val content = webView.context.assets.open("js/$file").bufferedReader().use { it.readText() }
+                injector = JsBuilder().js(content).build()
+            } catch (e: FileNotFoundException) {
+                L.e(e, "JsAssets file not found")
+                injector = JsInjector(JsActions.EMPTY.function)
+            }
         }
         injector!!.inject(webView, callback)
     }

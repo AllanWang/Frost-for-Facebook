@@ -14,7 +14,7 @@ import java.util.*
  * The enum name must match the css file name
  */
 enum class CssAssets(val folder: String = "themes") : InjectorContract {
-    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components"), BB
+    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components")
     ;
 
     var file = "${name.toLowerCase(Locale.CANADA)}.compact.css"
