@@ -1,8 +1,10 @@
 package com.pitchedapps.frost
 
+import android.app.Activity
 import android.app.Application
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Bundle
 import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
 import com.bumptech.glide.Glide
@@ -51,8 +53,6 @@ class FrostApp : Application() {
         if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
         Prefs.lastLaunch = System.currentTimeMillis()
 
-
-
         super.onCreate()
 
         /**
@@ -67,6 +67,24 @@ class FrostApp : Application() {
                         .thumbnail(old).into(imageView)
             }
         })
+        if (BuildConfig.DEBUG)
+            registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+                override fun onActivityPaused(activity: Activity) {}
+                override fun onActivityResumed(activity: Activity) {}
+                override fun onActivityStarted(activity: Activity) {}
+
+                override fun onActivityDestroyed(activity: Activity) {
+                    L.d("Activity ${activity.localClassName} destroyed")
+                }
+
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+                override fun onActivityStopped(activity: Activity) {}
+
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle) {
+                    L.d("Activity ${activity.localClassName} created")
+                }
+            })
     }
 
 

@@ -132,6 +132,15 @@ fun frostAnswersCustom(name: String, vararg events: Pair<String, Any>) {
     }
 }
 
+/**
+ * Helper method to quietly keep track of throwable issues
+ */
+fun Throwable?.logFrostAnswers(text: String) {
+    val msg = if (this == null) text else "$text: $message"
+    L.e(msg)
+    frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
+}
+
 fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) {
     Snackbar.make(this, text, Snackbar.LENGTH_LONG).apply {
         builder()

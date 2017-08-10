@@ -53,6 +53,7 @@ class AboutActivity : AboutActivityBase(null, {
                 "kotterknife",
                 "materialdialogs",
                 "materialdrawer",
+                "rxjava",
                 "subsamplingscaleimageview"
         )
 
@@ -78,7 +79,6 @@ class AboutActivity : AboutActivityBase(null, {
             }
         }
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
-
     }
 
     class AboutLinks : AbstractItem<AboutLinks, AboutLinks.ViewHolder>(), ThemableIItem by ThemableIItemDelegate() {
@@ -121,7 +121,7 @@ class AboutActivity : AboutActivityBase(null, {
                         setImageDrawable(icon.toDrawable(context, 32))
                         scaleType = ImageView.ScaleType.CENTER
                         background = context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
-                        setOnClickListener({ onClick() })
+                        setOnClickListener { onClick() }
                         container.addView(this)
                     }
                 }

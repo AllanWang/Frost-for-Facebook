@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase()
+        applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase(Locale.CANADA)
         minSdkVersion Integer.parseInt(project.MIN_SDK)
         targetSdkVersion Integer.parseInt(project.TARGET_SDK)
         versionCode androidGitVersion.code()
