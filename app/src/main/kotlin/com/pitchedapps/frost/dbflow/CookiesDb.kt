@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.logFrostAnswers
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -73,7 +74,7 @@ fun CookieModel.fetchUsername(callback: (String) -> Unit) {
             L.d("Fetch username found", result)
         } catch (e: Exception) {
             if (e !is UnknownHostException)
-                L.e(e, "Fetch username failed")
+                e.logFrostAnswers("Fetch username failed")
         } finally {
             if (result.isBlank() && (name?.isNotBlank() ?: false)) {
                 callback(name!!)

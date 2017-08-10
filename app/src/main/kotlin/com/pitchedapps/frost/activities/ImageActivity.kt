@@ -95,8 +95,8 @@ class ImageActivity : KauBaseActivity() {
         })
         fab.setOnClickListener { fabAction.onClick(this) }
         photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-            override fun onImageLoadError(e: Exception) {
-                L.e(e, "Image load error")
+            override fun onImageLoadError(e: Exception?) {
+                e.logFrostAnswers("Image load error")
                 imageCallback(null, false)
             }
         })
@@ -248,7 +248,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 }
                 activity.startActivity(intent)
             } catch (e: Exception) {
-                L.e(e, "Image share failed");
+                e.logFrostAnswers("Image share failed")
                 activity.snackbar(R.string.image_share_failed)
             }
         }
