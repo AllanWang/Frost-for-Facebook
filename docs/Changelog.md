@@ -1,10 +1,13 @@
 # Changelog
 
 ## Beta Updates
-* Fixed notification titles
-* Added support for downloading videos
+* Fix notification titles
+* ALPHA: Add support for downloading videos (hit the download button)
 * Deny intents for login so the page loads properly (thank you @Zenexer)
 * Reduce injection offset and move injectors to an earlier method
+* Add option to disable media loading on metered network
+* Fix menu section
+* Add more background setters to help transparent themes
 
 ## v1.5.0
 * Experimental: Add notifications for messages; report to me if this drains your battery
