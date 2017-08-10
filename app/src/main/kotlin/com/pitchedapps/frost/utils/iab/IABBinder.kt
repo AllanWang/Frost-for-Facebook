@@ -53,9 +53,9 @@ abstract class IABBinder : FrostBilling {
     }
 
     override fun onDestroyBilling() {
+        activityRef.clear()
         bp?.release()
         bp = null
-        activityRef.clear()
     }
 
     override fun onBillingInitialized() = L.i("IAB initialized")
