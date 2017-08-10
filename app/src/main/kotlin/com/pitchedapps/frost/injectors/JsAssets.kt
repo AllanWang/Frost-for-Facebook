@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import java.util.*
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -11,7 +12,7 @@ enum class JsAssets : InjectorContract {
     MENU, CLICK_A, CONTEXT_A, HEADER_BADGES, SEARCH, TEXTAREA_LISTENER, NOTIF_MSG
     ;
 
-    var file = "${name.toLowerCase()}.min.js"
+    var file = "${name.toLowerCase(Locale.CANADA)}.min.js"
     var injector: JsInjector? = null
 
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {

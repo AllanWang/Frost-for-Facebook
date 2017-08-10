@@ -6,6 +6,7 @@ import ca.allanwang.kau.utils.*
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import java.io.FileNotFoundException
+import java.util.*
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -13,10 +14,10 @@ import java.io.FileNotFoundException
  * The enum name must match the css file name
  */
 enum class CssAssets(val folder: String = "themes") : InjectorContract {
-    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components")
+    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components"), BB
     ;
 
-    var file = "${name.toLowerCase()}.compact.css"
+    var file = "${name.toLowerCase(Locale.CANADA)}.compact.css"
     var injector: JsInjector? = null
 
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
