@@ -2,6 +2,7 @@ package com.pitchedapps.frost.dbflow
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.utils.L
@@ -65,26 +66,31 @@ fun removeCookie(id: Long) {
 }
 
 fun CookieModel.fetchUsername(callback: (String) -> Unit) {
-    doAsync {
-        var result = ""
-        try {
-            result = Jsoup.connect(FbTab.PROFILE.url)
-                    .cookie(FACEBOOK_COM, cookie)
-                    .get().title()
-            L.d("Fetch username found", result)
-        } catch (e: Exception) {
-            if (e !is UnknownHostException)
-                e.logFrostAnswers("Fetch username failed")
-        } finally {
-            if (result.isBlank() && (name?.isNotBlank() ?: false)) {
-                callback(name!!)
-                return@doAsync
+    ReactiveNetwork.checkInternetConnectivity().subscribe {
+        yes, _ ->
+        if (!yes) return@subscribe callback("")
+        doAsync {
+            var result = ""
+            try {
+                result = Jsoup.connect(FbTab.PROFILE.url)
+                        .cookie(FACEBOOK_COM, cookie)
+                        .get().title()
+                L.d("Fetch username found", result)
+            } catch (e: Exception) {
+                if (e !is UnknownHostException)
+                    e.logFrostAnswers("Fetch username failed")
+            } finally {
+                if (result.isBlank() && (name?.isNotBlank() ?: false)) {
+                    callback(name!!)
+                    return@doAsync
+                }
+                if (name != result) {
+                    name = result
+                    saveFbCookie(this@fetchUsername)
+                }
+                callback(result)
             }
-            if (name != result) {
-                name = result
-                saveFbCookie(this@fetchUsername)
-            }
-            callback(result)
         }
+
     }
 }
