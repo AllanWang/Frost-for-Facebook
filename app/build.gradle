@@ -21,7 +21,7 @@ android {
     buildToolsVersion project.BUILD_TOOLS
 
     androidGitVersion {
-        codeFormat = 'MMNNPPBB'
+        codeFormat = 'MMNNPPXX'
         format = '%tag%%.count%%-commit%'
         prefix 'v'
     }
