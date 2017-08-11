@@ -94,6 +94,13 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             onClick = { _, _, _ -> launchIntroActivity(cookies()); true }
         }
 
+        if (Prefs.debugSettings) {
+            subItems(R.string.debug_frost, getDebugPrefs(this@SettingsActivity)) {
+                descRes = R.string.debug_frost_desc
+                iicon = GoogleMaterial.Icon.gmd_bug_report
+            }
+        }
+
         if (BuildConfig.DEBUG) {
             checkbox(R.string.custom_pro, { Prefs.debugPro }, { Prefs.debugPro = it })
         }
