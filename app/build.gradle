@@ -138,6 +138,8 @@ dependencies {
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:searchview:$KAU"
     //noinspection GradleDependency
+    implementation "ca.allanwang.kau:core:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"

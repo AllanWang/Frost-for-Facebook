@@ -8,6 +8,7 @@
 * Add option to disable media loading on metered network
 * Fix menu section
 * Add more background setters to help transparent themes
+* Fixed crash for users with non english characters
 
 ## v1.5.0
 * Experimental: Add notifications for messages; report to me if this drains your battery
