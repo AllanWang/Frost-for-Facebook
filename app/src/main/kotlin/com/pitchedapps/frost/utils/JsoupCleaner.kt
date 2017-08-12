@@ -1,4 +1,4 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.utils
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Attribute

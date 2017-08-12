@@ -1,4 +1,4 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.utils
 
 import org.junit.Test
 import kotlin.test.assertEquals
