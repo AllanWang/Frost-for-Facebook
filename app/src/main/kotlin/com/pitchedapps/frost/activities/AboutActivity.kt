@@ -22,6 +22,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 
 
@@ -62,6 +63,9 @@ class AboutActivity : AboutActivityBase(null, {
         return l
     }
 
+    var lastClick = -1L
+    var clickCount = 0
+
     override fun postInflateMainPage(adapter: FastItemThemedAdapter<IItem<*, *>>) {
         /**
          * Frost may not be a library but we're conveying the same info
@@ -79,6 +83,22 @@ class AboutActivity : AboutActivityBase(null, {
             }
         }
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
+        adapter.withOnClickListener { _, _, item, _ ->
+            if (item is LibraryIItem) {
+                val now = System.currentTimeMillis()
+                if (now - lastClick > 500)
+                    clickCount = 0
+                else
+                    clickCount++
+                lastClick = now
+                if (clickCount == 7 && !Prefs.debugSettings) {
+                    Prefs.debugSettings = true
+                    L.d("Debugging section enabled")
+                    toast(R.string.debug_toast_enabled)
+                }
+            }
+            false
+        }
     }
 
     class AboutLinks : AbstractItem<AboutLinks, AboutLinks.ViewHolder>(), ThemableIItem by ThemableIItemDelegate() {
