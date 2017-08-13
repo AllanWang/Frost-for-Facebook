@@ -124,7 +124,6 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.e("Search subject error; reverting to full overlay")
-                    //todo add a way to fetch the html?
                     Prefs.searchBar = false
                     searchSubject.onComplete()
                     contract.searchOverlayDispose()

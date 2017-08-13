@@ -141,7 +141,7 @@ class NotificationService : JobService() {
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
         //fetch profpic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
 
@@ -193,9 +193,9 @@ class NotificationService : JobService() {
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
         L.v("url", a.attr("href"))
-        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl.formattedFbUrl)
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
     private fun Context.debugNotification(text: String) {
