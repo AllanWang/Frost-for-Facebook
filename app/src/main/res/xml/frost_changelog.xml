@@ -11,8 +11,8 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
-    <item text="" />
-    <item text="" />
+    <item text="Create more robust IM notification fetcher with a timeout" />
+    <item text="Add hidden debugging options for certain views" />
     <item text="" />
     <item text="" />
     <item text="" />
