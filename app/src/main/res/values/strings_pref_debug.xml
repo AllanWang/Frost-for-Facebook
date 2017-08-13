@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="debug_toast_enabled">Debugging section is enabled! Go back to settings.</string>
+
+    <string name="debug_disclaimer_info">Though most private content is automatically removed in the report, some sensitive info may still be visible.
+        \nPlease have a look at the debug report before sending it.
+        \n\nClicking one of the options below will prepare an email response with the web page data.
+    </string>
+
+    <string name="debug_incomplete">Incomplete report</string>
+    <string name="debug_request_error">An error occurred in the debugger.</string>
+    <string name="debug_request_cancelled">The request has been cancelled.</string>
+    <string name="debug_request_timeout">The request has timed out.</string>
+
+    <string name="debug_report_completed">Debug report completed</string>
+    <string name="debug_report_completed_content">Would you like to send the report?</string>
+</resources>

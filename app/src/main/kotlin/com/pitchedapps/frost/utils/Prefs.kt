@@ -130,4 +130,6 @@ object Prefs : KPref() {
 
     var loadMediaOnMeteredNetwork: Boolean by kpref("media_on_metered_network", true)
 
+    var debugSettings: Boolean by kpref("debug_settings", false)
+
 }

@@ -22,6 +22,8 @@
     <string name="about_frost">About Frost for Facebook</string>
     <string name="about_frost_desc">Version, Credits, and FAQs</string>
 
+    <string name="debug_frost">Frost Debugger</string>
+    <string name="debug_frost_desc">Send html data to help with debugging.</string>
 
     <string name="replay_intro">Replay Introduction</string>
 </resources>
