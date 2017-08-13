@@ -10,6 +10,5 @@
 
     <string name="debug_incomplete">Incomplete report</string>
 
-    <string name="debug_report_completed">Debug report completed</string>
-    <string name="debug_report_completed_content">Would you like to send the report?</string>
+    <string name="debug_report_email_title">Frost for Facebook: Debug Report</string>
 </resources>

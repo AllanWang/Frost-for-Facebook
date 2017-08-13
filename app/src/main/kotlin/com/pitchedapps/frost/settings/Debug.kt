@@ -137,20 +137,15 @@ private enum class Debugger(val data: FbTab, val injector: InjectorContract?, va
     }
 
     private fun AnkoAsyncContext<MaterialDialog>.createReport(html: String) {
+        val cleanHtml = html.cleanHtml()
         uiThread {
-            it.context.materialDialogThemed {
-                title(R.string.debug_report_completed)
-                content(R.string.debug_report_completed_content)
-                positiveText(R.string.kau_yes)
-                negativeText(R.string.kau_no)
-                onPositive { dialog, _ ->
-                    dialog.context.sendEmail(R.string.dev_email, R.string.kau_cancel) {
-                        addItem("Query List", query.contentToString())
-                        footer = html.cleanHtml()
-                    }
-                }
-            }
+            val c = it.context
             it.dismiss()
+            c.sendEmail(c.string(R.string.dev_email),
+                    "${c.string(R.string.debug_report_email_title)} $name") {
+                addItem("Query List", query.contentToString())
+                footer = cleanHtml
+            }
         }
     }
 }
