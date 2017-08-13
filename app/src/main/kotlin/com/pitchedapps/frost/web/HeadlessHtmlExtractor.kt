@@ -5,6 +5,7 @@ import android.content.Context
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import ca.allanwang.kau.utils.gone
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.utils.L
@@ -12,23 +13,29 @@ import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.runOnUiThread
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by Allan Wang on 2017-08-12.
+ *
+ * Launches a headless html request and returns a result pair
+ * When successful, the pair will contain the html content and -1
+ * When unsuccessful, the pair will contain an empty string and a StringRes for the given error
+ *
+ * All errors are rerouted to success calls, so no exceptions should occur.
+ * The headless extractor will also destroy itself on cancellation or when the request is finished
  */
-const val HTML_EXTRACTOR_SUCCESS = 0
-const val HTML_EXTRACTOR_CANCELLED = 1
-const val HTML_EXTRACTOR_ERROR = 2
-const val HTML_EXTRACTOR_TIMEOUT = 3
-
 fun Context.launchHeadlessHtmlExtractor(url: String, injector: InjectorContract, action: (Single<Pair<String, Int>>) -> Unit) {
     val single = Single.create<Pair<String, Int>> { e: SingleEmitter<Pair<String, Int>> ->
-        HeadlessHtmlExtractor(this, url, injector, e)
-        e.setCancellable { e.onSuccess("" to HTML_EXTRACTOR_CANCELLED) }
-    }.subscribeOn(AndroidSchedulers.mainThread()).observeOn(Schedulers.io())
-            .timeout(20, TimeUnit.SECONDS, Schedulers.io(), { it.onSuccess("" to HTML_EXTRACTOR_TIMEOUT) })
-            .onErrorReturn { "" to HTML_EXTRACTOR_ERROR }
+        val extractor = HeadlessHtmlExtractor(this, url, injector, e)
+        e.setCancellable {
+            runOnUiThread { extractor.destroy() }
+            e.onSuccess("" to R.string.debug_request_cancelled)
+        }
+    }.subscribeOn(AndroidSchedulers.mainThread())
+            .timeout(20, TimeUnit.SECONDS, Schedulers.io(), { it.onSuccess("" to R.string.debug_request_timeout) })
+            .onErrorReturn { "" to R.string.debug_request_error }
     action(single)
 }
 
@@ -64,13 +71,18 @@ private class HeadlessHtmlExtractor(
         @JavascriptInterface
         fun handleHtml(html: String?) {
             val time = System.currentTimeMillis() - startTime
-            L.d("HeadlessHtmlExtractor fetched $url in $time ms")
-            emitter.onSuccess((html ?: "") to HTML_EXTRACTOR_SUCCESS)
+            emitter.onSuccess((html ?: "") to -1)
             post {
+                L.d("HeadlessHtmlExtractor fetched $url in $time ms")
                 settings.javaScriptEnabled = false
                 settings.blockNetworkLoads = true
                 destroy()
             }
         }
+    }
+
+    override fun destroy() {
+        super.destroy()
+        L.d("HeadlessHtmlExtractor destroyed")
     }
 }

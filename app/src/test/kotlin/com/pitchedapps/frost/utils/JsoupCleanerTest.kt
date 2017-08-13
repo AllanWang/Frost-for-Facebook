@@ -35,6 +35,12 @@ class JsoupCleanerTest {
     }
 
     @Test
+    fun multiLineText() {
+        """<div class="test">Hello
+        world</div>""".assertCleanHtml("""<div class="test"></div>""")
+    }
+
+    @Test
     fun textRemoval() {
         """<div>Hello<a>World</a></div>""".assertCleanText("<div><a></a></div>")
     }
