@@ -59,7 +59,7 @@
     <string name="faq_title">Frost FAQ</string>
 
     <!--HTML Extractor-->
-    
+
     <string name="html_extraction_error">An error occurred in the html extraction.</string>
     <string name="html_extraction_cancelled">The request has been cancelled.</string>
     <string name="html_extraction_timeout">The request has timed out.</string>
