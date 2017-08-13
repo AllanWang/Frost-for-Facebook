@@ -1,5 +1,7 @@
 <resources>
     <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
+    <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
+    <string name="paypal" translatable="false">PayPal</string>
     <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
 
     <string name="feed">Feed</string>
@@ -55,7 +57,8 @@
     <string name="uh_oh">Uh Oh</string>
     <string name="reload">Reload</string>
     <string name="play_store_not_pro">It seems like you are a pro user, but we couldn\'t find your purchasing info. If this error persists, please try clearing the Play Store cache and reinstalling the app.</string>
-    <string name="play_store_unsupported">It seems like app version can\'t purchase pro. Please reinstall from the play store if this is a persisting issue.</string>
+    <string name="play_store_unsupported">It seems like this app version can\'t purchase pro. Please reinstall from the play store if this is a persistent issue.
+    \nIf you would like to donate without any additional features, you may do so through PayPal.</string>
     <string name="play_store_not_found_pro_query">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
     <string name="play_store_billing_error">Something went wrong. Please try again later.</string>
     <string name="play_thank_you">Thank you!</string>
