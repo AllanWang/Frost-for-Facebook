@@ -15,12 +15,13 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbTab
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
-import com.pitchedapps.frost.web.MessageWebView
+import com.pitchedapps.frost.web.launchHeadlessHtmlExtractor
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.Future
@@ -58,7 +59,7 @@ class NotificationService : JobService() {
 
     fun finish(params: JobParameters?) {
         val time = System.currentTimeMillis() - startTime
-        L.d("Notification service has finished in $time ms")
+        L.i("Notification service has finished in $time ms")
         frostAnswersCustom("NotificationTime",
                 "Type" to "Service",
                 "IM Included" to Prefs.notificationsInstantMessages,
@@ -70,6 +71,7 @@ class NotificationService : JobService() {
 
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        L.i("Fetching notifications")
         future = doAsync {
             if (Prefs.notificationAllAccounts) {
                 val cookies = loadFbCookiesSync()
@@ -83,9 +85,15 @@ class NotificationService : JobService() {
             L.d("Finished main notifications")
             if (Prefs.notificationsInstantMessages) {
                 val currentCookie = loadFbCookie(Prefs.userId)
-                if (currentCookie != null)
-                    uiThread { MessageWebView(this@NotificationService, params, currentCookie) }
-            } else finish(params)
+                if (currentCookie != null) {
+                    fetchMessageNotifications(currentCookie) {
+                        L.i("Notif IM fetching finished ${if (it) "succesfully" else "unsuccessfully"}")
+                        finish(params)
+                    }
+                    return@doAsync
+                }
+            }
+            finish(params)
         }
         return true
     }
@@ -96,7 +104,7 @@ class NotificationService : JobService() {
     }
 
     fun fetchGeneralNotifications(data: CookieModel) {
-        L.i("Notif fetch", data.toString())
+        L.d("Notif fetch", data.toString())
         val doc = Jsoup.connect(FbTab.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
         //aclb for unread, acw for read
         val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
@@ -122,7 +130,6 @@ class NotificationService : JobService() {
         summaryNotification(data.id, notifCount)
     }
 
-
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
         val a = element.getElementsByTag("a").first() ?: return logNotif("IM No a tag")
         val abbr = element.getElementsByTag("abbr")
@@ -134,13 +141,25 @@ class NotificationService : JobService() {
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
         //fetch profpic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
 
-    fun fetchMessageNotifications(data: CookieModel, content: String) {
-        L.i("Notif IM fetch", data.toString())
-        val doc = Jsoup.parseBodyFragment(content)
+    inline fun fetchMessageNotifications(data: CookieModel, crossinline callback: (success: Boolean) -> Unit) {
+        launchHeadlessHtmlExtractor(FbTab.MESSAGES.url, JsAssets.NOTIF_MSG) {
+            it.observeOn(Schedulers.newThread()).subscribe {
+                (html, errorRes) ->
+                L.d("Notf IM html received")
+                if (errorRes != -1) return@subscribe callback(false)
+                fetchMessageNotifications(data, html)
+                callback(true)
+            }
+        }
+    }
+
+    fun fetchMessageNotifications(data: CookieModel, html: String) {
+        L.d("Notif IM fetch", data.toString())
+        val doc = Jsoup.parseBodyFragment(html)
         val unreadNotifications = (doc.getElementById("threadlist_rows") ?: return L.eThrow("Notification messages not found")).getElementsByClass("aclb")
         var notifCount = 0
         val prevNotifTime = lastNotificationTime(data.id)
@@ -174,9 +193,9 @@ class NotificationService : JobService() {
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
         L.v("url", a.attr("href"))
-        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl.formattedFbUrl)
+        return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
     private fun Context.debugNotification(text: String) {

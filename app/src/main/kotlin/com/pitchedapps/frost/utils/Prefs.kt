@@ -97,8 +97,7 @@ object Prefs : KPref() {
 
     var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
 
-    //todo remove from experimental once stabilized
-    var notificationsInstantMessages: Boolean by kpref("notification_im", Showcase.experimentalDefault)
+    var notificationsInstantMessages: Boolean by kpref("notification_im", false)
 
     var notificationVibrate: Boolean by kpref("notification_vibrate", true)
 
