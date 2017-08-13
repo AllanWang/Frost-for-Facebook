@@ -2,6 +2,7 @@ package com.pitchedapps.frost.utils.iab
 
 import android.app.Activity
 import ca.allanwang.kau.utils.restart
+import ca.allanwang.kau.utils.startLink
 import ca.allanwang.kau.utils.startPlayStoreLink
 import ca.allanwang.kau.utils.string
 import com.crashlytics.android.answers.PurchaseEvent
@@ -69,9 +70,11 @@ fun Activity.playStorePurchaseUnsupported() {
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_unsupported)
-        positiveText(R.string.kau_ok)
-        neutralText(R.string.kau_play_store)
-        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
+        negativeText(R.string.kau_close)
+        positiveText(R.string.kau_play_store)
+        neutralText(R.string.paypal)
+        onPositive { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
+        onNeutral { _, _ -> startLink(string(R.string.dev_paypal)) }
     }
 }
 

@@ -98,6 +98,7 @@ abstract class IABBinder : FrostBilling {
             = bp?.handleActivityResult(requestCode, resultCode, data) ?: false
 
     override fun purchasePro() {
+        val bp = this.bp
         if (bp == null) {
             frostAnswers {
                 logPurchase(PurchaseEvent()
@@ -107,10 +108,12 @@ abstract class IABBinder : FrostBilling {
             L.eThrow("IAB null bp on purchase attempt")
             return
         }
-        if (!(bp?.isOneTimePurchaseSupported ?: false))
-            activity?.playStorePurchaseUnsupported()
+        val a = activity ?: return
+
+        if (!BillingProcessor.isIabServiceAvailable(a) || !bp.isOneTimePurchaseSupported)
+            a.playStorePurchaseUnsupported()
         else
-            bp?.purchase(activity, FROST_PRO)
+            bp.purchase(a, FROST_PRO)
     }
 
 }

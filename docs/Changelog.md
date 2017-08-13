@@ -1,6 +1,14 @@
 # Changelog
 
 ## Beta Updates
+
+## v1.4.2
+* Experimental: Add notifications for messages; report to me if this drains your battery
+* Add FAQ in the about section
+* Add video uploading
+* Add open link option in context menu
+* Add geolocation
+* Update theme
 * Fix notification titles
 * ALPHA: Add support for downloading videos (hit the download button)
 * Deny intents for login so the page loads properly (thank you @Zenexer)
@@ -8,15 +16,6 @@
 * Add option to disable media loading on metered network
 * Fix menu section
 * Add more background setters to help transparent themes
-* Fixed crash for users with non english characters
-
-## v1.5.0
-* Experimental: Add notifications for messages; report to me if this drains your battery
-* Add FAQ in the about section
-* Add video uploading
-* Add open link option in context menu
-* Add geolocation
-* Update theme
 
 ## v1.4.1
 * Add intro pages

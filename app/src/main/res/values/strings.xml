@@ -1,6 +1,10 @@
 <resources>
     <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
+    <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
+    <string name="paypal" translatable="false">PayPal</string>
     <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
+
+    <!--Tabs-->
 
     <string name="feed">Feed</string>
     <string name="most_recent">Most Recent</string>
@@ -23,6 +27,8 @@
     <string name="notes">Notes</string>
     <string name="on_this_day">On This Day</string>
 
+    <!--Login-->
+
     <string name="loading_account">Getting everything ready…</string>
     <string name="welcome">Welcome %s</string>
     <string name="select_facebook_account">Select Facebook Account</string>
@@ -38,47 +44,17 @@
     <string name="feature_request">Feature Request</string>
     <string name="subject">Subject</string>
     <string name="share">Share</string>
-    <string name="share_link">Share Link</string>
-    <string name="debug_link">Debug Link</string>
-    <string name="debug_link_subject">Frost for Facebook: Link Debug</string>
-    <string name="debug_link_content">Write here. Note that your link may contain private information, but I won\'t be able to see it as the post isn\'t public. The url will still help with debugging though.</string>
-    <string name="debug_link_desc">If a link isn\'t loading properly, you can email me so I can help debug it. Clicking okay will open an email request</string>
-    <string name="open_link">Open Link</string>
-    <string name="copy_link">Copy Link</string>
-    <string name="copy_text">Copy Text</string>
-    <string name="debug_image_link_subject">Frost for Facebook: Image Link Debug</string>
 
     <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
     <string name="profile_picture">Profile Picture</string>
 
-    <string name="custom_pro">Custom [Pro]</string>
-    <string name="uh_oh">Uh Oh</string>
-    <string name="reload">Reload</string>
-    <string name="play_store_not_pro">It seems like you are a pro user, but we couldn\'t find your purchasing info. If this error persists, please try clearing the Play Store cache and reinstalling the app.</string>
-    <string name="play_store_unsupported">It seems like app version can\'t purchase pro. Please reinstall from the play store if this is a persisting issue.</string>
-    <string name="play_store_not_found_pro_query">This is a pro feature, but this app doesn\'t seem to be installed from the Play Store. Please reinstall if this is an issue.</string>
-    <string name="play_store_billing_error">Something went wrong. Please try again later.</string>
-    <string name="play_thank_you">Thank you!</string>
-    <string name="play_purchased_pro">Thank you for your support! Enjoy the pro version.</string>
-    <string name="play_already_purchased">Already Purchased</string>
-    <string name="play_already_purchased_content">Looks like you\'ve already purchased %s. Enjoy!</string>
-    <string name="found_pro">Found Frost Pro!</string>
-    <string name="found_pro_desc">Looks like you have frost pro! We\'ll reload the app so you can enjoy the awesome features!</string>
-    <string name="restoring_purchases">Restoring purchases…</string>
-    <string name="purchases_restored">Purchases Restored</string>
-    <string name="purchases_restored_with_pro">Frost Pro has been restored. Enjoy the features!</string>
-    <string name="purchases_restored_without_pro">It seems like you don\'t have pro. If this is a persistent issue, contact me and attach your purchase receipt.</string>
-
-    <string name="login_id_failed">Login failed; id not found</string>
-    <string name="iab_still_in_progress">IAB query is still in progress</string>
     <string name="new_message">New Message</string>
     <string name="no_text">No text</string>
-    <string name="image_download_success">Image downloaded</string>
-    <string name="image_download_fail">Image failed to download</string>
-    <string name="image_share_failed">Failed to share image</string>
 
-    <string name="downloading_video">Downloading Video</string>
-    <string name="downloaded_video">Video Downloaded</string>
-    <string name="downloading_file">Downloading File</string>
-    <string name="downloaded_file">File Downloaded</string>
+    <!--About-->
+
+    <string name="frost_description">Frost is a fully themable,
+        fully functional alternative to the official Facebook app, made from scratch and proudly open sourced.</string>
+
+    <string name="faq_title">Frost FAQ</string>
 </resources>
