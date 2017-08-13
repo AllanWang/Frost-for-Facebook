@@ -1,6 +1,8 @@
 # Changelog
 
 ## Beta Updates
+* Create more robust IM notification fetcher with a timeout
+* Add hidden debugging options for certain views
 
 ## v1.4.2
 * Experimental: Add notifications for messages; report to me if this drains your battery
