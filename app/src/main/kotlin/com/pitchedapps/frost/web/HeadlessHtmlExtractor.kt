@@ -31,11 +31,11 @@ fun Context.launchHeadlessHtmlExtractor(url: String, injector: InjectorContract,
         val extractor = HeadlessHtmlExtractor(this, url, injector, e)
         e.setCancellable {
             runOnUiThread { extractor.destroy() }
-            e.onSuccess("" to R.string.debug_request_cancelled)
+            e.onSuccess("" to R.string.html_extraction_cancelled)
         }
     }.subscribeOn(AndroidSchedulers.mainThread())
-            .timeout(20, TimeUnit.SECONDS, Schedulers.io(), { it.onSuccess("" to R.string.debug_request_timeout) })
-            .onErrorReturn { "" to R.string.debug_request_error }
+            .timeout(20, TimeUnit.SECONDS, Schedulers.io(), { it.onSuccess("" to R.string.html_extraction_timeout) })
+            .onErrorReturn { "" to R.string.html_extraction_error }
     action(single)
 }
 
