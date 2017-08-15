@@ -50,7 +50,7 @@ import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.*
@@ -203,10 +203,10 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                     tabsForEachView {
                         _, view ->
                         when (view.iicon) {
-                            FbTab.FEED.icon -> view.badgeText = feed
-                            FbTab.FRIENDS.icon -> view.badgeText = requests
-                            FbTab.MESSAGES.icon -> view.badgeText = messages
-                            FbTab.NOTIFICATIONS.icon -> view.badgeText = notifications
+                            FbItem.FEED.icon -> view.badgeText = feed
+                            FbItem.FRIENDS.icon -> view.badgeText = requests
+                            FbItem.MESSAGES.icon -> view.badgeText = messages
+                            FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
                         }
                     }
                 }
@@ -258,7 +258,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                     identifier = -4L
                 }
                 onProfileChanged { _, profile, current ->
-                    if (current) launchWebOverlay(FbTab.PROFILE.url)
+                    if (current) launchWebOverlay(FbItem.PROFILE.url)
                     else when (profile.identifier) {
                         -2L -> {
                             val currentCookie = loadFbCookie(Prefs.userId)
@@ -292,25 +292,25 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                 }
             }
             drawerHeader.setActiveProfile(Prefs.userId)
-            primaryFrostItem(FbTab.FEED_MOST_RECENT)
-            primaryFrostItem(FbTab.FEED_TOP_STORIES)
-            primaryFrostItem(FbTab.ACTIVITY_LOG)
+            primaryFrostItem(FbItem.FEED_MOST_RECENT)
+            primaryFrostItem(FbItem.FEED_TOP_STORIES)
+            primaryFrostItem(FbItem.ACTIVITY_LOG)
             divider()
-            primaryFrostItem(FbTab.PHOTOS)
-            primaryFrostItem(FbTab.GROUPS)
-            primaryFrostItem(FbTab.FRIENDS)
-            primaryFrostItem(FbTab.PAGES)
+            primaryFrostItem(FbItem.PHOTOS)
+            primaryFrostItem(FbItem.GROUPS)
+            primaryFrostItem(FbItem.FRIENDS)
+            primaryFrostItem(FbItem.PAGES)
             divider()
-            primaryFrostItem(FbTab.EVENTS)
-            primaryFrostItem(FbTab.BIRTHDAYS)
-            primaryFrostItem(FbTab.ON_THIS_DAY)
+            primaryFrostItem(FbItem.EVENTS)
+            primaryFrostItem(FbItem.BIRTHDAYS)
+            primaryFrostItem(FbItem.ON_THIS_DAY)
             divider()
-            primaryFrostItem(FbTab.NOTES)
-            primaryFrostItem(FbTab.SAVED)
+            primaryFrostItem(FbItem.NOTES)
+            primaryFrostItem(FbItem.SAVED)
         }
     }
 
-    fun Builder.primaryFrostItem(item: FbTab) = this.primaryItem(item.titleId) {
+    fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
         iicon = item.icon
         iconColor = Prefs.textColor.toLong()
         textColor = Prefs.textColor.toLong()
@@ -346,7 +346,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     override fun searchOverlayDispose() {
         hiddenSearchView?.dispose()
         hiddenSearchView = null
-        searchView?.unBind { launchWebOverlay(FbTab.SEARCH.url); true }
+        searchView?.unBind { launchWebOverlay(FbItem.SEARCH.url); true }
         searchView = null
     }
 
@@ -376,7 +376,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             }
         } else {
             if (searchView != null) searchOverlayDispose()
-            else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbTab.SEARCH.url); true }
+            else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbItem.SEARCH.url); true }
         }
         return true
     }
@@ -456,7 +456,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     val currentFragment
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as WebFragment
 
-    inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbTab>) : FragmentPagerAdapter(fm) {
+    inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbItem>) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
             val fragment = WebFragment(pages[position], position)

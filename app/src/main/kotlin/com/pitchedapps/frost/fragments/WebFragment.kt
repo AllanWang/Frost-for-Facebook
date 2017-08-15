@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
 import com.pitchedapps.frost.activities.MainActivity
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.web.FrostWebView
@@ -30,15 +30,15 @@ class WebFragment : Fragment() {
         const val REQUEST_TEXT_ZOOM = 17
         const val REQUEST_REFRESH = 99
 
-        operator fun invoke(data: FbTab, position: Int) = WebFragment().withArguments(
+        operator fun invoke(data: FbItem, position: Int) = WebFragment().withArguments(
                 ARG_URL to data.url,
                 ARG_POSITION to position,
                 ARG_URL_ENUM to when (data) {
                 //If is feed, check if sorting method is specified
-                    FbTab.FEED -> when (FeedSort(Prefs.feedSort)) {
+                    FbItem.FEED -> when (FeedSort(Prefs.feedSort)) {
                         FeedSort.DEFAULT -> data
-                        FeedSort.MOST_RECENT -> FbTab.FEED_MOST_RECENT
-                        FeedSort.TOP -> FbTab.FEED_TOP_STORIES
+                        FeedSort.MOST_RECENT -> FbItem.FEED_MOST_RECENT
+                        FeedSort.TOP -> FbItem.FEED_TOP_STORIES
                     }
                     else -> data
                 })
@@ -47,7 +47,7 @@ class WebFragment : Fragment() {
     //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }
     val web: FrostWebViewCore by lazy { frostWebView.web }
     val url: String by lazy { arguments.getString(ARG_URL) }
-    val urlEnum: FbTab by lazy { arguments.getSerializable(ARG_URL_ENUM) as FbTab }
+    val urlEnum: FbItem by lazy { arguments.getSerializable(ARG_URL_ENUM) as FbItem }
     val position: Int by lazy { arguments.getInt(ARG_POSITION) }
     lateinit var frostWebView: FrostWebView
     private var firstLoad = true

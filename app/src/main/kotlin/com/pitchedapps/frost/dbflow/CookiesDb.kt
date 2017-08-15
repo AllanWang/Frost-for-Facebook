@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.logFrostAnswers
 import com.raizlabs.android.dbflow.annotation.ConflictAction
@@ -71,7 +71,7 @@ fun CookieModel.fetchUsername(callback: (String) -> Unit) {
         if (!yes) return@subscribe callback("")
         var result = ""
         try {
-            result = Jsoup.connect(FbTab.PROFILE.url)
+            result = Jsoup.connect(FbItem.PROFILE.url)
                     .cookie(FACEBOOK_COM, cookie)
                     .get().title()
             L.d("Fetch username found", result)

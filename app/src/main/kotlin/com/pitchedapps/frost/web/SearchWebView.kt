@@ -6,7 +6,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.utils.gone
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.JsBuilder
@@ -95,7 +95,7 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
         }
 
     override fun reload() {
-        super.loadUrl(FbTab.SEARCH.url)
+        super.loadUrl(FbItem.SEARCH.url)
     }
 
     /**

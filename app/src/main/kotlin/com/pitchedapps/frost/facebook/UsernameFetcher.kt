@@ -17,7 +17,7 @@ object UsernameFetcher {
         thread {
             var name = ""
             try {
-                name = Jsoup.connect(FbTab.PROFILE.url)
+                name = Jsoup.connect(FbItem.PROFILE.url)
                         .cookie(FACEBOOK_COM, data.cookie)
                         .get().title()
                 L.d("User name found", name)

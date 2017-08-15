@@ -25,7 +25,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import java.io.IOException
 import java.util.*
@@ -74,7 +74,7 @@ fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)
         = launchNewTask(IntroActivity::class.java, cookieList, true)
 
 fun WebOverlayActivity.url(): String {
-    return intent.extras?.getString(ARG_URL) ?: FbTab.FEED.url
+    return intent.extras?.getString(ARG_URL) ?: FbItem.FEED.url
 }
 
 fun Context.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {

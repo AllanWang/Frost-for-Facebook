@@ -14,7 +14,7 @@ import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isVisible
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,7 +41,7 @@ class FrostWebViewCore @JvmOverloads constructor(
 
 
     var baseUrl: String? = null
-    var baseEnum: FbTab? = null //only viewpager items should pass the base enum
+    var baseEnum: FbItem? = null //only viewpager items should pass the base enum
     internal lateinit var frostWebClient: FrostWebViewClient
 
     init {
