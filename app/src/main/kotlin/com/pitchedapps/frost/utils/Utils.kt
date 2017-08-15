@@ -172,10 +172,13 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
  * @returns {@code true} if activity is resolved, {@code false} otherwise
  */
 fun Context.resolveActivityForUri(uri: Uri): Boolean {
-    if (uri.toString().contains(FACEBOOK_COM) && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
+    if (uri.toString().isFacebookUrl && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
     val intent = Intent(Intent.ACTION_VIEW, uri)
     if (intent.resolveActivity(packageManager) == null) return false
     startActivity(intent)
     return true
 }
+
+inline val String?.isFacebookUrl
+    get() = this != null && this.contains(FACEBOOK_COM)
 
