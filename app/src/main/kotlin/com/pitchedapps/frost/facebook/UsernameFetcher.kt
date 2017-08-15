@@ -3,6 +3,7 @@ package com.pitchedapps.frost.facebook
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.saveFbCookie
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.logFrostAnswers
 import io.reactivex.subjects.SingleSubject
 import org.jsoup.Jsoup
 import kotlin.concurrent.thread
@@ -16,12 +17,12 @@ object UsernameFetcher {
         thread {
             var name = ""
             try {
-                name = Jsoup.connect(FbTab.PROFILE.url)
+                name = Jsoup.connect(FbItem.PROFILE.url)
                         .cookie(FACEBOOK_COM, data.cookie)
                         .get().title()
                 L.d("User name found", name)
             } catch (e: Exception) {
-                L.e(e, "User name fetching failed")
+                e.logFrostAnswers("User name fetching failed")
             } finally {
                 data.name = name
                 saveFbCookie(data)

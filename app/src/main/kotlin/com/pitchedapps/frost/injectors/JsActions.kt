@@ -14,7 +14,8 @@ enum class JsActions(body: String) : InjectorContract {
      * see [com.pitchedapps.frost.web.FrostJSI.loadLogin]
      */
     LOGIN_CHECK("document.getElementById('signup-button')&&Frost.loadLogin();"),
-    BASE_HREF("document.write(\"<base href='$FB_URL_BASE'/>\");"),
+    BASE_HREF("""document.write("<base href='$FB_URL_BASE'/>");"""),
+    FETCH_BODY("""setTimeout(function(){var e=document.querySelector("main");e||(e=document.querySelector("body")),Frost.handleHtml(e.outerHTML)},1e2);"""),
     /**
      * Used as a pseudoinjector for maybe functions
      */

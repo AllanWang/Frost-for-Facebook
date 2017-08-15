@@ -21,13 +21,13 @@ android {
     buildToolsVersion project.BUILD_TOOLS
 
     androidGitVersion {
-        codeFormat = 'MMNNPPBB'
+        codeFormat = 'MMNNPPXX'
         format = '%tag%%.count%%-commit%'
         prefix 'v'
     }
 
     defaultConfig {
-        applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase()
+        applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase(Locale.CANADA)
         minSdkVersion Integer.parseInt(project.MIN_SDK)
         targetSdkVersion Integer.parseInt(project.TARGET_SDK)
         versionCode androidGitVersion.code()
@@ -45,8 +45,7 @@ android {
 
     lintOptions {
         warningsAsErrors true
-        disable 'LogNotTimber',
-                'TrustAllX509TrustManager',
+        disable 'TrustAllX509TrustManager',
                 'UnusedResources',
                 'ContentDescription',
                 'RtlSymmetry'
@@ -139,6 +138,8 @@ dependencies {
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:searchview:$KAU"
     //noinspection GradleDependency
+    implementation "ca.allanwang.kau:core:$KAU"
+    //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
@@ -176,5 +177,10 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+
+    //Reactive Libs
+    implementation "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
+    implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
+    implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
 
 }

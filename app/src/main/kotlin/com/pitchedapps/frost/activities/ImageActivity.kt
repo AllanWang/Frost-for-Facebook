@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.FileProvider
 import android.view.View
@@ -34,11 +33,8 @@ import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import timber.log.Timber
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -99,8 +95,8 @@ class ImageActivity : KauBaseActivity() {
         })
         fab.setOnClickListener { fabAction.onClick(this) }
         photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-            override fun onImageLoadError(e: Exception) {
-                L.e(e, "Image load error")
+            override fun onImageLoadError(e: Exception?) {
+                e.logFrostAnswers("Image load error")
                 imageCallback(null, false)
             }
         })
@@ -155,7 +151,7 @@ class ImageActivity : KauBaseActivity() {
                 callback(null)
             } else {
                 tempFilePath = photoFile.absolutePath
-                Timber.d("Temp image path $tempFilePath")
+                L.d("Temp image path $tempFilePath")
                 // File created; proceed with request
                 val photoURI = FileProvider.getUriForFile(this,
                         BuildConfig.APPLICATION_ID + ".provider",
@@ -252,7 +248,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 }
                 activity.startActivity(intent)
             } catch (e: Exception) {
-                L.e(e, "Image share failed");
+                e.logFrostAnswers("Image share failed")
                 activity.snackbar(R.string.image_share_failed)
             }
         }

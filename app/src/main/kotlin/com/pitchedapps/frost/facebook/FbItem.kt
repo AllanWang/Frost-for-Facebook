@@ -10,7 +10,7 @@ import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import com.pitchedapps.frost.web.FrostWebViewCore
 
-enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String, val webClient: ((webCore: FrostWebViewCore) -> FrostWebViewClient)? = null) {
+enum class FbItem(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String, val webClient: ((webCore: FrostWebViewCore) -> FrostWebViewClient)? = null) {
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
     BIRTHDAYS(R.string.birthdays, GoogleMaterial.Icon.gmd_cake, "events/birthdays"),
     CHAT(R.string.chat, GoogleMaterial.Icon.gmd_chat, "buddylist"),
@@ -36,4 +36,4 @@ enum class FbTab(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Stri
     val url = "$FB_URL_BASE$relativeUrl"
 }
 
-fun defaultTabs(): List<FbTab> = listOf(FbTab.FEED, FbTab.MESSAGES, FbTab.NOTIFICATIONS, FbTab.MENU)
+fun defaultTabs(): List<FbItem> = listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)

@@ -10,6 +10,9 @@
     <string name="behaviour">Behaviour</string>
     <string name="behaviour_desc">Define how the app interacts in certain settings</string>
 
+    <string name="network">Network</string>
+    <string name="network_desc">Define options that affect metered networks</string>
+
     <string name="experimental">Experimental</string>
     <string name="experimental_desc">Enable early access to potentially unstable features</string>
 
@@ -19,6 +22,8 @@
     <string name="about_frost">About Frost for Facebook</string>
     <string name="about_frost_desc">Version, Credits, and FAQs</string>
 
+    <string name="debug_frost">Frost Debugger</string>
+    <string name="debug_frost_desc">Send html data to help with debugging.</string>
 
     <string name="replay_intro">Replay Introduction</string>
 </resources>
