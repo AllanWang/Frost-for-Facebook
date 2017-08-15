@@ -37,6 +37,9 @@ import java.util.concurrent.Future
  *
  * Service to manage notifications
  * Will periodically check through all accounts in the db and send notifications when appropriate
+ *
+ * Note that general notifications are parsed directly with Jsoup,
+ * but instant messages are done so with a headless webview as it is generated from JS
  */
 class NotificationService : JobService() {
 
@@ -75,7 +78,6 @@ class NotificationService : JobService() {
         future = null
     }
 
-
     override fun onStartJob(params: JobParameters?): Boolean {
         L.i("Fetching notifications")
         future = doAsync {
@@ -109,13 +111,21 @@ class NotificationService : JobService() {
         return null
     }
 
+    /*
+     * ----------------------------------------------------------------
+     * General notification logic.
+     * Fetch notifications -> Filter new ones -> Parse notifications ->
+     * Show notifications -> Show group notification
+     * ----------------------------------------------------------------
+     */
+
     fun fetchGeneralNotifications(data: CookieModel) {
         L.d("Notif fetch", data.toString())
         val doc = Jsoup.connect(FbItem.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
         //aclb for unread, acw for read
         val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
         var notifCount = 0
-//        val prevLatestEpoch = 1498931565L // for testing
+        //val prevLatestEpoch = 1498931565L // for testing
         val prevNotifTime = lastNotificationTime(data.id)
         val prevLatestEpoch = prevNotifTime.epoch
         L.v("Notif Prev Latest Epoch $prevLatestEpoch")
@@ -150,6 +160,17 @@ class NotificationService : JobService() {
         val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
+
+    fun summaryNotification(userId: Long, count: Int)
+            = summaryNotification(userId, count, R.string.notifications, FbItem.NOTIFICATIONS.url, FROST_NOTIFICATION_GROUP)
+
+    /*
+     * ----------------------------------------------------------------
+     * Instant message notification logic.
+     * Fetch notifications -> Filter new ones -> Parse notifications ->
+     * Show notifications -> Show group notification
+     * ----------------------------------------------------------------
+     */
 
     inline fun fetchMessageNotifications(data: CookieModel, crossinline callback: (success: Boolean) -> Unit) {
         launchHeadlessHtmlExtractor(FbItem.MESSAGES.url, JsAssets.NOTIF_MSG) {
@@ -204,6 +225,9 @@ class NotificationService : JobService() {
         return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
+    fun summaryMessageNotification(userId: Long, count: Int)
+            = summaryNotification(userId, count, R.string.messages, FbItem.MESSAGES.url, FROST_MESSAGE_NOTIFICATION_GROUP)
+
     private fun Context.debugNotification(text: String) {
         if (!BuildConfig.DEBUG) return
         val notifBuilder = frostNotification
@@ -211,12 +235,6 @@ class NotificationService : JobService() {
                 .setContentText(text)
         NotificationManagerCompat.from(this).notify(999, notifBuilder.build().frostConfig())
     }
-
-    fun summaryNotification(userId: Long, count: Int)
-            = summaryNotification(userId, count, R.string.notifications, FbItem.NOTIFICATIONS.url, FROST_NOTIFICATION_GROUP)
-
-    fun summaryMessageNotification(userId: Long, count: Int)
-            = summaryNotification(userId, count, R.string.messages, FbItem.MESSAGES.url, FROST_MESSAGE_NOTIFICATION_GROUP)
 
     private fun summaryNotification(userId: Long, count: Int, contentRes: Int, pendingUrl: String, groupPrefix: String) {
         if (count <= 1) return
@@ -232,7 +250,7 @@ class NotificationService : JobService() {
                 .setContentIntent(pendingIntent)
                 .setCategory(Notification.CATEGORY_SOCIAL)
 
-        NotificationManagerCompat.from(this).notify("frost_$userId", userId.toInt(), notifBuilder.build().frostConfig())
+        NotificationManagerCompat.from(this).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build().frostConfig())
     }
 
 }
