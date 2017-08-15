@@ -13,6 +13,7 @@ import com.pitchedapps.frost.utils.Prefs
  */
 class UpdateReceiver : BroadcastReceiver() {
 
+    //todo check action warning
     override fun onReceive(context: Context, intent: Intent) {
         L.d("Frost has updated")
         context.scheduleNotifications(Prefs.notificationFreq) //Update notifications

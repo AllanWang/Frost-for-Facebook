@@ -10,7 +10,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
@@ -48,9 +48,9 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
 }
 
-private enum class Debugger(val data: FbTab, val injector: InjectorContract?, vararg query: String) {
-    NOTIFICATIONS(FbTab.NOTIFICATIONS, null, "#notifications_list"),
-    SEARCH(FbTab.SEARCH, JsActions.FETCH_BODY);
+private enum class Debugger(val data: FbItem, val injector: InjectorContract?, vararg query: String) {
+    NOTIFICATIONS(FbItem.NOTIFICATIONS, null, "#notifications_list"),
+    SEARCH(FbItem.SEARCH, JsActions.FETCH_BODY);
 
     val query = if (query.isNotEmpty()) arrayOf(*query, "#root", "main", "body") else emptyArray()
 
