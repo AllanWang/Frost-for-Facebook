@@ -227,10 +227,10 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             translucentStatusBar = false
             sliderBackgroundColor = navBg
             drawerHeader = accountHeader {
+                customViewRes = R.layout.material_drawer_header
                 textColor = Prefs.iconColor.toLong()
                 backgroundDrawable = ColorDrawable(navHeader)
                 selectionSecondLineShown = false
-                paddingBelow = false
                 cookies().forEach { (id, name) ->
                     profile(name = name ?: "") {
                         iconUrl = PROFILE_PICTURE_URL(id)
