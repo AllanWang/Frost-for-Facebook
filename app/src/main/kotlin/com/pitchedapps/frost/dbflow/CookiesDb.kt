@@ -2,16 +2,18 @@ package com.pitchedapps.frost.dbflow
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.logFrostAnswers
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.kotlinextensions.*
 import com.raizlabs.android.dbflow.structure.BaseModel
-import org.jetbrains.anko.doAsync
+import io.reactivex.schedulers.Schedulers
 import org.jsoup.Jsoup
 import paperparcel.PaperParcel
 import java.net.UnknownHostException
@@ -64,20 +66,22 @@ fun removeCookie(id: Long) {
 }
 
 fun CookieModel.fetchUsername(callback: (String) -> Unit) {
-    doAsync {
+    ReactiveNetwork.checkInternetConnectivity().subscribeOn(Schedulers.io()).subscribe {
+        yes, _ ->
+        if (!yes) return@subscribe callback("")
         var result = ""
         try {
-            result = Jsoup.connect(FbTab.PROFILE.url)
+            result = Jsoup.connect(FbItem.PROFILE.url)
                     .cookie(FACEBOOK_COM, cookie)
                     .get().title()
             L.d("Fetch username found", result)
         } catch (e: Exception) {
             if (e !is UnknownHostException)
-                L.e(e, "Fetch username failed")
+                e.logFrostAnswers("Fetch username failed")
         } finally {
             if (result.isBlank() && (name?.isNotBlank() ?: false)) {
                 callback(name!!)
-                return@doAsync
+                return@subscribe
             }
             if (name != result) {
                 name = result

@@ -55,6 +55,10 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.notification_all_accounts_desc
     }
 
+    checkbox(R.string.notification_messages, { Prefs.notificationsInstantMessages }, { Prefs.notificationsInstantMessages = it }) {
+        descRes = R.string.notification_messages_desc
+    }
+
     checkbox(R.string.notification_sound, { Prefs.notificationSound }, { Prefs.notificationSound = it })
 
     checkbox(R.string.notification_vibrate, { Prefs.notificationVibrate }, { Prefs.notificationVibrate = it })

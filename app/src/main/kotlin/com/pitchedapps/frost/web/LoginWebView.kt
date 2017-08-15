@@ -60,7 +60,7 @@ class LoginWebView @JvmOverloads constructor(
             view.jsInject(CssHider.HEADER.maybe(containsFacebook),
                     CssHider.CORE.maybe(containsFacebook),
                     Prefs.themeInjector.maybe(containsFacebook),
-                    callback = { if (!view.isVisible) view.fadeIn(offset = 150L) })
+                    callback = { if (!view.isVisible) view.fadeIn(offset = WEB_LOAD_DELAY) })
         }
 
         fun checkForLogin(url: String?, onFound: (id: Long, cookie: String) -> Unit) {

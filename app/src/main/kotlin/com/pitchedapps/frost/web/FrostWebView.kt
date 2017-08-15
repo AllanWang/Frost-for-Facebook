@@ -11,7 +11,7 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import ca.allanwang.kau.utils.*
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.FbTab
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
@@ -53,7 +53,7 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview(url: String, enum: FbTab? = null) {
+    fun setupWebview(url: String, enum: FbItem? = null) {
         with(web) {
             baseUrl = url
             baseEnum = enum
@@ -77,7 +77,7 @@ class FrostWebView @JvmOverloads constructor(
     //Some urls have postJavascript injections so make sure we load the base url
     override fun onRefresh() {
         when (web.baseUrl) {
-            FbTab.MENU.url -> web.loadBaseUrl(true)
+            FbItem.MENU.url -> web.loadBaseUrl(true)
             else -> web.reload(true)
         }
     }

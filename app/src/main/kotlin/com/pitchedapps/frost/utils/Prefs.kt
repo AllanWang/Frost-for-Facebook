@@ -97,14 +97,15 @@ object Prefs : KPref() {
 
     var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
 
-    //todo remove from experimental once stabilized
-    var notificationsInstantMessages: Boolean by kpref("notification_im", Showcase.experimentalDefault)
+    var notificationsInstantMessages: Boolean by kpref("notification_im", false)
 
     var notificationVibrate: Boolean by kpref("notification_vibrate", true)
 
     var notificationSound: Boolean by kpref("notification_sound", true)
 
     var notificationLights: Boolean by kpref("notification_lights", true)
+
+    var messageScrollToBottom: Boolean by kpref("message_scroll_to_bottom", false)
 
     /**
      * Cache like value to determine if user has or had pro
@@ -127,5 +128,9 @@ object Prefs : KPref() {
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)
 
     var viewpagerSwipe: Boolean by kpref("viewpager_swipe", true)
+
+    var loadMediaOnMeteredNetwork: Boolean by kpref("media_on_metered_network", true)
+
+    var debugSettings: Boolean by kpref("debug_settings", false)
 
 }

@@ -31,6 +31,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.search_bar_desc
     }
 
+    checkbox(R.string.force_message_bottom, { Prefs.messageScrollToBottom }, { Prefs.messageScrollToBottom = it }) {
+        descRes = R.string.force_message_bottom_desc
+    }
+
     checkbox(R.string.exit_confirmation, { Prefs.exitConfirmation }, { Prefs.exitConfirmation = it }) {
         descRes = R.string.exit_confirmation_desc
     }

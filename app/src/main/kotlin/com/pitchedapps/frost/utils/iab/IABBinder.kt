@@ -9,6 +9,13 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswers
+import com.pitchedapps.frost.utils.logFrostAnswers
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.onComplete
+import org.jetbrains.anko.uiThread
+import java.lang.ref.WeakReference
+import java.math.BigDecimal
+import java.util.*
 
 /**
  * Created by Allan Wang on 2017-07-22.
@@ -33,31 +40,48 @@ interface FrostBilling : BillingProcessor.IBillingHandler {
 abstract class IABBinder : FrostBilling {
 
     var bp: BillingProcessor? = null
-    var activity: Activity? = null
+    lateinit var activityRef: WeakReference<Activity>
+    val activity
+        get() = activityRef.get()
 
-    override fun Activity.onCreateBilling() {
-        activity = this
-        bp = BillingProcessor.newBillingProcessor(this, PUBLIC_BILLING_KEY, this@IABBinder)
-        bp?.initialize()
+    override final fun Activity.onCreateBilling() {
+        activityRef = WeakReference(this)
+        doAsync {
+            bp = BillingProcessor.newBillingProcessor(this@onCreateBilling, PUBLIC_BILLING_KEY, this@IABBinder)
+            bp?.initialize()
+        }
     }
 
     override fun onDestroyBilling() {
+        activityRef.clear()
         bp?.release()
         bp = null
-        activity = null
     }
 
-    override fun onBillingInitialized() = L.d("IAB initialized")
+    override fun onBillingInitialized() = L.i("IAB initialized")
 
     override fun onPurchaseHistoryRestored() = L.d("IAB restored")
 
     override fun onProductPurchased(productId: String, details: TransactionDetails?) {
-        L.d("IAB $productId purchased")
-        frostAnswers {
-            logPurchase(PurchaseEvent()
-                    .putItemId(productId)
-                    .putSuccess(true)
-            )
+        bp.doAsync {
+            L.i("IAB $productId purchased")
+            val listing = weakRef.get()?.getPurchaseListingDetails(productId) ?: return@doAsync
+            val currency = try {
+                Currency.getInstance(listing.currency)
+            } catch (e: Exception) {
+                null
+            }
+            frostAnswers {
+                logPurchase(PurchaseEvent().apply {
+                    putItemId(productId)
+                    putSuccess(true)
+                    if (currency != null) {
+                        putCurrency(Currency.getInstance(Locale.getDefault()))
+                        putItemType(productId)
+                        putItemPrice(BigDecimal.valueOf(listing.priceValue))
+                    }
+                })
+            }
         }
     }
 
@@ -67,13 +91,14 @@ abstract class IABBinder : FrostBilling {
                     .putCustomAttribute("result", errorCode.toString())
                     .putSuccess(false))
         }
-        L.e(error, "IAB error $errorCode")
+        error.logFrostAnswers("IAB error $errorCode")
     }
 
     override fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean
             = bp?.handleActivityResult(requestCode, resultCode, data) ?: false
 
     override fun purchasePro() {
+        val bp = this.bp
         if (bp == null) {
             frostAnswers {
                 logPurchase(PurchaseEvent()
@@ -83,10 +108,12 @@ abstract class IABBinder : FrostBilling {
             L.eThrow("IAB null bp on purchase attempt")
             return
         }
-        if (!(bp?.isOneTimePurchaseSupported ?: false))
-            activity?.playStorePurchaseUnsupported()
+        val a = activity ?: return
+
+        if (!BillingProcessor.isIabServiceAvailable(a) || !bp.isOneTimePurchaseSupported)
+            a.playStorePurchaseUnsupported()
         else
-            bp?.purchase(activity, FROST_PRO)
+            bp.purchase(a, FROST_PRO)
     }
 
 }
@@ -107,15 +134,18 @@ class IABSettings : IABBinder() {
      * Attempts to get pro, or launch purchase flow if user doesn't have it
      */
     override fun restorePurchases() {
-        if (bp == null) return
-        val load = bp?.loadOwnedPurchasesFromGoogle() ?: return
-        L.d("IAB settings load from google $load")
-        if (!(bp?.isPurchased(FROST_PRO) ?: return)) {
-            if (Prefs.pro) activity.playStoreNoLongerPro()
-            else purchasePro()
-        } else {
-            if (!Prefs.pro) activity.playStoreFoundPro()
-            else activity?.purchaseRestored()
+        bp.doAsync {
+            val load = weakRef.get()?.loadOwnedPurchasesFromGoogle() ?: return@doAsync
+            L.d("IAB settings load from google $load")
+            uiThread {
+                if (!(weakRef.get()?.isPurchased(FROST_PRO) ?: return@uiThread)) {
+                    if (Prefs.pro) activity.playStoreNoLongerPro()
+                    else purchasePro()
+                } else {
+                    if (!Prefs.pro) activity.playStoreFoundPro()
+                    else activity?.purchaseRestored()
+                }
+            }
         }
     }
 }
@@ -142,13 +172,17 @@ class IABMain : IABBinder() {
     override fun restorePurchases() {
         if (restored || bp == null) return
         restored = true
-        val load = bp?.loadOwnedPurchasesFromGoogle() ?: false
-        L.d("IAB main load from google $load")
-        if (!(bp?.isPurchased(FROST_PRO) ?: false)) {
-            if (Prefs.pro) activity.playStoreNoLongerPro()
-        } else {
-            if (!Prefs.pro) activity.playStoreFoundPro()
+        bp.doAsync {
+            val load = weakRef.get()?.loadOwnedPurchasesFromGoogle() ?: false
+            L.d("IAB main load from google $load")
+            onComplete {
+                if (!(weakRef.get()?.isPurchased(FROST_PRO) ?: false)) {
+                    if (Prefs.pro) activity.playStoreNoLongerPro()
+                } else {
+                    if (!Prefs.pro) activity.playStoreFoundPro()
+                }
+                onDestroyBilling()
+            }
         }
-        onDestroyBilling()
     }
 }

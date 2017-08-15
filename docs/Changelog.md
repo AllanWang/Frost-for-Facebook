@@ -1,16 +1,27 @@
 # Changelog
 
 ## Beta Updates
-* Fixed notification titles
-* Added support for downloading videos
+* Create more robust IM notification fetcher with a timeout
+* Add hidden debugging options for certain views
+* Separate IM and general notification groups
+* Add click actions to group notifications. They will launch the message page or the notification page respectively
+* Add behaviour setting to force message threads to scroll to the bottom after loading.
+* Add faq for disabling video auto play
 
-## v1.5.0
+## v1.4.2
 * Experimental: Add notifications for messages; report to me if this drains your battery
 * Add FAQ in the about section
 * Add video uploading
 * Add open link option in context menu
 * Add geolocation
 * Update theme
+* Fix notification titles
+* ALPHA: Add support for downloading videos (hit the download button)
+* Deny intents for login so the page loads properly (thank you @Zenexer)
+* Reduce injection offset and move injectors to an earlier method
+* Add option to disable media loading on metered network
+* Fix menu section
+* Add more background setters to help transparent themes
 
 ## v1.4.1
 * Add intro pages

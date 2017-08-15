@@ -6,16 +6,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import ca.allanwang.kau.about.kauLaunchAbout
 import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefItemBase
 import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.utils.finishSlideOut
-import ca.allanwang.kau.utils.setMenuIcons
-import ca.allanwang.kau.utils.string
-import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.xml.showChangelog
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -38,7 +34,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!onActivityResultBilling(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data)
-        adapter.notifyDataSetChanged()
+        reloadList()
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
@@ -67,6 +63,11 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             iicon = GoogleMaterial.Icon.gmd_notifications
         }
 
+        subItems(R.string.network, getNetworkPrefs()) {
+            descRes = R.string.network_desc
+            iicon = GoogleMaterial.Icon.gmd_network_cell
+        }
+
         subItems(R.string.experimental, getExperimentalPrefs()) {
             descRes = R.string.experimental_desc
             iicon = CommunityMaterial.Icon.cmd_flask_outline
@@ -81,12 +82,18 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         plainText(R.string.about_frost) {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
-            onClick = { _, _, _ -> kauLaunchAbout(AboutActivity::class.java); true }
+            onClick = { _, _, _ -> startActivityForResult(AboutActivity::class.java, 9, true); true }
         }
 
         plainText(R.string.replay_intro) {
             iicon = GoogleMaterial.Icon.gmd_replay
             onClick = { _, _, _ -> launchIntroActivity(cookies()); true }
+        }
+
+        subItems(R.string.debug_frost, getDebugPrefs()) {
+            descRes = R.string.debug_frost_desc
+            iicon = CommunityMaterial.Icon.cmd_android_debug_bridge
+            visible = { Prefs.debugSettings }
         }
 
         if (BuildConfig.DEBUG) {
@@ -130,8 +137,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
-        toolbarTitle.textColor = Prefs.iconColor
-        toolbarTitle.invalidate()
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_email to GoogleMaterial.Icon.gmd_email,
                 R.id.action_changelog to GoogleMaterial.Icon.gmd_info)

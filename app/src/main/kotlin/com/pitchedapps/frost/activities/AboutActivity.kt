@@ -1,10 +1,8 @@
 package com.pitchedapps.frost.activities
 
-import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,8 +11,6 @@ import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
-import ca.allanwang.kau.animators.FadeScaleAnimatorAdd
-import ca.allanwang.kau.animators.KauAnimator
 import ca.allanwang.kau.utils.*
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
@@ -26,10 +22,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.security.InvalidParameterException
 
 
 /**
@@ -41,6 +35,7 @@ class AboutActivity : AboutActivityBase(null, {
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
     cutoutForeground = if (0xff3b5998.toInt().isColorVisibleOn(Prefs.bgColor)) 0xff3b5998.toInt() else Prefs.accentColor
     cutoutDrawableRes = R.drawable.frost_f_256
+    faqPageTitleRes = R.string.faq_title
     faqXmlRes = R.xml.frost_faq
     faqParseNewLine = false
 }) {
@@ -60,6 +55,7 @@ class AboutActivity : AboutActivityBase(null, {
                 "kotterknife",
                 "materialdialogs",
                 "materialdrawer",
+                "rxjava",
                 "subsamplingscaleimageview"
         )
 
@@ -67,6 +63,9 @@ class AboutActivity : AboutActivityBase(null, {
 //        l.forEach { KL.d("Lib ${it.definedName}") }
         return l
     }
+
+    var lastClick = -1L
+    var clickCount = 0
 
     override fun postInflateMainPage(adapter: FastItemThemedAdapter<IItem<*, *>>) {
         /**
@@ -85,7 +84,22 @@ class AboutActivity : AboutActivityBase(null, {
             }
         }
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
-
+        adapter.withOnClickListener { _, _, item, _ ->
+            if (item is LibraryIItem) {
+                val now = System.currentTimeMillis()
+                if (now - lastClick > 500)
+                    clickCount = 0
+                else
+                    clickCount++
+                lastClick = now
+                if (clickCount == 7 && !Prefs.debugSettings) {
+                    Prefs.debugSettings = true
+                    L.d("Debugging section enabled")
+                    toast(R.string.debug_toast_enabled)
+                }
+            }
+            false
+        }
     }
 
     class AboutLinks : AbstractItem<AboutLinks, AboutLinks.ViewHolder>(), ThemableIItem by ThemableIItemDelegate() {
@@ -128,7 +142,7 @@ class AboutActivity : AboutActivityBase(null, {
                         setImageDrawable(icon.toDrawable(context, 32))
                         scaleType = ImageView.ScaleType.CENTER
                         background = context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
-                        setOnClickListener({ onClick() })
+                        setOnClickListener { onClick() }
                         container.addView(this)
                     }
                 }
