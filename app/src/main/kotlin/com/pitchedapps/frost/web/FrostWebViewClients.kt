@@ -51,7 +51,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         if (url == null) return
         L.i("FWV Loading", url)
         refreshObservable.onNext(true)
-        if (!url.contains(FACEBOOK_COM)) return
+        if (!url.isFacebookUrl) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
         else if (url.contains("login.php")) FbCookie.reset({ launchLogin(view.context) })
     }
@@ -71,18 +71,19 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
-        view.jsInject(
-                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                CssHider.HEADER,
-                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
-                Prefs.themeInjector,
-                CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))
+        if (url.isFacebookUrl)
+            view.jsInject(
+                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+                    CssHider.HEADER,
+                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
+                    Prefs.themeInjector,
+                    CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
         L.i("Page finished", url)
-        if (!url.contains(FACEBOOK_COM)) {
+        if (!url.isFacebookUrl) {
             refreshObservable.onNext(false)
             return
         }
