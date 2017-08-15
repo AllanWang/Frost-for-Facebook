@@ -6,6 +6,7 @@
 * Separate IM and general notification groups
 * Add click actions to group notifications. They will launch the message page or the notification page respectively
 * Add behaviour setting to force message threads to scroll to the bottom after loading.
+* Add faq for disabling video auto play
 
 ## v1.4.2
 * Experimental: Add notifications for messages; report to me if this drains your battery
