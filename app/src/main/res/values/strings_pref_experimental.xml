@@ -5,8 +5,7 @@
     <string name="experimental_disclaimer_info">Experimental features may be unstable and may never make it to production. Use at your own risk, send feedback, and feel free to disable them if they don\'t work well.</string>
     <string name="experimental_by_default">Experimental by Default</string>
     <string name="experimental_by_default_desc">Feeling risky or just want to help with debugging? Checking this will enable future experimental functions be default.</string>
-    <string name="search_bar">Search Bar</string>
-    <string name="search_bar_desc">Enable the search bar instead of a search overlay</string>
+
     <string name="verbose_logging">Verbose Logging</string>
     <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev. This will automatically be disabled if the app restarts.</string>
     <string name="restart_frost">Restart Frost</string>

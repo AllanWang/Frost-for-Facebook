@@ -14,6 +14,7 @@ import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
@@ -89,6 +90,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     }
 
     open internal fun onPageFinishedActions(url: String) {
+        if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom)
+            webCore.pageDown(true)
         injectAndFinish()
     }
 

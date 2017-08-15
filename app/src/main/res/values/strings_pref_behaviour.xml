@@ -9,6 +9,10 @@
     <string name="overlay_full_screen_swipe_desc">Swipe right from anywhere on the overlaying web to close the browser. If disabled, only swiping from the left edge will move it.</string>
     <string name="viewpager_swipe">Viewpager Swipe</string>
     <string name="viewpager_swipe_desc">Allow swiping between the pages in the main view to switch tabs. By default, the swiping automatically stops when you long press on an item, such as the like button. Disabling this will prevent page swiping altogether.</string>
+    <string name="search_bar">Search Bar</string>
+    <string name="search_bar_desc">Enable the search bar instead of a search overlay</string>
+    <string name="force_message_bottom">Force Message Bottom</string>
+    <string name="force_message_bottom_desc">When loading a message thread, trigger a scroll to the bottom of the page rather than loading the page as is.</string>
     <string name="exit_confirmation">Exit Confirmation</string>
     <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
     <string name="analytics">Analytics</string>
