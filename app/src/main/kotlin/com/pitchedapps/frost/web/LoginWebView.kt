@@ -15,6 +15,7 @@ import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.isFacebookUrl
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -55,17 +56,18 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
-            val containsFacebook = url?.contains(FACEBOOK_COM) ?: false
             checkForLogin(url) { id, cookie -> loginCallback(CookieModel(id, "", cookie)) }
-            view.jsInject(CssHider.HEADER.maybe(containsFacebook),
-                    CssHider.CORE.maybe(containsFacebook),
-                    Prefs.themeInjector.maybe(containsFacebook),
-                    callback = { if (!view.isVisible) view.fadeIn(offset = WEB_LOAD_DELAY) })
+            if (url.isFacebookUrl)
+                view.jsInject(CssHider.HEADER,
+                        CssHider.CORE,
+                        Prefs.themeInjector,
+                        callback = { if (!view.isVisible) view.fadeIn(offset = WEB_LOAD_DELAY) })
+            else if (!view.isVisible) view.fadeIn()
         }
 
         fun checkForLogin(url: String?, onFound: (id: Long, cookie: String) -> Unit) {
             doAsync {
-                if (url == null || !url.contains(FACEBOOK_COM)) return@doAsync
+                if (!url.isFacebookUrl) return@doAsync
                 val cookie = CookieManager.getInstance().getCookie(url) ?: return@doAsync
                 L.d("Checking cookie for login", cookie)
                 val id = userMatcher.find(cookie)?.groups?.get(1)?.value?.toLong() ?: return@doAsync
