@@ -13,8 +13,8 @@
 	<version title="Beta Updates"/>
     <item text="Create more robust IM notification fetcher with a timeout" />
     <item text="Add hidden debugging options for certain views" />
-    <item text="" />
-    <item text="" />
+    <item text="Separate IM and general notification groups" />
+    <item text="Add click actions to group notifications. They will launch the message page or the notification page respectively" />
     <item text="" />
 	
 	<version title="v1.4.2"/>

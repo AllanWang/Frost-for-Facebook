@@ -3,6 +3,8 @@
 ## Beta Updates
 * Create more robust IM notification fetcher with a timeout
 * Add hidden debugging options for certain views
+* Separate IM and general notification groups
+* Add click actions to group notifications. They will launch the message page or the notification page respectively
 
 ## v1.4.2
 * Experimental: Add notifications for messages; report to me if this drains your battery
