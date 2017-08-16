@@ -34,7 +34,7 @@ body, #root, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r
 }
 
 button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._590n, ._4g8h, ._2cpp,
-._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj, .excessItem,
+._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj, .excessItem, .acr,
 ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._2k51,
 ._4qax, .aclb, ._4756, ._w34, ._56bv::before, ._5769, ._34iv, ._z-w,
 .acbk {
@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 //link card bottom border
-._4o58::after,
+._4o58::after, .acr,
 .acw, .aclb, ._4qax, ._5h8f {
   border-color: $divider !important;
 }
