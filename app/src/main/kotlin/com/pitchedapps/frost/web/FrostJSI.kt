@@ -25,10 +25,14 @@ class FrostJSI(val webView: FrostWebViewCore) {
     val cookies: ArrayList<CookieModel>
         get() = activity?.cookies() ?: arrayListOf()
 
+    /**
+     * Attempts to load the url in an overlay
+     * Returns {@code true} if successful, meaning the event is consumed,
+     * or {@code false} otherwise, meaning the event should be propagated
+     */
     @JavascriptInterface
-    fun loadUrl(url: String) {
-        context.launchWebOverlay(url)
-    }
+    fun loadUrl(url: String?): Boolean
+            = if (url == null) false else context.requestWebOverlay(url)
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {

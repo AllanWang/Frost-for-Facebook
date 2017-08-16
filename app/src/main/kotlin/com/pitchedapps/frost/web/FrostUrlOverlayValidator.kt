@@ -2,6 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.launchWebOverlay
 
@@ -15,11 +16,13 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  * Returns {@code true} (default) if overlay is launcher, {@code false} otherwise
  */
 fun Context.requestWebOverlay(url: String): Boolean {
+    if (url == "#") return false
     /*
      * Non facebook urls can be loaded
      */
     if (!url.formattedFbUrl.isFacebookUrl) {
         launchWebOverlay(url)
+        L.d("Request web overlay is not a facebook url", url)
         return true
     }
     /*
@@ -34,7 +37,7 @@ fun Context.requestWebOverlay(url: String): Boolean {
     if (url.contains("/messages/read/?tid=")) {
         if (!url.contains("?tid=id") && !url.contains("?tid=mid")) return false
     }
-
+    L.v("Request web overlay passed", url)
     launchWebOverlay(url)
     return true
 }
@@ -42,4 +45,4 @@ fun Context.requestWebOverlay(url: String): Boolean {
 /**
  * The following components should never be launched in a new overlay
  */
-val overlayBlacklist = setOf("messages/?pageNum")
+val overlayBlacklist = setOf("messages/?pageNum", "photoset_token")
