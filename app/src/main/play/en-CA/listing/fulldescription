@@ -1,12 +1,17 @@
 Frost is a fully themable, fully functional alternative to the official Facebook app.
 While being a web wrapper, Frost contains many unique and native features such as:
 
-• True multi user interactions - More than just an option in a settings menu, Frost's account switcher is right in the drawer. You are one tap away from switching accounts, and everything refreshes on the switch so that you can view other accounts instantaneously. Furthermore, the notification service will fetch notifications from all accounts, and will let you know which account has the new notification.
-• Better multitasking - Frost contains an overlaying web browser that can be drawn on top of your foreground task. Open links and notifications with a full screen view, then swipe away to get back to your previous task.
-• Contextual awareness - Frost integrates additional features via long presses. Need to copy a block of text or share a link? Long press the text. Need to zoom into an image or download it? Long press the image!
-• Material Design - Built for lollipop and up, Frost focuses strongly on a good UI, and embraces material transitions and dimensions.
-• Complete theme engine - Frost contains very comprehensive themes that customize all components of the app. Frost is also the only app to support transparent themes.
-• Fully opened - Nothing speaks for privacy more than being open sourced. Frost is proud to be one of those apps, and can be found on github (Link in the app's about section)
+• <b>True multi user interactions</b> - More than just an option in a settings menu, Frost's account switcher is right in the drawer. You are one tap away from switching accounts, and everything refreshes on the switch so that you can view other accounts instantaneously. Furthermore, the notification service will fetch notifications from all accounts, and will let you know which account has the new notification.
+• <b>Better multitasking</b> - Frost contains an overlaying web browser that can be drawn on top of your foreground task. Open links and notifications with a full screen view, then swipe away to get back to your previous task.
+• <b>Contextual awareness</b> - Frost integrates additional features via long presses. Need to copy a block of text or share a link? Long press the text. Need to zoom into an image or download it? Long press the image!
+• <b>Material Design</b> - Built for lollipop and up, Frost focuses strongly on a good UI, and embraces material transitions and dimensions.
+• <b>Complete theme engine</b> - Frost contains very comprehensive themes that customize all components of the app. Frost is also the only app to support transparent themes.
+• <b>Fully opened</b> - Nothing speaks for privacy more than being open sourced. Frost is proud to be one of those apps, and can be found on github (Link in the app's about section)
+• <b>Fixes the little things</b> - Frost is community driven, and many tweaks are added to address minor inconveniences and give a full native experience, despite being a web app. To list a few:
+&emsp;&emsp; • Focusing on a text input will prevent refreshing, so you don't accidentally swipe and lose your progress.
+&emsp;&emsp; • Horizontal swipe can be enabled along side the viewpager swipe with a simple long press
+&emsp;&emsp; • Automatic bug reports are sent when a crash is detected, so even if you don't contact the devs, you are helping contribute by using the app.
+&emsp;&emsp; • Fixing bugs is a priority for Frost, and many measures are added to help address more extensive issues.
 
 Mandatory permissions used and why:
 
