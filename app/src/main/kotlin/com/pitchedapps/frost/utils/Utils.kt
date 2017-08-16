@@ -57,7 +57,7 @@ fun Activity.cookies(): ArrayList<CookieModel> {
 /**
  * Launches the given url in a new overlay (if it already isn't in an overlay)
  * Note that most requests may need to first check if the url can be launched as an overlay
- * See [Context.requestLaunchWebOverlay] to verify the launch
+ * See [requestWebOverlay] to verify the launch
  */
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl

@@ -33,7 +33,7 @@ import org.jetbrains.anko.withAlpha
 open class BaseWebViewClient : WebViewClient() {
 
     override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
-            = shouldFrostInterceptRequest(view, request)
+            = view.shouldFrostInterceptRequest(request)
 
 }
 
