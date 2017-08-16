@@ -15,17 +15,16 @@ if (!window.hasOwnProperty('frost_click_a')) {
     if (element.tagName !== 'A') element = element.parentNode;
     //Notifications is two layers under
     if (element.tagName !== 'A') element = element.parentNode;
-    if (element.tagName === 'A' && element.getAttribute('href') !== '#') {
-      var url = element.getAttribute('href');
-      if (url.includes('photoset_token')) return;
-
-
+    if (element.tagName === 'A') {
       if (!prevented) {
+        var url = element.getAttribute('href');
         console.log('Click Intercept', url);
-        if (typeof Frost !== 'undefined') Frost.loadUrl(url);
+        // if frost is injected, check if loading the url through an overlay works
+        if (typeof Frost !== 'undefined' && Frost.loadUrl(url)) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
       }
-      e.stopPropagation();
-      e.preventDefault();
     }
   }
 
