@@ -54,6 +54,11 @@ fun Activity.cookies(): ArrayList<CookieModel> {
     return intent?.extras?.getParcelableArrayList<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
 }
 
+/**
+ * Launches the given url in a new overlay (if it already isn't in an overlay)
+ * For launch requests from webview,
+ * see [Context.requestLaunchWebOverlay] to verify that the url may be launched
+ */
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)

@@ -11,7 +11,6 @@ import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
-import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -125,9 +124,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
         L.d("Launching Url", request.url?.toString() ?: "null")
-        if (webCore.context is WebOverlayActivity) return false
-        webCore.context.launchWebOverlay(request.url.toString())
-        return true
+        return webCore.context !is WebOverlayActivity && webCore.context.requestWebOverlay(request.url.toString())
     }
 
     private fun launchImage(url: String, text: String? = null): Boolean {
