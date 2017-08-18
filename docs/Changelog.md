@@ -1,6 +1,9 @@
 # Changelog
 
 ## Beta Updates
+* Update secondary background for transparent themes to be more visible.
+
+## v1.4.5
 * Create more robust IM notification fetcher with a timeout
 * Add hidden debugging options for certain views
 * Separate IM and general notification groups
