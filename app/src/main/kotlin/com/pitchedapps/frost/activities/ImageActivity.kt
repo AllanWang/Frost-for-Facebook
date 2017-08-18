@@ -15,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
@@ -86,13 +87,11 @@ class ImageActivity : KauBaseActivity() {
         caption?.text = text
         progress.tint(Prefs.accentColor)
         panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
-
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset == 0f && !fab.isShown) fab.show()
                 else if (slideOffset != 0f && fab.isShown) fab.hide()
                 caption?.alpha = slideOffset / 2 + 0.5f
             }
-
         })
         fab.setOnClickListener { fabAction.onClick(this) }
         photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
@@ -176,7 +175,7 @@ class ImageActivity : KauBaseActivity() {
                     var success = true
                     try {
                         File(tempFilePath).copyTo(destination, true)
-                        scanFile(destination)
+                        scanMedia(destination)
                     } catch (e: Exception) {
                         errorRef = e
                         success = false
@@ -191,17 +190,6 @@ class ImageActivity : KauBaseActivity() {
                 }
             }
         }
-    }
-
-    /**
-     * See <a href="https://developer.android.com/training/camera/photobasics.html#TaskGallery">Docs</a>
-     */
-    internal fun scanFile(file: File) {
-        if (!file.exists()) return
-        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-        val contentUri = Uri.fromFile(file)
-        mediaScanIntent.data = contentUri
-        this.sendBroadcast(mediaScanIntent)
     }
 
     internal fun deleteTempFile() {
