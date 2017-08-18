@@ -183,7 +183,7 @@ class ImageActivity : KauBaseActivity() {
                         L.d("Download image async finished: $success")
                         uiThread {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
-                            snackbar(text)
+                            frostSnackbar(text)
                             if (success) fabAction = FabStates.SHARE
                         }
                     }
@@ -245,7 +245,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
             } catch (e: Exception) {
                 activity.errorRef = e
                 e.logFrostAnswers("Image share failed")
-                activity.snackbar(R.string.image_share_failed)
+                activity.frostSnackbar(R.string.image_share_failed)
             }
         }
     };

@@ -63,4 +63,5 @@
     <string name="html_extraction_error">An error occurred in the html extraction.</string>
     <string name="html_extraction_cancelled">The request has been cancelled.</string>
     <string name="html_extraction_timeout">The request has timed out.</string>
+    <string name="file_chooser_not_found">File chooser not found</string>
 </resources>

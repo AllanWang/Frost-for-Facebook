@@ -148,17 +148,20 @@ fun Throwable?.logFrostAnswers(text: String) {
     frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) {
-    Snackbar.make(this, text, Snackbar.LENGTH_LONG).apply {
-        builder()
-        //hacky workaround, but it has proper checks and shouldn't crash
-        ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
-            messageView.setTextColor(Prefs.textColor)
-            actionView.setTextColor(Prefs.accentColor)
-            //only set if previous text colors are set
-            view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
-        }
-        show()
+fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
+        = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+
+fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
+        = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+
+private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
+    builder()
+    //hacky workaround, but it has proper checks and shouldn't crash
+    ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
+        messageView.setTextColor(Prefs.textColor)
+        actionView.setTextColor(Prefs.accentColor)
+        //only set if previous text colors are set
+        view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
     }
 }
 
