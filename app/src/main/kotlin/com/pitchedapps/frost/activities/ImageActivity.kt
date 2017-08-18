@@ -47,6 +47,7 @@ class ImageActivity : KauBaseActivity() {
     val photo: SubsamplingScaleImageView by bindView(R.id.image_photo)
     val caption: TextView? by bindOptionalView(R.id.image_text)
     val fab: FloatingActionButton by bindView(R.id.image_fab)
+    var throwable: Throwable? = null
 
     /**
      * Reference to the temporary file path
@@ -96,6 +97,7 @@ class ImageActivity : KauBaseActivity() {
         fab.setOnClickListener { fabAction.onClick(this) }
         photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception?) {
+                throwable = e
                 e.logFrostAnswers("Image load error")
                 imageCallback(null, false)
             }
@@ -145,7 +147,8 @@ class ImageActivity : KauBaseActivity() {
         var photoFile: File? = null
         try {
             photoFile = createPrivateMediaFile(".png")
-        } catch (ignored: IOException) {
+        } catch (e: IOException) {
+            throwable = e
         } finally {
             if (photoFile == null) {
                 callback(null)
@@ -175,6 +178,7 @@ class ImageActivity : KauBaseActivity() {
                         File(tempFilePath).copyTo(destination, true)
                         scanFile(destination)
                     } catch (e: Exception) {
+                        throwable = e
                         success = false
                     } finally {
                         L.d("Download image async finished: $success")
@@ -221,8 +225,11 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 content(R.string.bad_image_overlay)
                 positiveText(R.string.kau_yes)
                 onPositive { _, _ ->
+                    if (activity.throwable != null)
+                        L.e(activity.throwable, "ImageActivity error report")
                     activity.sendEmail(R.string.dev_email, R.string.debug_image_link_subject) {
                         addItem("Url", activity.imageUrl)
+                        addItem("Message", activity.throwable?.message ?: "Null")
                     }
                 }
                 negativeText(R.string.kau_no)
@@ -248,6 +255,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 }
                 activity.startActivity(intent)
             } catch (e: Exception) {
+                activity.throwable = e
                 e.logFrostAnswers("Image share failed")
                 activity.snackbar(R.string.image_share_failed)
             }
