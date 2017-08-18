@@ -11,14 +11,16 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
-    <item text="Create more robust IM notification fetcher with a timeout" />
+    <item text="Update secondary background for transparent themes to be more visible." />
+    <item text="" />
+	
+	<version title="v1.4.5"/>
+	<item text="Create more robust IM notification fetcher with a timeout" />
     <item text="Add hidden debugging options for certain views" />
     <item text="Separate IM and general notification groups" />
     <item text="Add click actions to group notifications. They will launch the message page or the notification page respectively" />
     <item text="Add behaviour setting to force message threads to scroll to the bottom after loading." />
     <item text="Add faq for disabling video auto play" />
-    <item text="" />
-    <item text="" />
 	
 	<version title="v1.4.2"/>
     <item text="Experimental: Add notifications for messages; report to me if this drains your battery" />

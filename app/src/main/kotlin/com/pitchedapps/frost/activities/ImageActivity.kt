@@ -15,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
@@ -47,6 +48,7 @@ class ImageActivity : KauBaseActivity() {
     val photo: SubsamplingScaleImageView by bindView(R.id.image_photo)
     val caption: TextView? by bindOptionalView(R.id.image_text)
     val fab: FloatingActionButton by bindView(R.id.image_fab)
+    var errorRef: Throwable? = null
 
     /**
      * Reference to the temporary file path
@@ -85,17 +87,16 @@ class ImageActivity : KauBaseActivity() {
         caption?.text = text
         progress.tint(Prefs.accentColor)
         panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
-
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset == 0f && !fab.isShown) fab.show()
                 else if (slideOffset != 0f && fab.isShown) fab.hide()
                 caption?.alpha = slideOffset / 2 + 0.5f
             }
-
         })
         fab.setOnClickListener { fabAction.onClick(this) }
         photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception?) {
+                errorRef = e
                 e.logFrostAnswers("Image load error")
                 imageCallback(null, false)
             }
@@ -145,7 +146,8 @@ class ImageActivity : KauBaseActivity() {
         var photoFile: File? = null
         try {
             photoFile = createPrivateMediaFile(".png")
-        } catch (ignored: IOException) {
+        } catch (e: IOException) {
+            errorRef = e
         } finally {
             if (photoFile == null) {
                 callback(null)
@@ -173,8 +175,9 @@ class ImageActivity : KauBaseActivity() {
                     var success = true
                     try {
                         File(tempFilePath).copyTo(destination, true)
-                        scanFile(destination)
+                        scanMedia(destination)
                     } catch (e: Exception) {
+                        errorRef = e
                         success = false
                     } finally {
                         L.d("Download image async finished: $success")
@@ -187,17 +190,6 @@ class ImageActivity : KauBaseActivity() {
                 }
             }
         }
-    }
-
-    /**
-     * See <a href="https://developer.android.com/training/camera/photobasics.html#TaskGallery">Docs</a>
-     */
-    internal fun scanFile(file: File) {
-        if (!file.exists()) return
-        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-        val contentUri = Uri.fromFile(file)
-        mediaScanIntent.data = contentUri
-        this.sendBroadcast(mediaScanIntent)
     }
 
     internal fun deleteTempFile() {
@@ -221,8 +213,11 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 content(R.string.bad_image_overlay)
                 positiveText(R.string.kau_yes)
                 onPositive { _, _ ->
+                    if (activity.errorRef != null)
+                        L.e(activity.errorRef, "ImageActivity error report")
                     activity.sendEmail(R.string.dev_email, R.string.debug_image_link_subject) {
                         addItem("Url", activity.imageUrl)
+                        addItem("Message", activity.errorRef?.message ?: "Null")
                     }
                 }
                 negativeText(R.string.kau_no)
@@ -248,6 +243,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 }
                 activity.startActivity(intent)
             } catch (e: Exception) {
+                activity.errorRef = e
                 e.logFrostAnswers("Image share failed")
                 activity.snackbar(R.string.image_share_failed)
             }

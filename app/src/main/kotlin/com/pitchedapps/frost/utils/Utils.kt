@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import ca.allanwang.kau.mediapicker.createMediaFile
+import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.RequestBuilder

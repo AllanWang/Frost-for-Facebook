@@ -1,12 +1,18 @@
+<b>Welcome to Frost for Facebook!</b>
+
 Frost is a fully themable, fully functional alternative to the official Facebook app.
 While being a web wrapper, Frost contains many unique and native features such as:
 
-• True multi user interactions - More than just an option in a settings menu, Frost's account switcher is right in the drawer. You are one tap away from switching accounts, and everything refreshes on the switch so that you can view other accounts instantaneously. Furthermore, the notification service will fetch notifications from all accounts, and will let you know which account has the new notification.
-• Better multitasking - Frost contains an overlaying web browser that can be drawn on top of your foreground task. Open links and notifications with a full screen view, then swipe away to get back to your previous task.
-• Contextual awareness - Frost integrates additional features via long presses. Need to copy a block of text or share a link? Long press the text. Need to zoom into an image or download it? Long press the image!
-• Material Design - Built for lollipop and up, Frost focuses strongly on a good UI, and embraces material transitions and dimensions.
-• Complete theme engine - Frost contains very comprehensive themes that customize all components of the app. Frost is also the only app to support transparent themes.
-• Fully opened - Nothing speaks for privacy more than being open sourced. Frost is proud to be one of those apps, and can be found on github (Link in the app's about section)
+• <b>True multi user interactions</b> - More than just an option in a settings menu, Frost's account switcher is right in the drawer. You are one tap away from switching accounts, and everything refreshes on the switch so that you can view other accounts instantaneously. Furthermore, the notification service will fetch notifications from all accounts, and will let you know which account has the new notification.
+• <b>Better multitasking</b> - Frost contains an overlaying web browser that can be drawn on top of your foreground task. Open links and notifications with a full screen view, then swipe away to get back to your previous task.
+• <b>Contextual awareness</b> - Frost integrates additional features via long presses. Need to copy a block of text or share a link? Long press the text. Need to zoom into an image or download it? Long press the image!
+• <b>Material Design</b> - Built for lollipop and up, Frost focuses strongly on a beautiful and functional UI, and embraces material transitions and dimensions.
+• <b>Complete theme engine</b> - Frost contains very comprehensive themes that customize all components of the app. Frost is also the only app to support transparent themes.
+• <b>Fully opened</b> - Nothing speaks for privacy more than being open sourced. Frost is proud to be one of those apps, and can be found on github (Link in the app's about section)
+• <b>Fixes the little things</b> - Frost is community driven, and many tweaks are added to address minor inconveniences and give a full native experience, despite being a web app. To list a few:
+&emsp;&emsp; • Focusing on a text input will prevent refreshing, so you don't accidentally swipe and lose your progress.
+&emsp;&emsp; • Horizontal swipe can be enabled along side the viewpager swipe with a simple long press
+&emsp;&emsp; • Automatic bug reports are sent when a crash is detected, so even if you don't contact the devs, you are helping contribute by using the app.
 
 Mandatory permissions used and why:
 
@@ -16,13 +22,14 @@ Mandatory permissions used and why:
 • Billing - For purchasing pro and unlocking all of Frost's features
 
 Optional permissions used and why:
-(these are only requested when they have to be, and are disabled until then)
+<i>(these are only requested when they have to be, and are disabled until then)</i>
+
 • Read/write external storage - Needed to upload photos in a new status and save photos when prompted
 • Fine/coarse location - Needed for the check in option if users wish to search for their location
 
 • That's it! No privacy intrusion and no extra demands.
 
-Permissions NOT used and why:
+Permissions <i>NOT</i> used and why:
 
 • Wakelock - Frost takes advantage of Android's Job Scheduler, and lets the framework decide when to run background services. Frost therefore doesn't need to constantly run in the background, nor does it force your phone to stay awake.
 • Retrieve running apps - Frost has no need to access external apps or see what else is running
