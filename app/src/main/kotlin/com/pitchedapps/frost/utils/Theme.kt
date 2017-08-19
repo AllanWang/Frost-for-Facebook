@@ -11,6 +11,7 @@ import com.pitchedapps.frost.injectors.JsActions
  * Created by Allan Wang on 2017-06-14.
  */
 const val FACEBOOK_BLUE = 0xff3b5998.toInt()
+const val BLUE_LIGHT = 0xff5d86dd.toInt()
 
 enum class Theme(@StringRes val textRes: Int,
                  val injector: InjectorContract,
@@ -19,6 +20,7 @@ enum class Theme(@StringRes val textRes: Int,
                  private val backgroundColorGetter: () -> Int,
                  private val headerColorGetter: () -> Int,
                  private val iconColorGetter: () -> Int) {
+
     DEFAULT(R.string.kau_default,
             JsActions.EMPTY,
             { 0xde000000.toInt() },
@@ -38,7 +40,7 @@ enum class Theme(@StringRes val textRes: Int,
     DARK(R.string.kau_dark,
             CssAssets.MATERIAL_DARK,
             { Color.WHITE },
-            { FACEBOOK_BLUE },
+            { BLUE_LIGHT },
             { 0xff303030.toInt() },
             { 0xff2e4b86.toInt() },
             { Color.WHITE }),
@@ -46,7 +48,7 @@ enum class Theme(@StringRes val textRes: Int,
     AMOLED(R.string.kau_amoled,
             CssAssets.MATERIAL_AMOLED,
             { Color.WHITE },
-            { FACEBOOK_BLUE },
+            { BLUE_LIGHT },
             { Color.BLACK },
             { Color.BLACK },
             { Color.WHITE }),
@@ -54,7 +56,7 @@ enum class Theme(@StringRes val textRes: Int,
     GLASS(R.string.kau_glass,
             CssAssets.MATERIAL_GLASS,
             { Color.WHITE },
-            { FACEBOOK_BLUE },
+            { BLUE_LIGHT },
             { 0x80000000.toInt() },
             { 0xb3000000.toInt() },
             { Color.WHITE }),
@@ -65,8 +67,7 @@ enum class Theme(@StringRes val textRes: Int,
             { Prefs.customAccentColor },
             { Prefs.customBackgroundColor },
             { Prefs.customHeaderColor },
-            { Prefs.customIconColor })
-    ;
+            { Prefs.customIconColor });
 
     val textColor: Int
         get() = textColorGetter()
