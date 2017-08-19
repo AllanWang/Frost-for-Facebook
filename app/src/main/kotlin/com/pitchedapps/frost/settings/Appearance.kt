@@ -55,7 +55,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
         enabler = { Prefs.isCustomTheme }
-        onDisabledClick = { itemView, _, _ -> itemView.frostSnackbar(R.string.requires_custom_theme); true }
+        onDisabledClick = { itemView, _, _ -> frostSnackbar(R.string.requires_custom_theme); true }
         allowCustom = true
     }
 
@@ -72,6 +72,17 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         dependsOnCustom()
         allowCustomAlpha = false
     }
+
+    colorPicker(R.string.accent_color, { Prefs.customAccentColor }, {
+        Prefs.customAccentColor = it
+        reload()
+        invalidateCustomTheme()
+        shouldRestartMain()
+    }) {
+        dependsOnCustom()
+        allowCustomAlpha = false
+    }
+
 
     colorPicker(R.string.background_color, { Prefs.customBackgroundColor }, {
         Prefs.customBackgroundColor = it

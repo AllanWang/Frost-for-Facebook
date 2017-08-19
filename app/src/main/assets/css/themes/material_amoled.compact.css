@@ -1,30 +1,36 @@
 #viewport { background: #000 !important; }
 
-body, #root, #header, [style*="background-color"], ._55wo, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, .container, .subpage, ._5n_f, #static_templates, ._22_8, .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0, .al, ._1gkq, ._5c5b, ._1qxg, ._5luf, ._2new, ._cld, ._3zvb, ._2nk0, .btnD, .btnI, ._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18, ._10c_, ._2jl2, ._5q_r, ._5yt8, ._idb, ._2ip_, ._f6s, ._2l5v, ._8i2, ._kr5, ._d4i, ._577z, ._2u4w, ._3u9p, ._3u9t, ._2v9s, ._cw4, ._5_y-, ._5_y_, ._5_z3, ._cwy, ._5_z0, ._5_z1, ._5_z2, ._2mtc, ._206a, ._1_-1, ._1ybg, .appCenterCategorySelectorButton, ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5, ._55wm, ._2om3, ._2ol-, ._1f9d, ._vee, ._31a-, ._3r8b, ._3r9d, .acw, ._4_xl, ._1p70, ._1p70, ._1ih_, ._51v6, ._u2c, ._484w, ._3ils, ._rm7, ._32qk, ._d01, ._2y60, ._5fu3, ._2foa, ._2y5_, ._38o9, ._1kb, .mAppCenterFatLabel, ._3f50, .mentions-placeholder, .mentions, .mentions-shadow, .mentions-measurer, .acg, ._59tu, ._52z5, ._4l9b, ._4gj3, .groupChromeView, ._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1 { background: #000 !important; }
+body, #root, #header, [style*="background-color"], ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, .container, .subpage, ._5n_f, #static_templates, ._22_8, ._1t4h, ._uoq, ._55wo, ._1g05, .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0, .al, ._1gkq, ._5c5b, ._1qxg, ._5luf, ._2new, ._cld, ._3zvb, ._2nk0, .btnD, .btnI, ._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18, ._10c_, ._2jl2, ._5q_r, ._5yt8, ._idb, ._2ip_, ._f6s, ._2l5v, ._8i2, ._kr5, ._d4i, ._577z, ._2u4w, ._3u9p, ._3u9t, ._2v9s, ._cw4, ._5_y-, ._5_y_, ._5_z3, ._cwy, ._5_z0, ._5_z1, ._5_z2, ._2mtc, ._206a, ._1_-1, ._1ybg, .appCenterCategorySelectorButton, ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5, ._55wm, ._2om3, ._2ol-, ._1f9d, ._vee, ._31a-, ._3r8b, ._3r9d, .acw, ._4_xl, ._1p70, ._1p70, ._1ih_, ._51v6, ._u2c, ._484w, ._3ils, ._rm7, ._32qk, ._d01, ._2y60, ._5fu3, ._2foa, ._2y5_, ._38o9, ._1kb, .mAppCenterFatLabel, ._3f50, .mentions-placeholder, .mentions, .mentions-shadow, .mentions-measurer, .acg, ._59tu, ._52z5, ._4l9b, ._4gj3, .groupChromeView, ._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1 { background: #000 !important; }
 
 ._cv_, ._2sq8 { background-color: #000 !important; }
 
-#page { background: transparent !important; }
+#page, ._8l7 { background: transparent !important; }
 
 .jewel, .flyout, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p, .mentions-suggest-item, .mentions-suggest { background: black !important; }
 
 ._403n, ._1-kc { background: #595959 !important; }
 
-button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._590n, ._4g8h, ._2cpp, ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj, .excessItem, ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._2k51, ._4qax, .aclb, ._4756, ._w34, ._56bv::before, ._5769, ._34iv, ._z-w, .acbk { background: rgba(89, 89, 89, 0.2) !important; }
+button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before, ._590n, ._4g8h, ._2cpp, article._55wo, .timeline .timelinePublisher, .touched._52x6, .item a.primary.touched .primarywrap, ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj, .excessItem, .acr, ._5-lx, ._3g9-, ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._2k51, ._4qax, .aclb, ._4756, ._w34, ._56bv::before, ._5769, ._34iv, ._z-w, ._t21, .acbk { background: rgba(89, 89, 89, 0.2) !important; }
 
-[style*="color"], body, input, ._42rv, ._4qau, ._dwm .descArea, ._z-z, ._z-v, ._1e8d, ._36nl, ._36nm, ._2_11, ._2_rf, ._2ip_, ._403p, ._5xu2, ._3ml8, ._3mla, ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35, ._rnk, ._24u0, ._1g06, ._14ye, .fcb, ._56cz._56c_, ._1gk_, ._55fj, ._45fu, ._18qg, ._1_ac, textarea, ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782, ._3u9u, ._3u9_, ._3u9s, ._1hcx, ._2066, ._1_-1, ._cv_, ._1nbx, ._2cuh, ._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._27vp, ._4nwe, ._4nw9, ._27vi, .appCenterAppInfo, .appCenterPermissions, ._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g, ._2new, .appCenterCategorySelectorButton, .mentions-input, .mentions-placeholder, .fcw, ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4, ._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs, h1, h2, h3, h4, h5, h6 { color: #fff !important; }
+[style*="color"], body, input, ._42rv, ._4qau, ._dwm .descArea, ._eu5, ._1tcc, ._3g9-, ._29z_, ._z-z, ._z-v, ._1e8d, ._36nl, ._36nm, ._2_11, ._2_rf, ._2ip_, ._403p, ._5xu2, ._3ml8, ._3mla, ._50vk, ._1m2u, ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35, ._rnk, ._24u0, ._1g06, ._14ye, .fcb, ._56cz._56c_, ._1gk_, ._55fj, ._45fu, ._18qg, ._1_ac, textarea, ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782, ._3u9u, ._3u9_, ._3u9s, ._1hcx, ._2066, ._1_-1, ._cv_, ._1nbx, ._2cuh, ._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._27vp, ._4nwe, ._4nw9, ._27vi, .appCenterAppInfo, .appCenterPermissions, ._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g, ._2new, .appCenterCategorySelectorButton, .mentions-input, .mentions-placeholder, .largeStatusBox .placeHolder, .fcw, ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4, ._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs, h1, h2, h3, h4, h5, h6 { color: #fff !important; }
 
-._15kl::before, ._5j35::after, ._2k4b, ._3to7, ._4nw8 { border-left: 1px solid rgba(255, 255, 255, 0.3) !important; }
+strong > a, ._15ks ._2q8z._2q8z { color: #5d86dd !important; }
+
+._42nf ._42ng { color: transparent !important; }
+
+._15kl::before, ._37fd .inlineComposerButton, ._1hb:before, ._5j35::after, ._2k4b, ._3to7, ._4nw8 { border-left: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
 ._4_d1 { border-right: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
-._1mx0, ._1rbr, ._5yt8, ._idb, ._cld, ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9, ._2u4w, ._3u9t, ._55fj, ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._3on6, ._2om3, ._2ol-, ._56d8, .al, ._1gkq, ._5fjv, ._5fjw, ._4z83 { border-top: 1px solid rgba(255, 255, 255, 0.3) !important; }
+._1mx0, ._1rbr, ._5yt8, ._idb, ._cld, ._1e8h, ._z-w, ._1ha, ._1n8h ._1oby, ._5f99, ._2t39, ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9, ._3u9t, ._55fj, ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._56d8, .al { border-top: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
-._15ny::after, ._z-w, ._8i2, ._2nk0, ._22_8, ._2u4w, ._577z:not(:last-child) ._ygd, ._3u9u, ._3mgz, ._52x6, ._2066, ._5luf, .mAppCenterFatLabel, .appCenterCategorySelectorButton, ._1q6v, ._5q_r, ._5yt8, ._ap1, ._52x1, ._59tu, ._usq, ._13e_, ._59f6._55so::before, ._4gj3, .jx-result, ._2om3, ._2ol-, ._1f9d, ._vef, ._55x2 > *, .al, ._44qk, ._1gkq, ._5rgs, ._5xuj, ._1sv1, ._idb, ._5lp5, ._3-2-, ._3to6, ._ir5, ._4nw6, ._4nwh, ._27ve, div._51v6::before, ._3c9h::before, ._2s20, ._gui, ._5jku, ._2foa, ._2y60, ._5fu3, ._4en9, ._1kb:not(:last-child) ._1kc, ._5pz4, ._5lp4, ._5lp5, ._3on6, ._5h6z, ._5h6x, ._2om4, ._5fjw > div, ._5fjv > :first-child, ._5fjw > :first-child, ._5fjv, ._5fjw, ._4z83 { border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important; }
+._15ny::after, ._z-w, ._8i2, ._2nk0, ._22_8, ._1t4h, ._37fd, ._1ha, ._577z:not(:last-child) ._ygd, ._3u9u, ._3mgz, ._52x6, ._2066, ._5luf, .mAppCenterFatLabel, .appCenterCategorySelectorButton, ._1q6v, ._5q_r, ._5yt8, ._ap1, ._52x1, ._59tu, ._usq, ._13e_, ._59f6._55so::before, ._4gj3, .jx-result, ._1f9d, ._vef, ._55x2 > *, .al, ._44qk, ._5rgs, ._5xuj, ._1sv1, ._idb, ._5lp5, ._3-2-, ._3to6, ._ir5, ._4nw6, ._4nwh, ._27ve, div._51v6::before, ._3c9h::before, ._2s20, ._gui, ._5jku, ._2foa, ._2y60, ._5fu3, ._4en9, ._1kb:not(:last-child) ._1kc, ._5pz4, ._5lp4, ._5lp5, ._5h6z, ._5h6x, ._2om4, ._5fjw > div, ._5fjv > :first-child, ._5fjw > :first-child { border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
-._d4i, ._f6s, .mentions-suggest-item, .mentions-suggest, ._1_y5, ._lr0, ._5hgt, ._2cpp, ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd, ._5n_f { border: 1px solid rgba(255, 255, 255, 0.3) !important; }
+.item a.primary.touched .primarywrap, ._5fjv, ._3on6, ._2u4w, ._2om3, ._2ol-, ._5fjw, ._4z83, ._1gkq { border-top: 1px solid rgba(255, 255, 255, 0.3) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important; }
 
-._4o58::after, .acw, .aclb, ._4qax, ._5h8f { border-color: rgba(255, 255, 255, 0.3) !important; }
+._d4i, ._f6s, .mentions-suggest-item, .mentions-suggest, ._1_y5, ._lr0, ._5hgt, ._2cpp, ._50uu, ._50uw, ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd, ._5n_f { border: 1px solid rgba(255, 255, 255, 0.3) !important; }
+
+._4o58::after, .acr, ._t21, .acw, .aclb, ._4qax, ._5h8f { border-color: rgba(255, 255, 255, 0.3) !important; }
 
 ._220g, ._2zh4::before, ._2ip_ ._2zh4::before, ._2ip_ ._15kk::before, ._2ip_ ._15kk + ._4u3j::before, ._58a0:before, ._43mh::before, ._43mh::after, ._1_-1::before, ._1kmv:after, ._1_ac:before { background: rgba(255, 255, 255, 0.3) !important; }
 
@@ -38,7 +44,7 @@ button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS
 
 ._2cir.selected, ._42rv { border-bottom: 3px solid #fff !important; }
 
-._484w.selected > ._6zf, ._5kqs::after, ._3lvo ._5xum._5xuk { border-bottom: 1px solid #fff !important; }
+._484w.selected > ._6zf, ._5kqs::after, ._3lvo ._5xum._5xuk, ._x0b { border-bottom: 1px solid #fff !important; }
 
 ::-webkit-input-placeholder { color: #fff !important; }
 
@@ -67,3 +73,15 @@ a, ._5fpq { color: #eee !important; }
 @keyframes highlightFade { 0% { background: rgba(89, 89, 89, 0.2); }
   50% { background: rgba(89, 89, 89, 0.2); }
   100% { background: #000; } }
+
+._50uu { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 -10 50 50'%3E%3Ccircle cx='25' cy='23' r='3.2'/%3E%3Cpath d='M22 13l-1.83 2H17c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V17c0-1.1-.9-2-2-2h-3.17L28 13h-6zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z'/%3E%3Cpath fill='none' d='M13 11h24v24H13z'/%3E%3C/svg%3E") no-repeat !important; }
+
+._50uw { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 50 50'%3E%3Cpath fill='none' d='M13 26h24v24H13z'/%3E%3Cpath d='M30 31.5V28c0-.55-.45-1-1-1H17c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z'/%3E%3C/svg%3E") no-repeat !important; }
+
+._15km ._15ko::before { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z'/%3E%3C/svg%3E") no-repeat !important; background-position: center !important; }
+
+._15km ._15ko._2q8z::before { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%235d86dd' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z'/%3E%3C/svg%3E") no-repeat !important; background-position: center !important; }
+
+._15km ._15kq::before { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath d='M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z'/%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3C/svg%3E") no-repeat !important; background-position: center !important; }
+
+._15km ._15kr::before { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath d='M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z'/%3E%3Cpath fill='none' d='M24 0H0v24h24z'/%3E%3C/svg%3E") no-repeat !important; background-position: center !important; }

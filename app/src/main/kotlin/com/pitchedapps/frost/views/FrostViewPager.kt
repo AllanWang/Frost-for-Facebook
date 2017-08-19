@@ -15,7 +15,12 @@ import com.pitchedapps.frost.utils.Prefs
 class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
     var enableSwipe = true
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?) = Prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
+    override fun onInterceptTouchEvent(ev: MotionEvent?) =
+            try {
+                Prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
+            } catch(e: IllegalArgumentException) {
+                true
+            }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent?): Boolean = Prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)

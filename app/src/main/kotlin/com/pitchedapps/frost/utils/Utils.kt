@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import ca.allanwang.kau.mediapicker.createMediaFile
+import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.RequestBuilder
@@ -54,6 +56,11 @@ fun Activity.cookies(): ArrayList<CookieModel> {
     return intent?.extras?.getParcelableArrayList<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
 }
 
+/**
+ * Launches the given url in a new overlay (if it already isn't in an overlay)
+ * Note that most requests may need to first check if the url can be launched as an overlay
+ * See [requestWebOverlay] to verify the launch
+ */
 fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)
@@ -141,17 +148,20 @@ fun Throwable?.logFrostAnswers(text: String) {
     frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) {
-    Snackbar.make(this, text, Snackbar.LENGTH_LONG).apply {
-        builder()
-        //hacky workaround, but it has proper checks and shouldn't crash
-        ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
-            messageView.setTextColor(Prefs.textColor)
-            actionView.setTextColor(Prefs.accentColor)
-            //only set if previous text colors are set
-            view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
-        }
-        show()
+fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
+        = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+
+fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
+        = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+
+private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
+    builder()
+    //hacky workaround, but it has proper checks and shouldn't crash
+    ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
+        messageView.setTextColor(Prefs.textColor)
+        actionView.setTextColor(Prefs.accentColor)
+        //only set if previous text colors are set
+        view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
     }
 }
 
@@ -172,10 +182,13 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
  * @returns {@code true} if activity is resolved, {@code false} otherwise
  */
 fun Context.resolveActivityForUri(uri: Uri): Boolean {
-    if (uri.toString().contains(FACEBOOK_COM) && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
+    if (uri.toString().isFacebookUrl && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
     val intent = Intent(Intent.ACTION_VIEW, uri)
     if (intent.resolveActivity(packageManager) == null) return false
     startActivity(intent)
     return true
 }
+
+inline val String?.isFacebookUrl
+    get() = this != null && this.contains(FACEBOOK_COM)
 

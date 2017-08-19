@@ -1,10 +1,10 @@
 package com.pitchedapps.frost.utils
 
+import android.graphics.Color
 import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
-import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
@@ -25,6 +25,8 @@ object Prefs : KPref() {
     var theme: Int by kpref("theme", 0, postSetter = { _: Int -> loader.invalidate() })
 
     var customTextColor: Int by kpref("color_text", 0xffeceff1.toInt())
+
+    var customAccentColor: Int by kpref("color_accent", 0xff0288d1.toInt())
 
     var customBackgroundColor: Int by kpref("color_bg", 0xff212121.toInt())
 
@@ -49,6 +51,14 @@ object Prefs : KPref() {
     val textColor: Int
         get() = t.textColor
 
+    val accentColor: Int
+        get() = t.accentColor
+
+    val accentColorForWhite: Int
+        get() = if (accentColor.isColorVisibleOn(Color.WHITE)) accentColor
+        else if (textColor.isColorVisibleOn(Color.WHITE)) textColor
+        else FACEBOOK_BLUE
+
     val bgColor: Int
         get() = t.bgColor
 
@@ -57,18 +67,6 @@ object Prefs : KPref() {
 
     val iconColor: Int
         get() = t.iconColor
-
-    /**
-     * Ensures that the color is visible against the background
-     */
-    val accentColor: Int
-        get() = if (headerColor.isColorVisibleOn(bgColor, 100)) headerColor else textColor
-
-    /**
-     * Ensures that the color is visible against the background
-     */
-    val iconBackgroundColor: Int
-        get() = if (headerColor.isColorVisibleOn(bgColor)) headerColor else headerColor.colorToForeground(0.2f)
 
     val themeInjector: InjectorContract
         get() = t.injector

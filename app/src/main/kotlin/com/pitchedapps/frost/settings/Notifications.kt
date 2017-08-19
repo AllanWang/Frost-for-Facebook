@@ -2,12 +2,12 @@ package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.minuteToText
-import ca.allanwang.kau.utils.snackbar
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.views.Keywords
 
@@ -70,7 +70,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         onClick = {
             _, _, _ ->
             val text = if (fetchNotifications()) R.string.notification_fetch_success else R.string.notification_fetch_fail
-            snackbar(text)
+            frostSnackbar(text)
             true
         }
     }

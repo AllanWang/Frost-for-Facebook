@@ -11,14 +11,24 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
-    <item text="Create more robust IM notification fetcher with a timeout" />
+    <item text="Update secondary background for transparent themes to be more visible." />
+    <item text="Pressing enter when searching will launch the full search page" />
+    <item text="Add different backgrounds for news feed articles." />
+    <item text="Add option to get image/video from default camera or gallery app." />
+    <item text="Fix some bug reports." />
+    <item text="Remove error dialog for IAB. It will now depend solely on the google services dialogs." />
+    <item text="Fix loading issue for old conversations" />
+    <item text="Add debugger for failed image activities" />
+    <item text="" />
+    <item text="" />
+	
+	<version title="v1.4.5"/>
+	<item text="Create more robust IM notification fetcher with a timeout" />
     <item text="Add hidden debugging options for certain views" />
     <item text="Separate IM and general notification groups" />
     <item text="Add click actions to group notifications. They will launch the message page or the notification page respectively" />
     <item text="Add behaviour setting to force message threads to scroll to the bottom after loading." />
     <item text="Add faq for disabling video auto play" />
-    <item text="" />
-    <item text="" />
 	
 	<version title="v1.4.2"/>
     <item text="Experimental: Add notifications for messages; report to me if this drains your battery" />

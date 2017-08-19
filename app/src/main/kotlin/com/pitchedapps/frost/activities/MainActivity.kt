@@ -368,6 +368,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
             if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
                 textCallback = { query, _ -> runOnUiThread { hiddenSearchView?.query(query) } }
+                searchCallback = { query, _ -> launchWebOverlay("${FbItem.SEARCH.url}/?q=$query"); true }
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor.withMinAlpha(200)
                 openListener = { hiddenSearchView?.pauseLoad = false }

@@ -1,6 +1,14 @@
 # Changelog
 
 ## Beta Updates
+* Update secondary background for transparent themes to be more visible.
+* Pressing enter when searching will launch the full search page
+* Add different backgrounds for news feed articles.
+* Add option to get image/video from default camera or gallery app.
+* Fix some bug reports.
+* Remove error dialog for IAB. It will now depend solely on the google services dialogs.
+
+## v1.4.5
 * Create more robust IM notification fetcher with a timeout
 * Add hidden debugging options for certain views
 * Separate IM and general notification groups

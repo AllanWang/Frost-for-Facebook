@@ -104,6 +104,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     packagingOptions {
@@ -119,11 +120,15 @@ repositories {
 }
 
 dependencies {
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.3-alpha', {
+    androidTestImplementation("com.android.support.test:runner:${TEST_RUNNER}") {
         exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testImplementation 'junit:junit:4.12'
-    testImplementation "org.robolectric:robolectric:${ROBOELECTRIC}"
+    }
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    testImplementation "junit:junit:${JUNIT}"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
 
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:adapter:$KAU"
@@ -142,7 +147,7 @@ dependencies {
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
     releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
