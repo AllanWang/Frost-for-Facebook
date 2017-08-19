@@ -102,6 +102,7 @@ class ImageActivity : KauBaseActivity() {
             }
         })
         Glide.with(this).asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
+        setFrostColors(themeWindow = false)
     }
 
     /**
@@ -205,7 +206,7 @@ class ImageActivity : KauBaseActivity() {
     }
 }
 
-internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconColor, val backgroundTint: Int = Prefs.iconBackgroundColor.withAlpha(255)) {
+internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconColor, val backgroundTint: Int = Int.MAX_VALUE) {
     ERROR(GoogleMaterial.Icon.gmd_error, Color.WHITE, Color.RED) {
         override fun onClick(activity: ImageActivity) {
             activity.materialDialogThemed {
@@ -255,14 +256,15 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
      * If it's in view, give it some animations
      */
     fun update(fab: FloatingActionButton) {
+        val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else Prefs.accentColor
         if (fab.isHidden) {
             fab.setIcon(iicon, color = iconColor)
-            fab.backgroundTintList = ColorStateList.valueOf(backgroundTint)
+            fab.backgroundTintList = ColorStateList.valueOf(tint)
             fab.show()
         } else {
             fab.fadeScaleTransition {
                 setIcon(iicon, color = iconColor)
-                backgroundTintList = ColorStateList.valueOf(backgroundTint)
+                backgroundTintList = ColorStateList.valueOf(tint)
             }
         }
     }

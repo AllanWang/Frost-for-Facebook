@@ -73,6 +73,17 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         allowCustomAlpha = false
     }
 
+    colorPicker(R.string.accent_color, { Prefs.customAccentColor }, {
+        Prefs.customAccentColor = it
+        reload()
+        invalidateCustomTheme()
+        shouldRestartMain()
+    }) {
+        dependsOnCustom()
+        allowCustomAlpha = false
+    }
+
+
     colorPicker(R.string.background_color, { Prefs.customBackgroundColor }, {
         Prefs.customBackgroundColor = it
         bgCanvas.ripple(it, duration = 500L)

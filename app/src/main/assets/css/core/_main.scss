@@ -1,0 +1,6 @@
+@import "core";
+@import "svg";
+
+//this file is used as the base for all themes
+//given that svgs take a lot of characters, we won't compile them when testing
+//therefore we use the core scss
