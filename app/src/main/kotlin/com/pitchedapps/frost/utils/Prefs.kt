@@ -1,10 +1,10 @@
 package com.pitchedapps.frost.utils
 
+import android.graphics.Color
 import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
-import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
@@ -53,6 +53,11 @@ object Prefs : KPref() {
 
     val accentColor: Int
         get() = t.accentColor
+
+    val accentColorForWhite: Int
+        get() = if (accentColor.isColorVisibleOn(Color.WHITE)) accentColor
+        else if (textColor.isColorVisibleOn(Color.WHITE)) textColor
+        else FACEBOOK_BLUE
 
     val bgColor: Int
         get() = t.bgColor
