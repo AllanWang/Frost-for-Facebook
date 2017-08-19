@@ -1,8 +1,8 @@
 $text: #000;
 $link: #111;
 $accent: #3b5998;
-$background: #fafafa;
-$background2: rgba(darken($background, 35%), 0.2);
-$bg_transparent: #fafafa;
+$background: #f5f5f5;
+$background2: #fff;
+$bg_transparent: $background;
 
 @import "../core/main";
