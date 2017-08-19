@@ -17,6 +17,8 @@
     <item text="Add option to get image/video from default camera or gallery app." />
     <item text="Fix some bug reports." />
     <item text="Remove error dialog for IAB. It will now depend solely on the google services dialogs." />
+    <item text="Fix loading issue for old conversations" />
+    <item text="Add debugger for failed image activities" />
     <item text="" />
     <item text="" />
 	

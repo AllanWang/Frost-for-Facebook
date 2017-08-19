@@ -1,12 +1,10 @@
 package com.pitchedapps.frost.activities
 
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
 import android.support.v4.content.FileProvider
 import ca.allanwang.kau.mediapicker.*
 import ca.allanwang.kau.utils.colorToBackground
-import ca.allanwang.kau.utils.isColorVisibleOn
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.utils.Prefs
 import java.io.File
@@ -15,9 +13,7 @@ import java.io.File
  * Created by Allan Wang on 2017-07-23.
  */
 private fun actions(): List<MediaAction> {
-    var color = Prefs.iconBackgroundColor
-    if (!color.isColorVisibleOn(Color.WHITE, 50))
-        color = 0xff3b5998.toInt()
+    val color = Prefs.accentColorForWhite
     return listOf(object : MediaActionCamera(color) {
 
         override fun createFile(context: Context): File
