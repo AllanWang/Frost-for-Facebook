@@ -26,6 +26,8 @@ object Prefs : KPref() {
 
     var customTextColor: Int by kpref("color_text", 0xffeceff1.toInt())
 
+    var customAccentColor: Int by kpref("color_accent", 0xff0288d1.toInt())
+
     var customBackgroundColor: Int by kpref("color_bg", 0xff212121.toInt())
 
     var customHeaderColor: Int by kpref("color_header", 0xff01579b.toInt())
@@ -49,6 +51,9 @@ object Prefs : KPref() {
     val textColor: Int
         get() = t.textColor
 
+    val accentColor: Int
+        get() = t.accentColor
+
     val bgColor: Int
         get() = t.bgColor
 
@@ -57,18 +62,6 @@ object Prefs : KPref() {
 
     val iconColor: Int
         get() = t.iconColor
-
-    /**
-     * Ensures that the color is visible against the background
-     */
-    val accentColor: Int
-        get() = if (headerColor.isColorVisibleOn(bgColor, 100)) headerColor else textColor
-
-    /**
-     * Ensures that the color is visible against the background
-     */
-    val iconBackgroundColor: Int
-        get() = if (headerColor.isColorVisibleOn(bgColor)) headerColor else headerColor.colorToForeground(0.2f)
 
     val themeInjector: InjectorContract
         get() = t.injector

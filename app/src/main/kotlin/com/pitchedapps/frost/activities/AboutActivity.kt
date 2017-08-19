@@ -33,7 +33,7 @@ class AboutActivity : AboutActivityBase(null, {
     textColor = Prefs.textColor
     accentColor = Prefs.accentColor
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
-    cutoutForeground = if (0xff3b5998.toInt().isColorVisibleOn(Prefs.bgColor)) 0xff3b5998.toInt() else Prefs.accentColor
+    cutoutForeground = Prefs.accentColor
     cutoutDrawableRes = R.drawable.frost_f_256
     faqPageTitleRes = R.string.faq_title
     faqXmlRes = R.xml.frost_faq
