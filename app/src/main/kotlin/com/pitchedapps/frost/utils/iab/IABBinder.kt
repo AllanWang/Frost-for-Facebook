@@ -110,7 +110,7 @@ abstract class IABBinder : FrostBilling {
         }
         val a = activity ?: return
 
-        if (!BillingProcessor.isIabServiceAvailable(a) || !bp.isOneTimePurchaseSupported)
+        if (!BillingProcessor.isIabServiceAvailable(a) || !bp.isInitialized || !bp.isOneTimePurchaseSupported)
             a.playStorePurchaseUnsupported()
         else
             bp.purchase(a, FROST_PRO)
@@ -127,7 +127,7 @@ class IABSettings : IABBinder() {
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {
         super.onBillingError(errorCode, error)
-        activity?.playStoreGenericError(null)
+        L.e("Billing error $errorCode ${error?.message}")
     }
 
     /**
