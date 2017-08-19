@@ -94,7 +94,7 @@
 }
 
 //  Background svg mixin
-@mixin background-svg($svg, $extra: "") {
+@mixin background-svg($svg, $extra: "no-repeat") {
   background: svg-url($svg) unquote($extra) !important;
 }
 

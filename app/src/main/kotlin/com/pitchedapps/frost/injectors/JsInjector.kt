@@ -5,13 +5,14 @@ import com.pitchedapps.frost.web.FrostWebViewClient
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.SingleSubject
+import org.apache.commons.text.StringEscapeUtils
 
 class JsBuilder {
     private val css = StringBuilder()
     private val js = StringBuilder()
 
     fun css(css: String): JsBuilder {
-        this.css.append(css)
+        this.css.append(StringEscapeUtils.escapeEcmaScript(css))
         return this
     }
 

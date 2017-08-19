@@ -60,10 +60,7 @@ open class WebOverlayActivity : KauBaseActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
-        kauSwipeOnCreate {
-            if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
-            transitionSystemBars = false
-        }
+
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
@@ -76,6 +73,11 @@ open class WebOverlayActivity : KauBaseActivity(),
                 duration = Snackbar.LENGTH_INDEFINITE
                 setAction(R.string.kau_got_it) { _ -> this.dismiss() }
             }
+        }
+
+        kauSwipeOnCreate {
+            if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
+            transitionSystemBars = false
         }
     }
 
@@ -106,11 +108,6 @@ open class WebOverlayActivity : KauBaseActivity(),
         toolbar.setTitleTextColor(Prefs.iconColor)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
         toolbar.overflowIcon?.setTint(Prefs.iconColor)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        kauSwipeOnPostCreate()
     }
 
     override fun onDestroy() {

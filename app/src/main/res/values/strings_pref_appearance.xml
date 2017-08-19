@@ -5,6 +5,7 @@
 
     <string name="theme">Theme</string>
     <string name="text_color">Text Color</string>
+    <string name="accent_color">Accent Color</string>
     <string name="background_color">Background Color</string>
     <string name="header_color">Header Color</string>
     <string name="icon_color">Icon Color</string>

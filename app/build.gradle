@@ -147,6 +147,8 @@ dependencies {
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
 
+    implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
+
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
     releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
