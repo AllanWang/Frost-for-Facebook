@@ -7,6 +7,8 @@
 * Add option to get image/video from default camera or gallery app.
 * Fix some bug reports.
 * Remove error dialog for IAB. It will now depend solely on the google services dialogs.
+* Fix loading issue for old conversations
+* Add debugger for failed image activities
 
 ## v1.4.5
 * Create more robust IM notification fetcher with a timeout
