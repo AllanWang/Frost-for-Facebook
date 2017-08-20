@@ -33,5 +33,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:visibility="invisible" />
+
     </RelativeLayout>
+
 </android.support.v4.widget.SwipeRefreshLayout>

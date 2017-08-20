@@ -273,13 +273,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                                     content(String.format(string(R.string.kau_logout_confirm_as_x), currentCookie.name ?: Prefs.userId.toString()))
                                     positiveText(R.string.kau_yes)
                                     negativeText(R.string.kau_no)
-                                    onPositive { _, _ ->
-                                        FbCookie.logout(Prefs.userId) {
-                                            val allCookies = cookies()
-                                            allCookies.remove(currentCookie)
-                                            launchLogin(allCookies, true)
-                                        }
-                                    }
+                                    onPositive { _, _ -> FbCookie.logout(this@MainActivity) }
                                 }
                             }
                         }

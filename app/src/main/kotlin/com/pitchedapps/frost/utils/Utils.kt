@@ -27,6 +27,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import java.io.IOException
@@ -65,7 +66,9 @@ fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)
     L.i("Launch web overlay", argUrl)
-    if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
+    if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
+        FbCookie.logout(this)
+    else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
         startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })

@@ -1,5 +1,7 @@
 package com.pitchedapps.frost.facebook
 
+import android.app.Activity
+import android.content.Context
 import android.webkit.CookieManager
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookie
@@ -7,6 +9,8 @@ import com.pitchedapps.frost.dbflow.removeCookie
 import com.pitchedapps.frost.dbflow.saveFbCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.launchLogin
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.SingleSubject
@@ -83,6 +87,22 @@ object FbCookie {
         setWebCookie(cookie.cookie, callback)
     }
 
+    /**
+     * Helper function to remove the current cookies
+     * and launch the proper login page
+     */
+    fun logout(context: Context) {
+        val cookies = arrayListOf<CookieModel>()
+        if (context is Activity)
+            cookies.addAll(context.cookies().filter { it.id != Prefs.userId })
+        logout(Prefs.userId) {
+            context.launchLogin(cookies, true)
+        }
+    }
+
+    /**
+     * Clear the cookies of the given id
+     */
     fun logout(id: Long, callback: () -> Unit) {
         L.d("Logging out user $id")
         removeCookie(id)
