@@ -2,6 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.webkit.*
@@ -56,12 +57,7 @@ class LoginWebView @JvmOverloads constructor(
         override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
             checkForLogin(url) { id, cookie -> loginCallback(CookieModel(id, "", cookie)) }
-            if (url.isFacebookUrl)
-                view.jsInject(CssHider.HEADER,
-                        CssHider.CORE,
-                        Prefs.themeInjector,
-                        callback = { if (!view.isVisible) view.fadeIn(offset = WEB_LOAD_DELAY) })
-            else if (!view.isVisible) view.fadeIn()
+            if (!view.isVisible) view.fadeIn()
         }
 
         fun checkForLogin(url: String?, onFound: (id: Long, cookie: String) -> Unit) {
@@ -76,7 +72,11 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageCommitVisible(view: WebView, url: String?) {
             super.onPageCommitVisible(view, url)
-            view.setBackgroundColor(Prefs.bgColor)
+            view.setBackgroundColor(Color.TRANSPARENT)
+            if (url.isFacebookUrl)
+                view.jsInject(CssHider.HEADER,
+                        CssHider.CORE,
+                        Prefs.themeInjector)
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
