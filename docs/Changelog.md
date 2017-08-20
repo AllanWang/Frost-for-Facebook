@@ -7,6 +7,8 @@
 * Improve logout logic when account is invalid
 * Fix material light background for certain items
 * Fix initial login not sticking
+* Allow back press in login activity
+* Update themes
 
 ## v1.4.7
 * Update secondary background for transparent themes to be more visible.
