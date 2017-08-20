@@ -79,7 +79,7 @@ fun CookieModel.fetchUsername(callback: (String) -> Unit) {
             if (e !is UnknownHostException)
                 e.logFrostAnswers("Fetch username failed")
         } finally {
-            if (result.isBlank() && (name?.isNotBlank() ?: false)) {
+            if (result.isBlank() && (name?.isNotBlank() == true)) {
                 callback(name!!)
                 return@subscribe
             }

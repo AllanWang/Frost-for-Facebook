@@ -2,7 +2,6 @@ package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.webkit.*
@@ -18,7 +17,6 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.jetbrains.anko.withAlpha
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -78,7 +76,7 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageCommitVisible(view: WebView, url: String?) {
             super.onPageCommitVisible(view, url)
-            view.setBackgroundColor(Color.TRANSPARENT)
+            view.setBackgroundColor(Prefs.bgColor)
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {

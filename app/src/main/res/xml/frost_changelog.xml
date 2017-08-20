@@ -14,6 +14,9 @@
     <item text="Fix url loading bug and add option to launch urls in default browser (behaviour setting)" />
     <item text="Allow for bottom bar tabs (appearance setting)" />
     <item text="Allow custom ringtones for notifications and messages (notification setting)" />
+    <item text="Improve logout logic when account is invalid" />
+    <item text="Fix material light background for certain items" />
+    <item text="Fix initial login not sticking" />
     <item text="" />
 	
 	<version title="v1.4.7"/>

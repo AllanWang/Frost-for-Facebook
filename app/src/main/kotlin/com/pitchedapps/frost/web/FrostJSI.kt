@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.Subject
 
@@ -68,7 +69,7 @@ class FrostJSI(val webView: FrostWebViewCore) {
 
     @JavascriptInterface
     fun loadLogin() {
-        context.launchLogin(cookies, true)
+        FbCookie.logout(context)
     }
 
     /**

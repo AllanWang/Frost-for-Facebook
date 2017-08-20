@@ -21,6 +21,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.LoginWebView
@@ -64,6 +65,7 @@ class LoginActivity : BaseActivity() {
         web.loadLogin({ refresh = it != 100 }) {
             cookie ->
             L.d("Login found")
+            FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
                 profile.fadeIn()
                 loadInfo(cookie)
