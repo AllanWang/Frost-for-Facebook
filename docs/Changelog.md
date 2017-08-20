@@ -1,6 +1,10 @@
 # Changelog
 
 ## Beta Updates
+* Fix url loading bug and add option to launch urls in default browser (behaviour setting)
+* Allow for bottom bar tabs (appearance setting)
+
+## v1.4.7
 * Update secondary background for transparent themes to be more visible.
 * Pressing enter when searching will launch the full search page
 * Add different backgrounds for news feed articles.

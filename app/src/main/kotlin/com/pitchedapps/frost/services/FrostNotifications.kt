@@ -34,26 +34,33 @@ import org.jetbrains.anko.runOnUiThread
  * Logic for build notifications, scheduling notifications, and showing notifications
  */
 
+
+val Context.frostNotification: NotificationCompat.Builder
+    get() = frostNotification()
+
 /**
  * Wrap the default builder with our icon and accent color
  */
-val Context.frostNotification: NotificationCompat.Builder
-    get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
-        setSmallIcon(R.drawable.frost_f_24)
-        setAutoCancel(true)
-        color = color(R.color.frost_notification_accent)
-    }
-
-/**
- * Assign global changes to the notification after it is built
- */
-@Suppress("DEPRECATION")
-        //The update feature is for Android O and seems to still be in beta
-fun Notification.frostConfig() = apply {
+fun Context.frostNotification(ringtone: String = Prefs.notificationRingtone): NotificationCompat.Builder
+        = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
+    setSmallIcon(R.drawable.frost_f_24)
+    setAutoCancel(true)
+    color = color(R.color.frost_notification_accent)
+    var defaults = 0
     if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
-    if (Prefs.notificationSound) defaults = defaults or Notification.DEFAULT_SOUND
+    if (Prefs.notificationSound) {
+        if (ringtone.isNotBlank()) setSound(Uri.parse(ringtone))
+        else defaults = defaults or Notification.DEFAULT_SOUND
+    }
     if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
+    setDefaults(defaults)
 }
+
+val NotificationCompat.Builder.quiet
+    get() = apply { setDefaults(0) }
+
+val NotificationCompat.Builder.messageRingtone
+    get() = apply { }
 
 val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
     get() = NotificationCompat.BigTextStyle(this)
@@ -72,7 +79,7 @@ class FrostNotificationTarget(val context: Context,
 
     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>) {
         builder.setLargeIcon(resource)
-        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.withBigText.build().frostConfig())
+        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.withBigText.build())
     }
 }
 
@@ -99,7 +106,8 @@ data class NotificationContent(val data: CookieModel,
         intent.putExtra(ARG_USER_ID, data.id)
         val group = "${groupPrefix}_${data.id}"
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        val notifBuilder = context.frostNotification
+        val ringtone = if (groupPrefix == FROST_MESSAGE_NOTIFICATION_GROUP) Prefs.messageRingtone else Prefs.notificationRingtone
+        val notifBuilder = context.frostNotification(ringtone)
                 .setContentTitle(title ?: context.string(R.string.frost_name))
                 .setContentText(text)
                 .setContentIntent(pendingIntent)
@@ -109,7 +117,7 @@ data class NotificationContent(val data: CookieModel,
 
         if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
         L.v("Notif load", this.toString())
-        NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build().frostConfig())
+        NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build())
 
         if (profileUrl.isNotBlank()) {
             context.runOnUiThread {

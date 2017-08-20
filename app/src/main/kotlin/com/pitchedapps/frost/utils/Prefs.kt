@@ -7,9 +7,9 @@ import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
 import ca.allanwang.kau.utils.isColorVisibleOn
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
+import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
-import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
 
 /**
@@ -103,6 +103,10 @@ object Prefs : KPref() {
     var notificationVibrate: Boolean by kpref("notification_vibrate", true)
 
     var notificationSound: Boolean by kpref("notification_sound", true)
+
+    var notificationRingtone: String by kpref("notification_ringtone", "")
+
+    var messageRingtone: String by kpref("message_ringtone", "")
 
     var notificationLights: Boolean by kpref("notification_lights", true)
 

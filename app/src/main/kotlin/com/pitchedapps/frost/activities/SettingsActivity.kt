@@ -3,6 +3,8 @@ package com.pitchedapps.frost.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -32,10 +34,37 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
 
     var resultFlag = Activity.RESULT_CANCELED
 
+    companion object {
+        private const val REQUEST_RINGTONE = 0b10111 shl 5
+        const val REQUEST_NOTIFICATION_RINGTONE = REQUEST_RINGTONE or 1
+        const val REQUEST_MESSAGE_RINGTONE = REQUEST_RINGTONE or 2
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (fetchRingtone(requestCode, resultCode, data)) return
         if (!onActivityResultBilling(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data)
         reloadList()
+    }
+
+    /**
+     * Fetch ringtone and save uri
+     * Returns [true] if consumed, [false] otherwise
+     */
+    private fun fetchRingtone(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+        if (requestCode and REQUEST_RINGTONE != REQUEST_RINGTONE || resultCode != Activity.RESULT_OK) return false
+        val uri: String = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)?.toString() ?: ""
+        when (requestCode) {
+            REQUEST_NOTIFICATION_RINGTONE -> {
+                Prefs.notificationRingtone = uri
+                reloadByTitle(R.string.notification_ringtone)
+            }
+            REQUEST_MESSAGE_RINGTONE -> {
+                Prefs.messageRingtone = uri
+                reloadByTitle(R.string.message_ringtone)
+            }
+        }
+        return true
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
