@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
 
-def withPlaySigning = file('../files.gplay-keys.json').exists()
+def withPlaySigning = file('../files/gplay-keys.json').exists()
 /*
  * Feel free to check the gitignore under the files/ folder to see what is required for the signing
  * It is assumed that if one of those files exist, all remaining ones exist as well
