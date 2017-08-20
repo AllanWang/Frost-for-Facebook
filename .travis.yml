@@ -12,18 +12,14 @@ android:
   - extra-google-m2repository
   licenses:
   - ".+"
-before_install:
-- openssl aes-256-cbc -K $encrypted_0f269bed3d88_key -iv $encrypted_0f269bed3d88_iv
-  -in files/frost.tar.enc -out frost.tar -d
-- tar xvf frost.tar
-- chmod +x gradlew
 after_success:
-- if [[ "$TRAVIS_BRANCH" != "master" ]]; then chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh; fi
+- chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
 script:
 - cd $TRAVIS_BUILD_DIR/
 - printf "Starting script\n"
+- chmod +x gradlew
 - ./gradlew --quiet androidGitVersion
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then ./gradlew lintRelease publishRelease; else ./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest; fi
+- ./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest
 notifications:
   email: false
   slack:
