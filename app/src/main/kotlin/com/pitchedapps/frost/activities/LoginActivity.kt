@@ -62,8 +62,7 @@ class LoginActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
         setFrostColors(toolbar)
-        web.loadLogin({ refresh = it != 100 }) {
-            cookie ->
+        web.loadLogin({ refresh = it != 100 }) { cookie ->
             L.d("Login found")
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
@@ -78,8 +77,7 @@ class LoginActivity : BaseActivity() {
         refresh = true
         Observable.zip(SingleToObservable(profileObservable), SingleToObservable(usernameObservable),
                 BiFunction<Boolean, String, Pair<Boolean, String>> { foundImage, name -> Pair(foundImage, name) })
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-            (foundImage, name) ->
+                .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
             refresh = false
             if (!foundImage) {
                 L.e("Could not get profile photo; Invalid userId?")
@@ -92,8 +90,7 @@ class LoginActivity : BaseActivity() {
              * The user may have logged into an account that is already in the database
              * We will let the db handle duplicates and load it now after the new account has been saved
              */
-            loadFbCookiesAsync {
-                cookies ->
+            loadFbCookiesAsync { cookies ->
                 Handler().postDelayed({
                     launchNewTask(if (Showcase.intro) IntroActivity::class.java else MainActivity::class.java,
                             ArrayList(cookies), clearStack = true)
@@ -113,7 +110,7 @@ class LoginActivity : BaseActivity() {
             }
 
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                e.logFrostAnswers( "Profile loading exception")
+                e.logFrostAnswers("Profile loading exception")
                 profileObservable.onSuccess(false)
                 return false
             }
@@ -122,5 +119,12 @@ class LoginActivity : BaseActivity() {
 
     fun loadUsername(cookie: CookieModel) {
         cookie.fetchUsername { usernameObservable.onSuccess(it) }
+    }
+
+    override fun onBackPressed() {
+        if (web.canGoBack())
+            web.goBack()
+        else
+            super.onBackPressed()
     }
 }
