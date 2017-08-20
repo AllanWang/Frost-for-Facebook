@@ -63,7 +63,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
             c.launchNewTask(LoginActivity::class.java)
     }
 
-    fun injectBackgroundColor()
+    private fun injectBackgroundColor()
             = webCore.setBackgroundColor(if (isMain) Color.TRANSPARENT else Prefs.bgColor.withAlpha(255))
 
 

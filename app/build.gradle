@@ -160,7 +160,7 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
     releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+//    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
 
     implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
