@@ -32,7 +32,8 @@ object CookiesDb {
 @Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
 data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null, var cookie: String? = null) : BaseModel(), Parcelable {
     companion object {
-        @JvmField val CREATOR = PaperParcelCookieModel.CREATOR
+        @JvmField
+        val CREATOR = PaperParcelCookieModel.CREATOR
     }
 
     override fun describeContents() = 0
@@ -60,14 +61,13 @@ fun saveFbCookie(cookie: CookieModel, callback: (() -> Unit)? = null) {
 }
 
 fun removeCookie(id: Long) {
-    loadFbCookie(id)?.async?.delete({
+    loadFbCookie(id)?.async?.delete {
         L.d("Fb cookie deleted", id.toString())
-    })
+    }
 }
 
 fun CookieModel.fetchUsername(callback: (String) -> Unit) {
-    ReactiveNetwork.checkInternetConnectivity().subscribeOn(Schedulers.io()).subscribe {
-        yes, _ ->
+    ReactiveNetwork.checkInternetConnectivity().subscribeOn(Schedulers.io()).subscribe { yes, _ ->
         if (!yes) return@subscribe callback("")
         var result = ""
         try {
