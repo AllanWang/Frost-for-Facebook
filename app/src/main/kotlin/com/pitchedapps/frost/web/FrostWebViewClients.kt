@@ -48,7 +48,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
-        L.i("FWV Loading", url)
+        L.d("FWV Loading", url)
         refreshObservable.onNext(true)
         if (!url.isFacebookUrl) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
@@ -81,7 +81,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
-        L.i("Page finished", url)
+        L.d("Page finished", url)
         if (!url.isFacebookUrl) {
             refreshObservable.onNext(false)
             return
@@ -141,7 +141,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
             return launchImage(request.url.toString())
-        if (view.context.resolveActivityForUri(request.url)) return true
+        if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
 
