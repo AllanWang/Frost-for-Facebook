@@ -13,9 +13,9 @@ import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.services.frostConfig
 import com.pitchedapps.frost.services.frostNotification
 import com.pitchedapps.frost.services.getNotificationPendingCancelIntent
+import com.pitchedapps.frost.services.quiet
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -66,7 +66,7 @@ private fun AnkoAsyncContext<Context>.frostDownloadImpl(url: String, type: Downl
     val notifId = Math.abs(url.hashCode() + System.currentTimeMillis().toInt())
     var notifBuilderAttempt: NotificationCompat.Builder? = null
     weakRef.get()?.apply {
-        notifBuilderAttempt = frostNotification
+        notifBuilderAttempt = frostNotification.quiet
                 .setContentTitle(string(type.downloadingRes))
                 .setCategory(Notification.CATEGORY_PROGRESS)
                 .setWhen(System.currentTimeMillis())
@@ -133,7 +133,7 @@ private fun OkHttpClient.cancel(url: String) {
 
 private fun NotificationCompat.Builder.show(weakRef: WeakReference<Context>, notifId: Int) {
     val c = weakRef.get() ?: return
-    NotificationManagerCompat.from(c).notify(DOWNLOAD_GROUP, notifId, build().frostConfig())
+    NotificationManagerCompat.from(c).notify(DOWNLOAD_GROUP, notifId, build())
 }
 
 private class ProgressResponseBody(

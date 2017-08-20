@@ -104,6 +104,10 @@ object Prefs : KPref() {
 
     var notificationSound: Boolean by kpref("notification_sound", true)
 
+    var notificationRingtone: String by kpref("notification_ringtone", "")
+
+    var messageRingtone: String by kpref("message_ringtone", "")
+
     var notificationLights: Boolean by kpref("notification_lights", true)
 
     var messageScrollToBottom: Boolean by kpref("message_scroll_to_bottom", false)
