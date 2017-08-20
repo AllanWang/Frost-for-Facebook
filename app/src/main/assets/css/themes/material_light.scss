@@ -1,8 +1,10 @@
 $text: #000;
 $link: #111;
 $accent: #3b5998;
-$background: #f5f5f5;
-$background2: #fff;
+$background: #fff;
+// this is actually the inverse of material light (bg should be gray, cards should be white),
+// but it looks better than the alternative
+$background2: rgba(darken($background, 35%), 0.2) !default;
 $bg_transparent: $background;
 
 @import "../core/main";

@@ -11,6 +11,7 @@ import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
+import com.pitchedapps.frost.dbflow.removeCookie
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -52,7 +53,10 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         refreshObservable.onNext(true)
         if (!url.isFacebookUrl) return
         if (url.contains("logout.php")) FbCookie.logout(Prefs.userId, { launchLogin(view.context) })
-        else if (url.contains("login.php")) FbCookie.reset({ launchLogin(view.context) })
+        else if (url.contains("login.php")) {
+            removeCookie(Prefs.userId) // cookie is invalid
+            FbCookie.reset({ launchLogin(view.context) })
+        }
     }
 
 

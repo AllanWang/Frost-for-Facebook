@@ -19,9 +19,9 @@ object FbCookie {
     val webCookie: String?
         get() = CookieManager.getInstance().getCookie(FB_URL_BASE)
 
-    fun setWebCookie(cookie: String?, callback: (() -> Unit)?) {
+    private fun setWebCookie(cookie: String?, callback: (() -> Unit)?) {
         with(CookieManager.getInstance()) {
-            removeAllCookies({
+            removeAllCookies {
                 if (cookie == null) {
                     callback?.invoke()
                     return@removeAllCookies
@@ -29,12 +29,12 @@ object FbCookie {
                 L.d("Setting cookie", cookie)
                 val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
                 cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie, { callback.onSuccess(it) }) }
-                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {}).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
+                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {}).subscribeOn(AndroidSchedulers.mainThread()).subscribe {
                     callback?.invoke()
                     L.d("Cookies set", webCookie)
                     flush()
-                })
-            })
+                }
+            }
         }
     }
 
@@ -61,10 +61,10 @@ object FbCookie {
     fun reset(callback: () -> Unit) {
         Prefs.userId = -1L
         with(CookieManager.getInstance()) {
-            removeAllCookies({
+            removeAllCookies {
                 flush()
                 callback()
-            })
+            }
         }
     }
 
