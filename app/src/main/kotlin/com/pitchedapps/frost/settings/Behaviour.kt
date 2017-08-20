@@ -23,6 +23,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.overlay_full_screen_swipe_desc
     }
 
+    checkbox(R.string.open_links_in_default, { Prefs.linksInDefaultApp }, { Prefs.linksInDefaultApp = it }) {
+        descRes = R.string.open_links_in_default_desc
+    }
+
     checkbox(R.string.viewpager_swipe, { Prefs.viewpagerSwipe }, { Prefs.viewpagerSwipe = it }) {
         descRes = R.string.viewpager_swipe_desc
     }

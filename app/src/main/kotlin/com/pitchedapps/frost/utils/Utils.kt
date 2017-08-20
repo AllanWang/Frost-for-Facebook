@@ -65,9 +65,10 @@ fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)
     L.i("Launch web overlay", argUrl)
-    startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
-        putExtra(ARG_URL, argUrl)
-    })
+    if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
+        startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
+            putExtra(ARG_URL, argUrl)
+        })
 }
 
 fun Context.launchImageActivity(imageUrl: String, text: String?) {

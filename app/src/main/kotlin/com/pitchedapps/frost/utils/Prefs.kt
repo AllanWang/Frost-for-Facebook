@@ -131,4 +131,5 @@ object Prefs : KPref() {
 
     var debugSettings: Boolean by kpref("debug_settings", false)
 
+    var linksInDefaultApp: Boolean by kpref("link_in_default_app", false)
 }
