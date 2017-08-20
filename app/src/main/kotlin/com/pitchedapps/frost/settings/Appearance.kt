@@ -8,6 +8,7 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
+import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
@@ -27,9 +28,9 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                 title(R.string.theme)
                 items(Theme.values()
                         .map { if (it == Theme.CUSTOM && !IS_FROST_PRO) R.string.custom_pro else it.textRes }
-                        .map { context.string(it) })
+                        .map { string(it) })
                 itemsCallbackSingleChoice(item.pref) {
-                    _, _, which, text ->
+                    _, _, which, _ ->
                     if (item.pref != which) {
                         if (which == Theme.CUSTOM.ordinal && !IS_FROST_PRO) {
                             purchasePro()
@@ -41,7 +42,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                         setFrostTheme(true)
                         themeExterior()
                         invalidateOptionsMenu()
-                        frostAnswersCustom("Theme", "Count" to text)
+                        frostAnswersCustom("Theme", "Count" to Theme(which).name)
                     }
                     true
                 }
@@ -116,6 +117,27 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     header(R.string.global_customization)
+
+    text(R.string.main_activity_layout, { Prefs.mainActivityLayoutType }, { Prefs.mainActivityLayoutType = it }) {
+        textGetter = { string(Prefs.mainActivityLayout.titleRes) }
+        onClick = {
+            _, _, item ->
+            materialDialogThemed {
+                title(R.string.set_main_activity_layout)
+                items(MainActivityLayout.values.map { string(it.titleRes) })
+                itemsCallbackSingleChoice(item.pref) {
+                    _, _, which, _ ->
+                    if (item.pref != which) {
+                        item.pref = which
+                        shouldRestartMain()
+                        frostAnswersCustom("Main Layout", "Type" to MainActivityLayout(which).name)
+                    }
+                    true
+                }
+            }
+            true
+        }
+    }
 
     checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, {
         Prefs.showRoundedIcons = it

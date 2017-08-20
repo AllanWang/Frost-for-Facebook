@@ -6,6 +6,7 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
 import ca.allanwang.kau.utils.isColorVisibleOn
+import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FeedSort
 import com.pitchedapps.frost.injectors.InjectorContract
 
@@ -132,4 +133,9 @@ object Prefs : KPref() {
     var debugSettings: Boolean by kpref("debug_settings", false)
 
     var linksInDefaultApp: Boolean by kpref("link_in_default_app", false)
+
+    var mainActivityLayoutType: Int by kpref("main_activity_layout_type", 0)
+
+    val mainActivityLayout: MainActivityLayout
+        get() = MainActivityLayout(mainActivityLayoutType)
 }

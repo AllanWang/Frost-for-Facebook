@@ -125,7 +125,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                         "Frost id" to Prefs.frostId)
             }
         }
-        setContentView(R.layout.activity_main)
+        setContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
@@ -159,7 +159,8 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 //        }
-        setFrostColors(toolbar, themeWindow = false, headers = arrayOf(tabs, appBar), backgrounds = arrayOf(viewPager))
+        setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
+        tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
         setNetworkObserver {
             connectivity ->
