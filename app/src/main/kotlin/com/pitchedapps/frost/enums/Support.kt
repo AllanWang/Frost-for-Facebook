@@ -1,10 +1,11 @@
-package com.pitchedapps.frost.utils
+package com.pitchedapps.frost.enums
 
 import android.content.Context
 import android.support.annotation.StringRes
 import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-06-29.

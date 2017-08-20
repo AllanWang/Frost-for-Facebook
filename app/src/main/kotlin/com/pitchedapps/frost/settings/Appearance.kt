@@ -9,6 +9,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.MainActivityLayout
+import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO

@@ -1,4 +1,4 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.enums
 
 import android.support.annotation.StringRes
 import com.pitchedapps.frost.R

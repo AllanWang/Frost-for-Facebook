@@ -5,7 +5,7 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.facebook.FeedSort
+import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.materialDialogThemed
 

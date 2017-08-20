@@ -17,6 +17,7 @@ import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
