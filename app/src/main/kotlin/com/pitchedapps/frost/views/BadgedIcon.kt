@@ -24,11 +24,11 @@ class BadgedIcon @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_badged_icon, this)
-        val badgeColor = Prefs.headerColor.withAlpha(255).colorToForeground(0.2f)
+        val badgeColor = Prefs.mainActivityLayout.backgroundColor().withAlpha(255).colorToForeground(0.2f)
         val badgeBackground = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(badgeColor, badgeColor))
         badgeBackground.cornerRadius = 13.dpToPx.toFloat()
         badgeTextView.background = badgeBackground
-        badgeTextView.setTextColor(Prefs.iconColor)
+        badgeTextView.setTextColor(Prefs.mainActivityLayout.iconColor())
     }
 
 
@@ -36,7 +36,7 @@ class BadgedIcon @JvmOverloads constructor(
         get() = field
         set(value) {
             field = value
-            badgeImage.setImageDrawable(value?.toDrawable(context, color = Prefs.iconColor))
+            badgeImage.setImageDrawable(value?.toDrawable(context, color = Prefs.mainActivityLayout.iconColor()))
         }
 
     fun setAllAlpha(alpha: Float) {
