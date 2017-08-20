@@ -23,7 +23,7 @@ enum class MainActivityLayout(
             { Prefs.textColor });
 
     companion object {
-        val values = MainActivityLayout.values() //save one instance
+        val values = values() //save one instance
         operator fun invoke(index: Int) = values[index]
     }
 }

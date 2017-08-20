@@ -6,8 +6,8 @@ import ca.allanwang.kau.utils.bindViewResettable
 import ca.allanwang.kau.utils.scaleXY
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.enums.Theme
+import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-07-28.
