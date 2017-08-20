@@ -233,7 +233,7 @@ class NotificationService : JobService() {
         val notifBuilder = frostNotification
                 .setContentTitle(string(R.string.frost_name))
                 .setContentText(text)
-        NotificationManagerCompat.from(this).notify(999, notifBuilder.build().frostConfig())
+        NotificationManagerCompat.from(this).notify(999, notifBuilder.build())
     }
 
     private fun summaryNotification(userId: Long, count: Int, contentRes: Int, pendingUrl: String, groupPrefix: String) {
@@ -250,7 +250,7 @@ class NotificationService : JobService() {
                 .setContentIntent(pendingIntent)
                 .setCategory(Notification.CATEGORY_SOCIAL)
 
-        NotificationManagerCompat.from(this).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build().frostConfig())
+        NotificationManagerCompat.from(this).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build())
     }
 
 }

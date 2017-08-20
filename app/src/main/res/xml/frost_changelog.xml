@@ -11,7 +11,13 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
-    <item text="Update secondary background for transparent themes to be more visible." />
+    <item text="Fix url loading bug and add option to launch urls in default browser (behaviour setting)" />
+    <item text="Allow for bottom bar tabs (appearance setting)" />
+    <item text="Allow custom ringtones for notifications and messages (notification setting)" />
+    <item text="" />
+	
+	<version title="v1.4.7"/>
+	<item text="Update secondary background for transparent themes to be more visible." />
     <item text="Pressing enter when searching will launch the full search page" />
     <item text="Add different backgrounds for news feed articles." />
     <item text="Add option to get image/video from default camera or gallery app." />
@@ -19,8 +25,6 @@
     <item text="Remove error dialog for IAB. It will now depend solely on the google services dialogs." />
     <item text="Fix loading issue for old conversations" />
     <item text="Add debugger for failed image activities" />
-    <item text="" />
-    <item text="" />
 	
 	<version title="v1.4.5"/>
 	<item text="Create more robust IM notification fetcher with a timeout" />

@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
 import com.pitchedapps.frost.activities.MainActivity
-import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.enums.FeedSort
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.web.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewCore

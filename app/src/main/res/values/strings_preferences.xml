@@ -2,7 +2,7 @@
     <string name="appearance">Appearance</string>
     <string name="appearance_desc">Theme, Items to display, etc</string>
 
-    <string name="notifications_desc">Frequency, filters, etc</string>
+    <string name="notifications_desc">Frequency, filters, ringtones, etc</string>
 
     <string name="newsfeed">News Feed</string>
     <string name="newsfeed_desc">Define what items appear in the newsfeed</string>
