@@ -62,7 +62,7 @@ private class HeadlessHtmlExtractor(
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
         webViewClient = HeadlessWebViewClient(url, injector) // basic client that loads our JS once the page has loaded
-        webChromeClient = QuietChromeClient() // basic client that disables logging
+        webChromeClient = HeadlessChromeClient()
         addJavascriptInterface(HtmlJSI(), "Frost")
         loadUrl(url)
     }

@@ -21,8 +21,29 @@ import io.reactivex.subjects.Subject
 /**
  * Nothing more than a client without logging
  */
-class QuietChromeClient : WebChromeClient() {
+open class QuietChromeClient : WebChromeClient() {
     override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
+}
+
+/**
+ * Fully quiet client that disables any prompts relating to the UI
+ * (as nothing is attached)
+ */
+class HeadlessChromeClient : QuietChromeClient() {
+    override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
+        result.cancel()
+        return true
+    }
+
+    override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
+        result.cancel()
+        return true
+    }
+
+    override fun onJsPrompt(view: WebView, url: String?, message: String?, defaultValue: String?, result: JsPromptResult): Boolean {
+        result.cancel()
+        return true
+    }
 }
 
 /**
@@ -59,8 +80,7 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
 
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
         L.i("Requesting geolocation")
-        context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) {
-            granted, _ ->
+        context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) { granted, _ ->
             L.i("Geolocation response received; ${if (granted) "granted" else "denied"}")
             callback(origin, granted, true)
         }
