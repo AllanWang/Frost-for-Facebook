@@ -39,9 +39,9 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
      * Contains the last item's href (search more) as well as the number of items found
      * This holder is synchronized
      */
-    var previousResult: Pair<String, Int> = Pair("", 0)
+    private var previousResult: Pair<String, Int> = Pair("", 0)
 
-    fun saveResultFrame(result: List<Pair<List<String>, String>>) {
+    private fun saveResultFrame(result: List<Pair<List<String>, String>>) {
         synchronized(previousResult) {
             previousResult = Pair(result.last().second, result.size)
         }
@@ -49,10 +49,11 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebview() {
+        L.i("Begin SearchWebView setup")
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_BASIC
         webViewClient = HeadlessWebViewClient("Search", JsAssets.SEARCH)
-        webChromeClient = QuietChromeClient()
+        webChromeClient = HeadlessChromeClient()
         addJavascriptInterface(SearchJSI(), "Frost")
         searchSubject.debounce(300, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.newThread())
                 .map {
@@ -60,8 +61,7 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
                     L.d(doc.getElementById("main-search_input")?.html())
                     val searchQuery = doc.getElementById("main-search-input")?.text() ?: "Null input"
                     L.d("Search query", searchQuery)
-                    doc.select("a:not([rel*='keywords(']):not([href=#])[rel]").map {
-                        element ->
+                    doc.select("a:not([rel*='keywords(']):not([href=#])[rel]").map { element ->
                         //split text into separate items
                         L.v("Search element", element.attr("href"))
                         val texts = element.select("div").map { it.text() }.filter { !it.isNullOrBlank() }
@@ -72,12 +72,10 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
                 }
                 .filter { it.isNotEmpty() }
                 .filter { Pair(it.last().second, it.size) != previousResult }
-                .subscribe {
-                    content: List<Pair<List<String>, String>> ->
+                .subscribe { content: List<Pair<List<String>, String>> ->
                     saveResultFrame(content)
                     L.d("Search element count ${content.size}")
-                    contract.emitSearchResponse(content.map {
-                        (texts, href) ->
+                    contract.emitSearchResponse(content.map { (texts, href) ->
                         SearchItem(href, texts[0], texts.getOrNull(1))
                     })
                 }

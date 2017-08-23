@@ -19,17 +19,13 @@ import io.reactivex.subjects.Subject
  */
 
 /**
- * Nothing more than a client without logging
- */
-open class QuietChromeClient : WebChromeClient() {
-    override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
-}
-
-/**
  * Fully quiet client that disables any prompts relating to the UI
  * (as nothing is attached)
  */
-class HeadlessChromeClient : QuietChromeClient() {
+class HeadlessChromeClient : WebChromeClient() {
+
+    override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
+
     override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
         result.cancel()
         return true

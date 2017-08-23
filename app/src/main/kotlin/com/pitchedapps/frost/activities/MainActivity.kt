@@ -89,7 +89,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     var firstLoadFinished = false
         set(value) {
             if (field && value) return //both vals are already true
-            L.d("First fragment load has finished")
+            L.i("First fragment load has finished")
             field = value
             if (value && hiddenSearchView == null) {
                 hiddenSearchView = SearchWebView(this, this)
