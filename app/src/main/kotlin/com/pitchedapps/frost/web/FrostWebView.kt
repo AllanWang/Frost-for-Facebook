@@ -59,7 +59,7 @@ class FrostWebView @JvmOverloads constructor(
             baseEnum = enum
             with(settings) {
                 javaScriptEnabled = true
-                if (url.contains("facebook.com/message"))
+                if (messageWhitelist.any { url.contains(it) })
                     userAgentString = USER_AGENT_BASIC
                 allowFileAccess = true
                 textZoom = Prefs.webTextScaling

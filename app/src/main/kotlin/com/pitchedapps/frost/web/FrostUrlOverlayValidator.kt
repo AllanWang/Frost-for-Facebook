@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.web
 
 import android.content.Context
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isFacebookUrl
@@ -43,6 +44,11 @@ fun Context.requestWebOverlay(url: String): Boolean {
 }
 
 /**
+ * If the url contains any one of the whitelist segments, switch to the chat overlay
+ */
+val messageWhitelist = setOf(FbItem.MESSAGES.url, FbItem.CHAT.url)
+
+/**
  * The following components should never be launched in a new overlay
  */
-val overlayBlacklist = setOf("messages/?pageNum", "photoset_token")
+val overlayBlacklist = setOf("messages/?pageNum", "photoset_token", "sharer.php")
