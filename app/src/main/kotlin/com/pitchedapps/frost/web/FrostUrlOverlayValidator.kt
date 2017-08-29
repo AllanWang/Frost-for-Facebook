@@ -45,4 +45,4 @@ fun Context.requestWebOverlay(url: String): Boolean {
 /**
  * The following components should never be launched in a new overlay
  */
-val overlayBlacklist = setOf("messages/?pageNum", "photoset_token")
+val overlayBlacklist = setOf("messages/?pageNum", "photoset_token", "sharer.php")
