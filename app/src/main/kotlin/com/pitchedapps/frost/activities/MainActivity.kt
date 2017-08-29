@@ -295,6 +295,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             primaryFrostItem(FbItem.PHOTOS)
             primaryFrostItem(FbItem.GROUPS)
             primaryFrostItem(FbItem.FRIENDS)
+            primaryFrostItem(FbItem.CHAT)
             primaryFrostItem(FbItem.PAGES)
             divider()
             primaryFrostItem(FbItem.EVENTS)
