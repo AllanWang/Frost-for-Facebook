@@ -160,15 +160,19 @@ a,
 
 //new comment
 @include keyframes(highlightFade) {
-  0% {
+  0%, 50% {
     background: $background2;
   }
-
-  50% {
-    background: $background2;
-  }
-
   100% {
     background: $bg_transparent;
+  }
+}
+
+@include keyframes(chatHighlightAnimation) {
+  0%,100% {
+    background: $bg_transparent;
+  }
+  50% {
+    background: $background2;
   }
 }
