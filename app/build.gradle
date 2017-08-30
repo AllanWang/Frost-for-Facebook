@@ -157,9 +157,12 @@ dependencies {
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
-    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    //noinspection GradleDependency
+    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    //noinspection GradleDependency
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
 //    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
 
     implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"

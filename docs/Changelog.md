@@ -5,6 +5,7 @@
 * Fix theme for sharing and new messages
 * Prevent search bar settings from disabling itself if auto suggestions fail
 * Fix numerous crashes relating to search bar layouts
+* Add debugging for menu
 
 ## v1.4.11
 * Fix url loading bug and add option to launch urls in default browser (behaviour setting)
