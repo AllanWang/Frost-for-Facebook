@@ -64,10 +64,10 @@ class FrostWebView @JvmOverloads constructor(
                 allowFileAccess = true
                 textZoom = Prefs.webTextScaling
             }
-//            setLayerType(View.LAYER_TYPE_HARDWARE, null)
-//            frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
-//            webViewClient = frostWebClient
-//            webChromeClient = FrostChromeClient(this)
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            frostWebClient = baseEnum?.webClient?.invoke(this) ?: FrostWebViewClient(this)
+            webViewClient = frostWebClient
+            webChromeClient = FrostChromeClient(this)
             addJavascriptInterface(FrostJSI(this), "Frost")
             setBackgroundColor(Color.TRANSPARENT)
             setDownloadListener { downloadUrl, _, _, _, _ -> context.frostDownload(downloadUrl) }
