@@ -15,7 +15,7 @@
 	<item text="Fix theme for sharing and new messages" />
 	<item text="Prevent search bar settings from disabling itself if auto suggestions fail" />
 	<item text="Fix numerous crashes relating to search bar layouts" />
-	<item text="" />
+	<item text="Add debugging for menu" />
 	<item text="" />
 	<item text="" />
 	
