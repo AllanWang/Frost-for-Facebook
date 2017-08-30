@@ -121,7 +121,7 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.e("Search subject error")
-                    searchSubject.onComplete()
+                    dispose()
                     contract.disposeHeadlessSearch()
                 }
                 2 -> {

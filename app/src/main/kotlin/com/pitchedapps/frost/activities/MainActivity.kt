@@ -336,11 +336,8 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
      * Fallback to overlay style
      */
     override fun disposeHeadlessSearch() {
-        hiddenSearchView?.dispose()
         hiddenSearchView = null
-        searchView?.config {
-            textCallback = { _, _ -> }
-        }
+        searchView?.config { textCallback = { _, _ -> } }
     }
 
     override fun emitSearchResponse(items: List<SearchItem>) {
