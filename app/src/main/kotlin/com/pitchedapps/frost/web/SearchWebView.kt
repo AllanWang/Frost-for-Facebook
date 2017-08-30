@@ -11,7 +11,6 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.JsBuilder
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.runOnUiThread
@@ -118,13 +117,12 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
         fun emit(flag: Int) {
             when (flag) {
                 0 -> {
-                    L.d("Search loaded successfully")
+                    L.i("Search loaded successfully")
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
-                    L.e("Search subject error; reverting to full overlay")
-                    Prefs.searchBar = false
-                    searchSubject.onComplete()
-                    contract.searchOverlayDispose()
+                    L.e("Search subject error")
+                    dispose()
+                    contract.disposeHeadlessSearch()
                 }
                 2 -> {
                     L.v("Search emission received")
@@ -141,7 +139,7 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
     }
 
     interface SearchContract {
-        fun searchOverlayDispose()
+        fun disposeHeadlessSearch()
         fun emitSearchResponse(items: List<SearchItem>)
         val isSearchOpened: Boolean
     }

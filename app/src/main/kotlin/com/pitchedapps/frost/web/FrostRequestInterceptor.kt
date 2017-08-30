@@ -23,7 +23,7 @@ private val blankResource: WebResourceResponse by lazy { WebResourceResponse("te
 //these hosts will redirect to a blank resource
 private val blacklistHost: Set<String> =
         setOf(
-//                "edge-chat.facebook.com"
+//                "edge-chat.facebook.com" //todo make more specific? This is required for message responses
         )
 
 //these hosts will return null and skip logging
