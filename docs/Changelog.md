@@ -1,6 +1,12 @@
 # Changelog
 
 ## Beta Updates
+* Fix new messages not showing
+* Fix theme for sharing and new messages
+* Prevent search bar settings from disabling itself if auto suggestions fail
+* Fix numerous crashes relating to search bar layouts
+
+## v1.4.11
 * Fix url loading bug and add option to launch urls in default browser (behaviour setting)
 * Allow for bottom bar tabs (appearance setting)
 * Allow custom ringtones for notifications and messages (notification setting)

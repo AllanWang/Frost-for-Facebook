@@ -143,8 +143,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
-                tabsForEachView {
-                    tabPosition, view ->
+                tabsForEachView { tabPosition, view ->
                     view.setAllAlpha(when (tabPosition) {
                         position -> 255.0f - delta
                         position + 1 -> 128.0f + delta
@@ -163,15 +162,13 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-        setNetworkObserver {
-            connectivity ->
+        setNetworkObserver { connectivity ->
             shouldLoadImages = !connectivity.isRoaming
         }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
-        (0 until tabs.tabCount).asSequence().forEach {
-            i ->
+        (0 until tabs.tabCount).asSequence().forEach { i ->
             action(i, tabs.getTabAt(i)!!.customView as BadgedIcon)
         }
     }
@@ -200,10 +197,8 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                     return@map arrayOf(feed, requests, messages, notifications).map { it?.getOrNull(0)?.ownText() }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    (feed, requests, messages, notifications) ->
-                    tabsForEachView {
-                        _, view ->
+                .subscribe { (feed, requests, messages, notifications) ->
+                    tabsForEachView { _, view ->
                         when (view.iicon) {
                             FbItem.FEED.icon -> view.badgeText = feed
                             FbItem.FRIENDS.icon -> view.badgeText = requests
@@ -340,11 +335,9 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
      * Something happened where the normal search function won't work
      * Fallback to overlay style
      */
-    override fun searchOverlayDispose() {
-        hiddenSearchView?.dispose()
+    override fun disposeHeadlessSearch() {
         hiddenSearchView = null
-        searchView?.unBind { launchWebOverlay(FbItem.SEARCH.url); true }
-        searchView = null
+        searchView?.config { textCallback = { _, _ -> } }
     }
 
     override fun emitSearchResponse(items: List<SearchItem>) {
@@ -373,7 +366,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
         } else {
-            if (searchView != null) searchOverlayDispose()
+            if (searchView != null) disposeHeadlessSearch()
             else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbItem.SEARCH.url); true }
         }
         return true
