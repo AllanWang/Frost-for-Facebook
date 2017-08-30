@@ -67,14 +67,14 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
-        if (url.isFacebookUrl)
-            view.jsInject(
-                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                    CssHider.HEADER,
-                    CssHider.CORE,
-                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
-                    Prefs.themeInjector,
-                    CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))
+//        if (url.isFacebookUrl)
+//            view.jsInject(
+//                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+//                    CssHider.HEADER,
+//                    CssHider.CORE,
+//                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
+//                    Prefs.themeInjector,
+//                    CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
@@ -97,14 +97,14 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         L.d("Page finished reveal")
         refreshObservable.onNext(false)
         injectBackgroundColor()
-        webCore.jsInject(
-                JsActions.LOGIN_CHECK,
-                JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
-                JsAssets.TEXTAREA_LISTENER,
-                CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
-                JsAssets.CONTEXT_A,
-                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
-        )
+//        webCore.jsInject(
+//                JsActions.LOGIN_CHECK,
+//                JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
+//                JsAssets.TEXTAREA_LISTENER,
+//                CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
+//                JsAssets.CONTEXT_A,
+//                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
+//        )
     }
 
     open fun handleHtml(html: String?) {
