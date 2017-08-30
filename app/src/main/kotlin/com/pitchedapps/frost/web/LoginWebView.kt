@@ -49,6 +49,7 @@ class LoginWebView @JvmOverloads constructor(
     fun loadLogin(progressCallback: (Int) -> Unit, loginCallback: (CookieModel) -> Unit) {
         this.progressCallback = progressCallback
         this.loginCallback = loginCallback
+        L.d("Begin loading login")
         loadUrl(LOGIN_URL)
     }
 
