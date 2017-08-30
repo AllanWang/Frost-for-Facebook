@@ -118,6 +118,8 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
             when (flag) {
                 0 -> {
                     L.d("Search loaded successfully")
+                    searchSubject.onComplete()
+                    contract.disposeHeadlessSearch() //todo remove
                 }
                 1 -> { //something is not found in the search view; this is effectively useless
                     L.e("Search subject error")

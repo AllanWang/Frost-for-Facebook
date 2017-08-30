@@ -11,6 +11,15 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
+	<item text="Fix new messages not showing" />
+	<item text="Fix theme for sharing and new messages" />
+	<item text="Prevent search bar settings from disabling itself if auto suggestions fail" />
+	<item text="Fix numerous crashes relating to search bar layouts" />
+	<item text="" />
+	<item text="" />
+	<item text="" />
+	
+	<version title="v1.4.11"/>
     <item text="Fix url loading bug and add option to launch urls in default browser (behaviour setting)" />
     <item text="Allow for bottom bar tabs (appearance setting)" />
     <item text="Allow custom ringtones for notifications and messages (notification setting)" />
