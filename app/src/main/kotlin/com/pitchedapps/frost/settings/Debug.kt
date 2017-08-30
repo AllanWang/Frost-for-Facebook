@@ -14,6 +14,7 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
+import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cleanHtml
 import com.pitchedapps.frost.utils.materialDialogThemed
@@ -49,6 +50,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 }
 
 private enum class Debugger(val data: FbItem, val injector: InjectorContract?, vararg query: String) {
+    MENU(FbItem.MENU, JsAssets.MENU_DEBUG, "#viewport"), //todo modify menu js for debugging
     NOTIFICATIONS(FbItem.NOTIFICATIONS, null, "#notifications_list"),
     SEARCH(FbItem.SEARCH, JsActions.FETCH_BODY);
 
