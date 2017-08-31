@@ -29,8 +29,8 @@ if (!window.hasOwnProperty('frost_context_a')) {
       var image = element.querySelector('[style*="background-image: url("]');
       if (!image) image = element.parentNode.querySelector('[style*="background-image: url("]');
       if (image) {
-        var imageUrl = window.getComputedStyle(image, null).backgroundImage.slice(5, -2);
-        console.log('Context image', imageUrl);
+        var imageUrl = window.getComputedStyle(image, null).backgroundImage.trim().slice(4, -1);
+        console.log('Context image: ' + imageUrl);
         if (typeof Frost !== 'undefined') Frost.loadImage(imageUrl, text);
         e.stopPropagation();
         e.preventDefault();

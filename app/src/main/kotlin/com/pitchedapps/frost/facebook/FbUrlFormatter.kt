@@ -15,7 +15,7 @@ class FbUrlFormatter(url: String) {
     val cleaned: String
 
     init {
-        if (url.isNullOrBlank()) cleaned = ""
+        if (url.isBlank()) cleaned = ""
         else {
             var cleanedUrl = url
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
@@ -50,7 +50,8 @@ class FbUrlFormatter(url: String) {
 
     fun toLogList(): List<String> {
         val list = mutableListOf(cleaned)
-        queries.forEach { (k, v) -> list.add("- $k\t=\t$v") }
+        queries.forEach { (k, v) -> list.add("\n- $k\t=\t$v") }
+        list.add("\n\n${toString()}")
         return list
     }
 
@@ -60,7 +61,8 @@ class FbUrlFormatter(url: String) {
          * Taken from FaceSlim
          * https://github.com/indywidualny/FaceSlim/blob/master/app/src/main/java/org/indywidualni/fblite/util/Miscellany.java
          */
-        @JvmStatic val discardable = arrayOf(
+        @JvmStatic
+        val discardable = arrayOf(
                 "http://lm.facebook.com/l.php?u=",
                 "https://lm.facebook.com/l.php?u=",
                 "http://m.facebook.com/l.php?u=",
@@ -70,9 +72,11 @@ class FbUrlFormatter(url: String) {
                 "/video_redirect/?src="
         )
 
-        @JvmStatic val discardableQueries = arrayOf("ref", "refid")
+        @JvmStatic
+        val discardableQueries = arrayOf("ref", "refid")
 
-        @JvmStatic val decoder = mapOf(
+        @JvmStatic
+        val decoder = mapOf(
                 "%3C" to "<", "%3E" to ">", "%23" to "#", "%25" to "%",
                 "%7B" to "{", "%7D" to "}", "%7C" to "|", "%5C" to "\\",
                 "%5E" to "^", "%7E" to "~", "%5B" to "[", "%5D" to "]",
