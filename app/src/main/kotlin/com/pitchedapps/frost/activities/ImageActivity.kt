@@ -71,14 +71,13 @@ class ImageActivity : KauBaseActivity() {
             value.update(fab)
         }
 
-    val imageUrl: String
-        get() = intent.extras.getString(ARG_IMAGE_URL)
+    val imageUrl: String by lazy { intent.extras.getString(ARG_IMAGE_URL).trim('"') }
 
-    val text: String?
-        get() = intent.extras.getString(ARG_TEXT)
+    val text: String? by lazy { intent.extras.getString(ARG_TEXT) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        L.i("Displaying image $imageUrl")
         val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
@@ -166,8 +165,7 @@ class ImageActivity : KauBaseActivity() {
     }
 
     internal fun downloadImage() {
-        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            granted, _ ->
+        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
             L.d("Download image callback granted: $granted")
             if (granted) {
                 doAsync {
