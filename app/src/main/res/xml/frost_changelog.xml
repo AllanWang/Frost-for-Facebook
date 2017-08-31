@@ -11,13 +11,19 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
+	<item text="Prevent image loading from trimming too many characters" />
+	<item text="" />
+	<item text="" />
+	<item text="" />
+	<item text="" />
+	<item text="" />
+	
+	<version title="v1.4.12"/>
 	<item text="Fix new messages not showing" />
 	<item text="Fix theme for sharing and new messages" />
 	<item text="Prevent search bar settings from disabling itself if auto suggestions fail" />
 	<item text="Fix numerous crashes relating to search bar layouts" />
 	<item text="Add debugging for menu" />
-	<item text="" />
-	<item text="" />
 	
 	<version title="v1.4.11"/>
     <item text="Fix url loading bug and add option to launch urls in default browser (behaviour setting)" />
