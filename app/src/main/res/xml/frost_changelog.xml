@@ -13,7 +13,7 @@
 	<version title="Beta Updates"/>
 	<item text="Prevent image loading from trimming too many characters" />
 	<item text="Fix most recent mode for news feed" />
-	<item text="" />
+	<item text="Add link to disable video autoplay in settings > newsfeed" />
 	<item text="" />
 	<item text="" />
 	<item text="" />
