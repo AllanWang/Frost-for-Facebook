@@ -1,6 +1,9 @@
 # Changelog
 
 ## Beta Updates
+* Prevent image loading from trimming too many characters
+
+## v1.4.12
 * Fix new messages not showing
 * Fix theme for sharing and new messages
 * Prevent search bar settings from disabling itself if auto suggestions fail
