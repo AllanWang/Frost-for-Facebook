@@ -3,6 +3,8 @@
 
     <string name="newsfeed_sort">Newsfeed Order</string>
     <string name="newsfeed_sort_desc">Defines the order in which the posts are shown</string>
+    <string name="autoplay_settings">Video Autoplay Settings</string>
+    <string name="autoplay_settings_desc">Enable/disable video autoplays on data or at all times.\nThese settings are independent of your settings for desktop.</string>
     <string name="pro_features">Pro Features</string>
     <string name="suggested_friends">Suggested Friends</string>
     <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>
