@@ -137,6 +137,11 @@
             android:enabled="true"
             android:label="@string/frost_notifications"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true"
+            android:label="@string/frost_notifications"
+            android:permission="android.permission.WRITE_EXTERNAL_STORAGE" />
 
         <receiver
             android:name=".services.UpdateReceiver"
