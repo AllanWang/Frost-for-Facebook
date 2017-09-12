@@ -11,11 +11,11 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
+	<item text="Almost until release day!" />
 	<item text="Prevent image loading from trimming too many characters" />
 	<item text="Fix most recent mode for news feed" />
 	<item text="Add link to disable video autoplay in settings > newsfeed" />
 	<item text="Update theme" />
-	<item text="" />
 	<item text="" />
 	
 	<version title="v1.4.12"/>

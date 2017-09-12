@@ -1,7 +1,11 @@
 # Changelog
 
 ## Beta Updates
+* Almost until release day!
 * Prevent image loading from trimming too many characters
+* Fix most recent mode for news feed
+* Add link to disable video autoplay in settings > newsfeed
+* Update theme
 
 ## v1.4.12
 * Fix new messages not showing
