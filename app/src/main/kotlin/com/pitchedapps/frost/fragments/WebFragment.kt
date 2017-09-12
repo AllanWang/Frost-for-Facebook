@@ -30,18 +30,22 @@ class WebFragment : Fragment() {
         const val REQUEST_TEXT_ZOOM = 17
         const val REQUEST_REFRESH = 99
 
-        operator fun invoke(data: FbItem, position: Int) = WebFragment().withArguments(
-                ARG_URL to data.url,
-                ARG_POSITION to position,
-                ARG_URL_ENUM to when (data) {
-                //If is feed, check if sorting method is specified
-                    FbItem.FEED -> when (FeedSort(Prefs.feedSort)) {
-                        FeedSort.DEFAULT -> data
-                        FeedSort.MOST_RECENT -> FbItem.FEED_MOST_RECENT
-                        FeedSort.TOP -> FbItem.FEED_TOP_STORIES
-                    }
-                    else -> data
-                })
+        operator fun invoke(data: FbItem, position: Int) = WebFragment().apply {
+            val d = when (data) {
+            //If is feed, check if sorting method is specified
+                FbItem.FEED -> when (FeedSort(Prefs.feedSort)) {
+                    FeedSort.DEFAULT -> data
+                    FeedSort.MOST_RECENT -> FbItem.FEED_MOST_RECENT
+                    FeedSort.TOP -> FbItem.FEED_TOP_STORIES
+                }
+                else -> data
+            }
+            withArguments(
+                    ARG_URL to d.url,
+                    ARG_POSITION to position,
+                    ARG_URL_ENUM to d
+            )
+        }
     }
 
     //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }
