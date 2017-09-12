@@ -1,106 +1,143 @@
 package com.pitchedapps.frost.services
 
+import android.app.IntentService
+import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
-import android.os.IBinder
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.content.FileProvider
 import ca.allanwang.kau.utils.copyFromInputStream
+import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createMediaFile
-import okhttp3.*
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.ResponseBody
 import okio.*
 import org.jetbrains.anko.toast
-import java.io.IOException
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.io.File
 
 /**
  * Created by Allan Wang on 2017-08-08.
  *
  * Background file downloader
  * All we are given is a link and a mime type
- * To keep it simple, we'll opt for an IntentService and queued downloads
  */
-class DownloadService : Service() {
+class DownloadService : IntentService("FrostVideoDownloader") {
 
     companion object {
-        private const val EXTRA_URL = "download_url"
+        const val EXTRA_URL = "download_url"
+        private const val MAX_PROGRESS = 1000
+        private const val DOWNLOAD_GROUP = "frost_downloads"
     }
 
     val client: OkHttpClient by lazy { initClient() }
 
-    val urls = ConcurrentLinkedQueue<String>()
-    var mostRecentStartId = 0
     val start = System.currentTimeMillis()
     var totalSize = 0L
+    val downloaded = mutableSetOf<String>()
 
-
-    override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onDestroy() {
-        super.onDestroy()
-        client.dispatcher().cancelAll()
-    }
+    private lateinit var notifBuilder: NotificationCompat.Builder
+    private var notifId: Int = -1
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val url: String? = intent?.getStringExtra(EXTRA_URL)
-        if (url == null) {
-            stopSelf(startId)
-            return START_NOT_STICKY
+        if (intent != null && intent.flags == PendingIntent.FLAG_CANCEL_CURRENT) {
+            L.i("Cancelling download service")
+            cancelDownload()
+            return Service.START_NOT_STICKY
         }
-        if (urls.contains(url)) {
-            toast("Already in progress")
-            stopSelf(startId)
-            return START_NOT_STICKY
-        }
-        urls.add(url)
-        mostRecentStartId = startId
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onHandleIntent(intent: Intent?) {
+        val url: String = intent?.getStringExtra(EXTRA_URL) ?: return
+
+        if (downloaded.contains(url)) return
+
         val request: Request = Request.Builder()
                 .url(url)
-                .tag(startId)
                 .build()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                val id = call.request().tag() as Int
-                L.e("Download failed; ${e.message}")
-                this@DownloadService.toast("Download with id $id failed")
+
+        notifBuilder = frostNotification.quiet
+        notifId = Math.abs(url.hashCode() + System.currentTimeMillis().toInt())
+        val cancelIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+        notifBuilder.setContentTitle(string(R.string.downloading_video))
+                .setCategory(Notification.CATEGORY_PROGRESS)
+                .setWhen(System.currentTimeMillis())
+                .setProgress(MAX_PROGRESS, 0, false)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_action_cancel, string(R.string.kau_cancel), cancelIntent)
+                .setGroup(DOWNLOAD_GROUP)
+
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) {
+                L.e("Video download failed")
+                toast("Video download failed")
+                return@use
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                val id = call.request().tag() as Int
-                if (!response.isSuccessful) {
-                    L.e("Download failed; ${response.message()}")
-                    this@DownloadService.toast("Download with id $id failed")
-                } else {
-                    val stream = response.body()?.byteStream() ?: return
-                    val extension = response.request().body()?.contentType()?.subtype()
-                    val destination = createMediaFile(if (extension == null) "" else ".$extension")
-                    destination.copyFromInputStream(stream)
-                    //todo add clickable action here
-                }
-                //todo call notification finished here
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            val stream = response.body()?.byteStream() ?: return@use
+            val extension = response.request().body()?.contentType()?.subtype()
+            val destination = createMediaFile(if (extension == null) "" else ".$extension")
+            destination.copyFromInputStream(stream)
 
-        })
-        return START_REDELIVER_INTENT
+            notifBuilder.setContentIntent(getPendingIntent(this, destination))
+            notifBuilder.show()
+        }
     }
 
-    fun startNotification() {
-
-    }
-
-    fun finishNotification() {
-
-        //check to see if we are done with our requests
+    private fun NotificationCompat.Builder.show() {
+        NotificationManagerCompat.from(this@DownloadService).notify(DOWNLOAD_GROUP, notifId, build())
     }
 
 
-    fun onProgressUpdate(url: String, type: MediaType?, percentage: Float, done: Boolean) {
+    private fun getPendingIntent(context: Context, file: File): PendingIntent {
+        val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+        val type = context.contentResolver.getType(uri)
+        L.i("DownloadType: retrieved pending intent - $uri $type")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .setDataAndType(uri, type)
+        return PendingIntent.getActivity(context, 0, intent, 0)
+    }
 
+    /**
+     * Adds url to downloaded list and modifies the notif builder for the finished state
+     * Does not show the new notification
+     */
+    private fun finishDownload(url: String) {
+        L.i("Video download finished", url)
+        downloaded.add(url)
+        notifBuilder.setContentTitle(string(R.string.downloaded_video))
+                .setProgress(0, 0, false).setOngoing(false).setAutoCancel(true)
+                .apply { mActions.clear() }
+    }
+
+    private fun cancelDownload() {
+        client.dispatcher().cancelAll()
+        NotificationManagerCompat.from(this).cancel(DOWNLOAD_GROUP, notifId)
+    }
+
+    private fun onProgressUpdate(url: String, type: MediaType?, percentage: Float, done: Boolean) {
+        L.v("Download request progress $percentage", url)
+        notifBuilder.setProgress(MAX_PROGRESS, (percentage * MAX_PROGRESS).toInt(), false)
+        if (done) finishDownload(url)
+        notifBuilder.show()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
     }
 
     private fun initClient(): OkHttpClient = OkHttpClient.Builder()
-            .addNetworkInterceptor {
-                chain ->
+            .addNetworkInterceptor { chain ->
                 val original = chain.proceed(chain.request())
                 val body = original.body() ?: return@addNetworkInterceptor original
                 if (body.contentLength() > 0L) totalSize += body.contentLength()
