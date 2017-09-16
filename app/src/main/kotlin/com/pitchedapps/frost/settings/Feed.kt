@@ -34,6 +34,10 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         textGetter = { string(FeedSort(it).textRes) }
     }
 
+    checkbox(R.string.aggressive_recents, { Prefs.aggressiveRecents }, { Prefs.aggressiveRecents = it }) {
+        descRes = R.string.aggressive_recents_desc
+    }
+
     plainText(R.string.autoplay_settings) {
         descRes = R.string.autoplay_settings_desc
         onClick = { _, _, _ -> launchWebOverlay("https://touch.facebook.com/settings/videos"); true }
