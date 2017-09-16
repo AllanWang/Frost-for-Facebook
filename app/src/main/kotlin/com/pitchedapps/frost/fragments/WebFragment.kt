@@ -31,15 +31,7 @@ class WebFragment : Fragment() {
         const val REQUEST_REFRESH = 99
 
         operator fun invoke(data: FbItem, position: Int) = WebFragment().apply {
-            val d = when (data) {
-            //If is feed, check if sorting method is specified
-                FbItem.FEED -> when (FeedSort(Prefs.feedSort)) {
-                    FeedSort.DEFAULT -> data
-                    FeedSort.MOST_RECENT -> FbItem.FEED_MOST_RECENT
-                    FeedSort.TOP -> FbItem.FEED_TOP_STORIES
-                }
-                else -> data
-            }
+            val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             withArguments(
                     ARG_URL to d.url,
                     ARG_POSITION to position,
