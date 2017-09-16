@@ -10,8 +10,6 @@ import android.webkit.WebViewClient
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
-import com.pitchedapps.frost.activities.WebOverlayActivity
-import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*
@@ -100,7 +98,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         injectBackgroundColor()
         webCore.jsInject(
                 JsActions.LOGIN_CHECK,
-                JsAssets.CLICK_A.maybe(webCore.baseEnum != null && Prefs.overlayEnabled),
+                JsAssets.CLICK_A.maybe(Prefs.overlayEnabled),
                 JsAssets.TEXTAREA_LISTENER,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                 JsAssets.CONTEXT_A,
@@ -123,7 +121,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
         L.d("Launching Url", request.url?.toString() ?: "null")
-        return webCore.context !is WebOverlayActivity && webCore.context.requestWebOverlay(request.url.toString())
+        return webCore.requestWebOverlay(request.url.toString())
     }
 
     private fun launchImage(url: String, text: String? = null): Boolean {
@@ -137,6 +135,12 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         L.i("Url Loading", request.url?.toString())
         val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
         L.v("Url Loading Path", path)
+        request.url?.toString()?.apply {
+            if (contains("intent") && contains("com.facebook")) {
+                L.i("Skip facebook intent request")
+                return true
+            }
+        }
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
             return launchImage(request.url.toString())
