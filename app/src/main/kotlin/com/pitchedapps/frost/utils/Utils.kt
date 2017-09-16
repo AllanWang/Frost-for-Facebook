@@ -11,6 +11,7 @@ import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.mediapicker.createMediaFile
@@ -195,4 +196,13 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
 
 inline val String?.isFacebookUrl
     get() = this != null && this.contains(FACEBOOK_COM)
+
+var WebView.frostUserAgent
+    get() = settings.userAgentString
+    set(value) {
+        if (settings.userAgentString == value) return
+        L.i("Setting frost user agent to $value")
+        settings.userAgentString = value
+    }
+
 

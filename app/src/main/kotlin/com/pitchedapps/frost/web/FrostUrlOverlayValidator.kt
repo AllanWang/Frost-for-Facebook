@@ -1,9 +1,13 @@
 package com.pitchedapps.frost.web
 
-import android.content.Context
+import android.webkit.WebView
+import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_FULL
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.frostUserAgent
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.launchWebOverlay
 
@@ -14,15 +18,27 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  * cannot be resolved on a new window and must instead
  * by loaded in the current page
  * This helper method will collect all known cases and launch the overlay accordingly
- * Returns {@code true} (default) if overlay is launcher, {@code false} otherwise
+ * Returns {@code true} (default) if overlay is launched, {@code false} otherwise
+ *
+ * If the request already comes from an instance of [WebOverlayActivity], we will then judge
+ * whether the user agent string should be changed. All propagated results will return false,
+ * as we have no need of sending a new intent to the same activity
  */
-fun Context.requestWebOverlay(url: String): Boolean {
+fun WebView.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
+    if (this is WebOverlayActivity) {
+        //already overlay; manage user agent
+//        if (url.contains("message"))
+//            frostUserAgent = USER_AGENT_BASIC
+//        else
+//            frostUserAgent = USER_AGENT_FULL
+        return false
+    }
     /*
      * Non facebook urls can be loaded
      */
     if (!url.formattedFbUrl.isFacebookUrl) {
-        launchWebOverlay(url)
+        context.launchWebOverlay(url)
         L.d("Request web overlay is not a facebook url", url)
         return true
     }
@@ -39,7 +55,7 @@ fun Context.requestWebOverlay(url: String): Boolean {
         if (!url.contains("?tid=id") && !url.contains("?tid=mid")) return false
     }
     L.v("Request web overlay passed", url)
-    launchWebOverlay(url)
+    context.launchWebOverlay(url)
     return true
 }
 
@@ -47,6 +63,12 @@ fun Context.requestWebOverlay(url: String): Boolean {
  * If the url contains any one of the whitelist segments, switch to the chat overlay
  */
 val messageWhitelist = setOf(FbItem.MESSAGES.url, FbItem.CHAT.url)
+
+/**
+ * Test case for when to disable the basic user agent
+ * This still means that
+ */
+val messageBlacklist = setOf("story.php")
 
 /**
  * The following components should never be launched in a new overlay
