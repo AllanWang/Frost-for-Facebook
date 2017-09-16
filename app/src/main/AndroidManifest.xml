@@ -47,6 +47,12 @@
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
+            android:name=".activities.WebOverlayBasicActivity"
+            android:hardwareAccelerated="true"
+            android:label="@string/frost_web"
+            android:launchMode="singleTop"
+            android:theme="@style/FrostTheme.Overlay.Slide" />
+        <activity
             android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
