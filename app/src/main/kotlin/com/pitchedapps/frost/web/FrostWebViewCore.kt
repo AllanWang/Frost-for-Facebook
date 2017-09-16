@@ -15,7 +15,6 @@ import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,6 +43,22 @@ class FrostWebViewCore @JvmOverloads constructor(
     var baseUrl: String? = null
     var baseEnum: FbItem? = null //only viewpager items should pass the base enum
     internal lateinit var frostWebClient: FrostWebViewClient
+
+    /**
+     * Wrapper to the main userAgentString to cache it.
+     * This decouples it from the UiThread
+     *
+     * Note that this defaults to null, but the main purpose is to
+     * check if we've set our own agent.
+     *
+     * A null value may be interpreted as the default value
+     */
+    var userAgentString: String? = null
+        get() = field
+        set(value) {
+            field = value
+            settings.userAgentString = value
+        }
 
     init {
         isNestedScrollingEnabled = true

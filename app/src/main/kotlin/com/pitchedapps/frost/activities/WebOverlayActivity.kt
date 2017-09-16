@@ -37,7 +37,8 @@ import com.pitchedapps.frost.web.FrostWebView
  */
 
 /**
- * Used by notifications. Runs as a singleInstance
+ * Used by notifications. Unlike the other overlays, this runs as a singleInstance
+ * Going back will bring you back to the previous app
  */
 class FrostWebActivity : WebOverlayActivityBase(false)
 
@@ -45,7 +46,7 @@ class FrostWebActivity : WebOverlayActivityBase(false)
  * Variant that forces a basic user agent. This is largely internal,
  * and is only necessary when we are launching from an existing [WebOverlayActivityBase]
  */
-class FrostWebBasicActivity : WebOverlayActivityBase(true)
+class WebOverlayBasicActivity : WebOverlayActivityBase(true)
 
 /**
  * Internal overlay for the app; this is tied with the main task and is singleTop as opposed to singleInstance
@@ -88,7 +89,7 @@ open class WebOverlayActivityBase(val forceBasicAgent: Boolean) : KauBaseActivit
 
         frostWeb.setupWebview(url)
         if (forceBasicAgent)
-            frostWeb.web.settings.userAgentString = USER_AGENT_BASIC
+            frostWeb.web.userAgentString = USER_AGENT_BASIC
         frostWeb.web.addTitleListener({ toolbar.title = it })
         Prefs.prevId = Prefs.userId
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }

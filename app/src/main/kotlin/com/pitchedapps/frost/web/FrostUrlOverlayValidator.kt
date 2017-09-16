@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.web
 
-import android.webkit.WebView
-import com.pitchedapps.frost.activities.FrostWebBasicActivity
+import com.pitchedapps.frost.activities.WebOverlayBasicActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.facebook.FbItem
@@ -24,19 +23,23 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  * whether the user agent string should be changed. All propagated results will return false,
  * as we have no need of sending a new intent to the same activity
  */
-fun WebView.requestWebOverlay(url: String): Boolean {
+fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
 
     if (context is WebOverlayActivityBase) {
+        L.v("Check web request from overlay", url)
         //already overlay; manage user agent
-        if (settings.userAgentString != USER_AGENT_BASIC && url.shouldUseBasicAgent) {
-            context.launchWebOverlay(url, FrostWebBasicActivity::class.java)
+        if (userAgentString != USER_AGENT_BASIC && url.formattedFbUrl.shouldUseBasicAgent) {
+            L.i("Switch to basic agent overlay")
+            context.launchWebOverlay(url, WebOverlayBasicActivity::class.java)
             return true
         }
-        if (context is FrostWebBasicActivity && !url.shouldUseBasicAgent) {
+        if (context is WebOverlayBasicActivity && !url.formattedFbUrl.shouldUseBasicAgent) {
+            L.i("Switch from basic agent")
             context.launchWebOverlay(url)
             return true
         }
+        L.i("return false switch")
         return false
     }
     /*
