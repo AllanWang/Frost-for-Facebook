@@ -21,6 +21,7 @@ import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
@@ -29,7 +30,7 @@ import com.pitchedapps.frost.web.FrostWebView
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-open class WebOverlayActivity : KauBaseActivity(),
+open class FrostOverlayActivityBase(private val forceBasicUser: Boolean) : KauBaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -65,6 +66,9 @@ open class WebOverlayActivity : KauBaseActivity(),
 
         frostWeb.setupWebview(url)
         frostWeb.web.addTitleListener({ toolbar.title = it })
+        if (forceBasicUser)
+            frostWeb.web.settings.userAgentString = USER_AGENT_BASIC
+        Prefs.prevId = Prefs.userId
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
         if (Showcase.firstWebOverlay) {

@@ -1,20 +1,21 @@
 package com.pitchedapps.frost.activities
 
-import android.os.Bundle
-import com.pitchedapps.frost.utils.Prefs
-
 
 /**
  * Created by Allan Wang on 2017-06-19.
  *
- * Replica of [WebOverlayActivity] with a different base url
+ * Replica of [FrostOverlayActivityBase] with a different base url
  * Didn't use activity-alias because it causes issues when only one activity has the singleInstance mode
  */
-class FrostWebActivity : WebOverlayActivity() {
+class FrostWebActivity : FrostOverlayActivityBase(false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Prefs.prevId = Prefs.userId
-        super.onCreate(savedInstanceState)
-    }
+/**
+ * Replica of [FrostOverlayActivityBase] with a different base url
+ * Also forces the use of the basic user agent
+ *
+ * The default [WebOverlayActivity] is able to distinguish new message links,
+ * so this is largely for internal use
+ */
+class FrostWebMessageActivity : FrostOverlayActivityBase(true)
 
-}
+class WebOverlayActivity : FrostOverlayActivityBase(false)
