@@ -23,7 +23,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.FrostApp
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -63,14 +62,14 @@ fun Activity.cookies(): ArrayList<CookieModel> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-fun Context.launchWebOverlay(url: String, clazz: Class<out FrostOverlayActivityBase> = WebOverlayActivity::class.java) {
+fun Context.launchWebOverlay(url: String) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)
     L.i("Launch web overlay", argUrl)
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
         FbCookie.logout(this)
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
-        startActivity(clazz, false, intentBuilder = {
+        startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })
 }

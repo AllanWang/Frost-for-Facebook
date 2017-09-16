@@ -108,15 +108,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.FrostWebMessageActivity"
-            android:autoRemoveFromRecents="true"
-            android:exported="true"
-            android:hardwareAccelerated="true"
-            android:label="@string/frost_web"
-            android:launchMode="singleInstance"
-            android:taskAffinity="com.pitchedapps.frost.single.web.message"
-            android:theme="@style/FrostTheme.Overlay.Slide" />
-        <activity
             android:name=".activities.IntroActivity"
             android:theme="@style/FrostTheme.Intro" />
         <activity

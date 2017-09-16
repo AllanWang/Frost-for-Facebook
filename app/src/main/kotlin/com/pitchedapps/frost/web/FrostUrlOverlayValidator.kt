@@ -1,9 +1,6 @@
 package com.pitchedapps.frost.web
 
 import android.content.Context
-import com.pitchedapps.frost.activities.FrostOverlayActivityBase
-import com.pitchedapps.frost.activities.FrostWebActivity
-import com.pitchedapps.frost.activities.FrostWebMessageActivity
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
@@ -25,7 +22,6 @@ fun Context.requestWebOverlay(url: String): Boolean {
      * Non facebook urls can be loaded
      */
     if (!url.formattedFbUrl.isFacebookUrl) {
-        if (this is FrostOverlayActivityBase) return false
         launchWebOverlay(url)
         L.d("Request web overlay is not a facebook url", url)
         return true
@@ -43,15 +39,8 @@ fun Context.requestWebOverlay(url: String): Boolean {
         if (!url.contains("?tid=id") && !url.contains("?tid=mid")) return false
     }
     L.v("Request web overlay passed", url)
-    if (this is FrostOverlayActivityBase) {
-        if (this is FrostWebMessageActivity == url.contains("message")) return false //already in proper view
-        L.i("Toggling web overlay from ${this.javaClass}")
-        launchWebOverlay(url, if (this is FrostWebMessageActivity) FrostWebActivity::class.java else FrostWebMessageActivity::class.java)
-        return true
-    } else {
-        launchWebOverlay(url)
-        return true
-    }
+    launchWebOverlay(url)
+    return true
 }
 
 /**
