@@ -45,6 +45,7 @@ fun Context.requestWebOverlay(url: String): Boolean {
     L.v("Request web overlay passed", url)
     if (this is FrostOverlayActivityBase) {
         if (this is FrostWebMessageActivity == url.contains("message")) return false //already in proper view
+        L.i("Toggling web overlay from ${this.javaClass}")
         launchWebOverlay(url, if (this is FrostWebMessageActivity) FrostWebActivity::class.java else FrostWebMessageActivity::class.java)
         return true
     } else {
