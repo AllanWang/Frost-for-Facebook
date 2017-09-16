@@ -33,7 +33,7 @@ class FrostJSI(val webView: FrostWebViewCore) {
      */
     @JavascriptInterface
     fun loadUrl(url: String?): Boolean
-            = if (url == null) false else context.requestWebOverlay(url)
+            = if (url == null) false else webView.requestWebOverlay(url)
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {

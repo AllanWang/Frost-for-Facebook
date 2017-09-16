@@ -44,6 +44,22 @@ class FrostWebViewCore @JvmOverloads constructor(
     var baseEnum: FbItem? = null //only viewpager items should pass the base enum
     internal lateinit var frostWebClient: FrostWebViewClient
 
+    /**
+     * Wrapper to the main userAgentString to cache it.
+     * This decouples it from the UiThread
+     *
+     * Note that this defaults to null, but the main purpose is to
+     * check if we've set our own agent.
+     *
+     * A null value may be interpreted as the default value
+     */
+    var userAgentString: String? = null
+        get() = field
+        set(value) {
+            field = value
+            settings.userAgentString = value
+        }
+
     init {
         isNestedScrollingEnabled = true
         progressObservable = PublishSubject.create<Int>()
