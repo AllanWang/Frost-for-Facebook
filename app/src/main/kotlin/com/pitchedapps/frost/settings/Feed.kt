@@ -34,7 +34,10 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         textGetter = { string(FeedSort(it).textRes) }
     }
 
-    checkbox(R.string.aggressive_recents, { Prefs.aggressiveRecents }, { Prefs.aggressiveRecents = it }) {
+    checkbox(R.string.aggressive_recents, { Prefs.aggressiveRecents }, {
+        Prefs.aggressiveRecents = it
+        setFrostResult(MainActivity.REQUEST_REFRESH)
+    }) {
         descRes = R.string.aggressive_recents_desc
     }
 
