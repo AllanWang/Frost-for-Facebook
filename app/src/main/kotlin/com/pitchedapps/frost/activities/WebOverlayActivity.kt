@@ -21,6 +21,7 @@ import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
@@ -28,8 +29,30 @@ import com.pitchedapps.frost.web.FrostWebView
 
 /**
  * Created by Allan Wang on 2017-06-01.
+ *
+ * Collection of overlay activities for Frost
+ *
+ * Each one is largely the same layout, but is separated so they may run is separate single tasks
+ * All overlays support user switches
  */
-open class WebOverlayActivity : KauBaseActivity(),
+
+/**
+ * Used by notifications. Runs as a singleInstance
+ */
+class FrostWebActivity : WebOverlayActivityBase(false)
+
+/**
+ * Variant that forces a basic user agent. This is largely internal,
+ * and is only necessary when we are launching from an existing [WebOverlayActivityBase]
+ */
+class FrostWebBasicActivity : WebOverlayActivityBase(true)
+
+/**
+ * Internal overlay for the app; this is tied with the main task and is singleTop as opposed to singleInstance
+ */
+class WebOverlayActivity : WebOverlayActivityBase(false)
+
+open class WebOverlayActivityBase(val forceBasicAgent: Boolean) : KauBaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -64,7 +87,10 @@ open class WebOverlayActivity : KauBaseActivity(),
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
         frostWeb.setupWebview(url)
+        if (forceBasicAgent)
+            frostWeb.web.settings.userAgentString = USER_AGENT_BASIC
         frostWeb.web.addTitleListener({ toolbar.title = it })
+        Prefs.prevId = Prefs.userId
         if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
         else frostWeb.web.loadBaseUrl()
         if (Showcase.firstWebOverlay) {

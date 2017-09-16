@@ -1,13 +1,13 @@
 package com.pitchedapps.frost.web
 
 import android.webkit.WebView
+import com.pitchedapps.frost.activities.FrostWebBasicActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
+import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.facebook.USER_AGENT_FULL
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostUserAgent
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.launchWebOverlay
 
@@ -26,12 +26,17 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  */
 fun WebView.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
-    if (this is WebOverlayActivity) {
+
+    if (context is WebOverlayActivityBase) {
         //already overlay; manage user agent
-//        if (url.contains("message"))
-//            frostUserAgent = USER_AGENT_BASIC
-//        else
-//            frostUserAgent = USER_AGENT_FULL
+        if (settings.userAgentString != USER_AGENT_BASIC && url.shouldUseBasicAgent) {
+            context.launchWebOverlay(url, FrostWebBasicActivity::class.java)
+            return true
+        }
+        if (context is FrostWebBasicActivity && !url.shouldUseBasicAgent) {
+            context.launchWebOverlay(url)
+            return true
+        }
         return false
     }
     /*
@@ -64,11 +69,8 @@ fun WebView.requestWebOverlay(url: String): Boolean {
  */
 val messageWhitelist = setOf(FbItem.MESSAGES.url, FbItem.CHAT.url)
 
-/**
- * Test case for when to disable the basic user agent
- * This still means that
- */
-val messageBlacklist = setOf("story.php")
+val String.shouldUseBasicAgent
+    get() = (messageWhitelist.any { contains(it) })
 
 /**
  * The following components should never be launched in a new overlay

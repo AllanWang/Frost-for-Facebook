@@ -11,7 +11,6 @@ import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.TextView
 import ca.allanwang.kau.mediapicker.createMediaFile
@@ -63,14 +62,14 @@ fun Activity.cookies(): ArrayList<CookieModel> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-fun Context.launchWebOverlay(url: String) {
+fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBase> = WebOverlayActivity::class.java) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)
     L.i("Launch web overlay", argUrl)
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
         FbCookie.logout(this)
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
-        startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
+        startActivity(clazz, false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })
 }
@@ -196,13 +195,4 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
 
 inline val String?.isFacebookUrl
     get() = this != null && this.contains(FACEBOOK_COM)
-
-var WebView.frostUserAgent
-    get() = settings.userAgentString
-    set(value) {
-        if (settings.userAgentString == value) return
-        L.i("Setting frost user agent to $value")
-        settings.userAgentString = value
-    }
-
 

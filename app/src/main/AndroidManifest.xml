@@ -47,6 +47,14 @@
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
+            android:name=".activities.FrostWebBasicActivity"
+            android:autoRemoveFromRecents="true"
+            android:hardwareAccelerated="true"
+            android:label="@string/frost_web"
+            android:launchMode="singleInstance"
+            android:taskAffinity="com.pitchedapps.frost.single.web.basic"
+            android:theme="@style/FrostTheme.Overlay.Slide" />
+        <activity
             android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
