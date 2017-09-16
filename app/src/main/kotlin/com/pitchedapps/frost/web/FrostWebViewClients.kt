@@ -11,8 +11,8 @@ import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
+import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
@@ -74,7 +74,8 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                     CssHider.CORE,
                     CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
                     Prefs.themeInjector,
-                    CssHider.NON_RECENT.maybe(webCore.url?.contains("?sk=h_chr") ?: false))
+                    CssHider.NON_RECENT.maybe((webCore.url?.contains("?sk=h_chr") ?: false)
+                            && Prefs.aggressiveRecents))
     }
 
     override fun onPageFinished(view: WebView, url: String?) {

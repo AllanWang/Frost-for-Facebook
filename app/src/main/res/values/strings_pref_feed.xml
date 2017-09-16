@@ -3,6 +3,8 @@
 
     <string name="newsfeed_sort">Newsfeed Order</string>
     <string name="newsfeed_sort_desc">Defines the order in which the posts are shown</string>
+    <string name="aggressive_recents">Aggressive Recents</string>
+    <string name="aggressive_recents_desc">Filter out additional old posts from Facebook\'s original most recents feed. Disable this if your feed is empty.</string>
     <string name="autoplay_settings">Video Autoplay Settings</string>
     <string name="autoplay_settings_desc">Enable/disable video autoplays on data or at all times.\nThese settings are independent of your settings for desktop.</string>
     <string name="pro_features">Pro Features</string>
