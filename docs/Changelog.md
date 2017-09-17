@@ -1,6 +1,9 @@
 # Changelog
 
 ## Beta Updates
+* Add default download manager to download all files
+
+## v1.5.1
 * Release day is here!
 * Add full support for messaging in overlays. We will dynamically launch new overlays when required to.
 * Prevent bad messenger intent from launching
