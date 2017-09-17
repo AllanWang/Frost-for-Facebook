@@ -20,8 +20,8 @@ enum class Support(@StringRes val title: Int) {
     fun sendEmail(context: Context) {
         with(context) {
             this.sendEmail(string(R.string.dev_email), "${string(R.string.frost_prefix)} ${string(title)}") {
-                addItem("Random Frost ID", Prefs.frostId)
-                addItem("Identifier Key", if (IS_FROST_PRO) "TY" else "FP")
+                val proTag = if (IS_FROST_PRO) "TY" else "FP"
+                addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
             }
         }
     }

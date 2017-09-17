@@ -15,6 +15,7 @@ import com.crashlytics.android.answers.Answers
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
@@ -48,12 +49,15 @@ class FrostApp : Application() {
         KL.debug(BuildConfig.DEBUG)
         L.debug(BuildConfig.DEBUG)
         Prefs.verboseLogging = false
+        L.i("Begin Frost for Facebook")
         FbCookie()
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
         if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
         Prefs.lastLaunch = System.currentTimeMillis()
 
         super.onCreate()
+
+        applicationContext.scheduleNotifications(Prefs.notificationFreq)
 
         /**
          * Drawer profile loading logic
