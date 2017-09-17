@@ -66,7 +66,7 @@ class DownloadService : IntentService("FrostVideoDownloader") {
                 .url(url)
                 .build()
 
-        notifBuilder = frostNotification.quiet
+        notifBuilder = frostNotification
         notifId = Math.abs(url.hashCode() + System.currentTimeMillis().toInt())
         val cancelIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
