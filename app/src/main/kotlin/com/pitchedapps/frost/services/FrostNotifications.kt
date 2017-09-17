@@ -168,7 +168,11 @@ const val NOTIFICATION_PERIODIC_JOB = 7
  * returns false if an error occurs; true otherwise
  */
 fun Context.scheduleNotifications(minutes: Long): Boolean {
-    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler?
+    if (scheduler == null) {
+        L.e("JobScheduler not found; cannot schedule notifications")
+        return false
+    }
     scheduler.cancel(NOTIFICATION_PERIODIC_JOB)
     if (minutes < 0L) return true
     val serviceComponent = ComponentName(this, NotificationService::class.java)
@@ -190,7 +194,11 @@ const val NOTIFICATION_JOB_NOW = 6
  * Run notification job right now
  */
 fun Context.fetchNotifications(): Boolean {
-    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler? ?: return false
+    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler?
+    if (scheduler == null) {
+        L.e("JobScheduler not found")
+        return false
+    }
     val serviceComponent = ComponentName(this, NotificationService::class.java)
     val builder = JobInfo.Builder(NOTIFICATION_JOB_NOW, serviceComponent)
             .setMinimumLatency(0L)
