@@ -9,4 +9,9 @@
     <item name="intro_title" type="id" />
     <item name="intro_image" type="id" />
     <item name="intro_desc" type="id" />
+
+    <!--Extra menu ids; see OverlayContext-->
+    <item name="action_notification" type="id" />
+    <item name="action_messages" type="id" />
+    <item name="action_frost" type="id" />
 </resources>

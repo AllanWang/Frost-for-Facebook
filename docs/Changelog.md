@@ -2,6 +2,11 @@
 
 ## Beta Updates
 * Almost until release day!
+* Add full support for messaging in overlays. We will dynamically launch new overlays when required to.
+* Prevent bad messenger intent from launching
+* Add toggle for recents feed. Aggressive loading removes extra posts that are not really recent, whereas disabling it will show exactly what you get on Facebook
+
+## v1.4.13
 * Prevent image loading from trimming too many characters
 * Fix most recent mode for news feed
 * Add link to disable video autoplay in settings > newsfeed
