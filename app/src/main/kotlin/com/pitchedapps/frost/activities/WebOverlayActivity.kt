@@ -26,6 +26,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
+import okhttp3.HttpUrl
 
 
 /**
@@ -41,7 +42,25 @@ import com.pitchedapps.frost.web.FrostWebView
  * Used by notifications. Unlike the other overlays, this runs as a singleInstance
  * Going back will bring you back to the previous app
  */
-class FrostWebActivity : WebOverlayActivityBase(false)
+class FrostWebActivity : WebOverlayActivityBase(false) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        parseActionSend()
+        super.onCreate(savedInstanceState)
+    }
+
+    private fun parseActionSend() {
+        if (intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+        val url = HttpUrl.parse(text)?.toString()
+        if (url == null) {
+            L.i("Attempted to share a non-url", text)
+            copyToClipboard(text)
+        } else {
+            intent.putExtra(ARG_URL, "https://www.facebook.com/sharer/sharer.php?u=$url")
+        }
+    }
+}
 
 /**
  * Variant that forces a basic user agent. This is largely internal,

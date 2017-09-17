@@ -6,6 +6,7 @@
 * Prevent bad messenger intent from launching
 * Add toggle for recents feed. Aggressive loading removes extra posts that are not really recent, whereas disabling it will show exactly what you get on Facebook
 * Add contextual menu items. Easily go to your full list of notifications or messages from the overlay.
+* Ensure that bottom bar layout does not hide the web content
 
 ## v1.4.13
 * Prevent image loading from trimming too many characters

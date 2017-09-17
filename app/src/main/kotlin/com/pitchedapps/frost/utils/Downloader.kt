@@ -32,6 +32,8 @@ import java.lang.ref.WeakReference
  * Created by Allan Wang on 2017-08-04.
  *
  * With reference to the <a href="https://github.com/square/okhttp/blob/master/samples/guide/src/main/java/okhttp3/recipes/Progress.java">OkHttp3 sample</a>
+ *
+ * TODO delete this file; we've moved to our downloader service for now and will create our own player soon
  */
 fun Context.frostDownload(url: String) {
     L.d("Received download request", "Download $url")
