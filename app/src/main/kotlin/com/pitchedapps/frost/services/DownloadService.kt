@@ -28,6 +28,8 @@ import java.io.File
  *
  * Background file downloader
  * All we are given is a link and a mime type
+ *
+ * With reference to the <a href="https://github.com/square/okhttp/blob/master/samples/guide/src/main/java/okhttp3/recipes/Progress.java">OkHttp3 sample</a>
  */
 class DownloadService : IntentService("FrostVideoDownloader") {
 
