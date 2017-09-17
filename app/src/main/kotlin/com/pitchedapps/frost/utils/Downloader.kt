@@ -13,6 +13,7 @@ import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.services.DownloadService
 import com.pitchedapps.frost.services.frostNotification
 import com.pitchedapps.frost.services.getNotificationPendingCancelIntent
 import com.pitchedapps.frost.services.quiet
@@ -22,7 +23,7 @@ import okhttp3.Request
 import okhttp3.ResponseBody
 import okio.*
 import org.jetbrains.anko.AnkoAsyncContext
-import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.startService
 import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -34,11 +35,10 @@ import java.lang.ref.WeakReference
  */
 fun Context.frostDownload(url: String) {
     L.d("Received download request", "Download $url")
-    val type = if (url.contains("video")) DownloadType.VIDEO
-    else return L.d("Download request does not match any type")
-    kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) {
-        granted, _ ->
-        if (granted) doAsync { frostDownloadImpl(url, type) }
+    kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
+        if (granted)
+//            doAsync { frostDownloadImpl(url, type) }
+            startService<DownloadService>(DownloadService.EXTRA_URL to url)
     }
 }
 
@@ -85,11 +85,9 @@ private fun AnkoAsyncContext<Context>.frostDownloadImpl(url: String, type: Downl
 
     var client: OkHttpClient? = null
     client = OkHttpClient.Builder()
-            .addNetworkInterceptor {
-                chain ->
+            .addNetworkInterceptor { chain ->
                 val original = chain.proceed(chain.request())
-                return@addNetworkInterceptor original.newBuilder().body(ProgressResponseBody(original.body()!!) {
-                    bytesRead, contentLength, done ->
+                return@addNetworkInterceptor original.newBuilder().body(ProgressResponseBody(original.body()!!) { bytesRead, contentLength, done ->
                     //cancel request if context reference is now invalid
                     if (weakRef.get() == null) {
                         client?.cancel(url)
@@ -106,8 +104,7 @@ private fun AnkoAsyncContext<Context>.frostDownloadImpl(url: String, type: Downl
                 }).build()
             }
             .build()
-    client.newCall(request).execute().use {
-        response ->
+    client.newCall(request).execute().use { response ->
         if (!response.isSuccessful) throw IOException("Unexpected code $response")
         val stream = response.body()?.byteStream()
         if (stream != null) {
