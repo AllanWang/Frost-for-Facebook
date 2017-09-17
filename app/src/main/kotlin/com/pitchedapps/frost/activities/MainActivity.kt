@@ -48,7 +48,6 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
-import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
@@ -125,6 +124,17 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                         "Version name" to BuildConfig.VERSION_NAME,
                         "Build type" to BuildConfig.BUILD_TYPE,
                         "Frost id" to Prefs.frostId)
+            }
+            if (!Showcase.shownRelease && Prefs.installDate < 1503201600000L) {//08/20/2017
+                materialDialogThemed {
+                    title("The time has come!")
+                    content("Frost for Facebook has been officially released. We thank you immensely for being with us from the start, and for allowing us to grow to what we are now." +
+                            "\nYou are now free to opt out of beta and get monthly stable updates, or stick with the beta channel and help squash bugs. It will also be amazing if you can give us a rating, and help others find this great open source alternative." +
+                            "\n\nRegards,\nAllan Wang")
+                    neutralText(R.string.kau_rate)
+                    onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
+                    positiveText(R.string.kau_great)
+                }
             }
         }
         setContentView(Prefs.mainActivityLayout.layoutRes)
