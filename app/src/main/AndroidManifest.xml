@@ -70,6 +70,7 @@
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -119,6 +120,9 @@
         </activity>
         <activity
             android:name=".activities.IntroActivity"
+            android:theme="@style/FrostTheme.Intro" />
+        <activity
+            android:name=".activities.ReleaseActivity"
             android:theme="@style/FrostTheme.Intro" />
         <activity
             android:name=".activities.LoginActivity"

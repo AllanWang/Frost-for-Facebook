@@ -3,6 +3,11 @@
     <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
     <string name="paypal" translatable="false">PayPal</string>
     <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
+    <string name="play_store_beta_link" translatable="false">https://play.google.com/apps/testing/com.pitchedapps.frost</string>
+
+    <string name="release_main">The day has come!\n\nFrost for Facebook is now officially released to the public.\nI\'d like to thank you for being one of the early members of the community, and for helping me test my app. If you found this app helpful, it would be great if you can rate it so that other users can also enjoy this open source project. Unfortunately, you\'ll need to opt out of beta to do so, but you can always opt back in afterwards if you\'d like to stay and help with squashing bugs.\n\nHere\'s to many more features to come!\n\nPitched Apps</string>
+    <string name="beta_opt_out">Opt out of Beta</string>
+    <string name="f_continue">Continue</string>
 
     <!--Tabs-->
 
