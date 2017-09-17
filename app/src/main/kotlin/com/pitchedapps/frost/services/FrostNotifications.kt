@@ -21,11 +21,9 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.utils.ARG_USER_ID
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.withRoundIcon
+import com.pitchedapps.frost.utils.*
 import org.jetbrains.anko.runOnUiThread
 
 /**
@@ -96,6 +94,7 @@ data class NotificationContent(val data: CookieModel,
                                val text: String,
                                val timestamp: Long,
                                val profileUrl: String) {
+
     fun createNotification(context: Context) = createNotification(context, FROST_NOTIFICATION_GROUP)
 
     fun createMessageNotification(context: Context) = createNotification(context, FROST_MESSAGE_NOTIFICATION_GROUP)
@@ -104,6 +103,8 @@ data class NotificationContent(val data: CookieModel,
         val intent = Intent(context, FrostWebActivity::class.java)
         intent.data = Uri.parse(href.formattedFbUrl)
         intent.putExtra(ARG_USER_ID, data.id)
+        val overlayContext = if (groupPrefix == FROST_MESSAGE_NOTIFICATION_GROUP) OverlayContext.MESSAGE else OverlayContext.NOTIFICATION
+        intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
         val group = "${groupPrefix}_${data.id}"
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
         val ringtone = if (groupPrefix == FROST_MESSAGE_NOTIFICATION_GROUP) Prefs.messageRingtone else Prefs.notificationRingtone

@@ -7,6 +7,7 @@ import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.launchWebOverlay
 import com.pitchedapps.frost.utils.materialDialogThemed
 
 /**
@@ -16,13 +17,11 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.newsfeed_sort, { Prefs.feedSort }, { Prefs.feedSort = it }) {
         descRes = R.string.newsfeed_sort_desc
-        onClick = {
-            _, _, item ->
+        onClick = { _, _, item ->
             materialDialogThemed {
                 title(R.string.newsfeed_sort)
                 items(FeedSort.values().map { string(it.textRes) })
-                itemsCallbackSingleChoice(item.pref, {
-                    _, _, which, _ ->
+                itemsCallbackSingleChoice(item.pref, { _, _, which, _ ->
                     if (item.pref != which) {
                         item.pref = which
                         shouldRestartMain()
@@ -33,6 +32,18 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
             true
         }
         textGetter = { string(FeedSort(it).textRes) }
+    }
+
+    checkbox(R.string.aggressive_recents, { Prefs.aggressiveRecents }, {
+        Prefs.aggressiveRecents = it
+        setFrostResult(MainActivity.REQUEST_REFRESH)
+    }) {
+        descRes = R.string.aggressive_recents_desc
+    }
+
+    plainText(R.string.autoplay_settings) {
+        descRes = R.string.autoplay_settings_desc
+        onClick = { _, _, _ -> launchWebOverlay("https://touch.facebook.com/settings/videos"); true }
     }
 
     header(R.string.pro_features)

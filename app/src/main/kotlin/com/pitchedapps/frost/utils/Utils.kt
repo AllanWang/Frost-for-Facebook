@@ -41,6 +41,7 @@ const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
+const val ARG_OVERLAY_CONTEXT = "arg_overlay_context"
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity(clazz, clearStack, intentBuilder = {
@@ -62,14 +63,14 @@ fun Activity.cookies(): ArrayList<CookieModel> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-fun Context.launchWebOverlay(url: String) {
+fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBase> = WebOverlayActivity::class.java) {
     val argUrl = url.formattedFbUrl
     L.v("Launch received", url)
     L.i("Launch web overlay", argUrl)
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
         FbCookie.logout(this)
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
-        startActivity(WebOverlayActivity::class.java, false, intentBuilder = {
+        startActivity(clazz, false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })
 }
