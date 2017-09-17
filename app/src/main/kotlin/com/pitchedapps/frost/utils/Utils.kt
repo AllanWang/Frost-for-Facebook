@@ -41,6 +41,7 @@ const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
+const val ARG_OVERLAY_CONTEXT = "arg_overlay_context"
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity(clazz, clearStack, intentBuilder = {

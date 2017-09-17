@@ -20,6 +20,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
+import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -53,7 +54,7 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
  */
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
-open class WebOverlayActivityBase(val forceBasicAgent: Boolean) : KauBaseActivity(),
+open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate() {
 
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -68,6 +69,9 @@ open class WebOverlayActivityBase(val forceBasicAgent: Boolean) : KauBaseActivit
 
     val userId: Long
         get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
+
+    val overlayContext: OverlayContext?
+        get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as OverlayContext?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,6 +161,7 @@ open class WebOverlayActivityBase(val forceBasicAgent: Boolean) : KauBaseActivit
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_web, menu)
+        overlayContext?.onMenuCreate(this, menu)
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_share to CommunityMaterial.Icon.cmd_share,
@@ -168,7 +173,8 @@ open class WebOverlayActivityBase(val forceBasicAgent: Boolean) : KauBaseActivit
         when (item.itemId) {
             R.id.action_copy_link -> copyToClipboard(frostWeb.web.url)
             R.id.action_share -> shareText(frostWeb.web.url)
-            else -> return super.onOptionsItemSelected(item)
+            else -> if (!OverlayContext.onOptionsItemSelected(frostWeb.web, item.itemId))
+                return super.onOptionsItemSelected(item)
         }
         return true
     }
