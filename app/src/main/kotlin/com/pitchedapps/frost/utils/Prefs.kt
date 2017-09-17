@@ -86,7 +86,7 @@ object Prefs : KPref() {
 
     var feedSort: Int by kpref("feed_sort", FeedSort.DEFAULT.ordinal)
 
-    var aggressiveRecents: Boolean by kpref("aggressive_recents", true)
+    var aggressiveRecents: Boolean by kpref("aggressive_recents", false)
 
     var showRoundedIcons: Boolean by kpref("rounded_icons", true)
 
