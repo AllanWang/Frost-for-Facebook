@@ -19,6 +19,6 @@ object Showcase : KPref() {
     //not a showcase but cannot be in the same file as Prefs
     var experimentalDefault: Boolean by kpref("experimental_by_default", false)
 
-    val shownRelease: Boolean by kprefSingle("shown_release")
+    val showRelease: Boolean by kprefSingle("shown_release")
 }
 
