@@ -117,7 +117,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (urlTest == null) {
-            L.eThrow("Empty link on web overlay")
+            L.e("Empty link on web overlay")
             toast(R.string.null_url_overlay)
             finish()
             return

@@ -11,6 +11,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.JsBuilder
 import com.pitchedapps.frost.utils.L
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.jetbrains.anko.runOnUiThread
@@ -71,13 +72,18 @@ class SearchWebView(context: Context, val contract: SearchContract) : WebView(co
                 }
                 .filter { it.isNotEmpty() }
                 .filter { Pair(it.last().second, it.size) != previousResult }
-                .subscribe { content: List<Pair<List<String>, String>> ->
-                    saveResultFrame(content)
-                    L.d("Search element count ${content.size}")
-                    contract.emitSearchResponse(content.map { (texts, href) ->
-                        SearchItem(href, texts[0], texts.getOrNull(1))
-                    })
-                }
+                .subscribeBy(
+                        onNext = { content: List<Pair<List<String>, String>> ->
+                            saveResultFrame(content)
+                            L.d("Search element count ${content.size}")
+                            contract.emitSearchResponse(content.map { (texts, href) ->
+                                SearchItem(href, texts[0], texts.getOrNull(1))
+                            })
+                        },
+                        onError = { throwable ->
+                            L.e(throwable, "SearchSubject error")
+                        }
+                )
         reload()
     }
 

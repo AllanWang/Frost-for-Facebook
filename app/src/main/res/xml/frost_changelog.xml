@@ -11,12 +11,17 @@
     <!--<version title="Beta Updates" />-->
 	
 	<version title="Beta Updates"/>
-	<item text="Almost until release day!" />
+	<item text="Release day is here!" />
 	<item text="Add full support for messaging in overlays. We will dynamically launch new overlays when required to." />
 	<item text="Prevent bad messenger intent from launching" />
 	<item text="Add toggle for recents feed. Aggressive loading removes extra posts that are not really recent, whereas disabling it will show exactly what you get on Facebook" />
 	<item text="Add contextual menu items. Easily go to your full list of notifications or messages from the overlay." />
 	<item text="Ensure that bottom bar layout does not hide the web content" />
+	<item text="Add option to share external links to Frost" />
+	<item text="Trigger notification service on each app start" />
+	<item text="" />
+	<item text="" />
+	<item text="" />
 	<item text="" />
 	
 	<version title="v1.4.13"/>
