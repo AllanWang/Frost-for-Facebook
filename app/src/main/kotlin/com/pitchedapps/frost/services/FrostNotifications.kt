@@ -22,6 +22,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.enums.OverlayContext
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import org.jetbrains.anko.runOnUiThread
@@ -34,16 +35,13 @@ import org.jetbrains.anko.runOnUiThread
 
 
 val Context.frostNotification: NotificationCompat.Builder
-    get() = frostNotification()
+    get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
+        setSmallIcon(R.drawable.frost_f_24)
+        setAutoCancel(true)
+        color = color(R.color.frost_notification_accent)
+    }
 
-/**
- * Wrap the default builder with our icon and accent color
- */
-fun Context.frostNotification(ringtone: String = Prefs.notificationRingtone): NotificationCompat.Builder
-        = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
-    setSmallIcon(R.drawable.frost_f_24)
-    setAutoCancel(true)
-    color = color(R.color.frost_notification_accent)
+fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificationRingtone) = apply {
     var defaults = 0
     if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
     if (Prefs.notificationSound) {
@@ -53,12 +51,6 @@ fun Context.frostNotification(ringtone: String = Prefs.notificationRingtone): No
     if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
     setDefaults(defaults)
 }
-
-val NotificationCompat.Builder.quiet
-    get() = apply { setDefaults(0) }
-
-val NotificationCompat.Builder.messageRingtone
-    get() = apply { }
 
 val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
     get() = NotificationCompat.BigTextStyle(this)
@@ -81,8 +73,82 @@ class FrostNotificationTarget(val context: Context,
     }
 }
 
-internal const val FROST_NOTIFICATION_GROUP = "frost"
-internal const val FROST_MESSAGE_NOTIFICATION_GROUP = "frost_im"
+/**
+ * Enum to handle notification creations
+ */
+enum class NotificationType(
+        private val groupPrefix: String,
+        private val overlayContext: OverlayContext,
+        private val contentRes: Int,
+        private val pendingUrl: String,
+        private val ringtone: () -> String) {
+    GENERAL("frost", OverlayContext.NOTIFICATION, R.string.notifications, FbItem.NOTIFICATIONS.url, { Prefs.notificationRingtone }),
+    MESSAGE("frost_im", OverlayContext.MESSAGE, R.string.messages, FbItem.MESSAGES.url, { Prefs.messageRingtone });
+
+    /**
+     * Create and submit a new notification with the given [content]
+     * If [withDefaults] is set, it will also add the appropriate sound, vibration, and light
+     * Note that when we have multiple notifications coming in at once, we don't want to have defaults for all of them
+     */
+    fun createNotification(context: Context, content: NotificationContent, withDefaults: Boolean) {
+        with(content) {
+            val intent = Intent(context, FrostWebActivity::class.java)
+            intent.data = Uri.parse(href.formattedFbUrl)
+            intent.putExtra(ARG_USER_ID, data.id)
+            intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
+            val group = "${groupPrefix}_${data.id}"
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val notifBuilder = context.frostNotification
+                    .setContentTitle(title ?: context.string(R.string.frost_name))
+                    .setContentText(text)
+                    .setContentIntent(pendingIntent)
+                    .setCategory(Notification.CATEGORY_SOCIAL)
+                    .setSubText(data.name)
+                    .setGroup(group)
+
+            if (withDefaults)
+                notifBuilder.withDefaults(ringtone())
+
+            if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
+            L.v("Notif load", context.toString())
+            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build())
+
+            if (profileUrl.isNotBlank()) {
+                context.runOnUiThread {
+                    //todo verify if context is valid?
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(profileUrl)
+                            .withRoundIcon()
+                            .into(FrostNotificationTarget(context, notifId, group, notifBuilder))
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a summary notification to wrap the previous ones
+     * This will always produce sound, vibration, and lights based on preferences
+     * and will only show if we have at least 2 notifications
+     */
+    fun summaryNotification(context: Context, userId: Long, count: Int) {
+        frostAnswersCustom("Notifications", "Type" to name, "Count" to count)
+        if (count <= 1) return
+        val intent = Intent(context, FrostWebActivity::class.java)
+        intent.data = Uri.parse(pendingUrl)
+        intent.putExtra(ARG_USER_ID, userId)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val notifBuilder = context.frostNotification.withDefaults(ringtone())
+                .setContentTitle(context.string(R.string.frost_name))
+                .setContentText("$count ${context.string(contentRes)}")
+                .setGroup("${groupPrefix}_$userId")
+                .setGroupSummary(true)
+                .setContentIntent(pendingIntent)
+                .setCategory(Notification.CATEGORY_SOCIAL)
+
+        NotificationManagerCompat.from(context).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build())
+    }
+}
 
 /**
  * Notification data holder
@@ -93,44 +159,7 @@ data class NotificationContent(val data: CookieModel,
                                val title: String? = null,
                                val text: String,
                                val timestamp: Long,
-                               val profileUrl: String) {
-
-    fun createNotification(context: Context) = createNotification(context, FROST_NOTIFICATION_GROUP)
-
-    fun createMessageNotification(context: Context) = createNotification(context, FROST_MESSAGE_NOTIFICATION_GROUP)
-
-    private fun createNotification(context: Context, groupPrefix: String) {
-        val intent = Intent(context, FrostWebActivity::class.java)
-        intent.data = Uri.parse(href.formattedFbUrl)
-        intent.putExtra(ARG_USER_ID, data.id)
-        val overlayContext = if (groupPrefix == FROST_MESSAGE_NOTIFICATION_GROUP) OverlayContext.MESSAGE else OverlayContext.NOTIFICATION
-        intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
-        val group = "${groupPrefix}_${data.id}"
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        val ringtone = if (groupPrefix == FROST_MESSAGE_NOTIFICATION_GROUP) Prefs.messageRingtone else Prefs.notificationRingtone
-        val notifBuilder = context.frostNotification(ringtone)
-                .setContentTitle(title ?: context.string(R.string.frost_name))
-                .setContentText(text)
-                .setContentIntent(pendingIntent)
-                .setCategory(Notification.CATEGORY_SOCIAL)
-                .setSubText(data.name)
-                .setGroup(group)
-
-        if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
-        L.v("Notif load", this.toString())
-        NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build())
-
-        if (profileUrl.isNotBlank()) {
-            context.runOnUiThread {
-                Glide.with(context)
-                        .asBitmap()
-                        .load(profileUrl)
-                        .withRoundIcon()
-                        .into(FrostNotificationTarget(context, notifId, group, notifBuilder))
-            }
-        }
-    }
-}
+                               val profileUrl: String)
 
 const val NOTIFICATION_PERIODIC_JOB = 7
 
@@ -161,7 +190,7 @@ const val NOTIFICATION_JOB_NOW = 6
  * Run notification job right now
  */
 fun Context.fetchNotifications(): Boolean {
-    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler? ?: return false
     val serviceComponent = ComponentName(this, NotificationService::class.java)
     val builder = JobInfo.Builder(NOTIFICATION_JOB_NOW, serviceComponent)
             .setMinimumLatency(0L)
