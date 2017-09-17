@@ -12,8 +12,8 @@
 	
 	<version title="Beta Updates"/>
 	<item text="Add default download manager to download all files" />
-	<item text="" />
-	<item text="" />
+	<item text="Limit notification sounds when multiple notifications come in" />
+	<item text="Check that job scheduler exists before scheduling notifications" />
 	<item text="" />
 	
 	<version title="v1.5.1"/>
