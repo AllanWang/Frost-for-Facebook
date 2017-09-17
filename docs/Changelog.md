@@ -5,6 +5,7 @@
 * Add full support for messaging in overlays. We will dynamically launch new overlays when required to.
 * Prevent bad messenger intent from launching
 * Add toggle for recents feed. Aggressive loading removes extra posts that are not really recent, whereas disabling it will show exactly what you get on Facebook
+* Add contextual menu items. Easily go to your full list of notifications or messages from the overlay.
 
 ## v1.4.13
 * Prevent image loading from trimming too many characters
