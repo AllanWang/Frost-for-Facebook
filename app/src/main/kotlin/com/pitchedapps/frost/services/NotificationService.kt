@@ -124,11 +124,11 @@ class NotificationService : JobService() {
         val prevLatestEpoch = prevNotifTime.epoch
         L.v("Notif Prev Latest Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
-        unreadNotifications.forEachIndexed unread@ { index, elem ->
+        unreadNotifications.forEach unread@ { elem ->
             val notif = parseNotification(data, elem) ?: return@unread
             L.v("Notif timestamp ${notif.timestamp}")
             if (notif.timestamp <= prevLatestEpoch) return@unread
-            NotificationType.GENERAL.createNotification(this, notif, index == 0)
+            NotificationType.GENERAL.createNotification(this, notif, notifCount == 0)
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp
             notifCount++
@@ -181,11 +181,11 @@ class NotificationService : JobService() {
         val prevLatestEpoch = prevNotifTime.epochIm
         L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
-        unreadNotifications.forEachIndexed unread@ { index, elem ->
+        unreadNotifications.forEach unread@ { elem ->
             val notif = parseMessageNotification(data, elem) ?: return@unread
             L.v("Notif im timestamp ${notif.timestamp}")
             if (notif.timestamp <= prevLatestEpoch) return@unread
-            NotificationType.MESSAGE.createNotification(this, notif, index == 0)
+            NotificationType.MESSAGE.createNotification(this, notif, notifCount == 0)
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp
             notifCount++
