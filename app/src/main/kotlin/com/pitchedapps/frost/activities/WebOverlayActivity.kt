@@ -70,8 +70,8 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
     val userId: Long
         get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
 
-    val overlayContext: OverlayContext
-        get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as? OverlayContext ?: OverlayContext.DEFAULT
+    val overlayContext: OverlayContext?
+        get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as OverlayContext?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,7 +161,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_web, menu)
-        overlayContext.onMenuCreate(this, menu)
+        overlayContext?.onMenuCreate(this, menu)
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_share to CommunityMaterial.Icon.cmd_share,
@@ -173,7 +173,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
         when (item.itemId) {
             R.id.action_copy_link -> copyToClipboard(frostWeb.web.url)
             R.id.action_share -> shareText(frostWeb.web.url)
-            else -> if (!OverlayContext.onOptionsItemSelected(this, item.itemId))
+            else -> if (!OverlayContext.onOptionsItemSelected(frostWeb.web, item.itemId))
                 return super.onOptionsItemSelected(item)
         }
         return true
