@@ -24,6 +24,7 @@ import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
+import io.reactivex.disposables.Disposable
 import okhttp3.HttpUrl
 
 
@@ -43,19 +44,42 @@ import okhttp3.HttpUrl
 class FrostWebActivity : WebOverlayActivityBase(false) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        parseActionSend()
+        val requiresAction = !parseActionSend()
         super.onCreate(savedInstanceState)
+        if (requiresAction) {
+            /*
+             * Signifies that we need to let the user know of a bad url
+             * We will subscribe to the load cycle once,
+             * and pop a dialog giving the user the option to copy the shared text
+             */
+            var disposable: Disposable? = null
+            disposable = frostWeb.web.refreshObservable.subscribe {
+                disposable?.dispose()
+                materialDialogThemed {
+                    title(R.string.invalid_share_url)
+                    content(R.string.invalid_share_url_desc)
+                }
+            }
+        }
     }
 
-    private fun parseActionSend() {
-        if (intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return
-        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+    /**
+     * Attempts to parse the action url
+     * Returns [true] if no action exists or if the action has been consumed, [false] if we need to notify the user of a bad action
+     */
+    private fun parseActionSend(): Boolean {
+        if (intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return true
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return true
         val url = HttpUrl.parse(text)?.toString()
         if (url == null) {
             L.i("Attempted to share a non-url", text)
-            copyToClipboard(text)
+            copyToClipboard(text, "Text to Share", showToast = false)
+            intent.putExtra(ARG_URL, FbItem.FEED.url)
+            return false
         } else {
+            L.i("Sharing url through overlay", url)
             intent.putExtra(ARG_URL, "${FB_URL_BASE}/sharer/sharer.php?u=$url")
+            return true
         }
     }
 }
