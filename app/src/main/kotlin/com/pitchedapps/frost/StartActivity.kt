@@ -24,7 +24,7 @@ class StartActivity : KauBaseActivity() {
             loadFbCookiesAsync { cookies ->
                 L.d("Cookies loaded at time ${System.currentTimeMillis()}", cookies.toString())
                 if (cookies.isNotEmpty()) {
-                    if (BuildConfig.DEBUG || (!Showcase.shownRelease && Prefs.installDate < 1503201600000L)) {//08/20/2017
+                    if (BuildConfig.DEBUG || (Showcase.showRelease && Prefs.installDate < 1503201600000L)) {//08/20/2017
                         launchNewTask(ReleaseActivity::class.java, ArrayList(cookies))
                     } else
                         launchNewTask(if (Prefs.userId != -1L) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
