@@ -21,9 +21,7 @@ import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.enums.OverlayContext
-import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.FrostWebView
 import okhttp3.HttpUrl
@@ -57,7 +55,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
             L.i("Attempted to share a non-url", text)
             copyToClipboard(text)
         } else {
-            intent.putExtra(ARG_URL, "https://www.facebook.com/sharer/sharer.php?u=$url")
+            intent.putExtra(ARG_URL, "${FB_URL_BASE}/sharer/sharer.php?u=$url")
         }
     }
 }
