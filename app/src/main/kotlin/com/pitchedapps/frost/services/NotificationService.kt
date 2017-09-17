@@ -1,17 +1,12 @@
 package com.pitchedapps.frost.services
 
-import android.app.Notification
-import android.app.PendingIntent
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.dbflow.loadFbCookie
@@ -21,7 +16,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.JsAssets
-import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
@@ -130,20 +124,18 @@ class NotificationService : JobService() {
         val prevLatestEpoch = prevNotifTime.epoch
         L.v("Notif Prev Latest Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
-        unreadNotifications.forEach unread@ {
-            elem ->
+        unreadNotifications.forEachIndexed unread@ { index, elem ->
             val notif = parseNotification(data, elem) ?: return@unread
             L.v("Notif timestamp ${notif.timestamp}")
             if (notif.timestamp <= prevLatestEpoch) return@unread
-            notif.createNotification(this@NotificationService)
+            NotificationType.GENERAL.createNotification(this, notif, index == 0)
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
         if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).save()
         L.d("Notif new latest epoch ${lastNotificationTime(data.id).epoch}")
-        frostAnswersCustom("Notifications", "Type" to "General", "Count" to notifCount)
-        summaryNotification(data.id, notifCount)
+        NotificationType.GENERAL.summaryNotification(this, data.id, notifCount)
     }
 
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
@@ -161,9 +153,6 @@ class NotificationService : JobService() {
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
 
-    fun summaryNotification(userId: Long, count: Int)
-            = summaryNotification(userId, count, R.string.notifications, FbItem.NOTIFICATIONS.url, FROST_NOTIFICATION_GROUP)
-
     /*
      * ----------------------------------------------------------------
      * Instant message notification logic.
@@ -174,8 +163,7 @@ class NotificationService : JobService() {
 
     inline fun fetchMessageNotifications(data: CookieModel, crossinline callback: (success: Boolean) -> Unit) {
         launchHeadlessHtmlExtractor(FbItem.MESSAGES.url, JsAssets.NOTIF_MSG) {
-            it.observeOn(Schedulers.newThread()).subscribe {
-                (html, errorRes) ->
+            it.observeOn(Schedulers.newThread()).subscribe { (html, errorRes) ->
                 L.d("Notf IM html received")
                 if (errorRes != -1) return@subscribe callback(false)
                 fetchMessageNotifications(data, html)
@@ -193,20 +181,18 @@ class NotificationService : JobService() {
         val prevLatestEpoch = prevNotifTime.epochIm
         L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
-        unreadNotifications.forEach unread@ {
-            elem ->
+        unreadNotifications.forEachIndexed unread@ { index, elem ->
             val notif = parseMessageNotification(data, elem) ?: return@unread
             L.v("Notif im timestamp ${notif.timestamp}")
             if (notif.timestamp <= prevLatestEpoch) return@unread
-            notif.createMessageNotification(this@NotificationService)
+            NotificationType.MESSAGE.createNotification(this, notif, index == 0)
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
         if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).save()
         L.d("Notif new latest im epoch ${lastNotificationTime(data.id).epochIm}")
-        frostAnswersCustom("Notifications", "Type" to "Message", "Count" to notifCount)
-        summaryMessageNotification(data.id, notifCount)
+        NotificationType.MESSAGE.summaryNotification(this, data.id, notifCount)
     }
 
     fun parseMessageNotification(data: CookieModel, element: Element): NotificationContent? {
@@ -225,32 +211,12 @@ class NotificationService : JobService() {
         return NotificationContent(data, notifId.toInt(), a.attr("href"), a.text(), text, epoch, pUrl)
     }
 
-    fun summaryMessageNotification(userId: Long, count: Int)
-            = summaryNotification(userId, count, R.string.messages, FbItem.MESSAGES.url, FROST_MESSAGE_NOTIFICATION_GROUP)
-
     private fun Context.debugNotification(text: String) {
         if (!BuildConfig.DEBUG) return
-        val notifBuilder = frostNotification
+        val notifBuilder = frostNotification.withDefaults()
                 .setContentTitle(string(R.string.frost_name))
                 .setContentText(text)
         NotificationManagerCompat.from(this).notify(999, notifBuilder.build())
-    }
-
-    private fun summaryNotification(userId: Long, count: Int, contentRes: Int, pendingUrl: String, groupPrefix: String) {
-        if (count <= 1) return
-        val intent = Intent(this, FrostWebActivity::class.java)
-        intent.data = Uri.parse(pendingUrl)
-        intent.putExtra(ARG_USER_ID, userId)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-        val notifBuilder = frostNotification
-                .setContentTitle(string(R.string.frost_name))
-                .setContentText("$count ${string(contentRes)}")
-                .setGroup("${groupPrefix}_$userId")
-                .setGroupSummary(true)
-                .setContentIntent(pendingIntent)
-                .setCategory(Notification.CATEGORY_SOCIAL)
-
-        NotificationManagerCompat.from(this).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build())
     }
 
 }
