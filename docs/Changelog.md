@@ -8,6 +8,7 @@
 * Add contextual menu items. Easily go to your full list of notifications or messages from the overlay.
 * Ensure that bottom bar layout does not hide the web content
 * Add option to share external links to Frost
+* Trigger notification service on each app start
 
 ## v1.4.13
 * Prevent image loading from trimming too many characters

@@ -125,17 +125,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
                         "Build type" to BuildConfig.BUILD_TYPE,
                         "Frost id" to Prefs.frostId)
             }
-            if (!Showcase.shownRelease && Prefs.installDate < 1503201600000L) {//08/20/2017
-                materialDialogThemed {
-                    title("The time has come!")
-                    content("Frost for Facebook has been officially released. We thank you immensely for being with us from the start, and for allowing us to grow to what we are now." +
-                            "\nYou are now free to opt out of beta and get monthly stable updates, or stick with the beta channel and help squash bugs. It will also be amazing if you can give us a rating, and help others find this great open source alternative." +
-                            "\n\nRegards,\nAllan Wang")
-                    neutralText(R.string.kau_rate)
-                    onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
-                    positiveText(R.string.kau_great)
-                }
-            }
         }
         setContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
