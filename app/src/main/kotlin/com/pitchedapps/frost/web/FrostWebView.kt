@@ -70,7 +70,7 @@ class FrostWebView @JvmOverloads constructor(
             webChromeClient = FrostChromeClient(this)
             addJavascriptInterface(FrostJSI(this), "Frost")
             setBackgroundColor(Color.TRANSPARENT)
-            setDownloadListener { downloadUrl, _, _, _, _ -> context.frostDownload(downloadUrl) }
+            setDownloadListener(context::frostDownload)
         }
     }
 
