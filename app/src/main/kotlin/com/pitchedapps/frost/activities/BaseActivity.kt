@@ -42,7 +42,7 @@ abstract class BaseActivity : KauBaseActivity() {
         this.networkConsumer = consumer
     }
 
-    fun observeNetworkConnectivity() {
+    private fun observeNetworkConnectivity() {
         val consumer = networkConsumer ?: return
         networkDisposable = ReactiveNetwork.observeNetworkConnectivity(applicationContext)
                 .subscribeOn(Schedulers.io())
@@ -56,8 +56,8 @@ abstract class BaseActivity : KauBaseActivity() {
                 }
     }
 
-    fun disposeNetworkConnectivity() {
-        if (!(networkDisposable?.isDisposed ?: true))
+    private fun disposeNetworkConnectivity() {
+        if (networkDisposable?.isDisposed == false)
             networkDisposable?.dispose()
         networkDisposable = null
     }

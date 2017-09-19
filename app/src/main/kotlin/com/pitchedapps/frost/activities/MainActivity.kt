@@ -162,9 +162,9 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-        setNetworkObserver { connectivity ->
-            shouldLoadImages = !connectivity.isRoaming
-        }
+//        setNetworkObserver { connectivity ->
+//            shouldLoadImages = !connectivity.isRoaming
+//        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
