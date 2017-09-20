@@ -2,6 +2,8 @@
 
 ## Beta Updates
 * Add default download manager to download all files
+* Limit notification sounds when multiple notifications come in
+* Check that job scheduler exists before scheduling notifications
 
 ## v1.5.1
 * Release day is here!

@@ -52,7 +52,7 @@ fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourc
     if (blacklistHost.contains(host)) return blankResource
     if (whitelistHost.contains(host)) return null
     if (!adWhitelistHost.contains(host) && adblock(context).any { url.contains(it) }) return blankResource
-    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
+//    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
     L.v("Intercept Request", "$host $url")
     return null
 }
