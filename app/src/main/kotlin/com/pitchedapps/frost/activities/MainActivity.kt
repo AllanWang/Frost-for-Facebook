@@ -61,7 +61,6 @@ import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.web.SearchWebView
-import com.pitchedapps.frost.web.shouldLoadImages
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -162,9 +161,9 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-        setNetworkObserver { connectivity ->
-            shouldLoadImages = !connectivity.isRoaming
-        }
+//        setNetworkObserver { connectivity ->
+//            shouldLoadImages = !connectivity.isRoaming
+//        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
