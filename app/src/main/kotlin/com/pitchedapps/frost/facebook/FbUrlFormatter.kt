@@ -11,8 +11,8 @@ val String.formattedFbUrl: String
     get() = FbUrlFormatter(this).toString()
 
 class FbUrlFormatter(url: String) {
-    val queries = mutableMapOf<String, String>()
-    val cleaned: String
+    private val queries = mutableMapOf<String, String>()
+    private val cleaned: String
 
     init {
         if (url.isBlank()) cleaned = ""
