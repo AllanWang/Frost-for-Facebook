@@ -6,7 +6,7 @@
 }
 
 body, #root, #header, [style*="background-color"], ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, ._5lp5, .container, .subpage, ._5n_f, #static_templates, ._22_8, ._1t4h, ._uoq,
-._55wo, ._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._3bg5 ._56do, ._5hfh, ._52e-,
+._55wo, ._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._3bg5 ._56do, ._5hfh, ._52e-, .mQuestionsPollResultsBar,
 .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0, .al, ._1gkq, ._5c5b, ._1qxg, ._5luf, ._2new, ._cld, ._3zvb, ._2nk0, .btnD, .btnI,
 ._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18, ._10c_, ._2jl2, ._5q_r, ._5yt8, ._idb, ._2ip_, ._f6s, ._2l5v, ._8i2, ._kr5,
 ._d4i, ._577z, ._2u4w, ._3u9p, ._3u9t, ._2v9s, ._cw4, ._5_y-, ._5_y_, ._5_z3, ._cwy, ._5_z0, ._5_z1, ._5_z2, ._2mtc, ._206a, ._1_-1, ._1ybg, .appCenterCategorySelectorButton,
@@ -57,6 +57,10 @@ strong > a, ._15ks ._2q8z._2q8z, ._1e3e {
   color: $accent !important;
 }
 
+.mQuestionsPollResultsBar .shaded {
+  background: $accent !important;
+}
+
 ._42nf ._42ng {
   color: transparent !important;
 }
@@ -92,10 +96,14 @@ strong > a, ._15ks ._2q8z._2q8z, ._1e3e {
 }
 
 //friend card border
-._d4i, ._f6s, .mentions-suggest-item, .mentions-suggest, .sharerAttachment, .mToken, #addMembersTypeahead .mToken.mTokenWeakReference,
+._d4i, ._f6s, .mentions-suggest-item, .mentions-suggest, .sharerAttachment, .mToken, #addMembersTypeahead .mToken.mTokenWeakReference, .mQuestionsPollResultsBar,
 ._1_y5, ._lr0, ._5hgt, ._2cpp, ._50uu, ._50uw, ._31yd, ._1e3d, ._3xz7, ._1xoz, ._4kcb, ._2lut, .jewel .touchable-notification.touched, .touchable-notification .touchable.touched, .home-notification .touchable.touched,
 ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer, ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd, ._5n_f {
   border: 1px solid $divider !important;
+}
+
+.mQuestionsPollResultsBar .shaded {
+  border: 1px solid $text !important;
 }
 
 //link card bottom border
