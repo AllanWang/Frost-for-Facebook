@@ -45,8 +45,8 @@ class FbUrlTest {
 
     @Test
     fun css() {
-        val expected = "https://test.com?efg=hi&oh=bye&oe=apple"
-        val orig = "https\\3a //test.com?efg\\3d hi\\26 oh\\3d bye\\26 oe\\3d apple"
+        val expected = "https://test.com?efg=hi&oh=bye&oe=apple%3Fornot"
+        val orig = "https\\3a //test.com?efg=hi&oh=bye&oe=apple\\3F ornot"
         assertFbFormat(expected, orig)
     }
 
