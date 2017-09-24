@@ -172,20 +172,27 @@ a,
   outline: $divider !important;
 }
 
+._3m1m {
+  background: linear-gradient(transparent, $bg_opaque) !important;
+}
+
 //new comment
 @include keyframes(highlightFade) {
   0%, 50% {
     background: $background2;
   }
+
   100% {
     background: $bg_transparent;
   }
 }
 
+
 @include keyframes(chatHighlightAnimation) {
   0%,100% {
     background: $bg_transparent;
   }
+
   50% {
     background: $background2;
   }
