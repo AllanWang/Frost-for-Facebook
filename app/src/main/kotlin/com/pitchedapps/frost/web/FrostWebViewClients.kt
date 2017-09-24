@@ -50,7 +50,6 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         refreshObservable.onNext(true)
     }
 
-
     fun launchLogin(c: Context) {
         if (c is MainActivity && c.cookies().isNotEmpty())
             c.launchNewTask(SelectorActivity::class.java, c.cookies())
@@ -58,8 +57,15 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
             c.launchNewTask(LoginActivity::class.java)
     }
 
-    private fun injectBackgroundColor()
-            = webCore.setBackgroundColor(if (isMain) Color.TRANSPARENT else Prefs.bgColor.withAlpha(255))
+    private fun injectBackgroundColor() {
+        webCore.setBackgroundColor(
+                when {
+                    isMain -> Color.TRANSPARENT
+                    webCore.url.isFacebookUrl -> Prefs.bgColor.withAlpha(255)
+                    else -> Color.WHITE
+                }
+        )
+    }
 
 
     override fun onPageCommitVisible(view: WebView, url: String?) {
