@@ -14,6 +14,15 @@ class FbUrlFormatter(url: String) {
     private val queries = mutableMapOf<String, String>()
     private val cleaned: String
 
+    /**
+     * Formats all facebook urls
+     *
+     * The order is very important:
+     * 1. Wrapper links (discardables) are stripped away, resulting in the actual link
+     * 2. CSS encoding is converted to normal encoding
+     * 3. Query portions are separated from the cleaned url
+     * 4. The cleaned url is decoded. Queries are kept as is!
+     */
     init {
         if (url.isBlank()) cleaned = ""
         else {
