@@ -2,6 +2,7 @@
 <resources>
 
     <string name="notification_frequency">Notification Frequency</string>
+    <string name="no_notifications">No Notifications</string>
     <string name="notification_keywords">Keywords</string>
     <string name="notification_keywords_desc">Does not notify when notification contains any of these keys.</string>
     <string name="add_keyword">Add Keyword</string>

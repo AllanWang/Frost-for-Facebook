@@ -11,7 +11,7 @@
     <item text="Set background back to white on non facebook pages" />
 	<item text="Make read notification/message colors more obvious" />
 	<item text="Clean up and small bug fixes" />
-	<item text="" />
+	<item text="Fix facebook link parsing issue for many links" />
 	<item text="" />
 	<item text="" />
 
