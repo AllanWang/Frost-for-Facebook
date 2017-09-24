@@ -78,44 +78,14 @@ fun Activity.playStorePurchaseUnsupported() {
     }
 }
 
-fun Activity.playStoreProNotAvailable() {
-    L.d("Pro query; store not available")
-    materialDialogThemed {
-        title(R.string.uh_oh)
-        content(R.string.play_store_not_found_pro_query)
-        positiveText(R.string.kau_ok)
-        neutralText(R.string.kau_play_store)
-        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
-    }
-}
-
-fun Activity.playStoreGenericError(text: String? = "Store generic error") {
-    if (text != null) playStoreLog("IAB: $text")
-    materialDialogThemed {
-        title(R.string.uh_oh)
-        content(R.string.play_store_billing_error)
-        positiveText(R.string.kau_ok)
-    }
-}
-
-fun Activity.playStoreAlreadyPurchased(key: String) {
-    L.d("Play store already purchased $key")
-    materialDialogThemed {
-        title(R.string.play_already_purchased)
-        content(String.format(string(R.string.play_already_purchased_content), key))
-        positiveText(R.string.reload)
-        dismissListener {
-            this@playStoreAlreadyPurchased.playRestart()
-        }
-    }
-}
-
 fun Activity.playStorePurchasedSuccessfully(key: String) {
     L.d("Play store purchased $key successfully")
     materialDialogThemed {
         title(R.string.play_thank_you)
         content(R.string.play_purchased_pro)
         positiveText(R.string.kau_ok)
+        neutralText(R.string.kau_rate)
+        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
     }
 }
 
@@ -123,7 +93,7 @@ fun Activity.purchaseRestored() {
     L.d("Purchase restored")
     materialDialogThemed {
         title(R.string.play_thank_you)
-        content(R.string.play_purchased_pro)
+        content(R.string.purchases_restored_with_pro)
         positiveText(R.string.kau_ok)
     }
 }
