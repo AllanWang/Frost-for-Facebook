@@ -117,7 +117,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
-                showChangelog(R.xml.frost_changelog, Prefs.textColor) { theme() }
+                frostChangelog()
                 frostAnswersCustom("Version",
                         "Version code" to BuildConfig.VERSION_CODE,
                         "Version name" to BuildConfig.VERSION_NAME,
