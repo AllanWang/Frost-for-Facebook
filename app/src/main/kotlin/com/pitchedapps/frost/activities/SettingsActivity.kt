@@ -14,7 +14,6 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefItemBase
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.*
-import ca.allanwang.kau.xml.showChangelog
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
@@ -72,7 +71,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         accentColor = { Prefs.accentColor }
     }
 
-    override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
+    override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
         subItems(R.string.appearance, getAppearancePrefs()) {
             descRes = R.string.appearance_desc
             iicon = GoogleMaterial.Icon.gmd_palette
@@ -180,7 +179,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
                 items(Support.values().map { string(it.title) })
                 itemsCallback { _, _, which, _ -> Support.values()[which].sendEmail(this@SettingsActivity) }
             }
-            R.id.action_changelog -> showChangelog(R.xml.frost_changelog, Prefs.textColor) { theme() }
+            R.id.action_changelog -> frostChangelog()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
