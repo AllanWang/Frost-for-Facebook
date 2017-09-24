@@ -10,7 +10,7 @@ import com.pitchedapps.frost.utils.L
 val String.formattedFbUrl: String
     get() = FbUrlFormatter(this).toString()
 
-class FbUrlFormatter(url: String, decode: Boolean = false) {
+class FbUrlFormatter(url: String) {
     private val queries = mutableMapOf<String, String>()
     private val cleaned: String
 
@@ -21,8 +21,6 @@ class FbUrlFormatter(url: String, decode: Boolean = false) {
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
             val changed = cleanedUrl != url //note that discardables strip away the first '?'
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            if (decode)
-                decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
             if (qm > -1) {
                 cleanedUrl.substring(qm + 1).split("&").forEach {
@@ -31,6 +29,8 @@ class FbUrlFormatter(url: String, decode: Boolean = false) {
                 }
                 cleanedUrl = cleanedUrl.substring(0, qm)
             }
+            //only decode non query portion of the url
+            decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             discardableQueries.forEach { queries.remove(it) }
             if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
             if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
@@ -85,6 +85,17 @@ class FbUrlFormatter(url: String, decode: Boolean = false) {
                 "%60" to "`", "%3B" to ";", "%2F" to "/", "%3F" to "?",
                 "%3A" to ":", "%40" to "@", "%3D" to "=", "%26" to "&",
                 "%24" to "$", "%2B" to "+", "%22" to "\"", "%2C" to ",",
+                "%20" to " "
+        )
+
+        @JvmStatic
+        val cssDecoder = mapOf(
+                "\\3C " to "<", "\\3E " to ">", "\\23 " to "#", "\\25 " to "%",
+                "\\7B " to "{", "\\7D " to "}", "\\7C " to "|", "\\5C " to "\\",
+                "\\5E " to "^", "\\7E " to "~", "\\5B " to "[", "\\5D " to "]",
+                "\\60 " to "`", "\\3B " to ";", "\\2F " to "/", "\\3F " to "?",
+                "\\3A " to ":", "\\40 " to "@", "\\3D " to "=", "\\26 " to "&",
+                "\\24 " to "$", "\\2B " to "+", "\\22 " to "\"", "\\2C " to ",",
                 "%20" to " "
         )
 
