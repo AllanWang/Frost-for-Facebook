@@ -1,9 +1,11 @@
 # Changelog
 
-## Beta Updates
+## v1.5.4
 * Add default download manager to download all files
 * Limit notification sounds when multiple notifications come in
 * Check that job scheduler exists before scheduling notifications
+* Make read notification/message colors more obvious
+* Clean up and small bug fixes
 
 ## v1.5.1
 * Release day is here!
