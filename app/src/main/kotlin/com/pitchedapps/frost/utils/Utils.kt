@@ -16,6 +16,7 @@ import android.widget.TextView
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -196,4 +197,13 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
 
 inline val String?.isFacebookUrl
     get() = this != null && this.contains(FACEBOOK_COM)
+
+fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
+    theme()
+    if (System.currentTimeMillis() - Prefs.installDate > 2592000000) { //show after 1 month
+        neutralText(R.string.kau_rate)
+        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
+    }
+}
+
 
