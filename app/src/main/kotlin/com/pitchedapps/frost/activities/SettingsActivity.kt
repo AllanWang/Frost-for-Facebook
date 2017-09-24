@@ -71,7 +71,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
         accentColor = { Prefs.accentColor }
     }
 
-    override fun onCreateKPrefs(savedInstanceState: android.os.Bundle?): KPrefAdapterBuilder.() -> Unit = {
+    override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
         subItems(R.string.appearance, getAppearancePrefs()) {
             descRes = R.string.appearance_desc
             iicon = GoogleMaterial.Icon.gmd_palette
