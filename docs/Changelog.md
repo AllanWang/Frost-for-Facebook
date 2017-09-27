@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.5.4
+## v1.5.5
 * Numerous bug fixes in KAU
 * Set background back to white on non facebook pages
 * Make read notification/message colors more obvious
