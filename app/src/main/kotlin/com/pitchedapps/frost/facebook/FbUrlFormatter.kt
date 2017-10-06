@@ -7,10 +7,13 @@ import com.pitchedapps.frost.utils.L
  *
  * Custom url builder so we can easily test it without the Android framework
  */
-val String.formattedFbUrl: String
-    get() = FbUrlFormatter(this).toString()
+inline val String.formattedFbUrl: String
+    get() = FbUrlFormatter(this, false).toString()
 
-class FbUrlFormatter(url: String) {
+inline val String.formattedFbUrlCss: String
+    get() = FbUrlFormatter(this, true).toString()
+
+class FbUrlFormatter(url: String, css: Boolean = false) {
     private val queries = mutableMapOf<String, String>()
     private val cleaned: String
 
@@ -30,6 +33,8 @@ class FbUrlFormatter(url: String) {
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
             val changed = cleanedUrl != url //note that discardables strip away the first '?'
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+            //must decode for css
+            if (css) decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
             if (qm > -1) {
                 cleanedUrl.substring(qm + 1).split("&").forEach {
@@ -39,7 +44,7 @@ class FbUrlFormatter(url: String) {
                 cleanedUrl = cleanedUrl.substring(0, qm)
             }
             //only decode non query portion of the url
-            decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+            if (!css) decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             discardableQueries.forEach { queries.remove(it) }
             //final cleanup
             misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }

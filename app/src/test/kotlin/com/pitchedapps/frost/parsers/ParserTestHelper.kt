@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.parsers
 
 import com.pitchedapps.frost.Base
-import org.junit.Test
 import java.net.URL
 import java.nio.file.Paths
 
@@ -16,14 +15,4 @@ import java.nio.file.Paths
         return null
     }
     return resource.readText()
-}
-
-class ParserTestHelper {
-
-    @Test
-    fun print() {
-        println(FrostRegex.MESSAGES.data().joinToString(separator = ""))
-        Regex("id\\\\\"threadlist_rows\\\\\"(.*?).*?id\\\\\"see_older_threads\\\\\"(.*?)marea(.*?)<\\/script>")
-    }
-
 }
