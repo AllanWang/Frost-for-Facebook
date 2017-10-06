@@ -74,7 +74,6 @@ class FbUrlFormatter(url: String) {
          * Taken from FaceSlim
          * https://github.com/indywidualny/FaceSlim/blob/master/app/src/main/java/org/indywidualni/fblite/util/Miscellany.java
          */
-        @JvmStatic
         val discardable = arrayOf(
                 "http://lm.facebook.com/l.php?u=",
                 "https://lm.facebook.com/l.php?u=",
