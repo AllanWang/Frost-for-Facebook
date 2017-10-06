@@ -41,6 +41,8 @@ class FbUrlFormatter(url: String) {
             //only decode non query portion of the url
             decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             discardableQueries.forEach { queries.remove(it) }
+            //final cleanup
+            misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
             if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
             cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
@@ -83,11 +85,13 @@ class FbUrlFormatter(url: String) {
                 "/video_redirect/?src="
         )
 
-        @JvmStatic
+        val misc = listOf(
+                "&amp;" to "&"
+        )
+
         val discardableQueries = arrayOf("ref", "refid")
 
-        @JvmStatic
-        val decoder = mapOf(
+        val decoder = listOf(
                 "%3C" to "<", "%3E" to ">", "%23" to "#", "%25" to "%",
                 "%7B" to "{", "%7D" to "}", "%7C" to "|", "%5C" to "\\",
                 "%5E" to "^", "%7E" to "~", "%5B" to "[", "%5D" to "]",
@@ -97,8 +101,7 @@ class FbUrlFormatter(url: String) {
                 "%20" to " "
         )
 
-        @JvmStatic
-        val cssDecoder = mapOf(
+        val cssDecoder = listOf(
                 "\\3C " to "<", "\\3E " to ">", "\\23 " to "#", "\\25 " to "%",
                 "\\7B " to "{", "\\7D " to "}", "\\7C " to "|", "\\5C " to "\\",
                 "\\5E " to "^", "\\7E " to "~", "\\5B " to "[", "\\5D " to "]",
@@ -108,8 +111,7 @@ class FbUrlFormatter(url: String) {
                 "%20" to " "
         )
 
-        @JvmStatic
-        val converter = mapOf(
+        val converter = listOf(
                 "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
                 "\\7B " to "%7B", "\\7D " to "%7D", "\\7C " to "%7C", "\\5C " to "%5C",
                 "\\5E " to "%5E", "\\7E " to "%7E", "\\5B " to "%5B", "\\5D " to "%5D",
