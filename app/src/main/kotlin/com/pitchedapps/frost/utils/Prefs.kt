@@ -90,7 +90,11 @@ object Prefs : KPref() {
 
     var showRoundedIcons: Boolean by kpref("rounded_icons", true)
 
+    var showComposer: Boolean by kpref("status_composer_feed", true)
+
     var showSuggestedFriends: Boolean by kpref("suggested_friends_feed", true)
+
+    var showSuggestedGroups: Boolean by kpref("suggested_groups_feed", true)
 
     var showFacebookAds: Boolean by kpref("facebook_ads", true)
 
