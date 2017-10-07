@@ -9,11 +9,11 @@ import org.junit.Test
  */
 class InjectorTest {
 
-    private fun JsInjector.print()
-            = println(function)
-
     @Test
-    fun printAdHider() {
-        CssHider.ADS.injector.print()
+    fun printAll() {
+        println("CSS Hider Injectors")
+        CssHider.values().forEach {
+            println("${it.injector.function}\n")
+        }
     }
 }
