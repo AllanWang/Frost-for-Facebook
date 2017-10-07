@@ -2,7 +2,6 @@ package com.pitchedapps.frost.settings
 
 import android.content.Context
 import android.support.annotation.UiThread
-import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.string
 import com.afollestad.materialdialogs.MaterialDialog
@@ -18,6 +17,7 @@ import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cleanHtml
 import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.web.launchHeadlessHtmlExtractor
 import com.pitchedapps.frost.web.query
 import io.reactivex.disposables.Disposable
@@ -95,8 +95,7 @@ private enum class Debugger(val data: FbItem, val injector: InjectorContract?, v
         var disposable: Disposable? = null
         setOnCancelListener { disposable?.dispose() }
         context.launchHeadlessHtmlExtractor(data.url, injector) {
-            disposable = it.subscribe {
-                (html, errorRes) ->
+            disposable = it.subscribe { (html, errorRes) ->
                 debugAsync {
                     if (errorRes == -1) {
                         L.i("Debug report successful", html)
@@ -143,8 +142,7 @@ private enum class Debugger(val data: FbItem, val injector: InjectorContract?, v
         uiThread {
             val c = it.context
             it.dismiss()
-            c.sendEmail(c.string(R.string.dev_email),
-                    "${c.string(R.string.debug_report_email_title)} $name") {
+            c.sendFrostEmail("${c.string(R.string.debug_report_email_title)} $name") {
                 addItem("Query List", query.contentToString())
                 footer = cleanHtml
             }

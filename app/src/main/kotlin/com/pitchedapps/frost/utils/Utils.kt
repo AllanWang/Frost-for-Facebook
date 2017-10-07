@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import ca.allanwang.kau.email.EmailBuilder
+import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
@@ -31,6 +33,7 @@ import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import java.io.IOException
 import java.util.*
 
@@ -205,5 +208,16 @@ fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textCo
         onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
     }
 }
+
+inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit)
+        = sendFrostEmail(string(subjectId), builder)
+
+inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
+        = sendEmail(string(R.string.dev_email), subjectId) {
+    builder()
+    val proTag = if (IS_FROST_PRO) "TY" else "FP"
+    addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
+}
+
 
 

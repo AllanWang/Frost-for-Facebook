@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
@@ -214,7 +213,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 onPositive { _, _ ->
                     if (activity.errorRef != null)
                         L.e(activity.errorRef, "ImageActivity error report")
-                    activity.sendEmail(R.string.dev_email, R.string.debug_image_link_subject) {
+                    activity.sendFrostEmail(R.string.debug_image_link_subject) {
                         addItem("Url", activity.imageUrl)
                         addItem("Message", activity.errorRef?.message ?: "Null")
                     }
