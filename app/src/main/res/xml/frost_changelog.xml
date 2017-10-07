@@ -9,6 +9,7 @@
     <version title="v1.5.6"/>
     <item text="Greatly improve background notification fetcher" />
     <item text="Support fetching messages from all accounts" />
+    <item text="Update theme" />
 
 	<version title="v1.5.4"/>
 	<item text="Numerous bug fixes in KAU" />
