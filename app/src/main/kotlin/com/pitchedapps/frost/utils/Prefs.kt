@@ -102,6 +102,8 @@ object Prefs : KPref() {
 
     var notificationsInstantMessages: Boolean by kpref("notification_im", false)
 
+    var notificationsImAllAccounts: Boolean by kpref("notification_im_all_accounts", false)
+
     var notificationVibrate: Boolean by kpref("notification_vibrate", true)
 
     var notificationSound: Boolean by kpref("notification_sound", true)
