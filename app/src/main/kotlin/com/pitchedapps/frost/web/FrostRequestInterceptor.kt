@@ -3,11 +3,8 @@ package com.pitchedapps.frost.web
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import ca.allanwang.kau.kotlin.LazyContext
-import ca.allanwang.kau.kotlin.lazyContext
-import ca.allanwang.kau.utils.use
+import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import okhttp3.HttpUrl
 import java.io.ByteArrayInputStream
 
@@ -23,7 +20,7 @@ private val blankResource: WebResourceResponse by lazy { WebResourceResponse("te
 //these hosts will redirect to a blank resource
 private val blacklistHost: Set<String> =
         setOf(
-//                "edge-chat.facebook.com" //todo make more specific? This is required for message responses
+                //                "edge-chat.facebook.com" //todo make more specific? This is required for message responses
         )
 
 //these hosts will return null and skip logging
@@ -41,17 +38,13 @@ private val adWhitelistHost: Set<String> =
                 "scontent-sea1-1.xx.fbcdn.net"
         )
 
-private val adblock: LazyContext<Set<String>> = lazyContext {
-    it.assets.open("adblock.txt").bufferedReader().use { it.readLines().toSet() }
-}
-
 fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourceResponse? {
     val httpUrl = HttpUrl.parse(request.url?.toString() ?: return null) ?: return null
     val host = httpUrl.host()
     val url = httpUrl.toString()
-    if (blacklistHost.contains(host)) return blankResource
+//    if (blacklistHost.contains(host)) return blankResource
     if (whitelistHost.contains(host)) return null
-    if (!adWhitelistHost.contains(host) && adblock(context).any { url.contains(it) }) return blankResource
+    if (!adWhitelistHost.contains(host) && FrostPglAdBlock.isAdHost(host)) return blankResource
 //    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
     L.v("Intercept Request", "$host $url")
     return null

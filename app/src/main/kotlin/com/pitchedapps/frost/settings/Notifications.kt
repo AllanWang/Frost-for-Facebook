@@ -24,7 +24,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.notification_frequency, { Prefs.notificationFreq }, { Prefs.notificationFreq = it }) {
         val options = longArrayOf(-1, 15, 30, 60, 120, 180, 300, 1440, 2880)
-        val texts = options.map { minuteToText(it) }
+        val texts = options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
         onClick = { _, _, item ->
             materialDialogThemed {
                 title(R.string.notification_frequency)

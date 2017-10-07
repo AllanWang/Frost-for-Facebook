@@ -16,6 +16,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.services.scheduleNotifications
+import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
@@ -51,6 +52,7 @@ class FrostApp : Application() {
         Prefs.verboseLogging = false
         L.i("Begin Frost for Facebook")
         FbCookie()
+        FrostPglAdBlock.init(this)
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
         if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
         Prefs.lastLaunch = System.currentTimeMillis()

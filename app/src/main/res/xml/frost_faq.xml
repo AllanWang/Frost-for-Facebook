@@ -16,7 +16,12 @@
     This is also why I don&apos;t require the wakelock permission]]></answer>
 
     <question><![CDATA[Can I disable auto play for videos?]]></question>
-    <answer><![CDATA[Facebook already has a toggle. <br/> Go to menu &rarr; account settings &rarr; videos <br/> and change it from there.]]></answer>
+    <answer>
+        <![CDATA[Facebook already has a toggle. <br/> Go to menu &rarr; account settings &rarr; videos <br/> and change it from there.]]></answer>
+
+    <question><![CDATA[The overlay is not loading!]]></question>
+    <answer><![CDATA[This usually happens if you try sharing something to Facebook from your browser, which is logged into a different account.
+    In this case, make sure you switch Frost to the right account first, as we cannot auto detect it.]]></answer>
 
     <!--
     <question><![CDATA[]]></question>

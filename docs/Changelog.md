@@ -1,10 +1,11 @@
 # Changelog
 
-## v1.5.4
+## v1.5.5
 * Numerous bug fixes in KAU
 * Set background back to white on non facebook pages
 * Make read notification/message colors more obvious
 * Clean up and small bug fixes
+* Fix facebook link parsing issue for many links
 
 ## v1.5.2
 * Add default download manager to download all files

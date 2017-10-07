@@ -10,12 +10,13 @@
     <item text="Greatly improve background notification fetcher" />
     <item text="Support fetching messages from all accounts" />
     <item text="Update theme" />
-
-	<version title="v1.5.4"/>
+	
+	<version title="v1.5.5"/>
 	<item text="Numerous bug fixes in KAU" />
-    <item text="Set background back to white on non facebook pages" />
+  <item text="Set background back to white on non facebook pages" />
 	<item text="Make read notification/message colors more obvious" />
 	<item text="Clean up and small bug fixes" />
+	<item text="Fix facebook link parsing issue for many links" />
 
 	<version title="v1.5.2"/>
 	<item text="Add default download manager to download all files" />
