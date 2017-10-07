@@ -2,51 +2,58 @@
 <resources>
 
     <!--
-    <version title="v"/>
+    <version title="v" />
     <item text="" />
     -->
 
-    <version title="v1.5.6"/>
+    <version title="v1.5.7" />
+    <item text="Allow hiding of composer and groups you may knnow" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
+    <version title="v1.5.6" />
     <item text="Greatly improve background notification fetcher" />
     <item text="Support fetching messages from all accounts" />
     <item text="Update theme" />
-	
-	<version title="v1.5.5"/>
-	<item text="Numerous bug fixes in KAU" />
-  <item text="Set background back to white on non facebook pages" />
-	<item text="Make read notification/message colors more obvious" />
-	<item text="Clean up and small bug fixes" />
-	<item text="Fix facebook link parsing issue for many links" />
 
-	<version title="v1.5.2"/>
-	<item text="Add default download manager to download all files" />
-	<item text="Limit notification sounds when multiple notifications come in" />
-	<item text="Check that job scheduler exists before scheduling notifications" />
+    <version title="v1.5.5" />
+    <item text="Numerous bug fixes in KAU" />
+    <item text="Set background back to white on non facebook pages" />
+    <item text="Make read notification/message colors more obvious" />
+    <item text="Clean up and small bug fixes" />
+    <item text="Fix facebook link parsing issue for many links" />
 
-	<version title="v1.5.1"/>
-	<item text="Release day is here!" />
-	<item text="Add full support for messaging in overlays. We will dynamically launch new overlays when required to." />
-	<item text="Prevent bad messenger intent from launching" />
-	<item text="Add toggle for recents feed. Aggressive loading removes extra posts that are not really recent, whereas disabling it will show exactly what you get on Facebook" />
-	<item text="Add contextual menu items. Easily go to your full list of notifications or messages from the overlay." />
-	<item text="Ensure that bottom bar layout does not hide the web content" />
-	<item text="Add option to share external links to Frost" />
-	<item text="Trigger notification service on each app start" />
-	
-	<version title="v1.4.13"/>
-	<item text="Prevent image loading from trimming too many characters" />
-	<item text="Fix most recent mode for news feed" />
-	<item text="Add link to disable video autoplay in settings > newsfeed" />
-	<item text="Update theme" />
-	
-	<version title="v1.4.12"/>
-	<item text="Fix new messages not showing" />
-	<item text="Fix theme for sharing and new messages" />
-	<item text="Prevent search bar settings from disabling itself if auto suggestions fail" />
-	<item text="Fix numerous crashes relating to search bar layouts" />
-	<item text="Add debugging for menu" />
-	
-	<version title="v1.4.11"/>
+    <version title="v1.5.2" />
+    <item text="Add default download manager to download all files" />
+    <item text="Limit notification sounds when multiple notifications come in" />
+    <item text="Check that job scheduler exists before scheduling notifications" />
+
+    <version title="v1.5.1" />
+    <item text="Release day is here!" />
+    <item text="Add full support for messaging in overlays. We will dynamically launch new overlays when required to." />
+    <item text="Prevent bad messenger intent from launching" />
+    <item text="Add toggle for recents feed. Aggressive loading removes extra posts that are not really recent, whereas disabling it will show exactly what you get on Facebook" />
+    <item text="Add contextual menu items. Easily go to your full list of notifications or messages from the overlay." />
+    <item text="Ensure that bottom bar layout does not hide the web content" />
+    <item text="Add option to share external links to Frost" />
+    <item text="Trigger notification service on each app start" />
+
+    <version title="v1.4.13" />
+    <item text="Prevent image loading from trimming too many characters" />
+    <item text="Fix most recent mode for news feed" />
+    <item text="Add link to disable video autoplay in settings > newsfeed" />
+    <item text="Update theme" />
+
+    <version title="v1.4.12" />
+    <item text="Fix new messages not showing" />
+    <item text="Fix theme for sharing and new messages" />
+    <item text="Prevent search bar settings from disabling itself if auto suggestions fail" />
+    <item text="Fix numerous crashes relating to search bar layouts" />
+    <item text="Add debugging for menu" />
+
+    <version title="v1.4.11" />
     <item text="Fix url loading bug and add option to launch urls in default browser (behaviour setting)" />
     <item text="Allow for bottom bar tabs (appearance setting)" />
     <item text="Allow custom ringtones for notifications and messages (notification setting)" />
@@ -55,9 +62,9 @@
     <item text="Fix initial login not sticking" />
     <item text="Allow back press in login activity" />
     <item text="Update themes" />
-	
-	<version title="v1.4.7"/>
-	<item text="Update secondary background for transparent themes to be more visible." />
+
+    <version title="v1.4.7" />
+    <item text="Update secondary background for transparent themes to be more visible." />
     <item text="Pressing enter when searching will launch the full search page" />
     <item text="Add different backgrounds for news feed articles." />
     <item text="Add option to get image/video from default camera or gallery app." />
@@ -65,31 +72,31 @@
     <item text="Remove error dialog for IAB. It will now depend solely on the google services dialogs." />
     <item text="Fix loading issue for old conversations" />
     <item text="Add debugger for failed image activities" />
-	
-	<version title="v1.4.5"/>
-	<item text="Create more robust IM notification fetcher with a timeout" />
+
+    <version title="v1.4.5" />
+    <item text="Create more robust IM notification fetcher with a timeout" />
     <item text="Add hidden debugging options for certain views" />
     <item text="Separate IM and general notification groups" />
     <item text="Add click actions to group notifications. They will launch the message page or the notification page respectively" />
     <item text="Add behaviour setting to force message threads to scroll to the bottom after loading." />
     <item text="Add faq for disabling video auto play" />
-	
-	<version title="v1.4.2"/>
+
+    <version title="v1.4.2" />
     <item text="Experimental: Add notifications for messages; report to me if this drains your battery" />
     <item text="Add FAQ in the about section" />
     <item text="Add video uploading" />
     <item text="Add open link option in context menu" />
     <item text="Add geolocation" />
     <item text="Update theme" />
-	<item text="Fix notification titles" />
+    <item text="Fix notification titles" />
     <item text="ALPHA: Add support for downloading videos (hit the download button)" />
     <item text="Deny intents for login so the page loads properly (thank you @Zenexer)" />
     <item text="Reduce injection offset and move injectors to an earlier method" />
     <item text="Add option to disable media loading on metered network" />
     <item text="Fix menu section" />
     <item text="Add more background setters to help transparent themes" />
-	
-	<version title="v1.4.1"/>
+
+    <version title="v1.4.1" />
     <item text="Add intro pages" />
     <item text="Style new comment highlights" />
     <item text="Style reaction background" />
@@ -99,16 +106,16 @@
     <item text="Update IAB helper" />
     <item text="Create image viewing and downloading; long press any image!" />
     <item text="Start filtering out unnecessary loads" />
-	<item text="Fix notification duplicates" />
+    <item text="Fix notification duplicates" />
     <item text="Fix long pressing album images" />
-	<item text="Add friend request tab in nav bar" />
+    <item text="Add friend request tab in nav bar" />
     <item text="Aggressively filter nonrecent posts in recents mode" />
     <item text="Add download option for full sized images" />
     <item text="Fix rounded icons" />
-	<item text="Fix regex bug for some devices" />
+    <item text="Fix regex bug for some devices" />
     <item text="Fix notification text" />
     <item text="Update round icons" />
-	<item text="Allow for multiple result flags in settings to better reload the main view" />
+    <item text="Allow for multiple result flags in settings to better reload the main view" />
     <item text="Add custom image picker" />
     <item text="Check if activities can open intent before loading in browser" />
     <item text="Add url debugging. Long press a button and press debug link to send me an email" />

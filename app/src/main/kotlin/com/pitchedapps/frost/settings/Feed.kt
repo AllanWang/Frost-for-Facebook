@@ -46,6 +46,13 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         onClick = { _, _, _ -> launchWebOverlay("https://touch.facebook.com/settings/videos"); true }
     }
 
+    checkbox(R.string.composer, { Prefs.showComposer }, {
+        Prefs.showComposer = it
+        setFrostResult(MainActivity.REQUEST_REFRESH)
+    }) {
+        descRes = R.string.composer_desc
+    }
+
     header(R.string.pro_features)
 
     checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, {
@@ -53,6 +60,14 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         setFrostResult(MainActivity.REQUEST_REFRESH)
     }) {
         descRes = R.string.suggested_friends_desc
+        dependsOnPro()
+    }
+
+    checkbox(R.string.suggested_groups, { Prefs.showSuggestedGroups }, {
+        Prefs.showSuggestedGroups = it
+        setFrostResult(MainActivity.REQUEST_REFRESH)
+    }) {
+        descRes = R.string.suggested_groups_desc
         dependsOnPro()
     }
 

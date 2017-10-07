@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -55,9 +56,10 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<Strin
     val validInjectors = injectors.filter { it != JsActions.EMPTY }
     if (validInjectors.isEmpty()) return callback(emptyArray())
     val observables = Array(validInjectors.size, { SingleSubject.create<String>() })
-    Observable.zip<String, Array<String>>(observables.map { it.toObservable() }, { it.map { it.toString() }.toTypedArray() }).subscribeOn(AndroidSchedulers.mainThread()).subscribe({
-        callback(it)
-    })
+    L.d("Injecting ${observables.size} items")
+    Observable.zip<String, Array<String>>(observables.map(SingleSubject<String>::toObservable),
+            { it.map(Any::toString).toTypedArray() })
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe({ callback(it) })
     (0 until validInjectors.size).forEach { i -> validInjectors[i].inject(this, { observables[i].onSuccess(it) }) }
 }
 
