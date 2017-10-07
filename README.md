@@ -16,6 +16,11 @@ It contains many features, including:
 * Reactive based loading
 * The transparency of open sourced development
 
+Frost is the only third party Facebook app to have:
+* Transparent themes and a fully customizable theme engine
+* True multiuser support, along with multiuser notifications
+* Fully swipable overlays
+
 For testers and users without a play store account, test builds can be found [here](https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases).
 Note that these builds occur for every commit, including unstable ones.
 You can find the release numbers for the master branch under the [Travis](https://travis-ci.org/AllanWang/Frost-for-Facebook/branches).
