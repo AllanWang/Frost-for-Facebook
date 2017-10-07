@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.6
+* Greatly improve background notification fetcher
+* Support fetching messages from all accounts
+* Update theme
+
 ## v1.5.5
 * Numerous bug fixes in KAU
 * Set background back to white on non facebook pages

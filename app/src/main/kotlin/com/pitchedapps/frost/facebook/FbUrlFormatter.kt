@@ -7,10 +7,13 @@ import com.pitchedapps.frost.utils.L
  *
  * Custom url builder so we can easily test it without the Android framework
  */
-val String.formattedFbUrl: String
-    get() = FbUrlFormatter(this).toString()
+inline val String.formattedFbUrl: String
+    get() = FbUrlFormatter(this, false).toString()
 
-class FbUrlFormatter(url: String) {
+inline val String.formattedFbUrlCss: String
+    get() = FbUrlFormatter(this, true).toString()
+
+class FbUrlFormatter(url: String, css: Boolean = false) {
     private val queries = mutableMapOf<String, String>()
     private val cleaned: String
 
@@ -30,6 +33,8 @@ class FbUrlFormatter(url: String) {
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
             val changed = cleanedUrl != url //note that discardables strip away the first '?'
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+            //must decode for css
+            if (css) decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
             if (qm > -1) {
                 cleanedUrl.substring(qm + 1).split("&").forEach {
@@ -39,8 +44,10 @@ class FbUrlFormatter(url: String) {
                 cleanedUrl = cleanedUrl.substring(0, qm)
             }
             //only decode non query portion of the url
-            decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+            if (!css) decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             discardableQueries.forEach { queries.remove(it) }
+            //final cleanup
+            misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
             if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
             cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
@@ -72,7 +79,6 @@ class FbUrlFormatter(url: String) {
          * Taken from FaceSlim
          * https://github.com/indywidualny/FaceSlim/blob/master/app/src/main/java/org/indywidualni/fblite/util/Miscellany.java
          */
-        @JvmStatic
         val discardable = arrayOf(
                 "http://lm.facebook.com/l.php?u=",
                 "https://lm.facebook.com/l.php?u=",
@@ -83,11 +89,13 @@ class FbUrlFormatter(url: String) {
                 "/video_redirect/?src="
         )
 
-        @JvmStatic
+        val misc = listOf(
+                "&amp;" to "&"
+        )
+
         val discardableQueries = arrayOf("ref", "refid")
 
-        @JvmStatic
-        val decoder = mapOf(
+        val decoder = listOf(
                 "%3C" to "<", "%3E" to ">", "%23" to "#", "%25" to "%",
                 "%7B" to "{", "%7D" to "}", "%7C" to "|", "%5C" to "\\",
                 "%5E" to "^", "%7E" to "~", "%5B" to "[", "%5D" to "]",
@@ -97,8 +105,7 @@ class FbUrlFormatter(url: String) {
                 "%20" to " "
         )
 
-        @JvmStatic
-        val cssDecoder = mapOf(
+        val cssDecoder = listOf(
                 "\\3C " to "<", "\\3E " to ">", "\\23 " to "#", "\\25 " to "%",
                 "\\7B " to "{", "\\7D " to "}", "\\7C " to "|", "\\5C " to "\\",
                 "\\5E " to "^", "\\7E " to "~", "\\5B " to "[", "\\5D " to "]",
@@ -108,8 +115,7 @@ class FbUrlFormatter(url: String) {
                 "%20" to " "
         )
 
-        @JvmStatic
-        val converter = mapOf(
+        val converter = listOf(
                 "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
                 "\\7B " to "%7B", "\\7D " to "%7D", "\\7C " to "%7C", "\\5C " to "%5C",
                 "\\5E " to "%5E", "\\7E " to "%7E", "\\5B " to "%5B", "\\5D " to "%5D",
