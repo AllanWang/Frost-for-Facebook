@@ -49,7 +49,6 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
     private fun parseMessage(element: Element): FrostThread? {
         val a = element.getElementsByTag("a").first() ?: return null
         val abbr = element.getElementsByTag("abbr")
-        println(abbr.attr("data-store"))
         val epoch = FrostRegex.epoch.find(abbr.attr("data-store"))
                 ?.groupValues?.getOrNull(1)?.toLongOrNull() ?: -1L
         //fetch id
