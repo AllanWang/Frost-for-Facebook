@@ -7,9 +7,14 @@
     <string name="aggressive_recents_desc">Filter out additional old posts from Facebook\'s original most recents feed. Disable this if your feed is empty.</string>
     <string name="autoplay_settings">Video Autoplay Settings</string>
     <string name="autoplay_settings_desc">Enable/disable video autoplays on data or at all times.\nThese settings are independent of your settings for desktop.</string>
+    <string name="composer">Status Composer</string>
+    <string name="composer_desc">Show status composer in the feed</string>
+
     <string name="pro_features">Pro Features</string>
     <string name="suggested_friends">Suggested Friends</string>
     <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>
+    <string name="suggested_groups">Suggested Groups</string>
+    <string name="suggested_groups_desc">Show "Suggested Groups" in the feed</string>
     <string name="facebook_ads">Facebook Ads</string>
     <string name="facebook_ads_desc">Show native Facebook ads</string>
 
