@@ -1,3 +1,4 @@
 /build
+/src/test/resources/
 fabric.properties
 *_test.compact.css
