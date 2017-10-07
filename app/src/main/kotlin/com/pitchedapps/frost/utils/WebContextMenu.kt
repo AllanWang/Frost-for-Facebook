@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.utils
 
 import android.content.Context
-import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
@@ -25,8 +24,7 @@ fun Context.showWebContextMenu(wc: WebContext) {
             if (it == WebContextType.COPY_TEXT && wc.text == null) return@map null
             this@showWebContextMenu.string(it.textId)
         }.filterNotNull())
-        itemsCallback {
-            _, _, position, _ ->
+        itemsCallback { _, _, position, _ ->
             WebContextType[position].onClick(this@showWebContextMenu, wc)
         }
         dismissListener {
@@ -51,7 +49,7 @@ enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebCont
             content(R.string.debug_link_desc)
             positiveText(R.string.kau_ok)
             onPositive { _, _ ->
-                c.sendEmail(R.string.dev_email, R.string.debug_link_subject) {
+                c.sendFrostEmail(R.string.debug_link_subject) {
                     message = c.string(R.string.debug_link_content)
                     addItem("Unformatted url", wc.unformattedUrl)
                     addItem("Formatted url", wc.url)
