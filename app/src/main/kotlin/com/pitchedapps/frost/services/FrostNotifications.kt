@@ -24,6 +24,7 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.parsers.FrostThread
 import com.pitchedapps.frost.utils.*
 import org.jetbrains.anko.runOnUiThread
 
@@ -159,7 +160,10 @@ data class NotificationContent(val data: CookieModel,
                                val title: String? = null,
                                val text: String,
                                val timestamp: Long,
-                               val profileUrl: String)
+                               val profileUrl: String) {
+    constructor(data:CookieModel, thread: FrostThread)
+            :this(data, thread.id, thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
+}
 
 const val NOTIFICATION_PERIODIC_JOB = 7
 

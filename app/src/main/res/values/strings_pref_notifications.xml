@@ -11,6 +11,8 @@
     <string name="notification_all_accounts_desc">Get notifications for every account that is logged in. Disabling this will only fetch notifications form the currently selected account.</string>
     <string name="notification_messages">Enable message notifications</string>
     <string name="notification_messages_desc">Get instant message notifications for your current account.</string>
+    <string name="notification_messages_all_accounts">Notify messages from all accounts</string>
+    <string name="notification_messages_all_accounts_desc">Get instant message notifications from all accounts</string>
     <string name="notification_fetch_now">Fetch Notifications Now</string>
     <string name="notification_fetch_now_desc">Trigger the notification fetcher once. Note that fetching instant messages takes time.</string>
     <string name="notification_fetch_success">Fetching Notifications…</string>

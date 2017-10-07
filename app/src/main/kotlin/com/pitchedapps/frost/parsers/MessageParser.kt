@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.parsers
 
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.formattedFbUrlCss
 import com.pitchedapps.frost.utils.L
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -15,7 +16,7 @@ import org.jsoup.nodes.Element
  */
 object MessageParser : FrostParser<Triple<List<FrostThread>, FrostLink?, List<FrostLink>>> by MessageParserImpl()
 
-data class FrostThread(val id: Long, val img: String, val title: String, val time: Long, val url: String, val unread: Boolean, val content: String?)
+data class FrostThread(val id: Int, val img: String, val title: String, val time: Long, val url: String, val unread: Boolean, val content: String?)
 
 data class FrostLink(val text: String, val href: String)
 
@@ -60,11 +61,11 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
         val pUrl = FrostRegex.profilePicture.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
         L.v("url", a.attr("href"))
         return FrostThread(
-                id = id,
-                img = pUrl.formattedFbUrl,
+                id = id.toInt(),
+                img = pUrl.formattedFbUrlCss,
                 title = a.text(),
                 time = epoch,
-                url = a.attr("href").formattedFbUrl,
+                url = a.attr("href").formattedFbUrlCss,
                 unread = !element.hasClass("acw"),
                 content = content
         )

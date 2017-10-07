@@ -58,8 +58,13 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.notification_all_accounts_desc
     }
 
-    checkbox(R.string.notification_messages, { Prefs.notificationsInstantMessages }, { Prefs.notificationsInstantMessages = it }) {
+    checkbox(R.string.notification_messages, { Prefs.notificationsInstantMessages }, { Prefs.notificationsInstantMessages = it; reloadByTitle(R.string.notification_messages_all_accounts) }) {
         descRes = R.string.notification_messages_desc
+    }
+
+    checkbox(R.string.notification_messages_all_accounts, { Prefs.notificationsImAllAccounts }, { Prefs.notificationsImAllAccounts = it }) {
+        descRes = R.string.notification_messages_all_accounts_desc
+        enabler = { Prefs.notificationsInstantMessages }
     }
 
     checkbox(R.string.notification_sound, { Prefs.notificationSound }, { Prefs.notificationSound = it; reloadByTitle(R.string.notification_ringtone, R.string.message_ringtone) })
