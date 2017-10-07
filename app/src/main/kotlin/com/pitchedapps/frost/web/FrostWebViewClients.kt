@@ -76,7 +76,9 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                     CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
                     CssHider.HEADER,
                     CssHider.CORE,
+                    CssHider.COMPOSER.maybe(!Prefs.showComposer),
                     CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
+                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe((webCore.url?.contains("?sk=h_chr") ?: false)
                             && Prefs.aggressiveRecents))
