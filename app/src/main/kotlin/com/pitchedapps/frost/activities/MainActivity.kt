@@ -438,7 +438,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     }
 
     override fun onBackPressed() {
-        if (searchView?.onBackPressed() ?: false) return
+        if (searchView?.onBackPressed() == true) return
         if (currentFragment.onBackPressed()) return
         super.onBackPressed()
     }
