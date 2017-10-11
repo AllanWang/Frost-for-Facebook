@@ -8,10 +8,8 @@
 
     <version title="v1.5.7" />
     <item text="Allow hiding of composer and groups you may knnow" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Theme overflow icon" />
+    <item text="Greatly improve search bar" />
 
     <version title="v1.5.6" />
     <item text="Greatly improve background notification fetcher" />

@@ -2,6 +2,8 @@
 
 ## v1.5.7
 * Allow hiding of composer and groups you may knnow
+* Theme overflow icon
+* Greatly improve search bar
 
 ## v1.5.6
 * Greatly improve background notification fetcher
