@@ -92,6 +92,7 @@ class MainActivity : BaseActivity(),
             field = value
         }
     var searchView: SearchView? = null
+    val searchViewCache = mutableMapOf<String, List<SearchItem>>()
 
     companion object {
         const val ACTIVITY_SETTINGS = 97
@@ -336,13 +337,20 @@ class MainActivity : BaseActivity(),
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
         if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
             textCallback = { query, _ ->
-                doAsync {
-                    val data = SearchParser.query(query) ?: return@doAsync
-                    uiThread { searchView?.results = data.map { SearchItem(it.href, it.title, it.description) } }
-                }
+                val results = searchViewCache[query]
+                if (results != null)
+                    runOnUiThread { searchView?.results = results }
+                else
+                    doAsync {
+                        val data = SearchParser.query(query) ?: return@doAsync
+                        val items = data.map { SearchItem(it.href, it.title, it.description) }
+                        searchViewCache.put(query, items)
+                        uiThread { searchView?.results = items }
+                    }
             }
             textDebounceInterval = 300
             searchCallback = { query, _ -> launchWebOverlay("${FbItem.SEARCH.url}/?q=$query"); true }
+            closeListener = { _ -> searchViewCache.clear() }
             foregroundColor = Prefs.textColor
             backgroundColor = Prefs.bgColor.withMinAlpha(200)
             onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
