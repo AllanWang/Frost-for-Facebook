@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.5.7
+* Allow hiding of composer and groups you may knnow
+
 ## v1.5.6
 * Greatly improve background notification fetcher
 * Support fetching messages from all accounts
