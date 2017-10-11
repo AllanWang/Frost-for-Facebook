@@ -3,6 +3,7 @@ package com.pitchedapps.frost.parsers
 import ca.allanwang.kau.utils.withMaxLength
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrlCss
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -12,8 +13,11 @@ import org.jsoup.nodes.Element
  * Created by Allan Wang on 2017-10-09.
  */
 object SearchParser : FrostParser<List<FrostSearch>> by SearchParserImpl() {
-    fun query(input: String)
-            = parse(frostJsoup("${FbItem.SEARCH.url}?q=$input"))
+    fun query(input: String): List<FrostSearch>? {
+        val url = "${FbItem.SEARCH.url}?q=$input"
+        L.i(null, "Search Query $url")
+        return parse(frostJsoup(url))
+    }
 }
 
 enum class SearchKeys(val key: String) {
@@ -47,8 +51,10 @@ private class SearchParserImpl : FrostParserBase<List<FrostSearch>>() {
         /**
          * When mapping items, some links are duplicated because they are nested below a main one
          * We will filter out search items whose links are already in the list
+         *
+         * Removed [data-store*=result_id]
          */
-        return container.select("a[href][data-store*=result_id]").filter(Element::hasText).mapNotNull {
+        return container.select("a.touchable.primary[href]").filter(Element::hasText).mapNotNull {
             val item = FrostSearch(it.attr("href").formattedFbUrlCss,
                     it.select("._uok").first()?.text() ?: it.text(),
                     it.select("._1tcc").first()?.text())

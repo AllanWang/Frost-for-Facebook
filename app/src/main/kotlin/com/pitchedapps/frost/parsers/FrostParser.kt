@@ -71,6 +71,8 @@ internal abstract class FrostParserBase<T> : FrostParser<T> {
         if (output == null) {
             result.add("Output is null")
             return result.joinToString("\n")
+        } else {
+            result.add("Output is not null")
         }
         debugImpl(output, result)
         return result.joinToString("\n")

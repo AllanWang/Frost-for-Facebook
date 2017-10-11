@@ -134,8 +134,6 @@ object Prefs : KPref() {
 
     var analytics: Boolean by kpref("analytics", true)
 
-    var searchBar: Boolean by kpref("search_bar", true)
-
     var overlayEnabled: Boolean by kpref("overlay_enabled", true)
 
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)
@@ -152,4 +150,6 @@ object Prefs : KPref() {
 
     val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
+
+    override fun deleteKeys() = arrayOf("search_bar")
 }
