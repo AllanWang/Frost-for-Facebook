@@ -44,7 +44,7 @@ $share: '<svg xmlns="http://www.w3.org/2000/svg" fill="#{$text}" viewBox="0 0 24
 
 $more_horiz: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path fill="#{$text}" d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>';
 
-.sp_C2yIhMFjXJl_1_5x {
+.sp_C2yIhMFjXJl_1_5x, .sp_C2yIhMFjXJl_3x {
   @include background-svg($more_horiz);
   background-position: center !important;
 }
