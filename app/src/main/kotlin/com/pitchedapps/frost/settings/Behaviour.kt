@@ -31,10 +31,6 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.viewpager_swipe_desc
     }
 
-    checkbox(R.string.search_bar, { Prefs.searchBar }, { Prefs.searchBar = it; setFrostResult(MainActivity.REQUEST_SEARCH) }) {
-        descRes = R.string.search_bar_desc
-    }
-
     checkbox(R.string.force_message_bottom, { Prefs.messageScrollToBottom }, { Prefs.messageScrollToBottom = it }) {
         descRes = R.string.force_message_bottom_desc
     }

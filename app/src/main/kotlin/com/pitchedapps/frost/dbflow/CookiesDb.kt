@@ -6,6 +6,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.logFrostAnswers
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
@@ -71,9 +72,7 @@ fun CookieModel.fetchUsername(callback: (String) -> Unit) {
         if (!yes) return@subscribe callback("")
         var result = ""
         try {
-            result = Jsoup.connect(FbItem.PROFILE.url)
-                    .cookie(FACEBOOK_COM, cookie)
-                    .get().title()
+            result = frostJsoup(cookie, FbItem.PROFILE.url).title()
             L.d("Fetch username found", result)
         } catch (e: Exception) {
             if (e !is UnknownHostException)

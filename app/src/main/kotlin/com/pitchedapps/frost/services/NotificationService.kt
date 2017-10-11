@@ -10,16 +10,14 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
-import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
+import com.pitchedapps.frost.utils.frostJsoup
 import org.jetbrains.anko.doAsync
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.concurrent.Future
 
@@ -101,7 +99,7 @@ class NotificationService : JobService() {
 
     fun fetchGeneralNotifications(data: CookieModel) {
         L.d("Notif fetch", data.toString())
-        val doc = Jsoup.connect(FbItem.NOTIFICATIONS.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
+        val doc = frostJsoup(data.cookie, FbItem.NOTIFICATIONS.url)
         //aclb for unread, acw for read
         val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
         var notifCount = 0
@@ -149,7 +147,7 @@ class NotificationService : JobService() {
 
     fun fetchMessageNotifications(data: CookieModel) {
         L.d("Notif IM fetch", data.toString())
-        val doc = Jsoup.connect(FbItem.MESSAGES.url).cookie(FACEBOOK_COM, data.cookie).userAgent(USER_AGENT_BASIC).get()
+        val doc = frostJsoup(data.cookie, FbItem.MESSAGES.url)
         val (threads, _, _) = MessageParser.parse(doc.toString()) ?: return L.e("Could not parse IM")
 
         var notifCount = 0
