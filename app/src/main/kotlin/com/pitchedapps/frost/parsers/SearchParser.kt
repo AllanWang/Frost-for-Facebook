@@ -1,7 +1,9 @@
 package com.pitchedapps.frost.parsers
 
 import ca.allanwang.kau.utils.withMaxLength
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrlCss
+import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -9,7 +11,10 @@ import org.jsoup.nodes.Element
 /**
  * Created by Allan Wang on 2017-10-09.
  */
-object SearchParser : FrostParser<List<FrostSearch>> by SearchParserImpl()
+object SearchParser : FrostParser<List<FrostSearch>> by SearchParserImpl() {
+    fun query(input: String)
+            = parse(frostJsoup("${FbItem.SEARCH.url}?q=$input"))
+}
 
 enum class SearchKeys(val key: String) {
     USERS("keywords_users"),
