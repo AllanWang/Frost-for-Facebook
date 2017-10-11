@@ -27,7 +27,6 @@ import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.*
-import ca.allanwang.kau.xml.showChangelog
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -54,21 +53,23 @@ import com.pitchedapps.frost.facebook.FbCookie.switchUser
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IABMain
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
-import com.pitchedapps.frost.web.SearchWebView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity(), SearchWebView.SearchContract,
+class MainActivity : BaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate(),
         FrostBilling by IABMain() {
 
@@ -84,19 +85,14 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     var webFragmentObservable = PublishSubject.create<Int>()!!
     var lastPosition = -1
     val headerBadgeObservable = PublishSubject.create<String>()
-    var hiddenSearchView: SearchWebView? = null
     var firstLoadFinished = false
         set(value) {
             if (field && value) return //both vals are already true
             L.i("First fragment load has finished")
             field = value
-            if (value && hiddenSearchView == null) {
-                hiddenSearchView = SearchWebView(this, this)
-            }
         }
     var searchView: SearchView? = null
-    override val isSearchOpened: Boolean
-        get() = searchView?.isOpen ?: false
+    val searchViewCache = mutableMapOf<String, List<SearchItem>>()
 
     companion object {
         const val ACTIVITY_SETTINGS = 97
@@ -329,20 +325,6 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         onClick { _ -> onClick(); false }
     }
 
-
-    /**
-     * Something happened where the normal search function won't work
-     * Fallback to overlay style
-     */
-    override fun disposeHeadlessSearch() {
-        hiddenSearchView = null
-        searchView?.config { textCallback = { _, _ -> } }
-    }
-
-    override fun emitSearchResponse(items: List<SearchItem>) {
-        searchView?.results = items
-    }
-
     fun refreshAll() {
         webFragmentObservable.onNext(WebFragment.REQUEST_REFRESH)
     }
@@ -353,20 +335,25 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
-        if (Prefs.searchBar) {
-            if (firstLoadFinished && hiddenSearchView == null) hiddenSearchView = SearchWebView(this, this)
-            if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textCallback = { query, _ -> runOnUiThread { hiddenSearchView?.query(query) } }
-                searchCallback = { query, _ -> launchWebOverlay("${FbItem.SEARCH.url}/?q=$query"); true }
-                foregroundColor = Prefs.textColor
-                backgroundColor = Prefs.bgColor.withMinAlpha(200)
-                openListener = { hiddenSearchView?.pauseLoad = false }
-                closeListener = { hiddenSearchView?.pauseLoad = true }
-                onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
+        if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
+            textCallback = { query, _ ->
+                val results = searchViewCache[query]
+                if (results != null)
+                    runOnUiThread { searchView?.results = results }
+                else
+                    doAsync {
+                        val data = SearchParser.query(query) ?: return@doAsync
+                        val items = data.map { SearchItem(it.href, it.title, it.description) }
+                        searchViewCache.put(query, items)
+                        uiThread { searchView?.results = items }
+                    }
             }
-        } else {
-            if (searchView != null) disposeHeadlessSearch()
-            else menu.findItem(R.id.action_search).setOnMenuItemClickListener { _ -> launchWebOverlay(FbItem.SEARCH.url); true }
+            textDebounceInterval = 300
+            searchCallback = { query, _ -> launchWebOverlay("${FbItem.SEARCH.url}/?q=$query"); true }
+            closeListener = { _ -> searchViewCache.clear() }
+            foregroundColor = Prefs.textColor
+            backgroundColor = Prefs.bgColor.withMinAlpha(200)
+            onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
         }
         return true
     }
@@ -438,7 +425,7 @@ class MainActivity : BaseActivity(), SearchWebView.SearchContract,
     }
 
     override fun onBackPressed() {
-        if (searchView?.onBackPressed() ?: false) return
+        if (searchView?.onBackPressed() == true) return
         if (currentFragment.onBackPressed()) return
         super.onBackPressed()
     }

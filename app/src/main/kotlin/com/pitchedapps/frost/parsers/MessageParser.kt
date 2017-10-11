@@ -5,6 +5,7 @@ import com.pitchedapps.frost.facebook.formattedFbUrlCss
 import com.pitchedapps.frost.utils.L
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
@@ -22,7 +23,7 @@ data class FrostLink(val text: String, val href: String)
 
 private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, FrostLink?, List<FrostLink>>>() {
 
-    override fun parseImpl(text: String): Triple<List<FrostThread>, FrostLink?, List<FrostLink>>? {
+    override fun textToDoc(text: String): Document? {
         var content = StringEscapeUtils.unescapeEcmaScript(text)
         val begin = content.indexOf("id=\"threadlist_rows\"")
         if (begin <= 0) {
@@ -36,11 +37,14 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
             return null
         }
         content = content.substring(0, end).substringBeforeLast("</div>")
-        val body = Jsoup.parseBodyFragment("<div $content")
-        val threadList = body.getElementById("threadlist_rows")
+        return Jsoup.parseBodyFragment("<div $content")
+    }
+
+    override fun parse(doc: Document): Triple<List<FrostThread>, FrostLink?, List<FrostLink>>? {
+        val threadList = doc.getElementById("threadlist_rows")
         val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
                 .mapNotNull { parseMessage(it) }
-        val seeMore = parseLink(body.getElementById("see_older_threads"))
+        val seeMore = parseLink(doc.getElementById("see_older_threads"))
         val extraLinks = threadList.nextElementSibling().select("a")
                 .mapNotNull { parseLink(it) }
         return Triple(threads, seeMore, extraLinks)
@@ -76,9 +80,9 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
     }
 
     override fun debugImpl(data: Triple<List<FrostThread>, FrostLink?, List<FrostLink>>, result: MutableList<String>) {
-        result.addAll(data.first.map { it.toString() })
+        result.addAll(data.first.map(FrostThread::toString))
         result.add("See more link:")
         result.add("\t${data.second}")
-        result.addAll(data.third.map { it.toString() })
+        result.addAll(data.third.map(FrostLink::toString))
     }
 }

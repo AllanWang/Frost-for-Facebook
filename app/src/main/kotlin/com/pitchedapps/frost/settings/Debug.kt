@@ -14,10 +14,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.cleanHtml
-import com.pitchedapps.frost.utils.materialDialogThemed
-import com.pitchedapps.frost.utils.sendFrostEmail
+import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.launchHeadlessHtmlExtractor
 import com.pitchedapps.frost.web.query
 import io.reactivex.disposables.Disposable
@@ -119,11 +116,7 @@ private enum class Debugger(val data: FbItem, val injector: InjectorContract?, v
         uiThread {
             it.setContent("Load Jsoup")
             it.setOnCancelListener(null)
-            it.debugAsync {
-                val connection = Jsoup.connect(data.url).cookie(FACEBOOK_COM, FbCookie.webCookie).userAgent(USER_AGENT_BASIC)
-                val doc = connection.get()
-                simplifyJsoup(doc)
-            }
+            it.debugAsync { simplifyJsoup(frostJsoup(data.url)) }
         }
     }
 

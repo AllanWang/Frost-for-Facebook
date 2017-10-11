@@ -10,10 +10,7 @@ import kotlin.test.assertEquals
 class MessageParserTest {
 
     @Test
-    fun basic() {
-        val content = getResource("priv/messages.html") ?: return
-        println(MessageParser.debug(content))
-    }
+    fun basic() = debug("messages", MessageParser)
 
     @Test
     fun parseEpoch() {

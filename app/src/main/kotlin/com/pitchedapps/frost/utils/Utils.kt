@@ -29,11 +29,9 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.facebook.FACEBOOK_COM
-import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
+import org.jsoup.Jsoup
 import java.io.IOException
 import java.util.*
 
@@ -219,5 +217,9 @@ inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailB
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
 }
 
+fun frostJsoup(url: String)
+        = frostJsoup(FbCookie.webCookie, url)
 
+fun frostJsoup(cookie: String?, url: String)
+        = Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
 
