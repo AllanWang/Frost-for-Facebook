@@ -20,7 +20,12 @@ enum class MainActivityLayout(
     BOTTOM_BAR(R.string.bottom_bar,
             R.layout.activity_main_bottom_tabs,
             { Prefs.bgColor },
-            { Prefs.textColor });
+            { Prefs.textColor }),
+
+    FULL_SCREEN(R.string.full_screen,
+            R.layout.activity_main_hidden_tabs,
+            { Prefs.headerColor },
+            { Prefs.iconColor });
 
     companion object {
         val values = values() //save one instance

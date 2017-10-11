@@ -21,6 +21,8 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import ca.allanwang.kau.searchview.SearchItem
@@ -47,6 +49,7 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
@@ -121,6 +124,8 @@ class MainActivity : BaseActivity(),
                         "Frost id" to Prefs.frostId)
             }
         }
+        if (Prefs.mainActivityLayout == MainActivityLayout.FULL_SCREEN)
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
@@ -428,6 +433,18 @@ class MainActivity : BaseActivity(),
         if (searchView?.onBackPressed() == true) return
         if (currentFragment.onBackPressed()) return
         super.onBackPressed()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && Prefs.mainActivityLayout == MainActivityLayout.FULL_SCREEN) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
     }
 
     val currentFragment
