@@ -32,6 +32,7 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import java.io.IOException
 import java.util.*
 
@@ -223,3 +224,10 @@ fun frostJsoup(url: String)
 fun frostJsoup(cookie: String?, url: String)
         = Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
 
+fun Element.first(vararg select: String): Element? {
+    select.forEach {
+        val e = select(it)
+        if (e.size > 0) return e.first()
+    }
+    return null
+}
