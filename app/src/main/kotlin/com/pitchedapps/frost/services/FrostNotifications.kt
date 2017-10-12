@@ -161,8 +161,8 @@ data class NotificationContent(val data: CookieModel,
                                val text: String,
                                val timestamp: Long,
                                val profileUrl: String) {
-    constructor(data:CookieModel, thread: FrostThread)
-            :this(data, thread.id, thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
+    constructor(data: CookieModel, thread: FrostThread)
+            : this(data, thread.id, thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
 }
 
 const val NOTIFICATION_PERIODIC_JOB = 7
@@ -172,7 +172,11 @@ const val NOTIFICATION_PERIODIC_JOB = 7
  * returns false if an error occurs; true otherwise
  */
 fun Context.scheduleNotifications(minutes: Long): Boolean {
-    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler?
+    if (scheduler == null) {
+        L.e("JobScheduler not found; cannot schedule notifications")
+        return false
+    }
     scheduler.cancel(NOTIFICATION_PERIODIC_JOB)
     if (minutes < 0L) return true
     val serviceComponent = ComponentName(this, NotificationService::class.java)
@@ -194,7 +198,11 @@ const val NOTIFICATION_JOB_NOW = 6
  * Run notification job right now
  */
 fun Context.fetchNotifications(): Boolean {
-    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+    val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler?
+    if (scheduler == null) {
+        L.e("JobScheduler not found")
+        return false
+    }
     val serviceComponent = ComponentName(this, NotificationService::class.java)
     val builder = JobInfo.Builder(NOTIFICATION_JOB_NOW, serviceComponent)
             .setMinimumLatency(0L)
