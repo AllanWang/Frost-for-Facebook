@@ -29,4 +29,4 @@ Those builds are likely more stable as they are pushed out to the alpha stream o
 ## Translations
 
 Frost depends on translations crowdsourced by the general public.
-If you would like to contribute, please visit [here](https://crowdin.com/project/frost-for-facebook)
+If you would like to contribute, please visit [here](https://crwd.in/frost-for-facebook)
