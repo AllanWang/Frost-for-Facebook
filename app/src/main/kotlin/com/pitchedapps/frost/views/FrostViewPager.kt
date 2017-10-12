@@ -18,10 +18,15 @@ class FrostViewPager @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onInterceptTouchEvent(ev: MotionEvent?) =
             try {
                 Prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
-            } catch(e: IllegalArgumentException) {
-                true
+            } catch (e: IllegalArgumentException) {
+                false
             }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(ev: MotionEvent?): Boolean = Prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
+    override fun onTouchEvent(ev: MotionEvent?): Boolean =
+            try {
+                Prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
+            } catch (e: IllegalArgumentException) {
+                false
+            }
 }

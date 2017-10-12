@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/crowdin.properties
 /.idea
 .DS_Store
 /build
