@@ -25,3 +25,8 @@ For testers and users without a play store account, test builds can be found [he
 Note that these builds occur for every commit, including unstable ones.
 You can find the release numbers for the master branch under the [Travis](https://travis-ci.org/AllanWang/Frost-for-Facebook/branches).
 Those builds are likely more stable as they are pushed out to the alpha stream on the play store.
+
+## Translations
+
+Frost depends on translations crowdsourced by the general public.
+If you would like to contribute, please visit [here](https://crowdin.com/project/frost-for-facebook)
