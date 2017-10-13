@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="pick_image">Pick Image</string>
     <string name="image_download_success">Image downloaded</string>
     <string name="image_download_fail">Image failed to download</string>
     <string name="image_share_failed">Failed to share image</string>
