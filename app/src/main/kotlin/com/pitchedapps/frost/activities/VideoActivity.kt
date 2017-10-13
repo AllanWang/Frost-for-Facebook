@@ -1,35 +1,33 @@
 package com.pitchedapps.frost.activities
 
-import android.net.Uri
 import android.os.Bundle
+import android.view.ViewGroup
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.bindView
-import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.views.FrostVideoView
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
 class VideoActivity : KauBaseActivity() {
 
-    val video: VideoView by bindView(R.id.video)
+    val container: ViewGroup by bindView(R.id.video_container)
+    val video: FrostVideoView by bindView(R.id.video)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_video)
-        video.apply {
-            setOnPreparedListener {
-                video.start()
-            }
-            showControls()
-            setVideoURI(Uri.parse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"))
-            setOnCompletionListener {
-                restart()
-            }
+        container.setOnTouchListener { _, event ->
+            val y = video.shouldParentAcceptTouch(event)
+            L.d("Video SPAT $y")
+            y
         }
-//        postDelayed(2000) {
-//            video.animate().translationYBy(500f)
-//        }
     }
 
+    override fun onStop() {
+        video.pause()
+        super.onStop()
+    }
 }

@@ -59,6 +59,7 @@ import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IABMain
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -80,6 +81,7 @@ class MainActivity : BaseActivity(),
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+    var videoViewer: FrostVideoViewer? = null
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var webFragmentObservable = PublishSubject.create<Int>()!!
@@ -160,8 +162,12 @@ class MainActivity : BaseActivity(),
 //        setNetworkObserver { connectivity ->
 //            shouldLoadImages = !connectivity.isRoaming
 //        }
+        showVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+    }
 
-        startActivity(VideoActivity::class.java)
+    fun showVideo(url:String) {
+        val viewer = FrostVideoViewer.showVideo(coordinator.parentViewGroup, url)
+        videoViewer = viewer
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -419,6 +425,11 @@ class MainActivity : BaseActivity(),
             if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
         }
         super.onStart()
+    }
+
+    override fun onStop() {
+        videoViewer?.pause()
+        super.onStop()
     }
 
     override fun onDestroy() {
