@@ -165,7 +165,7 @@ class MainActivity : BaseActivity(),
         showVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
     }
 
-    fun showVideo(url:String) {
+    fun showVideo(url: String) {
         val viewer = FrostVideoViewer.showVideo(coordinator.parentViewGroup, url)
         videoViewer = viewer
     }
@@ -438,6 +438,7 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onBackPressed() {
+        if (videoViewer?.onBackPressed() == true) return
         if (searchView?.onBackPressed() == true) return
         if (currentFragment.onBackPressed()) return
         super.onBackPressed()

@@ -23,10 +23,16 @@ class FrostVideoViewer @JvmOverloads constructor(
     val video: FrostVideoView by bindView(R.id.video)
 
     companion object {
+        /**
+         * Simplified binding to add video to layout, and remove it when finished
+         * This is under the assumption that the container allows for overlays,
+         * such as a FrameLayout
+         */
         fun showVideo(container: ViewGroup, url: String): FrostVideoViewer {
             val videoViewer = FrostVideoViewer(container.context)
             container.addView(videoViewer)
             videoViewer.setVideo(url)
+            videoViewer.video.onFinishedListener = { container.removeView(videoViewer) }
             return videoViewer
         }
     }
@@ -41,6 +47,18 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun setVideo(url: String) {
         fadeIn()
         video.setVideoURI(Uri.parse(url.formattedFbUrl))
+    }
+
+    /**
+     * Handle back presses
+     * returns true if consumed, false otherwise
+     */
+    fun onBackPressed(): Boolean {
+        if (video.isExpanded) {
+            video.isExpanded = false
+            return true
+        }
+        return false
     }
 
     fun pause() = video.pause()

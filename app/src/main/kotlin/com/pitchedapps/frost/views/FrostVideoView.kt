@@ -2,6 +2,7 @@ package com.pitchedapps.frost.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.PointF
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -13,6 +14,7 @@ import ca.allanwang.kau.utils.parentViewGroup
 import ca.allanwang.kau.utils.scaleXY
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.utils.L
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -31,14 +33,21 @@ class FrostVideoView @JvmOverloads constructor(
         get() = videoViewImpl
 
     var backgroundView: View? = null
+    var onFinishedListener: () -> Unit = {}
 
     val parent: ViewGroup by lazy { parentViewGroup }
+
     /**
      * Padding between minimized video and the parent borders
      * Note that this is double the actual padding
      * as we are calculating then dividing by 2
      */
     private val MINIMIZED_PADDING = 10.dpToPx
+    private val SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD = 2f.dpToPx
+    private val SWIPE_TO_CLOSE_VERTICAL_THRESHOLD = 5f.dpToPx
+    private val SWIPE_TO_CLOSE_OFFSET_THRESHOLD = 150f.dpToPx
+    private val ANIMATION_DURATION = 300L
+    private val FAST_ANIMATION_DURATION = 100L
 
     private var upperMinimizedX = 0f
     private var upperMinimizedY = 0f
@@ -48,8 +57,8 @@ class FrostVideoView @JvmOverloads constructor(
             if (field == value) return
             field = value
             if (field) {
-                animate().scaleXY(1f).translationX(0f).translationY(0f).withStartAction {
-                    backgroundView?.animate()?.alpha(1f)
+                animate().scaleXY(1f).translationX(0f).translationY(0f).setDuration(ANIMATION_DURATION).withStartAction {
+                    backgroundView?.animate()?.alpha(1f)?.setDuration(ANIMATION_DURATION)
                 }
             } else {
                 hideControls()
@@ -62,8 +71,8 @@ class FrostVideoView @JvmOverloads constructor(
                 val translationY = (height - MINIMIZED_PADDING - desiredHeight) / 2
                 upperMinimizedX = width - desiredWidth - MINIMIZED_PADDING
                 upperMinimizedY = height - desiredHeight - MINIMIZED_PADDING
-                animate().scaleXY(scale).translationX(translationX).translationY(translationY).withStartAction {
-                    backgroundView?.animate()?.alpha(0f)
+                animate().scaleXY(scale).translationX(translationX).translationY(translationY).setDuration(ANIMATION_DURATION).withStartAction {
+                    backgroundView?.animate()?.alpha(0f)?.setDuration(ANIMATION_DURATION)
                 }
             }
         }
@@ -101,6 +110,23 @@ class FrostVideoView @JvmOverloads constructor(
         return ev.x >= upperMinimizedX && ev.y >= upperMinimizedY
     }
 
+    fun destroy() {
+        stopPlayback()
+        onFinishedListener()
+    }
+
+    private fun onHorizontalSwipe(offset: Float) {
+        val alpha = Math.max(1f - Math.abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD), 0f)
+        L.d("New Video alpha $alpha")
+        parent.alpha = alpha
+    }
+
+    /*
+     * -------------------------------------------------------------------
+     * Touch Listeners
+     * -------------------------------------------------------------------
+     */
+
     private inner class FrameTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(), View.OnTouchListener {
 
         private val gestureDetector: GestureDetector = GestureDetector(context, this)
@@ -129,10 +155,47 @@ class FrostVideoView @JvmOverloads constructor(
     private inner class VideoTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(), View.OnTouchListener {
 
         private val gestureDetector: GestureDetector = GestureDetector(context, this)
+        private val downLoc = PointF()
+        private var baseSwipeX = -1f
+        private var baseTranslateX = -1f
+        private var checkForDismiss = true
+        private var onSwipe = false
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             gestureDetector.onTouchEvent(event)
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    checkForDismiss = !isExpanded
+                    onSwipe = false
+                    downLoc.x = event.rawX
+                    downLoc.y = event.rawY
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (onSwipe) {
+                        val dx = baseSwipeX - event.rawX
+                        translationX = baseTranslateX - dx
+                        L.d("Video Swipe $baseSwipeX ${event.rawX} $dx")
+//                        onHorizontalSwipe(dx)
+                    } else if (checkForDismiss) {
+                        if (Math.abs(event.rawY - downLoc.y) > SWIPE_TO_CLOSE_VERTICAL_THRESHOLD)
+                            checkForDismiss = false
+                        else if (Math.abs(event.rawX - downLoc.x) > SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD) {
+                            onSwipe = true
+                            baseSwipeX = event.rawX
+                            baseTranslateX = translationX
+                        }
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (onSwipe) {
+                        if (Math.abs(baseSwipeX - event.rawX) > SWIPE_TO_CLOSE_OFFSET_THRESHOLD)
+                            destroy()
+                        else
+                            animate().alpha(1f).translationX(baseTranslateX).setDuration(FAST_ANIMATION_DURATION).start()
+                    }
+                }
+            }
             return true
         }
 
