@@ -41,6 +41,13 @@
         <item name="android:windowAnimationStyle">@style/KauFadeInFadeOut</item>
     </style>
 
+    <style name="FrostTheme.Video" parent="FrostTheme.Overlay.Fade">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="FrostTheme.Settings" parent="FrostTheme">
         <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
     </style>

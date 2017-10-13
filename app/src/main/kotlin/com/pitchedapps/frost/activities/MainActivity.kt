@@ -160,6 +160,8 @@ class MainActivity : BaseActivity(),
 //        setNetworkObserver { connectivity ->
 //            shouldLoadImages = !connectivity.isRoaming
 //        }
+
+        startActivity(VideoActivity::class.java)
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
