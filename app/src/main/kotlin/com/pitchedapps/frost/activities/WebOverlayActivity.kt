@@ -192,7 +192,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
         }
     }
 
-    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
+    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
         openMediaPicker(filePathCallback, fileChooserParams)
     }
 
