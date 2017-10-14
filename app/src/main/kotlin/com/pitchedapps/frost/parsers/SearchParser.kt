@@ -47,22 +47,17 @@ private class SearchParserImpl : FrostParserBase<List<FrostSearch>>() {
         val container: Element = doc.getElementById("BrowseResultsContainer")
                 ?: doc.getElementById("root")
                 ?: return null
-        val hrefSet = mutableSetOf<String>()
         /**
-         * When mapping items, some links are duplicated because they are nested below a main one
-         * We will filter out search items whose links are already in the list
          *
          * Removed [data-store*=result_id]
          */
         return container.select("a.touchable.primary[href]").filter(Element::hasText).mapNotNull {
-            val item = FrostSearch(it.attr("href").formattedFbUrlCss,
-                    it.select("._uok").first()?.text() ?: it.text(),
-                    it.select("._1tcc").first()?.text())
-            if (hrefSet.contains(item.href)) return@mapNotNull null
-            hrefSet.add(item.href)
-            item
-        }
+            FrostSearch(it.attr("href").formattedFbUrlCss,
+                    it.select(".title").first()?.text() ?: "",
+                    it.select(".subtitle").first()?.ownText())
+        }.filter { it.title.isNotBlank() }
     }
+
 
     override fun textToDoc(text: String): Document? = Jsoup.parse(text)
 
