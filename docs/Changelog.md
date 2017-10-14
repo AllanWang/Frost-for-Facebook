@@ -1,5 +1,8 @@
 # Changelog
 
+## Translations are opened!
+* If you want to have Frost in your language, please consider helping translate it. Link is in settings.
+
 ## v1.5.8
 * Fix theme for newer comments layout
 * Revert media picker to use system default

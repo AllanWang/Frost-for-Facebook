@@ -3,4 +3,5 @@
     <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
     <string name="paypal" translatable="false">PayPal</string>
     <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
+    <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
 </resources>
