@@ -6,6 +6,9 @@
     <item text="" />
     -->
 	
+	<version title="Translations are opened!" />
+    <item text="If you want to have Frost in your language, please consider helping translate it. Link is in settings." />
+	
 	<version title="v1.5.8" />
     <item text="Fix theme for newer comments layout" />
     <item text="Revert media picker to use system default" />
