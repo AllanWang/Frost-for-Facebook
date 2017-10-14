@@ -46,6 +46,8 @@
     <string name="new_message">New Message</string>
     <string name="no_text">No text</string>
 
+    <string name="show_all_results">Show All Results</string>
+
     <!--About-->
 
     <string name="frost_description">Frost is a fully themable,

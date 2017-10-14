@@ -22,14 +22,14 @@ import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IABSettings
+import com.pitchedapps.frost.utils.iab.IabSettings
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
-class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
+class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
 
     var resultFlag = Activity.RESULT_CANCELED
 

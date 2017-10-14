@@ -56,7 +56,7 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IABMain
+import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostViewPager
@@ -71,7 +71,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate(),
-        FrostBilling by IABMain() {
+        FrostBilling by IabMain() {
 
     lateinit var adapter: SectionsPagerAdapter
     val toolbar: Toolbar by bindView(R.id.toolbar)
@@ -92,7 +92,7 @@ class MainActivity : BaseActivity(),
             field = value
         }
     var searchView: SearchView? = null
-    val searchViewCache = mutableMapOf<String, List<SearchItem>>()
+    private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
 
     companion object {
         const val ACTIVITY_SETTINGS = 97
@@ -343,7 +343,8 @@ class MainActivity : BaseActivity(),
                 else
                     doAsync {
                         val data = SearchParser.query(query) ?: return@doAsync
-                        val items = data.map { SearchItem(it.href, it.title, it.description) }
+                        val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
+                        items.add(SearchItem("${FbItem.SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
                         searchViewCache.put(query, items)
                         uiThread { searchView?.results = items }
                     }
