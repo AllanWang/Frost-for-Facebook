@@ -37,7 +37,7 @@ interface FrostBilling : BillingProcessor.IBillingHandler {
     fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean
 }
 
-abstract class IABBinder : FrostBilling {
+abstract class IabBinder : FrostBilling {
 
     var bp: BillingProcessor? = null
     lateinit var activityRef: WeakReference<Activity>
@@ -47,7 +47,7 @@ abstract class IABBinder : FrostBilling {
     override final fun Activity.onCreateBilling() {
         activityRef = WeakReference(this)
         doAsync {
-            bp = BillingProcessor.newBillingProcessor(this@onCreateBilling, PUBLIC_BILLING_KEY, this@IABBinder)
+            bp = BillingProcessor.newBillingProcessor(this@onCreateBilling, PUBLIC_BILLING_KEY, this@IabBinder)
             bp?.initialize()
         }
     }
@@ -118,7 +118,7 @@ abstract class IABBinder : FrostBilling {
 
 }
 
-class IABSettings : IABBinder() {
+class IabSettings : IabBinder() {
 
     override fun onProductPurchased(productId: String, details: TransactionDetails?) {
         super.onProductPurchased(productId, details)
@@ -150,7 +150,7 @@ class IABSettings : IABBinder() {
     }
 }
 
-class IABMain : IABBinder() {
+class IabMain : IabBinder() {
 
     override fun onBillingInitialized() {
         super.onBillingInitialized()
