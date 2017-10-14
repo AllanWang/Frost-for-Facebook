@@ -372,7 +372,7 @@ class MainActivity : BaseActivity(),
         return true
     }
 
-    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
+    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
         openMediaPicker(filePathCallback, fileChooserParams)
     }
 

@@ -15,20 +15,20 @@ import com.pitchedapps.frost.utils.L
 const val MEDIA_CHOOSER_RESULT = 67
 
 interface FileChooserActivityContract {
-    fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams)
+    fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams)
 }
 
 interface FileChooserContract {
-    var filePathCallback: ValueCallback<Array<Uri>>?
-    fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams)
+    var filePathCallback: ValueCallback<Array<Uri>?>?
+    fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams)
     fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean
 }
 
 class FileChooserDelegate : FileChooserContract {
 
-    override var filePathCallback: ValueCallback<Array<Uri>>? = null
+    override var filePathCallback: ValueCallback<Array<Uri>?>? = null
 
-    override fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: WebChromeClient.FileChooserParams) {
+    override fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
         this@FileChooserDelegate.filePathCallback = filePathCallback
         val intent = Intent()
         intent.type = fileChooserParams.acceptTypes.firstOrNull()
@@ -40,8 +40,7 @@ class FileChooserDelegate : FileChooserContract {
         L.d("FileChooser On activity results web $requestCode")
         if (requestCode != MEDIA_CHOOSER_RESULT) return false
         val data = intent?.data
-        if (data != null)
-            filePathCallback?.onReceiveValue(arrayOf(data))
+        filePathCallback?.onReceiveValue(if (data != null) arrayOf(data) else null)
         filePathCallback = null
         return true
     }
