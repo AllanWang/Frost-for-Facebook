@@ -1,14 +1,20 @@
 package com.pitchedapps.frost.services
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
@@ -33,7 +39,14 @@ import org.jetbrains.anko.runOnUiThread
  *
  * Logic for build notifications, scheduling notifications, and showing notifications
  */
-
+fun setupNotificationChannels(c: Context) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+    val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val mainChannel = NotificationChannel(BuildConfig.APPLICATION_ID, c.getString(R.string.frost_name), NotificationManager.IMPORTANCE_DEFAULT)
+    mainChannel.lightColor = c.color(R.color.facebook_blue)
+    mainChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+    manager.createNotificationChannel(mainChannel)
+}
 
 val Context.frostNotification: NotificationCompat.Builder
     get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
@@ -161,8 +174,8 @@ data class NotificationContent(val data: CookieModel,
                                val text: String,
                                val timestamp: Long,
                                val profileUrl: String) {
-    constructor(data:CookieModel, thread: FrostThread)
-            :this(data, thread.id, thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
+    constructor(data: CookieModel, thread: FrostThread)
+            : this(data, thread.id, thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
 }
 
 const val NOTIFICATION_PERIODIC_JOB = 7

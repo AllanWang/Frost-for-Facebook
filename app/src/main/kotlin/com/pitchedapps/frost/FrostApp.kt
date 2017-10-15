@@ -16,6 +16,7 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.services.scheduleNotifications
+import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -60,6 +61,8 @@ class FrostApp : Application() {
         super.onCreate()
 
         applicationContext.scheduleNotifications(Prefs.notificationFreq)
+
+        setupNotificationChannels(applicationContext)
 
         /**
          * Drawer profile loading logic
