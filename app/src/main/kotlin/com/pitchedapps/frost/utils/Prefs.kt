@@ -39,7 +39,7 @@ object Prefs : KPref() {
 
     var exitConfirmation: Boolean by kpref("exit_confirmation", true)
 
-    var notificationFreq: Long by kpref("notification_freq", -1L)
+    var notificationFreq: Long by kpref("notification_freq", 60L)
 
     var versionCode: Int by kpref("version_code", -1)
 
@@ -104,7 +104,7 @@ object Prefs : KPref() {
 
     var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
 
-    var notificationsInstantMessages: Boolean by kpref("notification_im", false)
+    var notificationsInstantMessages: Boolean by kpref("notification_im", true)
 
     var notificationsImAllAccounts: Boolean by kpref("notification_im_all_accounts", false)
 
