@@ -32,11 +32,6 @@
     <string name="frost_notifications">Frost Notifications</string>
     <string name="requires_custom_theme">Requires custom theme</string>
 
-    <string name="frost_prefix">Frost for Facebook:</string>
-    <string name="feedback">Feedback</string>
-    <string name="bug_report">Bug Report</string>
-    <string name="theme_issue">Theme Issue</string>
-    <string name="feature_request">Feature Request</string>
     <string name="subject">Subject</string>
     <string name="share">Share</string>
 
