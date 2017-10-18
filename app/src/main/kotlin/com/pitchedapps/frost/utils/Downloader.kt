@@ -20,9 +20,12 @@ import com.pitchedapps.frost.dbflow.loadFbCookie
  */
 fun Context.frostDownload(url: String, userAgent: String, contentDisposition: String, mimeType: String, contentLength: Long) {
     L.d("Received download request", "Download $url")
+    val uri = Uri.parse(url) ?: return
+    if (uri.scheme != "http" && uri.scheme != "https")
+        return L.e("Invalid download attempt", url)
     kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
         if (!granted) return@kauRequestPermissions
-        val request = DownloadManager.Request(Uri.parse(url))
+        val request = DownloadManager.Request(uri)
         request.setMimeType(mimeType)
         val cookie = loadFbCookie(Prefs.userId) ?: return@kauRequestPermissions
         request.addRequestHeader("cookie", cookie.cookie)
