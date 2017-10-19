@@ -120,7 +120,7 @@ class FrostVideoView @JvmOverloads constructor(
     fun destroy() {
         stopPlayback()
         if (parent.alpha > 0f)
-            parent.animate().alpha(0f).setDuration(FAST_ANIMATION_DURATION).withEndAction { onFinishInflate() }
+            parent.animate().alpha(0f).setDuration(FAST_ANIMATION_DURATION).withEndAction { onFinishedListener() }.start()
         else
             onFinishedListener()
     }
