@@ -7,7 +7,7 @@
   <string name="overlay_swipe_desc">Antippen der meisten Links öffnet ein neues Overlay, so können Sie mit einem Wisch zur Originalseite zurück. Dies resultiert in etwas längeren Ladezeiten da die ganze Seite neu geladen wird.</string>
   <string name="overlay_full_screen_swipe">Vollbild Overlay, zum deaktivieren wischen</string>
   <string name="overlay_full_screen_swipe_desc">Wischen Sie von überall nach rechts um im Web Overlay den Browser zu schließen. Wenn deaktiviert, wird es nur durch das wischen vom linken Rand geschlossen.</string>
-  <string name="open_links_in_default">Öffne Links in der Standart app</string>
+  <string name="open_links_in_default">Öffne Links in der Standard app</string>
   <string name="open_links_in_default_desc">Wenn möglich, werden Links mit der Standard-App anstatt durch den Frost Web Overlay geöffnet</string>
   <string name="viewpager_swipe">Viewpager wischen</string>
   <string name="viewpager_swipe_desc">Wischen zwischen den Seiten in der Hauptansicht erlauben. Standartmässig stoppt das Wischen von allein wenn man lang auf ein Element, vie z. Bsp. den Like-Button, drückt. Abschalten verhindert das Wischen komplett.</string>
