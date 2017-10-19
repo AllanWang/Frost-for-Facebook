@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.utils.L
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 /**
  * Created by Allan Wang on 2017-07-07.
@@ -8,12 +10,12 @@ import com.pitchedapps.frost.utils.L
  * Custom url builder so we can easily test it without the Android framework
  */
 inline val String.formattedFbUrl: String
-    get() = FbUrlFormatter(this, false).toString()
+    get() = FbUrlFormatter(this).toString()
 
 inline val String.formattedFbUrlCss: String
-    get() = FbUrlFormatter(this, true).toString()
+    get() = FbUrlFormatter(this).toString()
 
-class FbUrlFormatter(url: String, css: Boolean = false) {
+class FbUrlFormatter(url: String) {
     private val queries = mutableMapOf<String, String>()
     private val cleaned: String
 
@@ -23,19 +25,17 @@ class FbUrlFormatter(url: String, css: Boolean = false) {
      * The order is very important:
      * 1. Wrapper links (discardables) are stripped away, resulting in the actual link
      * 2. CSS encoding is converted to normal encoding
-     * 3. Query portions are separated from the cleaned url
-     * 4. The cleaned url is decoded. Queries are kept as is!
+     * 3. Url is completely decoded
+     * 4. Url is split into sections
      */
     init {
         if (url.isBlank()) cleaned = ""
         else {
             var cleanedUrl = url
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
-            val changed = cleanedUrl != url //note that discardables strip away the first '?'
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            //must decode for css
-            if (css) decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            val qm = cleanedUrl.indexOf(if (changed) "&" else "?")
+            cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
+            val qm = cleanedUrl.indexOf("?")
             if (qm > -1) {
                 cleanedUrl.substring(qm + 1).split("&").forEach {
                     val p = it.split("=")
@@ -43,8 +43,6 @@ class FbUrlFormatter(url: String, css: Boolean = false) {
                 }
                 cleanedUrl = cleanedUrl.substring(0, qm)
             }
-            //only decode non query portion of the url
-            if (!css) decoder.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
             discardableQueries.forEach { queries.remove(it) }
             //final cleanup
             misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
@@ -89,31 +87,9 @@ class FbUrlFormatter(url: String, css: Boolean = false) {
                 "/video_redirect/?src="
         )
 
-        val misc = listOf(
-                "&amp;" to "&"
-        )
+        val misc = arrayOf("&amp;" to "&")
 
         val discardableQueries = arrayOf("ref", "refid")
-
-        val decoder = listOf(
-                "%3C" to "<", "%3E" to ">", "%23" to "#", "%25" to "%",
-                "%7B" to "{", "%7D" to "}", "%7C" to "|", "%5C" to "\\",
-                "%5E" to "^", "%7E" to "~", "%5B" to "[", "%5D" to "]",
-                "%60" to "`", "%3B" to ";", "%2F" to "/", "%3F" to "?",
-                "%3A" to ":", "%40" to "@", "%3D" to "=", "%26" to "&",
-                "%24" to "$", "%2B" to "+", "%22" to "\"", "%2C" to ",",
-                "%20" to " "
-        )
-
-        val cssDecoder = listOf(
-                "\\3C " to "<", "\\3E " to ">", "\\23 " to "#", "\\25 " to "%",
-                "\\7B " to "{", "\\7D " to "}", "\\7C " to "|", "\\5C " to "\\",
-                "\\5E " to "^", "\\7E " to "~", "\\5B " to "[", "\\5D " to "]",
-                "\\60 " to "`", "\\3B " to ";", "\\2F " to "/", "\\3F " to "?",
-                "\\3A " to ":", "\\40 " to "@", "\\3D " to "=", "\\26 " to "&",
-                "\\24 " to "$", "\\2B " to "+", "\\22 " to "\"", "\\2C " to ",",
-                "%20" to " "
-        )
 
         val converter = listOf(
                 "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",

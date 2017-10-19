@@ -1,6 +1,9 @@
 package com.pitchedapps.frost.facebook
 
+import okhttp3.HttpUrl
+import okio.Utf8
 import org.junit.Test
+import java.net.URLDecoder
 import kotlin.test.assertEquals
 
 
@@ -27,11 +30,6 @@ class FbUrlTest {
     }
 
     @Test
-    fun redirect() {
-        assertFbFormat("${FB_URL_BASE}relative/?asdf=1234&hjkl=7890", "https://touch.facebook.com/l.php?u=${FB_URL_BASE}relative/&asdf=1234&hjkl=7890")
-    }
-
-    @Test
     fun discard() {
         val prefix = "$FB_URL_BASE?test=1234"
         val suffix = "&apple=notorange"
@@ -41,13 +39,6 @@ class FbUrlTest {
     @Test
     fun doubleDash() {
         assertFbFormat("${FB_URL_BASE}relative", "$FB_URL_BASE/relative")
-    }
-
-    @Test
-    fun css() {
-        val expected = "https://test.com?efg=hi&oh=bye&oe=apple%3Fornot"
-        val orig = "https\\3a //test.com?efg=hi&oh=bye&oe=apple\\3F ornot"
-        assertFbFormat(expected, orig)
     }
 
 }
