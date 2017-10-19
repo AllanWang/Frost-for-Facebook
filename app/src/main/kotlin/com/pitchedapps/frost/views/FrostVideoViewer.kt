@@ -1,14 +1,19 @@
 package com.pitchedapps.frost.views
 
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.inflate
+import ca.allanwang.kau.utils.isColorDark
+import ca.allanwang.kau.utils.withMinAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 
 /**
@@ -28,24 +33,26 @@ class FrostVideoViewer @JvmOverloads constructor(
          * This is under the assumption that the container allows for overlays,
          * such as a FrameLayout
          */
-        fun showVideo(container: ViewGroup, url: String): FrostVideoViewer {
+        inline fun showVideo(container: ViewGroup, url: String, crossinline onFinish: () -> Unit): FrostVideoViewer {
             val videoViewer = FrostVideoViewer(container.context)
             container.addView(videoViewer)
+            videoViewer.bringToFront()
+            L.d("Create video view", url)
             videoViewer.setVideo(url)
-            videoViewer.video.onFinishedListener = { container.removeView(videoViewer) }
+            videoViewer.video.onFinishedListener = { container.removeView(videoViewer); onFinish() }
             return videoViewer
         }
     }
 
     init {
         inflate(R.layout.view_video, true)
-        gone()
-        background.setBackgroundColor(Prefs.bgColor.withMinAlpha(200))
+        alpha = 0f
+        background.setBackgroundColor(if (Prefs.bgColor.isColorDark) Prefs.bgColor.withMinAlpha(200) else Color.BLACK)
         video.backgroundView = background
     }
 
     fun setVideo(url: String) {
-        fadeIn()
+        animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
         video.setVideoURI(Uri.parse(url.formattedFbUrl))
     }
 

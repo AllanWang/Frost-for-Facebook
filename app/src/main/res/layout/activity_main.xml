@@ -46,9 +46,4 @@
         android:layout_margin="@dimen/kau_fab_margin"
         android:visibility="gone" />
 
-    <com.pitchedapps.frost.views.FrostVideoViewer
-        android:id="@+id/video_viewer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
 </android.support.design.widget.CoordinatorLayout>

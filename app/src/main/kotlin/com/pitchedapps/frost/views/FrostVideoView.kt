@@ -3,7 +3,6 @@ package com.pitchedapps.frost.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PointF
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -13,7 +12,6 @@ import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.parentViewGroup
 import ca.allanwang.kau.utils.scaleXY
 import com.devbrackets.android.exomedia.ui.widget.VideoView
-import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 
 /**
@@ -35,19 +33,24 @@ class FrostVideoView @JvmOverloads constructor(
     var backgroundView: View? = null
     var onFinishedListener: () -> Unit = {}
 
+    private val videoDimensions = PointF(0f, 0f)
+
     val parent: ViewGroup by lazy { parentViewGroup }
 
-    /**
-     * Padding between minimized video and the parent borders
-     * Note that this is double the actual padding
-     * as we are calculating then dividing by 2
-     */
-    private val MINIMIZED_PADDING = 10.dpToPx
-    private val SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD = 2f.dpToPx
-    private val SWIPE_TO_CLOSE_VERTICAL_THRESHOLD = 5f.dpToPx
-    private val SWIPE_TO_CLOSE_OFFSET_THRESHOLD = 150f.dpToPx
-    private val ANIMATION_DURATION = 300L
-    private val FAST_ANIMATION_DURATION = 100L
+    companion object {
+
+        /**
+         * Padding between minimized video and the parent borders
+         * Note that this is double the actual padding
+         * as we are calculating then dividing by 2
+         */
+        private val MINIMIZED_PADDING = 10.dpToPx
+        private val SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD = 2f.dpToPx
+        private val SWIPE_TO_CLOSE_VERTICAL_THRESHOLD = 5f.dpToPx
+        private val SWIPE_TO_CLOSE_OFFSET_THRESHOLD = 75f.dpToPx
+        val ANIMATION_DURATION = 300L
+        private val FAST_ANIMATION_DURATION = 100L
+    }
 
     private var upperMinimizedX = 0f
     private var upperMinimizedY = 0f
@@ -55,6 +58,8 @@ class FrostVideoView @JvmOverloads constructor(
     var isExpanded: Boolean = true
         set(value) {
             if (field == value) return
+            if (videoDimensions.x <= 0f || videoDimensions.y <= 0f)
+                return L.d("Attempted to toggle video expansion when points have not been finalized")
             field = value
             if (field) {
                 animate().scaleXY(1f).translationX(0f).translationY(0f).setDuration(ANIMATION_DURATION).withStartAction {
@@ -64,9 +69,9 @@ class FrostVideoView @JvmOverloads constructor(
                 hideControls()
                 val height = parent.height
                 val width = parent.width
-                val scale = Math.min(height / 4f / v.height, width / 2.3f / v.width)
-                val desiredHeight = scale * v.height
-                val desiredWidth = scale * v.width
+                val scale = Math.min(height / 4f / videoDimensions.y, width / 2.3f / videoDimensions.x)
+                val desiredHeight = scale * videoDimensions.y
+                val desiredWidth = scale * videoDimensions.x
                 val translationX = (width - MINIMIZED_PADDING - desiredWidth) / 2
                 val translationY = (height - MINIMIZED_PADDING - desiredHeight) / 2
                 upperMinimizedX = width - desiredWidth - MINIMIZED_PADDING
@@ -88,17 +93,19 @@ class FrostVideoView @JvmOverloads constructor(
         }
         setOnTouchListener(FrameTouchListener(context))
         v.setOnTouchListener(VideoTouchListener(context))
+        setOnVideoSizedChangedListener { intrinsicWidth, intrinsicHeight ->
+            //the textureview bases its dimensions from its parent. We have to calculate it manually
+            val ratio = Math.min(parent.width.toFloat() / intrinsicWidth, parent.height.toFloat() / intrinsicHeight.toFloat())
+            videoDimensions.set(ratio * intrinsicWidth, ratio * intrinsicHeight)
+        }
     }
 
-    fun setVideo(url: String)
-            = setVideoURI(Uri.parse(url.formattedFbUrl))
-
-    fun hideControls() {
+    private fun hideControls() {
         if (videoControls?.isVisible == true)
             videoControls?.hide()
     }
 
-    fun toggleControls() {
+    private fun toggleControls() {
         if (videoControls?.isVisible == true)
             hideControls()
         else
@@ -112,12 +119,14 @@ class FrostVideoView @JvmOverloads constructor(
 
     fun destroy() {
         stopPlayback()
-        onFinishedListener()
+        if (parent.alpha > 0f)
+            parent.animate().alpha(0f).setDuration(FAST_ANIMATION_DURATION).withEndAction { onFinishInflate() }
+        else
+            onFinishedListener()
     }
 
     private fun onHorizontalSwipe(offset: Float) {
-        val alpha = Math.max(1f - Math.abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD), 0f)
-        L.d("New Video alpha $alpha")
+        val alpha = Math.max((1f - Math.abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD)) * 0.5f + 0.5f, 0f)
         parent.alpha = alpha
     }
 
@@ -175,8 +184,7 @@ class FrostVideoView @JvmOverloads constructor(
                     if (onSwipe) {
                         val dx = baseSwipeX - event.rawX
                         translationX = baseTranslateX - dx
-                        L.d("Video Swipe $baseSwipeX ${event.rawX} $dx")
-//                        onHorizontalSwipe(dx)
+                        onHorizontalSwipe(dx)
                     } else if (checkForDismiss) {
                         if (Math.abs(event.rawY - downLoc.y) > SWIPE_TO_CLOSE_VERTICAL_THRESHOLD)
                             checkForDismiss = false
@@ -192,7 +200,9 @@ class FrostVideoView @JvmOverloads constructor(
                         if (Math.abs(baseSwipeX - event.rawX) > SWIPE_TO_CLOSE_OFFSET_THRESHOLD)
                             destroy()
                         else
-                            animate().alpha(1f).translationX(baseTranslateX).setDuration(FAST_ANIMATION_DURATION).start()
+                            animate().translationX(baseTranslateX).setDuration(FAST_ANIMATION_DURATION).withStartAction {
+                                parent.animate().alpha(1f)
+                            }
                     }
                 }
             }

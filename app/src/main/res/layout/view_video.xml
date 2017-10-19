@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/video_container"
     android:layout_width="match_parent"
-    android:theme="@style/FrostTheme.Video"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:clickable="false">
+    android:clickable="false"
+    android:theme="@style/FrostTheme.Video">
 
     <View
         android:id="@+id/video_background"
@@ -21,6 +21,6 @@
         android:background="@android:color/transparent"
         android:theme="@style/FrostTheme.Video"
         app:useDefaultControls="true"
-        app:useTextureViewBacking="false" />
+        app:useTextureViewBacking="true" />
 
 </FrameLayout>

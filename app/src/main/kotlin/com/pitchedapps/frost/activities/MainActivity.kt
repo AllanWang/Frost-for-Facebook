@@ -162,12 +162,18 @@ class MainActivity : BaseActivity(),
 //        setNetworkObserver { connectivity ->
 //            shouldLoadImages = !connectivity.isRoaming
 //        }
-        showVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
     }
 
     fun showVideo(url: String) {
-        val viewer = FrostVideoViewer.showVideo(coordinator.parentViewGroup, url)
-        videoViewer = viewer
+        if (videoViewer != null) {
+            videoViewer?.setVideo(url)
+        } else {
+            val viewer = FrostVideoViewer.showVideo(coordinator.parentViewGroup, url) {
+                L.d("Video view released")
+                videoViewer = null
+            }
+            videoViewer = viewer
+        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
