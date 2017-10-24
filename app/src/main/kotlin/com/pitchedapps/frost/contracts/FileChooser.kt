@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
+import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
@@ -29,11 +31,17 @@ class FileChooserDelegate : FileChooserContract {
     override var filePathCallback: ValueCallback<Array<Uri>?>? = null
 
     override fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        this@FileChooserDelegate.filePathCallback = filePathCallback
-        val intent = Intent()
-        intent.type = fileChooserParams.acceptTypes.firstOrNull()
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, string(R.string.pick_image)), MEDIA_CHOOSER_RESULT)
+        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
+            if (!granted) {
+                filePathCallback.onReceiveValue(null)
+                return@kauRequestPermissions
+            }
+            this@FileChooserDelegate.filePathCallback = filePathCallback
+            val intent = Intent()
+            intent.type = fileChooserParams.acceptTypes.firstOrNull()
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, string(R.string.pick_image)), MEDIA_CHOOSER_RESULT)
+        }
     }
 
     override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
