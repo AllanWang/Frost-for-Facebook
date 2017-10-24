@@ -5,7 +5,7 @@
   <string name="found_pro_desc">Parece que tienes Frost Pro! Reiniciaremos la app para que puedas disfrutar de todas las fantásticas características!</string>
   <string name="play_purchased_pro">Gracias por tu apoyo! Disfruta de todas las características de Frost.\n\nSi te gusta esta app, por favor considera calificarla y apoyar este proyecto de código abierto.\n\nSi tienes algún comentario, no dudes en contactarme!</string>
   <string name="play_store_not_pro">Parece que eres un usuario pro, pero no hemos podido recuperar la información de compra. Si el error persiste, por favor intenta limpiar la caché de la Play Store o reinstala la app.</string>
-  <string name="play_store_unsupported">Esta versión de la app no fue diseñada para compras. Por favor vuelve a instalarla desde Google Play Store si persiste el error.\nSi deseas donar, sin obtener características adicionales, puedes hacerlo via PayPal.</string>
+  <string name="play_store_unsupported">Esta versión de la app no fue diseñada para compras. Por favor vuelve a instalarla desde Google Play Store si persiste el error.\nSi deseas donar, sin obtener características adicionales, puedes hacerlo vía PayPal.</string>
   <string name="play_thank_you">Gracias!</string>
   <string name="purchases_restored">Compras restauradas</string>
   <string name="purchases_restored_with_pro">Frost Pro ha sido restaurado. Disfruta!</string>
