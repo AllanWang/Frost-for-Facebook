@@ -48,8 +48,8 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
 private enum class Debugger(val data: FbItem, val injector: InjectorContract?, vararg query: String) {
     MENU(FbItem.MENU, JsAssets.MENU_DEBUG, "#viewport"), //todo modify menu js for debugging
-    NOTIFICATIONS(FbItem.NOTIFICATIONS, null, "#notifications_list"),
-    SEARCH(FbItem.SEARCH, JsActions.FETCH_BODY);
+    NOTIFICATIONS(FbItem.NOTIFICATIONS, null, "#notifications_list");
+//    SEARCH(FbItem.SEARCH, JsActions.FETCH_BODY);
 
     val query = if (query.isNotEmpty()) arrayOf(*query, "#root", "main", "body") else emptyArray()
 

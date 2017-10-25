@@ -12,9 +12,6 @@ import java.nio.charset.StandardCharsets
 inline val String.formattedFbUrl: String
     get() = FbUrlFormatter(this).toString()
 
-inline val String.formattedFbUrlCss: String
-    get() = FbUrlFormatter(this).toString()
-
 class FbUrlFormatter(url: String) {
     private val queries = mutableMapOf<String, String>()
     private val cleaned: String
