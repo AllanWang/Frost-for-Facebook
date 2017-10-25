@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.6.0
+## v1.6.1
 * Add Spanish translations
 * Add French translations
 * Add German translations
@@ -8,6 +8,7 @@
 * Add pip video support
 * Add video downloader
 * Fix bugs with parsing url queries
+* Fix search update from Facebook
 
 ## v1.5.9
 * Add notification support for Android O

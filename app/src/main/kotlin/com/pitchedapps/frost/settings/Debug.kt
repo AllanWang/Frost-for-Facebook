@@ -7,12 +7,8 @@ import ca.allanwang.kau.utils.string
 import com.afollestad.materialdialogs.MaterialDialog
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.facebook.FACEBOOK_COM
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.InjectorContract
-import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.launchHeadlessHtmlExtractor

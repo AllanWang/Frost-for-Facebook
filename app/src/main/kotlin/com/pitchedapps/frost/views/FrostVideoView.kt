@@ -3,6 +3,7 @@ package com.pitchedapps.frost.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PointF
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -30,7 +31,8 @@ class FrostVideoView @JvmOverloads constructor(
 
     var backgroundView: View? = null
     var onFinishedListener: () -> Unit = {}
-    var viewerContract: FrostVideoViewerContract? = null
+    lateinit var viewerContract: FrostVideoViewerContract
+    lateinit var containerContract: FrostVideoContainerContract
 
     private val videoDimensions = PointF(0f, 0f)
 
@@ -49,8 +51,7 @@ class FrostVideoView @JvmOverloads constructor(
         private val FAST_ANIMATION_DURATION = 100L
     }
 
-    private var upperMinimizedX = 0f
-    private var upperMinimizedY = 0f
+    private var videoBounds = RectF()
 
     var isExpanded: Boolean = true
         set(value) {
@@ -61,22 +62,25 @@ class FrostVideoView @JvmOverloads constructor(
             if (field) {
                 animate().scaleXY(1f).translationX(0f).translationY(0f).setDuration(ANIMATION_DURATION).withStartAction {
                     backgroundView?.animate()?.alpha(1f)?.setDuration(ANIMATION_DURATION)
-                    viewerContract?.onFade(1f, ANIMATION_DURATION)
+                    viewerContract.onFade(1f, ANIMATION_DURATION)
+                }.withEndAction {
+                    if (!isPlaying) showControls()
                 }
             } else {
                 hideControls()
-                val height = height
-                val width = width
                 val scale = Math.min(height / 4f / videoDimensions.y, width / 2.3f / videoDimensions.x)
                 val desiredHeight = scale * videoDimensions.y
                 val desiredWidth = scale * videoDimensions.x
-                val translationX = (width - MINIMIZED_PADDING - desiredWidth) / 2
-                val translationY = (height - MINIMIZED_PADDING - desiredHeight) / 2
-                upperMinimizedX = width - desiredWidth - MINIMIZED_PADDING
-                upperMinimizedY = height - desiredHeight - MINIMIZED_PADDING
+                val padding = containerContract.lowerVideoPadding
+                val offsetX = width - MINIMIZED_PADDING - desiredWidth
+                val offsetY = height - MINIMIZED_PADDING - desiredHeight
+                val translationX = offsetX / 2 - padding.x
+                val translationY = offsetY / 2 - padding.y
+                videoBounds.set(offsetX, offsetY, width.toFloat(), height.toFloat())
+                videoBounds.offset(padding.x, padding.y)
                 animate().scaleXY(scale).translationX(translationX).translationY(translationY).setDuration(ANIMATION_DURATION).withStartAction {
                     backgroundView?.animate()?.alpha(0f)?.setDuration(ANIMATION_DURATION)
-                    viewerContract?.onFade(0f, ANIMATION_DURATION)
+                    viewerContract.onFade(0f, ANIMATION_DURATION)
                 }
             }
         }
@@ -84,10 +88,10 @@ class FrostVideoView @JvmOverloads constructor(
     init {
         setOnPreparedListener {
             start()
-            showControls()
+            if (isExpanded) showControls()
         }
         setOnCompletionListener {
-            viewerContract?.onVideoComplete()
+            viewerContract.onVideoComplete()
         }
         setOnTouchListener(FrameTouchListener(context))
         v.setOnTouchListener(VideoTouchListener(context))
@@ -104,6 +108,23 @@ class FrostVideoView @JvmOverloads constructor(
         videoControls?.finishLoading()
     }
 
+    override fun pause() {
+        audioFocusHelper.abandonFocus()
+        videoViewImpl.pause()
+        keepScreenOn = false
+        if (isExpanded)
+            videoControls?.updatePlaybackState(false)
+    }
+
+    override fun restart(): Boolean {
+        videoUri ?: return false
+        if (videoViewImpl.restart() && isExpanded) {
+            videoControls?.showLoading(true)
+            return true
+        }
+        return false
+    }
+
     private fun hideControls() {
         if (videoControls?.isVisible == true)
             videoControls?.hide()
@@ -118,14 +139,14 @@ class FrostVideoView @JvmOverloads constructor(
 
     fun shouldParentAcceptTouch(ev: MotionEvent): Boolean {
         if (isExpanded) return true
-        return ev.x >= upperMinimizedX && ev.y >= upperMinimizedY
+        return !videoBounds.contains(ev.x, ev.y)
     }
 
     fun destroy() {
         stopPlayback()
         if (alpha > 0f)
             animate().alpha(0f).setDuration(FAST_ANIMATION_DURATION).withEndAction { onFinishedListener() }.withStartAction {
-                viewerContract?.onFade(0f, FAST_ANIMATION_DURATION)
+                viewerContract.onFade(0f, FAST_ANIMATION_DURATION)
             }.start()
         else
             onFinishedListener()
@@ -154,7 +175,7 @@ class FrostVideoView @JvmOverloads constructor(
         }
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            if (viewerContract?.onSingleTapConfirmed(event) != true)
+            if (!viewerContract.onSingleTapConfirmed(event))
                 toggleControls()
             return true
         }
@@ -217,7 +238,7 @@ class FrostVideoView @JvmOverloads constructor(
         }
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            if (viewerContract?.onSingleTapConfirmed(event) == true) return true
+            if (viewerContract.onSingleTapConfirmed(event)) return true
             if (!isExpanded) {
                 isExpanded = true
                 return true
