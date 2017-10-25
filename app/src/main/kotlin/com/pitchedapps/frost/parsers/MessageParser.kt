@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.parsers
 
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.facebook.formattedFbUrlCss
 import com.pitchedapps.frost.utils.L
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -65,10 +64,10 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
         L.v("url", a.attr("href"))
         return FrostThread(
                 id = id.toInt(),
-                img = pUrl.formattedFbUrlCss,
+                img = pUrl.formattedFbUrl,
                 title = a.text(),
                 time = epoch,
-                url = a.attr("href").formattedFbUrlCss,
+                url = a.attr("href").formattedFbUrl,
                 unread = !element.hasClass("acw"),
                 content = content
         )
