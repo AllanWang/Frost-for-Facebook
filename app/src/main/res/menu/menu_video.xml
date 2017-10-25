@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_pip"
+        android:orderInCategory="100"
+        android:title="@string/pip"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_download"
+        android:orderInCategory="200"
+        android:title="@string/download"
+        app:showAsAction="ifRoom" />
+</menu>
+

@@ -157,6 +157,8 @@ dependencies {
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
+    implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
+
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     //noinspection GradleDependency

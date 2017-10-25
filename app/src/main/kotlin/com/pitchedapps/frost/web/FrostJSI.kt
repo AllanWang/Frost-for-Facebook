@@ -6,6 +6,7 @@ import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
 import io.reactivex.subjects.Subject
 
@@ -34,6 +35,12 @@ class FrostJSI(val webView: FrostWebViewCore) {
     @JavascriptInterface
     fun loadUrl(url: String?): Boolean
             = if (url == null) false else webView.requestWebOverlay(url)
+
+    @JavascriptInterface
+    fun loadVideo(url: String?) {
+        if (url != null)
+            webView.post { activity?.showVideo(url) }
+    }
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {

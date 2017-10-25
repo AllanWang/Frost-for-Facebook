@@ -59,6 +59,7 @@ import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -80,6 +81,7 @@ class MainActivity : BaseActivity(),
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+    var videoViewer: FrostVideoViewer? = null
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var webFragmentObservable = PublishSubject.create<Int>()!!
@@ -157,9 +159,18 @@ class MainActivity : BaseActivity(),
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-//        setNetworkObserver { connectivity ->
-//            shouldLoadImages = !connectivity.isRoaming
-//        }
+    }
+
+    fun showVideo(url: String) {
+        if (videoViewer != null) {
+            videoViewer?.setVideo(url)
+        } else {
+            val viewer = FrostVideoViewer.showVideo(coordinator.parentViewGroup, url) {
+                L.d("Video view released")
+                videoViewer = null
+            }
+            videoViewer = viewer
+        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -420,12 +431,18 @@ class MainActivity : BaseActivity(),
         super.onStart()
     }
 
+    override fun onStop() {
+        videoViewer?.pause()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         onDestroyBilling()
         super.onDestroy()
     }
 
     override fun onBackPressed() {
+        if (videoViewer?.onBackPressed() == true) return
         if (searchView?.onBackPressed() == true) return
         if (currentFragment.onBackPressed()) return
         super.onBackPressed()

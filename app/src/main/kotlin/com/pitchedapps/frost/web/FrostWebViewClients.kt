@@ -110,6 +110,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                 JsAssets.TEXTAREA_LISTENER,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                 JsAssets.CONTEXT_A,
+                JsAssets.MEDIA.maybe(webCore.baseEnum != null),
                 JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
         )
     }

@@ -135,6 +135,8 @@
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
+        <activity android:name=".activities.VideoActivity"
+            android:theme="@style/FrostTheme.Video" />
 
         <service
             android:name=".services.NotificationService"
