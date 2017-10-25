@@ -22,6 +22,9 @@
     <string name="about_frost">About Frost for Facebook</string>
     <string name="about_frost_desc">Version, Credits, and FAQs</string>
 
+    <string name="help_translate">Help Translate</string>
+    <string name="help_translate_desc">Frost is translated through crowdin. Contribute if you want it in your language!</string>
+
     <string name="debug_frost">Frost Debugger</string>
     <string name="debug_frost_desc">Send html data to help with debugging.</string>
 

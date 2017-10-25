@@ -22,14 +22,14 @@ import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IABSettings
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
+import com.pitchedapps.frost.utils.iab.IabSettings
 
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
-class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
+class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
 
     var resultFlag = Activity.RESULT_CANCELED
 
@@ -112,6 +112,12 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IABSettings() {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = { _, _, _ -> startActivityForResult(AboutActivity::class.java, 9, true); true }
+        }
+
+        plainText(R.string.help_translate) {
+            descRes = R.string.help_translate_desc
+            iicon = GoogleMaterial.Icon.gmd_translate
+            onClick = { _, _, _ -> startLink(R.string.translation_url); true }
         }
 
         plainText(R.string.replay_intro) {

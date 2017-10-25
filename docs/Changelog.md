@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.6.0
+* Add Spanish translations
+* Add French translations
+* Add German translations
+
+## v1.5.9
+* Add notification support for Android O
+
+## v1.5.8
+* Fix theme for newer comments layout
+* Revert media picker to use system default
+
 ## v1.5.7
 * Allow hiding of composer and groups you may knnow
 * Theme overflow icon

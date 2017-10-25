@@ -17,8 +17,8 @@
     <string name="birthdays">Birthdays</string>
     <string name="chat">Chat</string>
     <string name="photos">Photos</string>
-    <string name="menu">@string/kau_menu</string>
-    <string name="settings">@string/kau_settings</string>
+    <string name="menu" translatable="false">@string/kau_menu</string>
+    <string name="settings" translatable="false">@string/kau_settings</string>
     <string name="notes">Notes</string>
     <string name="on_this_day">On This Day</string>
 
@@ -32,11 +32,6 @@
     <string name="frost_notifications">Frost Notifications</string>
     <string name="requires_custom_theme">Requires custom theme</string>
 
-    <string name="frost_prefix">Frost for Facebook:</string>
-    <string name="feedback">Feedback</string>
-    <string name="bug_report">Bug Report</string>
-    <string name="theme_issue">Theme Issue</string>
-    <string name="feature_request">Feature Request</string>
     <string name="subject">Subject</string>
     <string name="share">Share</string>
 
@@ -45,6 +40,8 @@
 
     <string name="new_message">New Message</string>
     <string name="no_text">No text</string>
+
+    <string name="show_all_results">Show All Results</string>
 
     <!--About-->
 

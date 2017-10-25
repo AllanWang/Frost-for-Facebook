@@ -69,7 +69,7 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
         progressObservable.onNext(newProgress)
     }
 
-    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams): Boolean {
+    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: FileChooserParams): Boolean {
         activityContract?.openFileChooser(filePathCallback, fileChooserParams) ?: webView.frostSnackbar(R.string.file_chooser_not_found)
         return activityContract != null
     }

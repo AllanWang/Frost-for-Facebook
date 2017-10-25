@@ -135,12 +135,6 @@
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
-        <activity
-            android:name=".activities.ImagePickerActivity"
-            android:theme="@style/Kau.MediaPicker.Overlay" />
-        <activity
-            android:name=".activities.VideoPickerActivity"
-            android:theme="@style/Kau.MediaPicker.Overlay" />
         <activity android:name=".activities.VideoActivity"
             android:theme="@style/FrostTheme.Video" />
 

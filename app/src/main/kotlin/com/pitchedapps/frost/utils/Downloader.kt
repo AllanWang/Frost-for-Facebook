@@ -8,6 +8,8 @@ import android.os.Environment
 import android.webkit.URLUtil
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
+import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.loadFbCookie
 
 
@@ -18,16 +20,17 @@ import com.pitchedapps.frost.dbflow.loadFbCookie
  */
 fun Context.frostDownload(url: String, userAgent: String, contentDisposition: String, mimeType: String, contentLength: Long) {
     L.d("Received download request", "Download $url")
+    val uri = Uri.parse(url) ?: return
+    if (uri.scheme != "http" && uri.scheme != "https")
+        return L.e("Invalid download attempt", url)
     kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
         if (!granted) return@kauRequestPermissions
-
-        val request = DownloadManager.Request(Uri.parse(url))
-
+        val request = DownloadManager.Request(uri)
         request.setMimeType(mimeType)
         val cookie = loadFbCookie(Prefs.userId) ?: return@kauRequestPermissions
         request.addRequestHeader("cookie", cookie.cookie)
         request.addRequestHeader("User-Agent", userAgent)
-        request.setDescription("Downloading file...")
+        request.setDescription(string(R.string.downloading))
         request.setTitle(URLUtil.guessFileName(url, contentDisposition, mimeType))
         request.allowScanningByMediaScanner()
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)

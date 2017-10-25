@@ -133,8 +133,9 @@ class AboutActivity : AboutActivityBase(null, {
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
                         GoogleMaterial.Icon.gmd_star to { c.startPlayStoreLink(R.string.play_store_package_id) },
-                        CommunityMaterial.Icon.cmd_reddit to { c.startLink("https://www.reddit.com/r/FrostForFacebook/") },
-                        CommunityMaterial.Icon.cmd_github_circle to { c.startLink("https://github.com/AllanWang/Frost-for-Facebook") }
+                        CommunityMaterial.Icon.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                        CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
+                        CommunityMaterial.Icon.cmd_xda to { c.startLink(R.string.xda_url) }
                 ).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
                         layoutParams = ViewGroup.LayoutParams(size, size)
