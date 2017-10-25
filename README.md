@@ -36,6 +36,7 @@ If you would like to contribute, please visit [here](https://crwd.in/frost-for-f
 Special thanks to the following awesome people for translating significant portions of Frost!
 
 * [Vincent Kulak](https://github.com/VonOx) [FR]
+* [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) [FR]
 * [Jahir Fiquitiva](https://jahirfiquitiva.me/) [ES]
 * [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) [ES]
 * [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) [DE]

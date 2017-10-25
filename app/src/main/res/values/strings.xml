@@ -59,4 +59,7 @@
 
     <string name="top_bar">Top Bar</string>
     <string name="bottom_bar">Bottom Bar</string>
+
+    <string name="pip" translatable="false">PIP</string>
+
 </resources>

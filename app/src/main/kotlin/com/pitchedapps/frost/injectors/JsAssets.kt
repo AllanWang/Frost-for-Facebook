@@ -11,7 +11,7 @@ import java.util.*
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, HEADER_BADGES, SEARCH, TEXTAREA_LISTENER, NOTIF_MSG
+    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, SEARCH, TEXTAREA_LISTENER, NOTIF_MSG
     ;
 
     var file = "${name.toLowerCase(Locale.CANADA)}.min.js"

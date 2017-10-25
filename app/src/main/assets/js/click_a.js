@@ -12,6 +12,7 @@ if (!window.hasOwnProperty('frost_click_a')) {
      * Commonality; check for valid target
      */
     var element = e.target || e.srcElement;
+
     if (element.tagName !== 'A') element = element.parentNode;
     //Notifications is two layers under
     if (element.tagName !== 'A') element = element.parentNode;
@@ -41,11 +42,14 @@ if (!window.hasOwnProperty('frost_click_a')) {
 
   document.addEventListener('click', _frostAClick, true);
 
+  var clickTimeout;
+
   document.addEventListener('touchstart', function _frostStart(e) {
-    setTimeout(_frostPreventClick, 400);
+    clickTimeout = setTimeout(_frostPreventClick, 400);
   }, true);
 
   document.addEventListener('touchend', function _frostEnd(e) {
     prevented = false;
+    clearTimeout(clickTimeout);
   }, true);
 }

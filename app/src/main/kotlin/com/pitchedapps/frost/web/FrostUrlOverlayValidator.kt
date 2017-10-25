@@ -1,8 +1,10 @@
 package com.pitchedapps.frost.web
 
-import com.pitchedapps.frost.activities.WebOverlayBasicActivity
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
+import com.pitchedapps.frost.activities.WebOverlayBasicActivity
+import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -17,7 +19,7 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  * cannot be resolved on a new window and must instead
  * by loaded in the current page
  * This helper method will collect all known cases and launch the overlay accordingly
- * Returns {@code true} (default) if overlay is launched, {@code false} otherwise
+ * Returns {@code true} (default) if action is consumed, {@code false} otherwise
  *
  * If the request already comes from an instance of [WebOverlayActivity], we will then judge
  * whether the user agent string should be changed. All propagated results will return false,
@@ -25,7 +27,6 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  */
 fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
-
     if (context is WebOverlayActivityBase) {
         L.v("Check web request from overlay", url)
         //already overlay; manage user agent
@@ -70,10 +71,10 @@ fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
 /**
  * If the url contains any one of the whitelist segments, switch to the chat overlay
  */
-val messageWhitelist = setOf(FbItem.MESSAGES.url, FbItem.CHAT.url)
+val messageWhitelist = setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES).map { it.url }.toSet()
 
 val String.shouldUseBasicAgent
-    get() = (messageWhitelist.any { contains(it) })
+    get() = (messageWhitelist.any { contains(it) }) || this == FB_URL_BASE
 
 /**
  * The following components should never be launched in a new overlay
