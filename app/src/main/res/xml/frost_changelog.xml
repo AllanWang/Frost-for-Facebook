@@ -10,6 +10,9 @@
     <item text="Add Spanish translations" />
     <item text="Add French translations" />
     <item text="Add German translations" />
+    <item text="Check permissions before attempting upload or download" />
+    <item text="" />
+    <item text="" />
     <item text="" />
 
     <version title="v1.5.9" />

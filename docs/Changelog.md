@@ -4,6 +4,7 @@
 * Add Spanish translations
 * Add French translations
 * Add German translations
+* Check permissions before attempting upload or download
 
 ## v1.5.9
 * Add notification support for Android O

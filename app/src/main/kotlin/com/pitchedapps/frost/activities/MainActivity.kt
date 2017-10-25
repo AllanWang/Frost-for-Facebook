@@ -159,9 +159,6 @@ class MainActivity : BaseActivity(),
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-//        setNetworkObserver { connectivity ->
-//            shouldLoadImages = !connectivity.isRoaming
-//        }
     }
 
     fun showVideo(url: String) {
