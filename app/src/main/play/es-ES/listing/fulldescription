@@ -1,0 +1,36 @@
+<b>Bienvenido a Frost para Facebook!</b>
+
+Frost es una alternativa, completamente funcional y personalizable, a la aplicación oficial de Facebook.
+
+A pesar de ser un cliente web, Frost contiene muchas características únicas y nativas, tales como:
+
+• <b>Verdaderas interacciones multi usuario</b> - Más que sólo una opción en un menú de configuración, el intercambio de cuentas de Frost, está justo en el panel lateral. Estás a un toque de distancia de intercambiar cuentas, y todo se actualiza con el toque, para que puedas ver las otras cuentas instantáneamente. Además, el servicio de notificación obtendrá las notificaciones de todas las cuents, y te hará saber a qué cuenta pertenece la notificación.
+• <b>Multitarea como ninguna</b> - Frost contiene un navegador web superpuesto, que puede mostrarse en primer plano. Abre enlaces y notificaciones con una vista de pantalla completa, después desliza para volver a tu tarea previa.
+• <b>Atención al contexto</b> - Frost integra características adicionales cuando mantienes presionado. Necesitas copiar un bloque de texto o compartir un enlace? Mantén presionado el texto. Necesitas hacer zoom a una imagen o descargarla? Mantén presionada la imagen!
+• <b>Material Design</b> - Desarrollado para Android Lollipop y posteriores, Forst se enfoca en una interfaz bella y funcional, y adopta transiciones y dimensiones de Material Design.
+• <b>Motor de Temas Completo</b> - Frost contiene temas que personalizan todos los componentes de la aplicación. Frost es también la única aplicación que tiene soporte para temas transparentes.
+• <b>Completamente abierta</b> - Nada habla mejor de la privacidad que ser de código abierto. Frost se siente orgullosa de ser una de aquellas aplicaciones, puede ser encontrada en GitHub. (El enlace se encuentra en la sección 'Acerca de' de la aplicación)
+
+Permisos obligatorios usados y por qué:
+
+• Internet, Estado de la Red, Estado de WiFi - Frost obtiene las páginas del sitio web de Facebook. También necesita el estado de la red para limitar el uso de internet cuando estás conectado a una red de uso medido.
+• Detectar el inicio completo - Las notificaciones de Frost persisten después de un reinicio, y se requiere este permiso para añadirlas cada vez.
+• Vibrar - Se requiere para hacer vibrar el dispositivo con las notificaciones. Esto se puede configurar en la aplicación.
+• Facturación - Para que compres Frost Pro y desbloquees todas las características de Frost.
+
+Permisos opcionales usados y por qué:
+<i>(éstos sólo se solicitan cuando se requieren y se encuentran deshabilitados hasta entonces)</i>
+
+• Leer/escribir en el almacenamiento - Se necesita para subir fotos en un nuevo estado y guardar fotos cuando se solicita
+• Ubicación precisa - Se requiere para la opción de registro de ubicación
+
+• Eso es todo! Sin intrusión a la privacidad y sin demandas adicionales.
+
+Permisos <i>NO</i> usados y por qué:
+
+• Wakelock - Frost toma ventaja del Job Scheduler de Android, y permite que el framework decida cuándo ejecutar los servicios en segundo plano. Por lo tanto, Forst no necesita estar ejecutandose constantemente en segundo plano, y no obliga a tu dispositivo a permanecer alerta.
+• Obtener aplicaciones en ejecución - Frost no tiene necesidad de acceder a aplicaciones externas o saber cuáles se están ejecutando
+• Identidad - Frost administra sus cuentas internamente y lo usa sólo para darte acceso a tu cuenta. No dependemos de otra información personal y ni siquiera guardamos tu dirección de correo electrónico.
+• Cámara - A pesar de que el permiso para usar la cámara puede ser añadido para permitirte tomar fotos y subirlas directamente, hemos decidido que es mejor permitirte hacerlo externamente y luego compartir la imagen con Frost
+
+* Frost es una aplicación independiente y no se encuentra, de ningun manera, asociada con Facebook Inc.*
