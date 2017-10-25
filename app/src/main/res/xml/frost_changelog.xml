@@ -11,7 +11,9 @@
     <item text="Add French translations" />
     <item text="Add German translations" />
     <item text="Check permissions before attempting upload or download" />
-    <item text="" />
+    <item text="Add pip video support" />
+    <item text="Add video downloader" />
+    <item text="Fix bugs with parsing url queries" />
     <item text="" />
     <item text="" />
 
