@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.web
 
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity

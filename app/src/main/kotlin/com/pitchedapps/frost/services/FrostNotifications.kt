@@ -8,13 +8,10 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color

@@ -6,7 +6,7 @@
     <item text="" />
     -->
 
-    <version title="v1.6.0" />
+    <version title="v1.6.1" />
     <item text="Add Spanish translations" />
     <item text="Add French translations" />
     <item text="Add German translations" />
@@ -14,7 +14,7 @@
     <item text="Add pip video support" />
     <item text="Add video downloader" />
     <item text="Fix bugs with parsing url queries" />
-    <item text="" />
+    <item text="Fix search update from Facebook" />
     <item text="" />
 
     <version title="v1.5.9" />
