@@ -106,9 +106,9 @@ class FrostVideoViewer @JvmOverloads constructor(
      */
 
     override fun onFade(alpha: Float, duration: Long) {
-        val anim = toolbar.visible().animate().alpha(alpha).setDuration(duration)
-        if (alpha == 0f)
-            anim.withEndAction { toolbar.gone() }
+        toolbar.animate().alpha(alpha).setDuration(duration).withEndAction {
+            toolbar.isEnabled = alpha != 0f
+        }
     }
 
     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
