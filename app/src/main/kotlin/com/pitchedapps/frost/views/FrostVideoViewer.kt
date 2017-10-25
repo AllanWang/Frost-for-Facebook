@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.net.Uri
-import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -25,7 +24,7 @@ import com.pitchedapps.frost.utils.frostDownload
  */
 class FrostVideoViewer @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
+) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
 
     val container: ViewGroup by bindView(R.id.video_container)
     val toolbar: Toolbar by bindView(R.id.video_toolbar)
@@ -77,6 +76,7 @@ class FrostVideoViewer @JvmOverloads constructor(
             video.restart()
             restarter.fadeOut { restarter.gone() }
         }
+//        toolbar.setOnTouchListener { _, event -> video.shouldParentAcceptTouch(event) }
     }
 
     fun setVideo(url: String) {
@@ -106,8 +106,8 @@ class FrostVideoViewer @JvmOverloads constructor(
      */
 
     override fun onFade(alpha: Float, duration: Long) {
-        toolbar.animate().alpha(alpha).setDuration(duration).withEndAction {
-            toolbar.isEnabled = alpha != 0f
+        toolbar.visible().animate().alpha(alpha).setDuration(duration).withEndAction {
+            if (alpha == 0f) toolbar.gone()
         }
     }
 
@@ -123,6 +123,7 @@ class FrostVideoViewer @JvmOverloads constructor(
         video.jumpToStart()
         restarter.fadeIn()
     }
+
 }
 
 interface FrostVideoViewerContract {

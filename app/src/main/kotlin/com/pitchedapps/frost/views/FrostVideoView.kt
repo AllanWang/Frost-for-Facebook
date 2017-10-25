@@ -63,6 +63,8 @@ class FrostVideoView @JvmOverloads constructor(
                 animate().scaleXY(1f).translationX(0f).translationY(0f).setDuration(ANIMATION_DURATION).withStartAction {
                     backgroundView?.animate()?.alpha(1f)?.setDuration(ANIMATION_DURATION)
                     viewerContract.onFade(1f, ANIMATION_DURATION)
+                }.withEndAction {
+                    if (!isPlaying) showControls()
                 }
             } else {
                 hideControls()
@@ -86,7 +88,7 @@ class FrostVideoView @JvmOverloads constructor(
     init {
         setOnPreparedListener {
             start()
-            showControls()
+            if (isExpanded) showControls()
         }
         setOnCompletionListener {
             viewerContract.onVideoComplete()
@@ -104,6 +106,23 @@ class FrostVideoView @JvmOverloads constructor(
         videoControls?.hide()
         v.seekTo(0)
         videoControls?.finishLoading()
+    }
+
+    override fun pause() {
+        audioFocusHelper.abandonFocus()
+        videoViewImpl.pause()
+        keepScreenOn = false
+        if (isExpanded)
+            videoControls?.updatePlaybackState(false)
+    }
+
+    override fun restart(): Boolean {
+        videoUri ?: return false
+        if (videoViewImpl.restart() && isExpanded) {
+            videoControls?.showLoading(true)
+            return true
+        }
+        return false
     }
 
     private fun hideControls() {
@@ -156,7 +175,7 @@ class FrostVideoView @JvmOverloads constructor(
         }
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            if (viewerContract.onSingleTapConfirmed(event) != true)
+            if (!viewerContract.onSingleTapConfirmed(event))
                 toggleControls()
             return true
         }
@@ -219,7 +238,7 @@ class FrostVideoView @JvmOverloads constructor(
         }
 
         override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-            if (viewerContract.onSingleTapConfirmed(event) == true) return true
+            if (viewerContract.onSingleTapConfirmed(event)) return true
             if (!isExpanded) {
                 isExpanded = true
                 return true
