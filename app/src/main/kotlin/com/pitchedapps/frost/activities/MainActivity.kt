@@ -5,7 +5,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
