@@ -1,0 +1,23 @@
+[1mdiff --git a/app/src/main/kotlin/com/pitchedapps/frost/views/FrostVideoView.kt b/app/src/main/kotlin/com/pitchedapps/frost/views/FrostVideoView.kt[m
+[1mindex 7b61471..1b89d9c 100644[m
+[1m--- a/app/src/main/kotlin/com/pitchedapps/frost/views/FrostVideoView.kt[m
+[1m+++ b/app/src/main/kotlin/com/pitchedapps/frost/views/FrostVideoView.kt[m
+[36m@@ -12,7 +12,9 @@[m [mimport android.view.ViewGroup[m
+ import ca.allanwang.kau.utils.dpToPx[m
+ import ca.allanwang.kau.utils.parentViewGroup[m
+ import ca.allanwang.kau.utils.scaleXY[m
+[32m+[m[32mimport com.devbrackets.android.exomedia.ExoMedia[m
+ import com.devbrackets.android.exomedia.ui.widget.VideoView[m
+[32m+[m[32mimport com.halilibo.bettervideoplayer.BetterVideoPlayer[m
+ import com.pitchedapps.frost.facebook.formattedFbUrl[m
+ import com.pitchedapps.frost.utils.L[m
+ [m
+[36m@@ -24,7 +26,7 @@[m [mimport com.pitchedapps.frost.utils.L[m
+  */[m
+ class FrostVideoView @JvmOverloads constructor([m
+         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0[m
+[31m-) : VideoView(context, attrs, defStyleAttr) {[m
+[32m+[m[32m) : ExoMedia(context, attrs, defStyleAttr) {[m
+ [m
+     /**[m
+      * Shortcut for actual video view[m
