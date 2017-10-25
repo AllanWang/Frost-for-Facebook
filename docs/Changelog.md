@@ -5,6 +5,9 @@
 * Add French translations
 * Add German translations
 * Check permissions before attempting upload or download
+* Add pip video support
+* Add video downloader
+* Fix bugs with parsing url queries
 
 ## v1.5.9
 * Add notification support for Android O
