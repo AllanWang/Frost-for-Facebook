@@ -4,8 +4,8 @@
     <string name="paypal" translatable="false">PayPal</string>
     <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
     <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
-    <string name="github_url">https://github.com/AllanWang/Frost-for-Facebook</string>
-    <string name="reddit_url">https://www.reddit.com/r/FrostForFacebook</string>
+    <string name="github_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook</string>
+    <string name="reddit_url" translatable="false">https://www.reddit.com/r/FrostForFacebook</string>
     <string name="xda_url" translatable="false">https://forum.xda-developers.com/android/apps-games/app-frost-facebook-t3685896</string>
     <string name="frost_prefix" translatable="false">Frost for Facebook:</string>
     <string name="feedback" translatable="false">Feedback</string>
