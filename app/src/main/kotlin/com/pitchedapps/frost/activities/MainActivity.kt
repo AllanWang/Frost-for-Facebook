@@ -5,6 +5,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
+import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -48,6 +50,7 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbCookie.switchUser
@@ -60,6 +63,7 @@ import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.views.FrostVideoContainerContract
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -73,6 +77,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate(),
+        FrostVideoContainerContract,
         FrostBilling by IabMain() {
 
     lateinit var adapter: SectionsPagerAdapter
@@ -169,11 +174,7 @@ class MainActivity : BaseActivity(),
         if (videoViewer != null) {
             videoViewer?.setVideo(url)
         } else {
-            val viewer = FrostVideoViewer.showVideo(coordinator.parentViewGroup, url) {
-                L.d("Video view released")
-                videoViewer = null
-            }
-            videoViewer = viewer
+            videoViewer = FrostVideoViewer.showVideo(url, this)
         }
     }
 
@@ -481,4 +482,18 @@ class MainActivity : BaseActivity(),
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
     }
 
+    override val lowerVideoPadding: PointF
+        get() =
+            if (Prefs.mainActivityLayout == MainActivityLayout.BOTTOM_BAR)
+                PointF(0f, toolbar.height.toFloat())
+            else
+                PointF(0f, 0f)
+
+    override val videoContainer: FrameLayout
+        get() = frameWrapper
+
+    override fun onVideoFinished() {
+        L.d("Video view released")
+        videoViewer = null
+    }
 }
