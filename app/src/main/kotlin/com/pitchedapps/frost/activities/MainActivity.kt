@@ -23,6 +23,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.FrameLayout
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.bindSearchView
@@ -56,8 +57,8 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
+import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
@@ -75,6 +76,7 @@ class MainActivity : BaseActivity(),
         FrostBilling by IabMain() {
 
     lateinit var adapter: SectionsPagerAdapter
+    val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: FrostViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
@@ -123,7 +125,9 @@ class MainActivity : BaseActivity(),
                         "Frost id" to Prefs.frostId)
             }
         }
-        setContentView(Prefs.mainActivityLayout.layoutRes)
+        setContentView(R.layout.activity_frame_wrapper)
+        frameWrapper.inflate(Prefs.mainActivityLayout.layoutRes, true)
+//        setContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
