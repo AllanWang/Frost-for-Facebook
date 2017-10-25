@@ -32,3 +32,12 @@ Those builds are likely more stable as they are pushed out to the alpha stream o
 
 Frost depends on translations crowdsourced by the general public.
 If you would like to contribute, please visit [here](https://crwd.in/frost-for-facebook)
+
+Special thanks to the following awesome people for translating significant portions of Frost!
+
+* [Vincent Kulak](https://github.com/VonOx) [FR]
+* [Jahir Fiquitiva](https://jahirfiquitiva.me/) [ES]
+* [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) [ES]
+* [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) [DE]
+
+The full activity stream for the translations can be found [here](https://crowdin.com/project/frost-for-facebook/activity_stream)

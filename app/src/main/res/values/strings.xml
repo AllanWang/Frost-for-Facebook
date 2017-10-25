@@ -17,8 +17,8 @@
     <string name="birthdays">Birthdays</string>
     <string name="chat">Chat</string>
     <string name="photos">Photos</string>
-    <string name="menu">@string/kau_menu</string>
-    <string name="settings">@string/kau_settings</string>
+    <string name="menu" translatable="false">@string/kau_menu</string>
+    <string name="settings" translatable="false">@string/kau_settings</string>
     <string name="notes">Notes</string>
     <string name="on_this_day">On This Day</string>
 
