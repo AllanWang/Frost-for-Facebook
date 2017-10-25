@@ -76,7 +76,7 @@ abstract class IabBinder : FrostBilling {
                     putItemId(productId)
                     putSuccess(true)
                     if (currency != null) {
-                        putCurrency(Currency.getInstance(Locale.getDefault()))
+                        putCurrency(currency)
                         putItemType(productId)
                         putItemPrice(BigDecimal.valueOf(listing.priceValue))
                     }

@@ -3,7 +3,6 @@ package com.pitchedapps.frost.dbflow
 import android.os.Parcel
 import android.os.Parcelable
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
@@ -15,7 +14,6 @@ import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.kotlinextensions.*
 import com.raizlabs.android.dbflow.structure.BaseModel
 import io.reactivex.schedulers.Schedulers
-import org.jsoup.Jsoup
 import paperparcel.PaperParcel
 import java.net.UnknownHostException
 

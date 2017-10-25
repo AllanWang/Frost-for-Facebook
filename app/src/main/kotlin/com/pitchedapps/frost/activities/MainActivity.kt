@@ -131,7 +131,6 @@ class MainActivity : BaseActivity(),
         }
         setContentView(R.layout.activity_frame_wrapper)
         frameWrapper.inflate(Prefs.mainActivityLayout.layoutRes, true)
-//        setContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
