@@ -29,11 +29,17 @@ enum class FbItem(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Str
     PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     SAVED(R.string.saved, GoogleMaterial.Icon.gmd_bookmark, "saved"),
-    SEARCH(R.string.search_menu_title, GoogleMaterial.Icon.gmd_search, "search"),
+    _SEARCH(R.string.search_menu_title, GoogleMaterial.Icon.gmd_search, "search/top"),
     SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
     ;
 
     val url = "$FB_URL_BASE$relativeUrl"
 }
 
+inline val fbSearch
+    get() = fbSearch()
+
+fun fbSearch(query: String = "a") = "${FB_SEARCH}$query"
+
+private const val FB_SEARCH = "${FB_URL_BASE}search/top/?q="
 fun defaultTabs(): List<FbItem> = listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)

@@ -359,13 +359,14 @@ class MainActivity : BaseActivity(),
                     doAsync {
                         val data = SearchParser.query(query) ?: return@doAsync
                         val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
-                        items.add(SearchItem("${FbItem.SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
+                        if (items.isNotEmpty())
+                            items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
                         searchViewCache.put(query, items)
                         uiThread { searchView?.results = items }
                     }
             }
             textDebounceInterval = 300
-            searchCallback = { query, _ -> launchWebOverlay("${FbItem.SEARCH.url}/?q=$query"); true }
+            searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
             closeListener = { _ -> searchViewCache.clear() }
             foregroundColor = Prefs.textColor
             backgroundColor = Prefs.bgColor.withMinAlpha(200)

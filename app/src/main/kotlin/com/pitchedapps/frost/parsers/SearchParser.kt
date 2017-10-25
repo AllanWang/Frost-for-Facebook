@@ -2,7 +2,7 @@ package com.pitchedapps.frost.parsers
 
 import ca.allanwang.kau.utils.withMaxLength
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.formattedFbUrlCss
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.Jsoup
@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element
  */
 object SearchParser : FrostParser<List<FrostSearch>> by SearchParserImpl() {
     fun query(input: String): List<FrostSearch>? {
-        val url = "${FbItem.SEARCH.url}?q=$input"
+        val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
         L.i(null, "Search Query $url")
         return parse(frostJsoup(url))
     }
@@ -51,10 +51,10 @@ private class SearchParserImpl : FrostParserBase<List<FrostSearch>>() {
          *
          * Removed [data-store*=result_id]
          */
-        return container.select("a.touchable.primary[href]").filter(Element::hasText).mapNotNull {
-            FrostSearch(it.attr("href").formattedFbUrlCss,
-                    it.select(".title").first()?.text() ?: "",
-                    it.select(".subtitle").first()?.ownText())
+        return container.select("a.touchable[href]").filter(Element::hasText).map {
+            FrostSearch(it.attr("href").formattedFbUrl,
+                    it.select("._uoi").first()?.text() ?: "",
+                    it.select("._1tcc").first()?.text())
         }.filter { it.title.isNotBlank() }
     }
 
@@ -62,6 +62,7 @@ private class SearchParserImpl : FrostParserBase<List<FrostSearch>>() {
     override fun textToDoc(text: String): Document? = Jsoup.parse(text)
 
     override fun debugImpl(data: List<FrostSearch>, result: MutableList<String>) {
+        result.add("Has size ${data.size}")
         result.addAll(data.map(FrostSearch::toString))
     }
 
