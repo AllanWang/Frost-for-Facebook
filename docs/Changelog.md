@@ -1,6 +1,11 @@
 # Changelog
 
-## v1.6.1
+## v1.6.2
+* Fix search update from Facebook
+* Fix url parsing errors again
+* Fix pip for bottom bar (rotation still has issues)
+
+## v1.6.0
 * Add Spanish translations
 * Add French translations
 * Add German translations

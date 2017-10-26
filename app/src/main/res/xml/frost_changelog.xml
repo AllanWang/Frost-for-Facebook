@@ -6,7 +6,12 @@
     <item text="" />
     -->
 
-    <version title="v1.6.1" />
+    <version title="v1.6.2" />
+    <item text="Fix search update from Facebook" />
+    <item text="Fix url parsing errors again" />
+    <item text="Fix pip for bottom bar (rotation still has issues)" />
+
+    <version title="v1.6.0" />
     <item text="Add Spanish translations" />
     <item text="Add French translations" />
     <item text="Add German translations" />

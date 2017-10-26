@@ -5,6 +5,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -494,5 +495,10 @@ class MainActivity : BaseActivity(),
     override fun onVideoFinished() {
         L.d("Video view released")
         videoViewer = null
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        videoViewer?.video?.updateLocation()
     }
 }
