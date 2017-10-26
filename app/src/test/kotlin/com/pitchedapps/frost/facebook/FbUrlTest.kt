@@ -1,9 +1,6 @@
 package com.pitchedapps.frost.facebook
 
-import okhttp3.HttpUrl
-import okio.Utf8
 import org.junit.Test
-import java.net.URLDecoder
 import kotlin.test.assertEquals
 
 
