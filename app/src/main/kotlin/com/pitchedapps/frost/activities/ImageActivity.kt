@@ -31,6 +31,8 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import org.jetbrains.anko.activityUiThread
+import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
@@ -179,7 +181,7 @@ class ImageActivity : KauBaseActivity() {
                         success = false
                     } finally {
                         L.d("Download image async finished: $success")
-                        uiThread {
+                        activityUiThreadWithContext {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             frostSnackbar(text)
                             if (success) fabAction = FabStates.SHARE
