@@ -28,6 +28,7 @@ open class AdBlocker(val assetPath: String) {
     }
 
     fun isAd(url: String?): Boolean {
+        url ?: return false
         val httpUrl = HttpUrl.parse(url) ?: return false
         return isAdHost(httpUrl.host())
     }
