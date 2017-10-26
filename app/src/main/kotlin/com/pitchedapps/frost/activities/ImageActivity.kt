@@ -31,10 +31,8 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import org.jetbrains.anko.activityUiThread
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import java.io.File
 import java.io.IOException
 
@@ -201,6 +199,7 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onDestroy() {
         deleteTempFile()
+        if (!BuildConfig.DEBUG) L.d("Closing $localClassName")
         super.onDestroy()
     }
 }
