@@ -31,6 +31,7 @@ class FbUrlFormatter(url: String) {
             var cleanedUrl = url
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+            if (cleanedUrl != url) cleanedUrl = cleanedUrl.replaceFirst("&", "?")
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
             val qm = cleanedUrl.indexOf("?")
             if (qm > -1) {

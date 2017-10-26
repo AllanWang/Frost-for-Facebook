@@ -1,9 +1,6 @@
 package com.pitchedapps.frost.facebook
 
-import okhttp3.HttpUrl
-import okio.Utf8
 import org.junit.Test
-import java.net.URLDecoder
 import kotlin.test.assertEquals
 
 
@@ -34,6 +31,16 @@ class FbUrlTest {
         val prefix = "$FB_URL_BASE?test=1234"
         val suffix = "&apple=notorange"
         assertFbFormat("$prefix$suffix", "$prefix&ref=hello$suffix")
+    }
+
+    /**
+     * Unnecessary wraps should be removed & the query items should be bound properly (first & to ?)
+     */
+    @Test
+    fun queryConversion() {
+        val url = "https://m.facebook.com/l.php?u=https%3A%2F%2Fgoogle.ca&h=hi"
+        val expected = "https://google.ca?h=hi"
+        assertFbFormat(expected, url)
     }
 
     @Test
