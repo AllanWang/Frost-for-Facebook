@@ -36,6 +36,16 @@ class FbUrlTest {
         assertFbFormat("$prefix$suffix", "$prefix&ref=hello$suffix")
     }
 
+    /**
+     * Unnecessary wraps should be removed & the query items should be bound properly (first & to ?)
+     */
+    @Test
+    fun queryConversion() {
+        val url = "https://m.facebook.com/l.php?u=https%3A%2F%2Fgoogle.ca&h=hi"
+        val expected = "https://google.ca?h=hi"
+        assertFbFormat(expected, url)
+    }
+
     @Test
     fun doubleDash() {
         assertFbFormat("${FB_URL_BASE}relative", "$FB_URL_BASE/relative")
