@@ -39,7 +39,8 @@ private val adWhitelistHost: Set<String> =
         )
 
 fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourceResponse? {
-    val httpUrl = HttpUrl.parse(request.url?.toString() ?: return null) ?: return null
+    request.url ?: return null
+    val httpUrl = HttpUrl.parse(request.url.toString()) ?: return null
     val host = httpUrl.host()
     val url = httpUrl.toString()
 //    if (blacklistHost.contains(host)) return blankResource
