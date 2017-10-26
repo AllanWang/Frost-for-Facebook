@@ -68,22 +68,41 @@ class FrostVideoView @JvmOverloads constructor(
                 }
             } else {
                 hideControls()
-                val scale = Math.min(height / 4f / videoDimensions.y, width / 2.3f / videoDimensions.x)
-                val desiredHeight = scale * videoDimensions.y
-                val desiredWidth = scale * videoDimensions.x
-                val padding = containerContract.lowerVideoPadding
-                val offsetX = width - MINIMIZED_PADDING - desiredWidth
-                val offsetY = height - MINIMIZED_PADDING - desiredHeight
-                val translationX = offsetX / 2 - padding.x
-                val translationY = offsetY / 2 - padding.y
-                videoBounds.set(offsetX, offsetY, width.toFloat(), height.toFloat())
-                videoBounds.offset(padding.x, padding.y)
-                animate().scaleXY(scale).translationX(translationX).translationY(translationY).setDuration(ANIMATION_DURATION).withStartAction {
+                val (scale, tX, tY) = mapBounds()
+                animate().scaleXY(scale).translationX(tX).translationY(tY).setDuration(ANIMATION_DURATION).withStartAction {
                     backgroundView?.animate()?.alpha(0f)?.setDuration(ANIMATION_DURATION)
                     viewerContract.onFade(0f, ANIMATION_DURATION)
                 }
             }
         }
+
+    /**
+     * Store the boundaries of the minimized video,
+     * and return the necessary transitions to get there
+     */
+    private fun mapBounds(): Triple<Float, Float, Float> {
+        val portrait = height > width
+        val scale = Math.min(height / (if (portrait) 4f else 2.3f) / videoDimensions.y, width / (if (portrait) 2.3f else 4f) / videoDimensions.x)
+        val desiredHeight = scale * videoDimensions.y
+        val desiredWidth = scale * videoDimensions.x
+        val padding = containerContract.lowerVideoPadding
+        val offsetX = width - MINIMIZED_PADDING - desiredWidth
+        val offsetY = height - MINIMIZED_PADDING - desiredHeight
+        val tX = offsetX / 2 - padding.x
+        val tY = offsetY / 2 - padding.y
+        videoBounds.set(offsetX, offsetY, width.toFloat(), height.toFloat())
+        videoBounds.offset(padding.x, padding.y)
+        L.v("Video bounds: fullwidth $width, fullheight $height, scale $scale, tX $tX, tY $tY")
+        return Triple(scale, tX, tY)
+    }
+
+    fun updateLocation() {
+        L.d("Update video location")
+        val (scale, tX, tY) = if (isExpanded) Triple(1f, 0f, 0f) else mapBounds()
+        scaleXY = scale
+        translationX = tX
+        translationY = tY
+    }
 
     init {
         setOnPreparedListener {
@@ -103,7 +122,6 @@ class FrostVideoView @JvmOverloads constructor(
 
     fun jumpToStart() {
         pause()
-        videoControls?.hide()
         v.seekTo(0)
         videoControls?.finishLoading()
     }

@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import ca.allanwang.kau.utils.*
@@ -122,6 +123,15 @@ class FrostVideoViewer @JvmOverloads constructor(
     override fun onVideoComplete() {
         video.jumpToStart()
         restarter.fadeIn()
+    }
+
+    fun updateLocation() {
+        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                video.updateLocation()
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
     }
 
 }
