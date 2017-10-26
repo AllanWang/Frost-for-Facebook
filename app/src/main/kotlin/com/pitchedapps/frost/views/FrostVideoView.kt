@@ -88,24 +88,20 @@ class FrostVideoView @JvmOverloads constructor(
         val padding = containerContract.lowerVideoPadding
         val offsetX = width - MINIMIZED_PADDING - desiredWidth
         val offsetY = height - MINIMIZED_PADDING - desiredHeight
-        val translationX = offsetX / 2 - padding.x
-        val translationY = offsetY / 2 - padding.y
+        val tX = offsetX / 2 - padding.x
+        val tY = offsetY / 2 - padding.y
         videoBounds.set(offsetX, offsetY, width.toFloat(), height.toFloat())
         videoBounds.offset(padding.x, padding.y)
-        return Triple(scale, translationX, translationY)
+        L.v("Video bounds: fullwidth $width, fullheight $height, scale $scale, tX $tX, tY $tY")
+        return Triple(scale, tX, tY)
     }
 
     fun updateLocation() {
-        if (isExpanded) {
-            scaleXY = 1f
-            translationX = 0f
-            translationY = 0f
-        } else {
-            val (scale, tX, tY) = mapBounds()
-            scaleXY = scale
-            translationX = tX
-            translationY = tY
-        }
+        L.d("Update video location")
+        val (scale, tX, tY) = if (isExpanded) Triple(1f, 0f, 0f) else mapBounds()
+        scaleXY = scale
+        translationX = tX
+        translationY = tY
     }
 
     init {
@@ -126,7 +122,6 @@ class FrostVideoView @JvmOverloads constructor(
 
     fun jumpToStart() {
         pause()
-        videoControls?.hide()
         v.seekTo(0)
         videoControls?.finishLoading()
     }

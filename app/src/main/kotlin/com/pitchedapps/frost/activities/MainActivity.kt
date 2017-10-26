@@ -499,6 +499,6 @@ class MainActivity : BaseActivity(),
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        videoViewer?.video?.updateLocation()
+        videoViewer?.updateLocation()
     }
 }
