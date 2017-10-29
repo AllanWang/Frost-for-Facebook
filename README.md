@@ -40,5 +40,8 @@ Special thanks to the following awesome people for translating significant porti
 * [Jahir Fiquitiva](https://jahirfiquitiva.me/) [ES]
 * [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) [ES]
 * [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) [DE]
+* [3LD0mi](https://forum.xda-developers.com/member.php?u=5860523) [DE]
+* [Marcel Soehnchen] [DE]
+* [잇스테이크] [KO]
 
 The full activity stream for the translations can be found [here](https://crowdin.com/project/frost-for-facebook/activity_stream)
