@@ -31,8 +31,8 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import java.io.File
 import java.io.IOException
 
@@ -76,7 +76,7 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        L.i("Displaying image $imageUrl")
+        L.i("Displaying image", imageUrl)
         val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
@@ -179,7 +179,7 @@ class ImageActivity : KauBaseActivity() {
                         success = false
                     } finally {
                         L.d("Download image async finished: $success")
-                        uiThread {
+                        activityUiThreadWithContext {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             frostSnackbar(text)
                             if (success) fabAction = FabStates.SHARE
@@ -199,6 +199,7 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onDestroy() {
         deleteTempFile()
+        if (!BuildConfig.DEBUG) L.d("Closing $localClassName")
         super.onDestroy()
     }
 }

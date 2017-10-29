@@ -156,9 +156,6 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".services.NotificationReceiver"
-            android:enabled="true" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
