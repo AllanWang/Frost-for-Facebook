@@ -11,7 +11,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
  * Created by Allan Wang on 2017-05-30.
  */
 
-@Database(name = NotificationDb.NAME, version = NotificationDb.VERSION)
+@Database(version = NotificationDb.VERSION)
 object NotificationDb {
     const val NAME = "Notifications"
     const val VERSION = 2

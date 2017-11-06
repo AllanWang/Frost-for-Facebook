@@ -14,6 +14,9 @@ import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
+import com.pitchedapps.frost.dbflow.CookiesDb
+import com.pitchedapps.frost.dbflow.FbTabsDb
+import com.pitchedapps.frost.dbflow.NotificationDb
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.services.setupNotificationChannels
@@ -21,10 +24,12 @@ import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
+import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import io.fabric.sdk.android.Fabric
 import java.util.*
+import kotlin.reflect.KClass
 
 
 /**
@@ -38,8 +43,17 @@ class FrostApp : Application() {
 
 //    lateinit var refWatcher: RefWatcher
 
+    private fun FlowConfig.Builder.withDatabase(name: String, klass: KClass<*>) =
+            addDatabaseConfig(DatabaseConfig.builder(klass.java)
+                    .databaseName(name)
+                    .build())
+
     override fun onCreate() {
-        FlowManager.init(FlowConfig.Builder(this).build())
+        FlowManager.init(FlowConfig.Builder(this)
+                .withDatabase(CookiesDb.NAME, CookiesDb::class)
+                .withDatabase(FbTabsDb.NAME, FbTabsDb::class)
+                .withDatabase(NotificationDb.NAME, NotificationDb::class)
+                .build())
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
