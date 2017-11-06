@@ -21,7 +21,7 @@ import java.net.UnknownHostException
  * Created by Allan Wang on 2017-05-30.
  */
 
-@Database(name = CookiesDb.NAME, version = CookiesDb.VERSION)
+@Database(version = CookiesDb.VERSION)
 object CookiesDb {
     const val NAME = "Cookies"
     const val VERSION = 2
