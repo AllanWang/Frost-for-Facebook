@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import ca.allanwang.kau.utils.*
+import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -34,6 +35,11 @@ class FrostVideoViewer @JvmOverloads constructor(
     val restarter: ImageView by bindView(R.id.video_restart)
 
     companion object {
+        /**
+         * Matches VideoControls.CONTROL_VISIBILITY_ANIMATION_LENGTH
+         */
+        private const val CONTROL_ANIMATION_DURATION = 300L
+
         /**
          * Simplified binding to add video to layout, and remove it when finished
          * This is under the assumption that the container allows for overlays,
@@ -134,9 +140,17 @@ class FrostVideoViewer @JvmOverloads constructor(
         })
     }
 
+    override fun onControlsShown() {
+        toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { toolbar.visible() })
+    }
+
+    override fun onControlsHidden() {
+        toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { toolbar.gone() }
+    }
+
 }
 
-interface FrostVideoViewerContract {
+interface FrostVideoViewerContract : VideoControlsVisibilityListener {
     fun onSingleTapConfirmed(event: MotionEvent): Boolean
     fun onFade(alpha: Float, duration: Long)
     fun onVideoComplete()

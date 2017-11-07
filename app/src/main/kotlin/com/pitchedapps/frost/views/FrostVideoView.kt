@@ -47,8 +47,8 @@ class FrostVideoView @JvmOverloads constructor(
         private val SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD = 2f.dpToPx
         private val SWIPE_TO_CLOSE_VERTICAL_THRESHOLD = 5f.dpToPx
         private val SWIPE_TO_CLOSE_OFFSET_THRESHOLD = 75f.dpToPx
-        val ANIMATION_DURATION = 300L
-        private val FAST_ANIMATION_DURATION = 100L
+        const val ANIMATION_DURATION = 200L
+        private const val FAST_ANIMATION_DURATION = 100L
     }
 
     private var videoBounds = RectF()
@@ -118,6 +118,7 @@ class FrostVideoView @JvmOverloads constructor(
             val ratio = Math.min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
             videoDimensions.set(ratio * intrinsicWidth, ratio * intrinsicHeight)
         }
+        videoControls?.setVisibilityListener(viewerContract)
     }
 
     fun jumpToStart() {

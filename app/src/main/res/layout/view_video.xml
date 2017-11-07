@@ -17,13 +17,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/video_toolbar"
         android:layout_width="match_parent"
+        android:background="@drawable/exomedia_default_controls_interactive_background"
         android:layout_height="?attr/actionBarSize" />
 
     <com.pitchedapps.frost.views.FrostVideoView
         android:id="@+id/video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
         android:background="@android:color/transparent"
         android:theme="@style/FrostTheme.Video"
         app:useDefaultControls="true"
