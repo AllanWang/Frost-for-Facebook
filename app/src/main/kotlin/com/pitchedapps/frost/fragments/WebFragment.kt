@@ -128,6 +128,5 @@ class WebFragment : Fragment() {
             web.settings.blockNetworkLoads = value
         }
 
-
     fun onBackPressed() = frostWebView.onBackPressed()
 }
