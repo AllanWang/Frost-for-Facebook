@@ -73,8 +73,8 @@ class AboutActivity : AboutActivityBase(null, {
          */
         val frost = Library().apply {
             libraryName = string(R.string.frost_name)
-            author = "Pitched Apps"
-            libraryWebsite = "https://github.com/AllanWang/Frost-for-Facebook"
+            author = string(R.string.dev_name)
+            libraryWebsite = string(R.string.github_url)
             isOpenSource = true
             libraryDescription = string(R.string.frost_description)
             libraryVersion = BuildConfig.VERSION_NAME
@@ -109,7 +109,7 @@ class AboutActivity : AboutActivityBase(null, {
 
         override fun getLayoutRes(): Int = R.layout.item_about_links
 
-        override fun bindView(holder: ViewHolder, payloads: MutableList<Any>?) {
+        override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
             super.bindView(holder, payloads)
             with(holder) {
                 bindIconColor(*images.toTypedArray())

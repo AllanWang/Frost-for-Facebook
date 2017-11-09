@@ -22,7 +22,7 @@ abstract class BaseImageIntroFragment(val titleRes: Int, val imageRes: Int, val 
     override fun viewArray(): Array<Array<out View>>
             = arrayOf(arrayOf(title), arrayOf(desc))
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         title.setText(titleRes)
         image.setImageResource(imageRes)
         desc.setText(descRes)
