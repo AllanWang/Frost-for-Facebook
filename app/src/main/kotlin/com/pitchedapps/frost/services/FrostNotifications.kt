@@ -45,7 +45,7 @@ fun setupNotificationChannels(c: Context) {
     manager.createNotificationChannel(mainChannel)
 }
 
-val Context.frostNotification: NotificationCompat.Builder
+inline val Context.frostNotification: NotificationCompat.Builder
     get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
         setSmallIcon(R.drawable.frost_f_24)
         setAutoCancel(true)
@@ -63,7 +63,7 @@ fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificatio
     setDefaults(defaults)
 }
 
-val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
+inline val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
     get() = NotificationCompat.BigTextStyle(this)
 
 /**

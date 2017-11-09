@@ -453,7 +453,7 @@ class MainActivity : BaseActivity(),
         super.onBackPressed()
     }
 
-    val currentFragment
+    inline val currentFragment
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as WebFragment
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbItem>) : FragmentPagerAdapter(fm) {

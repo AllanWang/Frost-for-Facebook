@@ -64,7 +64,7 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         themeFragment()
     }
@@ -126,7 +126,7 @@ class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         container.setOnSingleTapListener { _, event ->
             (activity as IntroActivity).finish(event.x, event.y)
