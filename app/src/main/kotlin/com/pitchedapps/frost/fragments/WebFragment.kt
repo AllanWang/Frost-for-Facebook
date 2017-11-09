@@ -42,9 +42,9 @@ class WebFragment : Fragment() {
 
     //    val refresh: SwipeRefreshLayout by lazy { frostWebView.refresh }
     val web: FrostWebViewCore by lazy { frostWebView.web }
-    val url: String by lazy { arguments.getString(ARG_URL) }
-    val urlEnum: FbItem by lazy { arguments.getSerializable(ARG_URL_ENUM) as FbItem }
-    val position: Int by lazy { arguments.getInt(ARG_POSITION) }
+    val url: String by lazy { arguments!!.getString(ARG_URL) }
+    val urlEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
+    val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
     lateinit var frostWebView: FrostWebView
     private var firstLoad = true
     private var activityDisposable: Disposable? = null
@@ -60,12 +60,12 @@ class WebFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        frostWebView = FrostWebView(context)
+        frostWebView = FrostWebView(context!!)
         frostWebView.setupWebview(url, urlEnum)
         return frostWebView
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onCreateRunnable?.invoke(this)
         onCreateRunnable = null

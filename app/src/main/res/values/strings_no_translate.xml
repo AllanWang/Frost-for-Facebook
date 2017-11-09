@@ -1,4 +1,5 @@
 <resources>
+    <string name="dev_name" translatable="false">Pitched Apps</string>
     <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
     <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
     <string name="paypal" translatable="false">PayPal</string>

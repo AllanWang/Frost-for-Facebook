@@ -55,6 +55,10 @@ android {
                 'UnusedResources',
                 'ContentDescription',
                 'RtlSymmetry'
+
+        xmlReport false
+        textReport true
+        textOutput 'stdout'
     }
 
     signingConfigs {
