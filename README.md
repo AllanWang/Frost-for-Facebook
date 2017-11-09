@@ -42,13 +42,15 @@ Those builds are likely more stable as they are pushed out to the alpha stream o
 
 Frost depends on translations crowdsourced by the general public.
 If you would like to contribute, please visit [here](https://crwd.in/frost-for-facebook)
+Note that this project heavily depends on [KAU](https://github.com/AllanWang/KAU), which also needs to be translated [here](https://crwd.in/kotlin-android-utils)
 
 Special thanks to the following awesome people for translating significant portions of Frost!
 
-* [Vincent Kulak](https://github.com/VonOx) [FR]
-* [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) [FR]
-* [Jahir Fiquitiva](https://jahirfiquitiva.me/) [ES]
-* [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) [ES]
-* [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) [DE]
+| Language | Contributors |
+|----------|--------------|
+| French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
+| German | [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) &bull; [Marcel Soehnchen](https://crowdin.com/profile/msoehnchen) &bull; [3LD0mi HA](https://forum.xda-developers.com/member.php?u=5860523) |
+| Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431)|
+
 
 The full activity stream for the translations can be found [here](https://crowdin.com/project/frost-for-facebook/activity_stream)
