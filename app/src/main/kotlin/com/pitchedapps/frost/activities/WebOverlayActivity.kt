@@ -102,16 +102,16 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
-    val urlTest: String?
+    inline val urlTest: String?
         get() = intent.extras?.getString(ARG_URL) ?: intent.dataString
 
     open val url: String
         get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
 
-    val userId: Long
+    inline val userId: Long
         get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
 
-    val overlayContext: OverlayContext?
+    inline val overlayContext: OverlayContext?
         get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as OverlayContext?
 
     override fun onCreate(savedInstanceState: Bundle?) {
