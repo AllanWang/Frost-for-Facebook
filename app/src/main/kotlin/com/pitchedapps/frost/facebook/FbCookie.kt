@@ -20,7 +20,7 @@ import io.reactivex.subjects.SingleSubject
  */
 object FbCookie {
 
-    val webCookie: String?
+    inline val webCookie: String?
         get() = CookieManager.getInstance().getCookie(FB_URL_BASE)
 
     private fun setWebCookie(cookie: String?, callback: (() -> Unit)?) {
