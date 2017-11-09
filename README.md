@@ -28,6 +28,16 @@ Note that these builds occur for every commit, including unstable ones.
 You can find the release numbers for the master branch under the [Travis](https://travis-ci.org/AllanWang/Frost-for-Facebook/branches).
 Those builds are likely more stable as they are pushed out to the alpha stream on the play store.
 
+## Showcase
+
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_themes.png)&ensp;
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_glass.png)
+
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_multi_accounts.png)&ensp;
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_swipe.png)
+
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_quick_links.png)&ensp;
+
 ## Translations
 
 Frost depends on translations crowdsourced by the general public.
