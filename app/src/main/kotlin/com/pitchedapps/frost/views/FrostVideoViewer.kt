@@ -63,7 +63,7 @@ class FrostVideoViewer @JvmOverloads constructor(
         alpha = 0f
         background.setBackgroundColor(if (Prefs.bgColor.isColorDark) Prefs.bgColor.withMinAlpha(200) else Color.BLACK)
         video.backgroundView = background
-        video.viewerContract = this
+        video.setViewerContract(this)
         video.pause()
         toolbar.inflateMenu(R.menu.menu_video)
         toolbar.setBackgroundColor(Prefs.headerColor)
@@ -83,7 +83,6 @@ class FrostVideoViewer @JvmOverloads constructor(
             video.restart()
             restarter.fadeOut { restarter.gone() }
         }
-//        toolbar.setOnTouchListener { _, event -> video.shouldParentAcceptTouch(event) }
     }
 
     fun setVideo(url: String) {

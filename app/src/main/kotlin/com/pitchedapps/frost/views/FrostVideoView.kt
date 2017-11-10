@@ -31,7 +31,7 @@ class FrostVideoView @JvmOverloads constructor(
 
     var backgroundView: View? = null
     var onFinishedListener: () -> Unit = {}
-    lateinit var viewerContract: FrostVideoViewerContract
+    private lateinit var viewerContract: FrostVideoViewerContract
     lateinit var containerContract: FrostVideoContainerContract
 
     private val videoDimensions = PointF(0f, 0f)
@@ -118,6 +118,10 @@ class FrostVideoView @JvmOverloads constructor(
             val ratio = Math.min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
             videoDimensions.set(ratio * intrinsicWidth, ratio * intrinsicHeight)
         }
+    }
+
+    fun setViewerContract(contract: FrostVideoViewerContract) {
+        this.viewerContract = contract
         videoControls?.setVisibilityListener(viewerContract)
     }
 
