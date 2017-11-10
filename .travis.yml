@@ -18,8 +18,8 @@ script:
 - cd $TRAVIS_BUILD_DIR/
 - printf "Starting script\n"
 - chmod +x gradlew
-- ./gradlew --quiet androidGitVersion
-- ./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest
+- "./gradlew --quiet androidGitVersion"
+- "./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest"
 notifications:
   email: false
   slack:
@@ -28,8 +28,8 @@ notifications:
     on_success: always
     on_failure: always
     template:
-    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository}@%{branch} %{result}
-      in %{duration}
+    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of
+      %{repository}@%{branch} %{result} in %{duration}
     - "%{commit_subject}"
     - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
       Download>"
@@ -45,4 +45,4 @@ cache:
   - "$HOME/.m2s"
 env:
   global:
-  - secure: Sob0b0PXhJ5uq+quf74Vl/jWaJ0RVGqTcn83p45iQI/OCEvCLyLk4FojDrtEuu1wUrWNYnv4EpX2WcAUO8+93e93Y3XIfSltXOWnXtM6usSMm7/2iiT1nR0Q6L1mC0rFLvkkhnm1mlq1DGOZKB3eI6WJKx0+/oX3gWUWgmeTsTln7YjQl/QHIk4tJFt3K+DE0fDJfo561OawC2UUPESULv5O/fd4fbnVIcJYJDBciPqT/PNJ+Rx3DqKO3BKam6+ulv5fByCcPaDXiJ7NfWw+ggpgEBZaIoGy/UL6/it1LiDXRE2yHE1kRTjMOmiCd71pL26J0n4c+o2ldTSMz0dScmbA4c+elQDwCjtnXw21B/pNavRvhGX6iqRl2A3z5/ivVf6foSpCSzLm6FZSizAnMBAa0TxmPiM4F3QWvwtF6Rgo7hD/iuTVUW4i6mOIDfTWRPD4Ha6zdkj6OCRZ1OsIuw3OiYZNtlytX7aTyHIC2aoZw0sUkExbE/3fCP1Ej6632zxGjhof8jlvrnFJZacf921Q0/4O52H6KaQM6L0CV+YpPuctsEkFeoZ6xR0WXS9RTmCyGC3J6Qv+GWlbkFyLsphz43HSaGb8pIrljjmP1N7Q/7Oft54yEwbT6s8pXmBymkVeJQuyKTHzg5yyZgddWbiWM20kN6RA8jnykTMy5FU=
+  - secure: X3J97ccW+8K0bXPXhX608vPx7Pr/G4ju7quxydqMaYGgClHxoL/WpXOBAyyllde5P28PY4kioaqcI21BEhnAw0QUbmnzVLA1Qd5VS7aMPHpEnInKuOxGZ2d570OZd1f+ozFVt05vzG0VBJlBAkVhz2GWNxQdmIV1sO28MH526JMuYaEREuuywVSZmAeY7AAbW9MeCC2wvHvNmhk2nk6NLRQcsrDHcBsimy9fnnQ9lT/QsvToi1ZJd/MN7YkGDUULR+YmaotBzG546UJ1EiZQX91bFEJfP0oL43Pk7t5snzmHnKjLOr8Mt5QsIUXaiy/uzhUVmuDh1i0GEpZmhqM7nz/T6P7ogaLbbyJeauNmf15nu+e3hSvNiTzKyIwfSSflv8Do3g8/Eo3dKfIi3I8/OKF/uZ76kywh2LRqtZAqxRDiAMDZVwsRgD4aztoWm5AWa3tSoGy1J7i1eoqX6bNqokRbjgheTqcjN13kCdSZi3pZX7UBYm2Vumhn4izhTume19Rh9SqTmRgQ8jM7ynxHh7vVsJPPJG0HbQ623xz+d9mtXGy1fAb0dcUJMXdOhFN3m6AnKuHiF7cmsqje7Euk/TOZyqZmu0xEhTkugMbNKwGrklJiwRr3IoLtPdhLE38u3/auloUqBQ4K/iA9ZdhAreTSHEaI9d3J4N6kqCj3U30=

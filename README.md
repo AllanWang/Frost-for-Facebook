@@ -28,17 +28,29 @@ Note that these builds occur for every commit, including unstable ones.
 You can find the release numbers for the master branch under the [Travis](https://travis-ci.org/AllanWang/Frost-for-Facebook/branches).
 Those builds are likely more stable as they are pushed out to the alpha stream on the play store.
 
+## Showcase
+
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_themes.png)&ensp;
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_glass.png)
+
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_multi_accounts.png)&ensp;
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_swipe.png)
+
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_quick_links.png)&ensp;
+
 ## Translations
 
 Frost depends on translations crowdsourced by the general public.
 If you would like to contribute, please visit [here](https://crwd.in/frost-for-facebook)
+Note that this project heavily depends on [KAU](https://github.com/AllanWang/KAU), which also needs to be translated [here](https://crwd.in/kotlin-android-utils)
 
 Special thanks to the following awesome people for translating significant portions of Frost!
 
-* [Vincent Kulak](https://github.com/VonOx) [FR]
-* [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) [FR]
-* [Jahir Fiquitiva](https://jahirfiquitiva.me/) [ES]
-* [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) [ES]
-* [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) [DE]
+| Language | Contributors |
+|----------|--------------|
+| French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
+| German | [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) &bull; [Marcel Soehnchen](https://crowdin.com/profile/msoehnchen) &bull; [3LD0mi HA](https://forum.xda-developers.com/member.php?u=5860523) |
+| Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431)|
+
 
 The full activity stream for the translations can be found [here](https://crowdin.com/project/frost-for-facebook/activity_stream)
