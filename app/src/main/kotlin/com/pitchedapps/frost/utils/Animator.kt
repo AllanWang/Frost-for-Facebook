@@ -3,6 +3,7 @@ package com.pitchedapps.frost.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.view.animation.Interpolator
 
 /**
  * Created by Allan Wang on 2017-11-10.
@@ -23,6 +24,7 @@ class ProgressAnimator private constructor(private vararg val values: Float) {
     private val endActions: MutableList<() -> Unit> = mutableListOf()
 
     var duration: Long = -1L
+    var interpolator: Interpolator? = null
 
     /**
      * Add more changes to the [ValueAnimator] before running
@@ -46,6 +48,8 @@ class ProgressAnimator private constructor(private vararg val values: Float) {
         ValueAnimator.ofFloat(*values).apply {
             if (this@ProgressAnimator.duration > 0L)
                 duration = this@ProgressAnimator.duration
+            if (this@ProgressAnimator.interpolator != null)
+                interpolator = this@ProgressAnimator.interpolator
             addUpdateListener {
                 val progress = it.animatedValue as Float
                 animators.forEach { it(progress) }

@@ -137,11 +137,13 @@ class FrostVideoViewer @JvmOverloads constructor(
     }
 
     override fun onControlsShown() {
-        toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { toolbar.visible() })
+        if (video.isExpanded)
+            toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { toolbar.visible() })
     }
 
     override fun onControlsHidden() {
-        toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { toolbar.gone() }
+        if (!toolbar.isGone)
+            toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { toolbar.gone() }
     }
 
 }
@@ -153,6 +155,7 @@ interface FrostVideoViewerContract : VideoControlsVisibilityListener {
      * 1f represents an expanded view, 0f represents a minimized view
      */
     fun onExpand(progress: Float)
+
     fun onVideoComplete()
 }
 

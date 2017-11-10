@@ -1,16 +1,16 @@
 package com.pitchedapps.frost.views
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.AnimHolder
+import ca.allanwang.kau.utils.dpToPx
+import ca.allanwang.kau.utils.scaleXY
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.ProgressAnimator
@@ -34,8 +34,6 @@ class FrostVideoView @JvmOverloads constructor(
     var onFinishedListener: () -> Unit = {}
     private lateinit var viewerContract: FrostVideoViewerContract
     lateinit var containerContract: FrostVideoContainerContract
-    private var statusBarColor = Color.BLACK
-    private var navigationBarColor = Color.BLACK
 
     private val videoDimensions = PointF(0f, 0f)
 
@@ -67,22 +65,12 @@ class FrostVideoView @JvmOverloads constructor(
             val origScale = scaleX
             if (field) {
                 ProgressAnimator.ofFloat {
-                    duration = ANIMATION_DURATION * 10
-                    withAnimator {
-                        //current view transformations
-                        scaleXY = it
-                        viewerContract.onExpand(it)
-                    }
-                    withAnimatorInv {
-                        translationX = origX * it
-                        translationY = origY * it
-                    }
-                    val activity = context as? Activity
-                    if (activity != null)
-                        withAnimator {
-                            activity.statusBarColor = Color.BLACK.blendWith(statusBarColor, it)
-                            activity.navigationBarColor = Color.BLACK.blendWith(navigationBarColor, it)
-                        }
+                    duration = ANIMATION_DURATION
+                    interpolator = AnimHolder.fastOutSlowInInterpolator(context)
+                    withAnimator { viewerContract.onExpand(it) }
+                    withAnimator(origScale, 1f) { scaleXY = it }
+                    withAnimator(origX, 0f) { translationX = it }
+                    withAnimator(origY, 0f) { translationY = it }
                     withEndAction {
                         if (!isPlaying) showControls()
                         else viewerContract.onControlsHidden()
@@ -92,20 +80,12 @@ class FrostVideoView @JvmOverloads constructor(
                 hideControls()
                 val (scale, tX, tY) = mapBounds()
                 ProgressAnimator.ofFloat {
-                    duration = ANIMATION_DURATION * 10
+                    duration = ANIMATION_DURATION
+                    interpolator = AnimHolder.fastOutSlowInInterpolator(context)
                     withAnimatorInv { viewerContract.onExpand(it) }
                     withAnimator(origScale, scale) { scaleXY = it }
                     withAnimator(origX, tX) { translationX = it }
                     withAnimator(origY, tY) { translationY = it }
-                    val activity = context as? Activity
-                    if (activity != null) {
-                        statusBarColor = activity.statusBarColor
-                        navigationBarColor = activity.navigationBarColor
-                        withAnimatorInv {
-                            activity.statusBarColor = Color.BLACK.blendWith(statusBarColor, it)
-                            activity.navigationBarColor = Color.BLACK.blendWith(navigationBarColor, it)
-                        }
-                    }
                 }
             }
         }
@@ -144,7 +124,8 @@ class FrostVideoView @JvmOverloads constructor(
             if (isExpanded) showControls()
         }
         setOnCompletionListener {
-            viewerContract.onVideoComplete()
+            if (videoUri?.toString()?.contains(".gif") == true) restart()
+            else viewerContract.onVideoComplete()
         }
         setOnTouchListener(FrameTouchListener(context))
         v.setOnTouchListener(VideoTouchListener(context))
@@ -203,14 +184,9 @@ class FrostVideoView @JvmOverloads constructor(
         stopPlayback()
         if (alpha > 0f)
             ProgressAnimator.ofFloat(alpha, 0f) {
-                duration = FAST_ANIMATION_DURATION * 10
-                withAnimator {
-                    alpha = it
-                    viewerContract.onExpand(it)
-                }
-                withEndAction {
-                    onFinishedListener()
-                }
+                duration = FAST_ANIMATION_DURATION
+                withAnimator { alpha = it }
+                withEndAction { onFinishedListener() }
             }
         else
             onFinishedListener()
