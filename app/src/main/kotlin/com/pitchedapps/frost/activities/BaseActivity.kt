@@ -20,11 +20,9 @@ import io.reactivex.schedulers.Schedulers
  */
 abstract class BaseActivity : KauBaseActivity() {
     override fun onBackPressed() {
+        if (this is MainActivity && searchView?.onBackPressed() == true) return
         if (this is VideoViewerContract && videoOnBackPress()) return
-        if (this is MainActivity) {
-            if (searchView?.onBackPressed() == true) return
-            if (currentFragment.onBackPressed()) return
-        }
+        if (this is MainActivity && currentFragment.onBackPressed()) return
         if (this !is WebOverlayActivityBase && isTaskRoot && Prefs.exitConfirmation) {
             materialDialogThemed {
                 title(R.string.kau_exit)
