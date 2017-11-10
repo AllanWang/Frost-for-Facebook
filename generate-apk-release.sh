@@ -6,8 +6,8 @@
 # Note - gradle 3.0.0 generates outputs in their own folders - ctrl + f > releaseTest
 
 RELEASE_REPO=AllanWang/Frost-for-Facebook-APK-Builder
-USER_AUTH=AllanWang
-EMAIL=me@allanwang.ca
+USER_AUTH=PitchedApps
+EMAIL=pitchedapps@gmail.com
 MODULE_NAME=app
 VERSION_KEY=Frost
 # Make version key different from module name
