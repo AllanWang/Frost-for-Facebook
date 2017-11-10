@@ -31,7 +31,7 @@ class FbUrlFormatter(url: String) {
             var cleanedUrl = url
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            if (cleanedUrl != url) cleanedUrl = cleanedUrl.replaceFirst("&", "?")
+            if (cleanedUrl != url && !cleanedUrl.contains("?")) cleanedUrl = cleanedUrl.replaceFirst("&", "?")
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
             val qm = cleanedUrl.indexOf("?")
             if (qm > -1) {
@@ -70,6 +70,8 @@ class FbUrlFormatter(url: String) {
     }
 
     companion object {
+
+        const val VIDEO_REDIRECT = "/video_redirect/?src="
         /**
          * Items here are explicitly removed from the url
          * Taken from FaceSlim
@@ -82,7 +84,7 @@ class FbUrlFormatter(url: String) {
                 "https://m.facebook.com/l.php?u=",
                 "http://touch.facebook.com/l.php?u=",
                 "https://touch.facebook.com/l.php?u=",
-                "/video_redirect/?src="
+                VIDEO_REDIRECT
         )
 
         val misc = arrayOf("&amp;" to "&")

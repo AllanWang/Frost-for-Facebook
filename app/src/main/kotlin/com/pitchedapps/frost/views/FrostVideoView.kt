@@ -1,17 +1,19 @@
 package com.pitchedapps.frost.views
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import ca.allanwang.kau.utils.dpToPx
-import ca.allanwang.kau.utils.scaleXY
+import ca.allanwang.kau.utils.*
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.ProgressAnimator
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -29,10 +31,11 @@ class FrostVideoView @JvmOverloads constructor(
     private inline val v
         get() = videoViewImpl
 
-    var backgroundView: View? = null
     var onFinishedListener: () -> Unit = {}
     private lateinit var viewerContract: FrostVideoViewerContract
     lateinit var containerContract: FrostVideoContainerContract
+    private var statusBarColor = Color.BLACK
+    private var navigationBarColor = Color.BLACK
 
     private val videoDimensions = PointF(0f, 0f)
 
@@ -59,19 +62,50 @@ class FrostVideoView @JvmOverloads constructor(
             if (videoDimensions.x <= 0f || videoDimensions.y <= 0f)
                 return L.d("Attempted to toggle video expansion when points have not been finalized")
             field = value
+            val origX = translationX
+            val origY = translationY
+            val origScale = scaleX
             if (field) {
-                animate().scaleXY(1f).translationX(0f).translationY(0f).setDuration(ANIMATION_DURATION).withStartAction {
-                    backgroundView?.animate()?.alpha(1f)?.setDuration(ANIMATION_DURATION)
-                    viewerContract.onFade(1f, ANIMATION_DURATION)
-                }.withEndAction {
-                    if (!isPlaying) showControls()
+                ProgressAnimator.ofFloat {
+                    duration = ANIMATION_DURATION * 10
+                    withAnimator {
+                        //current view transformations
+                        scaleXY = it
+                        viewerContract.onExpand(it)
+                    }
+                    withAnimatorInv {
+                        translationX = origX * it
+                        translationY = origY * it
+                    }
+                    val activity = context as? Activity
+                    if (activity != null)
+                        withAnimator {
+                            activity.statusBarColor = Color.BLACK.blendWith(statusBarColor, it)
+                            activity.navigationBarColor = Color.BLACK.blendWith(navigationBarColor, it)
+                        }
+                    withEndAction {
+                        if (!isPlaying) showControls()
+                        else viewerContract.onControlsHidden()
+                    }
                 }
             } else {
                 hideControls()
                 val (scale, tX, tY) = mapBounds()
-                animate().scaleXY(scale).translationX(tX).translationY(tY).setDuration(ANIMATION_DURATION).withStartAction {
-                    backgroundView?.animate()?.alpha(0f)?.setDuration(ANIMATION_DURATION)
-                    viewerContract.onFade(0f, ANIMATION_DURATION)
+                ProgressAnimator.ofFloat {
+                    duration = ANIMATION_DURATION * 10
+                    withAnimatorInv { viewerContract.onExpand(it) }
+                    withAnimator(origScale, scale) { scaleXY = it }
+                    withAnimator(origX, tX) { translationX = it }
+                    withAnimator(origY, tY) { translationY = it }
+                    val activity = context as? Activity
+                    if (activity != null) {
+                        statusBarColor = activity.statusBarColor
+                        navigationBarColor = activity.navigationBarColor
+                        withAnimatorInv {
+                            activity.statusBarColor = Color.BLACK.blendWith(statusBarColor, it)
+                            activity.navigationBarColor = Color.BLACK.blendWith(navigationBarColor, it)
+                        }
+                    }
                 }
             }
         }
@@ -168,9 +202,16 @@ class FrostVideoView @JvmOverloads constructor(
     fun destroy() {
         stopPlayback()
         if (alpha > 0f)
-            animate().alpha(0f).setDuration(FAST_ANIMATION_DURATION).withEndAction { onFinishedListener() }.withStartAction {
-                viewerContract.onFade(0f, FAST_ANIMATION_DURATION)
-            }.start()
+            ProgressAnimator.ofFloat(alpha, 0f) {
+                duration = FAST_ANIMATION_DURATION * 10
+                withAnimator {
+                    alpha = it
+                    viewerContract.onExpand(it)
+                }
+                withEndAction {
+                    onFinishedListener()
+                }
+            }
         else
             onFinishedListener()
     }

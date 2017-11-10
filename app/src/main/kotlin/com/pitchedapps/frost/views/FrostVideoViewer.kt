@@ -62,11 +62,9 @@ class FrostVideoViewer @JvmOverloads constructor(
         inflate(R.layout.view_video, true)
         alpha = 0f
         background.setBackgroundColor(if (Prefs.bgColor.isColorDark) Prefs.bgColor.withMinAlpha(200) else Color.BLACK)
-        video.backgroundView = background
         video.setViewerContract(this)
         video.pause()
         toolbar.inflateMenu(R.menu.menu_video)
-        toolbar.setBackgroundColor(Prefs.headerColor)
         context.setMenuIcons(toolbar.menu, Prefs.iconColor,
                 R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
                 R.id.action_download to GoogleMaterial.Icon.gmd_file_download
@@ -111,10 +109,9 @@ class FrostVideoViewer @JvmOverloads constructor(
      * -------------------------------------------------------------
      */
 
-    override fun onFade(alpha: Float, duration: Long) {
-        toolbar.visible().animate().alpha(alpha).setDuration(duration).withEndAction {
-            if (alpha == 0f) toolbar.gone()
-        }
+    override fun onExpand(progress: Float) {
+        toolbar.goneIf(progress == 0f).alpha = progress
+        background.alpha = progress
     }
 
     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
@@ -151,7 +148,11 @@ class FrostVideoViewer @JvmOverloads constructor(
 
 interface FrostVideoViewerContract : VideoControlsVisibilityListener {
     fun onSingleTapConfirmed(event: MotionEvent): Boolean
-    fun onFade(alpha: Float, duration: Long)
+    /**
+     * Process of expansion
+     * 1f represents an expanded view, 0f represents a minimized view
+     */
+    fun onExpand(progress: Float)
     fun onVideoComplete()
 }
 
