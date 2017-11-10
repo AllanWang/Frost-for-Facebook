@@ -1,10 +1,12 @@
 package com.pitchedapps.frost.activities
 
+import android.content.res.Configuration
 import android.os.Bundle
 import ca.allanwang.kau.internal.KauBaseActivity
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.contracts.VideoViewerContract
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.materialDialogThemed
@@ -18,7 +20,12 @@ import io.reactivex.schedulers.Schedulers
  */
 abstract class BaseActivity : KauBaseActivity() {
     override fun onBackPressed() {
-        if (isTaskRoot && Prefs.exitConfirmation) {
+        if (this is VideoViewerContract && videoOnBackPress()) return
+        if (this is MainActivity) {
+            if (searchView?.onBackPressed() == true) return
+            if (currentFragment.onBackPressed()) return
+        }
+        if (this !is WebOverlayActivityBase && isTaskRoot && Prefs.exitConfirmation) {
             materialDialogThemed {
                 title(R.string.kau_exit)
                 content(R.string.kau_exit_confirmation)
@@ -27,12 +34,14 @@ abstract class BaseActivity : KauBaseActivity() {
                 onPositive { _, _ -> super.onBackPressed() }
                 checkBoxPromptRes(R.string.kau_do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
             }
-        } else super.onBackPressed()
+            return
+        }
+        super.onBackPressed()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFrostTheme()
+        if (this !is WebOverlayActivityBase) setFrostTheme()
     }
 
     private var networkDisposable: Disposable? = null
@@ -47,8 +56,7 @@ abstract class BaseActivity : KauBaseActivity() {
         networkDisposable = ReactiveNetwork.observeNetworkConnectivity(applicationContext)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    connectivity: Connectivity ->
+                .subscribe { connectivity: Connectivity ->
                     connectivity.apply {
                         L.d("Network connectivity changed: isAvailable: $isAvailable isRoaming: $isRoaming")
                         consumer(connectivity)
@@ -64,12 +72,23 @@ abstract class BaseActivity : KauBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        disposeNetworkConnectivity()
-        observeNetworkConnectivity()
+//        disposeNetworkConnectivity()
+//        observeNetworkConnectivity()
     }
 
     override fun onPause() {
         super.onPause()
-        disposeNetworkConnectivity()
+//        disposeNetworkConnectivity()
+    }
+
+
+    override fun onStop() {
+        if (this is VideoViewerContract) videoOnStop()
+        super.onStop()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (this is VideoViewerContract) videoViewer?.updateLocation()
     }
 }

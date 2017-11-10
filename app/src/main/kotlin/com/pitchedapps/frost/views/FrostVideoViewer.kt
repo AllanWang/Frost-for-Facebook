@@ -50,7 +50,6 @@ class FrostVideoViewer @JvmOverloads constructor(
             val videoViewer = FrostVideoViewer(container.context)
             container.addView(videoViewer)
             videoViewer.bringToFront()
-            L.d("Create video view", url)
             videoViewer.setVideo(url)
             videoViewer.video.containerContract = contract
             videoViewer.video.onFinishedListener = { container.removeView(videoViewer); contract.onVideoFinished() }
@@ -84,8 +83,10 @@ class FrostVideoViewer @JvmOverloads constructor(
     }
 
     fun setVideo(url: String) {
+        val formattedUrl = url.formattedFbUrl
+        L.d("Load ${if (formattedUrl.contains(".gif")) "gif" else "video"} view", url)
         animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
-        video.setVideoURI(Uri.parse(url.formattedFbUrl))
+        video.setVideoURI(Uri.parse(formattedUrl))
     }
 
     /**
