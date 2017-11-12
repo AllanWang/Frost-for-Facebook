@@ -105,6 +105,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
         plainText(R.string.get_pro) {
             descRes = R.string.get_pro_desc
             iicon = GoogleMaterial.Icon.gmd_star
+            visible = { !IS_FROST_PRO }
             onClick = { _, _, _ -> restorePurchases(); true }
         }
 

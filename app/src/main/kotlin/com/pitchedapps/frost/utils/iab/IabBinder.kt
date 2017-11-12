@@ -26,8 +26,8 @@ private const val FROST_PRO = "frost_pro"
  * Implemented pro checker with a hook for debug builds
  * Use this when checking if the pro feature is enabled
  */
-val IS_FROST_PRO: Boolean
-    get() = (BuildConfig.DEBUG && Prefs.debugPro) || Prefs.pro
+inline val IS_FROST_PRO: Boolean
+    get() = Prefs.pro || (BuildConfig.DEBUG && Prefs.debugPro)
 
 interface FrostBilling : BillingProcessor.IBillingHandler {
     fun Activity.onCreateBilling()

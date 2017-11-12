@@ -15,7 +15,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
  * Created by Allan Wang on 2017-05-30.
  */
 
-@Database(name = FbTabsDb.NAME, version = FbTabsDb.VERSION)
+@Database( version = FbTabsDb.VERSION)
 object FbTabsDb {
     const val NAME = "FrostTabs"
     const val VERSION = 1
@@ -31,6 +31,6 @@ fun loadFbTabs(): List<FbItem> {
     return defaultTabs()
 }
 
-fun List<FbItem>.saveAsync(c: Context) {
-    mapIndexed { index, fbTab -> FbTabModel(index, fbTab) }.replace(c, FbTabsDb.NAME)
+fun List<FbItem>.saveAsync() {
+    mapIndexed { index, fbTab -> FbTabModel(index, fbTab) }.replace(FbTabsDb.NAME)
 }

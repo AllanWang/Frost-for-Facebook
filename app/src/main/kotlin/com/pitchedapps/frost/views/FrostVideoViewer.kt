@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import ca.allanwang.kau.utils.*
+import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -35,17 +36,21 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     companion object {
         /**
+         * Matches VideoControls.CONTROL_VISIBILITY_ANIMATION_LENGTH
+         */
+        private const val CONTROL_ANIMATION_DURATION = 300L
+
+        /**
          * Simplified binding to add video to layout, and remove it when finished
          * This is under the assumption that the container allows for overlays,
          * such as a FrameLayout
          */
-        fun showVideo(url: String, contract: FrostVideoContainerContract): FrostVideoViewer {
+        fun showVideo(url: String, repeat: Boolean, contract: FrostVideoContainerContract): FrostVideoViewer {
             val container = contract.videoContainer
             val videoViewer = FrostVideoViewer(container.context)
             container.addView(videoViewer)
             videoViewer.bringToFront()
-            L.d("Create video view", url)
-            videoViewer.setVideo(url)
+            videoViewer.setVideo(url, repeat)
             videoViewer.video.containerContract = contract
             videoViewer.video.onFinishedListener = { container.removeView(videoViewer); contract.onVideoFinished() }
             return videoViewer
@@ -56,11 +61,9 @@ class FrostVideoViewer @JvmOverloads constructor(
         inflate(R.layout.view_video, true)
         alpha = 0f
         background.setBackgroundColor(if (Prefs.bgColor.isColorDark) Prefs.bgColor.withMinAlpha(200) else Color.BLACK)
-        video.backgroundView = background
-        video.viewerContract = this
+        video.setViewerContract(this)
         video.pause()
         toolbar.inflateMenu(R.menu.menu_video)
-        toolbar.setBackgroundColor(Prefs.headerColor)
         context.setMenuIcons(toolbar.menu, Prefs.iconColor,
                 R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
                 R.id.action_download to GoogleMaterial.Icon.gmd_file_download
@@ -77,12 +80,14 @@ class FrostVideoViewer @JvmOverloads constructor(
             video.restart()
             restarter.fadeOut { restarter.gone() }
         }
-//        toolbar.setOnTouchListener { _, event -> video.shouldParentAcceptTouch(event) }
     }
 
-    fun setVideo(url: String) {
+    fun setVideo(url: String, repeat: Boolean = false) {
+        val formattedUrl = url.formattedFbUrl
+        L.d("Load video view; repeat: $repeat", url)
         animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
-        video.setVideoURI(Uri.parse(url.formattedFbUrl))
+        video.setVideoURI(Uri.parse(formattedUrl))
+        video.repeat = repeat
     }
 
     /**
@@ -106,10 +111,9 @@ class FrostVideoViewer @JvmOverloads constructor(
      * -------------------------------------------------------------
      */
 
-    override fun onFade(alpha: Float, duration: Long) {
-        toolbar.visible().animate().alpha(alpha).setDuration(duration).withEndAction {
-            if (alpha == 0f) toolbar.gone()
-        }
+    override fun onExpand(progress: Float) {
+        toolbar.goneIf(progress == 0f).alpha = progress
+        background.alpha = progress
     }
 
     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
@@ -134,11 +138,26 @@ class FrostVideoViewer @JvmOverloads constructor(
         })
     }
 
+    override fun onControlsShown() {
+        if (video.isExpanded)
+            toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { toolbar.visible() })
+    }
+
+    override fun onControlsHidden() {
+        if (!toolbar.isGone)
+            toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { toolbar.gone() }
+    }
+
 }
 
-interface FrostVideoViewerContract {
+interface FrostVideoViewerContract : VideoControlsVisibilityListener {
     fun onSingleTapConfirmed(event: MotionEvent): Boolean
-    fun onFade(alpha: Float, duration: Long)
+    /**
+     * Process of expansion
+     * 1f represents an expanded view, 0f represents a minimized view
+     */
+    fun onExpand(progress: Float)
+
     fun onVideoComplete()
 }
 

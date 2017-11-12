@@ -106,11 +106,11 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         injectBackgroundColor()
         webCore.jsInject(
                 JsActions.LOGIN_CHECK,
-                JsAssets.CLICK_A.maybe(Prefs.overlayEnabled),
+                JsAssets.CLICK_A,
                 JsAssets.TEXTAREA_LISTENER,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                 JsAssets.CONTEXT_A,
-                JsAssets.MEDIA.maybe(webCore.baseEnum != null),
+                JsAssets.MEDIA,
                 JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
         )
     }

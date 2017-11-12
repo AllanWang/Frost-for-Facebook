@@ -5,7 +5,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -48,6 +47,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
+import com.pitchedapps.frost.contracts.VideoViewerContract
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -63,7 +63,6 @@ import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
-import com.pitchedapps.frost.views.FrostVideoContainerContract
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -77,18 +76,18 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate(),
-        FrostVideoContainerContract,
+        VideoViewerContract,
         FrostBilling by IabMain() {
 
     lateinit var adapter: SectionsPagerAdapter
-    val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
+    override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: FrostViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
-    var videoViewer: FrostVideoViewer? = null
+    override var videoViewer: FrostVideoViewer? = null
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var webFragmentObservable = PublishSubject.create<Int>()!!
@@ -130,8 +129,7 @@ class MainActivity : BaseActivity(),
                         "Frost id" to Prefs.frostId)
             }
         }
-        setContentView(R.layout.activity_frame_wrapper)
-        frameWrapper.inflate(Prefs.mainActivityLayout.layoutRes, true)
+        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
@@ -147,7 +145,7 @@ class MainActivity : BaseActivity(),
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
+                val delta = positionOffset * (255 - 128).toFloat()
                 tabsForEachView { tabPosition, view ->
                     view.setAllAlpha(when (tabPosition) {
                         position -> 255.0f - delta
@@ -167,14 +165,6 @@ class MainActivity : BaseActivity(),
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-    }
-
-    fun showVideo(url: String) {
-        if (videoViewer != null) {
-            videoViewer?.setVideo(url)
-        } else {
-            videoViewer = FrostVideoViewer.showVideo(url, this)
-        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -312,7 +302,7 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
+    private fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
         iicon = item.icon
         iconColor = Prefs.textColor.toLong()
         textColor = Prefs.textColor.toLong()
@@ -331,7 +321,7 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) = this.secondaryItem(title) {
+    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) = this.secondaryItem(title) {
         textColor = Prefs.textColor.toLong()
         selectedIconColor = Prefs.textColor.toLong()
         selectedTextColor = Prefs.textColor.toLong()
@@ -436,24 +426,12 @@ class MainActivity : BaseActivity(),
         super.onStart()
     }
 
-    override fun onStop() {
-        videoViewer?.pause()
-        super.onStop()
-    }
-
     override fun onDestroy() {
         onDestroyBilling()
         super.onDestroy()
     }
 
-    override fun onBackPressed() {
-        if (videoViewer?.onBackPressed() == true) return
-        if (searchView?.onBackPressed() == true) return
-        if (currentFragment.onBackPressed()) return
-        super.onBackPressed()
-    }
-
-    val currentFragment
+    inline val currentFragment
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as WebFragment
 
     inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbItem>) : FragmentPagerAdapter(fm) {
@@ -489,16 +467,4 @@ class MainActivity : BaseActivity(),
             else
                 PointF(0f, 0f)
 
-    override val videoContainer: FrameLayout
-        get() = frameWrapper
-
-    override fun onVideoFinished() {
-        L.d("Video view released")
-        videoViewer = null
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        videoViewer?.updateLocation()
-    }
 }

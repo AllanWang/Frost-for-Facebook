@@ -30,6 +30,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -199,6 +200,9 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
 
 inline val String?.isFacebookUrl
     get() = this != null && this.contains(FACEBOOK_COM)
+
+inline val String?.isVideoUrl
+    get() = this != null && this.startsWith(VIDEO_REDIRECT)
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
     theme()
