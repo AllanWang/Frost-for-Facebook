@@ -9,7 +9,7 @@ if (!window.hasOwnProperty('frost_media')) {
      * Commonality; check for valid target
      */
     var element = e.target || e.srcElement;
-    if (!element.hasAttribute("data-sigil") || !element.getAttribute("data-sigil").includes("playInlineVideo")) return;
+    if (!element.hasAttribute("data-sigil") || !element.getAttribute("data-sigil").toLowerCase().includes("inlinevideo")) return;
     console.log("Found inline video");
     element = element.parentNode;
     if (!element.hasAttribute("data-store")) return;
@@ -20,8 +20,8 @@ if (!window.hasOwnProperty('frost_media')) {
       return;
     }
     if (!dataStore.src) return;
-    console.log("Inline video", dataStore.src);
-    if (typeof Frost !== 'undefined') Frost.loadVideo(dataStore.src);
+    console.log("Inline video " + dataStore.src);
+    if (typeof Frost !== 'undefined') Frost.loadVideo(dataStore.src, dataStore.animatedGifVideo);
     e.stopPropagation();
     e.preventDefault();
     return;

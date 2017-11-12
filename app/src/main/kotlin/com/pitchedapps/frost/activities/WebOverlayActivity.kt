@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.activities
 
 import android.content.Intent
+import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
@@ -10,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.FrameLayout
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
@@ -20,9 +22,11 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
+import com.pitchedapps.frost.contracts.VideoViewerContract
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.web.FrostWebView
 import io.reactivex.disposables.Disposable
 import okhttp3.HttpUrl
@@ -95,9 +99,10 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
  */
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
-open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBaseActivity(),
-        ActivityWebContract, FileChooserContract by FileChooserDelegate() {
+open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
+        ActivityWebContract, VideoViewerContract, FileChooserContract by FileChooserDelegate() {
 
+    override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
     val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
@@ -122,7 +127,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
             finish()
             return
         }
-        setContentView(R.layout.activity_web_overlay)
+        setFrameContentView(R.layout.activity_web_overlay)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -219,4 +224,13 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : KauBas
         }
         return true
     }
+
+    /*
+     * ----------------------------------------------------
+     * Video Contract
+     * ----------------------------------------------------
+     */
+    override var videoViewer: FrostVideoViewer? = null
+    override val lowerVideoPadding: PointF = PointF(0f, 0f)
+
 }
