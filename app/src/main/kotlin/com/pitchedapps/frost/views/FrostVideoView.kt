@@ -132,7 +132,13 @@ class FrostVideoView @JvmOverloads constructor(
         v.setOnTouchListener(VideoTouchListener(context))
         setOnVideoSizedChangedListener { intrinsicWidth, intrinsicHeight ->
             val ratio = Math.min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
+            /**
+             * Only remap if not expanded and if dimensions have changed
+             */
+            val shouldRemap = !isExpanded
+                    && (videoDimensions.x != ratio * intrinsicWidth || videoDimensions.y != ratio * intrinsicHeight)
             videoDimensions.set(ratio * intrinsicWidth, ratio * intrinsicHeight)
+            if (shouldRemap) updateLocation()
         }
     }
 

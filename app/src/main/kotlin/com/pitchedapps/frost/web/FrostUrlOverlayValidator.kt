@@ -78,7 +78,8 @@ fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
 val messageWhitelist = setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES).map { it.url }.toSet()
 
 val String.shouldUseBasicAgent
-    get() = (messageWhitelist.any { contains(it) }) || this == FB_URL_BASE
+    get() = !contains("story.php") //we will use basic agent for anything that isn't a comment section
+//    get() = (messageWhitelist.any { contains(it) }) || this == FB_URL_BASE
 
 /**
  * The following components should never be launched in a new overlay

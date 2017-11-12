@@ -3,6 +3,7 @@
 ## v1.6.3
 * Allow for truly full screen videos
 * Support pip video everywhere
+* Support gifs
 
 ## v1.6.2
 * Fix search update from Facebook
