@@ -27,6 +27,7 @@ import android.webkit.WebChromeClient
 import android.widget.FrameLayout
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
+import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
@@ -37,7 +38,6 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
-import com.crashlytics.android.answers.ContentViewEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.materialdrawer.AccountHeader
@@ -47,7 +47,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
-import com.pitchedapps.frost.contracts.VideoViewerContract
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -76,7 +76,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate(),
-        VideoViewerContract,
+        VideoViewHolder, SearchViewHolder,
         FrostBilling by IabMain() {
 
     lateinit var adapter: SectionsPagerAdapter
@@ -99,7 +99,7 @@ class MainActivity : BaseActivity(),
             L.i("First fragment load has finished")
             field = value
         }
-    var searchView: SearchView? = null
+    override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
 
     companion object {
@@ -340,27 +340,29 @@ class MainActivity : BaseActivity(),
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
-        if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-            textCallback = { query, _ ->
-                val results = searchViewCache[query]
-                if (results != null)
-                    runOnUiThread { searchView?.results = results }
-                else
-                    doAsync {
-                        val data = SearchParser.query(query) ?: return@doAsync
-                        val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
-                        if (items.isNotEmpty())
-                            items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
-                        searchViewCache.put(query, items)
-                        uiThread { searchView?.results = items }
-                    }
+        searchViewBindIfNull {
+            bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
+                textCallback = { query, _ ->
+                    val results = searchViewCache[query]
+                    if (results != null)
+                        runOnUiThread { searchView?.results = results }
+                    else
+                        doAsync {
+                            val data = SearchParser.query(query) ?: return@doAsync
+                            val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
+                            if (items.isNotEmpty())
+                                items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
+                            searchViewCache.put(query, items)
+                            uiThread { searchView?.results = items }
+                        }
+                }
+                textDebounceInterval = 300
+                searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
+                closeListener = { _ -> searchViewCache.clear() }
+                foregroundColor = Prefs.textColor
+                backgroundColor = Prefs.bgColor.withMinAlpha(200)
+                onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
-            textDebounceInterval = 300
-            searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
-            closeListener = { _ -> searchViewCache.clear() }
-            foregroundColor = Prefs.textColor
-            backgroundColor = Prefs.bgColor.withMinAlpha(200)
-            onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
         }
         return true
     }
