@@ -10,9 +10,9 @@
     <item text="Allow for truly full screen videos" />
     <item text="Support pip video everywhere" />
     <item text="Support gifs" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Add Italian translations" />
+    <item text="Add Korean translations" />
+    <item text="Add Vietnamese translations" />
 
     <version title="v1.6.2" />
     <item text="Fix search update from Facebook" />

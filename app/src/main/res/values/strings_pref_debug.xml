@@ -10,5 +10,5 @@
 
     <string name="debug_incomplete">Incomplete report</string>
 
-    <string name="debug_report_email_title">Frost for Facebook: Debug Report</string>
+    <string name="debug_report_email_title" translatable="false">Frost for Facebook: Debug Report</string>
 </resources>

@@ -11,7 +11,7 @@ import com.pitchedapps.frost.views.FrostVideoViewer
 /**
  * Created by Allan Wang on 2017-11-10.
  */
-interface VideoViewerContract : FrameWrapper, FrostVideoContainerContract {
+interface VideoViewHolder : FrameWrapper, FrostVideoContainerContract {
 
     var videoViewer: FrostVideoViewer?
 

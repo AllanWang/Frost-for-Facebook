@@ -3,10 +3,11 @@ package com.pitchedapps.frost.activities
 import android.content.res.Configuration
 import android.os.Bundle
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.searchview.SearchViewHolder
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.VideoViewerContract
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.materialDialogThemed
@@ -20,8 +21,8 @@ import io.reactivex.schedulers.Schedulers
  */
 abstract class BaseActivity : KauBaseActivity() {
     override fun onBackPressed() {
-        if (this is MainActivity && searchView?.onBackPressed() == true) return
-        if (this is VideoViewerContract && videoOnBackPress()) return
+        if (this is SearchViewHolder && searchViewOnBackPress()) return
+        if (this is VideoViewHolder && videoOnBackPress()) return
         if (this is MainActivity && currentFragment.onBackPressed()) return
         if (this !is WebOverlayActivityBase && isTaskRoot && Prefs.exitConfirmation) {
             materialDialogThemed {
@@ -81,12 +82,12 @@ abstract class BaseActivity : KauBaseActivity() {
 
 
     override fun onStop() {
-        if (this is VideoViewerContract) videoOnStop()
+        if (this is VideoViewHolder) videoOnStop()
         super.onStop()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (this is VideoViewerContract) videoViewer?.updateLocation()
+        if (this is VideoViewHolder) videoViewer?.updateLocation()
     }
 }
