@@ -8,10 +8,7 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.isFacebookUrl
-import com.pitchedapps.frost.utils.isVideoUrl
-import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.*
 
 /**
  * Created by Allan Wang on 2017-08-15.
@@ -33,7 +30,7 @@ fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
         (context as VideoViewerContract).showVideo(url)
         return true
     }
-
+    if (!Prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
         L.v("Check web request from overlay", url)
         //already overlay; manage user agent

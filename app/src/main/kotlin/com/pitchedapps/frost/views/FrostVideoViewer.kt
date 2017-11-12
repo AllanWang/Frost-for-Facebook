@@ -45,12 +45,12 @@ class FrostVideoViewer @JvmOverloads constructor(
          * This is under the assumption that the container allows for overlays,
          * such as a FrameLayout
          */
-        fun showVideo(url: String, contract: FrostVideoContainerContract): FrostVideoViewer {
+        fun showVideo(url: String, repeat: Boolean, contract: FrostVideoContainerContract): FrostVideoViewer {
             val container = contract.videoContainer
             val videoViewer = FrostVideoViewer(container.context)
             container.addView(videoViewer)
             videoViewer.bringToFront()
-            videoViewer.setVideo(url)
+            videoViewer.setVideo(url, repeat)
             videoViewer.video.containerContract = contract
             videoViewer.video.onFinishedListener = { container.removeView(videoViewer); contract.onVideoFinished() }
             return videoViewer
@@ -82,11 +82,12 @@ class FrostVideoViewer @JvmOverloads constructor(
         }
     }
 
-    fun setVideo(url: String) {
+    fun setVideo(url: String, repeat: Boolean = false) {
         val formattedUrl = url.formattedFbUrl
-        L.d("Load ${if (formattedUrl.contains(".gif")) "gif" else "video"} view", url)
+        L.d("Load video view; repeat: $repeat", url)
         animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
         video.setVideoURI(Uri.parse(formattedUrl))
+        video.repeat = repeat
     }
 
     /**

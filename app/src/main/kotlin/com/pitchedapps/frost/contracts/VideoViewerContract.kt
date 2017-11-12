@@ -15,15 +15,18 @@ interface VideoViewerContract : FrameWrapper, FrostVideoContainerContract {
 
     var videoViewer: FrostVideoViewer?
 
+    fun showVideo(url: String)
+            = showVideo(url, false)
+
     /**
      * Create new viewer and reuse existing one
      * The url will be formatted upon loading
      */
-    fun showVideo(url: String) {
+    fun showVideo(url: String, repeat: Boolean) {
         if (videoViewer != null)
-            videoViewer?.setVideo(url)
+            videoViewer?.setVideo(url, repeat)
         else
-            videoViewer = FrostVideoViewer.showVideo(url, this)
+            videoViewer = FrostVideoViewer.showVideo(url, repeat, this)
     }
 
     fun videoOnStop() = videoViewer?.pause()

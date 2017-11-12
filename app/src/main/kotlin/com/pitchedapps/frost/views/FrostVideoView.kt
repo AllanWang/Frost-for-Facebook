@@ -34,6 +34,7 @@ class FrostVideoView @JvmOverloads constructor(
     var onFinishedListener: () -> Unit = {}
     private lateinit var viewerContract: FrostVideoViewerContract
     lateinit var containerContract: FrostVideoContainerContract
+    var repeat: Boolean = false
 
     private val videoDimensions = PointF(0f, 0f)
 
@@ -124,7 +125,7 @@ class FrostVideoView @JvmOverloads constructor(
             if (isExpanded) showControls()
         }
         setOnCompletionListener {
-            if (videoUri?.toString()?.contains(".gif") == true) restart()
+            if (repeat) restart()
             else viewerContract.onVideoComplete()
         }
         setOnTouchListener(FrameTouchListener(context))
@@ -156,7 +157,7 @@ class FrostVideoView @JvmOverloads constructor(
 
     override fun restart(): Boolean {
         videoUri ?: return false
-        if (videoViewImpl.restart() && isExpanded) {
+        if (videoViewImpl.restart() && isExpanded && !repeat) {
             videoControls?.showLoading(true)
             return true
         }

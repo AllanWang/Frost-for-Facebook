@@ -127,7 +127,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             finish()
             return
         }
-        setContentView(R.layout.activity_web_overlay)
+        setFrameContentView(R.layout.activity_web_overlay)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -231,9 +231,6 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
      * ----------------------------------------------------
      */
     override var videoViewer: FrostVideoViewer? = null
-    override val lowerVideoPadding: PointF = PointF(0f, 0f) 
-    override val videoContainer: FrameLayout
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
+    override val lowerVideoPadding: PointF = PointF(0f, 0f)
 
 }
