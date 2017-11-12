@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.widget.FrameLayout
-import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
 import ca.allanwang.kau.utils.*
@@ -22,7 +21,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
-import com.pitchedapps.frost.contracts.VideoViewerContract
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
@@ -100,7 +99,7 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
-        ActivityWebContract, VideoViewerContract, FileChooserContract by FileChooserDelegate() {
+        ActivityWebContract, VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)

@@ -10,6 +10,7 @@ import org.jetbrains.anko.doAsync
  * Created by Allan Wang on 2017-09-24.
  */
 object FrostAdBlock : AdBlocker("adblock.txt")
+
 object FrostPglAdBlock : AdBlocker("pgl.yoyo.org.txt")
 
 /**
