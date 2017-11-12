@@ -5,5 +5,4 @@
   <string name="debug_disclaimer_info">Dù hầu hết các thông tin cá nhân đều tự động bị xoá khỏi báo cáo, một số thông tin nhạy cảm có thể vẫn xuất hiện. \nHãy xem lại báo cáo lỗi trước khi gửi đi. \n\nBấm một trong các tuỳ chọn dưới đây để soạn email chứa dữ liệu trang web.
     </string>
   <string name="debug_incomplete">Báo cáo không đầy đủ</string>
-  <string name="debug_report_email_title">Frost for Facebook: Báo báo soát lỗi</string>
 </resources>
