@@ -10,7 +10,7 @@
   <string name="purchases_restored">구매 내역 복원됨</string>
   <string name="purchases_restored_with_pro">Frost Pro 가 복원되었습니다. 기능을 즐기세요!</string>
   <string name="purchases_restored_without_pro">Pro 버전이 없으신 것 같습니다. 문제가 지속된다면 개발자에게 영수증과 함께 연락해 주세요.</string>
-  <string name="restoring_purchases">구매 내역 복원 중...</string>
+  <string name="restoring_purchases">구매 내역 복원 중…</string>
   <string name="custom_pro">사용자 지정 [Pro]</string>
   <string name="uh_oh">이런</string>
   <string name="reload">새로 고침</string>
