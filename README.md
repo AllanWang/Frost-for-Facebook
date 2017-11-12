@@ -55,5 +55,4 @@ Special thanks to the following awesome people for translating significant porti
 | Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431)|
 | Vietnamese | [Alienz](https://crowdin.com/profile/alienyd) |
 
-
 The full activity stream for the translations can be found [here](https://crowdin.com/project/frost-for-facebook/activity_stream)
