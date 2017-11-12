@@ -3,11 +3,11 @@
 
     <string name="share_link">Share Link</string>
     <string name="debug_link">Debug Link</string>
-    <string name="debug_link_subject">Frost for Facebook: Link Debug</string>
-    <string name="debug_link_content">Write here. Note that your link may contain private information, but I won\'t be able to see it as the post isn\'t public. The url will still help with debugging though.</string>
+    <string name="debug_link_subject" translatable="false">Frost for Facebook: Link Debug</string>
+    <string name="debug_link_content" translatable="false">Write here. Note that your link may contain private information, but I won\'t be able to see it as the post isn\'t public. The url will still help with debugging though.</string>
     <string name="debug_link_desc">If a link isn\'t loading properly, you can email me so I can help debug it. Clicking okay will open an email request</string>
     <string name="open_link">Open Link</string>
     <string name="copy_link">Copy Link</string>
     <string name="copy_text">Copy Text</string>
-    <string name="debug_image_link_subject">Frost for Facebook: Image Link Debug</string>
+    <string name="debug_image_link_subject" translatable="false">Frost for Facebook: Image Link Debug</string>
 </resources>

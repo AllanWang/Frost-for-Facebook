@@ -3,8 +3,7 @@ package com.pitchedapps.frost.web
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
-import com.pitchedapps.frost.contracts.VideoViewerContract
-import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -25,9 +24,9 @@ import com.pitchedapps.frost.utils.*
  */
 fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
-    if (url.isVideoUrl && context is VideoViewerContract) {
+    if (url.isVideoUrl && context is VideoViewHolder) {
         L.i("Found video", url)
-        (context as VideoViewerContract).showVideo(url)
+        (context as VideoViewHolder).showVideo(url)
         return true
     }
     if (!Prefs.overlayEnabled) return false
