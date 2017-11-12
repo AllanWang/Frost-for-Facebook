@@ -23,15 +23,13 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     header(R.string.theme_customization)
 
     text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
-        onClick = {
-            _, _, item ->
+        onClick = { _, _, item ->
             materialDialogThemed {
                 title(R.string.theme)
                 items(Theme.values()
                         .map { if (it == Theme.CUSTOM && !IS_FROST_PRO) R.string.custom_pro else it.textRes }
                         .map { string(it) })
-                itemsCallbackSingleChoice(item.pref) {
-                    _, _, which, _ ->
+                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
                     if (item.pref != which) {
                         if (which == Theme.CUSTOM.ordinal && !IS_FROST_PRO) {
                             purchasePro()
@@ -121,13 +119,11 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.main_activity_layout, { Prefs.mainActivityLayoutType }, { Prefs.mainActivityLayoutType = it }) {
         textGetter = { string(Prefs.mainActivityLayout.titleRes) }
-        onClick = {
-            _, _, item ->
+        onClick = { _, _, item ->
             materialDialogThemed {
                 title(R.string.set_main_activity_layout)
                 items(MainActivityLayout.values.map { string(it.titleRes) })
-                itemsCallbackSingleChoice(item.pref) {
-                    _, _, which, _ ->
+                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
                     if (item.pref != which) {
                         item.pref = which
                         shouldRestartMain()

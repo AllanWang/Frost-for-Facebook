@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.dbflow
 
-import android.content.Context
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.defaultTabs
 import com.pitchedapps.frost.utils.L
@@ -15,7 +14,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel
  * Created by Allan Wang on 2017-05-30.
  */
 
-@Database( version = FbTabsDb.VERSION)
+@Database(version = FbTabsDb.VERSION)
 object FbTabsDb {
     const val NAME = "FrostTabs"
     const val VERSION = 1
