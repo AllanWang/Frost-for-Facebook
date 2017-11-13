@@ -13,7 +13,7 @@ android:
   licenses:
   - ".+"
 after_success:
-- chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
+- if [ "$TRAVIS_BRANCH" != "l10n_dev" ]; then chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh; fi
 script:
 - cd $TRAVIS_BUILD_DIR/
 - printf "Starting script\n"
