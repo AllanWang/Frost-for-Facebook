@@ -26,32 +26,39 @@ class FbUrlFormatter(url: String) {
      * 4. Url is split into sections
      */
     init {
-        if (url.isBlank()) cleaned = ""
-        else {
-            var cleanedUrl = url
-            discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
-            val changed = cleanedUrl != url
-            converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+        cleaned = clean(url)
+    }
+
+    fun clean(url: String): String {
+        if (url.isBlank()) return ""
+        var cleanedUrl = url
+        discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
+        val changed = cleanedUrl != url
+        converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+        try {
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
-            if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
-                cleanedUrl = cleanedUrl.replaceFirst("&", "?")
-            val qm = cleanedUrl.indexOf("?")
-            if (qm > -1) {
-                cleanedUrl.substring(qm + 1).split("&").forEach {
-                    val p = it.split("=")
-                    queries.put(p[0], p.elementAtOrNull(1) ?: "")
-                }
-                cleanedUrl = cleanedUrl.substring(0, qm)
-            }
-            discardableQueries.forEach { queries.remove(it) }
-            //final cleanup
-            misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
-            if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
-            cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
-            L.v(null, "Formatted url from $url to $cleanedUrl")
-            cleaned = cleanedUrl
+        } catch (e: Exception) {
+            L.e(e, "Failed url formatting")
+            return url
         }
+        if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
+            cleanedUrl = cleanedUrl.replaceFirst("&", "?")
+        val qm = cleanedUrl.indexOf("?")
+        if (qm > -1) {
+            cleanedUrl.substring(qm + 1).split("&").forEach {
+                val p = it.split("=")
+                queries.put(p[0], p.elementAtOrNull(1) ?: "")
+            }
+            cleanedUrl = cleanedUrl.substring(0, qm)
+        }
+        discardableQueries.forEach { queries.remove(it) }
+        //final cleanup
+        misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+        if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
+        if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
+        cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
+        L.v(null, "Formatted url from $url to $cleanedUrl")
+        return cleanedUrl
     }
 
     override fun toString(): String {
