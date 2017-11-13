@@ -3,7 +3,8 @@ package com.pitchedapps.frost.web
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
-import com.pitchedapps.frost.contracts.VideoViewerContract
+
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -28,9 +29,9 @@ import org.jetbrains.anko.runOnUiThread
  */
 fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
-    if (url.isVideoUrl && context is VideoViewerContract) {
+    if (url.isVideoUrl && context is VideoViewHolder) {
         L.i("Found video", url)
-        context.runOnUiThread { (context as VideoViewerContract).showVideo(url) }
+        context.runOnUiThread { (context as VideoViewHolder).showVideo(url) }
         return true
     }
     if (!Prefs.overlayEnabled) return false

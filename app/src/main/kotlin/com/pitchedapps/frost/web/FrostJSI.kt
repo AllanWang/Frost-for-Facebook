@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
-import com.pitchedapps.frost.contracts.VideoViewerContract
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.*
@@ -39,8 +39,10 @@ class FrostJSI(val webView: FrostWebViewCore) {
     @JavascriptInterface
     fun loadVideo(url: String?, isGif: Boolean) {
         if (url != null)
-            webView.post { (context as? VideoViewerContract)?.showVideo(url, isGif)
-                    ?: L.d("Could not load video; contract not implemented") }
+            webView.post {
+                (context as? VideoViewHolder)?.showVideo(url, isGif)
+                        ?: L.d("Could not load video; contract not implemented")
+            }
     }
 
     @JavascriptInterface
