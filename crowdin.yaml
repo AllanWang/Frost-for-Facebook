@@ -4,7 +4,7 @@
 "files": [
   {
     "source" : "/values/strings_*.xml",
-    "translation" : "/values-%two_letters_code%/%original_file_name%",
+    "translation" : "/values-%android_code%/%original_file_name%",
     "ignore" : [
       "/values/strings_no_translate.xml"
     ]
