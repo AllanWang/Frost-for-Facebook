@@ -54,7 +54,8 @@ android {
         disable 'TrustAllX509TrustManager',
                 'UnusedResources',
                 'ContentDescription',
-                'RtlSymmetry'
+                'RtlSymmetry',
+                'MissingTranslation'
 
         xmlReport false
         textReport true
