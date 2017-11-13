@@ -13,7 +13,7 @@ android:
   licenses:
   - ".+"
 after_success:
-- if [ "$TRAVIS_BRANCH" != "l10n_dev" ]; then chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh; fi
+- chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
 script:
 - cd $TRAVIS_BUILD_DIR/
 - printf "Starting script\n"
@@ -34,6 +34,9 @@ notifications:
     - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
       Download>"
 sudo: false
+branches:
+  except:
+  - l10n_dev
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
