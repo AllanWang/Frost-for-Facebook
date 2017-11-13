@@ -76,6 +76,7 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        intent?.extras ?: return finish()
         L.i("Displaying image", imageUrl)
         val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
