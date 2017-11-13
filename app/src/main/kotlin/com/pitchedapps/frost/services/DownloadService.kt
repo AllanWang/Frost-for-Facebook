@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.services
 
+import android.annotation.SuppressLint
 import android.app.IntentService
 import android.app.Notification
 import android.app.PendingIntent
@@ -26,11 +27,14 @@ import java.io.File
 /**
  * Created by Allan Wang on 2017-08-08.
  *
+ * Not in use
+ *
  * Background file downloader
  * All we are given is a link and a mime type
  *
  * With reference to the <a href="https://github.com/square/okhttp/blob/master/samples/guide/src/main/java/okhttp3/recipes/Progress.java">OkHttp3 sample</a>
  */
+@SuppressLint("Registered")
 class DownloadService : IntentService("FrostVideoDownloader") {
 
     companion object {
