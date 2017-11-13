@@ -13,7 +13,7 @@ android:
   licenses:
   - ".+"
 after_success:
-- chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
+- if [ "$TRAVIS_BRANCH" != "l10n_dev" ]; then chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh; fi
 script:
 - cd $TRAVIS_BUILD_DIR/
 - printf "Starting script\n"
@@ -43,9 +43,6 @@ cache:
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.android/build-cache"
   - "$HOME/.m2s"
-branches:
-  except:
-  - l10n_dev
 env:
   global:
   - secure: X3J97ccW+8K0bXPXhX608vPx7Pr/G4ju7quxydqMaYGgClHxoL/WpXOBAyyllde5P28PY4kioaqcI21BEhnAw0QUbmnzVLA1Qd5VS7aMPHpEnInKuOxGZ2d570OZd1f+ozFVt05vzG0VBJlBAkVhz2GWNxQdmIV1sO28MH526JMuYaEREuuywVSZmAeY7AAbW9MeCC2wvHvNmhk2nk6NLRQcsrDHcBsimy9fnnQ9lT/QsvToi1ZJd/MN7YkGDUULR+YmaotBzG546UJ1EiZQX91bFEJfP0oL43Pk7t5snzmHnKjLOr8Mt5QsIUXaiy/uzhUVmuDh1i0GEpZmhqM7nz/T6P7ogaLbbyJeauNmf15nu+e3hSvNiTzKyIwfSSflv8Do3g8/Eo3dKfIi3I8/OKF/uZ76kywh2LRqtZAqxRDiAMDZVwsRgD4aztoWm5AWa3tSoGy1J7i1eoqX6bNqokRbjgheTqcjN13kCdSZi3pZX7UBYm2Vumhn4izhTume19Rh9SqTmRgQ8jM7ynxHh7vVsJPPJG0HbQ623xz+d9mtXGy1fAb0dcUJMXdOhFN3m6AnKuHiF7cmsqje7Euk/TOZyqZmu0xEhTkugMbNKwGrklJiwRr3IoLtPdhLE38u3/auloUqBQ4K/iA9ZdhAreTSHEaI9d3J4N6kqCj3U30=
