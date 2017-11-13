@@ -25,6 +25,8 @@ if (!window.hasOwnProperty('frost_click_a')) {
             e.stopPropagation();
             e.preventDefault();
         }
+      } else {
+        console.log('Click Intercept Prevented');
       }
     }
   }

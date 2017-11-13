@@ -30,9 +30,11 @@ class FbUrlFormatter(url: String) {
         else {
             var cleanedUrl = url
             discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
+            val changed = cleanedUrl != url
             converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            if (cleanedUrl != url && !cleanedUrl.contains("?")) cleanedUrl = cleanedUrl.replaceFirst("&", "?")
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
+            if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
+                cleanedUrl = cleanedUrl.replaceFirst("&", "?")
             val qm = cleanedUrl.indexOf("?")
             if (qm > -1) {
                 cleanedUrl.substring(qm + 1).split("&").forEach {
@@ -76,6 +78,10 @@ class FbUrlFormatter(url: String) {
          * Items here are explicitly removed from the url
          * Taken from FaceSlim
          * https://github.com/indywidualny/FaceSlim/blob/master/app/src/main/java/org/indywidualni/fblite/util/Miscellany.java
+         *
+         * Note: Typically, in this case, the redirect url should have all the necessary queries
+         * I am unsure how Facebook reacts in all cases, so the ones after the redirect are appended on afterwards
+         * That shouldn't break anything
          */
         val discardable = arrayOf(
                 "http://lm.facebook.com/l.php?u=",

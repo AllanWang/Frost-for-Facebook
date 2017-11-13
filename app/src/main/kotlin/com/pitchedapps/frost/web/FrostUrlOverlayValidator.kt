@@ -4,11 +4,11 @@ import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
 import com.pitchedapps.frost.contracts.VideoViewerContract
-import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
+import org.jetbrains.anko.runOnUiThread
 
 /**
  * Created by Allan Wang on 2017-08-15.
@@ -19,6 +19,9 @@ import com.pitchedapps.frost.utils.*
  * This helper method will collect all known cases and launch the overlay accordingly
  * Returns {@code true} (default) if action is consumed, {@code false} otherwise
  *
+ * Note that this is not always called on the main thread!
+ * UI related methods should always be posted or they may not be properly executed.
+ *
  * If the request already comes from an instance of [WebOverlayActivity], we will then judge
  * whether the user agent string should be changed. All propagated results will return false,
  * as we have no need of sending a new intent to the same activity
@@ -27,7 +30,7 @@ fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
     if (url == "#") return false
     if (url.isVideoUrl && context is VideoViewerContract) {
         L.i("Found video", url)
-        (context as VideoViewerContract).showVideo(url)
+        context.runOnUiThread { (context as VideoViewerContract).showVideo(url) }
         return true
     }
     if (!Prefs.overlayEnabled) return false
