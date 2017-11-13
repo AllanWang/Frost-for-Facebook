@@ -1,0 +1,13 @@
+"project_identifier": "frost-for-facebook"
+"api_key": "xxx"
+"base_path": "/app/src/main/res"
+
+"files": [
+  {
+    "source" : "/values/strings_*.xml",
+    "translation" : "/values-%two_letters_code%/%original_file_name%",
+    "ignore" : [
+      "/values/strings_no_translate.xml"
+    ]
+  }
+]
