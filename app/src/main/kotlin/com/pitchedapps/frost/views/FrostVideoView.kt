@@ -8,12 +8,12 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import ca.allanwang.kau.ui.ProgressAnimator
 import ca.allanwang.kau.utils.AnimHolder
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.scaleXY
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.ProgressAnimator
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -83,7 +83,7 @@ class FrostVideoView @JvmOverloads constructor(
                 ProgressAnimator.ofFloat {
                     duration = ANIMATION_DURATION
                     interpolator = AnimHolder.fastOutSlowInInterpolator(context)
-                    withAnimatorInv { viewerContract.onExpand(it) }
+                    withAnimator { viewerContract.onExpand(1f - it) }
                     withAnimator(origScale, scale) { scaleXY = it }
                     withAnimator(origX, tX) { translationX = it }
                     withAnimator(origY, tY) { translationY = it }

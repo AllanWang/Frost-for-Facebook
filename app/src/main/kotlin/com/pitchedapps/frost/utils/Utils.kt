@@ -202,7 +202,7 @@ inline val String?.isFacebookUrl
     get() = this != null && this.contains(FACEBOOK_COM)
 
 inline val String?.isVideoUrl
-    get() = this != null && this.startsWith(VIDEO_REDIRECT)
+    get() = this != null && (this.startsWith(VIDEO_REDIRECT) || this.startsWith("https://video-"))
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
     theme()
