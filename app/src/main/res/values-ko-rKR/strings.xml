@@ -21,7 +21,7 @@
   <string name="notes">노트</string>
   <string name="on_this_day">과거의 오늘</string>
   <!--Login-->
-  <string name="loading_account">모든 것을 준비 중입니다...</string>
+  <string name="loading_account">모든 것을 준비 중입니다…</string>
   <string name="welcome">환영합니다 %s님</string>
   <string name="select_facebook_account">페이스북 계정 선택</string>
   <string name="account_not_found">현재 계정은 데이터베이스에 없습니다.</string>
