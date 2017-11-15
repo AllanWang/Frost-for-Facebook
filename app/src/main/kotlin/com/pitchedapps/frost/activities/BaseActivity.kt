@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.searchview.SearchViewHolder
+import ca.allanwang.kau.utils.finishSlideOut
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.R
@@ -20,21 +21,16 @@ import io.reactivex.schedulers.Schedulers
  * Created by Allan Wang on 2017-06-12.
  */
 abstract class BaseActivity : KauBaseActivity() {
-    override fun onBackPressed() {
+
+    /**
+     * Inherited consumer to customize back press
+     */
+    protected open fun backConsumer(): Boolean = false
+
+    override final fun onBackPressed() {
         if (this is SearchViewHolder && searchViewOnBackPress()) return
         if (this is VideoViewHolder && videoOnBackPress()) return
-        if (this is MainActivity && currentFragment.onBackPressed()) return
-        if (this !is WebOverlayActivityBase && isTaskRoot && Prefs.exitConfirmation) {
-            materialDialogThemed {
-                title(R.string.kau_exit)
-                content(R.string.kau_exit_confirmation)
-                positiveText(R.string.kau_yes)
-                negativeText(R.string.kau_no)
-                onPositive { _, _ -> super.onBackPressed() }
-                checkBoxPromptRes(R.string.kau_do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
-            }
-            return
-        }
+        if (backConsumer()) return
         super.onBackPressed()
     }
 
