@@ -190,9 +190,12 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
 
 /**
  * Tries to send the uri to the proper activity via an intent
- * @returns {@code true} if activity is resolved, {@code false} otherwise
+ * returns [true] if activity is resolved, [false] otherwise
+ * For safety, any uri that [isFacebookUrl] without [isExplicitIntent] will return [false]
  */
 fun Context.resolveActivityForUri(uri: Uri): Boolean {
+    val url = uri.toString()
+    if (url.isFacebookUrl && !url.isExplicitIntent) return false
     val intent = Intent(Intent.ACTION_VIEW, uri)
     if (intent.resolveActivity(packageManager) == null) return false
     startActivity(intent)

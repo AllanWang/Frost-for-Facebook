@@ -146,14 +146,13 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         L.v("Url Loading Path", path)
         val url = request.url.toString()
         if (url.isExplicitIntent) {
-            if (!url.contains("com.facebook"))
-                view.context.resolveActivityForUri(request.url)
+            view.context.resolveActivityForUri(request.url)
             return true
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (url.contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
             return launchImage(url)
-        if (Prefs.linksInDefaultApp && !url.isFacebookUrl && view.context.resolveActivityForUri(request.url)) return true
+        if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
 
