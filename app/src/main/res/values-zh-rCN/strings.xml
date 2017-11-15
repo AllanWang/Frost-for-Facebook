@@ -3,6 +3,7 @@
 <resources>
   <!--Tabs-->
   <!--Login-->
+  <string name="loading_account">准备好一切…</string>
   <!--About-->
   <!--HTML Extractor-->
 </resources>
