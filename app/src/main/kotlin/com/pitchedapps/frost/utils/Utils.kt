@@ -215,7 +215,8 @@ inline val String?.isVideoUrl
  * [true] is url can be displayed in a different webview
  */
 inline val String?.isIndependent
-    get() = this == null || !isFacebookUrl || !contains("photoset_token")
+    get() = this == null || (startsWith("http") && !isFacebookUrl)
+            || !contains("photoset_token")
 
 inline val String?.isExplicitIntent
     get() = this != null && startsWith("intent://")

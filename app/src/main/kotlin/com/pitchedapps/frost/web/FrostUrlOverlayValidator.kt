@@ -28,7 +28,10 @@ import org.jetbrains.anko.runOnUiThread
  * as we have no need of sending a new intent to the same activity
  */
 fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
-    if (url == "#" || !url.isIndependent) return false
+    if (url == "#" || !url.isIndependent) {
+        L.i("Forbid overlay switch", url)
+        return false
+    }
     if (url.isVideoUrl && context is VideoViewHolder) {
         L.i("Found video", url)
         context.runOnUiThread { (context as VideoViewHolder).showVideo(url) }
