@@ -1,12 +1,15 @@
 # Changelog
 
-## v1.6.3
+## v1.6.5
 * Allow for truly full screen videos
 * Support pip video everywhere
-* Support gifs
+* Support gifs (auto loop)
 * Add Italian translations
 * Add Korean translations
 * Add Vietnamese translations
+* Fix bad date param for videos and images
+* Allow for explicit intent launches
+* Updated all dependencies
 
 ## v1.6.2
 * Fix search update from Facebook
