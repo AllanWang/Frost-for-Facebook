@@ -18,7 +18,7 @@ import org.jetbrains.anko.runOnUiThread
  * cannot be resolved on a new window and must instead
  * by loaded in the current page
  * This helper method will collect all known cases and launch the overlay accordingly
- * Returns {@code true} (default) if action is consumed, {@code false} otherwise
+ * Returns [true] (default) if action is consumed, [false] otherwise
  *
  * Note that this is not always called on the main thread!
  * UI related methods should always be posted or they may not be properly executed.
@@ -28,7 +28,10 @@ import org.jetbrains.anko.runOnUiThread
  * as we have no need of sending a new intent to the same activity
  */
 fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
-    if (url == "#") return false
+    if (url == "#" || !url.isIndependent) {
+        L.i("Forbid overlay switch", url)
+        return false
+    }
     if (url.isVideoUrl && context is VideoViewHolder) {
         L.i("Found video", url)
         context.runOnUiThread { (context as VideoViewHolder).showVideo(url) }
