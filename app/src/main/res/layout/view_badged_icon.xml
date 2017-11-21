@@ -2,12 +2,13 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_width="wrap_content"
+    android:padding="3dp"
+    android:layout_height="?attr/actionBarSize">
 
     <android.support.constraint.Guideline
         android:id="@+id/g_v_c"
-        android:layout_width="1dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"
@@ -17,7 +18,7 @@
     <android.support.constraint.Guideline
         android:id="@+id/g_h_c"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5"
         tools:layout_editor_absoluteX="0dp"
