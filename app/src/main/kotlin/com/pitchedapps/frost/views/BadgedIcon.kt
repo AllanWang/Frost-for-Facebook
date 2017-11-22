@@ -31,9 +31,7 @@ class BadgedIcon @JvmOverloads constructor(
         badgeTextView.setTextColor(Prefs.mainActivityLayout.iconColor())
     }
 
-
     var iicon: IIcon? = null
-        get() = field
         set(value) {
             field = value
             badgeImage.setImageDrawable(value?.toDrawable(context, sizeDp = 24, color = Prefs.mainActivityLayout.iconColor()))
