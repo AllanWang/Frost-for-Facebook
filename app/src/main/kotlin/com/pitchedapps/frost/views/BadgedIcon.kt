@@ -35,8 +35,7 @@ class BadgedIcon @JvmOverloads constructor(
     var iicon: IIcon? = null
         set(value) {
             field = value
-            badgeImage.setImageDrawable(if (value == null) null
-            else IconicsDrawable(context, value).color(Prefs.mainActivityLayout.iconColor()))
+            badgeImage.setImageDrawable(value?.toDrawable(context, sizeDp = 20, color = Prefs.mainActivityLayout.iconColor()))
         }
 
     fun setAllAlpha(alpha: Float) {
