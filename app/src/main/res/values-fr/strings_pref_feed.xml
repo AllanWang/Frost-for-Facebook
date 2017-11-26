@@ -5,8 +5,6 @@
   <string name="newsfeed_sort_desc">Définit l’ordre dans lequel les messages sont affichés</string>
   <string name="aggressive_recents">Récents agressifs</string>
   <string name="aggressive_recents_desc">Filtrer les vieilles publications additionnelles du fil de nouvelles les plus récentes de Facebook. Désactivez cette option si votre fil de nouvelles est vide.</string>
-  <string name="autoplay_settings">Paramètres de lecture automatique des vidéos</string>
-  <string name="autoplay_settings_desc">Activer/désactiver la lecture automatique de vidéo sur données mobiles ou à tout temps. \nCes paramètres sont indépendants des paramètres de votre ordinateur de bureau.</string>
   <string name="composer">Compositeur de statut</string>
   <string name="composer_desc">Montrer le compositeur de status dans le fil de nouvelles</string>
   <string name="pro_features">Fonctionnalités Pro</string>
