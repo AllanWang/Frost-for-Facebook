@@ -5,8 +5,6 @@
   <string name="newsfeed_sort_desc">Określa kolejność, w której są wyświetlane posty</string>
   <string name="aggressive_recents">Wymuszone ostatnie</string>
   <string name="aggressive_recents_desc">Odfiltruj dodatkowe stare posty z najnowszych aktualności Facebooka. Wyłączyć tę opcję, jeśli twoje aktualności są puste.</string>
-  <string name="autoplay_settings">Ustawienia auto-odtwarzania filmów</string>
-  <string name="autoplay_settings_desc">Włącz/wyłącz autoodtwarzanie wideo przy korzystaniu z danych komórkowych lub w każdym przypadku.\nTe ustawienia są niezależne od ustawień Facebooka.</string>
   <string name="composer">Aktualizacja statusu</string>
   <string name="composer_desc">Wyświetlaj aktualizację statusu</string>
   <string name="pro_features">Funkcje Pro</string>
