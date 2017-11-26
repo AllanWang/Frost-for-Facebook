@@ -5,8 +5,6 @@
   <string name="newsfeed_sort_desc">Define a ordem em que as postagens são mostradas</string>
   <string name="aggressive_recents">Postagens Recentes Modo Agressivo</string>
   <string name="aggressive_recents_desc">Filtra as postagens mais antigas do Feed das postagens recentes. Desative esta opção se o Feed estiver vazio.</string>
-  <string name="autoplay_settings">Configurações de Auto Reprodução de Vídeos</string>
-  <string name="autoplay_settings_desc">Ativa/desativa a reprodução de vídeos automática no plano de dados ou em todos os modos.\nEssas configurações são independentes das suas configurações para desktop.</string>
   <string name="composer">Compositor de Status</string>
   <string name="composer_desc">Mostrar o compositor de status no Feed</string>
   <string name="pro_features">Recursos Pro</string>
