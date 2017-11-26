@@ -42,12 +42,14 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     val refreshObservable: Subject<Boolean> = webCore.refreshObservable
     val isMain = webCore.baseEnum != null
+    var commitVisible = false
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
         L.d("FWV Loading", url)
         refreshObservable.onNext(true)
+        commitVisible = false
     }
 
     fun launchLogin(c: Context) {
@@ -70,6 +72,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
+        commitVisible = true
         injectBackgroundColor()
         if (url.isFacebookUrl)
             view.jsInject(
@@ -97,6 +100,10 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     open internal fun onPageFinishedActions(url: String) {
         if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom)
             webCore.pageDown(true)
+        if (!commitVisible) {
+            commitVisible = true
+            onPageCommitVisible(webCore, url)
+        }
         injectAndFinish()
     }
 
