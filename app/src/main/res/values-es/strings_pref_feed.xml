@@ -5,9 +5,7 @@
   <string name="newsfeed_sort_desc">Define el orden en que aparecen las publicaciones</string>
   <string name="aggressive_recents">Modo \"Más Recientes\" agresivo</string>
   <string name="aggressive_recents_desc">Filtra de manera adicional las publicaciones más antiguas de Facebook de las noticias recientes. Deshabilita esta opción si el feed se encuentra vacio.</string>
-  <string name="autoplay_settings">Configuración de reproducción automática de vídeos</string>
-  <string name="autoplay_settings_desc">Activa o desactiva la reproducción automática de vídeos mientras usas datos móviles.\nEstos ajustes son independientes de tus ajustes para escritorio.</string>
-  <string name="composer">Escritor de Estado</string>
+    <string name="composer">Escritor de Estado</string>
   <string name="composer_desc">Mostrar escritor de estado en el feed</string>
   <string name="pro_features">Características Pro</string>
   <string name="suggested_friends">Sugerencias de Amigos</string>
