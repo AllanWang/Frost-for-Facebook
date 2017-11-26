@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
+import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
@@ -31,12 +32,10 @@ class BadgedIcon @JvmOverloads constructor(
         badgeTextView.setTextColor(Prefs.mainActivityLayout.iconColor())
     }
 
-
     var iicon: IIcon? = null
-        get() = field
         set(value) {
             field = value
-            badgeImage.setImageDrawable(value?.toDrawable(context, color = Prefs.mainActivityLayout.iconColor()))
+            badgeImage.setImageDrawable(value?.toDrawable(context, sizeDp = 20, color = Prefs.mainActivityLayout.iconColor()))
         }
 
     fun setAllAlpha(alpha: Float) {

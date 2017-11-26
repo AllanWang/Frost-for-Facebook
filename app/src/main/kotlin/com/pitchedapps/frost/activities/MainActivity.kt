@@ -210,9 +210,7 @@ class MainActivity : BaseActivity(),
                 }
         adapter.pages.forEach {
             tabs.addTab(tabs.newTab()
-                    .setCustomView(BadgedIcon(this).apply {
-                        iicon = it.icon
-                    }))
+                    .setCustomView(BadgedIcon(this).apply { iicon = it.icon }))
         }
     }
 
