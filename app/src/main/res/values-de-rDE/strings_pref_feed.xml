@@ -5,8 +5,6 @@
   <string name="newsfeed_sort_desc">Bestimmt die Reihenfolge in welcher die Posts angezeigt werden</string>
   <string name="aggressive_recents">Aggressive Neuigkeiten</string>
   <string name="aggressive_recents_desc">Filtert alte, zusätzliche Post von Facebook\'s originalen Neuigkeiten heraus. Deaktivieren falls der Feed leer ist.</string>
-  <string name="autoplay_settings">Video Autoplay Einstellungen</string>
-  <string name="autoplay_settings_desc">De-/Aktiviere Video Autoplay wenn im Mobilen Netz oder für immer.\nDiese Einstellung ist unabhängig von der Einstellung von Facebook.</string>
   <string name="composer">Status Composer</string>
   <string name="composer_desc">Zeige den Status Composer im Feed</string>
   <string name="pro_features">Pro Funktionen</string>
