@@ -9,3 +9,4 @@
 .externalNativeBuild
 *.min.css
 .sass-cache/
+/projectFilesBackup
