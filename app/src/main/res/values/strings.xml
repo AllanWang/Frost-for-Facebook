@@ -61,5 +61,8 @@
     <string name="bottom_bar">Bottom Bar</string>
 
     <string name="pip" translatable="false">PIP</string>
+    <string name="preview">Preview</string>
+    <string name="options">Options</string>
+    <string name="tab_customizer_instructions">Drag and drop icons above to rearrange them.\nDouble tap an icon above to remove it.\nTap an icon below to add it to the toolbar if there is space.</string>
 
 </resources>

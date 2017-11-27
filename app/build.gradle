@@ -164,6 +164,8 @@ dependencies {
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
+    implementation"com.mikepenz:fastadapter-extensions:${FAST_ADAPTER_EXTENSIONS}@aar"
+
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
     //noinspection GradleDependency

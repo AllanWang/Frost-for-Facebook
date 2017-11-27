@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/badge_image"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/badge_icon_size"
+        android:layout_height="@dimen/badge_icon_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
