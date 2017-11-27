@@ -1,9 +1,12 @@
 package com.pitchedapps.frost.iitems
 
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.iitems.KauIItem
+import ca.allanwang.kau.kotlin.lazyContext
 import ca.allanwang.kau.utils.*
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
@@ -19,6 +22,7 @@ class TabIItem(val item: FbItem, var isPreview: Boolean) : KauIItem<TabIItem, Ta
         R.layout.iitem_tab_preview,
         { ViewHolder(it) }
 ), IDraggable<TabIItem, IItem<*, *>> {
+
     override fun withIsDraggable(draggable: Boolean): TabIItem {
         this.isPreview = draggable
         return this

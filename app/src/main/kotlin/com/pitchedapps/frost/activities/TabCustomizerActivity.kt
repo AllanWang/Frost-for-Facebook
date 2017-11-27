@@ -5,12 +5,14 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import ca.allanwang.kau.adapters.fastAdapter
 import ca.allanwang.kau.animators.FadeScaleAnimatorAdd
 import ca.allanwang.kau.animators.FadeScaleAnimatorRemove
 import ca.allanwang.kau.animators.KauAnimator
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.kotlin.lazyContext
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -32,6 +34,7 @@ class TabCustomizerActivity : BaseActivity(), ItemTouchCallback {
         private const val maxPerRow = 4
         private const val scaleFactor = 0.7f
         private const val animDuration = 300L
+        private val wobble = lazyContext { AnimationUtils.loadAnimation(it, R.anim.rotate_delta) }
     }
 
     val previewRv: RecyclerView by bindView(R.id.tab_preview)
@@ -70,8 +73,9 @@ class TabCustomizerActivity : BaseActivity(), ItemTouchCallback {
 
         optionsAdapter.add(remaining.map { TabIItem(it, false) })
 
-        previewAdapter.withOnClickListener { _, _, item, position -> onPreviewClick(item, position);true }
-        optionsAdapter.withOnClickListener { _, _, item, position -> onOptionClick(item, position); true }
+        previewAdapter.withOnClickListener { view, _, item, position -> onPreviewClick(view, item, position);true }
+        optionsAdapter.withOnClickListener { view, _, item, position -> onOptionClick(view, item, position); true }
+        optionsAdapter.withOnLongClickListener { view, _, item, position -> onOptionClick(view, item, position); true }
     }
 
     private val animator
@@ -81,6 +85,8 @@ class TabCustomizerActivity : BaseActivity(), ItemTouchCallback {
             changeDuration = animDuration
             removeDuration = animDuration
         }
+
+    private fun View.wobble() = startAnimation(wobble(context))
 
     override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
         Collections.swap(previewAdapter.adapterItems, oldPosition, newPosition)
@@ -92,7 +98,7 @@ class TabCustomizerActivity : BaseActivity(), ItemTouchCallback {
 
     }
 
-    private fun onOptionClick(item: TabIItem, position: Int) {
+    private fun onOptionClick(view: View, item: TabIItem, position: Int) {
         if (previewAdapter.itemCount < maxPerRow) {
             optionsAdapter.remove(position)
             previewAdapter.add(item.asPreview())
@@ -102,13 +108,17 @@ class TabCustomizerActivity : BaseActivity(), ItemTouchCallback {
     private var previewClick: Int = -1
     private var previewClickTime: Long = -1L
 
-    private fun onPreviewClick(item: TabIItem, position: Int) {
+    private fun onPreviewClick(view: View, item: TabIItem, position: Int) {
         if (previewClick != position) {
             previewClick = position
         } else if (System.currentTimeMillis() - previewClickTime < 200) {
-            previewAdapter.remove(position)
-            optionsAdapter.add(item.asOption())
-            previewClick = -1
+            if (previewAdapter.itemCount > 1) {
+                previewAdapter.remove(position)
+                optionsAdapter.add(item.asOption())
+                previewClick = -1
+            } else {
+                view.wobble()
+            }
         }
         previewClickTime = System.currentTimeMillis()
     }
