@@ -210,9 +210,7 @@ class MainActivity : BaseActivity(),
                 }
         adapter.pages.forEach {
             tabs.addTab(tabs.newTab()
-                    .setCustomView(BadgedIcon(this).apply {
-                        iicon = it.icon
-                    }))
+                    .setCustomView(BadgedIcon(this).apply { iicon = it.icon }))
         }
     }
 
@@ -432,6 +430,22 @@ class MainActivity : BaseActivity(),
     override fun onDestroy() {
         onDestroyBilling()
         super.onDestroy()
+    }
+
+    override fun backConsumer(): Boolean {
+        if (currentFragment.onBackPressed()) return true
+        if (Prefs.exitConfirmation) {
+            materialDialogThemed {
+                title(R.string.kau_exit)
+                content(R.string.kau_exit_confirmation)
+                positiveText(R.string.kau_yes)
+                negativeText(R.string.kau_no)
+                onPositive { _, _ -> finish() }
+                checkBoxPromptRes(R.string.kau_do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
+            }
+            return true
+        }
+        return false
     }
 
     inline val currentFragment

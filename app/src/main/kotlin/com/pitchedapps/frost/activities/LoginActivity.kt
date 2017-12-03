@@ -121,10 +121,12 @@ class LoginActivity : BaseActivity() {
         cookie.fetchUsername { usernameObservable.onSuccess(it) }
     }
 
-    override fun onBackPressed() {
-        if (web.canGoBack())
+    override fun backConsumer(): Boolean {
+        if (web.canGoBack()) {
             web.goBack()
-        else
-            super.onBackPressed()
+            return true
+        }
+        return false
     }
+
 }

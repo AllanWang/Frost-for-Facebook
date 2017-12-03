@@ -48,7 +48,6 @@ if (!window.hasOwnProperty('frost_context_a')) {
         return;
       }
 
-      if (url.includes('photoset_token')) return;
       console.log('Context Content', url, text);
       if (typeof Frost !== 'undefined') Frost.contextMenu(url, text);
 

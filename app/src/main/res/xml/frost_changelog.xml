@@ -6,18 +6,21 @@
     <item text="" />
     -->
 
-    <version title="v1.6.4" />
+    <version title="v1.6.7" />
     <item text="Fix icons in tablets" />
     <item text="Add Portuguese translations" />
     <item text="Remove generic translations" />
 
-	<version title="v1.6.3" />
+	<version title="v1.6.5" />
     <item text="Allow for truly full screen videos" />
     <item text="Support pip video everywhere" />
-    <item text="Support gifs" />
+    <item text="Support gifs (auto loop)" />
     <item text="Add Italian translations" />
     <item text="Add Korean translations" />
     <item text="Add Vietnamese translations" />
+	<item text="Fix bad date param for videos and images" />
+	<item text="Allow for explicit intent launches" />
+	<item text="Updated all dependencies" />
 
     <version title="v1.6.2" />
     <item text="Fix search update from Facebook" />

@@ -172,6 +172,12 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         }
     }
 
+    override fun backConsumer(): Boolean {
+        if (!frostWeb.onBackPressed())
+            finishSlideOut()
+        return true
+    }
+
     /**
      * Our theme for the overlay should be fully opaque
      */
@@ -188,12 +194,6 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
     override fun onDestroy() {
         super.onDestroy()
         kauSwipeOnDestroy()
-    }
-
-    override fun onBackPressed() {
-        if (!frostWeb.onBackPressed()) {
-            finishSlideOut()
-        }
     }
 
     override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {

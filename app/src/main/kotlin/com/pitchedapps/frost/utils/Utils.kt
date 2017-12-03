@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -163,6 +164,7 @@ fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = 
 fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
         = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
 
+@SuppressLint("RestrictedApi")
 private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
     builder()
     //hacky workaround, but it has proper checks and shouldn't crash
@@ -188,21 +190,39 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
 
 /**
  * Tries to send the uri to the proper activity via an intent
- * @returns {@code true} if activity is resolved, {@code false} otherwise
+ * returns [true] if activity is resolved, [false] otherwise
+ * For safety, any uri that [isFacebookUrl] without [isExplicitIntent] will return [false]
  */
 fun Context.resolveActivityForUri(uri: Uri): Boolean {
-    if (uri.toString().isFacebookUrl && !uri.toString().contains("intent:")) return false //ignore response as we will be triggering ourself
+    val url = uri.toString()
+    if (url.isFacebookUrl && !url.isExplicitIntent) return false
     val intent = Intent(Intent.ACTION_VIEW, uri)
     if (intent.resolveActivity(packageManager) == null) return false
     startActivity(intent)
     return true
 }
 
+/**
+ * [true] if url contains [FACEBOOK_COM]
+ */
 inline val String?.isFacebookUrl
-    get() = this != null && this.contains(FACEBOOK_COM)
+    get() = this != null && contains(FACEBOOK_COM)
 
+/**
+ * [true] is url is a video and can be accepted by VideoViewer
+ */
 inline val String?.isVideoUrl
-    get() = this != null && (this.startsWith(VIDEO_REDIRECT) || this.startsWith("https://video-"))
+    get() = this != null && (startsWith(VIDEO_REDIRECT) || startsWith("https://video-"))
+
+/**
+ * [true] is url can be displayed in a different webview
+ */
+inline val String?.isIndependent
+    get() = this == null || (startsWith("http") && !isFacebookUrl)
+            || !contains("photoset_token")
+
+inline val String?.isExplicitIntent
+    get() = this != null && startsWith("intent://")
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
     theme()
