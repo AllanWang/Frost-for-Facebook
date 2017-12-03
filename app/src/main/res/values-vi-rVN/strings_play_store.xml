@@ -13,6 +13,6 @@
   <string name="purchases_restored_without_pro">Có vẻ như bạn không có bản pro. Nếu lỗi tiếp tục lặp lại, hãy liên hệ với tôi và gửi kèm hoá đơn mua hàng.</string>
   <string name="restoring_purchases">Đang khôi phục mua hàng…</string>
   <string name="custom_pro">Tự chọn [Pro]</string>
-  <string name="uh_oh">Ồ...</string>
+  <string name="uh_oh">Ồ…</string>
   <string name="reload">Tải lại</string>
 </resources>
