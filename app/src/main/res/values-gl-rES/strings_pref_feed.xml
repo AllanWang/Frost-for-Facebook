@@ -5,8 +5,6 @@
   <string name="newsfeed_sort_desc">Define a orde en que aparecen as publicacións</string>
   <string name="aggressive_recents">Publicacións máis recentes</string>
   <string name="aggressive_recents_desc">Filtra as publicacións máis antigas do Facebook daquelas máis recentes. Desactiva esta opción se a canle se atopa baleira.</string>
-  <string name="autoplay_settings">Axustes da reprodución automática</string>
-  <string name="autoplay_settings_desc">Activa/desactiva a reprodución automática de vídeos baixo datos móbiles ou todo o tempo.\nEstes axustes son independentes dos definidos para a versión escritorio.</string>
   <string name="composer">Editor de estado</string>
   <string name="composer_desc">Mostra o editor de estado na canle</string>
   <string name="pro_features">Funcionalidades Pro</string>
