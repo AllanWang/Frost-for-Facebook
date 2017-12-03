@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.7
+* Fix icons in tablets
+* Add Portuguese translations
+* Add Galician translations
+* Remove generic translations
+
 ## v1.6.5
 * Allow for truly full screen videos
 * Support pip video everywhere

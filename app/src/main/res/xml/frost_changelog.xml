@@ -5,7 +5,13 @@
     <version title="v" />
     <item text="" />
     -->
-	
+
+    <version title="v1.6.7" />
+    <item text="Fix icons in tablets" />
+    <item text="Add Portuguese translations" />
+    <item text="Add Galician translations" />
+    <item text="Remove generic translations" />
+
 	<version title="v1.6.5" />
     <item text="Allow for truly full screen videos" />
     <item text="Support pip video everywhere" />
@@ -16,9 +22,6 @@
 	<item text="Fix bad date param for videos and images" />
 	<item text="Allow for explicit intent launches" />
 	<item text="Updated all dependencies" />
-	<item text="" />
-	<item text="" />
-	<item text="" />
 
     <version title="v1.6.2" />
     <item text="Fix search update from Facebook" />
