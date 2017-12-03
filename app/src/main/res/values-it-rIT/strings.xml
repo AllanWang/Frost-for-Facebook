@@ -42,5 +42,6 @@
   <string name="html_extraction_cancelled">La richiesta è stata cancellata.</string>
   <string name="html_extraction_timeout">La richiesta è scaduta.</string>
   <string name="file_chooser_not_found">Gestore file non trovato</string>
+  <string name="top_bar">Barra Superiore</string>
   <string name="bottom_bar">Barra Inferiore</string>
 </resources>
