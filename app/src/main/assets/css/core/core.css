@@ -70,24 +70,17 @@ a, ._5fpq { color: #d59ed5 !important; }
 
 @-webkit-keyframes highlightFade { 0%, 50% { background: rgba(199, 70, 70, 0.35); }
   100% { background: rgba(255, 0, 255, 0.02); } }
-
 @-moz-keyframes highlightFade { 0%, 50% { background: rgba(199, 70, 70, 0.35); }
   100% { background: rgba(255, 0, 255, 0.02); } }
-
 @-ms-keyframes highlightFade { 0%, 50% { background: rgba(199, 70, 70, 0.35); }
   100% { background: rgba(255, 0, 255, 0.02); } }
-
 @keyframes highlightFade { 0%, 50% { background: rgba(199, 70, 70, 0.35); }
   100% { background: rgba(255, 0, 255, 0.02); } }
-
 @-webkit-keyframes chatHighlightAnimation { 0%, 100% { background: rgba(255, 0, 255, 0.02); }
   50% { background: rgba(199, 70, 70, 0.35); } }
-
 @-moz-keyframes chatHighlightAnimation { 0%, 100% { background: rgba(255, 0, 255, 0.02); }
   50% { background: rgba(199, 70, 70, 0.35); } }
-
 @-ms-keyframes chatHighlightAnimation { 0%, 100% { background: rgba(255, 0, 255, 0.02); }
   50% { background: rgba(199, 70, 70, 0.35); } }
-
 @keyframes chatHighlightAnimation { 0%, 100% { background: rgba(255, 0, 255, 0.02); }
   50% { background: rgba(199, 70, 70, 0.35); } }
