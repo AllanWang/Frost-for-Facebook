@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.utils.L
 import java.io.FileNotFoundException
 import java.util.*
@@ -11,22 +12,30 @@ import java.util.*
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, SEARCH, TEXTAREA_LISTENER, NOTIF_MSG
+    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG
     ;
 
-    var file = "${name.toLowerCase(Locale.CANADA)}.min.js"
-    var injector: JsInjector? = null
+    var file = "${name.toLowerCase(Locale.CANADA)}.js"
+    var injector = lazyContext {
+        try {
+            val content = it.assets.open("js/$file").bufferedReader().use { it.readText() }
+            JsBuilder().js(singleInjector(content)).build()
+        } catch (e: FileNotFoundException) {
+            L.e(e, "JsAssets file not found")
+            JsInjector(JsActions.EMPTY.function)
+        }
+    }
 
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
-        if (injector == null) {
-            try {
-                val content = webView.context.assets.open("js/$file").bufferedReader().use { it.readText() }
-                injector = JsBuilder().js(content).build()
-            } catch (e: FileNotFoundException) {
-                L.e(e, "JsAssets file not found")
-                injector = JsInjector(JsActions.EMPTY.function)
-            }
-        }
-        injector!!.inject(webView, callback)
+        injector(webView.context).inject(webView, callback)
     }
+
+    private fun singleInjector(content: String) = StringBuilder().apply {
+        val name = "_frost_$name"
+        append("if (!window.hasOwnProperty(\"$name\")) {")
+        append("console.log(\"Registering $name\");")
+        append("window.$name = true;")
+        append(content)
+        append("}")
+    }.toString()
 }

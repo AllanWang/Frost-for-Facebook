@@ -49,9 +49,11 @@ Special thanks to the following awesome people for translating significant porti
 | Language | Contributors |
 |----------|--------------|
 | French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
+| Galician | [Xesús M. Mosquera](https://twitter.com/xesusmmc?lang=en) |
 | German | [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) &bull; [Marcel Soehnchen](https://crowdin.com/profile/msoehnchen) &bull; [3LD0mi HA](https://forum.xda-developers.com/member.php?u=5860523) |
 | Italian | [Bonnee](https://github.com/Bonnee) |
 | Korean | [잇스테이크](https://crowdin.com/profile/bexco2010) |
+| Portuguese | [TheusKhan](https://crowdin.com/profile/TheusKhan) |
 | Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431)|
 | Vietnamese | [Alienz](https://crowdin.com/profile/alienyd) |
 

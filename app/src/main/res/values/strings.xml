@@ -1,6 +1,4 @@
 <resources>
-    <!--Tabs-->
-
     <string name="feed">Feed</string>
     <string name="most_recent">Most Recent</string>
     <string name="top_stories">Top Stories</string>
@@ -22,8 +20,6 @@
     <string name="notes">Notes</string>
     <string name="on_this_day">On This Day</string>
 
-    <!--Login-->
-
     <string name="loading_account">Getting everything ready…</string>
     <string name="welcome">Welcome %s</string>
     <string name="select_facebook_account">Select Facebook Account</string>
@@ -43,14 +39,11 @@
 
     <string name="show_all_results">Show All Results</string>
 
-    <!--About-->
 
     <string name="frost_description">Frost is a fully themable,
         fully functional alternative to the official Facebook app, made from scratch and proudly open sourced.</string>
 
     <string name="faq_title">Frost FAQ</string>
-
-    <!--HTML Extractor-->
 
     <string name="html_extraction_error">An error occurred in the html extraction.</string>
     <string name="html_extraction_cancelled">The request has been cancelled.</string>
