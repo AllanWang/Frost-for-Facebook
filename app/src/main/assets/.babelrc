@@ -2,7 +2,7 @@
   "presets": [
     ["env",{
       "targets": {
-        "browsers": ["android >= 36.0.0.0"]
+        "browsers": ["android >= 36", "chrome >= 51"]
       }
     }]
   ]
