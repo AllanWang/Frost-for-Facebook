@@ -12,6 +12,8 @@ android:
   - extra-google-m2repository
   licenses:
   - ".+"
+before_install:
+- yes | sdkmanager "platforms;android-27"
 after_success:
 - chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
 script:
