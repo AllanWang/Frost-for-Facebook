@@ -170,7 +170,6 @@ strong > a, ._15ks ._2q8z._2q8z, ._1e3e {
   color: $text !important;
 }
 
-
 //these are links
 a,
 ._5fpq {
@@ -196,9 +195,8 @@ a,
   }
 }
 
-
 @include keyframes(chatHighlightAnimation) {
-  0%,100% {
+  0%, 100% {
     background: $bg_transparent;
   }
 
