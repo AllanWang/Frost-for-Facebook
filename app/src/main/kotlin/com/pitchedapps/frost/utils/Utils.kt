@@ -94,8 +94,9 @@ fun Context.launchImageActivity(imageUrl: String, text: String?) {
 
 fun Activity.launchTabCustomizerActivity() {
     startActivityForResult(TabCustomizerActivity::class.java,
-            SettingsActivity.ACTIVITY_REQUEST_TABS,
-            bundle = fadeBundle())
+            SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
+        with(fadeBundle())
+    })
 }
 
 fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)

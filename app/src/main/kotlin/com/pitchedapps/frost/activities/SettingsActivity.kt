@@ -58,14 +58,22 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
      */
     private fun fetchRingtone(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode and REQUEST_RINGTONE != REQUEST_RINGTONE || resultCode != Activity.RESULT_OK) return false
-        val uri: String = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)?.toString() ?: ""
+        val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+        val uriString: String = uri?.toString() ?: ""
+        if (uri != null) {
+            try {
+                grantUriPermission("com.android.systemui", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } catch (e: Exception) {
+                L.e(e, "grantUriPermission")
+            }
+        }
         when (requestCode) {
             REQUEST_NOTIFICATION_RINGTONE -> {
-                Prefs.notificationRingtone = uri
+                Prefs.notificationRingtone = uriString
                 reloadByTitle(R.string.notification_ringtone)
             }
             REQUEST_MESSAGE_RINGTONE -> {
-                Prefs.messageRingtone = uri
+                Prefs.messageRingtone = uriString
                 reloadByTitle(R.string.message_ringtone)
             }
         }
@@ -112,24 +120,28 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
             descRes = R.string.get_pro_desc
             iicon = GoogleMaterial.Icon.gmd_star
             visible = { !IS_FROST_PRO }
-            onClick = { _, _, _ -> restorePurchases(); true }
+            onClick = { restorePurchases() }
         }
 
         plainText(R.string.about_frost) {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
-            onClick = { _, _, _ -> startActivityForResult(AboutActivity::class.java, 9, true); true }
+            onClick = {
+                startActivityForResult(AboutActivity::class.java, 9, bundleBuilder = {
+                    withSceneTransitionAnimation(this@SettingsActivity)
+                })
+            }
         }
 
         plainText(R.string.help_translate) {
             descRes = R.string.help_translate_desc
             iicon = GoogleMaterial.Icon.gmd_translate
-            onClick = { _, _, _ -> startLink(R.string.translation_url); true }
+            onClick = { startLink(R.string.translation_url) }
         }
 
         plainText(R.string.replay_intro) {
             iicon = GoogleMaterial.Icon.gmd_replay
-            onClick = { _, _, _ -> launchIntroActivity(cookies()); true }
+            onClick = { launchIntroActivity(cookies()) }
         }
 
         subItems(R.string.debug_frost, getDebugPrefs()) {
@@ -144,7 +156,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
     }
 
     fun KPrefItemBase.BaseContract<*>.dependsOnPro() {
-        onDisabledClick = { _, _, _ -> purchasePro(); true }
+        onDisabledClick = { purchasePro() }
         enabler = { IS_FROST_PRO }
     }
 

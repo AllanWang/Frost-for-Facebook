@@ -36,7 +36,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     Debugger.values().forEach {
         plainText(it.data.titleId) {
             iicon = it.data.icon
-            onClick = { itemView, _, _ -> it.debug(itemView.context); true }
+            onClick = {  it.debug(itemView.context) }
         }
     }
 
