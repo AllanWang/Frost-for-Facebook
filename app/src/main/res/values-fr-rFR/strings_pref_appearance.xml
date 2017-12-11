@@ -10,7 +10,6 @@
   <string name="icon_color">Couleur d\'icône</string>
   <string name="global_customization">Personnalisation globale</string>
   <string name="main_activity_layout">Disposition de l\'activité principale</string>
-  <string name="set_main_activity_layout">Régler la disposition de l\'activité principale</string>
   <string name="rounded_icons">Icônes rondes</string>
   <string name="rounded_icons_desc">Les photos de profil et les icônes de conversation de groupe seront arrondis</string>
   <string name="tint_nav">Teinter la barre de navigation</string>
