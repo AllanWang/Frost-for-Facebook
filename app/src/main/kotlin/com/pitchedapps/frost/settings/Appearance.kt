@@ -4,12 +4,10 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefColorPicker
 import ca.allanwang.kau.kpref.activity.items.KPrefSeekbar
 import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.activities.TabCustomizerActivity
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.CssAssets
@@ -140,10 +138,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     plainText(R.string.main_tabs) {
         descRes = R.string.main_tabs_desc
-        onClick = { _, _, _ ->
-            startActivityForResult(TabCustomizerActivity::class.java, SettingsActivity.ACTIVITY_REQUEST_TABS)
-            true
-        }
+        onClick = { _, _, _ -> launchTabCustomizerActivity(); true }
     }
 
     checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, {

@@ -10,6 +10,7 @@ import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
@@ -80,11 +81,21 @@ fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBas
         })
 }
 
+private fun Context.fadeBundle() = ActivityOptionsCompat.makeCustomAnimation(this,
+        android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
+
 fun Context.launchImageActivity(imageUrl: String, text: String?) {
     startActivity(ImageActivity::class.java, intentBuilder = {
+        putExtras(fadeBundle())
         putExtra(ARG_IMAGE_URL, imageUrl)
         putExtra(ARG_TEXT, text)
     })
+}
+
+fun Activity.launchTabCustomizerActivity() {
+    startActivityForResult(TabCustomizerActivity::class.java,
+            SettingsActivity.ACTIVITY_REQUEST_TABS,
+            bundle = fadeBundle())
 }
 
 fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)

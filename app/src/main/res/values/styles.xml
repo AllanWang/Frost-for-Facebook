@@ -5,7 +5,6 @@
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
-        <item name="android:windowAnimationStyle">@style/KauFadeIn</item>
     </style>
 
     <style name="FrostTheme" parent="@style/FrostThemeBase">
@@ -18,7 +17,6 @@
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/black</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
-        <item name="android:windowAnimationStyle">@style/KauFadeIn</item>
     </style>
 
     <style name="FrostTheme.Transparent">
