@@ -54,5 +54,8 @@
     <string name="bottom_bar">Bottom Bar</string>
 
     <string name="pip" translatable="false">PIP</string>
+    <string name="preview">Preview</string>
+    <string name="options">Options</string>
+    <string name="tab_customizer_instructions">Long press and drag to rearrange the top icons.</string>
 
 </resources>

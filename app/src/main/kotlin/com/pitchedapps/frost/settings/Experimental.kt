@@ -39,10 +39,9 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     plainText(R.string.restart_frost) {
         descRes = R.string.restart_frost_desc
-        onClick = { _, _, _ ->
+        onClick = {
             setFrostResult(MainActivity.REQUEST_RESTART_APPLICATION)
             finish()
-            true
         }
     }
 }

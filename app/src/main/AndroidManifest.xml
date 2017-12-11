@@ -131,6 +131,9 @@
             android:name=".activities.SelectorActivity"
             android:theme="@style/FrostTheme" />
         <activity
+            android:name=".activities.TabCustomizerActivity"
+            android:theme="@style/FrostTheme" />
+        <activity
             android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
         <activity
