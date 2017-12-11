@@ -19,7 +19,7 @@ enum class JsAssets : InjectorContract {
     var injector = lazyContext {
         try {
             val content = it.assets.open("js/$file").bufferedReader().use { it.readText() }
-            JsBuilder().js(singleInjector(content)).build()
+            JsBuilder().js(content).single(name).build()
         } catch (e: FileNotFoundException) {
             L.e(e, "JsAssets file not found")
             JsInjector(JsActions.EMPTY.function)
@@ -30,12 +30,4 @@ enum class JsAssets : InjectorContract {
         injector(webView.context).inject(webView, callback)
     }
 
-    private fun singleInjector(content: String) = StringBuilder().apply {
-        val name = "_frost_$name"
-        append("if (!window.hasOwnProperty(\"$name\")) {")
-        append("console.log(\"Registering $name\");")
-        append("window.$name = true;")
-        append(content)
-        append("}")
-    }.toString()
 }
