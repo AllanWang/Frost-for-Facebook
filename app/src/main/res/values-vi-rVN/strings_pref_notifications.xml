@@ -21,7 +21,6 @@
   <string name="notification_sound">Âm báo</string>
   <string name="notification_ringtone">Chuông báo</string>
   <string name="message_ringtone">Nhạc chuông tin nhắn</string>
-  <string name="select_ringtone">Chọn nhạc chuông</string>
   <string name="notification_vibrate">Rung báo</string>
   <string name="notification_lights">Đèn báo</string>
 </resources>
