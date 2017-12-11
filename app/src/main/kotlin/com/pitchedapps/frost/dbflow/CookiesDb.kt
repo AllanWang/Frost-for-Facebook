@@ -52,10 +52,10 @@ fun loadFbCookiesAsync(callback: (cookies: List<CookieModel>) -> Unit) {
 fun loadFbCookiesSync(): List<CookieModel> = (select from CookieModel::class).orderBy(CookieModel_Table.name, true).queryList()
 
 
-fun saveFbCookie(cookie: CookieModel, callback: (() -> Unit)? = null) {
+inline fun saveFbCookie(cookie: CookieModel, crossinline callback: (() -> Unit) = {}) {
     cookie.async save {
         L.d("Fb cookie saved", cookie.toString())
-        callback?.invoke()
+        callback()
     }
 }
 
@@ -65,7 +65,7 @@ fun removeCookie(id: Long) {
     }
 }
 
-fun CookieModel.fetchUsername(callback: (String) -> Unit) {
+inline fun CookieModel.fetchUsername(crossinline callback: (String) -> Unit) {
     ReactiveNetwork.checkInternetConnectivity().subscribeOn(Schedulers.io()).subscribe { yes, _ ->
         if (!yes) return@subscribe callback("")
         var result = ""

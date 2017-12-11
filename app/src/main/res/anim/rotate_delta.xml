@@ -4,6 +4,6 @@
     android:fromDegrees="-5"
     android:pivotX="50%"
     android:pivotY="50%"
-    android:repeatCount="7"
+    android:repeatCount="3"
     android:repeatMode="reverse"
     android:toDegrees="5" />

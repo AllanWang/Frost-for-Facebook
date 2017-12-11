@@ -21,7 +21,10 @@ enum class CssHider(vararg val items: String) : InjectorContract {
     NON_RECENT("article:not([data-store*=actor_name])")
     ;
 
-    val injector: JsInjector by lazy { JsBuilder().css("${items.joinToString(separator = ",")}{display:none!important}").build() }
+    val injector: JsInjector by lazy {
+        JsBuilder().css("${items.joinToString(separator = ",")}{display:none !important}")
+                .single(name).build()
+    }
 
     override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
         injector.inject(webView, callback)

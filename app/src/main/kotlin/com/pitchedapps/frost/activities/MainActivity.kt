@@ -49,6 +49,7 @@ import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -134,7 +135,7 @@ class MainActivity : BaseActivity(),
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 5
+        viewPager.offscreenPageLimit = TAB_COUNT
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
