@@ -10,7 +10,6 @@
   <string name="icon_color">图标颜色</string>
   <string name="global_customization">全局定制</string>
   <string name="main_activity_layout">主要活动布局</string>
-  <string name="set_main_activity_layout">设置主要活动布局</string>
   <string name="rounded_icons">圆形图标</string>
   <string name="rounded_icons_desc">圆形图标说明</string>
   <string name="tint_nav">淡色导航栏</string>
