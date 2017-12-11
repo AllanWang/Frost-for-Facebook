@@ -21,7 +21,6 @@
   <string name="notification_sound">Benachrichtigungs Sound</string>
   <string name="notification_ringtone">Benachrichtigungs Klingelton</string>
   <string name="message_ringtone">Nachrichten Klingelton</string>
-  <string name="select_ringtone">Wähle Klingelton</string>
   <string name="notification_vibrate">Benachrichtigungs Vibration</string>
   <string name="notification_lights">Benachrichtigungs Lichter</string>
 </resources>
