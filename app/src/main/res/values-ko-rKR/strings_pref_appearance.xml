@@ -10,7 +10,6 @@
   <string name="icon_color">아이콘 색상</string>
   <string name="global_customization">전역 사용자 지정</string>
   <string name="main_activity_layout">주 액티비티 구성</string>
-  <string name="set_main_activity_layout">주 액티비티 구성으로 설정</string>
   <string name="rounded_icons">원형 아이콘</string>
   <string name="rounded_icons_desc">프로필 사진과 그룹 대화 아이콘이 둥글어 집니다.</string>
   <string name="tint_nav">내비게이션 바 색상</string>
