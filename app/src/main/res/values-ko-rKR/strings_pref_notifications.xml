@@ -21,7 +21,6 @@
   <string name="notification_sound">알림 소리</string>
   <string name="notification_ringtone">알림 벨소리</string>
   <string name="message_ringtone">메시지 벨소리</string>
-  <string name="select_ringtone">벨소리 선택</string>
   <string name="notification_vibrate">알림 진동</string>
   <string name="notification_lights">알림 LED</string>
 </resources>
