@@ -10,7 +10,6 @@
   <string name="icon_color">Cor dos ícones</string>
   <string name="global_customization">Personalização geral</string>
   <string name="main_activity_layout">Layout da atividade principal</string>
-  <string name="set_main_activity_layout">Definir o layout das abas principais</string>
   <string name="rounded_icons">Ícones Arredondados</string>
   <string name="rounded_icons_desc">Fotos de perfil e ícones de conversas em grupo serão arredondados</string>
   <string name="tint_nav">Cor da Barra de Navegação</string>
