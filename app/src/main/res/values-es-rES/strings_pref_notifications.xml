@@ -21,7 +21,6 @@
   <string name="notification_sound">Sonido de notificación</string>
   <string name="notification_ringtone">Tono de notificación</string>
   <string name="message_ringtone">Tono de mensaje</string>
-  <string name="select_ringtone">Seleccionar tono</string>
   <string name="notification_vibrate">Vibración de notificación</string>
   <string name="notification_lights">Luces de notificación</string>
 </resources>
