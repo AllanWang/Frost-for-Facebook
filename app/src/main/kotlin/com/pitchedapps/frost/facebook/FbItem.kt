@@ -44,7 +44,7 @@ enum class FbItem(
 inline val fbSearch
     get() = fbSearch()
 
-fun fbSearch(query: String = "a") = "${FB_SEARCH}$query"
+fun fbSearch(query: String = "a") = "$FB_SEARCH$query"
 
 private const val FB_SEARCH = "${FB_URL_BASE}search/top/?q="
 fun defaultTabs(): List<FbItem> = listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)
