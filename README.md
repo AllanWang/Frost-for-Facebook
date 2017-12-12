@@ -25,8 +25,7 @@ Frost is the only third party Facebook app to have:
 
 For testers and users without a play store account, test builds can be found [here](https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases).
 Note that these builds occur for every commit, including unstable ones.
-You can find the release numbers for the master branch under the [Travis](https://travis-ci.org/AllanWang/Frost-for-Facebook/branches).
-Those builds are likely more stable as they are pushed out to the alpha stream on the play store.
+Typically, those merged into `master` are stable, and those merged into `dev` have been tested.
 
 ## Showcase
 

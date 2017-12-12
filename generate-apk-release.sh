@@ -39,7 +39,7 @@ git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed [skip ci]"
 git push -fq origin master > /dev/null
 
 echo "Create New Release"
-API_JSON="$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Automatic Release v%s","draft": false,"prerelease": false}' $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_NUMBER)"
+API_JSON="$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Automatic Release v%s for branch %s %s","draft": false,"prerelease": false}' $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_NUMBER "\`$TRAVIS_BRANCH\`" "\nhttps://github.com/$TRAVIS_REPO_SLUG/commit/$TRAVIS_COMMIT")"
 newRelease="$(curl --data "$API_JSON" https://api.github.com/repos/$RELEASE_REPO/releases?access_token=$GITHUB_API_KEY)"
 rID="$(echo "$newRelease" | jq ".id")"
 

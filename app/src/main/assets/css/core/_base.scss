@@ -34,6 +34,14 @@
   }
 }
 
+//  Helper function to replace characters in a string
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @return if($index, str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace), $string);
+}
+
+//  https://css-tricks.com/probably-dont-base64-svg/
 //  SVG optimization thanks to https://codepen.io/jakob-e/pen/doMoML
 //  Function to create an optimized svg url
 //  Version: 1.0.6
@@ -60,7 +68,7 @@
     //
     //   Encode
     //
-    $chunk: str-replace($chunk, '"', "'");
+    //$chunk: str-replace($chunk, '"', "&quot;");
     $chunk: str-replace($chunk, "%", "%25");
     $chunk: str-replace($chunk, "#", "%23");
     $chunk: str-replace($chunk, "{", "%7B");
@@ -96,11 +104,4 @@
 //  Background svg mixin
 @mixin background-svg($svg, $extra: "no-repeat") {
   background: svg-url($svg) unquote($extra) !important;
-}
-
-//  Helper function to replace characters in a string
-@function str-replace($string, $search, $replace: "") {
-  $index: str-index($string, $search);
-
-  @return if($index, str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace), $string);
 }

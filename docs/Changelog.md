@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.8
+* Fully customize your tabs! Check out settings > appearance > main activity tabs
+* Optimize scripts
+* Add more theme components
+* Fixed issue with deleting posts
+
 ## v1.6.7
 * Fix icons in tablets
 * Add Portuguese translations
