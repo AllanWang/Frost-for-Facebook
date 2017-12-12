@@ -11,6 +11,7 @@ Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
 * Support for multiple accounts and fast switching
 * Full theming across all activities
+* PIP videos
 * Overlaying browser to read posts and get right back to your previous task
 * Extensive notification support, with bundling, filtering, battery friendly scheduling, icons, and multi user support
 * Context menu from any link via long press
@@ -22,6 +23,7 @@ Frost is the only third party Facebook app to have:
 * Transparent themes and a fully customizable theme engine
 * True multiuser support, along with multiuser notifications
 * Fully swipable overlays
+* Fully customizable tabs
 
 For testers and users without a play store account, test builds can be found [here](https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases).
 Note that these builds occur for every commit, including unstable ones.
@@ -41,8 +43,8 @@ Typically, those merged into `master` are stable, and those merged into `dev` ha
 ## Translations
 
 Frost depends on translations crowdsourced by the general public.
-If you would like to contribute, please visit [here](https://crwd.in/frost-for-facebook)
-Note that this project heavily depends on [KAU](https://github.com/AllanWang/KAU), which also needs to be translated [here](https://crwd.in/kotlin-android-utils)
+If you would like to contribute, please visit [here](https://crwd.in/frost-for-facebook).
+Note that this project heavily depends on [KAU](https://github.com/AllanWang/KAU), which also needs to be translated [here](https://crwd.in/kotlin-android-utils).
 
 Special thanks to the following awesome people for translating significant portions of Frost!
 

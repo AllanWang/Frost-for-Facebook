@@ -1,13 +1,10 @@
 package com.pitchedapps.frost.intro
 
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import ca.allanwang.kau.ui.createSimpleRippleDrawable
 import ca.allanwang.kau.utils.*
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R

@@ -2,7 +2,6 @@ package com.pitchedapps.frost.activities
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.transition.Fade
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.searchview.SearchViewHolder
 import com.pitchedapps.frost.contracts.VideoViewHolder
