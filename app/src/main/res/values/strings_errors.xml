@@ -7,4 +7,5 @@
     <string name="no_download_manager">No Download Manager</string>
     <string name="no_download_manager_desc">The download manager is not enabled. Would you like to enable it to allow downloads?</string>
     <string name="error_generic">An error occurred.</string>
+    <string name="video_load_failed">Failed to load video</string>
 </resources>

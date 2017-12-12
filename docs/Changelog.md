@@ -5,6 +5,7 @@
 * Optimize scripts
 * Add more theme components
 * Fixed issue with deleting posts
+* Automatically close video player if url cannot be loaded
 
 ## v1.6.7
 * Fix icons in tablets
