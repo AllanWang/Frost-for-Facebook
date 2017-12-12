@@ -6,6 +6,16 @@
     <item text="" />
     -->
 
+    <version title="v1.6.8" />
+    <item text="Fully customize your tabs! Check out settings > appearance > main activity tabs" />
+    <item text="Optimize scripts" />
+    <item text="Add more theme components" />
+    <item text="Fixed issue with deleting posts" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.6.7" />
     <item text="Fix icons in tablets" />
     <item text="Add Portuguese translations" />

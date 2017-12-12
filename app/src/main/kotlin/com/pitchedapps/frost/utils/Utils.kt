@@ -221,17 +221,21 @@ inline val String?.isFacebookUrl
     get() = this != null && contains(FACEBOOK_COM)
 
 /**
- * [true] is url is a video and can be accepted by VideoViewer
+ * [true] if url is a video and can be accepted by VideoViewer
  */
 inline val String?.isVideoUrl
     get() = this != null && (startsWith(VIDEO_REDIRECT) || startsWith("https://video-"))
 
 /**
- * [true] is url can be displayed in a different webview
+ * [true] if url can be displayed in a different webview
  */
 inline val String?.isIndependent
     get() = this == null || (startsWith("http") && !isFacebookUrl)
-            || !contains("photoset_token")
+            || dependentSet.all { !contains(it) }
+
+val dependentSet = setOf(
+        "photoset_token", "direct_action_execute"
+)
 
 inline val String?.isExplicitIntent
     get() = this != null && startsWith("intent://")
