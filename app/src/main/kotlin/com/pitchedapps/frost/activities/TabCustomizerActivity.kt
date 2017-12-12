@@ -58,7 +58,7 @@ class TabCustomizerActivity : BaseActivity() {
         instructions.setTextColor(Prefs.textColor)
 
         val tabs = loadFbTabs().toMutableList()
-        val remaining = FbItem.values().toMutableList()
+        val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
         remaining.removeAll(tabs)
         tabs.addAll(remaining)
 

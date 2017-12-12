@@ -8,11 +8,14 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import ca.allanwang.kau.ui.ProgressAnimator
 import ca.allanwang.kau.utils.AnimHolder
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.scaleXY
+import ca.allanwang.kau.utils.toast
 import com.devbrackets.android.exomedia.ui.widget.VideoView
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 
 /**
@@ -58,8 +61,6 @@ class FrostVideoView @JvmOverloads constructor(
     var isExpanded: Boolean = true
         set(value) {
             if (field == value) return
-            if (videoDimensions.x <= 0f || videoDimensions.y <= 0f)
-                return L.d("Attempted to toggle video expansion when points have not been finalized")
             field = value
             val origX = translationX
             val origY = translationY
@@ -96,6 +97,11 @@ class FrostVideoView @JvmOverloads constructor(
      * and return the necessary transitions to get there
      */
     private fun mapBounds(): Triple<Float, Float, Float> {
+        if (videoDimensions.x <= 0f || videoDimensions.y <= 0f) {
+            L.d("Attempted to toggle video expansion when points have not been finalized")
+            val dimen = Math.min(height, width).toFloat()
+            videoDimensions.set(dimen, dimen)
+        }
         val portrait = height > width
         val scale = Math.min(height / (if (portrait) 4f else 2.3f) / videoDimensions.y, width / (if (portrait) 2.3f else 4f) / videoDimensions.x)
         val desiredHeight = scale * videoDimensions.y
@@ -123,6 +129,11 @@ class FrostVideoView @JvmOverloads constructor(
         setOnPreparedListener {
             start()
             if (isExpanded) showControls()
+        }
+        setOnErrorListener {
+            toast(R.string.video_load_failed, Toast.LENGTH_SHORT)
+            destroy()
+            true
         }
         setOnCompletionListener {
             if (repeat) restart()

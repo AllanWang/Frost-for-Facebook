@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.utils.*
-import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs

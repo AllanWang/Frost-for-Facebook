@@ -1,12 +1,10 @@
 package com.pitchedapps.frost
 
-import android.content.Context
 import android.os.Bundle
 import ca.allanwang.kau.internal.KauBaseActivity
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
-import com.pitchedapps.frost.activities.TabCustomizerActivity
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L

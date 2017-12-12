@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.iitems
 
-import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,7 +10,6 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter_extensions.drag.IDraggable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 
 /**
