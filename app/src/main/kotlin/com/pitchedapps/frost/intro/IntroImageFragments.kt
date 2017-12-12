@@ -1,23 +1,32 @@
 package com.pitchedapps.frost.intro
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import ca.allanwang.kau.utils.colorToForeground
-import ca.allanwang.kau.utils.tint
-import ca.allanwang.kau.utils.withAlpha
+import android.widget.ImageView
+import ca.allanwang.kau.ui.createSimpleRippleDrawable
+import ca.allanwang.kau.utils.*
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.launchTabCustomizerActivity
 
 /**
  * Created by Allan Wang on 2017-07-28.
  */
-abstract class BaseImageIntroFragment(val titleRes: Int, val imageRes: Int, val descRes: Int) : BaseIntroFragment(R.layout.intro_image) {
+abstract class BaseImageIntroFragment(
+        val titleRes: Int,
+        val imageRes: Int,
+        val descRes: Int
+) : BaseIntroFragment(R.layout.intro_image) {
 
     val imageDrawable: LayerDrawable by lazyResettableRegistered { image.drawable as LayerDrawable }
     val phone: Drawable by lazyResettableRegistered { imageDrawable.findDrawableByLayerId(R.id.intro_phone) }
     val screen: Drawable by lazyResettableRegistered { imageDrawable.findDrawableByLayerId(R.id.intro_phone_screen) }
+    val icon: ImageView by bindViewResettable(R.id.intro_button)
 
     override fun viewArray(): Array<Array<out View>>
             = arrayOf(arrayOf(title), arrayOf(desc))
@@ -82,6 +91,14 @@ class IntroAccountFragment : BaseImageIntroFragment(
 class IntroTabTouchFragment : BaseImageIntroFragment(
         R.string.intro_easy_navigation, R.drawable.intro_phone_tab, R.string.intro_easy_navigation_desc
 ) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        icon.visible().setIcon(GoogleMaterial.Icon.gmd_edit, 24)
+        icon.setOnClickListener {
+            activity?.launchTabCustomizerActivity()
+        }
+    }
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()

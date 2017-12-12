@@ -30,6 +30,17 @@
         app:layout_constraintTop_toBottomOf="@id/intro_title"
         tools:layout_editor_absoluteX="112dp" />
 
+    <ImageView
+        android:id="@id/intro_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/intro_image"
+        app:layout_constraintEnd_toEndOf="@id/intro_image"
+        app:layout_constraintStart_toStartOf="@id/intro_image"
+        app:layout_constraintTop_toTopOf="@id/intro_image" />
+
     <TextView
         android:id="@id/intro_desc"
         style="@style/IntroSubTitle"

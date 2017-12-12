@@ -33,9 +33,10 @@ Typically, those merged into `master` are stable, and those merged into `dev` ha
 ![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_glass.png)
 
 ![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_multi_accounts.png)&ensp;
-![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_swipe.png)
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_pip.png)
 
-![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_quick_links.png)&ensp;
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_swipe.png)&ensp;
+![Transparency](https://raw.githubusercontent.com/AllanWang/Storage-Hub/master/frost/screenshots/thumbnails/frost_quick_links.png)
 
 ## Translations
 
