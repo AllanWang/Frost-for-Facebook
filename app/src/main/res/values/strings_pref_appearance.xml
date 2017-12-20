@@ -13,7 +13,10 @@
     <string name="global_customization">Global Customization</string>
 
     <string name="main_activity_layout">Main Activity Layout</string>
-    <string name="set_main_activity_layout">Set Main Activity Layout</string>
+    <string name="main_activity_layout_desc">Set Main Activity Layout</string>
+
+    <string name="main_tabs">Main Activity Tabs</string>
+    <string name="main_tabs_desc">Customize which tabs you\'ll see in your main activity</string>
 
     <string name="rounded_icons">Rounded Icons</string>
     <string name="rounded_icons_desc">Profile photos and group conversation icons will be rounded</string>

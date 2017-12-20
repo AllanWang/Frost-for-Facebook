@@ -24,14 +24,12 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
         onClick = {
-            _, _, item ->
             materialDialogThemed {
                 title(R.string.theme)
                 items(Theme.values()
                         .map { if (it == Theme.CUSTOM && !IS_FROST_PRO) R.string.custom_pro else it.textRes }
                         .map { string(it) })
-                itemsCallbackSingleChoice(item.pref) {
-                    _, _, which, _ ->
+                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
                     if (item.pref != which) {
                         if (which == Theme.CUSTOM.ordinal && !IS_FROST_PRO) {
                             purchasePro()
@@ -48,7 +46,6 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                     true
                 }
             }
-            true
         }
         textGetter = {
             string(Theme(it).textRes)
@@ -57,12 +54,12 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
         enabler = { Prefs.isCustomTheme }
-        onDisabledClick = { _, _, _ -> frostSnackbar(R.string.requires_custom_theme); true }
+        onDisabledClick = { frostSnackbar(R.string.requires_custom_theme) }
         allowCustom = true
     }
 
     fun invalidateCustomTheme() {
-        CssAssets.CUSTOM.injector = null
+        CssAssets.CUSTOM.injector.invalidate()
     }
 
     colorPicker(R.string.text_color, { Prefs.customTextColor }, {
@@ -122,12 +119,10 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     text(R.string.main_activity_layout, { Prefs.mainActivityLayoutType }, { Prefs.mainActivityLayoutType = it }) {
         textGetter = { string(Prefs.mainActivityLayout.titleRes) }
         onClick = {
-            _, _, item ->
             materialDialogThemed {
-                title(R.string.set_main_activity_layout)
+                title(R.string.main_activity_layout_desc)
                 items(MainActivityLayout.values.map { string(it.titleRes) })
-                itemsCallbackSingleChoice(item.pref) {
-                    _, _, which, _ ->
+                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
                     if (item.pref != which) {
                         item.pref = which
                         shouldRestartMain()
@@ -136,8 +131,12 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                     true
                 }
             }
-            true
         }
+    }
+
+    plainText(R.string.main_tabs) {
+        descRes = R.string.main_tabs_desc
+        onClick = { launchTabCustomizerActivity() }
     }
 
     checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, {

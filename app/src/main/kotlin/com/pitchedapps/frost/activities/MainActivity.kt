@@ -5,7 +5,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -28,6 +27,7 @@ import android.webkit.WebChromeClient
 import android.widget.FrameLayout
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
+import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.*
 import co.zsmb.materialdrawerkt.builders.Builder
@@ -48,6 +48,8 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityWebContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
+import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -63,7 +65,6 @@ import com.pitchedapps.frost.utils.iab.FrostBilling
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
-import com.pitchedapps.frost.views.FrostVideoContainerContract
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -77,18 +78,18 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseActivity(),
         ActivityWebContract, FileChooserContract by FileChooserDelegate(),
-        FrostVideoContainerContract,
+        VideoViewHolder, SearchViewHolder,
         FrostBilling by IabMain() {
 
     lateinit var adapter: SectionsPagerAdapter
-    val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
+    override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: FrostViewPager by bindView(R.id.container)
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
-    var videoViewer: FrostVideoViewer? = null
+    override var videoViewer: FrostVideoViewer? = null
     lateinit var drawer: Drawer
     lateinit var drawerHeader: AccountHeader
     var webFragmentObservable = PublishSubject.create<Int>()!!
@@ -100,7 +101,7 @@ class MainActivity : BaseActivity(),
             L.i("First fragment load has finished")
             field = value
         }
-    var searchView: SearchView? = null
+    override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
 
     companion object {
@@ -130,12 +131,11 @@ class MainActivity : BaseActivity(),
                         "Frost id" to Prefs.frostId)
             }
         }
-        setContentView(R.layout.activity_frame_wrapper)
-        frameWrapper.inflate(Prefs.mainActivityLayout.layoutRes, true)
+        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
         viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = 5
+        viewPager.offscreenPageLimit = TAB_COUNT
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -147,7 +147,7 @@ class MainActivity : BaseActivity(),
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                val delta: Float by lazy { positionOffset * (255 - 128).toFloat() }
+                val delta = positionOffset * (255 - 128).toFloat()
                 tabsForEachView { tabPosition, view ->
                     view.setAllAlpha(when (tabPosition) {
                         position -> 255.0f - delta
@@ -167,14 +167,6 @@ class MainActivity : BaseActivity(),
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-    }
-
-    fun showVideo(url: String) {
-        if (videoViewer != null) {
-            videoViewer?.setVideo(url)
-        } else {
-            videoViewer = FrostVideoViewer.showVideo(url, this)
-        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -219,9 +211,7 @@ class MainActivity : BaseActivity(),
                 }
         adapter.pages.forEach {
             tabs.addTab(tabs.newTab()
-                    .setCustomView(BadgedIcon(this).apply {
-                        iicon = it.icon
-                    }))
+                    .setCustomView(BadgedIcon(this).apply { iicon = it.icon }))
         }
     }
 
@@ -312,7 +302,7 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
+    private fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
         iicon = item.icon
         iconColor = Prefs.textColor.toLong()
         textColor = Prefs.textColor.toLong()
@@ -331,7 +321,7 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) = this.secondaryItem(title) {
+    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) = this.secondaryItem(title) {
         textColor = Prefs.textColor.toLong()
         selectedIconColor = Prefs.textColor.toLong()
         selectedTextColor = Prefs.textColor.toLong()
@@ -350,27 +340,29 @@ class MainActivity : BaseActivity(),
         setMenuIcons(menu, Prefs.iconColor,
                 R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
-        if (searchView == null) searchView = bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-            textCallback = { query, _ ->
-                val results = searchViewCache[query]
-                if (results != null)
-                    runOnUiThread { searchView?.results = results }
-                else
-                    doAsync {
-                        val data = SearchParser.query(query) ?: return@doAsync
-                        val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
-                        if (items.isNotEmpty())
-                            items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
-                        searchViewCache.put(query, items)
-                        uiThread { searchView?.results = items }
-                    }
+        searchViewBindIfNull {
+            bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
+                textCallback = { query, _ ->
+                    val results = searchViewCache[query]
+                    if (results != null)
+                        runOnUiThread { searchView?.results = results }
+                    else
+                        doAsync {
+                            val data = SearchParser.query(query) ?: return@doAsync
+                            val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
+                            if (items.isNotEmpty())
+                                items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
+                            searchViewCache.put(query, items)
+                            uiThread { searchView?.results = items }
+                        }
+                }
+                textDebounceInterval = 300
+                searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
+                closeListener = { _ -> searchViewCache.clear() }
+                foregroundColor = Prefs.textColor
+                backgroundColor = Prefs.bgColor.withMinAlpha(200)
+                onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
-            textDebounceInterval = 300
-            searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
-            closeListener = { _ -> searchViewCache.clear() }
-            foregroundColor = Prefs.textColor
-            backgroundColor = Prefs.bgColor.withMinAlpha(200)
-            onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
         }
         return true
     }
@@ -436,21 +428,25 @@ class MainActivity : BaseActivity(),
         super.onStart()
     }
 
-    override fun onStop() {
-        videoViewer?.pause()
-        super.onStop()
-    }
-
     override fun onDestroy() {
         onDestroyBilling()
         super.onDestroy()
     }
 
-    override fun onBackPressed() {
-        if (videoViewer?.onBackPressed() == true) return
-        if (searchView?.onBackPressed() == true) return
-        if (currentFragment.onBackPressed()) return
-        super.onBackPressed()
+    override fun backConsumer(): Boolean {
+        if (currentFragment.onBackPressed()) return true
+        if (Prefs.exitConfirmation) {
+            materialDialogThemed {
+                title(R.string.kau_exit)
+                content(R.string.kau_exit_confirmation)
+                positiveText(R.string.kau_yes)
+                negativeText(R.string.kau_no)
+                onPositive { _, _ -> finish() }
+                checkBoxPromptRes(R.string.kau_do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
+            }
+            return true
+        }
+        return false
     }
 
     inline val currentFragment
@@ -489,16 +485,4 @@ class MainActivity : BaseActivity(),
             else
                 PointF(0f, 0f)
 
-    override val videoContainer: FrameLayout
-        get() = frameWrapper
-
-    override fun onVideoFinished() {
-        L.d("Video view released")
-        videoViewer = null
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        videoViewer?.updateLocation()
-    }
 }

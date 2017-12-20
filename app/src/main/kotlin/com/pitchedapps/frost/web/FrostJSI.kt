@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.*
@@ -36,9 +37,12 @@ class FrostJSI(val webView: FrostWebViewCore) {
             = if (url == null) false else webView.requestWebOverlay(url)
 
     @JavascriptInterface
-    fun loadVideo(url: String?) {
+    fun loadVideo(url: String?, isGif: Boolean) {
         if (url != null)
-            webView.post { activity?.showVideo(url) }
+            webView.post {
+                (context as? VideoViewHolder)?.showVideo(url, isGif)
+                        ?: L.d("Could not load video; contract not implemented")
+            }
     }
 
     @JavascriptInterface
@@ -52,6 +56,7 @@ class FrostJSI(val webView: FrostWebViewCore) {
 
     @JavascriptInterface
     fun contextMenu(url: String, text: String?) {
+        if (!text.isIndependent) return
         //url will be formatted through webcontext
         webView.post { context.showWebContextMenu(WebContext(url, text)) }
     }

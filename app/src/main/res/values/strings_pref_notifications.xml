@@ -22,7 +22,7 @@
 
     <string name="notification_ringtone">Notification Ringtone</string>
     <string name="message_ringtone">Message Ringtone</string>
-    <string name="select_ringtone">Selet Ringtone</string>
+    <string name="select_ringtone">Select Ringtone</string>
 
     <string name="notification_vibrate">Notification vibration</string>
     <string name="notification_lights">Notification lights</string>

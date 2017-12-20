@@ -3,13 +3,13 @@ package com.pitchedapps.frost.web
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
-import com.pitchedapps.frost.facebook.FB_URL_BASE
+
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.isFacebookUrl
-import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.*
+import org.jetbrains.anko.runOnUiThread
 
 /**
  * Created by Allan Wang on 2017-08-15.
@@ -18,14 +18,26 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  * cannot be resolved on a new window and must instead
  * by loaded in the current page
  * This helper method will collect all known cases and launch the overlay accordingly
- * Returns {@code true} (default) if action is consumed, {@code false} otherwise
+ * Returns [true] (default) if action is consumed, [false] otherwise
+ *
+ * Note that this is not always called on the main thread!
+ * UI related methods should always be posted or they may not be properly executed.
  *
  * If the request already comes from an instance of [WebOverlayActivity], we will then judge
  * whether the user agent string should be changed. All propagated results will return false,
  * as we have no need of sending a new intent to the same activity
  */
 fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
-    if (url == "#") return false
+    if (url == "#" || !url.isIndependent) {
+        L.i("Forbid overlay switch", url)
+        return false
+    }
+    if (url.isVideoUrl && context is VideoViewHolder) {
+        L.i("Found video", url)
+        context.runOnUiThread { (context as VideoViewHolder).showVideo(url) }
+        return true
+    }
+    if (!Prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
         L.v("Check web request from overlay", url)
         //already overlay; manage user agent
@@ -73,7 +85,8 @@ fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
 val messageWhitelist = setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES).map { it.url }.toSet()
 
 val String.shouldUseBasicAgent
-    get() = (messageWhitelist.any { contains(it) }) || this == FB_URL_BASE
+    get() = !contains("story.php") //we will use basic agent for anything that isn't a comment section
+//    get() = (messageWhitelist.any { contains(it) }) || this == FB_URL_BASE
 
 /**
  * The following components should never be launched in a new overlay

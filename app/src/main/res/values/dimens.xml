@@ -5,5 +5,7 @@
 
     <dimen name="context_menu_height">60dp</dimen>
 
+    <dimen name="tab_bar_height">50dp</dimen>
     <dimen name="intro_bar_height">64dp</dimen>
+    <dimen name="badge_icon_size">20dp</dimen>
 </resources>

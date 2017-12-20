@@ -31,12 +31,10 @@ class BadgedIcon @JvmOverloads constructor(
         badgeTextView.setTextColor(Prefs.mainActivityLayout.iconColor())
     }
 
-
     var iicon: IIcon? = null
-        get() = field
         set(value) {
             field = value
-            badgeImage.setImageDrawable(value?.toDrawable(context, color = Prefs.mainActivityLayout.iconColor()))
+            badgeImage.setImageDrawable(value?.toDrawable(context, sizeDp = 20, color = Prefs.mainActivityLayout.iconColor()))
         }
 
     fun setAllAlpha(alpha: Float) {

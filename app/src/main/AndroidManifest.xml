@@ -42,12 +42,14 @@
             android:theme="@style/FrostTheme" />
         <activity
             android:name=".activities.WebOverlayActivity"
+            android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_name"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
             android:name=".activities.WebOverlayBasicActivity"
+            android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"
             android:launchMode="singleTop"
@@ -55,6 +57,7 @@
         <activity
             android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
+            android:configChanges="orientation|screenSize|locale"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"
@@ -70,6 +73,7 @@
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -127,6 +131,9 @@
             android:name=".activities.SelectorActivity"
             android:theme="@style/FrostTheme" />
         <activity
+            android:name=".activities.TabCustomizerActivity"
+            android:theme="@style/FrostTheme" />
+        <activity
             android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
         <activity
@@ -135,19 +142,12 @@
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
-        <activity android:name=".activities.VideoActivity"
-            android:theme="@style/FrostTheme.Video" />
 
         <service
             android:name=".services.NotificationService"
             android:enabled="true"
             android:label="@string/frost_notifications"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".services.DownloadService"
-            android:enabled="true"
-            android:label="@string/frost_notifications"
-            android:permission="android.permission.WRITE_EXTERNAL_STORAGE" />
 
         <receiver
             android:name=".services.UpdateReceiver"

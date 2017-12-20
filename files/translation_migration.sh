@@ -1,24 +1,20 @@
 #!/usr/bin/env bash
 
+MODULE=Frost-for-Facebook
+
 cd ..
 
 current=${PWD##*/}
 
-if [ "$current" != "Frost-for-Facebook" ]; then
-    echo "Not in Frost";
+if [ "$current" != "$MODULE" ]; then
+    echo "Not in $MODULE";
     return;
 fi
 
-declare -a folders=("es" "fr" "de")
+# DANGEROUS! Removes all files matching regex
 
-cd app/src/main/res
+egrep -lir --include="*.xml" "<resources.*></resources>" "./" | tr '\n' '\0' | xargs -0 -n1 rm
 
-for d in $(find ./values-* -type d) ; do
-	key=$(echo $d | cut -d '-' -f2)
-	
-	if ! [[ ${folders[*]} =~ "$key" ]]; then
-		rm -r "$d"
-	else
-		mv "$d" "./values-$key"
-	fi
-done
+# Delete empty directories
+
+find . -type d -empty -delete

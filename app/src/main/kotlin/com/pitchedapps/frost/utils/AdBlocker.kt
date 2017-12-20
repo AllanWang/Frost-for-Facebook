@@ -10,6 +10,7 @@ import org.jetbrains.anko.doAsync
  * Created by Allan Wang on 2017-09-24.
  */
 object FrostAdBlock : AdBlocker("adblock.txt")
+
 object FrostPglAdBlock : AdBlocker("pgl.yoyo.org.txt")
 
 /**
@@ -22,7 +23,8 @@ open class AdBlocker(val assetPath: String) {
 
     fun init(context: Context) {
         doAsync {
-            data.addAll(context.assets.open(assetPath).bufferedReader().use { it.readLines().filter { !it.startsWith("#") } })
+            val content = context.assets.open(assetPath).bufferedReader().use { it.readLines().filter { !it.startsWith("#") } }
+            data.addAll(content)
             L.i("Initialized adblock for $assetPath with ${data.size} hosts")
         }
     }

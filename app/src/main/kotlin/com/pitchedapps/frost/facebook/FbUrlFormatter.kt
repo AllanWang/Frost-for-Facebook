@@ -26,30 +26,39 @@ class FbUrlFormatter(url: String) {
      * 4. Url is split into sections
      */
     init {
-        if (url.isBlank()) cleaned = ""
-        else {
-            var cleanedUrl = url
-            discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
-            converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            if (cleanedUrl != url) cleanedUrl = cleanedUrl.replaceFirst("&", "?")
+        cleaned = clean(url)
+    }
+
+    fun clean(url: String): String {
+        if (url.isBlank()) return ""
+        var cleanedUrl = url
+        discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
+        val changed = cleanedUrl != url
+        converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+        try {
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
-            val qm = cleanedUrl.indexOf("?")
-            if (qm > -1) {
-                cleanedUrl.substring(qm + 1).split("&").forEach {
-                    val p = it.split("=")
-                    queries.put(p[0], p.elementAtOrNull(1) ?: "")
-                }
-                cleanedUrl = cleanedUrl.substring(0, qm)
-            }
-            discardableQueries.forEach { queries.remove(it) }
-            //final cleanup
-            misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-            if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
-            if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
-            cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
-            L.v(null, "Formatted url from $url to $cleanedUrl")
-            cleaned = cleanedUrl
+        } catch (e: Exception) {
+            L.e(e, "Failed url formatting")
+            return url
         }
+        if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
+            cleanedUrl = cleanedUrl.replaceFirst("&", "?")
+        val qm = cleanedUrl.indexOf("?")
+        if (qm > -1) {
+            cleanedUrl.substring(qm + 1).split("&").forEach {
+                val p = it.split("=")
+                queries.put(p[0], p.elementAtOrNull(1) ?: "")
+            }
+            cleanedUrl = cleanedUrl.substring(0, qm)
+        }
+        discardableQueries.forEach { queries.remove(it) }
+        //final cleanup
+        misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
+        if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
+        if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
+        cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
+        L.v(null, "Formatted url from $url to $cleanedUrl")
+        return cleanedUrl
     }
 
     override fun toString(): String {
@@ -70,10 +79,16 @@ class FbUrlFormatter(url: String) {
     }
 
     companion object {
+
+        const val VIDEO_REDIRECT = "/video_redirect/?src="
         /**
          * Items here are explicitly removed from the url
          * Taken from FaceSlim
          * https://github.com/indywidualny/FaceSlim/blob/master/app/src/main/java/org/indywidualni/fblite/util/Miscellany.java
+         *
+         * Note: Typically, in this case, the redirect url should have all the necessary queries
+         * I am unsure how Facebook reacts in all cases, so the ones after the redirect are appended on afterwards
+         * That shouldn't break anything
          */
         val discardable = arrayOf(
                 "http://lm.facebook.com/l.php?u=",
@@ -82,7 +97,7 @@ class FbUrlFormatter(url: String) {
                 "https://m.facebook.com/l.php?u=",
                 "http://touch.facebook.com/l.php?u=",
                 "https://touch.facebook.com/l.php?u=",
-                "/video_redirect/?src="
+                VIDEO_REDIRECT
         )
 
         val misc = arrayOf("&amp;" to "&")

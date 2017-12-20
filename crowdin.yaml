@@ -1,0 +1,16 @@
+"project_identifier": "frost-for-facebook"
+"base_path": "/app/src/main/res"
+
+"files": [
+  {
+    "source" : "/values/strings.xml",
+    "translation" : "/values-%android_code%/%original_file_name%"
+  },
+  {
+    "source" : "/values/strings_*.xml",
+    "translation" : "/values-%android_code%/%original_file_name%",
+    "ignore" : [
+      "/values/strings_no_translate.xml"
+    ]
+  }
+]

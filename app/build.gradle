@@ -1,5 +1,5 @@
 plugins {
-    id 'com.gladed.androidgitversion' version '0.3.4'
+    id 'com.gladed.androidgitversion' version '0.4.3'
 }
 
 apply plugin: 'com.android.application'
@@ -54,7 +54,8 @@ android {
         disable 'TrustAllX509TrustManager',
                 'UnusedResources',
                 'ContentDescription',
-                'RtlSymmetry'
+                'RtlSymmetry',
+                'MissingTranslation'
 
         xmlReport false
         textReport true
@@ -162,6 +163,8 @@ dependencies {
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
+
+    implementation"com.mikepenz:fastadapter-extensions:${FAST_ADAPTER_EXTENSIONS}@aar"
 
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"

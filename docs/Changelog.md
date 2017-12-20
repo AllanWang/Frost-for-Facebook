@@ -1,5 +1,29 @@
 # Changelog
 
+## v1.6.8
+* Fully customize your tabs! Check out settings > appearance > main activity tabs
+* Optimize scripts
+* Add more theme components
+* Fixed issue with deleting posts
+* Automatically close video player if url cannot be loaded
+
+## v1.6.7
+* Fix icons in tablets
+* Add Portuguese translations
+* Add Galician translations
+* Remove generic translations
+
+## v1.6.5
+* Allow for truly full screen videos
+* Support pip video everywhere
+* Support gifs (auto loop)
+* Add Italian translations
+* Add Korean translations
+* Add Vietnamese translations
+* Fix bad date param for videos and images
+* Allow for explicit intent launches
+* Updated all dependencies
+
 ## v1.6.2
 * Fix search update from Facebook
 * Fix url parsing errors again

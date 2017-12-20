@@ -25,7 +25,6 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
     // Experimental content starts here ------------------
 
 
-
     // Experimental content ends here --------------------
 
     checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, {
@@ -41,10 +40,8 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
     plainText(R.string.restart_frost) {
         descRes = R.string.restart_frost_desc
         onClick = {
-            _, _, _ ->
             setFrostResult(MainActivity.REQUEST_RESTART_APPLICATION)
             finish()
-            true
         }
     }
 }

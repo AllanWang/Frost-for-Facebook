@@ -8,9 +8,14 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
+import ca.allanwang.kau.ui.ProgressAnimator
+import ca.allanwang.kau.utils.AnimHolder
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.scaleXY
+import ca.allanwang.kau.utils.toast
 import com.devbrackets.android.exomedia.ui.widget.VideoView
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 
 /**
@@ -29,10 +34,10 @@ class FrostVideoView @JvmOverloads constructor(
     private inline val v
         get() = videoViewImpl
 
-    var backgroundView: View? = null
     var onFinishedListener: () -> Unit = {}
-    lateinit var viewerContract: FrostVideoViewerContract
+    private lateinit var viewerContract: FrostVideoViewerContract
     lateinit var containerContract: FrostVideoContainerContract
+    var repeat: Boolean = false
 
     private val videoDimensions = PointF(0f, 0f)
 
@@ -47,8 +52,8 @@ class FrostVideoView @JvmOverloads constructor(
         private val SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD = 2f.dpToPx
         private val SWIPE_TO_CLOSE_VERTICAL_THRESHOLD = 5f.dpToPx
         private val SWIPE_TO_CLOSE_OFFSET_THRESHOLD = 75f.dpToPx
-        val ANIMATION_DURATION = 300L
-        private val FAST_ANIMATION_DURATION = 100L
+        const val ANIMATION_DURATION = 200L
+        private const val FAST_ANIMATION_DURATION = 100L
     }
 
     private var videoBounds = RectF()
@@ -56,22 +61,33 @@ class FrostVideoView @JvmOverloads constructor(
     var isExpanded: Boolean = true
         set(value) {
             if (field == value) return
-            if (videoDimensions.x <= 0f || videoDimensions.y <= 0f)
-                return L.d("Attempted to toggle video expansion when points have not been finalized")
             field = value
+            val origX = translationX
+            val origY = translationY
+            val origScale = scaleX
             if (field) {
-                animate().scaleXY(1f).translationX(0f).translationY(0f).setDuration(ANIMATION_DURATION).withStartAction {
-                    backgroundView?.animate()?.alpha(1f)?.setDuration(ANIMATION_DURATION)
-                    viewerContract.onFade(1f, ANIMATION_DURATION)
-                }.withEndAction {
-                    if (!isPlaying) showControls()
+                ProgressAnimator.ofFloat {
+                    duration = ANIMATION_DURATION
+                    interpolator = AnimHolder.fastOutSlowInInterpolator(context)
+                    withAnimator { viewerContract.onExpand(it) }
+                    withAnimator(origScale, 1f) { scaleXY = it }
+                    withAnimator(origX, 0f) { translationX = it }
+                    withAnimator(origY, 0f) { translationY = it }
+                    withEndAction {
+                        if (!isPlaying) showControls()
+                        else viewerContract.onControlsHidden()
+                    }
                 }
             } else {
                 hideControls()
                 val (scale, tX, tY) = mapBounds()
-                animate().scaleXY(scale).translationX(tX).translationY(tY).setDuration(ANIMATION_DURATION).withStartAction {
-                    backgroundView?.animate()?.alpha(0f)?.setDuration(ANIMATION_DURATION)
-                    viewerContract.onFade(0f, ANIMATION_DURATION)
+                ProgressAnimator.ofFloat {
+                    duration = ANIMATION_DURATION
+                    interpolator = AnimHolder.fastOutSlowInInterpolator(context)
+                    withAnimator { viewerContract.onExpand(1f - it) }
+                    withAnimator(origScale, scale) { scaleXY = it }
+                    withAnimator(origX, tX) { translationX = it }
+                    withAnimator(origY, tY) { translationY = it }
                 }
             }
         }
@@ -81,6 +97,11 @@ class FrostVideoView @JvmOverloads constructor(
      * and return the necessary transitions to get there
      */
     private fun mapBounds(): Triple<Float, Float, Float> {
+        if (videoDimensions.x <= 0f || videoDimensions.y <= 0f) {
+            L.d("Attempted to toggle video expansion when points have not been finalized")
+            val dimen = Math.min(height, width).toFloat()
+            videoDimensions.set(dimen, dimen)
+        }
         val portrait = height > width
         val scale = Math.min(height / (if (portrait) 4f else 2.3f) / videoDimensions.y, width / (if (portrait) 2.3f else 4f) / videoDimensions.x)
         val desiredHeight = scale * videoDimensions.y
@@ -109,15 +130,32 @@ class FrostVideoView @JvmOverloads constructor(
             start()
             if (isExpanded) showControls()
         }
+        setOnErrorListener {
+            toast(R.string.video_load_failed, Toast.LENGTH_SHORT)
+            destroy()
+            true
+        }
         setOnCompletionListener {
-            viewerContract.onVideoComplete()
+            if (repeat) restart()
+            else viewerContract.onVideoComplete()
         }
         setOnTouchListener(FrameTouchListener(context))
         v.setOnTouchListener(VideoTouchListener(context))
         setOnVideoSizedChangedListener { intrinsicWidth, intrinsicHeight ->
             val ratio = Math.min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
+            /**
+             * Only remap if not expanded and if dimensions have changed
+             */
+            val shouldRemap = !isExpanded
+                    && (videoDimensions.x != ratio * intrinsicWidth || videoDimensions.y != ratio * intrinsicHeight)
             videoDimensions.set(ratio * intrinsicWidth, ratio * intrinsicHeight)
+            if (shouldRemap) updateLocation()
         }
+    }
+
+    fun setViewerContract(contract: FrostVideoViewerContract) {
+        this.viewerContract = contract
+        videoControls?.setVisibilityListener(viewerContract)
     }
 
     fun jumpToStart() {
@@ -136,7 +174,7 @@ class FrostVideoView @JvmOverloads constructor(
 
     override fun restart(): Boolean {
         videoUri ?: return false
-        if (videoViewImpl.restart() && isExpanded) {
+        if (videoViewImpl.restart() && isExpanded && !repeat) {
             videoControls?.showLoading(true)
             return true
         }
@@ -163,9 +201,11 @@ class FrostVideoView @JvmOverloads constructor(
     fun destroy() {
         stopPlayback()
         if (alpha > 0f)
-            animate().alpha(0f).setDuration(FAST_ANIMATION_DURATION).withEndAction { onFinishedListener() }.withStartAction {
-                viewerContract.onFade(0f, FAST_ANIMATION_DURATION)
-            }.start()
+            ProgressAnimator.ofFloat(alpha, 0f) {
+                duration = FAST_ANIMATION_DURATION
+                withAnimator { alpha = it }
+                withEndAction { onFinishedListener() }
+            }
         else
             onFinishedListener()
     }

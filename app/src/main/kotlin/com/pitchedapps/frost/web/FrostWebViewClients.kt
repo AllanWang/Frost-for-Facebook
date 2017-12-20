@@ -106,11 +106,11 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         injectBackgroundColor()
         webCore.jsInject(
                 JsActions.LOGIN_CHECK,
-                JsAssets.CLICK_A.maybe(Prefs.overlayEnabled),
+                JsAssets.CLICK_A,
                 JsAssets.TEXTAREA_LISTENER,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                 JsAssets.CONTEXT_A,
-                JsAssets.MEDIA.maybe(webCore.baseEnum != null),
+                JsAssets.MEDIA,
                 JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
         )
     }
@@ -144,15 +144,14 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         L.i("Url Loading", request.url?.toString())
         val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
         L.v("Url Loading Path", path)
-        request.url?.toString()?.apply {
-            if (contains("intent") && contains("com.facebook")) {
-                L.i("Skip facebook intent request")
-                return true
-            }
+        val url = request.url.toString()
+        if (url.isExplicitIntent) {
+            view.context.resolveActivityForUri(request.url)
+            return true
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
-        if (request.url.toString().contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
-            return launchImage(request.url.toString())
+        if (url.contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
+            return launchImage(url)
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
