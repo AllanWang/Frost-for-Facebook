@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
-import com.pitchedapps.frost.activities.MainActivity
-import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.contracts.DynamicUiContract
-import com.pitchedapps.frost.contracts.FrostViewContract
+import com.pitchedapps.frost.contracts.FrostContentCore
+import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
@@ -43,25 +43,19 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
         }
     }
 
-    override val url: String by lazy { arguments!!.getString(ARG_URL) }
-    override val urlEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
+    override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
+    override val baseEnum: FbItem? by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
     private var onCreateRunnable: ((FragmentContract) -> Unit)? = null
 
-    protected var refreshView: FrostRefreshView? = null
-    protected val delegate
-        get() = refreshView?.inner
+    override var content: FrostContentParent? = null
 
     override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val refresh = FrostRefreshView(context!!)
-        this.refreshView = refresh
-        refresh.baseUrl = url
-        refresh.baseEnum = urlEnum
-        val viewContract = innerView(context!!)
-        viewContract.bind(refresh)
+        refresh.bind(this)
         return refresh
     }
 
@@ -80,7 +74,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     override fun firstLoadRequest() {
         if (userVisibleHint && isVisible && firstLoad) {
-            delegate?.reload(true)
+            core?.reload(true)
             firstLoad = false
         }
     }
@@ -89,24 +83,28 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
         onCreateRunnable = action
     }
 
-    override fun attachMainObservable(contract: ActivityContract): Disposable =
+    override fun setTitle(title: String) {
+        // todo
+    }
+
+    override fun attachMainObservable(contract: MainActivityContract): Disposable =
             contract.fragmentSubject.observeOn(AndroidSchedulers.mainThread()).subscribe {
                 when (it) {
                     REQUEST_REFRESH -> {
-                        delegate?.apply {
+                        core?.apply {
                             reload(true)
                             clearHistory()
                         }
                     }
                     position -> {
-                        contract.setTitle(urlEnum.titleId)
-                        delegate?.onScrollTo()
+                        contract.setTitle(baseEnum!!.titleId)
+                        core?.active = true
                     }
                     -(position + 1) -> {
-                        delegate?.onScrollFrom()
+                        core?.active = false
                     }
                     REQUEST_TEXT_ZOOM -> {
-                        delegate?.reloadTextSize()
+                        reloadTextSize()
                     }
                 }
             }
@@ -118,7 +116,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         detachMainObservable()
-        if (context is ActivityContract)
+        if (context is MainActivityContract)
             activityDisposable = attachMainObservable(context)
     }
 
@@ -128,24 +126,32 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
-        delegate?.destroy()
-        refreshView = null
+        content?.clean()
+        content = null
         super.onDestroyView()
     }
 
-    override fun onBackPressed() = delegate?.onBackPressed() ?: false
+    override fun reloadTheme() {
+        reloadThemeSelf()
+        content?.reloadTextSize()
+    }
+
+    override fun reloadThemeSelf() {
+        // intentionally blank
+    }
 
     override fun reloadTextSize() {
-        refreshView?.reloadTextSize()
+        reloadTextSizeSelf()
+        content?.reloadTextSize()
     }
 
-    override fun reloadTheme() {
-        refreshView?.reloadTextSize()
+    override fun reloadTextSizeSelf() {
+        // intentionally blank
     }
 
-    override fun onTabClick() {
-        delegate?.scrollOrRefresh()
-    }
+    override fun onBackPressed(): Boolean = content?.core?.onBackPressed() ?: false
+
+    override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }
 
 abstract class RecyclerFragment<T> : BaseFragment(), NativeFragmentContract<T> {
@@ -158,6 +164,10 @@ abstract class RecyclerFragment<T> : BaseFragment(), NativeFragmentContract<T> {
 }
 
 open class WebFragment : BaseFragment(), FragmentContract {
+
+    override fun createCore(context: Context): FrostContentCore {
+        return FrostWebView(context)
+    }
 
     /**
      * Given a webview, output a client

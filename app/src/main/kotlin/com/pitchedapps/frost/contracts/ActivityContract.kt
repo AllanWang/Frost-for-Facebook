@@ -5,8 +5,9 @@ import io.reactivex.subjects.PublishSubject
 /**
  * All the contracts for [MainActivity]
  */
-interface ActivityContract : FileChooserActivityContract {
-    fun setTitle(titleRes: Int)
-    fun setTitle(title: String)
+interface ActivityContract : FileChooserActivityContract
+
+interface MainActivityContract : ActivityContract {
     val fragmentSubject: PublishSubject<Int>
+    fun setTitle(res: Int)
 }

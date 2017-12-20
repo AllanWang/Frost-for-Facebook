@@ -48,8 +48,8 @@ class HeadlessChromeClient : WebChromeClient() {
  */
 class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
-    private val progress: Subject<Int> = web.progressObservable
-    private val title: BehaviorSubject<String> = web.titleObservable
+    private val progress: Subject<Int> = web.parent.progressObservable
+    private val title: BehaviorSubject<String> = web.parent.titleObservable
     private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
 

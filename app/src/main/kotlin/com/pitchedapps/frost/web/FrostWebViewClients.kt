@@ -41,8 +41,8 @@ open class BaseWebViewClient : WebViewClient() {
  */
 open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
-    private val refresh: Subject<Boolean> = web.refreshObservable
-    private val isMain = web.baseEnum != null
+    private val refresh: Subject<Boolean> = web.parent.refreshObservable
+    private val isMain = web.parent.baseEnum != null
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -112,7 +112,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                 JsAssets.CONTEXT_A,
                 JsAssets.MEDIA,
-                JsAssets.HEADER_BADGES.maybe(web.baseEnum != null)
+                JsAssets.HEADER_BADGES.maybe(web.parent.baseEnum != null)
         )
     }
 

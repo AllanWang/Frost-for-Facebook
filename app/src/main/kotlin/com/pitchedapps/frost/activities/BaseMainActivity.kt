@@ -46,6 +46,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
+import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
@@ -55,7 +56,6 @@ import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
-import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
@@ -73,7 +73,7 @@ import org.jetbrains.anko.uiThread
  *
  * Most of the logic that is unrelated to handling fragments
  */
-abstract class BaseMainActivity : BaseActivity(), ActivityContract,
+abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         FileChooserContract by FileChooserDelegate(),
         VideoViewHolder, SearchViewHolder,
         FrostBilling by IabMain() {
@@ -122,17 +122,13 @@ abstract class BaseMainActivity : BaseActivity(), ActivityContract,
         onCreateBilling()
     }
 
-    override fun setTitle(title: String) {
-        toolbar.title = title
-    }
-
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
         (0 until tabs.tabCount).asSequence().forEach { i ->
             action(i, tabs.getTabAt(i)!!.customView as BadgedIcon)
         }
     }
 
-    fun setupDrawer(savedInstanceState: Bundle?) {
+    private fun setupDrawer(savedInstanceState: Bundle?) {
         val navBg = Prefs.bgColor.withMinAlpha(200).toLong()
         val navHeader = Prefs.headerColor.withMinAlpha(200)
         drawer = drawer {

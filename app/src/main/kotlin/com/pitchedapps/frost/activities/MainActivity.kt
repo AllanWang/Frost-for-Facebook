@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -30,7 +30,7 @@ class MainActivity : BaseMainActivity() {
         setupTabs()
     }
 
-    fun setupViewPager() {
+    private fun setupViewPager() {
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -57,7 +57,7 @@ class MainActivity : BaseMainActivity() {
     }
 
 
-    fun setupTabs() {
+    private fun setupTabs() {
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
             override fun onTabReselected(tab: TabLayout.Tab) {

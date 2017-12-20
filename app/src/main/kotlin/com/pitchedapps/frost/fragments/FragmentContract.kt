@@ -1,11 +1,9 @@
 package com.pitchedapps.frost.fragments
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.pitchedapps.frost.contracts.ActivityContract
-import com.pitchedapps.frost.contracts.FrostViewContract
-import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.contracts.FrostContentContainerDynamic
+import com.pitchedapps.frost.contracts.FrostContentCore
+import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.disposables.Disposable
@@ -14,17 +12,7 @@ import io.reactivex.disposables.Disposable
  * Created by Allan Wang on 2017-11-07.
  */
 
-interface FragmentContract {
-
-    /**
-     * Specifies base url
-     */
-    val url: String
-
-    /**
-     * Specifies base url enum
-     */
-    val urlEnum: FbItem
+interface FragmentContract : FrostContentContainerDynamic {
 
     /**
      * Specifies position in Activity's viewpager
@@ -56,18 +44,24 @@ interface FragmentContract {
      * Call whenever a fragment is attached so that it may listen
      * to activity emissions
      */
-    fun attachMainObservable(contract: ActivityContract): Disposable
+    fun attachMainObservable(contract: MainActivityContract): Disposable
 
     /**
      * Load custom layout to container
      */
-    fun innerView(context: Context) : FrostViewContract
+    fun innerView(context: Context): FrostContentCore
 
     /**
      * Call when fragment is detached so that any existing
      * observable is disposed
      */
     fun detachMainObservable()
+
+    /*
+     * -----------------------------------------
+     * Delegates
+     * -----------------------------------------
+     */
 
     fun onBackPressed(): Boolean
 

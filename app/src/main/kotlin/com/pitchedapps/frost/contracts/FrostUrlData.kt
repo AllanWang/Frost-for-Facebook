@@ -17,7 +17,7 @@ interface FrostUrlData {
      */
     var baseEnum: FbItem?
 
-    fun passUrlDataTo(other : FrostUrlData) {
+    fun passUrlDataTo(other: FrostUrlData) {
         other.baseUrl = baseUrl
         other.baseEnum = baseEnum
     }

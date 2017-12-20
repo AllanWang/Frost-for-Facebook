@@ -21,6 +21,16 @@
         android:id="@+id/overlay_frost_refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize" />
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <com.pitchedapps.frost.views.FrostWebView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+android:id="@+id/overlay_frost_web_view"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </com.pitchedapps.frost.views.FrostRefreshView>
 
 </android.support.design.widget.CoordinatorLayout>

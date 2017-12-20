@@ -11,12 +11,8 @@ import ca.allanwang.kau.utils.invisibleIf
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.FrostObservables
-import com.pitchedapps.frost.contracts.FrostViewContract
-import com.pitchedapps.frost.contracts.DynamicUiContract
-import com.pitchedapps.frost.contracts.FrostUrlData
+import com.pitchedapps.frost.contracts.*
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -24,8 +20,8 @@ import io.reactivex.subjects.PublishSubject
 
 class FrostRefreshView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), SwipeRefreshLayout.OnRefreshListener,
-        FrostObservables, FrostUrlData, DynamicUiContract {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
+        FrostContentParent {
 
     val refresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     val progress: ProgressBar by bindView(R.id.progress_bar)
@@ -36,13 +32,12 @@ class FrostRefreshView @JvmOverloads constructor(
 
     override lateinit var baseUrl: String
     override var baseEnum: FbItem? = null
-
-    lateinit var inner: FrostViewContract
+    override var core: FrostContentCore? = null
 
     init {
         inflate(context, R.layout.view_swipable, this)
 
-        reloadOwnTheme()
+        reloadThemeSelf()
 
         // bind observables
         progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
@@ -54,23 +49,56 @@ class FrostRefreshView @JvmOverloads constructor(
             refresh.isRefreshing = it
             refresh.isEnabled = true
         }
-        refresh.setOnRefreshListener(this)
+        refresh.setOnRefreshListener { core?.reload(true) }
+    }
+
+
+    override fun clean() {
+        val core = core ?: return
+        core.destroy()
+        refresh.removeAllViews()
+        this.core = null
+    }
+
+    override fun bind(container: FrostContentContainer) {
+        baseUrl = container.baseUrl
+        baseEnum = container.baseEnum
+        when (container) {
+            is FrostContentContainerDynamic -> {
+                clean() // todo check if necessary
+                container.content = this
+                val core = container.createCore(context)
+                this.core = core
+                core.parent = this
+                val child = core.bind(container)
+                refresh.addView(child)
+            }
+            is FrostContentContainerStatic -> {
+                core = container.core
+                container.core.parent = this
+                container.core.bind(container)
+            }
+            else -> throw IllegalStateException("Binding container contract is invalid: ${container::class.java.simpleName}")
+        }
+
+    }
+
+    override fun reloadTheme() {
+        reloadThemeSelf()
+        core?.reloadTheme()
     }
 
     override fun reloadTextSize() {
-        inner.reloadTextSize()
+        core?.reloadTextSize()
     }
 
-    private fun reloadOwnTheme() {
+    override fun reloadThemeSelf() {
         progress.tint(Prefs.textColor.withAlpha(180))
         refresh.setColorSchemeColors(Prefs.iconColor)
         refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
     }
 
-    override fun reloadTheme() {
-        reloadOwnTheme()
-        inner.reloadTheme()
+    override fun reloadTextSizeSelf() {
+        // intentionally blank
     }
-
-    override fun onRefresh() = inner.reload(true)
 }

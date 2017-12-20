@@ -2,9 +2,9 @@ package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
 
 /**
  * Created by Allan Wang on 2017-06-30.

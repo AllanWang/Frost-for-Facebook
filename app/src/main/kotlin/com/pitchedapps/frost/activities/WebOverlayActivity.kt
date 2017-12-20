@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PointF
 import android.net.Uri
@@ -18,10 +19,7 @@ import ca.allanwang.kau.utils.*
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.ActivityContract
-import com.pitchedapps.frost.contracts.FileChooserContract
-import com.pitchedapps.frost.contracts.FileChooserDelegate
-import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.contracts.*
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
@@ -57,7 +55,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
              * and pop a dialog giving the user the option to copy the shared text
              */
             var disposable: Disposable? = null
-            disposable = refreshView.refreshObservable.subscribe {
+            disposable = refresh.refreshObservable.subscribe {
                 disposable?.dispose()
                 materialDialogThemed {
                     title(R.string.invalid_share_url)
@@ -99,24 +97,34 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
  */
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
+@SuppressLint("Registered")
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
-        ActivityContract, VideoViewHolder, FileChooserContract by FileChooserDelegate() {
+        ActivityContract, FrostContentContainerStatic,
+        VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
-    val refreshView: FrostRefreshView by bindView(R.id.overlay_frost_refresh_view)
+    val refresh: FrostRefreshView by bindView(R.id.overlay_frost_refresh_view)
+    val web: FrostWebView by bindView(R.id.overlay_frost_web_view)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
-    inline val urlTest: String?
+    override val content: FrostContentParent
+        get() = refresh
+    override val core: FrostContentCore
+        get() = web
+
+    private inline val urlTest: String?
         get() = intent.extras?.getString(ARG_URL) ?: intent.dataString
 
-    open val url: String
+    override val baseUrl: String
         get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
 
-    inline val userId: Long
+    override val baseEnum: FbItem? = null
+
+    private inline val userId: Long
         get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
 
-    inline val overlayContext: OverlayContext?
+    private inline val overlayContext: OverlayContext?
         get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as OverlayContext?
 
     override fun setTitle(title: String) {
@@ -141,20 +149,20 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
-        refreshView.baseUrl = url
-        val web = FrostWebView(this)
-        web.bind(refreshView)
+        refresh.bind(this)
 
-        if (forceBasicAgent)
-            web.userAgentString = USER_AGENT_BASIC
-        web.addTitleListener({ toolbar.title = it })
-        Prefs.prevId = Prefs.userId
-        if (userId != Prefs.userId) FbCookie.switchUser(userId) { web.reloadBase(true) }
-        else web.reloadBase(true)
-        if (Showcase.firstWebOverlay) {
-            coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
-                duration = Snackbar.LENGTH_INDEFINITE
-                setAction(R.string.kau_got_it) { _ -> this.dismiss() }
+        with(web) {
+            if (forceBasicAgent)
+                userAgentString = USER_AGENT_BASIC
+            addTitleListener({ toolbar.title = it })
+            Prefs.prevId = Prefs.userId
+            if (userId != Prefs.userId) FbCookie.switchUser(userId) { reloadBase(true) }
+            else reloadBase(true)
+            if (Showcase.firstWebOverlay) {
+                coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                    duration = Snackbar.LENGTH_INDEFINITE
+                    setAction(R.string.kau_got_it) { _ -> this.dismiss() }
+                }
             }
         }
 
@@ -173,15 +181,15 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         super.onNewIntent(intent)
         val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
         L.d("New intent")
-        if (url != newUrl) {
+        if (baseUrl != newUrl) {
             this.intent = intent
-            web.baseUrl = newUrl
-            refreshView.web.loadBaseUrl()
+            content.baseUrl = newUrl
+            core.reloadBase(true)
         }
     }
 
     override fun backConsumer(): Boolean {
-        if (!refreshView.onBackPressed())
+        if (!core.onBackPressed())
             finishSlideOut()
         return true
     }
@@ -224,9 +232,9 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_copy_link -> copyToClipboard(refreshView.web.url)
-            R.id.action_share -> shareText(refreshView.web.url)
-            else -> if (!OverlayContext.onOptionsItemSelected(refreshView.web, item.itemId))
+            R.id.action_copy_link -> copyToClipboard(core.currentUrl)
+            R.id.action_share -> shareText(core.currentUrl)
+            else -> if (!OverlayContext.onOptionsItemSelected(web, item.itemId))
                 return super.onOptionsItemSelected(item)
         }
         return true
