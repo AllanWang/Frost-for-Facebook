@@ -27,7 +27,7 @@ private fun playStoreLog(text: String) {
  */
 private fun Activity.playRestart() {
     if (this is SettingsActivity) {
-        setResult(MainActivity.REQUEST_RESTART)
+        setResult(REQUEST_RESTART)
         finish()
     } else restart()
 }

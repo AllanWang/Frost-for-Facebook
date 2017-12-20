@@ -1,31 +1,24 @@
 package com.pitchedapps.frost.web
 
-import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
 
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class FrostJSI(val webView: FrostWebViewCore) {
+class FrostJSI(val web: FrostWebView) {
 
-    val context: Context
-        get() = webView.context
-
-    val activity: MainActivity?
-        get() = (context as? MainActivity)
-
-    val headerObservable: Subject<String>? = activity?.headerBadgeObservable
-
-    val cookies: ArrayList<CookieModel>
-        get() = activity?.cookies() ?: arrayListOf()
+    private val context = web.context
+    private val activity = context as? MainActivity
+    private val header: Subject<String>? = activity?.headerBadgeObservable
+    private val cookies = activity?.cookies() ?: arrayListOf()
 
     /**
      * Attempts to load the url in an overlay
@@ -34,12 +27,12 @@ class FrostJSI(val webView: FrostWebViewCore) {
      */
     @JavascriptInterface
     fun loadUrl(url: String?): Boolean
-            = if (url == null) false else webView.requestWebOverlay(url)
+            = if (url == null) false else web.requestWebOverlay(url)
 
     @JavascriptInterface
     fun loadVideo(url: String?, isGif: Boolean) {
         if (url != null)
-            webView.post {
+            web.post {
                 (context as? VideoViewHolder)?.showVideo(url, isGif)
                         ?: L.d("Could not load video; contract not implemented")
             }
@@ -48,9 +41,9 @@ class FrostJSI(val webView: FrostWebViewCore) {
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {
         L.d("FrostJSI reload")
-        webView.post {
-            webView.stopLoading()
-            webView.loadBaseUrl(animate)
+        web.post {
+            web.stopLoading()
+            web.reloadBase(animate)
         }
     }
 
@@ -58,7 +51,7 @@ class FrostJSI(val webView: FrostWebViewCore) {
     fun contextMenu(url: String, text: String?) {
         if (!text.isIndependent) return
         //url will be formatted through webcontext
-        webView.post { context.showWebContextMenu(WebContext(url, text)) }
+        web.post { context.showWebContextMenu(WebContext(url, text)) }
     }
 
     /**
@@ -75,7 +68,7 @@ class FrostJSI(val webView: FrostWebViewCore) {
      */
     @JavascriptInterface
     fun disableSwipeRefresh(disable: Boolean) {
-        webView.post { (webView.parent as? SwipeRefreshLayout)?.isEnabled = !disable }
+        web.post { (web.parent as? SwipeRefreshLayout)?.isEnabled = !disable }
     }
 
     @JavascriptInterface
@@ -93,19 +86,19 @@ class FrostJSI(val webView: FrostWebViewCore) {
 
     @JavascriptInterface
     fun emit(flag: Int) {
-        webView.post { webView.frostWebClient.emit(flag) }
+        web.post { web.frostWebClient.emit(flag) }
     }
 
     @JavascriptInterface
     fun handleHtml(html: String?) {
         html ?: return
-        webView.post { webView.frostWebClient.handleHtml(html) }
+        web.post { web.frostWebClient.handleHtml(html) }
     }
 
     @JavascriptInterface
     fun handleHeader(html: String?) {
         html ?: return
-        headerObservable?.onNext(html)
+        header?.onNext(html)
     }
 
 }

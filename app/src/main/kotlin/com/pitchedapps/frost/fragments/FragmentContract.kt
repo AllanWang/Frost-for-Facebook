@@ -1,25 +1,18 @@
 package com.pitchedapps.frost.fragments
 
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.pitchedapps.frost.contracts.ActivityContract
+import com.pitchedapps.frost.contracts.FrostViewContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.web.FrostWebView
-import com.pitchedapps.frost.web.FrostWebViewCore
+import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.PublishSubject
 
 /**
  * Created by Allan Wang on 2017-11-07.
  */
-object FragmentRequest {
-    const val REFRESH = 99
-    const val TEXT_ZOOM = 17
-}
-
-interface ActivityContract {
-    fun setTitle(titleRes: Int)
-    fun setTitle(title: String)
-    val subject: PublishSubject<Int>
-}
 
 interface FragmentContract {
 
@@ -54,27 +47,6 @@ interface FragmentContract {
     fun firstLoadRequest()
 
     /**
-     * Reload [url] with or without animation
-     */
-    fun reload(animate: Boolean)
-
-    /**
-     * Should be called when a back press is triggered
-     * Return [true] if consumed, [false] otherwise
-     */
-    fun onBackPressed():Boolean
-
-    /**
-     * Triggered when viewpager scrolls to current fragment
-     */
-    fun onScrollTo()
-
-    /**
-     * Triggered when viewpager scrolls from current fragment
-     */
-    fun onScrollFrom()
-
-    /**
      * Single callable action to be executed upon creation
      * Note that this call is not guaranteed
      */
@@ -87,14 +59,21 @@ interface FragmentContract {
     fun attachMainObservable(contract: ActivityContract): Disposable
 
     /**
+     * Load custom layout to container
+     */
+    fun innerView(context: Context) : FrostViewContract
+
+    /**
      * Call when fragment is detached so that any existing
-     * observable is disposeed
+     * observable is disposed
      */
     fun detachMainObservable()
 
-    fun reloadTextSize()
+    fun onBackPressed(): Boolean
 
-    fun reloadTheme()
+    fun onTabClick()
+
+
 }
 
 interface NativeFragmentContract<T> : FragmentContract {
@@ -110,8 +89,7 @@ interface NativeFragmentContract<T> : FragmentContract {
 }
 
 interface WebFragmentContract : FragmentContract {
-    var frostWebView: FrostWebView
-    val web: FrostWebViewCore
+    var web: FrostWebView
     /**
      * Call refresh with animations and also clear history
      */

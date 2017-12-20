@@ -141,7 +141,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, {
         Prefs.showRoundedIcons = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.rounded_icons_desc
     }
@@ -149,7 +149,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(R.string.tint_nav, { Prefs.tintNavBar }, {
         Prefs.tintNavBar = it
         frostNavigationBar()
-        setFrostResult(MainActivity.REQUEST_NAV)
+        setFrostResult(REQUEST_NAV)
     }) {
         descRes = R.string.tint_nav_desc
     }
@@ -157,5 +157,5 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     list.add(KPrefTextSeekbar(
             KPrefSeekbar.KPrefSeekbarBuilder(
                     globalOptions,
-                    R.string.web_text_scaling, { Prefs.webTextScaling }, { Prefs.webTextScaling = it; setFrostResult(MainActivity.REQUEST_WEB_ZOOM) })))
+                    R.string.web_text_scaling, { Prefs.webTextScaling }, { Prefs.webTextScaling = it; setFrostResult(REQUEST_TEXT_ZOOM) })))
 }

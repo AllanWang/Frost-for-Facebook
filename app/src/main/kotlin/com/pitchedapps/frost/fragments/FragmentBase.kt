@@ -2,25 +2,31 @@ package com.pitchedapps.frost.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
+import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.contracts.ActivityContract
+import com.pitchedapps.frost.contracts.DynamicUiContract
+import com.pitchedapps.frost.contracts.FrostViewContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.web.FrostWebView
-import com.pitchedapps.frost.web.FrostWebViewCore
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
+import com.pitchedapps.frost.views.FrostRefreshView
+import com.pitchedapps.frost.views.FrostWebView
+import com.pitchedapps.frost.web.FrostWebViewClient
+import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 /**
  * Created by Allan Wang on 2017-11-07.
  */
-abstract class BaseFragment : Fragment(), FragmentContract {
+abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
         private const val ARG_URL = "arg_url"
@@ -37,18 +43,33 @@ abstract class BaseFragment : Fragment(), FragmentContract {
         }
     }
 
-    override val url: String by lazy { arguments.getString(ARG_URL) }
-    override val urlEnum: FbItem by lazy { arguments.getSerializable(ARG_URL_ENUM) as FbItem }
-    override val position: Int by lazy { arguments.getInt(ARG_POSITION) }
+    override val url: String by lazy { arguments!!.getString(ARG_URL) }
+    override val urlEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
+    override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
     private var onCreateRunnable: ((FragmentContract) -> Unit)? = null
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    protected var refreshView: FrostRefreshView? = null
+    protected val delegate
+        get() = refreshView?.inner
+
+    override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val refresh = FrostRefreshView(context!!)
+        this.refreshView = refresh
+        refresh.baseUrl = url
+        refresh.baseEnum = urlEnum
+        val viewContract = innerView(context!!)
+        viewContract.bind(refresh)
+        return refresh
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onCreateRunnable?.invoke(this)
         onCreateRunnable = null
+
         firstLoadRequest()
     }
 
@@ -59,7 +80,7 @@ abstract class BaseFragment : Fragment(), FragmentContract {
 
     override fun firstLoadRequest() {
         if (userVisibleHint && isVisible && firstLoad) {
-            reload(true)
+            delegate?.reload(true)
             firstLoad = false
         }
     }
@@ -69,21 +90,23 @@ abstract class BaseFragment : Fragment(), FragmentContract {
     }
 
     override fun attachMainObservable(contract: ActivityContract): Disposable =
-            contract.subject.observeOn(AndroidSchedulers.mainThread()).subscribe {
+            contract.fragmentSubject.observeOn(AndroidSchedulers.mainThread()).subscribe {
                 when (it) {
-                    FragmentRequest.REFRESH -> {
-                        if (this is WebFragmentContract) reloadAndClear(true)
-                        else reload(true)
+                    REQUEST_REFRESH -> {
+                        delegate?.apply {
+                            reload(true)
+                            clearHistory()
+                        }
                     }
                     position -> {
                         contract.setTitle(urlEnum.titleId)
-                        onScrollTo()
+                        delegate?.onScrollTo()
                     }
                     -(position + 1) -> {
-                        onScrollFrom()
+                        delegate?.onScrollFrom()
                     }
-                    FragmentRequest.TEXT_ZOOM -> {
-                        reloadTextSize()
+                    REQUEST_TEXT_ZOOM -> {
+                        delegate?.reloadTextSize()
                     }
                 }
             }
@@ -104,26 +127,29 @@ abstract class BaseFragment : Fragment(), FragmentContract {
         super.onDetach()
     }
 
-    @CallSuper
-    override fun onScrollTo() = Unit
-
-    @CallSuper
-    override fun onScrollFrom() = Unit
-
-}
-
-class RecyclerFragment<T>(override val parser: FrostParser<T>) : BaseFragment(), NativeFragmentContract<T> {
-    override fun reload(animate: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onDestroyView() {
+        delegate?.destroy()
+        refreshView = null
+        super.onDestroyView()
     }
 
-    override fun onBackPressed() = false
+    override fun onBackPressed() = delegate?.onBackPressed() ?: false
 
     override fun reloadTextSize() {
+        refreshView?.reloadTextSize()
     }
 
     override fun reloadTheme() {
+        refreshView?.reloadTextSize()
     }
+
+    override fun onTabClick() {
+        delegate?.scrollOrRefresh()
+    }
+}
+
+abstract class RecyclerFragment<T> : BaseFragment(), NativeFragmentContract<T> {
+
 
     override fun revertToWeb() {
         //todo
@@ -131,55 +157,19 @@ class RecyclerFragment<T>(override val parser: FrostParser<T>) : BaseFragment(),
 
 }
 
-class WebFragment2 : BaseFragment(), WebFragmentContract {
+open class WebFragment : BaseFragment(), FragmentContract {
 
-    companion object {
-        operator fun invoke(data: FbItem, position: Int) =
-                BaseFragment(WebFragment2(), data, position)
-    }
+    /**
+     * Given a webview, output a client
+     */
+    open fun client(web: FrostWebView) = FrostWebViewClient(web)
 
-    override lateinit var frostWebView: FrostWebView
-    override val web: FrostWebViewCore by lazy { frostWebView.web }
+    override fun innerView(context: Context) = FrostWebView(context)
 
-    override var pauseLoad: Boolean
-        get() = web.settings.blockNetworkLoads
-        set(value) {
-            web.settings.blockNetworkLoads = value
-        }
+}
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        frostWebView = FrostWebView(context)
-        frostWebView.setupWebview(url, urlEnum)
-        return frostWebView
-    }
+class WebFragmentMenu : WebFragment() {
 
-    override fun reload(animate: Boolean) =
-            web.reload(animate)
+    override fun client(web: FrostWebView) = FrostWebViewClientMenu(web)
 
-    override fun reloadTextSize() {
-        web.settings.textZoom = Prefs.webTextScaling
-    }
-
-    override fun onScrollTo() {
-        super.onScrollTo()
-        pauseLoad = false
-    }
-
-    override fun onScrollFrom() {
-        super.onScrollFrom()
-        pauseLoad = true
-    }
-
-    override fun onBackPressed() =
-            frostWebView.onBackPressed()
-
-    override fun reloadAndClear(animate: Boolean) {
-        web.clearHistory()
-        reload(animate)
-    }
-
-    override fun reloadTheme() {
-        reload(false) //todo just inject theme
-    }
 }

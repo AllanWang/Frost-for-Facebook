@@ -5,9 +5,10 @@ import android.webkit.*
 import ca.allanwang.kau.permissions.PERMISSION_ACCESS_FINE_LOCATION
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.ActivityWebContract
+import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostSnackbar
+import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
@@ -45,12 +46,12 @@ class HeadlessChromeClient : WebChromeClient() {
 /**
  * The default chrome client
  */
-class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
+class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
-    val progressObservable: Subject<Int> = webCore.progressObservable
-    val titleObservable: BehaviorSubject<String> = webCore.titleObservable
-    val activityContract = (webCore.context as? ActivityWebContract)
-    val context = webCore.context!!
+    private val progress: Subject<Int> = web.progressObservable
+    private val title: BehaviorSubject<String> = web.titleObservable
+    private val activity = (web.context as? ActivityContract)
+    private val context = web.context!!
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return true
@@ -60,18 +61,18 @@ class FrostChromeClient(webCore: FrostWebViewCore) : WebChromeClient() {
 
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
-        if (title.contains("http") || titleObservable.value == title) return
-        titleObservable.onNext(title)
+        if (title.contains("http") || this.title.value == title) return
+        this.title.onNext(title)
     }
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {
         super.onProgressChanged(view, newProgress)
-        progressObservable.onNext(newProgress)
+        progress.onNext(newProgress)
     }
 
     override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: FileChooserParams): Boolean {
-        activityContract?.openFileChooser(filePathCallback, fileChooserParams) ?: webView.frostSnackbar(R.string.file_chooser_not_found)
-        return activityContract != null
+        activity?.openFileChooser(filePathCallback, fileChooserParams) ?: webView.frostSnackbar(R.string.file_chooser_not_found)
+        return activity != null
     }
 
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {

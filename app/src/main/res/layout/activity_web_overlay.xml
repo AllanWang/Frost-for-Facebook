@@ -17,8 +17,8 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <com.pitchedapps.frost.web.FrostWebView
-        android:id="@+id/overlay_frost_webview"
+    <com.pitchedapps.frost.views.FrostRefreshView
+        android:id="@+id/overlay_frost_refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" />

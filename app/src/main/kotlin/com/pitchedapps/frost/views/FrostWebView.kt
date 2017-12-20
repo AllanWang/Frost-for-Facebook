@@ -1,4 +1,4 @@
-package com.pitchedapps.frost.web
+package com.pitchedapps.frost.views
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -8,14 +8,21 @@ import android.support.v4.view.NestedScrollingChildHelper
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isVisible
+import com.pitchedapps.frost.contracts.FrostUrlData
+import com.pitchedapps.frost.contracts.FrostViewContract
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostDownload
+import com.pitchedapps.frost.web.*
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -26,23 +33,50 @@ import io.reactivex.subjects.PublishSubject
  * Created by Allan Wang on 2017-05-29.
  *
  */
-class FrostWebViewCore @JvmOverloads constructor(
+class FrostWebView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr), NestedScrollingChild {
+) : WebView(context, attrs, defStyleAttr), NestedScrollingChild, FrostViewContract {
+
+    override fun reload(animate: Boolean) {
+        registerTransition(animate)
+        super.reload()
+    }
+
+    override val view: View = this
 
     private val childHelper = NestedScrollingChildHelper(this)
     private var lastY: Int = 0
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
     private var nestedOffsetY: Int = 0
-    val progressObservable: PublishSubject<Int>     // Keeps track of every progress change
-    val refreshObservable: PublishSubject<Boolean>  // Only emits on page loads
-    val titleObservable: BehaviorSubject<String>    // Only emits on different non http titles
 
+    override var baseUrl: String = ""
+    override var baseEnum: FbItem? = null //only viewpager items should pass the base enum
+    override lateinit var progressObservable: PublishSubject<Int>
+    override lateinit var refreshObservable: PublishSubject<Boolean>
+    override lateinit var titleObservable: BehaviorSubject<String>
 
-    var baseUrl: String? = null
-    var baseEnum: FbItem? = null //only viewpager items should pass the base enum
     internal lateinit var frostWebClient: FrostWebViewClient
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun init(dataContract: FrostUrlData) {
+        with(settings) {
+            javaScriptEnabled = true
+            if (url.shouldUseBasicAgent)
+                userAgentString = com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+            allowFileAccess = true
+            textZoom = com.pitchedapps.frost.utils.Prefs.webTextScaling
+        }
+        setLayerType(LAYER_TYPE_HARDWARE, null)
+        // attempt to get custom client; otherwise fallback to original
+        frostWebClient = (dataContract as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
+        webViewClient = frostWebClient
+        webChromeClient = FrostChromeClient(this)
+        addJavascriptInterface(FrostJSI(this), "Frost")
+        setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        setDownloadListener(context::frostDownload)
+    }
+
 
     /**
      * Wrapper to the main userAgentString to cache it.
@@ -54,7 +88,6 @@ class FrostWebViewCore @JvmOverloads constructor(
      * A null value may be interpreted as the default value
      */
     var userAgentString: String? = null
-        get() = field
         set(value) {
             field = value
             settings.userAgentString = value
@@ -62,20 +95,12 @@ class FrostWebViewCore @JvmOverloads constructor(
 
     init {
         isNestedScrollingEnabled = true
-        progressObservable = PublishSubject.create<Int>()
-        refreshObservable = PublishSubject.create<Boolean>()
-        titleObservable = BehaviorSubject.create<String>()
     }
 
     fun loadUrl(url: String?, animate: Boolean) {
         if (url == null) return
         registerTransition(animate)
         super.loadUrl(url)
-    }
-
-    fun reload(animate: Boolean) {
-        registerTransition(animate)
-        super.reload()
     }
 
     /**
@@ -98,12 +123,21 @@ class FrostWebViewCore @JvmOverloads constructor(
         }
     }
 
-    fun loadBaseUrl(animate: Boolean = true) {
+    override fun reloadBase(animate: Boolean) {
         loadUrl(baseUrl, animate)
     }
 
     fun addTitleListener(subscriber: (title: String) -> Unit, scheduler: Scheduler = AndroidSchedulers.mainThread()): Disposable
             = titleObservable.observeOn(scheduler).subscribe(subscriber)
+
+    override fun onBackPressed(): Boolean {
+        if (canGoBack()) {
+            goBack()
+            return true
+        }
+        return false
+    }
+
 
     /**
      * Handle nested scrolling against SwipeRecyclerView
@@ -156,12 +190,12 @@ class FrostWebViewCore @JvmOverloads constructor(
      * If webview is already at the top, refresh
      * Otherwise scroll to top
      */
-    fun scrollOrRefresh() {
-        if (scrollY < 5) loadBaseUrl()
+    override fun scrollOrRefresh() {
+        if (scrollY < 5) reloadBase(true)
         else scrollToTop()
     }
 
-    fun scrollToTop() {
+    private fun scrollToTop() {
         flingScroll(0, 0) // stop fling
         if (scrollY > 10000) {
             scrollTo(0, 0)
@@ -175,7 +209,28 @@ class FrostWebViewCore @JvmOverloads constructor(
         }
     }
 
-    // Nested Scroll implements
+    override fun reloadTextSize() {
+        settings.textZoom = Prefs.webTextScaling
+    }
+
+    override fun reloadTheme() {
+        reload(false) // todo see if there's a better solution
+    }
+
+    override fun onScrollTo() {
+        //todo idk
+    }
+
+    override fun onScrollFrom() {
+        //todo idk
+    }
+
+    /*
+     * ---------------------------------------------
+     * Nested Scrolling Content
+     * ---------------------------------------------
+     */
+
     override fun setNestedScrollingEnabled(enabled: Boolean) {
         childHelper.isNestedScrollingEnabled = enabled
     }

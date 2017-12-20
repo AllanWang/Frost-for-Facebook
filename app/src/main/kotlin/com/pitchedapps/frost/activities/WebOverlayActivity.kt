@@ -18,15 +18,16 @@ import ca.allanwang.kau.utils.*
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.ActivityWebContract
+import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.FrostRefreshView
 import com.pitchedapps.frost.views.FrostVideoViewer
-import com.pitchedapps.frost.web.FrostWebView
+import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.disposables.Disposable
 import okhttp3.HttpUrl
 
@@ -56,7 +57,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
              * and pop a dialog giving the user the option to copy the shared text
              */
             var disposable: Disposable? = null
-            disposable = frostWeb.web.refreshObservable.subscribe {
+            disposable = refreshView.refreshObservable.subscribe {
                 disposable?.dispose()
                 materialDialogThemed {
                     title(R.string.invalid_share_url)
@@ -99,11 +100,11 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
-        ActivityWebContract, VideoViewHolder, FileChooserContract by FileChooserDelegate() {
+        ActivityContract, VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
-    val frostWeb: FrostWebView by bindView(R.id.overlay_frost_webview)
+    val refreshView: FrostRefreshView by bindView(R.id.overlay_frost_refresh_view)
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
     inline val urlTest: String?
@@ -117,6 +118,10 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
     inline val overlayContext: OverlayContext?
         get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as OverlayContext?
+
+    override fun setTitle(title: String) {
+        toolbar.title = title
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,13 +141,16 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
-        frostWeb.setupWebview(url)
+        refreshView.baseUrl = url
+        val web = FrostWebView(this)
+        web.bind(refreshView)
+
         if (forceBasicAgent)
-            frostWeb.web.userAgentString = USER_AGENT_BASIC
-        frostWeb.web.addTitleListener({ toolbar.title = it })
+            web.userAgentString = USER_AGENT_BASIC
+        web.addTitleListener({ toolbar.title = it })
         Prefs.prevId = Prefs.userId
-        if (userId != Prefs.userId) FbCookie.switchUser(userId) { frostWeb.web.loadBaseUrl() }
-        else frostWeb.web.loadBaseUrl()
+        if (userId != Prefs.userId) FbCookie.switchUser(userId) { web.reloadBase(true) }
+        else web.reloadBase(true)
         if (Showcase.firstWebOverlay) {
             coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
                 duration = Snackbar.LENGTH_INDEFINITE
@@ -167,13 +175,13 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         L.d("New intent")
         if (url != newUrl) {
             this.intent = intent
-            frostWeb.web.baseUrl = newUrl
-            frostWeb.web.loadBaseUrl()
+            web.baseUrl = newUrl
+            refreshView.web.loadBaseUrl()
         }
     }
 
     override fun backConsumer(): Boolean {
-        if (!frostWeb.onBackPressed())
+        if (!refreshView.onBackPressed())
             finishSlideOut()
         return true
     }
@@ -216,9 +224,9 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_copy_link -> copyToClipboard(frostWeb.web.url)
-            R.id.action_share -> shareText(frostWeb.web.url)
-            else -> if (!OverlayContext.onOptionsItemSelected(frostWeb.web, item.itemId))
+            R.id.action_copy_link -> copyToClipboard(refreshView.web.url)
+            R.id.action_share -> shareText(refreshView.web.url)
+            else -> if (!OverlayContext.onOptionsItemSelected(refreshView.web, item.itemId))
                 return super.onOptionsItemSelected(item)
         }
         return true
