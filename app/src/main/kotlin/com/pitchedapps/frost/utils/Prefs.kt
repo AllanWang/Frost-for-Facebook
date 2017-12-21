@@ -151,5 +151,7 @@ object Prefs : KPref() {
     val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 
+    var nativeViews: Boolean by kpref("native_views", true)
+
     override fun deleteKeys() = arrayOf("search_bar")
 }

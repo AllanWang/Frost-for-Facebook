@@ -10,4 +10,5 @@ interface ActivityContract : FileChooserActivityContract
 interface MainActivityContract : ActivityContract {
     val fragmentSubject: PublishSubject<Int>
     fun setTitle(res: Int)
+    fun setTitle(text: CharSequence)
 }

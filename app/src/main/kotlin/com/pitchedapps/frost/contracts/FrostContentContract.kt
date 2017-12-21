@@ -60,6 +60,20 @@ interface FrostContentParent : DynamicUiContract {
      */
     fun bind(container: FrostContentContainer)
 
+    /**
+     * Signal that the contract will not be used again
+     * Clean up resources where applicable
+     */
+    fun destroy()
+
+    /**
+     * Hook onto the refresh observable for one cycle
+     * Animate toggles between the fancy ripple and the basic fade
+     * The cycle only starts on the first load since
+     * there may have been another process when this is registered
+     */
+    fun registerTransition(animate: Boolean)
+
 }
 
 /**

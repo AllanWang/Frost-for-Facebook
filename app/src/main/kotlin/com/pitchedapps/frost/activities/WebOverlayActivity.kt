@@ -26,6 +26,7 @@ import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import okhttp3.HttpUrl
 
@@ -148,10 +149,13 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         content.bind(this)
         web.reloadBase(true)
 
+        content.titleObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { toolbar.title = it }
+
         with(web) {
             if (forceBasicAgent)
                 userAgentString = USER_AGENT_BASIC
-            addTitleListener({ toolbar.title = it })
             Prefs.prevId = Prefs.userId
             if (userId != Prefs.userId) FbCookie.switchUser(userId) { reloadBase(true) }
             else reloadBase(true)

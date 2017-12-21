@@ -5,8 +5,7 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.views.FrostWebView
+import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
 
 /**
@@ -79,29 +78,15 @@ interface FragmentContract : FrostContentContainer {
 
 }
 
-interface NativeFragmentContract<T> : FragmentContract {
-    /**
-     * The parser to make this all happen
-     */
-    val parser: FrostParser<T>
+interface RecyclerContentContract {
+
+    fun bind(recyclerView: FrostRecyclerView)
 
     /**
-     * Called when something goes wrong in the parser
+     * Completely handle data reloading
+     * Optional progress emission update
+     * Callback returns [true] for success, [false] otherwise
      */
-    fun revertToWeb()
-}
+    fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit)
 
-interface WebFragmentContract : FragmentContract {
-    var web: FrostWebView
-    /**
-     * Call refresh with animations and also clear history
-     */
-    fun reloadAndClear(animate: Boolean)
-
-    /**
-     * Boolean to help define when to stop loading new data
-     * Typically this should be turned true when the fragment is out of view
-     * and false once it is back into view
-     */
-    var pauseLoad: Boolean
 }

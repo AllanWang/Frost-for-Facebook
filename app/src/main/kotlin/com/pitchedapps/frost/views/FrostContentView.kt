@@ -7,17 +7,16 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import ca.allanwang.kau.utils.bindView
-import ca.allanwang.kau.utils.invisibleIf
-import ca.allanwang.kau.utils.tint
-import ca.allanwang.kau.utils.withAlpha
+import ca.allanwang.kau.utils.*
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.web.WEB_LOAD_DELAY
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
@@ -26,6 +25,14 @@ class FrostContentWeb @JvmOverloads constructor(
 ) : FrostContentView<FrostWebView>(context, attrs, defStyleAttr, defStyleRes) {
 
     override val layoutRes: Int = R.layout.view_content_base_web
+
+}
+
+class FrostContentRecycler @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+) : FrostContentView<FrostRecyclerView>(context, attrs, defStyleAttr, defStyleRes) {
+
+    override val layoutRes: Int = R.layout.view_content_base_recycler
 
 }
 
@@ -100,5 +107,34 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     override fun reloadTextSizeSelf() {
         // intentionally blank
+    }
+
+    override fun destroy() {
+        titleObservable.onComplete()
+        progressObservable.onComplete()
+        refreshObservable.onComplete()
+        core.destroy()
+    }
+
+    /**
+     * Hook onto the refresh observable for one cycle
+     * Animate toggles between the fancy ripple and the basic fade
+     * The cycle only starts on the first load since there may have been another process when this is registered
+     */
+    override fun registerTransition(animate: Boolean) {
+        with(coreView) {
+            var dispose: Disposable? = null
+            var loading = false
+            dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
+                if (it) {
+                    loading = true
+                    if (isVisible) fadeOut(duration = 200L)
+                } else if (loading) {
+                    dispose?.dispose()
+                    if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                    else fadeIn(duration = 100L)
+                }
+            }
+        }
     }
 }

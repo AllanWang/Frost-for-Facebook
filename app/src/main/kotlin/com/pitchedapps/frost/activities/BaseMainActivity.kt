@@ -369,7 +369,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            val fragment = BaseFragment(item.fragmentCreator(), item, position)
+            val fragment = BaseFragment(item.fragmentCreator, item, position)
             //If first load hasn't occurred, add a listener
             // todo check
 //            if (!firstLoadFinished) {

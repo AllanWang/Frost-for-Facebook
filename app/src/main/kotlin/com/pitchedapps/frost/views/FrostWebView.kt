@@ -7,10 +7,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import ca.allanwang.kau.utils.circularReveal
-import ca.allanwang.kau.utils.fadeIn
-import ca.allanwang.kau.utils.fadeOut
-import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -19,9 +15,6 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.*
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -33,7 +26,7 @@ class FrostWebView @JvmOverloads constructor(
         FrostContentCore {
 
     override fun reload(animate: Boolean) {
-        registerTransition(animate)
+        parent.registerTransition(animate)
         super.reload()
     }
 
@@ -86,36 +79,13 @@ class FrostWebView @JvmOverloads constructor(
 
     fun loadUrl(url: String?, animate: Boolean) {
         if (url == null) return
-        registerTransition(animate)
+        parent.registerTransition(animate)
         super.loadUrl(url)
-    }
-
-    /**
-     * Hook onto the refresh observable for one cycle
-     * Animate toggles between the fancy ripple and the basic fade
-     * The cycle only starts on the first load since there may have been another process when this is registered
-     */
-    private fun registerTransition(animate: Boolean) {
-        var dispose: Disposable? = null
-        var loading = false
-        dispose = parent.refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
-            if (it) {
-                loading = true
-                if (isVisible) fadeOut(duration = 200L)
-            } else if (loading) {
-                dispose?.dispose()
-                if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
-                else fadeIn(duration = 100L)
-            }
-        }
     }
 
     override fun reloadBase(animate: Boolean) {
         loadUrl(parent.baseUrl, animate)
     }
-
-    fun addTitleListener(subscriber: (title: String) -> Unit, scheduler: Scheduler = AndroidSchedulers.mainThread()): Disposable
-            = parent.titleObservable.observeOn(scheduler).subscribe(subscriber)
 
     override fun onBackPressed(): Boolean {
         if (canGoBack()) {

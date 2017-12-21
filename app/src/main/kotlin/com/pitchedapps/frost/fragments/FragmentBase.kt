@@ -7,20 +7,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
+import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.REQUEST_REFRESH
-import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
+import com.pitchedapps.frost.parsers.FrostParser
+import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.FrostRecyclerView
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -28,22 +32,23 @@ import io.reactivex.disposables.Disposable
 abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
-        private const val ARG_URL = "arg_url"
         private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
 
-        internal operator fun invoke(base: BaseFragment, data: FbItem, position: Int) = base.apply {
+        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
+            val fragment = if (Prefs.nativeViews) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
-            withArguments(
+            fragment.withArguments(
                     ARG_URL to d.url,
                     ARG_POSITION to position,
                     ARG_URL_ENUM to d
             )
+            return fragment
         }
     }
 
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
-    override val baseEnum: FbItem? by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
+    override val baseEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
 
     override var firstLoad: Boolean = true
@@ -87,7 +92,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun setTitle(title: String) {
-        // todo
+        (context as? MainActivityContract)?.setTitle(title)
     }
 
     override fun attachMainObservable(contract: MainActivityContract): Disposable =
@@ -100,7 +105,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
                         }
                     }
                     position -> {
-                        contract.setTitle(baseEnum!!.titleId)
+                        contract.setTitle(baseEnum.titleId)
                         core?.active = true
                     }
                     -(position + 1) -> {
@@ -129,7 +134,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
-        core?.destroy() // todo check
+        content?.destroy()
         content = null
         super.onDestroyView()
     }
@@ -157,13 +162,53 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }
 
-abstract class RecyclerFragment<T> : BaseFragment(), NativeFragmentContract<T> {
+abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
+    /**
+     * The parser to make this all happen
+     */
+    abstract val parser: FrostParser<T>
 
+    abstract val adapter: FastItemAdapter<Item>
 
-    override fun revertToWeb() {
-        //todo
+    abstract fun toItems(data: T): List<Item>
+
+    override fun bind(recyclerView: FrostRecyclerView) {
+        recyclerView.adapter = this.adapter
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val tail = tailMapper(baseEnum)
+        if (tail.isNotEmpty()) {
+            val baseUrl = baseEnum.url
+            L.d("Adding $tail to $baseUrl for RecyclerFragment")
+            arguments!!.putString(ARG_URL, "$baseUrl$tail")
+        }
+    }
+
+    private fun tailMapper(item: FbItem) = when (item) {
+        FbItem.NOTIFICATIONS, FbItem.MESSAGES -> "/?more"
+        else -> ""
+    }
+
+    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
+        doAsync {
+            progress(10)
+            val doc = frostJsoup(baseUrl)
+            progress(60)
+            val data = parser.parse(doc)
+            if (data == null) {
+                context?.toast(R.string.error_generic)
+                L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
+                Prefs.nativeViews = false
+                return@doAsync callback(false)
+            }
+            progress(80)
+            val items = toItems(data)
+            progress(97)
+            adapter.setNewList(items)
+        }
+    }
 }
 
 open class WebFragment : BaseFragment(), FragmentContract {
