@@ -161,7 +161,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
     }
 
     fun shouldRestartMain() {
-        setFrostResult(MainActivity.REQUEST_RESTART)
+        setFrostResult(REQUEST_RESTART)
     }
 
     @SuppressLint("MissingSuperCall")

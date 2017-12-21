@@ -25,7 +25,7 @@ import com.pitchedapps.frost.utils.withRoundIcon
 class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.ViewHolder>
 (R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
 
-    override fun bindView(viewHolder: ViewHolder, payloads: List<Any>?) {
+    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(viewHolder, payloads)
         with(viewHolder) {
             text.invisible()

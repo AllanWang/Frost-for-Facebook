@@ -9,6 +9,7 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.views.FrostWebView
 import org.jetbrains.anko.runOnUiThread
 
 /**
@@ -27,7 +28,7 @@ import org.jetbrains.anko.runOnUiThread
  * whether the user agent string should be changed. All propagated results will return false,
  * as we have no need of sending a new intent to the same activity
  */
-fun FrostWebViewCore.requestWebOverlay(url: String): Boolean {
+fun FrostWebView.requestWebOverlay(url: String): Boolean {
     if (url == "#" || !url.isIndependent) {
         L.i("Forbid overlay switch", url)
         return false

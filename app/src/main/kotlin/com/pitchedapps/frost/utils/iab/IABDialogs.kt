@@ -7,12 +7,8 @@ import ca.allanwang.kau.utils.startPlayStoreLink
 import ca.allanwang.kau.utils.string
 import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.frostAnswers
-import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.*
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -27,7 +23,7 @@ private fun playStoreLog(text: String) {
  */
 private fun Activity.playRestart() {
     if (this is SettingsActivity) {
-        setResult(MainActivity.REQUEST_RESTART)
+        setResult(REQUEST_RESTART)
         finish()
     } else restart()
 }

@@ -82,7 +82,7 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<Strin
     (0 until validInjectors.size).forEach { i -> validInjectors[i].inject(this, { observables[i].onSuccess(it) }) }
 }
 
-fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = webCore.jsInject(*injectors, callback = callback)
+fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = web.jsInject(*injectors, callback = callback)
 
 /**
  * Wrapper class to convert a function into an injector

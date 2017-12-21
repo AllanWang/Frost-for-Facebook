@@ -15,6 +15,7 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
+import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
 import org.jetbrains.anko.withAlpha
 
@@ -38,16 +39,16 @@ open class BaseWebViewClient : WebViewClient() {
 /**
  * The default webview client
  */
-open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient() {
+open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
-    val refreshObservable: Subject<Boolean> = webCore.refreshObservable
-    val isMain = webCore.baseEnum != null
+    private val refresh: Subject<Boolean> = web.parent.refreshObservable
+    private val isMain = web.parent.baseEnum != null
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
         L.d("FWV Loading", url)
-        refreshObservable.onNext(true)
+        refresh.onNext(true)
     }
 
     fun launchLogin(c: Context) {
@@ -58,10 +59,10 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
     }
 
     private fun injectBackgroundColor() {
-        webCore.setBackgroundColor(
+        web.setBackgroundColor(
                 when {
                     isMain -> Color.TRANSPARENT
-                    webCore.url.isFacebookUrl -> Prefs.bgColor.withAlpha(255)
+                    web.url.isFacebookUrl -> Prefs.bgColor.withAlpha(255)
                     else -> Color.WHITE
                 }
         )
@@ -80,7 +81,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
                     CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
                     CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
                     Prefs.themeInjector,
-                    CssHider.NON_RECENT.maybe((webCore.url?.contains("?sk=h_chr") ?: false)
+                    CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
                             && Prefs.aggressiveRecents))
     }
 
@@ -88,7 +89,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
         url ?: return
         L.d("Page finished", url)
         if (!url.isFacebookUrl) {
-            refreshObservable.onNext(false)
+            refresh.onNext(false)
             return
         }
         onPageFinishedActions(url)
@@ -96,22 +97,22 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 
     open internal fun onPageFinishedActions(url: String) {
         if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom)
-            webCore.pageDown(true)
+            web.pageDown(true)
         injectAndFinish()
     }
 
     internal fun injectAndFinish() {
         L.d("Page finished reveal")
-        refreshObservable.onNext(false)
+        refresh.onNext(false)
         injectBackgroundColor()
-        webCore.jsInject(
+        web.jsInject(
                 JsActions.LOGIN_CHECK,
                 JsAssets.CLICK_A,
                 JsAssets.TEXTAREA_LISTENER,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                 JsAssets.CONTEXT_A,
                 JsAssets.MEDIA,
-                JsAssets.HEADER_BADGES.maybe(webCore.baseEnum != null)
+                JsAssets.HEADER_BADGES.maybe(web.parent.baseEnum != null)
         )
     }
 
@@ -130,13 +131,13 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
         L.d("Launching Url", request.url?.toString() ?: "null")
-        return webCore.requestWebOverlay(request.url.toString())
+        return web.requestWebOverlay(request.url.toString())
     }
 
     private fun launchImage(url: String, text: String? = null): Boolean {
         L.d("Launching Image", url)
-        webCore.context.launchImageActivity(url, text)
-        if (webCore.canGoBack()) webCore.goBack()
+        web.context.launchImageActivity(url, text)
+        if (web.canGoBack()) web.goBack()
         return true
     }
 
@@ -161,7 +162,7 @@ open class FrostWebViewClient(val webCore: FrostWebViewCore) : BaseWebViewClient
 /**
  * Client variant for the menu view
  */
-class FrostWebViewClientMenu(webCore: FrostWebViewCore) : FrostWebViewClient(webCore) {
+class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     private val String.shouldInjectMenu
         get() = when (removePrefix(FB_URL_BASE)) {

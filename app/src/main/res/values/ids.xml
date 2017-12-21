@@ -15,4 +15,9 @@
     <item name="action_notification" type="id" />
     <item name="action_messages" type="id" />
     <item name="action_frost" type="id" />
+
+    <item name="content_progress" type="id" />
+    <item name="content_refresh" type="id" />
+    <item name="content_core" type="id" />
+    <item name="content_frame" type="id" />
 </resources>
