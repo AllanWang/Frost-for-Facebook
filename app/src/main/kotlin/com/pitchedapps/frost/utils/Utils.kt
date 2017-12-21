@@ -231,9 +231,10 @@ inline val String?.isVideoUrl
  */
 inline val String?.isIndependent: Boolean
     get() {
-        if (this == null || length < 3 || !contains('/')) return false
-        if (startsWith("http") && !isFacebookUrl) return true
-        if (dependentSet.any { contains(it) }) return false
+        if (this == null || length < 5) return false            // ignore short queries
+        if (this[0] == '#' && !contains('/')) return false      // ignore element values
+        if (startsWith("http") && !isFacebookUrl) return true   // ignore non facebook urls
+        if (dependentSet.any { contains(it) }) return false     // ignore known dependent segments
         return true
     }
 
