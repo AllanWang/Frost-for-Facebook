@@ -229,12 +229,22 @@ inline val String?.isVideoUrl
 /**
  * [true] if url can be displayed in a different webview
  */
-inline val String?.isIndependent
-    get() = this == null || (startsWith("http") && !isFacebookUrl)
-            || dependentSet.all { !contains(it) }
+inline val String?.isIndependent: Boolean
+    get() {
+        if (this == null || length < 3 || !contains('/')) return false
+        if (startsWith("http") && !isFacebookUrl) return true
+        if (dependentSet.any { contains(it) }) return false
+        return true
+    }
 
 val dependentSet = setOf(
-        "photoset_token", "direct_action_execute"
+        "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
+        /*
+         * Facebook messages have the following cases for the tid query
+         * mid* or id* for newer threads, which can be launched in new windows
+         * or a hash for old threads, which must be loaded on old threads
+         */
+        "messages/read/?tid=id", "messages/read/?tid=mid"
 )
 
 inline val String?.isExplicitIntent
