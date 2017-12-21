@@ -3,10 +3,10 @@ package com.pitchedapps.frost.settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.logging.KL
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_RESTART_APPLICATION
 import com.pitchedapps.frost.utils.Showcase
 
 /**
@@ -40,7 +40,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
     plainText(R.string.restart_frost) {
         descRes = R.string.restart_frost_desc
         onClick = {
-            setFrostResult(MainActivity.REQUEST_RESTART_APPLICATION)
+            setFrostResult(REQUEST_RESTART_APPLICATION)
             finish()
         }
     }
