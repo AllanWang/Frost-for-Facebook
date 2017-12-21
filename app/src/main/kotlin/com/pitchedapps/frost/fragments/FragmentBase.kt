@@ -163,6 +163,9 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 }
 
 abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
+
+    override val layoutRes: Int = R.layout.view_content_recycler
+
     /**
      * The parser to make this all happen
      */

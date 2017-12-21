@@ -22,6 +22,11 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/view_content_part_progress" />
+    <ProgressBar
+        android:id="@id/content_progress"
+        style="@style/FrostProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top" />
 
 </FrameLayout>
