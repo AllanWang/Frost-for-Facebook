@@ -168,7 +168,9 @@
         </provider>
         <provider
             android:name="com.raizlabs.android.dbflow.runtime.StubContentProvider"
-            android:authorities="${applicationId}.dbflow.provider"/>
+            android:authorities="${applicationId}.dbflow.provider"
+            android:exported="false" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="18b3c223b96b7e7fc1fac372e36b8f4d49a193c7" />
