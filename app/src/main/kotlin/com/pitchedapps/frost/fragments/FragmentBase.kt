@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
-import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
@@ -16,7 +16,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
-import com.pitchedapps.frost.views.FrostRefreshView
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
@@ -53,17 +52,21 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     override var content: FrostContentParent? = null
 
+    protected abstract val layoutRes: Int
+
     override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val refresh = FrostRefreshView(context!!)
-        refresh.bind(this)
-        return refresh
+        val view = inflater.inflate(layoutRes, container, false)
+        val content = view  as? FrostContentParent
+                ?: throw IllegalArgumentException("layoutRes for fragment must return view implementing FrostContentParent")
+        this.content = content
+        content.bind(this)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onCreateRunnable?.invoke(this)
         onCreateRunnable = null
-
         firstLoadRequest()
     }
 
@@ -74,7 +77,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     override fun firstLoadRequest() {
         if (userVisibleHint && isVisible && firstLoad) {
-            core?.reload(true)
+            core?.reloadBase(true)
             firstLoad = false
         }
     }
@@ -126,7 +129,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
-        content?.clean()
+        core?.destroy() // todo check
         content = null
         super.onDestroyView()
     }
@@ -165,9 +168,7 @@ abstract class RecyclerFragment<T> : BaseFragment(), NativeFragmentContract<T> {
 
 open class WebFragment : BaseFragment(), FragmentContract {
 
-    override fun createCore(context: Context): FrostContentCore {
-        return FrostWebView(context)
-    }
+    override val layoutRes: Int = R.layout.view_content_web
 
     /**
      * Given a webview, output a client

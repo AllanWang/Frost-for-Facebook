@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.contracts
 
-import android.content.Context
 import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
 import io.reactivex.subjects.BehaviorSubject
@@ -28,53 +27,12 @@ interface FrostContentContainer {
 }
 
 /**
- * Allows for dynamic core creation
- */
-interface FrostContentContainerDynamic : FrostContentContainer {
-    /**
-     * Reference to the content parent
-     * Bound through calling [FrostContentParent.bind]
-     */
-    var content: FrostContentParent?
-
-    /**
-     * Helper to retrieve the core from [content]
-     */
-    val core: FrostContentCore?
-        get() = content?.core
-
-    /**
-     * Create the designated core provider
-     */
-    fun createCore(context: Context): FrostContentCore
-}
-
-/**
- * For prebound and fixed content
- */
-interface FrostContentContainerStatic : FrostContentContainer {
-
-    val content: FrostContentParent
-
-    val core: FrostContentCore
-}
-
-/**
  * Contract for components shared among
  * all content providers
  */
 interface FrostContentParent : DynamicUiContract {
 
-    /**
-     * Reference to the provider
-     * Bound through calling [FrostContentParent.bind]
-     */
-    var core: FrostContentCore?
-
-    /**
-     * Remove inner content providers if they exist
-     */
-    fun clean()
+    val core: FrostContentCore
 
     /**
      * Observable to get data on whether view is refreshing or not
@@ -98,6 +56,7 @@ interface FrostContentParent : DynamicUiContract {
     /**
      * Binds the container to self
      * this will also handle all future bindings
+     * Must be called by container!
      */
     fun bind(container: FrostContentContainer)
 

@@ -23,7 +23,7 @@ import com.pitchedapps.frost.contracts.*
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.views.FrostRefreshView
+import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.disposables.Disposable
@@ -55,7 +55,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
              * and pop a dialog giving the user the option to copy the shared text
              */
             var disposable: Disposable? = null
-            disposable = refresh.refreshObservable.subscribe {
+            disposable = content.refreshObservable.subscribe {
                 disposable?.dispose()
                 materialDialogThemed {
                     title(R.string.invalid_share_url)
@@ -99,19 +99,15 @@ class WebOverlayActivity : WebOverlayActivityBase(false)
 
 @SuppressLint("Registered")
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
-        ActivityContract, FrostContentContainerStatic,
+        ActivityContract, FrostContentContainer,
         VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
-    val refresh: FrostRefreshView by bindView(R.id.overlay_frost_refresh_view)
-    val web: FrostWebView by bindView(R.id.overlay_frost_web_view)
+    val content: FrostContentWeb by bindView(R.id.frost_content_web)
+    val web: FrostWebView
+        get() = content.coreView
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
-
-    override val content: FrostContentParent
-        get() = refresh
-    override val core: FrostContentCore
-        get() = web
 
     private inline val urlTest: String?
         get() = intent.extras?.getString(ARG_URL) ?: intent.dataString
@@ -149,7 +145,8 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         setFrostColors(toolbar, themeWindow = false)
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
-        refresh.bind(this)
+        content.bind(this)
+        web.reloadBase(true)
 
         with(web) {
             if (forceBasicAgent)
@@ -184,12 +181,12 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         if (baseUrl != newUrl) {
             this.intent = intent
             content.baseUrl = newUrl
-            core.reloadBase(true)
+            web.reloadBase(true)
         }
     }
 
     override fun backConsumer(): Boolean {
-        if (!core.onBackPressed())
+        if (!web.onBackPressed())
             finishSlideOut()
         return true
     }
@@ -232,8 +229,8 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_copy_link -> copyToClipboard(core.currentUrl)
-            R.id.action_share -> shareText(core.currentUrl)
+            R.id.action_copy_link -> copyToClipboard(web.currentUrl)
+            R.id.action_share -> shareText(web.currentUrl)
             else -> if (!OverlayContext.onOptionsItemSelected(web, item.itemId))
                 return super.onOptionsItemSelected(item)
         }

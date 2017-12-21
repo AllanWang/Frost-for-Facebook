@@ -3,6 +3,7 @@ package com.pitchedapps.frost.views
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -13,6 +14,7 @@ import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
@@ -46,10 +48,10 @@ class FrostWebView @JvmOverloads constructor(
     override fun bind(container: FrostContentContainer): View {
         with(settings) {
             javaScriptEnabled = true
-            if (url.shouldUseBasicAgent)
-                userAgentString = com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+            if (parent.baseUrl.shouldUseBasicAgent)
+                userAgentString = USER_AGENT_BASIC
             allowFileAccess = true
-            textZoom = com.pitchedapps.frost.utils.Prefs.webTextScaling
+            textZoom = Prefs.webTextScaling
         }
         setLayerType(LAYER_TYPE_HARDWARE, null)
         // attempt to get custom client; otherwise fallback to original
@@ -57,7 +59,7 @@ class FrostWebView @JvmOverloads constructor(
         webViewClient = frostWebClient
         webChromeClient = FrostChromeClient(this)
         addJavascriptInterface(FrostJSI(this), "Frost")
-        setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        setBackgroundColor(Color.TRANSPARENT)
         setDownloadListener(context::frostDownload)
         return this
     }

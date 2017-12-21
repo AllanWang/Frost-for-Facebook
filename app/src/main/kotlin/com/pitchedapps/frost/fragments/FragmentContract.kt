@@ -1,8 +1,9 @@
 package com.pitchedapps.frost.fragments
 
 import android.content.Context
-import com.pitchedapps.frost.contracts.FrostContentContainerDynamic
+import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
+import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.views.FrostWebView
@@ -12,7 +13,15 @@ import io.reactivex.disposables.Disposable
  * Created by Allan Wang on 2017-11-07.
  */
 
-interface FragmentContract : FrostContentContainerDynamic {
+interface FragmentContract : FrostContentContainer {
+
+    val content: FrostContentParent?
+
+    /**
+     * Helper to retrieve the core from [content]
+     */
+    val core: FrostContentCore?
+        get() = content?.core
 
     /**
      * Specifies position in Activity's viewpager

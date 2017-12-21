@@ -8,6 +8,10 @@ import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.webkit.WebView
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CoordinatorLayout
+
+
 
 /**
  * Created by Allan Wang on 20/12/17.
