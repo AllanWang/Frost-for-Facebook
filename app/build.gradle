@@ -186,6 +186,7 @@ dependencies {
     implementation "org.jsoup:jsoup:${JSOUP}"
 
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
 
     implementation "com.anjlab.android.iab.v3:library:${IAB}"
 

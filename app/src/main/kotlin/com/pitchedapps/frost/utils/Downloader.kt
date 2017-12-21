@@ -58,7 +58,7 @@ fun Context.frostDownload(uri: Uri?,
         request.setMimeType(mimeType)
         val cookie = loadFbCookie(Prefs.userId) ?: return@kauRequestPermissions
         val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
-        request.addRequestHeader("cookie", cookie.cookie)
+        request.addRequestHeader("Cookie", cookie.cookie)
         request.addRequestHeader("User-Agent", userAgent)
         request.setDescription(string(R.string.downloading))
         request.setTitle(title)
