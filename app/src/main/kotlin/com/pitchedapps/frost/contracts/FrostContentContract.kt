@@ -54,6 +54,11 @@ interface FrostContentParent : DynamicUiContract {
     var baseEnum: FbItem?
 
     /**
+     * Toggle state for allowing swipes
+     */
+    var swipeEnabled: Boolean
+
+    /**
      * Binds the container to self
      * this will also handle all future bindings
      * Must be called by container!

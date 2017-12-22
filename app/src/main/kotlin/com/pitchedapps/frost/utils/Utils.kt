@@ -229,12 +229,23 @@ inline val String?.isVideoUrl
 /**
  * [true] if url can be displayed in a different webview
  */
-inline val String?.isIndependent
-    get() = this == null || (startsWith("http") && !isFacebookUrl)
-            || dependentSet.all { !contains(it) }
+inline val String?.isIndependent: Boolean
+    get() {
+        if (this == null || length < 5) return false            // ignore short queries
+        if (this[0] == '#' && !contains('/')) return false      // ignore element values
+        if (startsWith("http") && !isFacebookUrl) return true   // ignore non facebook urls
+        if (dependentSet.any { contains(it) }) return false     // ignore known dependent segments
+        return true
+    }
 
 val dependentSet = setOf(
-        "photoset_token", "direct_action_execute"
+        "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
+        /*
+         * Facebook messages have the following cases for the tid query
+         * mid* or id* for newer threads, which can be launched in new windows
+         * or a hash for old threads, which must be loaded on old threads
+         */
+        "messages/read/?tid=id", "messages/read/?tid=mid"
 )
 
 inline val String?.isExplicitIntent
@@ -254,6 +265,8 @@ inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder
 inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
         = sendEmail(string(R.string.dev_email), subjectId) {
     builder()
+
+    addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
 }
