@@ -5,8 +5,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.View
-import android.view.animation.DecelerateInterpolator
+import ca.allanwang.kau.utils.AnimHolder
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -106,16 +107,30 @@ class FrostWebView @JvmOverloads constructor(
 
     private fun scrollToTop() {
         flingScroll(0, 0) // stop fling
-        if (scrollY > 10000) {
+        if (scrollY > 10000)
             scrollTo(0, 0)
-        } else {
-            ValueAnimator.ofInt(scrollY, 0).apply {
-                duration = Math.min(scrollY, 500).toLong()
-                interpolator = DecelerateInterpolator()
-                addUpdateListener { scrollY = it.animatedValue as Int }
-                start()
-            }
+        else
+            smoothScrollTo(0)
+    }
+
+    private fun smoothScrollTo(y: Int) {
+        ValueAnimator.ofInt(scrollY, y).apply {
+            duration = Math.min(Math.abs(scrollY - y), 500).toLong()
+            interpolator = AnimHolder.fastOutSlowInInterpolator(context)
+            addUpdateListener { scrollY = it.animatedValue as Int }
+            start()
         }
+    }
+
+    private fun smoothScrollBy(y: Int) = smoothScrollTo(Math.max(0, scrollY + y))
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        when (event.keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> smoothScrollBy(-height)
+            KeyEvent.KEYCODE_VOLUME_DOWN -> smoothScrollBy(height)
+            else -> return super.onKeyDown(keyCode, event)
+        }
+        return true
     }
 
     override var active: Boolean = true
