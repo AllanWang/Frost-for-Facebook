@@ -29,8 +29,12 @@ import java.util.concurrent.TimeUnit
 fun Context.launchHeadlessHtmlExtractor(url: String, injector: InjectorContract, action: (Single<Pair<String, Int>>) -> Unit) {
     val single = Single.create<Pair<String, Int>> { e: SingleEmitter<Pair<String, Int>> ->
         val extractor = HeadlessHtmlExtractor(this, url, injector, e)
+        extractor.resumeTimers()
         e.setCancellable {
-            runOnUiThread { extractor.destroy() }
+            runOnUiThread {
+                extractor.pauseTimers()
+                extractor.destroy()
+            }
             e.onSuccess("" to R.string.html_extraction_cancelled)
         }
     }.subscribeOn(AndroidSchedulers.mainThread())
@@ -74,14 +78,13 @@ private class HeadlessHtmlExtractor(
             emitter.onSuccess((html ?: "") to -1)
             post {
                 L.d("HeadlessHtmlExtractor fetched $url in $time ms")
-                settings.javaScriptEnabled = false
-                settings.blockNetworkLoads = true
                 destroy()
             }
         }
     }
 
     override fun destroy() {
+        pauseTimers()
         super.destroy()
         L.d("HeadlessHtmlExtractor destroyed")
     }
