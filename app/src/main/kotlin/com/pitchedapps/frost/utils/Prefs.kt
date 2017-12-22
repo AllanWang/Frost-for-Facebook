@@ -43,6 +43,8 @@ object Prefs : KPref() {
 
     var versionCode: Int by kpref("version_code", -1)
 
+    var prevVersionCode: Int by kpref("prev_version_code", -1)
+
     var installDate: Long by kpref("install_date", -1L)
 
     var identifier: Int by kpref("identifier", -1)

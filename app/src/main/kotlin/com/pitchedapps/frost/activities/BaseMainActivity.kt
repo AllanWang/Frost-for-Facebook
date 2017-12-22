@@ -96,11 +96,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
+            Prefs.prevVersionCode = Prefs.versionCode
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 frostChangelog()
                 frostAnswersCustom("Version",
                         "Version code" to BuildConfig.VERSION_CODE,
+                        "Prev version code" to Prefs.prevVersionCode,
                         "Version name" to BuildConfig.VERSION_NAME,
                         "Build type" to BuildConfig.BUILD_TYPE,
                         "Frost id" to Prefs.frostId)

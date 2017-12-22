@@ -265,6 +265,8 @@ inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder
 inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
         = sendEmail(string(R.string.dev_email), subjectId) {
     builder()
+
+    addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
 }
