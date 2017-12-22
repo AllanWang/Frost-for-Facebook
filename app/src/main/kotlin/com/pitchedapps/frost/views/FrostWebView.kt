@@ -124,15 +124,6 @@ class FrostWebView @JvmOverloads constructor(
 
     private fun smoothScrollBy(y: Int) = smoothScrollTo(Math.max(0, scrollY + y))
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        when (event.keyCode) {
-            KeyEvent.KEYCODE_VOLUME_UP -> smoothScrollBy(-height)
-            KeyEvent.KEYCODE_VOLUME_DOWN -> smoothScrollBy(height)
-            else -> return super.onKeyDown(keyCode, event)
-        }
-        return true
-    }
-
     override var active: Boolean = true
         set(value) {
             if (field == value) return
