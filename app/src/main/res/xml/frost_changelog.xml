@@ -12,6 +12,9 @@
     <item text="Fix some errors in launching pages" />
     <item text="Redid base design to prepare for native views" />
     <item text="Automatically bring toolbar up when keyboard is shown" />
+    <item text="Rewrite theme components to fully support AMOLED and improve light" />
+    <item text="" />
+    <item text="" />
     <item text="" />
 
     <version title="v1.6.8" />

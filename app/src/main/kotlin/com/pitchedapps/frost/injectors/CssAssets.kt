@@ -6,6 +6,7 @@ import ca.allanwang.kau.kotlin.lazyContext
 import ca.allanwang.kau.utils.*
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.*
 
@@ -21,7 +22,7 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
     var file = "${name.toLowerCase(Locale.CANADA)}.css"
     var injector = lazyContext {
         try {
-            var content = it.assets.open("css/$folder/$file").bufferedReader().use { it.readText() }
+            var content = it.assets.open("css/$folder/$file").bufferedReader().use(BufferedReader::readText)
             if (this == CUSTOM) {
                 val bt = if (Color.alpha(Prefs.bgColor) == 255)
                     Prefs.bgColor.toRgbaString()
