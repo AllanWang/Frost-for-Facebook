@@ -27,6 +27,7 @@ import com.pitchedapps.frost.utils.Showcase
 import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
+import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import io.fabric.sdk.android.Fabric
 import java.util.*
 import kotlin.reflect.KClass
@@ -46,6 +47,7 @@ class FrostApp : Application() {
     private fun FlowConfig.Builder.withDatabase(name: String, klass: KClass<*>) =
             addDatabaseConfig(DatabaseConfig.builder(klass.java)
                     .databaseName(name)
+                    .modelNotifier(ContentResolverNotifier("${BuildConfig.APPLICATION_ID}.dbflow.provider"))
                     .build())
 
     override fun onCreate() {

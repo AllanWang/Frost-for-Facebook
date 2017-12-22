@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.web
 
-import android.support.v4.widget.SwipeRefreshLayout
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.VideoViewHolder
@@ -68,7 +67,7 @@ class FrostJSI(val web: FrostWebView) {
      */
     @JavascriptInterface
     fun disableSwipeRefresh(disable: Boolean) {
-        web.post { (web.parent as? SwipeRefreshLayout)?.isEnabled = !disable }
+        web.post { web.parent.swipeEnabled = !disable }
     }
 
     @JavascriptInterface

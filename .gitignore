@@ -1,5 +1,6 @@
 *.iml
 .gradle
+/priv.properties
 /local.properties
 /crowdin.properties
 /.idea
@@ -9,4 +10,4 @@
 .externalNativeBuild
 *.min.css
 .sass-cache/
-/projectFilesBackupd
+/projectFilesBackup
