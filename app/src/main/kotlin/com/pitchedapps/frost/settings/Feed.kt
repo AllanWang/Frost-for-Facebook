@@ -3,11 +3,10 @@ package com.pitchedapps.frost.settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.materialDialogThemed
 
 /**
@@ -17,7 +16,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.newsfeed_sort, { Prefs.feedSort }, { Prefs.feedSort = it }) {
         descRes = R.string.newsfeed_sort_desc
-        onClick = { _, _, item ->
+        onClick = {
             materialDialogThemed {
                 title(R.string.newsfeed_sort)
                 items(FeedSort.values().map { string(it.textRes) })
@@ -29,21 +28,20 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     true
                 })
             }
-            true
         }
         textGetter = { string(FeedSort(it).textRes) }
     }
 
     checkbox(R.string.aggressive_recents, { Prefs.aggressiveRecents }, {
         Prefs.aggressiveRecents = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.aggressive_recents_desc
     }
 
     checkbox(R.string.composer, { Prefs.showComposer }, {
         Prefs.showComposer = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.composer_desc
     }
@@ -52,7 +50,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, {
         Prefs.showSuggestedFriends = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.suggested_friends_desc
         dependsOnPro()
@@ -60,7 +58,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.suggested_groups, { Prefs.showSuggestedGroups }, {
         Prefs.showSuggestedGroups = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.suggested_groups_desc
         dependsOnPro()
@@ -68,7 +66,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, {
         Prefs.showFacebookAds = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.facebook_ads_desc
         dependsOnPro()

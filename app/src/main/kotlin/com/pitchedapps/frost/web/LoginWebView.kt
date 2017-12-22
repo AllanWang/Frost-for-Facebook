@@ -9,7 +9,8 @@ import android.webkit.*
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.facebook.FB_LOGIN_URL
+import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
@@ -25,11 +26,6 @@ import org.jetbrains.anko.uiThread
 class LoginWebView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
-
-    companion object {
-        const val LOGIN_URL = "${FB_URL_BASE}login"
-        private val userMatcher: Regex = Regex("c_user=([0-9]*);")
-    }
 
     private lateinit var loginCallback: (CookieModel) -> Unit
     private lateinit var progressCallback: (Int) -> Unit
@@ -50,7 +46,7 @@ class LoginWebView @JvmOverloads constructor(
         this.progressCallback = progressCallback
         this.loginCallback = loginCallback
         L.d("Begin loading login")
-        loadUrl(LOGIN_URL)
+        loadUrl(FB_LOGIN_URL)
     }
 
     private inner class LoginClient : BaseWebViewClient() {
@@ -66,7 +62,7 @@ class LoginWebView @JvmOverloads constructor(
                 if (!url.isFacebookUrl) return@doAsync
                 val cookie = CookieManager.getInstance().getCookie(url) ?: return@doAsync
                 L.d("Checking cookie for login", cookie)
-                val id = userMatcher.find(cookie)?.groups?.get(1)?.value?.toLong() ?: return@doAsync
+                val id = FB_USER_MATCHER.find(cookie)?.groupValues?.get(1)?.toLong() ?: return@doAsync
                 uiThread { onFound(id, cookie) }
             }
         }

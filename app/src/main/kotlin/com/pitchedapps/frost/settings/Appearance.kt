@@ -6,7 +6,6 @@ import ca.allanwang.kau.kpref.activity.items.KPrefSeekbar
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
@@ -23,7 +22,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     header(R.string.theme_customization)
 
     text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
-        onClick = { _, _, item ->
+        onClick = {
             materialDialogThemed {
                 title(R.string.theme)
                 items(Theme.values()
@@ -46,7 +45,6 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                     true
                 }
             }
-            true
         }
         textGetter = {
             string(Theme(it).textRes)
@@ -55,12 +53,12 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
         enabler = { Prefs.isCustomTheme }
-        onDisabledClick = { _, _, _ -> frostSnackbar(R.string.requires_custom_theme); true }
+        onDisabledClick = { frostSnackbar(R.string.requires_custom_theme) }
         allowCustom = true
     }
 
     fun invalidateCustomTheme() {
-        CssAssets.CUSTOM.injector = null
+        CssAssets.CUSTOM.injector.invalidate()
     }
 
     colorPicker(R.string.text_color, { Prefs.customTextColor }, {
@@ -119,9 +117,9 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.main_activity_layout, { Prefs.mainActivityLayoutType }, { Prefs.mainActivityLayoutType = it }) {
         textGetter = { string(Prefs.mainActivityLayout.titleRes) }
-        onClick = { _, _, item ->
+        onClick = {
             materialDialogThemed {
-                title(R.string.set_main_activity_layout)
+                title(R.string.main_activity_layout_desc)
                 items(MainActivityLayout.values.map { string(it.titleRes) })
                 itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
                     if (item.pref != which) {
@@ -132,13 +130,17 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                     true
                 }
             }
-            true
         }
+    }
+
+    plainText(R.string.main_tabs) {
+        descRes = R.string.main_tabs_desc
+        onClick = { launchTabCustomizerActivity() }
     }
 
     checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, {
         Prefs.showRoundedIcons = it
-        setFrostResult(MainActivity.REQUEST_REFRESH)
+        setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.rounded_icons_desc
     }
@@ -146,7 +148,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(R.string.tint_nav, { Prefs.tintNavBar }, {
         Prefs.tintNavBar = it
         frostNavigationBar()
-        setFrostResult(MainActivity.REQUEST_NAV)
+        setFrostResult(REQUEST_NAV)
     }) {
         descRes = R.string.tint_nav_desc
     }
@@ -154,5 +156,5 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     list.add(KPrefTextSeekbar(
             KPrefSeekbar.KPrefSeekbarBuilder(
                     globalOptions,
-                    R.string.web_text_scaling, { Prefs.webTextScaling }, { Prefs.webTextScaling = it; setFrostResult(MainActivity.REQUEST_WEB_ZOOM) })))
+                    R.string.web_text_scaling, { Prefs.webTextScaling }, { Prefs.webTextScaling = it; setFrostResult(REQUEST_TEXT_ZOOM) })))
 }

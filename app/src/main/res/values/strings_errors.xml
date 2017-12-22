@@ -6,4 +6,6 @@
     <string name="invalid_share_url_desc">You have shared a block of text that is not a url. The text has been copied to your clipboard, so you may share it manually  yourself.</string>
     <string name="no_download_manager">No Download Manager</string>
     <string name="no_download_manager_desc">The download manager is not enabled. Would you like to enable it to allow downloads?</string>
+    <string name="error_generic">An error occurred.</string>
+    <string name="video_load_failed">Failed to load video</string>
 </resources>

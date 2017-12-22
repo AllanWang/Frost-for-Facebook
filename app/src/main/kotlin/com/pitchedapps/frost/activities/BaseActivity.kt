@@ -28,6 +28,7 @@ abstract class BaseActivity : KauBaseActivity() {
         super.onCreate(savedInstanceState)
         if (this !is WebOverlayActivityBase) setFrostTheme()
     }
+
 //
 //    private var networkDisposable: Disposable? = null
 //    private var networkConsumer: ((Connectivity) -> Unit)? = null

@@ -60,8 +60,7 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     protected fun defaultViewArray(): Array<Array<out View>> = arrayOf(arrayOf(title), arrayOf(image), arrayOf(desc))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(layoutRes, container, false)
-        return view
+        return inflater.inflate(layoutRes, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,9 +69,9 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         Kotterknife.reset(this)
         lazyRegistry.invalidateAll()
+        super.onDestroyView()
     }
 
     fun themeFragment() {

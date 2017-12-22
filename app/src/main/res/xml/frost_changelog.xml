@@ -6,22 +6,40 @@
     <item text="" />
     -->
 
+
+    <version title="v1.7.1" />
+    <item text="Fix launching messages in new overlay" />
+    <item text="Fix some errors in launching pages" />
+    <item text="Redid base design to prepare for native views" />
+    <item text="Automatically bring toolbar up when keyboard is shown" />
+    <item text="Rewrite theme components to fully support AMOLED and improve light" />
+    <item text="Properly pause webviews when not in use" />
+    <item text="" />
+    <item text="" />
+
+    <version title="v1.7.0" />
+    <item text="Fully customize your tabs! Check out settings > appearance > main activity tabs" />
+    <item text="Optimize scripts" />
+    <item text="Add more theme components" />
+    <item text="Fixed issue with deleting posts" />
+    <item text="Automatically close video player if url cannot be loaded" />
+
     <version title="v1.6.7" />
     <item text="Fix icons in tablets" />
     <item text="Add Portuguese translations" />
     <item text="Add Galician translations" />
     <item text="Remove generic translations" />
 
-	<version title="v1.6.5" />
+    <version title="v1.6.5" />
     <item text="Allow for truly full screen videos" />
     <item text="Support pip video everywhere" />
     <item text="Support gifs (auto loop)" />
     <item text="Add Italian translations" />
     <item text="Add Korean translations" />
     <item text="Add Vietnamese translations" />
-	<item text="Fix bad date param for videos and images" />
-	<item text="Allow for explicit intent launches" />
-	<item text="Updated all dependencies" />
+    <item text="Fix bad date param for videos and images" />
+    <item text="Allow for explicit intent launches" />
+    <item text="Updated all dependencies" />
 
     <version title="v1.6.2" />
     <item text="Fix search update from Facebook" />

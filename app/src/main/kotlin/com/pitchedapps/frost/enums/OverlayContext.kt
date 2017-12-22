@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
 import ca.allanwang.kau.utils.toDrawable
-import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.web.FrostWebViewCore
+import com.pitchedapps.frost.views.FrostWebView
 
 /**
  * Created by Allan Wang on 2017-09-16.
@@ -19,12 +18,8 @@ import com.pitchedapps.frost.web.FrostWebViewCore
  */
 enum class OverlayContext(private val menuItem: FrostMenuItem?) {
 
-    NOTIFICATION(FrostMenuItem(R.id.action_notification, FbItem.NOTIFICATIONS.icon, R.string.notifications) { webview ->
-        webview.loadUrl(FbItem.NOTIFICATIONS.url, true)
-    }),
-    MESSAGE(FrostMenuItem(R.id.action_messages, FbItem.MESSAGES.icon, R.string.messages) { webview ->
-        webview.loadUrl(FbItem.MESSAGES.url, true)
-    });
+    NOTIFICATION(FrostMenuItem(R.id.action_notification, FbItem.NOTIFICATIONS)),
+    MESSAGE(FrostMenuItem(R.id.action_messages, FbItem.MESSAGES));
 
     /**
      * Inject the [menuItem] in the order that they are given at the front of the menu
@@ -40,9 +35,9 @@ enum class OverlayContext(private val menuItem: FrostMenuItem?) {
          * Execute selection call for an item by id
          * Returns [true] if selection was consumed, [false] otherwise
          */
-        fun onOptionsItemSelected(webview: FrostWebViewCore, id: Int): Boolean {
-            val consumer = values.firstOrNull { id == it.menuItem?.id } ?: return false
-            consumer.menuItem!!.onClick(webview)
+        fun onOptionsItemSelected(web: FrostWebView, id: Int): Boolean {
+            val item = values.firstOrNull { id == it.menuItem?.id }?.menuItem ?: return false
+            web.loadUrl(item.fbItem.url, true)
             return true
         }
     }
@@ -53,13 +48,11 @@ enum class OverlayContext(private val menuItem: FrostMenuItem?) {
  */
 class FrostMenuItem(
         val id: Int,
-        val iicon: IIcon,
-        val stringRes: Int,
-        val showAsAction: Int = MenuItem.SHOW_AS_ACTION_ALWAYS,
-        val onClick: (webview: FrostWebViewCore) -> Unit) {
+        val fbItem: FbItem,
+        val showAsAction: Int = MenuItem.SHOW_AS_ACTION_ALWAYS) {
     fun addToMenu(context: Context, menu: Menu, index: Int) {
-        val item = menu.add(Menu.NONE, id, index, stringRes)
-        item.icon = iicon.toDrawable(context, 18)
+        val item = menu.add(Menu.NONE, id, index, fbItem.titleId)
+        item.icon = fbItem.icon.toDrawable(context, 18)
         item.setShowAsAction(showAsAction)
     }
 }

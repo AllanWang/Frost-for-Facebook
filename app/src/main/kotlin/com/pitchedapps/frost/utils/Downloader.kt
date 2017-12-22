@@ -9,14 +9,12 @@ import android.webkit.URLUtil
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.isAppEnabled
+import ca.allanwang.kau.utils.showAppInfo
 import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import android.content.ActivityNotFoundException
-import ca.allanwang.kau.utils.showAppInfo
 
 
 /**
@@ -40,8 +38,10 @@ fun Context.frostDownload(uri: Uri?,
                           contentLength: Long = 0L) {
     uri ?: return
     L.d("Received download request", "Download $uri")
-    if (uri.scheme != "http" && uri.scheme != "https")
-        return L.e("Invalid download attempt", uri.toString())
+    if (uri.scheme != "http" && uri.scheme != "https") {
+        toast(R.string.error_invalid_download)
+        return L.e(string(R.string.error_invalid_download), uri.toString())
+    }
     if (!isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
         materialDialogThemed {
             title(R.string.no_download_manager)
@@ -58,7 +58,7 @@ fun Context.frostDownload(uri: Uri?,
         request.setMimeType(mimeType)
         val cookie = loadFbCookie(Prefs.userId) ?: return@kauRequestPermissions
         val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
-        request.addRequestHeader("cookie", cookie.cookie)
+        request.addRequestHeader("Cookie", cookie.cookie)
         request.addRequestHeader("User-Agent", userAgent)
         request.setDescription(string(R.string.downloading))
         request.setTitle(title)
@@ -66,7 +66,12 @@ fun Context.frostDownload(uri: Uri?,
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Frost/$title")
         val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        dm.enqueue(request)
+        try {
+            dm.enqueue(request)
+        } catch (e: Exception) {
+            toast(R.string.error_generic)
+            L.e(e, "Download")
+        }
     }
 }
 

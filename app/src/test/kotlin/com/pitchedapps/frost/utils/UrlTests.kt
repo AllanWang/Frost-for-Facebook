@@ -17,6 +17,12 @@ class UrlTests {
         assertTrue(GOOGLE.isIndependent, "google")
         assertTrue(FACEBOOK_COM.isIndependent, "facebook")
         assertFalse("#!/photos/viewer/?photoset_token=pcb.1234".isIndependent, "photo")
+        assertFalse("#test-id".isIndependent, "id")
+        assertFalse("#".isIndependent, "#")
+        assertFalse("#!".isIndependent, "#!")
+        assertFalse("#!/".isIndependent, "#!/")
+        assertTrue("/this/is/valid".isIndependent, "url segments")
+        assertTrue("#!/facebook/segment".isIndependent, "facebook segments")
     }
 
     @Test

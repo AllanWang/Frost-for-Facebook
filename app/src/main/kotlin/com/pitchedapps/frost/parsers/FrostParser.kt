@@ -10,6 +10,8 @@ import org.jsoup.nodes.Document
  *
  * In all cases, parsing will be done from a JSoup document
  * Variants accepting strings are also permitted, and they will be converted to documents accordingly
+ * The return type must be nonnull if no parsing errors occurred, as null signifies a parse error
+ * If null really must be allowed, use Optionals
  */
 interface FrostParser<T> {
     /**
@@ -37,6 +39,7 @@ interface FrostParser<T> {
 }
 
 internal abstract class FrostParserBase<T> : FrostParser<T> {
+
     override final fun parse(text: String?): T? {
         text ?: return null
         val doc = textToDoc(text) ?: return null

@@ -8,10 +8,16 @@
     <item name="intro_phone_screen" type="id" />
     <item name="intro_title" type="id" />
     <item name="intro_image" type="id" />
+    <item name="intro_button" type="id" />
     <item name="intro_desc" type="id" />
 
     <!--Extra menu ids; see OverlayContext-->
     <item name="action_notification" type="id" />
     <item name="action_messages" type="id" />
     <item name="action_frost" type="id" />
+
+    <item name="content_progress" type="id" />
+    <item name="content_refresh" type="id" />
+    <item name="content_core" type="id" />
+    <item name="content_frame" type="id" />
 </resources>

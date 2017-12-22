@@ -131,6 +131,9 @@
             android:name=".activities.SelectorActivity"
             android:theme="@style/FrostTheme" />
         <activity
+            android:name=".activities.TabCustomizerActivity"
+            android:theme="@style/FrostTheme" />
+        <activity
             android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
         <activity
@@ -163,6 +166,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <provider
+            android:name="com.raizlabs.android.dbflow.runtime.StubContentProvider"
+            android:authorities="${applicationId}.dbflow.provider"
+            android:exported="false" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="18b3c223b96b7e7fc1fac372e36b8f4d49a193c7" />

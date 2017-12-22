@@ -6,11 +6,16 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.web.FrostWebViewClient
-import com.pitchedapps.frost.web.FrostWebViewClientMenu
-import com.pitchedapps.frost.web.FrostWebViewCore
+import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.fragments.WebFragmentMenu
 
-enum class FbItem(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: String, val webClient: ((webCore: FrostWebViewCore) -> FrostWebViewClient)? = null) {
+enum class FbItem(
+        @StringRes val titleId: Int,
+        val icon: IIcon,
+        relativeUrl: String,
+        val fragmentCreator: () -> BaseFragment = ::WebFragment
+) {
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
     BIRTHDAYS(R.string.birthdays, GoogleMaterial.Icon.gmd_cake, "events/birthdays"),
     CHAT(R.string.chat, GoogleMaterial.Icon.gmd_chat, "buddylist"),
@@ -20,7 +25,7 @@ enum class FbItem(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Str
     FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "home.php?sk=h_nor"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
     GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
-    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", { FrostWebViewClientMenu(it) }),
+    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", ::WebFragmentMenu),
     MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
     NOTES(R.string.notes, CommunityMaterial.Icon.cmd_note, "notes"),
     NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
@@ -39,7 +44,7 @@ enum class FbItem(@StringRes val titleId: Int, val icon: IIcon, relativeUrl: Str
 inline val fbSearch
     get() = fbSearch()
 
-fun fbSearch(query: String = "a") = "${FB_SEARCH}$query"
+fun fbSearch(query: String = "a") = "$FB_SEARCH$query"
 
 private const val FB_SEARCH = "${FB_URL_BASE}search/top/?q="
 fun defaultTabs(): List<FbItem> = listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)

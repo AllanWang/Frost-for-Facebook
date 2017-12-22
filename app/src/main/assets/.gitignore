@@ -1,2 +1,4 @@
 .idea/
-js/search_query.min.js
+node_modules/
+.sass-cache/
+package-lock.json

@@ -43,6 +43,8 @@ object Prefs : KPref() {
 
     var versionCode: Int by kpref("version_code", -1)
 
+    var prevVersionCode: Int by kpref("prev_version_code", -1)
+
     var installDate: Long by kpref("install_date", -1L)
 
     var identifier: Int by kpref("identifier", -1)
@@ -150,6 +152,8 @@ object Prefs : KPref() {
 
     val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
+
+    var nativeViews: Boolean by kpref("native_views", true)
 
     override fun deleteKeys() = arrayOf("search_bar")
 }

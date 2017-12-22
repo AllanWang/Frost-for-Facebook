@@ -10,6 +10,7 @@ import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
@@ -80,10 +81,21 @@ fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBas
         })
 }
 
+private fun Context.fadeBundle() = ActivityOptionsCompat.makeCustomAnimation(this,
+        android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
+
 fun Context.launchImageActivity(imageUrl: String, text: String?) {
     startActivity(ImageActivity::class.java, intentBuilder = {
+        putExtras(fadeBundle())
         putExtra(ARG_IMAGE_URL, imageUrl)
         putExtra(ARG_TEXT, text)
+    })
+}
+
+fun Activity.launchTabCustomizerActivity() {
+    startActivityForResult(TabCustomizerActivity::class.java,
+            SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
+        with(fadeBundle())
     })
 }
 
@@ -209,17 +221,32 @@ inline val String?.isFacebookUrl
     get() = this != null && contains(FACEBOOK_COM)
 
 /**
- * [true] is url is a video and can be accepted by VideoViewer
+ * [true] if url is a video and can be accepted by VideoViewer
  */
 inline val String?.isVideoUrl
     get() = this != null && (startsWith(VIDEO_REDIRECT) || startsWith("https://video-"))
 
 /**
- * [true] is url can be displayed in a different webview
+ * [true] if url can be displayed in a different webview
  */
-inline val String?.isIndependent
-    get() = this == null || (startsWith("http") && !isFacebookUrl)
-            || !contains("photoset_token")
+inline val String?.isIndependent: Boolean
+    get() {
+        if (this == null || length < 5) return false            // ignore short queries
+        if (this[0] == '#' && !contains('/')) return false      // ignore element values
+        if (startsWith("http") && !isFacebookUrl) return true   // ignore non facebook urls
+        if (dependentSet.any { contains(it) }) return false     // ignore known dependent segments
+        return true
+    }
+
+val dependentSet = setOf(
+        "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
+        /*
+         * Facebook messages have the following cases for the tid query
+         * mid* or id* for newer threads, which can be launched in new windows
+         * or a hash for old threads, which must be loaded on old threads
+         */
+        "messages/read/?tid=id", "messages/read/?tid=mid"
+)
 
 inline val String?.isExplicitIntent
     get() = this != null && startsWith("intent://")
@@ -238,6 +265,8 @@ inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder
 inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
         = sendEmail(string(R.string.dev_email), subjectId) {
     builder()
+
+    addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
 }

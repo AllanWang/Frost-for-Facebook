@@ -25,7 +25,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
     text(R.string.notification_frequency, { Prefs.notificationFreq }, { Prefs.notificationFreq = it }) {
         val options = longArrayOf(-1, 15, 30, 60, 120, 180, 300, 1440, 2880)
         val texts = options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
-        onClick = { _, _, item ->
+        onClick = {
             materialDialogThemed {
                 title(R.string.notification_frequency)
                 items(texts)
@@ -35,14 +35,13 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     true
                 })
             }
-            true
         }
         textGetter = { minuteToText(it) }
     }
 
     plainText(R.string.notification_keywords) {
         descRes = R.string.notification_keywords_desc
-        onClick = { _, _, _ ->
+        onClick = {
             val keywordView = Keywords(this@getNotificationPrefs)
             materialDialogThemed {
                 title(R.string.notification_keywords)
@@ -50,7 +49,6 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 dismissListener { keywordView.save() }
                 positiveText(R.string.kau_done)
             }
-            true
         }
     }
 
@@ -76,7 +74,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             else RingtoneManager.getRingtone(this@getNotificationPrefs, Uri.parse(it))
                     ?.getTitle(this@getNotificationPrefs) ?: "---" //todo figure out why this happens
         }
-        onClick = { _, _, item ->
+        onClick = {
             val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
                 putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, string(R.string.select_ringtone))
                 putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
@@ -86,7 +84,6 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(item.pref))
             }
             startActivityForResult(intent, code)
-            true
         }
     }
 
@@ -104,10 +101,9 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     plainText(R.string.notification_fetch_now) {
         descRes = R.string.notification_fetch_now_desc
-        onClick = { _, _, _ ->
+        onClick = {
             val text = if (fetchNotifications()) R.string.notification_fetch_success else R.string.notification_fetch_fail
             frostSnackbar(text)
-            true
         }
     }
 

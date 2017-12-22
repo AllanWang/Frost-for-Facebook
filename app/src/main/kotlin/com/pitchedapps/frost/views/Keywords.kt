@@ -79,7 +79,7 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem, KeywordItem.V
 
     override fun getLayoutRes(): Int = R.layout.item_keyword
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>?) {
+    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
         holder.text.text = keyword
     }

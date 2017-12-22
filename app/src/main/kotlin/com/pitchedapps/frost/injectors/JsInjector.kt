@@ -7,10 +7,13 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.SingleSubject
 import org.apache.commons.text.StringEscapeUtils
+import java.util.*
 
 class JsBuilder {
     private val css = StringBuilder()
     private val js = StringBuilder()
+
+    private var tag: String? = null
 
     fun css(css: String): JsBuilder {
         this.css.append(StringEscapeUtils.escapeEcmaScript(css))
@@ -19,6 +22,11 @@ class JsBuilder {
 
     fun js(content: String): JsBuilder {
         this.js.append(content)
+        return this
+    }
+
+    fun single(tag: String): JsBuilder {
+        this.tag = tag
         return this
     }
 
@@ -32,8 +40,19 @@ class JsBuilder {
         }
         if (js.isNotBlank())
             builder.append(js)
-        return builder.append("}()").toString()
+        var content = builder.append("}()").toString()
+        if (tag != null) content = singleInjector(tag!!, content)
+        return content
     }
+
+    private fun singleInjector(tag: String, content: String) = StringBuilder().apply {
+        val name = "_frost_${tag.toLowerCase(Locale.CANADA)}"
+        append("if (!window.hasOwnProperty(\"$name\")) {")
+        append("console.log(\"Registering $name\");")
+        append("window.$name = true;")
+        append(content)
+        append("}")
+    }.toString()
 }
 
 /**
@@ -63,7 +82,7 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Array<Strin
     (0 until validInjectors.size).forEach { i -> validInjectors[i].inject(this, { observables[i].onSuccess(it) }) }
 }
 
-fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = webCore.jsInject(*injectors, callback = callback)
+fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, callback: ((Array<String>) -> Unit) = {}) = web.jsInject(*injectors, callback = callback)
 
 /**
  * Wrapper class to convert a function into an injector
