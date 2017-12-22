@@ -6,7 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.DecelerateInterpolator
+import ca.allanwang.kau.utils.AnimHolder
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -106,23 +106,29 @@ class FrostWebView @JvmOverloads constructor(
 
     private fun scrollToTop() {
         flingScroll(0, 0) // stop fling
-        if (scrollY > 10000) {
+        if (scrollY > 10000)
             scrollTo(0, 0)
-        } else {
-            ValueAnimator.ofInt(scrollY, 0).apply {
-                duration = Math.min(scrollY, 500).toLong()
-                interpolator = DecelerateInterpolator()
-                addUpdateListener { scrollY = it.animatedValue as Int }
-                start()
-            }
+        else
+            smoothScrollTo(0)
+    }
+
+    private fun smoothScrollTo(y: Int) {
+        ValueAnimator.ofInt(scrollY, y).apply {
+            duration = Math.min(Math.abs(scrollY - y), 500).toLong()
+            interpolator = AnimHolder.fastOutSlowInInterpolator(context)
+            addUpdateListener { scrollY = it.animatedValue as Int }
+            start()
         }
     }
+
+    private fun smoothScrollBy(y: Int) = smoothScrollTo(Math.max(0, scrollY + y))
 
     override var active: Boolean = true
         set(value) {
             if (field == value) return
             field = value
-            // todo
+            if (field) onResume()
+            else onPause()
         }
 
     override fun reloadTheme() {

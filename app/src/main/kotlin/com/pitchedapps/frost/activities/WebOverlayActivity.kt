@@ -208,7 +208,19 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         toolbar.overflowIcon?.setTint(Prefs.iconColor)
     }
 
+    override fun onResume() {
+        super.onResume()
+        web.resumeTimers()
+    }
+
+    override fun onPause() {
+        web.pauseTimers()
+        L.v("Pause overlay web timers")
+        super.onPause()
+    }
+
     override fun onDestroy() {
+        web.destroy()
         super.onDestroy()
         kauSwipeOnDestroy()
     }
