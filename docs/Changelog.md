@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.7.0
+* Fix launching messages in new overlay
+* Fix some errors in launching pages
+* Redid base design to prepare for native views
+* Automatically bring toolbar up when keyboard is shown
+
 ## v1.6.8
 * Fully customize your tabs! Check out settings > appearance > main activity tabs
 * Optimize scripts
