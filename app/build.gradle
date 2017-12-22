@@ -136,6 +136,9 @@ dependencies {
     androidTestImplementation("com.android.support.test:runner:${TEST_RUNNER}") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+
+    implementation "com.android.support:exifinterface:${ANDROID_SUPPORT_LIBS}"
+
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
     androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
@@ -186,6 +189,7 @@ dependencies {
     implementation "org.jsoup:jsoup:${JSOUP}"
 
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
 
     implementation "com.anjlab.android.iab.v3:library:${IAB}"
 
