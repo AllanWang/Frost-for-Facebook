@@ -23,6 +23,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.widget.FrameLayout
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
@@ -92,6 +93,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
+    private lateinit var controlWebview: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +110,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         "Frost id" to Prefs.frostId)
             }
         }
+        controlWebview = WebView(this)
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
@@ -333,6 +336,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
+        controlWebview.resumeTimers()
+    }
+
+    override fun onPause() {
+        controlWebview.pauseTimers()
+        L.v("Pause main web timers")
+        super.onPause()
     }
 
     override fun onStart() {
@@ -345,6 +355,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onDestroy() {
         onDestroyBilling()
+        controlWebview.destroy()
         super.onDestroy()
     }
 

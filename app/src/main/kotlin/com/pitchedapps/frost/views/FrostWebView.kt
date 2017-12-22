@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.view.KeyEvent
 import android.view.View
 import ca.allanwang.kau.utils.AnimHolder
 import com.pitchedapps.frost.contracts.FrostContentContainer
@@ -128,7 +127,8 @@ class FrostWebView @JvmOverloads constructor(
         set(value) {
             if (field == value) return
             field = value
-            // todo
+            if (field) onResume()
+            else onPause()
         }
 
     override fun reloadTheme() {
