@@ -11,4 +11,5 @@ interface MainActivityContract : ActivityContract {
     val fragmentSubject: PublishSubject<Int>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
+    fun collapseAppBar()
 }

@@ -87,8 +87,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
     override var videoViewer: FrostVideoViewer? = null
-    lateinit var drawer: Drawer
-    lateinit var drawerHeader: AccountHeader
+    private lateinit var drawer: Drawer
+    private lateinit var drawerHeader: AccountHeader
 
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
@@ -344,6 +344,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onDestroy() {
         onDestroyBilling()
         super.onDestroy()
+    }
+
+    override fun collapseAppBar() {
+        appBar.setExpanded(false)
     }
 
     override fun backConsumer(): Boolean {

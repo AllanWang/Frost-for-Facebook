@@ -245,7 +245,7 @@ val dependentSet = setOf(
          * mid* or id* for newer threads, which can be launched in new windows
          * or a hash for old threads, which must be loaded on old threads
          */
-        "messages/read/?tid=id", "messages/read/?tid=mid"
+        "messages/read/?tid=id", "messages/read/?tid=mid", "messages/read" //todo temp
 )
 
 inline val String?.isExplicitIntent
