@@ -1,13 +1,14 @@
 # Changelog
 
-## v1.7.0
+## v1.7.1
 * Fix launching messages in new overlay
 * Fix some errors in launching pages
 * Redid base design to prepare for native views
 * Automatically bring toolbar up when keyboard is shown
 * Rewrite theme components to fully support AMOLED and improve light
+* Properly pause webviews when not in use
 
-## v1.6.8
+## v1.7.0
 * Fully customize your tabs! Check out settings > appearance > main activity tabs
 * Optimize scripts
 * Add more theme components

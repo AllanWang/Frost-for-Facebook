@@ -12,6 +12,7 @@ import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -125,15 +126,17 @@ class NotificationService : JobService() {
     fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
         val a = element.getElementsByTag("a").first() ?: return logNotif("IM No a tag")
         val abbr = element.getElementsByTag("abbr")
-        val epoch = epochMatcher.find(abbr.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: return logNotif("IM No epoch")
+        val epoch = epochMatcher.find(abbr.attr("data-store"))[1]?.toLong()
+                ?: return logNotif("IM No epoch")
         //fetch id
-        val notifId = notifIdMatcher.find(a.attr("data-store"))?.groups?.get(1)?.value?.toLong() ?: System.currentTimeMillis()
+        val notifId = notifIdMatcher.find(a.attr("data-store"))[1]?.toLong()
+                ?: System.currentTimeMillis()
         val timeString = abbr.text()
         val text = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
         if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
         //fetch profpic
         val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
+        val pUrl = profMatcher.find(p.attr("style"))[1]?.formattedFbUrl ?: ""
         return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
     }
 

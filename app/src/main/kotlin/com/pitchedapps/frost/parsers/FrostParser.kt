@@ -1,5 +1,7 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.nodes.Document
 
 /**
@@ -13,7 +15,23 @@ import org.jsoup.nodes.Document
  * The return type must be nonnull if no parsing errors occurred, as null signifies a parse error
  * If null really must be allowed, use Optionals
  */
-interface FrostParser<T> {
+interface FrostParser<out T> {
+
+    /**
+     * Url to request from
+     */
+    val url: String
+
+    /**
+     * Directly load from jsoup with default cookie
+     */
+    fun fromJsoup(): T?
+
+    /**
+     * Directly load from jsoup with given cookie
+     */
+    fun fromJsoup(cookie: String?): T?
+
     /**
      * Extracts data from the JSoup document
      * In some cases, the document can be created directly from a connection
@@ -27,6 +45,10 @@ interface FrostParser<T> {
      */
     fun parse(text: String?): T?
 
+    fun debugFromJsoup(): String
+
+    fun debugFromJsoup(cookie: String?): String
+
     /**
      * Take in doc and emit debug output
      */
@@ -38,7 +60,18 @@ interface FrostParser<T> {
     fun debug(text: String?): String
 }
 
-internal abstract class FrostParserBase<T> : FrostParser<T> {
+internal interface ParseResponse {
+    override fun toString(): String
+}
+
+/**
+ * T should have a readable toString() function
+ */
+internal abstract class FrostParserBase<out T : ParseResponse> : FrostParser<T> {
+
+    override final fun fromJsoup() = fromJsoup(FbCookie.webCookie)
+
+    override final fun fromJsoup(cookie: String?) = parse(frostJsoup(cookie, url))
 
     override final fun parse(text: String?): T? {
         text ?: return null
@@ -63,6 +96,10 @@ internal abstract class FrostParserBase<T> : FrostParser<T> {
         return debug(doc, result)
     }
 
+    override final fun debugFromJsoup() = debugFromJsoup(FbCookie.webCookie)
+
+    override final fun debugFromJsoup(cookie: String?) = debug(frostJsoup(cookie, url))
+
     override final fun debug(doc: Document): String {
         val result = mutableListOf<String>()
         result.add("Testing parser for ${this::class.java.simpleName}")
@@ -77,16 +114,8 @@ internal abstract class FrostParserBase<T> : FrostParser<T> {
         } else {
             result.add("Output is not null")
         }
-        debugImpl(output, result)
+        result.add(output.toString())
         return result.joinToString("\n")
     }
 
-    protected abstract fun debugImpl(data: T, result: MutableList<String>)
-}
-
-object FrostRegex {
-    val epoch = Regex(":([0-9]+)")
-    val notifId = Regex("notif_id\":([0-9]+)")
-    val messageNotifId = Regex("thread_fbid_([0-9]+)")
-    val profilePicture = Regex("url\\(\"(.*?)\"\\)")
 }

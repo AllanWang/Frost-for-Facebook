@@ -47,8 +47,7 @@ fun Pair<Long, String>.getAuth(): RequestAuth? {
     call.execute().body()?.charStream()?.useLines {
         it.forEach {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
-            val result = FB_DTSG_MATCHER.find(text)
-            val fb_dtsg = result?.groupValues?.get(1)
+            val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
                 L.d(null, "fb_dtsg for $userId: $fb_dtsg")
                 return RequestAuth(userId, cookie, fb_dtsg)
