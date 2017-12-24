@@ -19,12 +19,12 @@ object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
 data class FrostMessages(val threads: List<FrostThread>, val seeMore: FrostLink?, val extraLinks: List<FrostLink>) : ParseResponse {
     override fun toString() = StringBuilder().apply {
         append("FrostMessages {\n")
-        append("\tthreads: {\n")
+        append("\tthreads: [\n\t\t")
         append(threads.joinToString("\n\t\t"))
-        append("\n\t}\n\n\tsee more: $seeMore\n\n")
-        append("\textra links: {\n")
+        append("\n\t]\n\n\tsee more: $seeMore\n\n")
+        append("\textra links: [\n\t\t")
         append(extraLinks.joinToString("\n\t\t"))
-        append("\n\t}\n}")
+        append("\n\t]\n}")
     }.toString()
 }
 
@@ -35,6 +35,8 @@ data class FrostLink(val text: String, val href: String)
 private class MessageParserImpl : FrostParserBase<FrostMessages>() {
 
     override val url = FbItem.MESSAGES.url
+
+    override fun fromJsoup(cookie: String?) = fromJsoupThroughText(cookie)
 
     override fun textToDoc(text: String): Document? {
         var content = StringEscapeUtils.unescapeEcmaScript(text)
@@ -54,7 +56,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>() {
     }
 
     override fun parse(doc: Document): FrostMessages? {
-        val threadList = doc.getElementById("threadlist_rows")
+        val threadList = doc.getElementById("threadlist_rows") ?: return null
         val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
                 .mapNotNull { parseMessage(it) }
         val seeMore = parseLink(doc.getElementById("see_older_threads"))
@@ -73,11 +75,12 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>() {
         val content = element.select("span.snippet").firstOrNull()?.text()?.trim()
         //fetch convo pic
         val p = element.select("i.img[style*=url]")
-        val pUrl = FB_PROFILE_PICTURE_MATCHER.find(p.attr("style"))[1]?.formattedFbUrl ?: ""
+        val pStyle = StringEscapeUtils.unescapeEcmaScript(p.attr("style"))
+        val pUrl = FB_PROFILE_PICTURE_MATCHER.find(pStyle)[1]
         L.v("url", a.attr("href"))
         return FrostThread(
                 id = id.toInt(),
-                img = pUrl.formattedFbUrl,
+                img = pUrl?.formattedFbUrl ?: "",
                 title = a.text(),
                 time = epoch,
                 url = a.attr("href").formattedFbUrl,

@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.facebook
 
+import org.apache.commons.text.StringEscapeUtils
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -19,5 +20,12 @@ class FbRegexTest {
         val fb_dtsg = "readme"
         val input = "data-sigil=\"mbasic_inline_feed_composer\">\u003Cinput type=\"hidden\" name=\"fb_dtsg\" value=\"$fb_dtsg\" autocomplete=\"off\" \\/>\u003Cinput type=\"hidden\" name=\"privacyx\" value=\"12345\""
         assertEquals(fb_dtsg, FB_DTSG_MATCHER.find(input)[1])
+    }
+
+    @Test
+    fun ppRegex() {
+        val img = "https\\3a //scontent-yyz1-1.xx.fbcdn.net/v/asdf1234.jpg?efg\\3d 333\\26 oh\\3d 77\\26 oe\\3d 444"
+        val ppStyle = "background:#d8dce6 url('$img') no-repeat center;background-size:100% 100%;-webkit-background-size:100% 100%;width:58px;height:58px;"
+        assertEquals(StringEscapeUtils.unescapeCsv(img), StringEscapeUtils.unescapeCsv(FB_PROFILE_PICTURE_MATCHER.find(ppStyle)[1]))
     }
 }

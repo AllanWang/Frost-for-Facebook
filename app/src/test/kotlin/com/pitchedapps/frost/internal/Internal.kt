@@ -1,10 +1,11 @@
 package com.pitchedapps.frost.internal
 
-import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
+import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.RequestAuth
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.utils.frostJsoup
-import org.junit.Test
+import org.junit.Assume
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
@@ -30,14 +31,17 @@ val PROPS: Properties by lazy {
 val COOKIE: String by lazy { PROPS.getProperty("COOKIE") ?: "" }
 val FB_DTSG: String by lazy { PROPS.getProperty("FB_DTSG") ?: "" }
 val USER_ID: Long by lazy { FB_USER_MATCHER.find(COOKIE)[1]?.toLong() ?: -1 }
+val AUTH: RequestAuth by lazy { RequestAuth(USER_ID, COOKIE, FB_DTSG) }
+
+val VALID_COOKIE: Boolean by lazy {
+    val data = testJsoup(FbItem.SETTINGS.url)
+    data.title() == "Settings"
+}
 
 fun testJsoup(url: String) = frostJsoup(COOKIE, url)
 
-class Internal {
-    @Test
-    fun test() {
-        val data = testJsoup(FB_URL_BASE)
-        println(data.html())
-    }
+@Suppress("NOTHING_TO_INLINE")
+inline fun cookieDependent() {
+    println("Cookie Dependent")
+    Assume.assumeTrue(COOKIE.isNotEmpty() && VALID_COOKIE)
 }
-

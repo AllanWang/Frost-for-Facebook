@@ -266,7 +266,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         runOnUiThread { searchView?.results = results }
                     else
                         doAsync {
-                            val data = SearchParser.query(query) ?: return@doAsync
+                            val data = SearchParser.query(query)?.results ?: return@doAsync
                             val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))

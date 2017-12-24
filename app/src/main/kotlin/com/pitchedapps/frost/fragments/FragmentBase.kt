@@ -162,7 +162,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }
 
-abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
+abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
 
     override val layoutRes: Int = R.layout.view_content_recycler
 
