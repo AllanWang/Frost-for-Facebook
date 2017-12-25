@@ -19,12 +19,10 @@ object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
 data class FrostMessages(val threads: List<FrostThread>, val seeMore: FrostLink?, val extraLinks: List<FrostLink>) : ParseResponse {
     override fun toString() = StringBuilder().apply {
         append("FrostMessages {\n")
-        append("\tthreads: [\n\t\t")
-        append(threads.joinToString("\n\t\t"))
-        append("\n\t]\n\n\tsee more: $seeMore\n\n")
-        append("\textra links: [\n\t\t")
-        append(extraLinks.joinToString("\n\t\t"))
-        append("\n\t]\n}")
+        append(threads.toJsonString("threads", 1))
+        append("\tsee more: $seeMore\n")
+        append(extraLinks.toJsonString("extra links", 1))
+        append("}")
     }.toString()
 }
 
@@ -61,7 +59,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         return Jsoup.parseBodyFragment("<div $content")
     }
 
-    override fun parse(doc: Document): FrostMessages? {
+    override fun parseImpl(doc: Document): FrostMessages? {
         val threadList = doc.getElementById("threadlist_rows") ?: return null
         val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
                 .mapNotNull { parseMessage(it) }

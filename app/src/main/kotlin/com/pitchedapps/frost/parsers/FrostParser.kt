@@ -32,6 +32,11 @@ interface FrostParser<out T : Any> {
     fun parse(cookie: String?): T?
 
     /**
+     * Call parsing with given document
+     */
+    fun parse(document: Document): T?
+
+    /**
      * Call parsing with given data
      */
     fun parseFromData(text: String): T?
@@ -45,6 +50,13 @@ fun <T : Any> FrostParser<T>.parse() = parse(FbCookie.webCookie)
 
 internal interface ParseResponse {
     override fun toString(): String
+
+    fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {
+        val tabs = "\t".repeat(indent)
+        append("$tabs$tag: [\n\t$tabs")
+        append(this@toJsonString.joinToString("\n\t$tabs"))
+        append("\n$tabs]\n")
+    }.toString()
 }
 
 /**
@@ -53,17 +65,21 @@ internal interface ParseResponse {
  */
 internal abstract class FrostParserBase<out T : ParseResponse>(private val redirectToText: Boolean) : FrostParser<T> {
 
-    override final fun parse(cookie: String?) = if (redirectToText)
-        parseFromData(frostJsoup(cookie, url).toString())
-    else
-        parse(frostJsoup(cookie, url))
+    override final fun parse(cookie: String?) = parse(frostJsoup(cookie, url))
 
     override final fun parseFromData(text: String): T? {
         val doc = textToDoc(text) ?: return null
-        return parse(doc)
+        return parseImpl(doc)
     }
 
-    protected abstract fun parse(doc: Document): T?
+    override fun parse(document: Document) = if (redirectToText)
+        parseFromData(document.toString())
+    else
+        parseImpl(document)
+
+    protected abstract fun parseImpl(doc: Document): T?
+
+    //    protected abstract fun parse(doc: Document): T?
 
     /**
      * Attempts to find inner <i> element with some style containing a url

@@ -26,7 +26,7 @@ class FbParseTest {
     }
 
     private inline fun <T : Any> FrostParser<T>.test(action: T.() -> Unit = {}) {
-        val data = fromJsoup(COOKIE)
+        val data = parse(COOKIE)
                 ?: fail("${this::class.java.simpleName} returned null for $url")
         println(data)
         data.action()

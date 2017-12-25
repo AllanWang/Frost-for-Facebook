@@ -25,7 +25,14 @@ enum class SearchKeys(val key: String) {
     EVENTS("keywords_events")
 }
 
-data class FrostSearches(val results: List<FrostSearch>) : ParseResponse
+data class FrostSearches(val results: List<FrostSearch>) : ParseResponse {
+
+    override fun toString() = StringBuilder().apply {
+        append("FrostSearches {\n")
+        append(results.toJsonString("results", 1))
+        append("}")
+    }.toString()
+}
 
 /**
  * As far as I'm aware, all links are independent, so the queries don't matter
@@ -43,14 +50,13 @@ data class FrostSearch(val href: String, val title: String, val description: Str
                 description?.format()
         )
     }
-
 }
 
 private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
     override val url = "${FbItem._SEARCH.url}?q=a"
 
-    override fun parse(doc: Document): FrostSearches? {
+    override fun parseImpl(doc: Document): FrostSearches? {
         val container: Element = doc.getElementById("BrowseResultsContainer")
                 ?: doc.getElementById("root")
                 ?: return null
