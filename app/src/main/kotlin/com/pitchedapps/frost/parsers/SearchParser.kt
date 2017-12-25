@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.parsers.FrostSearch.Companion.create
@@ -13,10 +14,10 @@ import org.jsoup.nodes.Element
  * Created by Allan Wang on 2017-10-09.
  */
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
-    fun query(input: String): FrostSearches? {
+    fun query(cookie: CookieModel, input: String): ParseResp<FrostSearches>? {
         val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
         L.i(null, "Search Query $url")
-        return parse(frostJsoup(url))
+        return parse(cookie, frostJsoup(url))
     }
 }
 
@@ -25,7 +26,7 @@ enum class SearchKeys(val key: String) {
     EVENTS("keywords_events")
 }
 
-data class FrostSearches(val results: List<FrostSearch>) : ParseResponse {
+data class FrostSearches(val results: List<FrostSearch>)  {
 
     override fun toString() = StringBuilder().apply {
         append("FrostSearches {\n")
@@ -56,7 +57,7 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
     override val url = "${FbItem._SEARCH.url}?q=a"
 
-    override fun parseImpl(doc: Document): FrostSearches? {
+    override fun parseImpl(cookie: CookieModel, doc: Document): FrostSearches? {
         val container: Element = doc.getElementById("BrowseResultsContainer")
                 ?: doc.getElementById("root")
                 ?: return null

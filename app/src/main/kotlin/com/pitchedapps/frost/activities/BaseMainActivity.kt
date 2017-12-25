@@ -49,6 +49,7 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
@@ -94,6 +95,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
     private lateinit var controlWebview: WebView
+    private lateinit var cookie: CookieModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,6 +127,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
+        cookies().first { it.id == Prefs.userId } // find full cookie data for current user
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -266,7 +269,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         runOnUiThread { searchView?.results = results }
                     else
                         doAsync {
-                            val data = SearchParser.query(query)?.results ?: return@doAsync
+                            val data = SearchParser.query(cookie, query)?.data?.results ?: return@doAsync
                             val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
@@ -386,7 +389,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            val fragment = BaseFragment(item.fragmentCreator, item, position)
+            val fragment = BaseFragment(item.fragmentCreator, item, position, cookie)
             //If first load hasn't occurred, add a listener
             // todo check
 //            if (!firstLoadFinished) {

@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.L
 import org.apache.commons.text.StringEscapeUtils
@@ -16,7 +17,7 @@ import org.jsoup.nodes.Element
  */
 object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
 
-data class FrostMessages(val threads: List<FrostThread>, val seeMore: FrostLink?, val extraLinks: List<FrostLink>) : ParseResponse {
+data class FrostMessages(val threads: List<FrostThread>, val seeMore: FrostLink?, val extraLinks: List<FrostLink>) {
     override fun toString() = StringBuilder().apply {
         append("FrostMessages {\n")
         append(threads.toJsonString("threads", 1))
@@ -59,7 +60,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         return Jsoup.parseBodyFragment("<div $content")
     }
 
-    override fun parseImpl(doc: Document): FrostMessages? {
+    override fun parseImpl(cookie: CookieModel, doc: Document): FrostMessages? {
         val threadList = doc.getElementById("threadlist_rows") ?: return null
         val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
                 .mapNotNull { parseMessage(it) }

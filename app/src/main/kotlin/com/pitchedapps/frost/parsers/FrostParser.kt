@@ -1,7 +1,7 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.utils.frostJsoup
@@ -27,57 +27,55 @@ interface FrostParser<out T : Any> {
     val url: String
 
     /**
-     * Call parsing with default implementation
+     * Call parsing with default implementation using cookie
      */
-    fun parse(cookie: String?): T?
+    fun parse(cookie: CookieModel): ParseResp<T>?
 
     /**
      * Call parsing with given document
      */
-    fun parse(document: Document): T?
+    fun parse(cookie: CookieModel, document: Document): ParseResp<T>?
 
     /**
      * Call parsing with given data
      */
-    fun parseFromData(text: String): T?
+    fun parseFromData(cookie: CookieModel, text: String): ParseResp<T>?
 
 }
 
-/**
- * Used as extensions as it can't be mocked in unit tests
- */
-fun <T : Any> FrostParser<T>.parse() = parse(FbCookie.webCookie)
-
-internal interface ParseResponse {
-    override fun toString(): String
-
-    fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {
-        val tabs = "\t".repeat(indent)
-        append("$tabs$tag: [\n\t$tabs")
-        append(this@toJsonString.joinToString("\n\t$tabs"))
-        append("\n$tabs]\n")
-    }.toString()
+data class ParseResp<out T>(val cookie: CookieModel, val data: T) {
+    override fun toString() = "ParseResp\ncookie: $cookie\ndata:\n$data"
 }
+
+internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {
+    val tabs = "\t".repeat(indent)
+    append("$tabs$tag: [\n\t$tabs")
+    append(this@toJsonString.joinToString("\n\t$tabs"))
+    append("\n$tabs]\n")
+}.toString()
 
 /**
  * T should have a readable toString() function
  * [redirectToText] dictates whether all data should be converted to text then back to document before parsing
  */
-internal abstract class FrostParserBase<out T : ParseResponse>(private val redirectToText: Boolean) : FrostParser<T> {
+internal abstract class FrostParserBase<out T : Any>(private val redirectToText: Boolean) : FrostParser<T> {
 
-    override final fun parse(cookie: String?) = parse(frostJsoup(cookie, url))
+    override final fun parse(cookie: CookieModel) = parse(cookie, frostJsoup(cookie.cookie, url))
 
-    override final fun parseFromData(text: String): T? {
+    override final fun parseFromData(cookie: CookieModel, text: String): ParseResp<T>? {
         val doc = textToDoc(text) ?: return null
-        return parseImpl(doc)
+        val data = parseImpl(cookie, doc) ?: return null
+        return ParseResp(cookie, data)
     }
 
-    override fun parse(document: Document) = if (redirectToText)
-        parseFromData(document.toString())
-    else
-        parseImpl(document)
+    override fun parse(cookie: CookieModel, document: Document): ParseResp<T>? {
+        if (redirectToText)
+            return parseFromData(cookie, document.toString())
+        val data = parseImpl(cookie, document) ?: return null
+        return ParseResp(cookie, data)
+    }
 
-    protected abstract fun parseImpl(doc: Document): T?
+    protected abstract fun parseImpl(cookie: CookieModel, doc: Document): T?
 
     //    protected abstract fun parse(doc: Document): T?
 

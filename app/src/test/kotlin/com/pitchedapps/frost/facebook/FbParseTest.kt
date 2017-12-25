@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.facebook
 
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.assertComponentsNotEmpty
 import com.pitchedapps.frost.internal.cookieDependent
@@ -26,10 +27,10 @@ class FbParseTest {
     }
 
     private inline fun <T : Any> FrostParser<T>.test(action: T.() -> Unit = {}) {
-        val data = parse(COOKIE)
+        val response = parse(CookieModel(-1, "Test", COOKIE))
                 ?: fail("${this::class.java.simpleName} returned null for $url")
-        println(data)
-        data.action()
+        println(response)
+        response.data.action()
     }
 
     @Test

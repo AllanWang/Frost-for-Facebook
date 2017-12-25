@@ -13,6 +13,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
@@ -34,14 +35,16 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     companion object {
         private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
+        private const val ARG_COOKIE = "arg_cookie"
 
-        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
+        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int, cookie: CookieModel): BaseFragment {
             val fragment = if (Prefs.nativeViews) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                     ARG_URL to d.url,
                     ARG_POSITION to position,
-                    ARG_URL_ENUM to d
+                    ARG_URL_ENUM to d,
+                    ARG_COOKIE to cookie
             )
             return fragment
         }
@@ -50,6 +53,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
+    override val cookie: CookieModel by lazy { arguments!!.getParcelable<CookieModel>(ARG_COOKIE) }
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
@@ -199,7 +203,7 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
             progress(10)
             val doc = frostJsoup(baseUrl)
             progress(60)
-            val data = parser.parse(doc)
+            val data = parser.parse(cookie, doc)
             if (data == null) {
                 context?.toast(R.string.error_generic)
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
@@ -207,7 +211,7 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
                 return@doAsync callback(false)
             }
             progress(80)
-            val items = toItems(data)
+            val items = toItems(data.data)
             progress(97)
             adapter.setNewList(items)
         }
