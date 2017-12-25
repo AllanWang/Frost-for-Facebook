@@ -26,6 +26,16 @@ class FbRegexTest {
     fun ppRegex() {
         val img = "https\\3a //scontent-yyz1-1.xx.fbcdn.net/v/asdf1234.jpg?efg\\3d 333\\26 oh\\3d 77\\26 oe\\3d 444"
         val ppStyle = "background:#d8dce6 url('$img') no-repeat center;background-size:100% 100%;-webkit-background-size:100% 100%;width:58px;height:58px;"
-        assertEquals(StringEscapeUtils.unescapeCsv(img), StringEscapeUtils.unescapeCsv(FB_PROFILE_PICTURE_MATCHER.find(ppStyle)[1]))
+        assertEquals(StringEscapeUtils.unescapeCsv(img), StringEscapeUtils.unescapeCsv(FB_CSS_URL_MATCHER.find(ppStyle)[1]))
+    }
+
+    @Test
+    fun msgNotifIdRegex() {
+        val id = 1273491646093428L
+        val data = "threadlist_row_other_user_fbid_thread_fbid_$id"
+        assertEquals(id, FB_MESSAGE_NOTIF_ID_MATCHER.find(data)[1]?.toLong(), "thread_fbid mismatch")
+        val userData = "threadlist_row_other_user_fbid_${id}thread_fbid_"
+        assertEquals(id, FB_MESSAGE_NOTIF_ID_MATCHER.find(userData)[1]?.toLong(), "user_fbid mismatch")
+
     }
 }

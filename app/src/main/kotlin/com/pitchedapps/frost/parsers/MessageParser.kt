@@ -28,7 +28,15 @@ data class FrostMessages(val threads: List<FrostThread>, val seeMore: FrostLink?
     }.toString()
 }
 
-data class FrostThread(val id: Int, val img: String, val title: String, val time: Long, val url: String, val unread: Boolean, val content: String?)
+/**
+ * [id] user/thread id, or current time fallback
+ * [img] parsed url for profile img
+ * [time] time of message
+ * [url] link to thread
+ * [unread] true if image is unread, false otherwise
+ * [content] optional string for thread
+ */
+data class FrostThread(val id: Long, val img: String, val title: String, val time: Long, val url: String, val unread: Boolean, val content: String?)
 
 data class FrostLink(val text: String, val href: String)
 
@@ -73,14 +81,11 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>() {
         val id = FB_MESSAGE_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
                 ?: System.currentTimeMillis()
         val content = element.select("span.snippet").firstOrNull()?.text()?.trim()
-        //fetch convo pic
-        val p = element.select("i.img[style*=url]")
-        val pStyle = StringEscapeUtils.unescapeEcmaScript(p.attr("style"))
-        val pUrl = FB_PROFILE_PICTURE_MATCHER.find(pStyle)[1]
+        val img = element.getInnerImgStyle()
         L.v("url", a.attr("href"))
         return FrostThread(
-                id = id.toInt(),
-                img = pUrl?.formattedFbUrl ?: "",
+                id = id,
+                img = img,
                 title = a.text(),
                 time = epoch,
                 url = a.attr("href").formattedFbUrl,

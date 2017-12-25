@@ -172,7 +172,7 @@ data class NotificationContent(val data: CookieModel,
                                val timestamp: Long,
                                val profileUrl: String) {
     constructor(data: CookieModel, thread: FrostThread)
-            : this(data, thread.id, thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
+            : this(data, Math.abs(thread.id.toInt()), thread.url, thread.title, thread.content ?: "", thread.time, thread.img)
 }
 
 const val NOTIFICATION_PERIODIC_JOB = 7

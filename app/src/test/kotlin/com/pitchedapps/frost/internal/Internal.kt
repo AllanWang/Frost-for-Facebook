@@ -9,6 +9,9 @@ import org.junit.Assume
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+import kotlin.reflect.full.starProjectedType
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -44,4 +47,24 @@ fun testJsoup(url: String) = frostJsoup(COOKIE, url)
 inline fun cookieDependent() {
     println("Cookie Dependent")
     Assume.assumeTrue(COOKIE.isNotEmpty() && VALID_COOKIE)
+}
+
+/**
+ * Check that component strings are nonempty and are properly parsed
+ * To be used for data classes
+ */
+fun Any.assertComponentsNotEmpty() {
+    val components = this::class.members.filter { it.name.startsWith("component") }
+    if (components.isEmpty())
+        fail("${this::class.simpleName} has no components")
+    components.forEach {
+        when (it.returnType) {
+            String::class.starProjectedType -> {
+                val result = it.call(this) as String
+                assertTrue(result.isNotEmpty(), "${it.name} returned empty string")
+                if (result.startsWith("https"))
+                    assertTrue(result.startsWith("https://"), "${it.name} has poorly formatted output $result")
+            }
+        }
+    }
 }

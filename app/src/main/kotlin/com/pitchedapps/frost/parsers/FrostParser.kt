@@ -1,8 +1,12 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 
 /**
  * Created by Allan Wang on 2017-10-06.
@@ -69,6 +73,13 @@ internal abstract class FrostParserBase<out T : ParseResponse> : FrostParser<T> 
         val doc = textToDoc(text) ?: return null
         return parse(doc)
     }
+
+    /**
+     * Attempts to find inner <i> element with some style containing a url
+     * Returns the formatted url, or an empty string if nothing was found
+     */
+    protected fun Element.getInnerImgStyle() =
+            FB_CSS_URL_MATCHER.find(select("i.img[style*=url]").attr("style"))[1]?.formattedFbUrl ?: ""
 
     protected abstract fun textToDoc(text: String): Document?
 
