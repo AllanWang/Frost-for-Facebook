@@ -25,7 +25,7 @@ enum class SearchKeys(val key: String) {
     EVENTS("keywords_events")
 }
 
-data class FrostSearches(val results: List<FrostSearch>): ParseResponse
+data class FrostSearches(val results: List<FrostSearch>) : ParseResponse
 
 /**
  * As far as I'm aware, all links are independent, so the queries don't matter
@@ -46,7 +46,7 @@ data class FrostSearch(val href: String, val title: String, val description: Str
 
 }
 
-private class SearchParserImpl : FrostParserBase<FrostSearches>() {
+private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
     override val url = "${FbItem._SEARCH.url}?q=a"
 

@@ -40,11 +40,9 @@ data class FrostThread(val id: Long, val img: String, val title: String, val tim
 
 data class FrostLink(val text: String, val href: String)
 
-private class MessageParserImpl : FrostParserBase<FrostMessages>() {
+private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
 
     override val url = FbItem.MESSAGES.url
-
-    override fun fromJsoup(cookie: String?) = fromJsoupThroughText(cookie)
 
     override fun textToDoc(text: String): Document? {
         var content = StringEscapeUtils.unescapeEcmaScript(text)

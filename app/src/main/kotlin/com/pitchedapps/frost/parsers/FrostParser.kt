@@ -27,29 +27,21 @@ interface FrostParser<out T : Any> {
     val url: String
 
     /**
-     * Directly load from jsoup with given cookie
+     * Call parsing with default implementation
      */
-    fun fromJsoup(cookie: String?): T?
+    fun parse(cookie: String?): T?
 
     /**
-     * Extracts data from the JSoup document
-     * In some cases, the document can be created directly from a connection
-     * In other times, it needs to be created from scripts, which otherwise
-     * won't be parsed
+     * Call parsing with given data
      */
-    fun parse(doc: Document): T?
-
-    /**
-     * Parse a String input
-     */
-    fun parse(text: String?): T?
+    fun parseFromData(text: String): T?
 
 }
 
 /**
  * Used as extensions as it can't be mocked in unit tests
  */
-fun <T : Any> FrostParser<T>.fromJsoup() = fromJsoup(FbCookie.webCookie)
+fun <T : Any> FrostParser<T>.parse() = parse(FbCookie.webCookie)
 
 internal interface ParseResponse {
     override fun toString(): String
@@ -57,22 +49,21 @@ internal interface ParseResponse {
 
 /**
  * T should have a readable toString() function
+ * [redirectToText] dictates whether all data should be converted to text then back to document before parsing
  */
-internal abstract class FrostParserBase<out T : ParseResponse> : FrostParser<T> {
+internal abstract class FrostParserBase<out T : ParseResponse>(private val redirectToText: Boolean) : FrostParser<T> {
 
-    override fun fromJsoup(cookie: String?) = parse(frostJsoup(cookie, url))
+    override final fun parse(cookie: String?) = if (redirectToText)
+        parseFromData(frostJsoup(cookie, url).toString())
+    else
+        parse(frostJsoup(cookie, url))
 
-    /**
-     * Retrieve fromJsoup, but pass through text converter
-     */
-    protected fun fromJsoupThroughText(cookie: String?) =
-            parse(frostJsoup(cookie, url).toString())
-
-    override final fun parse(text: String?): T? {
-        text ?: return null
+    override final fun parseFromData(text: String): T? {
         val doc = textToDoc(text) ?: return null
         return parse(doc)
     }
+
+    protected abstract fun parse(doc: Document): T?
 
     /**
      * Attempts to find inner <i> element with some style containing a url
