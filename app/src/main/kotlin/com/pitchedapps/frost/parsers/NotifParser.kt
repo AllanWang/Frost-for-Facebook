@@ -16,13 +16,28 @@ object NotifParser : FrostParser<FrostNotifs> by NotifParserImpl()
 data class FrostNotifs(
         val notifs: List<FrostNotif>,
         val seeMore: FrostLink?
-) {
+) : ParseNotification {
     override fun toString() = StringBuilder().apply {
         append("FrostNotifs {\n")
         append(notifs.toJsonString("notifs", 1))
         append("\tsee more: $seeMore\n")
         append("}")
     }.toString()
+
+    override fun getUnreadNotifications(data: CookieModel) =
+            notifs.filter(FrostNotif::unread).map {
+                with(it) {
+                    NotificationContent(
+                            data = data,
+                            notifId = Math.abs(id.toInt()),
+                            href = url,
+                            title = null,
+                            text = content ?: "",
+                            timestamp = time,
+                            profileUrl = img
+                    )
+                }
+            }
 }
 
 /**
@@ -38,20 +53,7 @@ data class FrostNotif(val id: Long,
                       val time: Long,
                       val url: String,
                       val unread: Boolean,
-                      val content: String?) {
-
-    fun toNotification(data: CookieModel) = NotificationContent(
-            data = data,
-            notifId = Math.abs(id.toInt()),
-            href = url,
-            title = null,
-            text = content ?:"",
-            timestamp = time,
-            profileUrl =  img
-    )
-
-}
-
+                      val content: String?)
 
 private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
 
@@ -67,7 +69,7 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
 
     private fun parseNotif(element: Element): FrostNotif? {
         val a = element.getElementsByTag("a").first() ?: return null
-       val abbr = element.getElementsByTag("abbr")
+        val abbr = element.getElementsByTag("abbr")
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
         val id = FB_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()

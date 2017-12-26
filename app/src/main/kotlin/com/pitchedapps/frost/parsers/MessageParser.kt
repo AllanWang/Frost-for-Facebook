@@ -21,7 +21,7 @@ object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
 data class FrostMessages(val threads: List<FrostThread>,
                          val seeMore: FrostLink?,
                          val extraLinks: List<FrostLink>
-) {
+) : ParseNotification {
     override fun toString() = StringBuilder().apply {
         append("FrostMessages {\n")
         append(threads.toJsonString("threads", 1))
@@ -29,6 +29,21 @@ data class FrostMessages(val threads: List<FrostThread>,
         append(extraLinks.toJsonString("extra links", 1))
         append("}")
     }.toString()
+
+    override fun getUnreadNotifications(data: CookieModel) =
+            threads.filter(FrostThread::unread).map {
+                with(it) {
+                    NotificationContent(
+                            data = data,
+                            notifId = Math.abs(id.toInt()),
+                            href = url,
+                            title = title,
+                            text = content ?: "",
+                            timestamp = time,
+                            profileUrl = img
+                    )
+                }
+            }
 }
 
 /**
@@ -45,20 +60,7 @@ data class FrostThread(val id: Long,
                        val time: Long,
                        val url: String,
                        val unread: Boolean,
-                       val content: String?) {
-
-    fun toNotification(data: CookieModel) = NotificationContent(
-            data = data,
-            notifId = Math.abs(id.toInt()),
-            href = url,
-            title = title,
-            text = content ?:"",
-            timestamp = time,
-            profileUrl =  img
-    )
-
-}
-
+                       val content: String?)
 
 private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
 
@@ -85,7 +87,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         val threadList = doc.getElementById("threadlist_rows") ?: return null
         val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
                 .mapNotNull(this::parseMessage)
-        val seeMore = parseLink( doc.getElementById("see_older_threads"))
+        val seeMore = parseLink(doc.getElementById("see_older_threads"))
         val extraLinks = threadList.nextElementSibling().select("a")
                 .mapNotNull(this::parseLink)
         return FrostMessages(threads, seeMore, extraLinks)

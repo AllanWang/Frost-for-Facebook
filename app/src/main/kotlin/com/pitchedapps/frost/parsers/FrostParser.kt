@@ -4,6 +4,7 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
+import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -48,6 +49,10 @@ data class FrostLink(val text: String, val href: String)
 
 data class ParseResponse<out T>(val cookie: CookieModel, val data: T) {
     override fun toString() = "ParseResponse\ncookie: $cookie\ndata:\n$data"
+}
+
+interface ParseNotification {
+    fun getUnreadNotifications(data: CookieModel): List<NotificationContent>
 }
 
 internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {

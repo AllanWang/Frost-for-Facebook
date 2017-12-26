@@ -7,13 +7,7 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
-import com.pitchedapps.frost.parsers.FrostNotif
-import com.pitchedapps.frost.parsers.FrostThread
-import com.pitchedapps.frost.parsers.MessageParser
-import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
@@ -26,8 +20,7 @@ import java.util.concurrent.Future
  * Service to manage notifications
  * Will periodically check through all accounts in the db and send notifications when appropriate
  *
- * Note that general notifications are parsed directly with Jsoup,
- * but instant messages are done so with a headless webview as it is generated from JS
+ * All fetching is done through parsers
  */
 class NotificationService : JobService() {
 
@@ -62,15 +55,17 @@ class NotificationService : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         L.i("Fetching notifications")
         future = doAsync {
+            val context = weakRef.get()
+                    ?: return@doAsync L.eThrow("NotificationService had null weakRef to self")
             val currentId = Prefs.userId
             val cookies = loadFbCookiesSync()
             cookies.forEach {
                 val current = it.id == currentId
                 if (current || Prefs.notificationAllAccounts)
-                    fetchGeneralNotifications(it)
+                    NotificationType.GENERAL.fetch(context, it)
                 if (Prefs.notificationsInstantMessages
                         && (current || Prefs.notificationsImAllAccounts))
-                    fetchMessageNotifications(it)
+                    NotificationType.MESSAGE.fetch(context, it)
             }
             finish(params)
         }
@@ -80,62 +75,6 @@ class NotificationService : JobService() {
     private fun logNotif(text: String): NotificationContent? {
         L.eThrow("NotificationService: $text")
         return null
-    }
-
-    /*
-     * ----------------------------------------------------------------
-     * General notification logic.
-     * Fetch notifications -> Filter new ones -> Parse notifications ->
-     * Show notifications -> Show group notification
-     * ----------------------------------------------------------------
-     */
-
-    private fun fetchGeneralNotifications(data: CookieModel) {
-        val unreadNotifications = NotifParser.parse(data)?.data?.notifs
-                ?.filter(FrostNotif::unread)?.map { it.toNotification(data) }
-                ?: return L.eThrow("Notification data not found")
-        createNotifications(NotificationType.GENERAL, unreadNotifications)
-    }
-
-    /*
-     * ----------------------------------------------------------------
-     * Instant message notification logic.
-     * Fetch notifications -> Filter new ones -> Parse notifications ->
-     * Show notifications -> Show group notification
-     * ----------------------------------------------------------------
-     */
-
-    private fun fetchMessageNotifications(data: CookieModel) {
-        val unreadNotifications = MessageParser.parse(data)?.data?.threads
-                ?.filter(FrostThread::unread)?.map { it.toNotification(data) }
-                ?: return L.eThrow("Message notification data not found")
-        createNotifications(NotificationType.MESSAGE, unreadNotifications)
-    }
-
-    /**
-     * Generate notification data from the given [type] and [notifs]
-     * Will also keep track of the epoch times and update accordingly
-     */
-    private fun createNotifications(type: NotificationType, notifs: List<NotificationContent>) {
-        if (notifs.isEmpty()) return
-        var notifCount = 0
-        val userId = notifs[1].data.id
-        val prevNotifTime = lastNotificationTime(userId)
-        val prevLatestEpoch = type.timeLong(prevNotifTime)
-        L.v("Notif ${type.name} prev epoch $prevLatestEpoch")
-        var newLatestEpoch = prevLatestEpoch
-        notifs.forEach { notif ->
-            L.v("Notif timestamp ${notif.timestamp}")
-            if (notif.timestamp <= prevLatestEpoch) return@forEach
-            type.createNotification(this, notif, notifCount == 0)
-            if (notif.timestamp > newLatestEpoch)
-                newLatestEpoch = notif.timestamp
-            notifCount++
-        }
-        if (newLatestEpoch != prevLatestEpoch)
-            type.saveTime(prevNotifTime, newLatestEpoch).save()
-        L.d("Notif ${type.name} new epoch ${type.timeLong(lastNotificationTime(userId))}")
-        type.summaryNotification(this, userId, notifCount)
     }
 
     private fun Context.debugNotification(text: String) {
