@@ -10,16 +10,14 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
-import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.facebook.get
+import com.pitchedapps.frost.parsers.FrostNotif
+import com.pitchedapps.frost.parsers.FrostThread
 import com.pitchedapps.frost.parsers.MessageParser
+import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
-import com.pitchedapps.frost.utils.frostJsoup
 import org.jetbrains.anko.doAsync
-import org.jsoup.nodes.Element
 import java.util.concurrent.Future
 
 /**
@@ -36,13 +34,6 @@ class NotificationService : JobService() {
     var future: Future<Unit>? = null
 
     val startTime = System.currentTimeMillis()
-
-    companion object {
-        val epochMatcher: Regex by lazy { Regex(":([0-9]*?),") }
-        val notifIdMatcher: Regex by lazy { Regex("notif_id\":([0-9]*?),") }
-        val messageNotifIdMatcher: Regex by lazy { Regex("thread_fbid_([0-9]+)") }
-        val profMatcher: Regex by lazy { Regex("url\\(\"(.*?)\"\\)") }
-    }
 
     override fun onStopJob(params: JobParameters?): Boolean {
         val time = System.currentTimeMillis() - startTime
@@ -77,7 +68,8 @@ class NotificationService : JobService() {
                 val current = it.id == currentId
                 if (current || Prefs.notificationAllAccounts)
                     fetchGeneralNotifications(it)
-                if (Prefs.notificationsInstantMessages && (current || Prefs.notificationsImAllAccounts))
+                if (Prefs.notificationsInstantMessages
+                        && (current || Prefs.notificationsImAllAccounts))
                     fetchMessageNotifications(it)
             }
             finish(params)
@@ -85,7 +77,7 @@ class NotificationService : JobService() {
         return true
     }
 
-    fun logNotif(text: String): NotificationContent? {
+    private fun logNotif(text: String): NotificationContent? {
         L.eThrow("NotificationService: $text")
         return null
     }
@@ -98,46 +90,11 @@ class NotificationService : JobService() {
      * ----------------------------------------------------------------
      */
 
-    fun fetchGeneralNotifications(data: CookieModel) {
-        L.d("Notif fetch", data.toString())
-        val doc = frostJsoup(data.cookie, FbItem.NOTIFICATIONS.url)
-        //aclb for unread, acw for read
-        val unreadNotifications = (doc.getElementById("notifications_list") ?: return L.eThrow("Notification list not found")).getElementsByClass("aclb")
-        var notifCount = 0
-        //val prevLatestEpoch = 1498931565L // for testing
-        val prevNotifTime = lastNotificationTime(data.id)
-        val prevLatestEpoch = prevNotifTime.epoch
-        L.v("Notif Prev Latest Epoch $prevLatestEpoch")
-        var newLatestEpoch = prevLatestEpoch
-        unreadNotifications.forEach unread@ { elem ->
-            val notif = parseNotification(data, elem) ?: return@unread
-            L.v("Notif timestamp ${notif.timestamp}")
-            if (notif.timestamp <= prevLatestEpoch) return@unread
-            NotificationType.GENERAL.createNotification(this, notif, notifCount == 0)
-            if (notif.timestamp > newLatestEpoch)
-                newLatestEpoch = notif.timestamp
-            notifCount++
-        }
-        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epoch = newLatestEpoch).save()
-        L.d("Notif new latest epoch ${lastNotificationTime(data.id).epoch}")
-        NotificationType.GENERAL.summaryNotification(this, data.id, notifCount)
-    }
-
-    fun parseNotification(data: CookieModel, element: Element): NotificationContent? {
-        val a = element.getElementsByTag("a").first() ?: return logNotif("IM No a tag")
-        val abbr = element.getElementsByTag("abbr")
-        val epoch = epochMatcher.find(abbr.attr("data-store"))[1]?.toLong()
-                ?: return logNotif("IM No epoch")
-        //fetch id
-        val notifId = notifIdMatcher.find(a.attr("data-store"))[1]?.toLong()
-                ?: System.currentTimeMillis()
-        val timeString = abbr.text()
-        val text = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
-        if (Prefs.notificationKeywords.any { text.contains(it, ignoreCase = true) }) return null //notification filtered out
-        //fetch profpic
-        val p = element.select("i.img[style*=url]")
-        val pUrl = profMatcher.find(p.attr("style"))[1]?.formattedFbUrl ?: ""
-        return NotificationContent(data, notifId.toInt(), a.attr("href"), null, text, epoch, pUrl)
+    private fun fetchGeneralNotifications(data: CookieModel) {
+        val unreadNotifications = NotifParser.parse(data)?.data?.notifs
+                ?.filter(FrostNotif::unread)?.map { it.toNotification(data) }
+                ?: return L.eThrow("Notification data not found")
+        createNotifications(NotificationType.GENERAL, unreadNotifications)
     }
 
     /*
@@ -148,26 +105,37 @@ class NotificationService : JobService() {
      * ----------------------------------------------------------------
      */
 
-    fun fetchMessageNotifications(data: CookieModel) {
-        L.d("Notif IM fetch", data.toString())
-        val threads = MessageParser.parse(data)?.data?.threads ?: return L.e("Could not parse IM")
+    private fun fetchMessageNotifications(data: CookieModel) {
+        val unreadNotifications = MessageParser.parse(data)?.data?.threads
+                ?.filter(FrostThread::unread)?.map { it.toNotification(data) }
+                ?: return L.eThrow("Message notification data not found")
+        createNotifications(NotificationType.MESSAGE, unreadNotifications)
+    }
 
+    /**
+     * Generate notification data from the given [type] and [notifs]
+     * Will also keep track of the epoch times and update accordingly
+     */
+    private fun createNotifications(type: NotificationType, notifs: List<NotificationContent>) {
+        if (notifs.isEmpty()) return
         var notifCount = 0
-        val prevNotifTime = lastNotificationTime(data.id)
-        val prevLatestEpoch = prevNotifTime.epochIm
-        L.v("Notif Prev Latest Im Epoch $prevLatestEpoch")
+        val userId = notifs[1].data.id
+        val prevNotifTime = lastNotificationTime(userId)
+        val prevLatestEpoch = type.timeLong(prevNotifTime)
+        L.v("Notif ${type.name} prev epoch $prevLatestEpoch")
         var newLatestEpoch = prevLatestEpoch
-        threads.filter { it.unread }.forEach { notif ->
-            L.v("Notif Im timestamp ${notif.time}")
-            if (notif.time <= prevLatestEpoch) return@forEach
-            NotificationType.MESSAGE.createNotification(this, NotificationContent(data, notif), notifCount == 0)
-            if (notif.time > newLatestEpoch)
-                newLatestEpoch = notif.time
+        notifs.forEach { notif ->
+            L.v("Notif timestamp ${notif.timestamp}")
+            if (notif.timestamp <= prevLatestEpoch) return@forEach
+            type.createNotification(this, notif, notifCount == 0)
+            if (notif.timestamp > newLatestEpoch)
+                newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch) prevNotifTime.copy(epochIm = newLatestEpoch).save()
-        L.d("Notif new latest im epoch ${lastNotificationTime(data.id).epochIm}")
-        NotificationType.MESSAGE.summaryNotification(this, data.id, notifCount)
+        if (newLatestEpoch != prevLatestEpoch)
+            type.saveTime(prevNotifTime, newLatestEpoch).save()
+        L.d("Notif ${type.name} new epoch ${type.timeLong(lastNotificationTime(userId))}")
+        type.summaryNotification(this, userId, notifCount)
     }
 
     private fun Context.debugNotification(text: String) {

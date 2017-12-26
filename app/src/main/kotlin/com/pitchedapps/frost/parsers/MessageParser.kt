@@ -2,6 +2,7 @@ package com.pitchedapps.frost.parsers
 
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.L
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -44,7 +45,19 @@ data class FrostThread(val id: Long,
                        val time: Long,
                        val url: String,
                        val unread: Boolean,
-                       val content: String?)
+                       val content: String?) {
+
+    fun toNotification(data: CookieModel) = NotificationContent(
+            data = data,
+            notifId = Math.abs(id.toInt()),
+            href = url,
+            title = title,
+            text = content ?:"",
+            timestamp = time,
+            profileUrl =  img
+    )
+
+}
 
 
 private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {

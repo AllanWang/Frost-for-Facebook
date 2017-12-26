@@ -24,9 +24,9 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.dbflow.NotificationModel
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.parsers.FrostThread
 import com.pitchedapps.frost.utils.*
 import org.jetbrains.anko.runOnUiThread
@@ -92,9 +92,23 @@ enum class NotificationType(
         private val overlayContext: OverlayContext,
         private val contentRes: Int,
         private val pendingUrl: String,
+        val timeLong: (notif: NotificationModel) -> Long,
+        val saveTime: (notif: NotificationModel, time: Long) -> NotificationModel,
         private val ringtone: () -> String) {
-    GENERAL("frost", OverlayContext.NOTIFICATION, R.string.notifications, FbItem.NOTIFICATIONS.url, { Prefs.notificationRingtone }),
-    MESSAGE("frost_im", OverlayContext.MESSAGE, R.string.messages, FbItem.MESSAGES.url, { Prefs.messageRingtone });
+    GENERAL("frost",
+            OverlayContext.NOTIFICATION,
+            R.string.notifications,
+            FbItem.NOTIFICATIONS.url,
+            NotificationModel::epoch,
+            { notif, time -> notif.copy(epoch = time) },
+            Prefs::notificationRingtone),
+    MESSAGE("frost_im",
+            OverlayContext.MESSAGE,
+            R.string.messages,
+            FbItem.MESSAGES.url,
+            NotificationModel::epochIm,
+            { notif, time -> notif.copy(epochIm = time) },
+            Prefs::messageRingtone);
 
     /**
      * Create and submit a new notification with the given [content]
@@ -104,7 +118,7 @@ enum class NotificationType(
     fun createNotification(context: Context, content: NotificationContent, withDefaults: Boolean) {
         with(content) {
             val intent = Intent(context, FrostWebActivity::class.java)
-            intent.data = Uri.parse(href.formattedFbUrl)
+            intent.data = Uri.parse(href)
             intent.putExtra(ARG_USER_ID, data.id)
             intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
             val group = "${groupPrefix}_${data.id}"
@@ -167,7 +181,7 @@ enum class NotificationType(
 data class NotificationContent(val data: CookieModel,
                                val notifId: Int,
                                val href: String,
-                               val title: String? = null,
+                               val title: String? = null, // defaults to frost title
                                val text: String,
                                val timestamp: Long,
                                val profileUrl: String) {
