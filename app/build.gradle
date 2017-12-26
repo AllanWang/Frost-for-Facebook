@@ -142,6 +142,7 @@ dependencies {
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
     androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
     testImplementation "junit:junit:${JUNIT}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"

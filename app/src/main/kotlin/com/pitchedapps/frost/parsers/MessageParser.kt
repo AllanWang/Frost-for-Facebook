@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.parsers
 
-import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.L
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -14,13 +16,55 @@ import org.jsoup.nodes.Element
  * We can parse out the content we want directly and load it ourselves
  *
  */
-object MessageParser : FrostParser<Triple<List<FrostThread>, FrostLink?, List<FrostLink>>> by MessageParserImpl()
+object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
 
-data class FrostThread(val id: Int, val img: String, val title: String, val time: Long, val url: String, val unread: Boolean, val content: String?)
+data class FrostMessages(val threads: List<FrostThread>,
+                         val seeMore: FrostLink?,
+                         val extraLinks: List<FrostLink>
+) : ParseNotification {
+    override fun toString() = StringBuilder().apply {
+        append("FrostMessages {\n")
+        append(threads.toJsonString("threads", 1))
+        append("\tsee more: $seeMore\n")
+        append(extraLinks.toJsonString("extra links", 1))
+        append("}")
+    }.toString()
 
-data class FrostLink(val text: String, val href: String)
+    override fun getUnreadNotifications(data: CookieModel) =
+            threads.filter(FrostThread::unread).map {
+                with(it) {
+                    NotificationContent(
+                            data = data,
+                            notifId = Math.abs(id.toInt()),
+                            href = url,
+                            title = title,
+                            text = content ?: "",
+                            timestamp = time,
+                            profileUrl = img
+                    )
+                }
+            }
+}
 
-private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, FrostLink?, List<FrostLink>>>() {
+/**
+ * [id] user/thread id, or current time fallback
+ * [img] parsed url for profile img
+ * [time] time of message
+ * [url] link to thread
+ * [unread] true if image is unread, false otherwise
+ * [content] optional string for thread
+ */
+data class FrostThread(val id: Long,
+                       val img: String,
+                       val title: String,
+                       val time: Long,
+                       val url: String,
+                       val unread: Boolean,
+                       val content: String?)
+
+private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
+
+    override val url = FbItem.MESSAGES.url
 
     override fun textToDoc(text: String): Document? {
         var content = StringEscapeUtils.unescapeEcmaScript(text)
@@ -39,32 +83,29 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
         return Jsoup.parseBodyFragment("<div $content")
     }
 
-    override fun parse(doc: Document): Triple<List<FrostThread>, FrostLink?, List<FrostLink>>? {
-        val threadList = doc.getElementById("threadlist_rows")
+    override fun parseImpl(doc: Document): FrostMessages? {
+        val threadList = doc.getElementById("threadlist_rows") ?: return null
         val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
-                .mapNotNull { parseMessage(it) }
+                .mapNotNull(this::parseMessage)
         val seeMore = parseLink(doc.getElementById("see_older_threads"))
         val extraLinks = threadList.nextElementSibling().select("a")
-                .mapNotNull { parseLink(it) }
-        return Triple(threads, seeMore, extraLinks)
+                .mapNotNull(this::parseLink)
+        return FrostMessages(threads, seeMore, extraLinks)
     }
 
     private fun parseMessage(element: Element): FrostThread? {
         val a = element.getElementsByTag("a").first() ?: return null
         val abbr = element.getElementsByTag("abbr")
-        val epoch = FrostRegex.epoch.find(abbr.attr("data-store"))
-                ?.groupValues?.getOrNull(1)?.toLongOrNull() ?: -1L
+        val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
-        val id = FrostRegex.messageNotifId.find(element.id())
-                ?.groupValues?.getOrNull(1)?.toLongOrNull() ?: System.currentTimeMillis()
+        val id = FB_MESSAGE_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
+                ?: System.currentTimeMillis()
         val content = element.select("span.snippet").firstOrNull()?.text()?.trim()
-        //fetch convo pic
-        val p = element.select("i.img[style*=url]")
-        val pUrl = FrostRegex.profilePicture.find(p.attr("style"))?.groups?.get(1)?.value?.formattedFbUrl ?: ""
+        val img = element.getInnerImgStyle()
         L.v("url", a.attr("href"))
         return FrostThread(
-                id = id.toInt(),
-                img = pUrl.formattedFbUrl,
+                id = id,
+                img = img,
                 title = a.text(),
                 time = epoch,
                 url = a.attr("href").formattedFbUrl,
@@ -73,15 +114,4 @@ private class MessageParserImpl : FrostParserBase<Triple<List<FrostThread>, Fros
         )
     }
 
-    private fun parseLink(element: Element?): FrostLink? {
-        val a = element?.getElementsByTag("a")?.first() ?: return null
-        return FrostLink(a.text(), a.attr("href"))
-    }
-
-    override fun debugImpl(data: Triple<List<FrostThread>, FrostLink?, List<FrostLink>>, result: MutableList<String>) {
-        result.addAll(data.first.map(FrostThread::toString))
-        result.add("See more link:")
-        result.add("\t${data.second}")
-        result.addAll(data.third.map(FrostLink::toString))
-    }
 }

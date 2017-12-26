@@ -11,7 +11,13 @@ import org.apache.commons.text.StringEscapeUtils
 /**
  * Created by Allan Wang on 21/12/17.
  */
-data class RequestAuth(val userId: Long = -1, val cookie: String = "", val fb_dtsg: String = "")
+data class RequestAuth(val userId: Long = -1,
+                       val cookie: String = "",
+                       val fb_dtsg: String = "",
+                       val rev: String = "") {
+    val isValid
+        get() = userId > 0 && cookie.isNotEmpty() && fb_dtsg.isNotEmpty() && rev.isNotEmpty()
+}
 
 private val client: OkHttpClient by lazy {
     val builder = OkHttpClient.Builder()
@@ -21,13 +27,19 @@ private val client: OkHttpClient by lazy {
     builder.build()
 }
 
-private fun List<Pair<String, Any?>>.toForm(): RequestBody {
+private fun List<Pair<String, Any?>>.toForm(): FormBody {
     val builder = FormBody.Builder()
     forEach { (key, value) ->
         val v = value?.toString() ?: ""
         builder.add(key, v)
     }
     return builder.build()
+}
+
+private fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pair<String, Any?>> {
+    val newList = toMutableList()
+    newList.addAll(key.map { it to null })
+    return newList
 }
 
 private fun String.requestBuilder() = Request.Builder()
@@ -38,25 +50,33 @@ private fun String.requestBuilder() = Request.Builder()
 private fun Request.Builder.call() = client.newCall(build())
 
 
-fun Pair<Long, String>.getAuth(): RequestAuth? {
+fun Pair<Long, String>.getAuth(): RequestAuth {
     val (userId, cookie) = this
+    var auth = RequestAuth(userId, cookie)
     val call = cookie.requestBuilder()
-            .url(FB_URL_BASE)
+            .url("https://touch.facebook.com")
             .get()
             .call()
     call.execute().body()?.charStream()?.useLines {
         it.forEach {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
-            val result = FB_DTSG_MATCHER.find(text)
-            val fb_dtsg = result?.groupValues?.get(1)
+            val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
                 L.d(null, "fb_dtsg for $userId: $fb_dtsg")
-                return RequestAuth(userId, cookie, fb_dtsg)
+                auth = auth.copy(fb_dtsg = fb_dtsg)
+                if (auth.isValid) return auth
+            }
+
+            val rev = FB_REV_MATCHER.find(text)[1]
+            if (rev != null) {
+                L.d(null, "rev for $userId: $rev")
+                auth = auth.copy(rev = rev)
+                if (auth.isValid) return auth
             }
         }
     }
 
-    return null
+    return auth
 }
 
 fun RequestAuth.markNotificationRead(notifId: Long): Call {
@@ -65,13 +85,9 @@ fun RequestAuth.markNotificationRead(notifId: Long): Call {
             "click_type" to "notification_click",
             "id" to notifId,
             "target_id" to "null",
-            "m_sess" to null,
             "fb_dtsg" to fb_dtsg,
-            "__dyn" to null,
-            "__req" to null,
-            "__ajax__" to null,
             "__user" to userId
-    )
+    ).withEmptyData("m_sess", "__dyn", "__req", "__ajax__")
 
     return cookie.requestBuilder()
             .url("${FB_URL_BASE}a/jewel_notifications_log.php")
@@ -95,4 +111,19 @@ fun RequestAuth.markNotificationsRead(vararg notifId: Long) = zip<Long, Boolean,
     val buffer = CharArray(20)
     response.body()?.charStream()?.read(buffer) ?: return@zip false
     !buffer.toString().contains("error")
+}
+
+/**
+ * Execute the call and attempt to check validity
+ */
+fun Call.executeAndCheck(): Boolean {
+    val body = execute().body() ?: return false
+    var empty = true
+    body.charStream().useLines {
+        it.forEach {
+            if (empty && it.isNotEmpty()) empty = false
+            if (it.contains("error")) return true
+        }
+    }
+    return !empty
 }

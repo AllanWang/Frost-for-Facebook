@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.contracts
 
+import com.pitchedapps.frost.dbflow.CookieModel
 import io.reactivex.subjects.PublishSubject
 
 /**

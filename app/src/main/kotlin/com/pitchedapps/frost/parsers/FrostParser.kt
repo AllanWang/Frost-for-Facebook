@@ -1,6 +1,14 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
+import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.get
+import com.pitchedapps.frost.services.NotificationContent
+import com.pitchedapps.frost.utils.frostJsoup
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 
 /**
  * Created by Allan Wang on 2017-10-06.
@@ -13,80 +21,88 @@ import org.jsoup.nodes.Document
  * The return type must be nonnull if no parsing errors occurred, as null signifies a parse error
  * If null really must be allowed, use Optionals
  */
-interface FrostParser<T> {
-    /**
-     * Extracts data from the JSoup document
-     * In some cases, the document can be created directly from a connection
-     * In other times, it needs to be created from scripts, which otherwise
-     * won't be parsed
-     */
-    fun parse(doc: Document): T?
+interface FrostParser<out T : Any> {
 
     /**
-     * Parse a String input
+     * Url to request from
      */
-    fun parse(text: String?): T?
+    val url: String
 
     /**
-     * Take in doc and emit debug output
+     * Call parsing with default implementation using cookie
      */
-    fun debug(doc: Document): String
+    fun parse(cookie: String?): ParseResponse<T>?
 
     /**
-     * Attempts to parse input and emit a debugger
+     * Call parsing with given document
      */
-    fun debug(text: String?): String
+    fun parse(cookie: String?, document: Document): ParseResponse<T>?
+
+    /**
+     * Call parsing with given data
+     */
+    fun parseFromData(cookie: String?, text: String): ParseResponse<T>?
+
 }
 
-internal abstract class FrostParserBase<T> : FrostParser<T> {
+data class FrostLink(val text: String, val href: String)
 
-    override final fun parse(text: String?): T? {
-        text ?: return null
+data class ParseResponse<out T>(val cookie: String, val data: T) {
+    override fun toString() = "ParseResponse\ncookie: $cookie\ndata:\n$data"
+}
+
+interface ParseNotification {
+    fun getUnreadNotifications(data: CookieModel): List<NotificationContent>
+}
+
+internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {
+    val tabs = "\t".repeat(indent)
+    append("$tabs$tag: [\n\t$tabs")
+    append(this@toJsonString.joinToString("\n\t$tabs"))
+    append("\n$tabs]\n")
+}.toString()
+
+/**
+ * T should have a readable toString() function
+ * [redirectToText] dictates whether all data should be converted to text then back to document before parsing
+ */
+internal abstract class FrostParserBase<out T : Any>(private val redirectToText: Boolean) : FrostParser<T> {
+
+    override final fun parse(cookie: String?) = parse(cookie, frostJsoup(cookie, url))
+
+    override final fun parseFromData(cookie: String?, text: String): ParseResponse<T>? {
+        cookie ?: return null
         val doc = textToDoc(text) ?: return null
-        return parse(doc)
+        val data = parseImpl(doc) ?: return null
+        return ParseResponse(cookie, data)
     }
 
-    protected abstract fun textToDoc(text: String): Document?
-
-    override fun debug(text: String?): String {
-        val result = mutableListOf<String>()
-        result.add("Testing parser for ${this::class.java.simpleName}")
-        if (text == null) {
-            result.add("Null text input")
-            return result.joinToString("\n")
-        }
-        val doc = textToDoc(text)
-        if (doc == null) {
-            result.add("Null document from text")
-            return result.joinToString("\n")
-        }
-        return debug(doc, result)
+    override fun parse(cookie: String?, document: Document): ParseResponse<T>? {
+        cookie ?: return null
+        if (redirectToText)
+            return parseFromData(cookie, document.toString())
+        val data = parseImpl(document) ?: return null
+        return ParseResponse(cookie, data)
     }
 
-    override final fun debug(doc: Document): String {
-        val result = mutableListOf<String>()
-        result.add("Testing parser for ${this::class.java.simpleName}")
-        return debug(doc, result)
+    protected abstract fun parseImpl(doc: Document): T?
+
+    //    protected abstract fun parse(doc: Document): T?
+
+    /**
+     * Attempts to find inner <i> element with some style containing a url
+     * Returns the formatted url, or an empty string if nothing was found
+     */
+    protected fun Element.getInnerImgStyle() =
+            FB_CSS_URL_MATCHER.find(select("i.img[style*=url]").attr("style"))[1]?.formattedFbUrl ?: ""
+
+    protected open fun textToDoc(text: String) = if (!redirectToText)
+        Jsoup.parse(text)
+    else
+        throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
+
+    protected fun parseLink(element: Element?): FrostLink? {
+        val a = element?.getElementsByTag("a")?.first() ?: return null
+        return FrostLink(a.text(), a.attr("href"))
     }
-
-    private fun debug(doc: Document, result: MutableList<String>): String {
-        val output = parse(doc)
-        if (output == null) {
-            result.add("Output is null")
-            return result.joinToString("\n")
-        } else {
-            result.add("Output is not null")
-        }
-        debugImpl(output, result)
-        return result.joinToString("\n")
-    }
-
-    protected abstract fun debugImpl(data: T, result: MutableList<String>)
-}
-
-object FrostRegex {
-    val epoch = Regex(":([0-9]+)")
-    val notifId = Regex("notif_id\":([0-9]+)")
-    val messageNotifId = Regex("thread_fbid_([0-9]+)")
-    val profilePicture = Regex("url\\(\"(.*?)\"\\)")
 }
