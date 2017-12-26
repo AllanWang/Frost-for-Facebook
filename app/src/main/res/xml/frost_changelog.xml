@@ -6,6 +6,13 @@
     <item text="" />
     -->
 
+    <version title="v1.7.2" />
+    <item text="Optimize login view" />
+    <item text="Rewrite parsers" />
+    <item text="Fix message notification icons" />
+    <item text="Small theme updates" />
+    <item text="" />
+    <item text="" />
 
     <version title="v1.7.1" />
     <item text="Fix launching messages in new overlay" />
@@ -14,8 +21,6 @@
     <item text="Automatically bring toolbar up when keyboard is shown" />
     <item text="Rewrite theme components to fully support AMOLED and improve light" />
     <item text="Properly pause webviews when not in use" />
-    <item text="" />
-    <item text="" />
 
     <version title="v1.7.0" />
     <item text="Fully customize your tabs! Check out settings > appearance > main activity tabs" />
