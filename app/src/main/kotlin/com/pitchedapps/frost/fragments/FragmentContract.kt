@@ -15,8 +15,6 @@ import io.reactivex.disposables.Disposable
 
 interface FragmentContract : FrostContentContainer {
 
-    val cookie: CookieModel
-
     val content: FrostContentParent?
 
     /**

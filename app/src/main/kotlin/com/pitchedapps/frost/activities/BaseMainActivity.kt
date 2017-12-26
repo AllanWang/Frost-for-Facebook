@@ -25,7 +25,6 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
-import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
@@ -50,7 +49,6 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
@@ -97,13 +95,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
     private lateinit var controlWebview: WebView
-    private val cookieImpl = lazyResettable {
-        val cookie = cookies().firstOrNull { it.cookie == FbCookie.webCookie }
-        if (cookie == null)
-            L.eThrow("No cookie found; using fallback")
-        cookie ?: CookieModel(id = Prefs.userId, cookie = FbCookie.webCookie)
-    }
-    override val cookie: CookieModel by cookieImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -204,10 +195,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
                         -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
                         else -> {
-                            FbCookie.switchUser(profile.identifier) {
-                                cookieImpl.invalidate()
-                                refreshAll()
-                            }
+                            FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }
                         }
                     }

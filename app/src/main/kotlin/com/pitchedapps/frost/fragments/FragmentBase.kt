@@ -55,8 +55,6 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
-    override val cookie
-        get() = (context as MainActivityContract).cookie
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null

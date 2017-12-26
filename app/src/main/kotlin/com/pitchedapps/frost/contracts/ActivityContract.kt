@@ -9,7 +9,6 @@ import io.reactivex.subjects.PublishSubject
 interface ActivityContract : FileChooserActivityContract
 
 interface MainActivityContract : ActivityContract {
-    val cookie: CookieModel
     val fragmentSubject: PublishSubject<Int>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
