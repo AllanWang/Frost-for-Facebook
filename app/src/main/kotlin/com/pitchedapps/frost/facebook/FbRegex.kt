@@ -13,6 +13,7 @@ package com.pitchedapps.frost.facebook
  * Matches the fb_dtsg component of a page containing it as a hidden value
  */
 val FB_DTSG_MATCHER: Regex by lazy { Regex("name=\"fb_dtsg\" value=\"(.*?)\"") }
+val FB_REV_MATCHER: Regex by lazy{Regex("\"app_version\":\"(.*?)\"")}
 
 /**
  * Matches user id from cookie

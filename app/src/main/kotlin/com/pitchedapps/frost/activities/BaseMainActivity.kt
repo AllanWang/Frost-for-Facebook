@@ -250,7 +250,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onClick { _ -> onClick(); false }
     }
 
-    fun refreshAll() {
+    private fun refreshAll() {
         fragmentSubject.onNext(REQUEST_REFRESH)
     }
 

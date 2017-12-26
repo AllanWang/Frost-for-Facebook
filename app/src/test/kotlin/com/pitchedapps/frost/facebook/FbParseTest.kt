@@ -3,7 +3,7 @@ package com.pitchedapps.frost.facebook
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.assertComponentsNotEmpty
 import com.pitchedapps.frost.internal.assertDescending
-import com.pitchedapps.frost.internal.cookieDependent
+import com.pitchedapps.frost.internal.authDependent
 import com.pitchedapps.frost.parsers.*
 import org.junit.BeforeClass
 import org.junit.Test
@@ -18,7 +18,7 @@ class FbParseTest {
         @BeforeClass
         @JvmStatic
         fun before() {
-            cookieDependent()
+            authDependent()
         }
     }
 

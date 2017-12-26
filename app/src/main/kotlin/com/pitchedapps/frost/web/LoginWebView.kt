@@ -2,6 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
@@ -32,7 +33,7 @@ class LoginWebView @JvmOverloads constructor(
     private lateinit var progressCallback: (Int) -> Unit
 
     init {
-        FbCookie.reset { setupWebview() }
+        FbCookie.reset(this::setupWebview)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -70,6 +71,7 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageCommitVisible(view: WebView, url: String?) {
             super.onPageCommitVisible(view, url)
+            L.d("Login page commit visible")
             view.setBackgroundColor(Color.TRANSPARENT)
             if (url.isFacebookUrl)
                 view.jsInject(CssHider.HEADER,

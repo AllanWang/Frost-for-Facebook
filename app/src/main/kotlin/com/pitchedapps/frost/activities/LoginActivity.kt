@@ -25,10 +25,9 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.LoginWebView
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
-import io.reactivex.internal.operators.single.SingleToObservable
 import io.reactivex.subjects.SingleSubject
 
 
@@ -37,18 +36,18 @@ import io.reactivex.subjects.SingleSubject
  */
 class LoginActivity : BaseActivity() {
 
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-    val web: LoginWebView by bindView(R.id.login_webview)
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-    val textview: AppCompatTextView by bindView(R.id.textview)
-    val profile: ImageView by bindView(R.id.profile)
+    private val toolbar: Toolbar by bindView(R.id.toolbar)
+    private val web: LoginWebView by bindView(R.id.login_webview)
+    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private val textview: AppCompatTextView by bindView(R.id.textview)
+    private val profile: ImageView by bindView(R.id.profile)
 
-    val profileObservable = SingleSubject.create<Boolean>()
-    val usernameObservable = SingleSubject.create<String>()
-    lateinit var profileLoader: RequestManager
+    private val profileSubject = SingleSubject.create<Boolean>()
+    private val usernameSubject = SingleSubject.create<String>()
+    private lateinit var profileLoader: RequestManager
 
     // Helper to set and enable swipeRefresh
-    var refresh: Boolean
+    private var refresh: Boolean
         get() = swipeRefresh.isRefreshing
         set(value) {
             if (value) swipeRefresh.isEnabled = true
@@ -73,10 +72,12 @@ class LoginActivity : BaseActivity() {
         profileLoader = Glide.with(profile)
     }
 
-    fun loadInfo(cookie: CookieModel) {
+    private fun loadInfo(cookie: CookieModel) {
         refresh = true
-        Observable.zip(SingleToObservable(profileObservable), SingleToObservable(usernameObservable),
-                BiFunction<Boolean, String, Pair<Boolean, String>> { foundImage, name -> Pair(foundImage, name) })
+        Single.zip<Boolean, String, Pair<Boolean, String>>(
+                profileSubject,
+                usernameSubject,
+                BiFunction(::Pair))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
             refresh = false
             if (!foundImage) {
@@ -85,7 +86,11 @@ class LoginActivity : BaseActivity() {
             }
             textview.text = String.format(getString(R.string.welcome), name)
             textview.fadeIn()
-            frostAnswers { logLogin(LoginEvent().putMethod("frost_browser").putSuccess(true)) }
+            frostAnswers {
+                logLogin(LoginEvent()
+                        .putMethod("frost_browser")
+                        .putSuccess(true))
+            }
             /*
              * The user may have logged into an account that is already in the database
              * We will let the db handle duplicates and load it now after the new account has been saved
@@ -102,23 +107,23 @@ class LoginActivity : BaseActivity() {
     }
 
 
-    fun loadProfile(id: Long) {
+    private fun loadProfile(id: Long) {
         profileLoader.load(PROFILE_PICTURE_URL(id)).withRoundIcon().listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                profileObservable.onSuccess(true)
+                profileSubject.onSuccess(true)
                 return false
             }
 
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                 e.logFrostAnswers("Profile loading exception")
-                profileObservable.onSuccess(false)
+                profileSubject.onSuccess(false)
                 return false
             }
         }).into(profile)
     }
 
-    fun loadUsername(cookie: CookieModel) {
-        cookie.fetchUsername { usernameObservable.onSuccess(it) }
+    private fun loadUsername(cookie: CookieModel) {
+        cookie.fetchUsername(usernameSubject::onSuccess)
     }
 
     override fun backConsumer(): Boolean {
@@ -127,6 +132,16 @@ class LoginActivity : BaseActivity() {
             return true
         }
         return false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        web.resumeTimers()
+    }
+
+    override fun onPause() {
+        web.pauseTimers()
+        super.onPause()
     }
 
 }
