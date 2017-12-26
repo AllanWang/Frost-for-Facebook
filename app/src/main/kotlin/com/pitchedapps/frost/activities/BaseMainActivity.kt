@@ -127,7 +127,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-        cookies().first { it.id == Prefs.userId } // find full cookie data for current user
+
+        // find full cookie data for current user
+        cookies().firstOrNull { it.id == Prefs.userId }
+                ?: CookieModel(id = Prefs.userId, cookie = FbCookie.webCookie)
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
