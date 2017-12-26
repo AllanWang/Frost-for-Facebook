@@ -60,6 +60,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
@@ -279,8 +280,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         runOnUiThread { searchView?.results = results }
                     else
                         doAsync {
-                            val data = SearchParser.query(cookie, query)?.data?.results ?: return@doAsync
-                            val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
+                            val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results ?: return@doAsync
+                            val items = data.map(FrostSearch::toSearchItem).toMutableList()
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
                             searchViewCache.put(query, items)

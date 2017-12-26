@@ -31,23 +31,23 @@ interface FrostParser<out T : Any> {
     /**
      * Call parsing with default implementation using cookie
      */
-    fun parse(cookie: CookieModel): ParseResponse<T>?
+    fun parse(cookie: String?): ParseResponse<T>?
 
     /**
      * Call parsing with given document
      */
-    fun parse(cookie: CookieModel, document: Document): ParseResponse<T>?
+    fun parse(cookie: String?, document: Document): ParseResponse<T>?
 
     /**
      * Call parsing with given data
      */
-    fun parseFromData(cookie: CookieModel, text: String): ParseResponse<T>?
+    fun parseFromData(cookie: String?, text: String): ParseResponse<T>?
 
 }
 
 data class FrostLink(val text: String, val href: String)
 
-data class ParseResponse<out T>(val cookie: CookieModel, val data: T) {
+data class ParseResponse<out T>(val cookie: String, val data: T) {
     override fun toString() = "ParseResponse\ncookie: $cookie\ndata:\n$data"
 }
 
@@ -68,15 +68,17 @@ internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder(
  */
 internal abstract class FrostParserBase<out T : Any>(private val redirectToText: Boolean) : FrostParser<T> {
 
-    override final fun parse(cookie: CookieModel) = parse(cookie, frostJsoup(cookie.cookie, url))
+    override final fun parse(cookie: String?) = parse(cookie, frostJsoup(cookie, url))
 
-    override final fun parseFromData(cookie: CookieModel, text: String): ParseResponse<T>? {
+    override final fun parseFromData(cookie: String?, text: String): ParseResponse<T>? {
+        cookie ?: return null
         val doc = textToDoc(text) ?: return null
         val data = parseImpl(doc) ?: return null
         return ParseResponse(cookie, data)
     }
 
-    override fun parse(cookie: CookieModel, document: Document): ParseResponse<T>? {
+    override fun parse(cookie: String?, document: Document): ParseResponse<T>? {
+        cookie ?: return null
         if (redirectToText)
             return parseFromData(cookie, document.toString())
         val data = parseImpl(document) ?: return null

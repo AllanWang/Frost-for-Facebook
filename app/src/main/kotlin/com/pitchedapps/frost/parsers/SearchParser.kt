@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.parsers
 
+import ca.allanwang.kau.searchview.SearchItem
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -14,7 +15,7 @@ import org.jsoup.nodes.Element
  * Created by Allan Wang on 2017-10-09.
  */
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
-    fun query(cookie: CookieModel, input: String): ParseResponse<FrostSearches>? {
+    fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
         val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
         L.i(null, "Search Query $url")
         return parse(cookie, frostJsoup(url))
@@ -43,6 +44,8 @@ data class FrostSearches(val results: List<FrostSearch>)  {
  * Note that it's best to create search results from [create]
  */
 data class FrostSearch(val href: String, val title: String, val description: String?) {
+
+    fun toSearchItem() = SearchItem(href, title, description)
 
     companion object {
         fun create(href: String, title: String, description: String?) = FrostSearch(

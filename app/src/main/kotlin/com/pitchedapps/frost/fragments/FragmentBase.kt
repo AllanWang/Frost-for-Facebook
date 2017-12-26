@@ -15,6 +15,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.enums.FeedSort
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.utils.*
@@ -211,7 +212,7 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
             progress(10)
             val doc = frostJsoup(baseUrl)
             progress(60)
-            val data = parser.parse(cookie, doc)
+            val data = parser.parse(FbCookie.webCookie, doc)
             if (data == null) {
                 context?.toast(R.string.error_generic)
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
