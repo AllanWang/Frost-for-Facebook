@@ -58,6 +58,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
@@ -127,6 +128,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onCreateBilling()
     }
 
+
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
         (0 until tabs.tabCount).asSequence().forEach { i ->
             action(i, tabs.getTabAt(i)!!.customView as BadgedIcon)
@@ -193,7 +195,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
                         -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
                         else -> {
-                            FbCookie.switchUser(profile.identifier, { refreshAll() })
+                            FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }
                         }
                     }
@@ -248,7 +250,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onClick { _ -> onClick(); false }
     }
 
-    fun refreshAll() {
+    private fun refreshAll() {
         fragmentSubject.onNext(REQUEST_REFRESH)
     }
 
@@ -266,8 +268,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         runOnUiThread { searchView?.results = results }
                     else
                         doAsync {
-                            val data = SearchParser.query(query) ?: return@doAsync
-                            val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
+                            val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results ?: return@doAsync
+                            val items = data.map(FrostSearch::toSearchItem).toMutableList()
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
                             searchViewCache.put(query, items)

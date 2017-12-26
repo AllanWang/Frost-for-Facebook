@@ -18,5 +18,5 @@ fun <T : Any> T.getResource(path: String): String? {
 
 fun <T : Any, P : Any> T.debug(path: String, parser: FrostParser<P>) {
     val content = getResource("priv/$path.html") ?: return
-    println(parser.debug(content))
+//    println(parser.debug(content))
 }

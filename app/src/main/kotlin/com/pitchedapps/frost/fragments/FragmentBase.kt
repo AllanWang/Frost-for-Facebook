@@ -13,7 +13,9 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.enums.FeedSort
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.utils.*
@@ -28,6 +30,9 @@ import org.jetbrains.anko.toast
 
 /**
  * Created by Allan Wang on 2017-11-07.
+ *
+ * All fragments pertaining to the main view
+ * Must be attached to activities implementing [MainActivityContract]
  */
 abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
@@ -58,6 +63,12 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override var content: FrostContentParent? = null
 
     protected abstract val layoutRes: Int
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (context !is MainActivityContract)
+            throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
+    }
 
     override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutRes, container, false)
@@ -162,7 +173,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }
 
-abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
+abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
 
     override val layoutRes: Int = R.layout.view_content_recycler
 
@@ -199,7 +210,7 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
             progress(10)
             val doc = frostJsoup(baseUrl)
             progress(60)
-            val data = parser.parse(doc)
+            val data = parser.parse(FbCookie.webCookie, doc)
             if (data == null) {
                 context?.toast(R.string.error_generic)
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
@@ -207,7 +218,7 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
                 return@doAsync callback(false)
             }
             progress(80)
-            val items = toItems(data)
+            val items = toItems(data.data)
             progress(97)
             adapter.setNewList(items)
         }

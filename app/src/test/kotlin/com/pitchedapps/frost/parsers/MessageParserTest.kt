@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.parsers
 
+import com.pitchedapps.frost.facebook.FB_EPOCH_MATCHER
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.get
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -15,7 +17,7 @@ class MessageParserTest {
     @Test
     fun parseEpoch() {
         val input = "{\"time\":1507301642,\"short\":true,\"forceseconds\":false}"
-        assertEquals(1507301642, FrostRegex.epoch.find(input)!!.groupValues[1].toLong())
+        assertEquals(1507301642, FB_EPOCH_MATCHER.find(input)[1]!!.toLong())
     }
 
     @Test
