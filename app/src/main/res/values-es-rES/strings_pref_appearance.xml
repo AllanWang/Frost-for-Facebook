@@ -10,7 +10,6 @@
   <string name="icon_color">Color del icono</string>
   <string name="global_customization">Personalización Global</string>
   <string name="main_activity_layout">Diseño de la Pantalla Principal</string>
-  <string name="main_activity_layout_desc">Establecer Diseño de la Pantalla Principal</string>
   <string name="rounded_icons">Iconos redondeados</string>
   <string name="rounded_icons_desc">Los iconos de conversación de grupo y fotos de perfil se redondearán</string>
   <string name="tint_nav">Colorear Barra de Navegación</string>
