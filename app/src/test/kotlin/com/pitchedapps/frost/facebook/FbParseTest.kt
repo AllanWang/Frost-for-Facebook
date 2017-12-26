@@ -3,14 +3,11 @@ package com.pitchedapps.frost.facebook
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.assertComponentsNotEmpty
+import com.pitchedapps.frost.internal.assertDescending
 import com.pitchedapps.frost.internal.cookieDependent
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.parsers.FrostThread
-import com.pitchedapps.frost.parsers.MessageParser
-import com.pitchedapps.frost.parsers.SearchParser
+import com.pitchedapps.frost.parsers.*
 import org.junit.BeforeClass
 import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.test.fail
 
 /**
@@ -36,10 +33,15 @@ class FbParseTest {
     @Test
     fun message() = MessageParser.test {
         threads.forEach(FrostThread::assertComponentsNotEmpty)
-        val times = threads.map(FrostThread::time)
-        assertEquals(times.sortedDescending(), times, "time values are not in descending order")
+        threads.map(FrostThread::time).assertDescending("thread time values")
     }
 
     @Test
     fun search() = SearchParser.test()
+
+    @Test
+    fun notif() = NotifParser.test {
+        notifs.forEach(FrostNotif::assertComponentsNotEmpty)
+        notifs.map(FrostNotif::time).assertDescending("notif time values")
+    }
 }

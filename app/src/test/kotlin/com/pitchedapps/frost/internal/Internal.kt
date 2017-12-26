@@ -10,6 +10,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 import kotlin.reflect.full.starProjectedType
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -67,4 +68,8 @@ fun Any.assertComponentsNotEmpty() {
             }
         }
     }
+}
+
+fun <T : Comparable<T>> List<T>.assertDescending(tag: String) {
+    assertEquals(sortedDescending(), this, "$tag not sorted in descending order")
 }

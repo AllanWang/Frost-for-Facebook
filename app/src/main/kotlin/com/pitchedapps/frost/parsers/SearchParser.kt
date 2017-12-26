@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element
  * Created by Allan Wang on 2017-10-09.
  */
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
-    fun query(cookie: CookieModel, input: String): ParseResp<FrostSearches>? {
+    fun query(cookie: CookieModel, input: String): ParseResponse<FrostSearches>? {
         val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
         L.i(null, "Search Query $url")
         return parse(cookie, frostJsoup(url))
@@ -57,7 +57,7 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
     override val url = "${FbItem._SEARCH.url}?q=a"
 
-    override fun parseImpl(cookie: CookieModel, doc: Document): FrostSearches? {
+    override fun parseImpl(doc: Document): FrostSearches? {
         val container: Element = doc.getElementById("BrowseResultsContainer")
                 ?: doc.getElementById("root")
                 ?: return null
@@ -71,8 +71,5 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
                     it.select("._1tcc").first()?.text())
         }.filter { it.title.isNotBlank() })
     }
-
-
-    override fun textToDoc(text: String): Document? = Jsoup.parse(text)
 
 }

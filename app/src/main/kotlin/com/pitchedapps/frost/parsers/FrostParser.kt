@@ -5,6 +5,7 @@ import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.utils.frostJsoup
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -29,22 +30,24 @@ interface FrostParser<out T : Any> {
     /**
      * Call parsing with default implementation using cookie
      */
-    fun parse(cookie: CookieModel): ParseResp<T>?
+    fun parse(cookie: CookieModel): ParseResponse<T>?
 
     /**
      * Call parsing with given document
      */
-    fun parse(cookie: CookieModel, document: Document): ParseResp<T>?
+    fun parse(cookie: CookieModel, document: Document): ParseResponse<T>?
 
     /**
      * Call parsing with given data
      */
-    fun parseFromData(cookie: CookieModel, text: String): ParseResp<T>?
+    fun parseFromData(cookie: CookieModel, text: String): ParseResponse<T>?
 
 }
 
-data class ParseResp<out T>(val cookie: CookieModel, val data: T) {
-    override fun toString() = "ParseResp\ncookie: $cookie\ndata:\n$data"
+data class FrostLink(val text: String, val href: String)
+
+data class ParseResponse<out T>(val cookie: CookieModel, val data: T) {
+    override fun toString() = "ParseResponse\ncookie: $cookie\ndata:\n$data"
 }
 
 internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {
@@ -62,20 +65,20 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
 
     override final fun parse(cookie: CookieModel) = parse(cookie, frostJsoup(cookie.cookie, url))
 
-    override final fun parseFromData(cookie: CookieModel, text: String): ParseResp<T>? {
+    override final fun parseFromData(cookie: CookieModel, text: String): ParseResponse<T>? {
         val doc = textToDoc(text) ?: return null
-        val data = parseImpl(cookie, doc) ?: return null
-        return ParseResp(cookie, data)
+        val data = parseImpl(doc) ?: return null
+        return ParseResponse(cookie, data)
     }
 
-    override fun parse(cookie: CookieModel, document: Document): ParseResp<T>? {
+    override fun parse(cookie: CookieModel, document: Document): ParseResponse<T>? {
         if (redirectToText)
             return parseFromData(cookie, document.toString())
-        val data = parseImpl(cookie, document) ?: return null
-        return ParseResp(cookie, data)
+        val data = parseImpl(document) ?: return null
+        return ParseResponse(cookie, data)
     }
 
-    protected abstract fun parseImpl(cookie: CookieModel, doc: Document): T?
+    protected abstract fun parseImpl(doc: Document): T?
 
     //    protected abstract fun parse(doc: Document): T?
 
@@ -86,6 +89,13 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
     protected fun Element.getInnerImgStyle() =
             FB_CSS_URL_MATCHER.find(select("i.img[style*=url]").attr("style"))[1]?.formattedFbUrl ?: ""
 
-    protected abstract fun textToDoc(text: String): Document?
+    protected open fun textToDoc(text: String) = if (!redirectToText)
+        Jsoup.parse(text)
+    else
+        throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
 
+    protected fun parseLink(element: Element?): FrostLink? {
+        val a = element?.getElementsByTag("a")?.first() ?: return null
+        return FrostLink(a.text(), a.attr("href"))
+    }
 }

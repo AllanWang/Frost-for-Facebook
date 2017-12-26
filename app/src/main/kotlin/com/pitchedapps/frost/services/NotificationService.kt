@@ -150,8 +150,7 @@ class NotificationService : JobService() {
 
     fun fetchMessageNotifications(data: CookieModel) {
         L.d("Notif IM fetch", data.toString())
-        val doc = frostJsoup(data.cookie, FbItem.MESSAGES.url)
-        val (threads, _, _) = MessageParser.parse(data, doc.toString())?.data ?: return L.e("Could not parse IM")
+        val threads = MessageParser.parse(data)?.data?.threads ?: return L.e("Could not parse IM")
 
         var notifCount = 0
         val prevNotifTime = lastNotificationTime(data.id)
