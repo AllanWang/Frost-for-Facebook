@@ -29,22 +29,23 @@ import org.jetbrains.anko.toast
 
 /**
  * Created by Allan Wang on 2017-11-07.
+ *
+ * All fragments pertaining to the main view
+ * Must be attached to activities implementing [MainActivityContract]
  */
 abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
         private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
-        private const val ARG_COOKIE = "arg_cookie"
 
-        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int, cookie: CookieModel): BaseFragment {
+        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
             val fragment = if (Prefs.nativeViews) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                     ARG_URL to d.url,
                     ARG_POSITION to position,
-                    ARG_URL_ENUM to d,
-                    ARG_COOKIE to cookie
+                    ARG_URL_ENUM to d
             )
             return fragment
         }
@@ -53,7 +54,8 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
-    override val cookie: CookieModel by lazy { arguments!!.getParcelable<CookieModel>(ARG_COOKIE) }
+    override val cookie
+        get() = (context as MainActivityContract).cookie
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
@@ -62,6 +64,12 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override var content: FrostContentParent? = null
 
     protected abstract val layoutRes: Int
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (context !is MainActivityContract)
+            throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
+    }
 
     override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutRes, container, false)

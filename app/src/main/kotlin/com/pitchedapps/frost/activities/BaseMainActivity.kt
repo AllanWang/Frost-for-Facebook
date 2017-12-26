@@ -25,6 +25,7 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
+import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
@@ -95,7 +96,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
     private lateinit var controlWebview: WebView
-    private lateinit var cookie: CookieModel
+    private val cookieImpl = lazyResettable {
+        val cookie = cookies().firstOrNull { it.cookie == FbCookie.webCookie }
+        if (cookie == null)
+            L.eThrow("No cookie found; using fallback")
+        cookie ?: CookieModel(id = Prefs.userId, cookie = FbCookie.webCookie)
+    }
+    override val cookie: CookieModel by cookieImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,11 +134,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
-
-        // find full cookie data for current user
-        cookies().firstOrNull { it.id == Prefs.userId }
-                ?: CookieModel(id = Prefs.userId, cookie = FbCookie.webCookie)
     }
+
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
         (0 until tabs.tabCount).asSequence().forEach { i ->
@@ -199,7 +203,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
                         -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
                         else -> {
-                            FbCookie.switchUser(profile.identifier, { refreshAll() })
+                            FbCookie.switchUser(profile.identifier) {
+                                cookieImpl.invalidate()
+                                refreshAll()
+                            }
                             tabsForEachView { _, view -> view.badgeText = null }
                         }
                     }
@@ -392,7 +399,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            val fragment = BaseFragment(item.fragmentCreator, item, position, cookie)
+            val fragment = BaseFragment(item.fragmentCreator, item, position)
             //If first load hasn't occurred, add a listener
             // todo check
 //            if (!firstLoadFinished) {
