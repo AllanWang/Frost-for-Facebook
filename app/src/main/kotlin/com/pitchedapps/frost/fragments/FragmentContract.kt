@@ -5,7 +5,6 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
 

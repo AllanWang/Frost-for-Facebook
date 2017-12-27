@@ -39,6 +39,11 @@ interface FrostParser<out T : Any> {
     fun parse(cookie: String?, document: Document): ParseResponse<T>?
 
     /**
+     * Call parsing using jsoup to fetch from given url
+     */
+    fun parseFromUrl(cookie: String?, url: String): ParseResponse<T>?
+
+    /**
      * Call parsing with given data
      */
     fun parseFromData(cookie: String?, text: String): ParseResponse<T>?
@@ -68,7 +73,7 @@ internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder(
  */
 internal abstract class FrostParserBase<out T : Any>(private val redirectToText: Boolean) : FrostParser<T> {
 
-    override final fun parse(cookie: String?) = parse(cookie, frostJsoup(cookie, url))
+    override final fun parse(cookie: String?) = parseFromUrl(cookie, url)
 
     override final fun parseFromData(cookie: String?, text: String): ParseResponse<T>? {
         cookie ?: return null
@@ -76,6 +81,9 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
         val data = parseImpl(doc) ?: return null
         return ParseResponse(cookie, data)
     }
+
+    override final fun parseFromUrl(cookie: String?, url: String): ParseResponse<T>? =
+            parse(cookie, frostJsoup(cookie, url))
 
     override fun parse(cookie: String?, document: Document): ParseResponse<T>? {
         cookie ?: return null

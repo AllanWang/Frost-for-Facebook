@@ -13,7 +13,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem

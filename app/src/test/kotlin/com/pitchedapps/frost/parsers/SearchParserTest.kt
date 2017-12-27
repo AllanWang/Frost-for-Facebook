@@ -12,7 +12,7 @@ class SearchParserTest {
 
     @Test
     fun debug2() = debug("search2", SearchParser)
-    
+
     @Test
     fun debug3() = debug("search3", SearchParser)
 }

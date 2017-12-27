@@ -16,7 +16,11 @@ import org.jsoup.nodes.Element
  * We can parse out the content we want directly and load it ourselves
  *
  */
-object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
+object MessageParser : FrostParser<FrostMessages> by MessageParserImpl() {
+
+    fun queryUser(cookie: String?, name: String) = parseFromUrl(cookie, "${FbItem.MESSAGES.url}/?q=$name")
+
+}
 
 data class FrostMessages(val threads: List<FrostThread>,
                          val seeMore: FrostLink?,

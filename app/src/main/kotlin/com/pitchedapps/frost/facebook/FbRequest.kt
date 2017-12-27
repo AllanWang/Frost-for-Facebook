@@ -19,6 +19,22 @@ data class RequestAuth(val userId: Long = -1,
         get() = userId > 0 && cookie.isNotEmpty() && fb_dtsg.isNotEmpty() && rev.isNotEmpty()
 }
 
+/**
+ * Request container with the execution call
+ */
+class FrostRequest<out T : Any>(val call: Call, private val invoke: (Call) -> T) {
+    fun invoke() = invoke(call)
+}
+
+private inline fun <T : Any> RequestAuth.frostRequest(
+        noinline invoke: (Call) -> T,
+        builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
+): FrostRequest<T> {
+    val request = cookie.requestBuilder()
+    request.builder()
+    return FrostRequest(request.call(), invoke)
+}
+
 private val client: OkHttpClient by lazy {
     val builder = OkHttpClient.Builder()
     if (BuildConfig.DEBUG)
@@ -49,12 +65,11 @@ private fun String.requestBuilder() = Request.Builder()
 
 private fun Request.Builder.call() = client.newCall(build())
 
-
 fun Pair<Long, String>.getAuth(): RequestAuth {
     val (userId, cookie) = this
     var auth = RequestAuth(userId, cookie)
     val call = cookie.requestBuilder()
-            .url("https://touch.facebook.com")
+            .url(FB_URL_BASE)
             .get()
             .call()
     call.execute().body()?.charStream()?.useLines {
@@ -79,7 +94,7 @@ fun Pair<Long, String>.getAuth(): RequestAuth {
     return auth
 }
 
-fun RequestAuth.markNotificationRead(notifId: Long): Call {
+fun RequestAuth.markNotificationRead(notifId: Long): FrostRequest<Boolean> {
 
     val body = listOf(
             "click_type" to "notification_click",
@@ -89,40 +104,37 @@ fun RequestAuth.markNotificationRead(notifId: Long): Call {
             "__user" to userId
     ).withEmptyData("m_sess", "__dyn", "__req", "__ajax__")
 
-    return cookie.requestBuilder()
-            .url("${FB_URL_BASE}a/jewel_notifications_log.php")
-            .post(body.toForm())
-            .call()
+    return frostRequest(::executeForNoError) {
+        url("${FB_URL_BASE}a/jewel_notifications_log.php")
+        post(body.toForm())
+    }
 }
 
-private inline fun <T, reified R : Any, O> zip(data: Array<T>,
-                                               crossinline mapper: (List<R>) -> O,
-                                               crossinline caller: (T) -> R): Single<O> {
-    val singles = data.map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
+inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) -> O,
+                                                crossinline caller: (T) -> R): Single<O> {
+    val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
     return Single.zip(singles) {
         val results = it.mapNotNull { it as? R }
         mapper(results)
     }
 }
 
-fun RequestAuth.markNotificationsRead(vararg notifId: Long) = zip<Long, Boolean, Int>(notifId.toTypedArray(),
-        { it.count { it } }) {
-    val response = markNotificationRead(it).execute()
-    val buffer = CharArray(20)
-    response.body()?.charStream()?.read(buffer) ?: return@zip false
-    !buffer.toString().contains("error")
-}
+fun RequestAuth.markNotificationsRead(vararg notifId: Long) =
+        notifId.toTypedArray().zip<Long, Boolean, Boolean>(
+                { it.all { it } },
+                { markNotificationRead(it).invoke() })
 
 /**
  * Execute the call and attempt to check validity
+ * Valid = not blank & no "error" instance
  */
-fun Call.executeAndCheck(): Boolean {
-    val body = execute().body() ?: return false
+fun executeForNoError(call: Call): Boolean {
+    val body = call.execute().body() ?: return false
     var empty = true
     body.charStream().useLines {
         it.forEach {
+            if (it.contains("error")) return false
             if (empty && it.isNotEmpty()) empty = false
-            if (it.contains("error")) return true
         }
     }
     return !empty

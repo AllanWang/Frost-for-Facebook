@@ -23,7 +23,7 @@ class FbRequestTest {
     }
 
     /**
-     * Used to emulate [executeAndCheck]
+     * Used to emulate [executeForNoError]
      * Must be consistent with that method
      */
     private fun Call.assertNoError() {
@@ -45,7 +45,7 @@ class FbRequestTest {
     @Test
     fun markNotification() {
         val notifId = 1513544657695779
-        AUTH.markNotificationRead(notifId).assertNoError()
+        AUTH.markNotificationRead(notifId).call.assertNoError()
     }
 
 }
