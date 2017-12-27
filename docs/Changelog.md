@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.7.2
+* Optimize login view
+* Rewrite parsers
+* Fix message notification icons
+* Small theme updates
+
 ## v1.7.1
 * Fix launching messages in new overlay
 * Fix some errors in launching pages
