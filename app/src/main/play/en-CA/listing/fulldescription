@@ -1,7 +1,6 @@
 <b>Welcome to Frost for Facebook!</b>
 
-Frost is a fully themable, fully functional alternative to the official Facebook app.
-While being a web wrapper, Frost contains many unique and native features such as:
+Frost is a fully functional web wrapper, with many unique and native features such as:
 
 • <b>True multi user interactions</b> - More than just an option in a settings menu, Frost's account switcher is right in the drawer. You are one tap away from switching accounts, and everything refreshes on the switch so that you can view other accounts instantaneously. Furthermore, the notification service will fetch notifications from all accounts, and will let you know which account has the new notification.
 • <b>Better multitasking</b> - Frost contains an overlaying web browser that can be drawn on top of your foreground task. Open links and notifications with a full screen view, then swipe away to get back to your previous task.
