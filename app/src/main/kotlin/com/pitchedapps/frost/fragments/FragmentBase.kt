@@ -6,9 +6,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import ca.allanwang.kau.adapters.fastAdapter
 import ca.allanwang.kau.utils.withArguments
 import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -19,13 +20,11 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.FrostRecyclerView
-import com.pitchedapps.frost.views.FrostWebView
-import com.pitchedapps.frost.web.FrostWebViewClient
-import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -181,12 +180,14 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
      */
     abstract val parser: FrostParser<T>
 
-    abstract val adapter: FastItemAdapter<Item>
+    open fun getDoc(cookie: String?) = frostJsoup(parser.url)
+
+    val adapter: ItemAdapter<Item> = ItemAdapter()
 
     abstract fun toItems(data: T): List<Item>
 
     override fun bind(recyclerView: FrostRecyclerView) {
-        recyclerView.adapter = this.adapter
+        recyclerView.adapter = fastAdapter(this.adapter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -207,11 +208,12 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
     override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
         doAsync {
             progress(10)
-            val doc = frostJsoup(baseUrl)
+            val cookie = FbCookie.webCookie
+            val doc = getDoc(cookie)
             progress(60)
-            val data = parser.parse(FbCookie.webCookie, doc)
+            val data = parser.parse(cookie, doc)
             if (data == null) {
-                context?.toast(R.string.error_generic)
+                uiThread { context?.toast(R.string.error_generic) }
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
                 Prefs.nativeViews = false
                 return@doAsync callback(false)
@@ -219,26 +221,8 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
             progress(80)
             val items = toItems(data.data)
             progress(97)
-            adapter.setNewList(items)
+            uiThread { adapter.setNewList(items) }
+            callback(true)
         }
     }
-}
-
-open class WebFragment : BaseFragment(), FragmentContract {
-
-    override val layoutRes: Int = R.layout.view_content_web
-
-    /**
-     * Given a webview, output a client
-     */
-    open fun client(web: FrostWebView) = FrostWebViewClient(web)
-
-    override fun innerView(context: Context) = FrostWebView(context)
-
-}
-
-class WebFragmentMenu : WebFragment() {
-
-    override fun client(web: FrostWebView) = FrostWebViewClientMenu(web)
-
 }

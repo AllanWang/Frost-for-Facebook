@@ -55,11 +55,6 @@ interface FragmentContract : FrostContentContainer {
     fun attachMainObservable(contract: MainActivityContract): Disposable
 
     /**
-     * Load custom layout to container
-     */
-    fun innerView(context: Context): FrostContentCore
-
-    /**
      * Call when fragment is detached so that any existing
      * observable is disposed
      */
