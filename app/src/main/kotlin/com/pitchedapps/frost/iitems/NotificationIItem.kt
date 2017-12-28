@@ -10,11 +10,13 @@ import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.withAlpha
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.mikepenz.fastadapter.FastAdapter
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.parsers.FrostNotif
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
+import glide.RoundCornerTransformation
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -43,9 +45,11 @@ class NotificationIItem(val notification: FrostNotif) : KauIItem<NotificationIIt
         override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(Prefs.textColor,
-                    Prefs.bgColor.colorToForeground(if (notif.unread) 0.6f else 0.0f)
+                    Prefs.bgColor.colorToForeground(if (notif.unread) 0.7f else 0.0f)
                             .withAlpha(30))
-            Glide.with(itemView).load(notif.img).into(avatar)
+            Glide.with(itemView).load(notif.img)
+                    .apply(RequestOptions().transform(RoundCornerTransformation))
+                    .into(avatar)
             content.text = notif.content
             date.text = notif.time.toString()
         }
