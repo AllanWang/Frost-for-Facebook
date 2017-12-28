@@ -77,7 +77,7 @@ class NotificationService : JobService() {
         return null
     }
 
-    private fun Context.debugNotification(text: String) {
+    private fun Context.debugNotification(text: String = string(R.string.kau_lorem_ipsum)) {
         if (!BuildConfig.DEBUG) return
         val notifBuilder = frostNotification.withDefaults()
                 .setContentTitle(string(R.string.frost_name))

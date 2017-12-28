@@ -56,6 +56,7 @@ inline val Context.frostNotification: NotificationCompat.Builder
     get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
         setSmallIcon(R.drawable.frost_f_24)
         setAutoCancel(true)
+        setStyle(NotificationCompat.BigTextStyle())
         color = color(R.color.frost_notification_accent)
     }
 
@@ -69,9 +70,6 @@ fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificatio
     if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
     setDefaults(defaults)
 }
-
-inline val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
-    get() = NotificationCompat.BigTextStyle(this)
 
 /**
  * Created by Allan Wang on 2017-07-08.
@@ -87,7 +85,7 @@ class FrostNotificationTarget(val context: Context,
 
     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>) {
         builder.setLargeIcon(resource)
-        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.withBigText.build())
+        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.build())
     }
 }
 
@@ -172,7 +170,7 @@ enum class NotificationType(
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
             L.v("Notif load", context.toString())
-            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build())
+            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
 
             if (profileUrl.isNotBlank()) {
                 context.runOnUiThread {

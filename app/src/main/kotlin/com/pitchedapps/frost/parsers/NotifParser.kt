@@ -3,7 +3,6 @@ package com.pitchedapps.frost.parsers
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.services.NotificationContent
-import com.pitchedapps.frost.utils.L
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -47,6 +46,8 @@ data class FrostNotifs(
  * [url] link to thread
  * [unread] true if image is unread, false otherwise
  * [content] optional string for thread
+ * [timeString] text version of time from Facebook
+ * [thumbnailUrl] optional thumbnail url if existent
  */
 data class FrostNotif(val id: Long,
                       val img: String,
@@ -54,7 +55,8 @@ data class FrostNotif(val id: Long,
                       val url: String,
                       val unread: Boolean,
                       val content: String,
-                      val timeString: String)
+                      val timeString: String,
+                      val thumbnailUrl: String?)
 
 private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
 
@@ -78,7 +80,7 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
         val img = element.getInnerImgStyle()
         val timeString = abbr.text()
         val content = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
-        L.v("url", a.attr("href"))
+        val thumbnail = element.selectFirst("img.thumbnail")?.attr("src")
         return FrostNotif(
                 id = id,
                 img = img,
@@ -86,7 +88,8 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
                 url = a.attr("href").formattedFbUrl,
                 unread = !element.hasClass("acw"),
                 content = content,
-                timeString = timeString
+                timeString = timeString,
+                thumbnailUrl = if (thumbnail?.isNotEmpty() == true) thumbnail else null
         )
     }
 
