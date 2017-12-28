@@ -2,6 +2,7 @@ package com.pitchedapps.frost.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -10,7 +11,6 @@ import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
@@ -81,7 +81,7 @@ fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBas
         })
 }
 
-private fun Context.fadeBundle() = ActivityOptionsCompat.makeCustomAnimation(this,
+private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(this,
         android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String?) {
