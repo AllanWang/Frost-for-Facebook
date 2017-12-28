@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.adapters.fastAdapter
 import ca.allanwang.kau.utils.withArguments
+import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.pitchedapps.frost.R
@@ -186,24 +187,22 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
 
     abstract fun toItems(data: T): List<Item>
 
-    override fun bind(recyclerView: FrostRecyclerView) {
-        recyclerView.adapter = fastAdapter(this.adapter)
+    override final fun bind(recyclerView: FrostRecyclerView) {
+        recyclerView.adapter = getAdapter()
+        recyclerView.onReloadClear = { adapter.clear() }
+        bindImpl(recyclerView)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val tail = tailMapper(baseEnum)
-        if (tail.isNotEmpty()) {
-            val baseUrl = baseEnum.url
-            L.d("Adding $tail to $baseUrl for RecyclerFragment")
-            arguments!!.putString(ARG_URL, "$baseUrl$tail")
-        }
-    }
+    /**
+     * Anything to call for one time bindings
+     * At this stage, all adapters will have FastAdapter references
+     */
+    open fun bindImpl(recyclerView: FrostRecyclerView) = Unit
 
-    private fun tailMapper(item: FbItem) = when (item) {
-        FbItem.NOTIFICATIONS, FbItem.MESSAGES -> "/?more"
-        else -> ""
-    }
+    /**
+     * Create the fast adapter to bind to the recyclerview
+     */
+    open fun getAdapter(): FastAdapter<Item> = fastAdapter(this.adapter)
 
     override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
         doAsync {

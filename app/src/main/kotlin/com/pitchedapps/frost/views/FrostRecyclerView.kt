@@ -5,10 +5,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
+import ca.allanwang.kau.utils.circularReveal
+import ca.allanwang.kau.utils.fadeOut
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
+import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -44,11 +47,15 @@ class FrostRecyclerView @JvmOverloads constructor(
         isNestedScrollingEnabled = true
     }
 
+    var onReloadClear: () -> Unit = {}
+
     override fun reloadBase(animate: Boolean) {
+        if (Prefs.animate) fadeOut(onFinish = onReloadClear)
         parent.refreshObservable.onNext(true)
         recyclerContract.reload({ parent.progressObservable.onNext(it) }) {
             parent.progressObservable.onNext(100)
             parent.refreshObservable.onNext(false)
+            if (Prefs.animate) circularReveal()
         }
     }
 

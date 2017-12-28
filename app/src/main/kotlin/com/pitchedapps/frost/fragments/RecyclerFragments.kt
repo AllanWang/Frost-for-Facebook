@@ -15,8 +15,8 @@ class NotificationFragment : RecyclerFragment<FrostNotifs, NotificationIItem>() 
     override fun toItems(data: FrostNotifs): List<NotificationIItem> =
             data.notifs.map(::NotificationIItem)
 
-    override fun bind(recyclerView: FrostRecyclerView) {
-        super.bind(recyclerView)
+    override fun bindImpl(recyclerView: FrostRecyclerView) {
         NotificationIItem.bindEvents(adapter.fastAdapter)
     }
+
 }
