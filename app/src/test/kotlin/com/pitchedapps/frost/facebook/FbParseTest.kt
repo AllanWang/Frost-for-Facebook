@@ -7,6 +7,7 @@ import com.pitchedapps.frost.internal.authDependent
 import com.pitchedapps.frost.parsers.*
 import org.junit.BeforeClass
 import org.junit.Test
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -38,6 +39,7 @@ class FbParseTest {
         threads.forEach {
             it.assertComponentsNotEmpty()
             assertTrue(it.id > FALLBACK_TIME_MOD, "id may not be properly matched")
+            assertNotNull(it.img, "img may not be properly matched")
         }
         threads.map(FrostThread::time).assertDescending("thread time values")
     }
@@ -53,6 +55,7 @@ class FbParseTest {
         notifs.forEach {
             it.assertComponentsNotEmpty()
             assertTrue(it.id > FALLBACK_TIME_MOD, "id may not be properly matched")
+            assertNotNull(it.img, "img may not be properly matched")
         }
         notifs.map(FrostNotif::time).assertDescending("notif time values")
     }

@@ -25,8 +25,13 @@ class FbRegexTest {
     @Test
     fun ppRegex() {
         val img = "https\\3a //scontent-yyz1-1.xx.fbcdn.net/v/asdf1234.jpg?efg\\3d 333\\26 oh\\3d 77\\26 oe\\3d 444"
-        val ppStyle = "background:#d8dce6 url('$img') no-repeat center;background-size:100% 100%;-webkit-background-size:100% 100%;width:58px;height:58px;"
-        assertEquals(StringEscapeUtils.unescapeCsv(img), StringEscapeUtils.unescapeCsv(FB_CSS_URL_MATCHER.find(ppStyle)[1]))
+        val imgUnescaped = StringEscapeUtils.unescapeCsv(img)
+        val ppStyleSingleQuote = "background:#d8dce6 url('$img') no-repeat center;"
+        val ppStyleDoubleQuote = "background:#d8dce6 url(\"$img\") no-repeat center;"
+        val ppStyleNoQuote = "background:#d8dce6 url($img) no-repeat center;"
+        listOf(ppStyleSingleQuote, ppStyleDoubleQuote, ppStyleNoQuote).forEach {
+            assertEquals(imgUnescaped, StringEscapeUtils.unescapeCsv(FB_CSS_URL_MATCHER.find(it)[1]))
+        }
     }
 
     @Test

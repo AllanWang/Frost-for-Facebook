@@ -11,6 +11,8 @@ import ca.allanwang.kau.utils.withArguments
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter_extensions.items.ProgressItem
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -213,7 +215,7 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
     /**
      * Create the fast adapter to bind to the recyclerview
      */
-    open fun getAdapter(): FastAdapter<Item> = fastAdapter(this.adapter)
+    open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 
     override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
         doAsync {
@@ -236,3 +238,31 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
         }
     }
 }
+
+//abstract class PagedRecyclerFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment<T, Item>() {
+//
+//    var allowPagedLoading = true
+//
+//    val footerAdapter = ItemAdapter<FrostProgress>()
+//
+//    val footerScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
+//        override fun onLoadMore(currentPage: Int) {
+//            TODO("not implemented")
+//
+//        }
+//
+//    }
+//
+//    override fun getAdapter() = fastAdapter(adapter, footerAdapter)
+//
+//    override fun bindImpl(recyclerView: FrostRecyclerView) {
+//        recyclerView.addOnScrollListener(footerScrollListener)
+//    }
+//
+//    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
+//        footerScrollListener.
+//        super.reload(progress, callback)
+//    }
+//}
+
+class FrostProgress : ProgressItem()

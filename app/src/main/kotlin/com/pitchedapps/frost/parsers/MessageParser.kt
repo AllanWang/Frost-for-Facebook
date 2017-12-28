@@ -44,7 +44,8 @@ data class FrostMessages(val threads: List<FrostThread>,
                             title = title,
                             text = content ?: "",
                             timestamp = time,
-                            profileUrl = img
+                            profileUrl = img,
+                            textImgUrl = contentImgUrl
                     )
                 }
             }
@@ -59,12 +60,13 @@ data class FrostMessages(val threads: List<FrostThread>,
  * [content] optional string for thread
  */
 data class FrostThread(val id: Long,
-                       val img: String,
+                       val img: String?,
                        val title: String,
                        val time: Long,
                        val url: String,
                        val unread: Boolean,
-                       val content: String?)
+                       val content: String?,
+                       val contentImgUrl: String?)
 
 private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
 
@@ -104,9 +106,10 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         //fetch id
         val id = FB_MESSAGE_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
                 ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
-        val content = element.select("span.snippet").firstOrNull()?.text()?.trim()
+        val snippet = element.select("span.snippet").firstOrNull()
+        val content = snippet?.text()?.trim()
+        val contentImg = snippet?.select("i[style*=url]")?.getStyleUrl()
         val img = element.getInnerImgStyle()
-        L.v("url", a.attr("href"))
         return FrostThread(
                 id = id,
                 img = img,
@@ -114,7 +117,8 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
                 time = epoch,
                 url = a.attr("href").formattedFbUrl,
                 unread = !element.hasClass("acw"),
-                content = content
+                content = content,
+                contentImgUrl = contentImg
         )
     }
 

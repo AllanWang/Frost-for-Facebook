@@ -50,7 +50,7 @@ data class FrostNotifs(
  * [thumbnailUrl] optional thumbnail url if existent
  */
 data class FrostNotif(val id: Long,
-                      val img: String,
+                      val img: String?,
                       val time: Long,
                       val url: String,
                       val unread: Boolean,

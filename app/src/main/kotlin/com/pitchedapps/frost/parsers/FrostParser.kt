@@ -9,6 +9,7 @@ import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 
 /**
  * Created by Allan Wang on 2017-10-06.
@@ -104,7 +105,10 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
      * Returns the formatted url, or an empty string if nothing was found
      */
     protected fun Element.getInnerImgStyle() =
-            FB_CSS_URL_MATCHER.find(select("i.img[style*=url]").attr("style"))[1]?.formattedFbUrl ?: ""
+            select("i.img[style*=url]").getStyleUrl()
+
+    protected fun Elements.getStyleUrl() =
+            FB_CSS_URL_MATCHER.find(attr("style"))[1]?.formattedFbUrl
 
     protected open fun textToDoc(text: String) = if (!redirectToText)
         Jsoup.parse(text)
