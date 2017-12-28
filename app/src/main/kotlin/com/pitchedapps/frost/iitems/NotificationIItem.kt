@@ -57,7 +57,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
                     .transform(FrostGlide.roundCorner)
                     .into(avatar)
             content.text = notif.content
-            date.text = notif.time.toString()
+            date.text = notif.timeString
         }
 
         override fun unbindView(item: NotificationIItem) {

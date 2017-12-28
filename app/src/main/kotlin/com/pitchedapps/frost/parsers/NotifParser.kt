@@ -32,7 +32,7 @@ data class FrostNotifs(
                             notifId = Math.abs(id.toInt()),
                             href = url,
                             title = null,
-                            text = content ?: "",
+                            text = content,
                             timestamp = time,
                             profileUrl = img
                     )
@@ -53,7 +53,8 @@ data class FrostNotif(val id: Long,
                       val time: Long,
                       val url: String,
                       val unread: Boolean,
-                      val content: String?)
+                      val content: String,
+                      val timeString: String)
 
 private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
 
@@ -73,7 +74,7 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
         val id = FB_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
-                ?: System.currentTimeMillis() % 1000000
+                ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
         val img = element.getInnerImgStyle()
         val timeString = abbr.text()
         val content = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
@@ -84,7 +85,8 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
                 time = epoch,
                 url = a.attr("href").formattedFbUrl,
                 unread = !element.hasClass("acw"),
-                content = content
+                content = content,
+                timeString = timeString
         )
     }
 

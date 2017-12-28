@@ -103,7 +103,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
         val id = FB_MESSAGE_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
-                ?: System.currentTimeMillis() % 1000000
+                ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
         val content = element.select("span.snippet").firstOrNull()?.text()?.trim()
         val img = element.getInnerImgStyle()
         L.v("url", a.attr("href"))

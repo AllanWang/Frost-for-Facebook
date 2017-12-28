@@ -50,6 +50,8 @@ interface FrostParser<out T : Any> {
 
 }
 
+const val FALLBACK_TIME_MOD = 1000000
+
 data class FrostLink(val text: String, val href: String)
 
 data class ParseResponse<out T>(val cookie: String, val data: T) {
