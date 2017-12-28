@@ -28,6 +28,8 @@ import com.pitchedapps.frost.dbflow.NotificationModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.parsers.NotifParser
@@ -178,7 +180,7 @@ enum class NotificationType(
                     Glide.with(context)
                             .asBitmap()
                             .load(profileUrl)
-                            .withRoundIcon()
+                            .transform(FrostGlide.circleCrop)
                             .into(FrostNotificationTarget(context, notifId, group, notifBuilder))
                 }
             }

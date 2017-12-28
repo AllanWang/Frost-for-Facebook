@@ -192,8 +192,6 @@ fun Activity.frostNavigationBar() {
     navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
 }
 
-fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!
-
 @Throws(IOException::class)
 fun createMediaFile(extension: String) = createMediaFile("Frost", extension)
 

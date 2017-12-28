@@ -1,6 +1,7 @@
-package glide
+package com.pitchedapps.frost.glide
 
 import android.graphics.*
+import ca.allanwang.kau.kotlin.lazyResettable
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.pitchedapps.frost.utils.Prefs
@@ -10,10 +11,10 @@ import java.security.MessageDigest
 /**
  * Created by Allan Wang on 27/12/17.
  */
-object RoundCornerTransformation : BitmapTransformation() {
+class RoundCornerTransformation : BitmapTransformation() {
 
     override fun updateDiskCacheKey(messageDigest: MessageDigest) {
-        messageDigest.update("FrostRoundCornerTransform".toByteArray())
+        messageDigest.update("FrostRoundCornerTransform-${Prefs.showRoundedIcons}".toByteArray())
     }
 
     override fun transform(pool: BitmapPool, toTransform: Bitmap, outWidth: Int, outHeight: Int): Bitmap {

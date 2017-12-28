@@ -91,8 +91,9 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun firstLoadRequest() {
+        val core = core ?: return
         if (userVisibleHint && isVisible && firstLoad) {
-            core?.reloadBase(true)
+            core.reloadBase(true)
             firstLoad = false
         }
     }
@@ -191,6 +192,14 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
         recyclerView.adapter = getAdapter()
         recyclerView.onReloadClear = { adapter.clear() }
         bindImpl(recyclerView)
+    }
+
+    override fun firstLoadRequest() {
+        val core = core ?: return
+        if (firstLoad) {
+            core.reloadBase(true)
+            firstLoad = false
+        }
     }
 
     /**
