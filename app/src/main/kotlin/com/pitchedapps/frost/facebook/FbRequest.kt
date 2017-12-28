@@ -24,6 +24,7 @@ fun String.fbRequest(action: RequestAuth.() -> Unit) {
             return
         }
         authMap.put(this, auth)
+        L.i(null, "Found auth $auth")
         auth.action()
     }
 }

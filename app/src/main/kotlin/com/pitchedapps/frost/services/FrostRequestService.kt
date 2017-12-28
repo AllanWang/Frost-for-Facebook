@@ -20,7 +20,11 @@ import java.util.concurrent.Future
 private enum class FrostRequestCommands(
         val action: RequestAuth.(PersistableBundle) -> Unit) {
 
-    NOTIF_READ({ markNotificationRead(it.getLong(ARG_0)) });
+    NOTIF_READ({
+        val id = it.getLong(ARG_0)
+        val success = markNotificationRead(id).invoke()
+        L.d("Marked notif $id as read: $success")
+    });
 
     companion object {
         val values = values()
@@ -61,6 +65,7 @@ object FrostRunnable {
             L.eThrow("FrostRequestService scheduler failed for ${command.name}")
             return false
         }
+        L.d("Scheduled ${command.name}")
         return true
     }
 
@@ -79,9 +84,10 @@ class FrostRequestService : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         val bundle = params?.extras
         if (bundle == null) {
-            L.e("Launched ${this::class.java.simpleName} without param data")
+            L.eThrow("Launched ${this::class.java.simpleName} without param data")
             return false
         }
+        val now = System.currentTimeMillis()
         future = doAsync {
             val command = FrostRequestCommands.values[bundle.getInt(ARG_COMMAND)]
             bundle.getString(ARG_COOKIE).fbRequest {
@@ -89,7 +95,7 @@ class FrostRequestService : JobService() {
                 val action = command.action
                 action(bundle)
             }
-            L.d("Finished frost service for ${command.name}")
+            L.d("Finished frost service for ${command.name} in ${System.currentTimeMillis() - now} ms")
             jobFinished(params, false)
         }
         return true

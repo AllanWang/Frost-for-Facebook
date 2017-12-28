@@ -62,7 +62,7 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
     override fun parseImpl(doc: Document): FrostNotifs? {
         val notificationList = doc.getElementById("notifications_list") ?: return null
         val notifications = notificationList.getElementsByAttributeValueContaining("id", "list_notif_")
-                .mapNotNull { parseNotif(it) }
+                .mapNotNull(this::parseNotif)
         val seeMore = parseLink(doc.getElementsByAttributeValue("href", "/notifications.php?more").first())
         return FrostNotifs(notifications, seeMore)
     }
@@ -73,7 +73,7 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
         val id = FB_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
-                ?: System.currentTimeMillis()
+                ?: System.currentTimeMillis() % 1000000
         val img = element.getInnerImgStyle()
         val timeString = abbr.text()
         val content = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;

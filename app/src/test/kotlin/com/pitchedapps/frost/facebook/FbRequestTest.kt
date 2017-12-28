@@ -44,7 +44,7 @@ class FbRequestTest {
 
     @Test
     fun markNotification() {
-        val notifId = 1513544657695779
+        val notifId = 1514443903880
         AUTH.markNotificationRead(notifId).call.assertNoError()
     }
 

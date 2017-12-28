@@ -16,6 +16,7 @@ import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.parsers.FrostNotif
 import com.pitchedapps.frost.services.FrostRunnable
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
 
@@ -31,7 +32,9 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
             adapter.withSelectable(false)
                     .withOnClickListener { v, _, item, _ ->
                         val notif = item.notification
-                        FrostRunnable.markNotificationRead(v.context, notif.id, item.cookie)
+                        L.d("notif $notif")
+                        if (notif.unread)
+                            FrostRunnable.markNotificationRead(v.context, notif.id, item.cookie)
                         v.context.launchWebOverlay(notif.url)
                         true
                     }
