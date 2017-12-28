@@ -15,13 +15,14 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.parsers.FrostNotif
+import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**
  * Created by Allan Wang on 27/12/17.
  */
-class NotificationIItem(val notification: FrostNotif) : KauIItem<NotificationIItem, NotificationIItem.ViewHolder>(
+class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauIItem<NotificationIItem, NotificationIItem.ViewHolder>(
         R.layout.iitem_notification, ::ViewHolder
 ) {
 
@@ -29,7 +30,9 @@ class NotificationIItem(val notification: FrostNotif) : KauIItem<NotificationIIt
         fun bindEvents(adapter: FastAdapter<NotificationIItem>) {
             adapter.withSelectable(false)
                     .withOnClickListener { v, _, item, _ ->
-                        v.context.launchWebOverlay(item.notification.url)
+                        val notif = item.notification
+                        FrostRunnable.markNotificationRead(v.context, notif.id, item.cookie)
+                        v.context.launchWebOverlay(notif.url)
                         true
                     }
         }

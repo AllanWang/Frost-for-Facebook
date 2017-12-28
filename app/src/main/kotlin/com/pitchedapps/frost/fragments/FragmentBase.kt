@@ -19,6 +19,7 @@ import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
+import com.pitchedapps.frost.parsers.ParseResponse
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,6 +66,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firstLoad = false
         if (context !is MainActivityContract)
             throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
     }
@@ -186,7 +188,7 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
 
     val adapter: ItemAdapter<Item> = ItemAdapter()
 
-    abstract fun toItems(data: T): List<Item>
+    abstract fun toItems(response: ParseResponse<T>): List<Item>
 
     override final fun bind(recyclerView: FrostRecyclerView) {
         recyclerView.adapter = getAdapter()
@@ -219,15 +221,15 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
             val cookie = FbCookie.webCookie
             val doc = getDoc(cookie)
             progress(60)
-            val data = parser.parse(cookie, doc)
-            if (data == null) {
+            val response = parser.parse(cookie, doc)
+            if (response == null) {
                 uiThread { context?.toast(R.string.error_generic) }
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
                 Prefs.nativeViews = false
                 return@doAsync callback(false)
             }
             progress(80)
-            val items = toItems(data.data)
+            val items = toItems(response)
             progress(97)
             uiThread { adapter.setNewList(items) }
             callback(true)

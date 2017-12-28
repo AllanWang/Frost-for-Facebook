@@ -55,7 +55,7 @@ class FrostRecyclerView @JvmOverloads constructor(
         recyclerContract.reload({ parent.progressObservable.onNext(it) }) {
             parent.progressObservable.onNext(100)
             parent.refreshObservable.onNext(false)
-            if (Prefs.animate) circularReveal()
+            if (Prefs.animate) post { circularReveal() }
         }
     }
 

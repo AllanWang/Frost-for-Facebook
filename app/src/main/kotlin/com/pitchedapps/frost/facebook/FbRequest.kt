@@ -11,6 +11,23 @@ import org.apache.commons.text.StringEscapeUtils
 /**
  * Created by Allan Wang on 21/12/17.
  */
+private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
+
+fun String.fbRequest(action: RequestAuth.() -> Unit) {
+    val savedAuth = authMap[this]
+    if (savedAuth != null) {
+        savedAuth.action()
+    } else {
+        val auth = getAuth()
+        if (!auth.isValid) {
+            L.e("Attempted fbrequest with invalid auth")
+            return
+        }
+        authMap.put(this, auth)
+        auth.action()
+    }
+}
+
 data class RequestAuth(val userId: Long = -1,
                        val cookie: String = "",
                        val fb_dtsg: String = "",
@@ -65,10 +82,11 @@ private fun String.requestBuilder() = Request.Builder()
 
 private fun Request.Builder.call() = client.newCall(build())
 
-fun Pair<Long, String>.getAuth(): RequestAuth {
-    val (userId, cookie) = this
-    var auth = RequestAuth(userId, cookie)
-    val call = cookie.requestBuilder()
+fun String.getAuth(): RequestAuth {
+    var auth = RequestAuth(cookie = this)
+    val id = FB_USER_MATCHER.find(this)[1]?.toLong() ?: return auth
+    auth = auth.copy(userId = id)
+    val call = this.requestBuilder()
             .url(FB_URL_BASE)
             .get()
             .call()
@@ -77,14 +95,14 @@ fun Pair<Long, String>.getAuth(): RequestAuth {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
-                L.d(null, "fb_dtsg for $userId: $fb_dtsg")
+                L.d(null, "fb_dtsg for ${auth.userId}: $fb_dtsg")
                 auth = auth.copy(fb_dtsg = fb_dtsg)
                 if (auth.isValid) return auth
             }
 
             val rev = FB_REV_MATCHER.find(text)[1]
             if (rev != null) {
-                L.d(null, "rev for $userId: $rev")
+                L.d(null, "rev for ${auth.userId}: $rev")
                 auth = auth.copy(rev = rev)
                 if (auth.isValid) return auth
             }

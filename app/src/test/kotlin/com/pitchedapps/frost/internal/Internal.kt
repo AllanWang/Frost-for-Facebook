@@ -32,7 +32,7 @@ val PROPS: Properties by lazy {
 val COOKIE: String by lazy { PROPS.getProperty("COOKIE") ?: "" }
 val USER_ID: Long by lazy { FB_USER_MATCHER.find(COOKIE)[1]?.toLong() ?: -1 }
 val AUTH: RequestAuth by lazy {
-    (USER_ID to COOKIE).getAuth().apply {
+    COOKIE.getAuth().apply {
         println("Auth:\nuser:$userId\nfb_dtsg: $fb_dtsg\nrev: $rev\nvalid: $isValid")
     }
 }

@@ -35,7 +35,7 @@ class FbRequestTest {
 
     @Test
     fun auth() {
-        val auth = (USER_ID to COOKIE).getAuth()
+        val auth = COOKIE.getAuth()
         assertNotNull(auth)
         assertEquals(USER_ID, auth.userId)
         assertEquals(COOKIE, auth.cookie)
