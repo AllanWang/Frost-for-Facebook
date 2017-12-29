@@ -44,8 +44,7 @@ data class FrostMessages(val threads: List<FrostThread>,
                             title = title,
                             text = content ?: "",
                             timestamp = time,
-                            profileUrl = img,
-                            textImgUrl = contentImgUrl
+                            profileUrl = img
                     )
                 }
             }

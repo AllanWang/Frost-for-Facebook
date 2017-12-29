@@ -1,9 +1,11 @@
 package com.pitchedapps.frost.fragments
 
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.NotificationIItem
 import com.pitchedapps.frost.parsers.FrostNotifs
 import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.parsers.ParseResponse
+import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 
 /**
@@ -13,11 +15,13 @@ class NotificationFragment : RecyclerFragment<FrostNotifs, NotificationIItem>() 
 
     override val parser = NotifParser
 
+    override fun getDoc(cookie: String?) = frostJsoup(cookie, "${FbItem.NOTIFICATIONS.url}?more")
+
     override fun toItems(response: ParseResponse<FrostNotifs>): List<NotificationIItem> =
             response.data.notifs.map { NotificationIItem(it, response.cookie) }
 
     override fun bindImpl(recyclerView: FrostRecyclerView) {
-        NotificationIItem.bindEvents(adapter.fastAdapter)
+        NotificationIItem.bindEvents(adapter)
     }
 
 }

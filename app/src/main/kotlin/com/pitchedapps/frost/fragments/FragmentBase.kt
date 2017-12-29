@@ -186,7 +186,7 @@ abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), R
      */
     abstract val parser: FrostParser<T>
 
-    open fun getDoc(cookie: String?) = frostJsoup(parser.url)
+    open fun getDoc(cookie: String?) = frostJsoup(cookie, parser.url)
 
     val adapter: ItemAdapter<Item> = ItemAdapter()
 

@@ -160,7 +160,6 @@ enum class NotificationType(
             val notifBuilder = context.frostNotification
                     .setContentTitle(title ?: context.string(R.string.frost_name))
                     .setContentText(text)
-                    .setContent()
                     .setContentIntent(pendingIntent)
                     .setCategory(Notification.CATEGORY_SOCIAL)
                     .setSubText(data.name)
@@ -219,8 +218,7 @@ data class NotificationContent(val data: CookieModel,
                                val title: String? = null, // defaults to frost title
                                val text: String,
                                val timestamp: Long,
-                               val profileUrl: String?,
-                               val textImgUrl: String? = null)
+                               val profileUrl: String?)
 
 const val NOTIFICATION_PERIODIC_JOB = 7
 

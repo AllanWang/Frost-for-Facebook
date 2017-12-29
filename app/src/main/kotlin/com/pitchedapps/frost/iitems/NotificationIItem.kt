@@ -9,7 +9,7 @@ import ca.allanwang.kau.ui.createSimpleRippleDrawable
 import ca.allanwang.kau.utils.*
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter_extensions.items.ProgressItem
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.transform
@@ -26,12 +26,14 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
 ) {
 
     companion object {
-        fun bindEvents(adapter: FastAdapter<NotificationIItem>) {
-            adapter.withSelectable(false)
-                    .withOnClickListener { v, _, item, _ ->
+        fun bindEvents(adapter: ItemAdapter<NotificationIItem>) {
+            adapter.fastAdapter.withSelectable(false)
+                    .withOnClickListener { v, _, item, position ->
                         val notif = item.notification
-                        if (notif.unread)
+                        if (notif.unread) {
                             FrostRunnable.markNotificationRead(v.context, notif.id, item.cookie)
+                            adapter.set(position, NotificationIItem(notif.copy(unread = false), item.cookie))
+                        }
                         v.context.launchWebOverlay(notif.url)
                         true
                     }
