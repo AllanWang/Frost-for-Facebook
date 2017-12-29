@@ -28,7 +28,7 @@ data class FrostNotifs(
                 with(it) {
                     NotificationContent(
                             data = data,
-                            notifId = Math.abs(id.toInt()),
+                            id = id,
                             href = url,
                             title = null,
                             text = content,

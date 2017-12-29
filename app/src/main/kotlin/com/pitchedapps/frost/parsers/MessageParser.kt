@@ -39,7 +39,7 @@ data class FrostMessages(val threads: List<FrostThread>,
                 with(it) {
                     NotificationContent(
                             data = data,
-                            notifId = Math.abs(id.toInt()),
+                            id = id,
                             href = url,
                             title = title,
                             text = content ?: "",

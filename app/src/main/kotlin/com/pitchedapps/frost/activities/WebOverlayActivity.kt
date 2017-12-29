@@ -22,6 +22,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.*
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -63,6 +64,8 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
                     content(R.string.invalid_share_url_desc)
                 }
             }
+        } else {
+            FrostRunnable.propagate(this, intent.extras)
         }
     }
 

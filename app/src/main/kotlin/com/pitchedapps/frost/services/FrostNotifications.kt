@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.BaseBundle
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
@@ -99,12 +100,18 @@ enum class NotificationType(
         private val getTime: (notif: NotificationModel) -> Long,
         private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
         private val ringtone: () -> String) {
+
     GENERAL(OverlayContext.NOTIFICATION,
             FbItem.NOTIFICATIONS,
             NotifParser,
             NotificationModel::epoch,
             { notif, time -> notif.copy(epoch = time) },
-            Prefs::notificationRingtone),
+            Prefs::notificationRingtone) {
+
+        override fun bindRequest(content: NotificationContent, cookie: String) =
+                FrostRunnable.prepareMarkNotificationRead(content.id, cookie)
+    },
+
     MESSAGE(OverlayContext.MESSAGE,
             FbItem.MESSAGES,
             MessageParser,
@@ -113,6 +120,17 @@ enum class NotificationType(
             Prefs::messageRingtone);
 
     private val groupPrefix = "frost_${name.toLowerCase(Locale.CANADA)}"
+
+    /**
+     * Optional binder to return the request bundle builder
+     */
+    internal open fun bindRequest(content: NotificationContent, cookie: String): (BaseBundle.() -> Unit)? = null
+
+    private fun bindRequest(intent: Intent, content: NotificationContent, cookie: String?) {
+        cookie ?: return
+        val binder = bindRequest(content, cookie) ?: return
+        intent.extras.binder()
+    }
 
     /**
      * Get unread data from designated parser
@@ -155,6 +173,7 @@ enum class NotificationType(
             intent.data = Uri.parse(href)
             intent.putExtra(ARG_USER_ID, data.id)
             intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
+            bindRequest(intent, content, data.cookie)
             val group = "${groupPrefix}_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
             val notifBuilder = context.frostNotification
@@ -213,12 +232,16 @@ enum class NotificationType(
  * Notification data holder
  */
 data class NotificationContent(val data: CookieModel,
-                               val notifId: Int,
+                               val id: Long,
                                val href: String,
                                val title: String? = null, // defaults to frost title
                                val text: String,
                                val timestamp: Long,
-                               val profileUrl: String?)
+                               val profileUrl: String?) {
+
+    val notifId = Math.abs(id.toInt())
+
+}
 
 const val NOTIFICATION_PERIODIC_JOB = 7
 
