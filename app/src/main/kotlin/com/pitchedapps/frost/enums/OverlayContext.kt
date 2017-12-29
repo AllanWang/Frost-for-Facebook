@@ -6,6 +6,8 @@ import android.view.MenuItem
 import ca.allanwang.kau.utils.toDrawable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.utils.EnumBundle
+import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.views.FrostWebView
 
 /**
@@ -16,7 +18,7 @@ import com.pitchedapps.frost.views.FrostWebView
  *
  * For now, this is able to add new menu options upon first load
  */
-enum class OverlayContext(private val menuItem: FrostMenuItem?) {
+enum class OverlayContext(private val menuItem: FrostMenuItem?) : EnumBundle<OverlayContext> {
 
     NOTIFICATION(FrostMenuItem(R.id.action_notification, FbItem.NOTIFICATIONS)),
     MESSAGE(FrostMenuItem(R.id.action_messages, FbItem.MESSAGES));
@@ -28,9 +30,15 @@ enum class OverlayContext(private val menuItem: FrostMenuItem?) {
         menuItem?.addToMenu(context, menu, 0)
     }
 
-    companion object {
+    override val bundleContract: EnumBundleCompanion<OverlayContext>
+        get() = Companion
 
-        val values = OverlayContext.values() //save one instance
+    companion object : EnumBundleCompanion<OverlayContext> {
+
+        override val argTag = "frost_arg_overlay_context"
+
+        override val values = values()
+
         /**
          * Execute selection call for an item by id
          * Returns [true] if selection was consumed, [false] otherwise

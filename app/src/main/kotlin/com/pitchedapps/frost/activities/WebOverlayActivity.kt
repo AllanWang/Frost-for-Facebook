@@ -64,8 +64,6 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
                     content(R.string.invalid_share_url_desc)
                 }
             }
-        } else {
-            FrostRunnable.propagate(this, intent.extras)
         }
     }
 
@@ -114,18 +112,18 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
     val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
     private inline val urlTest: String?
-        get() = intent.extras?.getString(ARG_URL) ?: intent.dataString
+        get() = intent.getStringExtra(ARG_URL) ?: intent.dataString
 
     override val baseUrl: String
-        get() = (intent.extras?.getString(ARG_URL) ?: intent.dataString).formattedFbUrl
+        get() = (intent.getStringExtra(ARG_URL) ?: intent.dataString).formattedFbUrl
 
     override val baseEnum: FbItem? = null
 
     private inline val userId: Long
-        get() = intent.extras?.getLong(ARG_USER_ID, Prefs.userId) ?: Prefs.userId
+        get() = intent.getLongExtra(ARG_USER_ID, Prefs.userId)
 
-    private inline val overlayContext: OverlayContext?
-        get() = intent.extras?.getSerializable(ARG_OVERLAY_CONTEXT) as OverlayContext?
+    private val overlayContext: OverlayContext?
+        get() = OverlayContext[intent.extras]
 
     override fun setTitle(title: String) {
         toolbar.title = title
@@ -139,6 +137,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             finish()
             return
         }
+
         setFrameContentView(R.layout.activity_web_overlay)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -170,6 +169,9 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             }
         }
 
+        FrostRunnable.propagate(this, intent)
+        L.e("Done propagation")
+
         kauSwipeOnCreate {
             if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
             transitionSystemBars = false
@@ -183,7 +185,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val newUrl = (intent.extras?.getString(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
+        val newUrl = (intent.getStringExtra(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
         L.d("New intent")
         if (baseUrl != newUrl) {
             this.intent = intent

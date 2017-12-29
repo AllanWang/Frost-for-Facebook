@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.glide
 
 import android.graphics.*
-import ca.allanwang.kau.kotlin.lazyResettable
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation
 import com.pitchedapps.frost.utils.Prefs

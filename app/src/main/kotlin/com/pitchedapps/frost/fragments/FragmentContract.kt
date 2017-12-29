@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.fragments
 
-import android.content.Context
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent

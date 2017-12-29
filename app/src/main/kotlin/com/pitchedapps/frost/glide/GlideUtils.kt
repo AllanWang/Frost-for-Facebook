@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.glide
 
-import ca.allanwang.kau.kotlin.lazyResettable
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation

@@ -13,6 +13,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.BaseBundle
 import android.os.Build
+import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
@@ -35,7 +36,10 @@ import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.parsers.ParseNotification
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_USER_ID
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostAnswersCustom
 import org.jetbrains.anko.runOnUiThread
 import java.util.*
 
@@ -129,7 +133,9 @@ enum class NotificationType(
     private fun bindRequest(intent: Intent, content: NotificationContent, cookie: String?) {
         cookie ?: return
         val binder = bindRequest(content, cookie) ?: return
-        intent.extras.binder()
+        val bundle = Bundle()
+        bundle.binder()
+        intent.putExtras(bundle)
     }
 
     /**
@@ -150,13 +156,13 @@ enum class NotificationType(
         var newLatestEpoch = prevLatestEpoch
         notifs.forEach { notif ->
             L.v("Notif timestamp ${notif.timestamp}")
-            if (notif.timestamp <= prevLatestEpoch) return@forEach
+            if (!BuildConfig.DEBUG && notif.timestamp <= prevLatestEpoch) return@forEach // todo switch back
             createNotification(context, notif, notifCount == 0)
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch)
+        if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d("Notif $name new epoch ${getTime(lastNotificationTime(userId))}")
         summaryNotification(context, userId, notifCount)
@@ -172,10 +178,11 @@ enum class NotificationType(
             val intent = Intent(context, FrostWebActivity::class.java)
             intent.data = Uri.parse(href)
             intent.putExtra(ARG_USER_ID, data.id)
-            intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
+            overlayContext.put(intent)
             bindRequest(intent, content, data.cookie)
+
             val group = "${groupPrefix}_${data.id}"
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val notifBuilder = context.frostNotification
                     .setContentTitle(title ?: context.string(R.string.frost_name))
                     .setContentText(text)
@@ -215,7 +222,7 @@ enum class NotificationType(
         val intent = Intent(context, FrostWebActivity::class.java)
         intent.data = Uri.parse(fbItem.url)
         intent.putExtra(ARG_USER_ID, userId)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notifBuilder = context.frostNotification.withDefaults(ringtone())
                 .setContentTitle(context.string(R.string.frost_name))
                 .setContentText("$count ${context.string(fbItem.titleId)}")

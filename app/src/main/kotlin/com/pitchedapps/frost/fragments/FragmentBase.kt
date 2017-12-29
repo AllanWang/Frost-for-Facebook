@@ -12,7 +12,6 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter_extensions.items.ProgressItem
-import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -39,7 +38,6 @@ import org.jetbrains.anko.uiThread
 abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
-        private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
 
         internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
@@ -47,15 +45,15 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                     ARG_URL to d.url,
-                    ARG_POSITION to position,
-                    ARG_URL_ENUM to d
+                    ARG_POSITION to position
             )
+            d.put(fragment.arguments)
             return fragment
         }
     }
 
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
-    override val baseEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
+    override val baseEnum: FbItem by lazy { FbItem[arguments!!]!! }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
 
     override var firstLoad: Boolean = true

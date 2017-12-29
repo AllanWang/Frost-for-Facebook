@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.facebook
 
+import android.os.BaseBundle
 import android.support.annotation.StringRes
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -10,13 +11,15 @@ import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.NotificationFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.fragments.WebFragmentMenu
+import com.pitchedapps.frost.utils.EnumBundle
+import com.pitchedapps.frost.utils.EnumBundleCompanion
 
 enum class FbItem(
         @StringRes val titleId: Int,
         val icon: IIcon,
         relativeUrl: String,
         val fragmentCreator: () -> BaseFragment = ::WebFragment
-) {
+) : EnumBundle<FbItem> {
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
     BIRTHDAYS(R.string.birthdays, GoogleMaterial.Icon.gmd_cake, "events/birthdays"),
     CHAT(R.string.chat, GoogleMaterial.Icon.gmd_chat, "buddylist"),
@@ -40,6 +43,17 @@ enum class FbItem(
     ;
 
     val url = "$FB_URL_BASE$relativeUrl"
+
+    override val bundleContract: EnumBundleCompanion<FbItem>
+        get() = Companion
+
+    companion object : EnumBundleCompanion<FbItem> {
+
+        override val argTag = "frost_arg_fb_item"
+
+        override val values = values()
+
+    }
 }
 
 inline val fbSearch

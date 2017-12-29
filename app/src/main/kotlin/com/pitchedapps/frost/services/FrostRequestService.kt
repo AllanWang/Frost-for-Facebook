@@ -6,11 +6,14 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.BaseBundle
 import android.os.PersistableBundle
 import com.pitchedapps.frost.facebook.RequestAuth
 import com.pitchedapps.frost.facebook.fbRequest
 import com.pitchedapps.frost.facebook.markNotificationRead
+import com.pitchedapps.frost.utils.EnumBundle
+import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.L
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.Future
@@ -22,7 +25,7 @@ import java.util.concurrent.Future
 /**
  * Private helper data
  */
-private enum class FrostRequestCommands {
+private enum class FrostRequestCommands : EnumBundle<FrostRequestCommands> {
 
     NOTIF_READ {
 
@@ -39,6 +42,9 @@ private enum class FrostRequestCommands {
 
     };
 
+    override val bundleContract: EnumBundleCompanion<FrostRequestCommands>
+        get() = Companion
+
     /**
      * Call request with arguments inside bundle
      */
@@ -46,15 +52,16 @@ private enum class FrostRequestCommands {
 
     /**
      * Return bundle builder given arguments in the old bundle
+     * Must not write to old bundle!
      */
     abstract fun propagate(bundle: BaseBundle): BaseBundle.() -> Unit
 
-    companion object {
-        val values = values().map { it.name to it }.toMap()
+    companion object : EnumBundleCompanion<FrostRequestCommands> {
 
-        operator fun get(name: String?) = if (name == null) null else values[name]
+        override val argTag: String = "frost_arg_request_commands"
 
-        operator fun get(bundle: BaseBundle) = get(bundle.getString(ARG_COMMAND))
+        override val values: Array<FrostRequestCommands> = FrostRequestCommands.values()
+
     }
 }
 
@@ -86,6 +93,7 @@ private fun BaseBundle.putCookie(cookie: String) = putString(ARG_COOKIE, cookie)
 object FrostRunnable {
 
     fun prepareMarkNotificationRead(id: Long, cookie: String): BaseBundle.() -> Unit = {
+        FrostRequestCommands.NOTIF_READ.put(this)
         putLong(ARG_0, id)
         putCookie(cookie)
     }
@@ -99,12 +107,12 @@ object FrostRunnable {
                 prepareMarkNotificationRead(id, cookie))
     }
 
-    fun propagate(context: Context, bundle: BaseBundle?) {
-        bundle ?: return
-        val command = FrostRequestCommands[bundle] ?: return
-        bundle.putString(ARG_COMMAND, null) // reset
+    fun propagate(context: Context, intent: Intent?) {
+        intent?.extras ?: return
+        val command = FrostRequestCommands[intent] ?: return
+        intent.removeExtra(ARG_COMMAND) // reset
         L.d("Propagating command ${command.name}")
-        val builder = command.propagate(bundle)
+        val builder = command.propagate(intent.extras)
         schedule(context, command, builder)
     }
 
