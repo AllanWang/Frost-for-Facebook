@@ -39,12 +39,22 @@ private enum class FrostRequestCommands {
 
     };
 
+    /**
+     * Call request with arguments inside bundle
+     */
     abstract fun invoke(auth: RequestAuth, bundle: PersistableBundle)
 
+    /**
+     * Return bundle builder given arguments in the old bundle
+     */
     abstract fun propagate(bundle: BaseBundle): BaseBundle.() -> Unit
 
     companion object {
         val values = values()
+
+        operator fun get(index: Int) = values.getOrNull(index)
+
+        operator fun get(bundle: BaseBundle) = get(bundle.getInt(ARG_COMMAND, -1))
     }
 }
 
@@ -54,6 +64,7 @@ private const val ARG_0 = "frost_request_arg_0"
 private const val ARG_1 = "frost_request_arg_1"
 private const val ARG_2 = "frost_request_arg_2"
 private const val ARG_3 = "frost_request_arg_3"
+private const val JOB_REQUEST_BASE = 928
 
 private fun BaseBundle.getCookie() = getString(ARG_COOKIE)
 private fun BaseBundle.putCookie(cookie: String) = putString(ARG_COOKIE, cookie)
@@ -90,8 +101,7 @@ object FrostRunnable {
 
     fun propagate(context: Context, bundle: BaseBundle?) {
         bundle ?: return
-        val cmdIndex = bundle.getInt(ARG_COMMAND, -1)
-        val command = FrostRequestCommands.values.getOrNull(cmdIndex) ?: return
+        val command = FrostRequestCommands[bundle] ?: return
         bundle.putInt(ARG_COMMAND, -1) // reset
         L.d("Propagating command ${command.name}")
         val builder = command.propagate(bundle)
@@ -112,7 +122,7 @@ object FrostRunnable {
             return false
         }
 
-        val builder = JobInfo.Builder(command.ordinal, serviceComponent)
+        val builder = JobInfo.Builder(JOB_REQUEST_BASE + command.ordinal, serviceComponent)
                 .setMinimumLatency(0L)
                 .setExtras(bundle)
                 .setOverrideDeadline(2000L)
@@ -144,10 +154,19 @@ class FrostRequestService : JobService() {
             L.eThrow("Launched ${this::class.java.simpleName} without param data")
             return false
         }
+        val cookie = bundle.getCookie()
+        if (cookie.isNullOrBlank()) {
+            L.eThrow("Launched ${this::class.java.simpleName} without cookie")
+            return false
+        }
+        val command = FrostRequestCommands[bundle]
+        if (command == null) {
+            L.eThrow("Launched ${this::class.java.simpleName} without command")
+            return false
+        }
         val now = System.currentTimeMillis()
         future = doAsync {
-            val command = FrostRequestCommands.values[bundle.getInt(ARG_COMMAND)]
-            bundle.getString(ARG_COOKIE).fbRequest {
+            cookie.fbRequest {
                 L.d("Requesting frost service for ${command.name}")
                 command.invoke(this, bundle)
             }
