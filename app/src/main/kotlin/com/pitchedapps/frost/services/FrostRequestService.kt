@@ -50,11 +50,11 @@ private enum class FrostRequestCommands {
     abstract fun propagate(bundle: BaseBundle): BaseBundle.() -> Unit
 
     companion object {
-        val values = values()
+        val values = values().map { it.name to it }.toMap()
 
-        operator fun get(index: Int) = values.getOrNull(index)
+        operator fun get(name: String?) = if (name == null) null else values[name]
 
-        operator fun get(bundle: BaseBundle) = get(bundle.getInt(ARG_COMMAND, -1))
+        operator fun get(bundle: BaseBundle) = get(bundle.getString(ARG_COMMAND))
     }
 }
 
@@ -102,7 +102,7 @@ object FrostRunnable {
     fun propagate(context: Context, bundle: BaseBundle?) {
         bundle ?: return
         val command = FrostRequestCommands[bundle] ?: return
-        bundle.putInt(ARG_COMMAND, -1) // reset
+        bundle.putString(ARG_COMMAND, null) // reset
         L.d("Propagating command ${command.name}")
         val builder = command.propagate(bundle)
         schedule(context, command, builder)
@@ -115,7 +115,7 @@ object FrostRunnable {
         val serviceComponent = ComponentName(context, FrostRequestService::class.java)
         val bundle = PersistableBundle()
         bundle.bundleBuilder()
-        bundle.putInt(ARG_COMMAND, command.ordinal)
+        bundle.putString(ARG_COMMAND, command.name)
 
         if (bundle.getCookie().isNullOrBlank()) {
             L.e("Scheduled frost request with empty cookie)")
