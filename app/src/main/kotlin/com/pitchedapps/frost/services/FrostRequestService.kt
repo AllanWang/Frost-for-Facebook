@@ -88,14 +88,14 @@ object FrostRunnable {
                 prepareMarkNotificationRead(id, cookie))
     }
 
-    fun propagate(context: Context, bundle: BaseBundle?): Boolean {
-        bundle ?: return false
+    fun propagate(context: Context, bundle: BaseBundle?) {
+        bundle ?: return
         val cmdIndex = bundle.getInt(ARG_COMMAND, -1)
-        val command = FrostRequestCommands.values.getOrNull(cmdIndex) ?: return false
+        val command = FrostRequestCommands.values.getOrNull(cmdIndex) ?: return
         bundle.putInt(ARG_COMMAND, -1) // reset
         L.d("Propagating command ${command.name}")
         val builder = command.propagate(bundle)
-        return schedule(context, command, builder)
+        schedule(context, command, builder)
     }
 
     private fun schedule(context: Context,
