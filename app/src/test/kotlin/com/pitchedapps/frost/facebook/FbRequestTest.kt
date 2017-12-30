@@ -1,7 +1,9 @@
 package com.pitchedapps.frost.facebook
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.pitchedapps.frost.facebook.requests.getAuth
 import com.pitchedapps.frost.facebook.requests.getFullSizedImage
+import com.pitchedapps.frost.facebook.requests.getMenuData
 import com.pitchedapps.frost.facebook.requests.markNotificationRead
 import com.pitchedapps.frost.internal.AUTH
 import com.pitchedapps.frost.internal.COOKIE
@@ -59,4 +61,11 @@ class FbRequestTest {
         assertTrue(url?.startsWith("https://scontent") == true)
     }
 
+    @Test
+    fun testMenu() {
+        val data = AUTH.getMenuData().invoke()
+        assertNotNull(data)
+        println(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(data))
+
+    }
 }

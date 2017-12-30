@@ -3,12 +3,16 @@ package com.pitchedapps.frost.activities
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.requests.fbRequest
+import com.pitchedapps.frost.facebook.requests.getMenuData
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import org.jetbrains.anko.doAsync
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
@@ -28,6 +32,12 @@ class MainActivity : BaseMainActivity() {
         super.onCreate(savedInstanceState)
         setupViewPager()
         setupTabs()
+
+        doAsync {
+            FbCookie.webCookie?.fbRequest {
+                L.e(getMenuData().invoke()?.toString())
+            }
+        }
     }
 
     private fun setupViewPager() {
