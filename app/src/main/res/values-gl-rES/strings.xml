@@ -42,4 +42,7 @@
   <string name="file_chooser_not_found">Selector de ficheiros non atopado</string>
   <string name="top_bar">Barra superior</string>
   <string name="bottom_bar">Barra inferior</string>
+  <string name="preview">Vista previa</string>
+  <string name="options">Opcións</string>
+  <string name="tab_customizer_instructions">Toque longo e arrastra para reorganizar as iconas superiores.</string>
 </resources>
