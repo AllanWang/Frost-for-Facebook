@@ -2,10 +2,7 @@ package com.pitchedapps.frost.facebook.requests
 
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.data.DataFetcher
-import com.bumptech.glide.load.model.ModelLoader
-import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import okhttp3.Call
 import okhttp3.Request
@@ -18,17 +15,6 @@ import java.io.InputStream
 fun RequestAuth.getFullSizedImage(fbid: Long) = frostRequest(::getJsonUrl) {
     url("${FB_URL_BASE}photo/view_full_size/?fbid=$fbid&__ajax__=&__user=$userId")
     get()
-}
-
-class T : StreMo
-class ImageFbidLoader : BaseGlideUrlLoader<Long> {
-
-    override fun handles(model: Long?) = true
-
-    override fun getUrl(model: Long?, width: Int, height: Int, options: Options?): String {
-        TODO("not implemented")
-    }
-
 }
 
 class ImageFbidFetcher(private val fbid: Long,
