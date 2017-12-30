@@ -20,6 +20,7 @@ enum class FbItem(
         relativeUrl: String,
         val fragmentCreator: () -> BaseFragment = ::WebFragment
 ) : EnumBundle<FbItem> {
+
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
     BIRTHDAYS(R.string.birthdays, GoogleMaterial.Icon.gmd_cake, "events/birthdays"),
     CHAT(R.string.chat, GoogleMaterial.Icon.gmd_chat, "buddylist"),

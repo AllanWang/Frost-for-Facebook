@@ -14,6 +14,11 @@ import org.apache.commons.text.StringEscapeUtils
  */
 private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
 
+/**
+ * Synchronously fetch [RequestAuth] from cookie
+ * [action] will only be called if a valid auth is found.
+ * Otherwise, [fail] will be called
+ */
 fun String.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     val savedAuth = authMap[this]
     if (savedAuth != null) {
@@ -30,6 +35,9 @@ fun String.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     }
 }
 
+/**
+ * Underlying container for all fb requests
+ */
 data class RequestAuth(val userId: Long = -1,
                        val cookie: String = "",
                        val fb_dtsg: String = "",
@@ -82,7 +90,7 @@ private fun String.requestBuilder() = Request.Builder()
         .header("User-Agent", USER_AGENT_BASIC)
         .cacheControl(CacheControl.FORCE_NETWORK)
 
-fun Request.Builder.call() = client.newCall(build())
+fun Request.Builder.call() = client.newCall(build())!!
 
 fun String.getAuth(): RequestAuth {
     var auth = RequestAuth(cookie = this)
