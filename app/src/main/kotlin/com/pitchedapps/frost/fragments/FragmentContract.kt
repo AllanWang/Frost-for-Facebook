@@ -1,11 +1,9 @@
 package com.pitchedapps.frost.fragments
 
-import android.content.Context
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
 
@@ -54,11 +52,6 @@ interface FragmentContract : FrostContentContainer {
      * to activity emissions
      */
     fun attachMainObservable(contract: MainActivityContract): Disposable
-
-    /**
-     * Load custom layout to container
-     */
-    fun innerView(context: Context): FrostContentCore
 
     /**
      * Call when fragment is detached so that any existing

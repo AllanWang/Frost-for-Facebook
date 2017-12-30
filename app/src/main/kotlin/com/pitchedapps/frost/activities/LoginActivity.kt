@@ -23,6 +23,8 @@ import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.LoginWebView
 import io.reactivex.Single
@@ -108,7 +110,8 @@ class LoginActivity : BaseActivity() {
 
 
     private fun loadProfile(id: Long) {
-        profileLoader.load(PROFILE_PICTURE_URL(id)).withRoundIcon().listener(object : RequestListener<Drawable> {
+        profileLoader.load(PROFILE_PICTURE_URL(id))
+                .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                 profileSubject.onSuccess(true)
                 return false

@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.activities
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -14,7 +15,6 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -293,7 +293,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
-                val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
+                val bundle = ActivityOptions.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
                 startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }
             else -> return super.onOptionsItemSelected(item)

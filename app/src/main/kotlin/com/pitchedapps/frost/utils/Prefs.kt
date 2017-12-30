@@ -102,7 +102,7 @@ object Prefs : KPref() {
 
     var animate: Boolean by kpref("fancy_animations", true)
 
-    var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
+    var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf())
 
     var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
 

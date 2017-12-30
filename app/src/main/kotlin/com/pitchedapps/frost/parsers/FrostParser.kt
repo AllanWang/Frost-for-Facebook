@@ -9,6 +9,7 @@ import com.pitchedapps.frost.utils.frostJsoup
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 
 /**
  * Created by Allan Wang on 2017-10-06.
@@ -39,11 +40,18 @@ interface FrostParser<out T : Any> {
     fun parse(cookie: String?, document: Document): ParseResponse<T>?
 
     /**
+     * Call parsing using jsoup to fetch from given url
+     */
+    fun parseFromUrl(cookie: String?, url: String): ParseResponse<T>?
+
+    /**
      * Call parsing with given data
      */
     fun parseFromData(cookie: String?, text: String): ParseResponse<T>?
 
 }
+
+const val FALLBACK_TIME_MOD = 1000000
 
 data class FrostLink(val text: String, val href: String)
 
@@ -68,7 +76,7 @@ internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder(
  */
 internal abstract class FrostParserBase<out T : Any>(private val redirectToText: Boolean) : FrostParser<T> {
 
-    override final fun parse(cookie: String?) = parse(cookie, frostJsoup(cookie, url))
+    override final fun parse(cookie: String?) = parseFromUrl(cookie, url)
 
     override final fun parseFromData(cookie: String?, text: String): ParseResponse<T>? {
         cookie ?: return null
@@ -76,6 +84,9 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
         val data = parseImpl(doc) ?: return null
         return ParseResponse(cookie, data)
     }
+
+    override final fun parseFromUrl(cookie: String?, url: String): ParseResponse<T>? =
+            parse(cookie, frostJsoup(cookie, url))
 
     override fun parse(cookie: String?, document: Document): ParseResponse<T>? {
         cookie ?: return null
@@ -94,7 +105,10 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
      * Returns the formatted url, or an empty string if nothing was found
      */
     protected fun Element.getInnerImgStyle() =
-            FB_CSS_URL_MATCHER.find(select("i.img[style*=url]").attr("style"))[1]?.formattedFbUrl ?: ""
+            select("i.img[style*=url]").getStyleUrl()
+
+    protected fun Elements.getStyleUrl() =
+            FB_CSS_URL_MATCHER.find(attr("style"))[1]?.formattedFbUrl
 
     protected open fun textToDoc(text: String) = if (!redirectToText)
         Jsoup.parse(text)
