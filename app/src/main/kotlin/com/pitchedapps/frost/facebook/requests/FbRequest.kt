@@ -1,6 +1,7 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -13,7 +14,12 @@ import org.apache.commons.text.StringEscapeUtils
  */
 private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
 
-fun String.fbRequest(action: RequestAuth.() -> Unit) {
+/**
+ * Synchronously fetch [RequestAuth] from cookie
+ * [action] will only be called if a valid auth is found.
+ * Otherwise, [fail] will be called
+ */
+fun String.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     val savedAuth = authMap[this]
     if (savedAuth != null) {
         savedAuth.action()
@@ -21,7 +27,7 @@ fun String.fbRequest(action: RequestAuth.() -> Unit) {
         val auth = getAuth()
         if (!auth.isValid) {
             L.e("Attempted fbrequest with invalid auth")
-            return
+            return fail()
         }
         authMap.put(this, auth)
         L.i(null, "Found auth $auth")
@@ -29,6 +35,9 @@ fun String.fbRequest(action: RequestAuth.() -> Unit) {
     }
 }
 
+/**
+ * Underlying container for all fb requests
+ */
 data class RequestAuth(val userId: Long = -1,
                        val cookie: String = "",
                        val fb_dtsg: String = "",
@@ -40,11 +49,11 @@ data class RequestAuth(val userId: Long = -1,
 /**
  * Request container with the execution call
  */
-class FrostRequest<out T : Any>(val call: Call, private val invoke: (Call) -> T) {
+class FrostRequest<out T : Any?>(val call: Call, private val invoke: (Call) -> T) {
     fun invoke() = invoke(call)
 }
 
-private inline fun <T : Any> RequestAuth.frostRequest(
+internal inline fun <T : Any?> RequestAuth.frostRequest(
         noinline invoke: (Call) -> T,
         builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
 ): FrostRequest<T> {
@@ -61,7 +70,7 @@ private val client: OkHttpClient by lazy {
     builder.build()
 }
 
-private fun List<Pair<String, Any?>>.toForm(): FormBody {
+internal fun List<Pair<String, Any?>>.toForm(): FormBody {
     val builder = FormBody.Builder()
     forEach { (key, value) ->
         val v = value?.toString() ?: ""
@@ -70,7 +79,7 @@ private fun List<Pair<String, Any?>>.toForm(): FormBody {
     return builder.build()
 }
 
-private fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pair<String, Any?>> {
+internal fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pair<String, Any?>> {
     val newList = toMutableList()
     newList.addAll(key.map { it to null })
     return newList
@@ -81,7 +90,7 @@ private fun String.requestBuilder() = Request.Builder()
         .header("User-Agent", USER_AGENT_BASIC)
         .cacheControl(CacheControl.FORCE_NETWORK)
 
-private fun Request.Builder.call() = client.newCall(build())
+fun Request.Builder.call() = client.newCall(build())!!
 
 fun String.getAuth(): RequestAuth {
     var auth = RequestAuth(cookie = this)
@@ -113,22 +122,6 @@ fun String.getAuth(): RequestAuth {
     return auth
 }
 
-fun RequestAuth.markNotificationRead(notifId: Long): FrostRequest<Boolean> {
-
-    val body = listOf(
-            "click_type" to "notification_click",
-            "id" to notifId,
-            "target_id" to "null",
-            "fb_dtsg" to fb_dtsg,
-            "__user" to userId
-    ).withEmptyData("m_sess", "__dyn", "__req", "__ajax__")
-
-    return frostRequest(::executeForNoError) {
-        url("${FB_URL_BASE}a/jewel_notifications_log.php")
-        post(body.toForm())
-    }
-}
-
 inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) -> O,
                                                 crossinline caller: (T) -> R): Single<O> {
     val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
@@ -137,11 +130,6 @@ inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) ->
         mapper(results)
     }
 }
-
-fun RequestAuth.markNotificationsRead(vararg notifId: Long) =
-        notifId.toTypedArray().zip<Long, Boolean, Boolean>(
-                { it.all { it } },
-                { markNotificationRead(it).invoke() })
 
 /**
  * Execute the call and attempt to check validity
@@ -157,4 +145,10 @@ fun executeForNoError(call: Call): Boolean {
         }
     }
     return !empty
+}
+
+fun getJsonUrl(call: Call): String? {
+    val body = call.execute().body() ?: return null
+    val url = FB_JSON_URL_MATCHER.find(body.string())[1] ?: return null
+    return StringEscapeUtils.unescapeEcmaScript(url)
 }

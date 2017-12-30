@@ -1,6 +1,8 @@
 package com.pitchedapps.frost.internal
 
 import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.facebook.requests.RequestAuth
+import com.pitchedapps.frost.facebook.requests.getAuth
 import com.pitchedapps.frost.utils.frostJsoup
 import org.junit.Assume
 import java.io.File

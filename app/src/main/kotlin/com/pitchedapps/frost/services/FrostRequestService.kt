@@ -9,9 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.BaseBundle
 import android.os.PersistableBundle
-import com.pitchedapps.frost.facebook.RequestAuth
-import com.pitchedapps.frost.facebook.fbRequest
-import com.pitchedapps.frost.facebook.markNotificationRead
+import com.pitchedapps.frost.facebook.requests.RequestAuth
+import com.pitchedapps.frost.facebook.requests.fbRequest
+import com.pitchedapps.frost.facebook.requests.markNotificationRead
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion
