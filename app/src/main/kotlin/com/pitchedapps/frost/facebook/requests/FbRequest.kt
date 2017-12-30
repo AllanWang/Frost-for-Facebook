@@ -1,6 +1,7 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -44,7 +45,7 @@ class FrostRequest<out T : Any>(val call: Call, private val invoke: (Call) -> T)
     fun invoke() = invoke(call)
 }
 
-private inline fun <T : Any> RequestAuth.frostRequest(
+internal inline fun <T : Any> RequestAuth.frostRequest(
         noinline invoke: (Call) -> T,
         builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
 ): FrostRequest<T> {
@@ -61,7 +62,7 @@ private val client: OkHttpClient by lazy {
     builder.build()
 }
 
-private fun List<Pair<String, Any?>>.toForm(): FormBody {
+internal fun List<Pair<String, Any?>>.toForm(): FormBody {
     val builder = FormBody.Builder()
     forEach { (key, value) ->
         val v = value?.toString() ?: ""
@@ -70,7 +71,7 @@ private fun List<Pair<String, Any?>>.toForm(): FormBody {
     return builder.build()
 }
 
-private fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pair<String, Any?>> {
+internal fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pair<String, Any?>> {
     val newList = toMutableList()
     newList.addAll(key.map { it to null })
     return newList
@@ -113,22 +114,6 @@ fun String.getAuth(): RequestAuth {
     return auth
 }
 
-fun RequestAuth.markNotificationRead(notifId: Long): FrostRequest<Boolean> {
-
-    val body = listOf(
-            "click_type" to "notification_click",
-            "id" to notifId,
-            "target_id" to "null",
-            "fb_dtsg" to fb_dtsg,
-            "__user" to userId
-    ).withEmptyData("m_sess", "__dyn", "__req", "__ajax__")
-
-    return frostRequest(::executeForNoError) {
-        url("${FB_URL_BASE}a/jewel_notifications_log.php")
-        post(body.toForm())
-    }
-}
-
 inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) -> O,
                                                 crossinline caller: (T) -> R): Single<O> {
     val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
@@ -137,11 +122,6 @@ inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) ->
         mapper(results)
     }
 }
-
-fun RequestAuth.markNotificationsRead(vararg notifId: Long) =
-        notifId.toTypedArray().zip<Long, Boolean, Boolean>(
-                { it.all { it } },
-                { markNotificationRead(it).invoke() })
 
 /**
  * Execute the call and attempt to check validity

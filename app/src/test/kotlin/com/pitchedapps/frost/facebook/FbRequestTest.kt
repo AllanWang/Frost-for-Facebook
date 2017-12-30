@@ -1,5 +1,7 @@
 package com.pitchedapps.frost.facebook
 
+import com.pitchedapps.frost.facebook.requests.getAuth
+import com.pitchedapps.frost.facebook.requests.markNotificationRead
 import com.pitchedapps.frost.internal.AUTH
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.USER_ID
