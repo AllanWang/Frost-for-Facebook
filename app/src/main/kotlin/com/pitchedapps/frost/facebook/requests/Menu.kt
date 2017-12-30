@@ -57,7 +57,9 @@ data class MenuData(val data: List<MenuHeader>) {
 
 }
 
-interface MenuItemData
+interface MenuItemData {
+    val valid: Boolean
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class MenuHeader(val id: String?,
@@ -73,6 +75,8 @@ data class MenuHeader(val id: String?,
             @JsonProperty("fake") fake: Boolean?
     ) : this(id, header, visible ?: emptyList(), all ?: emptyList())
 
+    override val valid: Boolean
+        get() = header != null
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -80,7 +84,8 @@ data class MenuItem(val id: String?,
                     val name: String?,
                     val pic: String?,
                     val url: String?,
-                    val count: Int) : MenuItemData {
+                    val count: Int,
+                    val countDetails: String?) : MenuItemData {
 
     @JsonCreator constructor(
             @JsonProperty("id") id: String?,
@@ -88,7 +93,10 @@ data class MenuItem(val id: String?,
             @JsonProperty("pic") pic: String?,
             @JsonProperty("url") url: String?,
             @JsonProperty("count") count: Int?,
+            @JsonProperty("count_details") countDetails: String?,
             @JsonProperty("fake") fake: Boolean?
-    ) : this(id, name, pic, url, count ?: 0)
+    ) : this(id, name, pic, url, count ?: 0, countDetails)
 
+    override val valid: Boolean
+        get() = name != null
 }
