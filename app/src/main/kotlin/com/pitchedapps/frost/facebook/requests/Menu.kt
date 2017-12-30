@@ -2,7 +2,9 @@ package com.pitchedapps.frost.facebook.requests
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.utils.L
@@ -37,6 +39,7 @@ fun parseMenu(call: Call): MenuData? {
     jsonString = "{ \"data\" : [${StringEscapeUtils.unescapeEcmaScript(jsonString)}"
 
     val mapper = ObjectMapper()
+            .disable(MapperFeature.AUTO_DETECT_SETTERS)
 
     return try {
         mapper.readValue(jsonString, MenuData::class.java)
