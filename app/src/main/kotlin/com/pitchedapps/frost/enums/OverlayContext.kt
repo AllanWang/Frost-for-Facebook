@@ -8,6 +8,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
+import com.pitchedapps.frost.utils.EnumCompanion
 import com.pitchedapps.frost.views.FrostWebView
 
 /**
@@ -33,11 +34,7 @@ enum class OverlayContext(private val menuItem: FrostMenuItem?) : EnumBundle<Ove
     override val bundleContract: EnumBundleCompanion<OverlayContext>
         get() = Companion
 
-    companion object : EnumBundleCompanion<OverlayContext> {
-
-        override val argTag = "frost_arg_overlay_context"
-
-        override val values = values()
+    companion object : EnumCompanion<OverlayContext>("frost_arg_overlay_context", values()) {
 
         /**
          * Execute selection call for an item by id

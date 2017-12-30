@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.facebook
 
-import android.os.BaseBundle
 import android.support.annotation.StringRes
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -13,6 +12,7 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.fragments.WebFragmentMenu
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
+import com.pitchedapps.frost.utils.EnumCompanion
 
 enum class FbItem(
         @StringRes val titleId: Int,
@@ -47,19 +47,7 @@ enum class FbItem(
     override val bundleContract: EnumBundleCompanion<FbItem>
         get() = Companion
 
-    companion object : EnumBundleCompanion<FbItem> {
-
-        override val argTag = "frost_arg_fb_item"
-
-        override val values = values()
-
-    }
+    companion object : EnumCompanion<FbItem>("frost_arg_fb_item", values())
 }
 
-inline val fbSearch
-    get() = fbSearch()
-
-fun fbSearch(query: String = "a") = "$FB_SEARCH$query"
-
-private const val FB_SEARCH = "${FB_URL_BASE}search/top/?q="
 fun defaultTabs(): List<FbItem> = listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)

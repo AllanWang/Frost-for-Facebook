@@ -156,7 +156,7 @@ enum class NotificationType(
         var newLatestEpoch = prevLatestEpoch
         notifs.forEach { notif ->
             L.v("Notif timestamp ${notif.timestamp}")
-            if (!BuildConfig.DEBUG && notif.timestamp <= prevLatestEpoch) return@forEach // todo switch back
+            if (notif.timestamp <= prevLatestEpoch) return@forEach
             createNotification(context, notif, notifCount == 0)
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp

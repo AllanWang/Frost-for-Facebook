@@ -47,13 +47,13 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
                     ARG_URL to d.url,
                     ARG_POSITION to position
             )
-            d.put(fragment.arguments)
+            d.put(fragment.arguments!!)
             return fragment
         }
     }
 
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
-    override val baseEnum: FbItem by lazy { FbItem[arguments!!]!! }
+    override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
 
     override var firstLoad: Boolean = true

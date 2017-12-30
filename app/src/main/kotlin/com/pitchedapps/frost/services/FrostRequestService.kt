@@ -14,6 +14,7 @@ import com.pitchedapps.frost.facebook.fbRequest
 import com.pitchedapps.frost.facebook.markNotificationRead
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
+import com.pitchedapps.frost.utils.EnumCompanion
 import com.pitchedapps.frost.utils.L
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.Future
@@ -56,13 +57,8 @@ private enum class FrostRequestCommands : EnumBundle<FrostRequestCommands> {
      */
     abstract fun propagate(bundle: BaseBundle): BaseBundle.() -> Unit
 
-    companion object : EnumBundleCompanion<FrostRequestCommands> {
+    companion object : EnumCompanion<FrostRequestCommands>("frost_arg_commands", values())
 
-        override val argTag: String = "frost_arg_request_commands"
-
-        override val values: Array<FrostRequestCommands> = FrostRequestCommands.values()
-
-    }
 }
 
 private const val ARG_COMMAND = "frost_request_command"
