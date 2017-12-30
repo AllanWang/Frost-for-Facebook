@@ -58,6 +58,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
@@ -388,28 +389,20 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            val fragment = BaseFragment(item.fragmentCreator, item, position)
-            //If first load hasn't occurred, add a listener
-            // todo check
-//            if (!firstLoadFinished) {
-//                var disposable: Disposable? = null
-//                fragment.post {
-//                    disposable = it.web.refreshObservable.subscribe {
-//                        if (!it) {
-//                            //Ensure first load finisher only happens once
-//                            if (!firstLoadFinished) firstLoadFinished = true
-//                            disposable?.dispose()
-//                            disposable = null
-//                        }
-//                    }
-//                }
-//            }
-            return fragment
+            return BaseFragment(item.fragmentCreator, item, position)
         }
 
         override fun getCount() = pages.size
 
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
+
+        override fun getItemPosition(fragment: Any) =
+                if (fragment !is BaseFragment)
+                    POSITION_UNCHANGED
+                else if (fragment is WebFragment || fragment.valid)
+                    POSITION_UNCHANGED
+                else
+                    POSITION_NONE
     }
 
     override val lowerVideoPadding: PointF

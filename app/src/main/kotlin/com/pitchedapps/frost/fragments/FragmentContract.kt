@@ -16,6 +16,12 @@ interface FragmentContract : FrostContentContainer {
     val content: FrostContentParent?
 
     /**
+     * Defines whether the fragment is valid in the viewpager
+     * Or if it needs to be recreated
+     */
+    var valid: Boolean
+
+    /**
      * Helper to retrieve the core from [content]
      */
     val core: FrostContentCore?

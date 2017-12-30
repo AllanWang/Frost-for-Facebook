@@ -6,28 +6,18 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ca.allanwang.kau.adapters.fastAdapter
 import ca.allanwang.kau.utils.withArguments
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter_extensions.items.ProgressItem
-import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.parsers.ParseResponse
-import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.views.FrostRecyclerView
+import com.pitchedapps.frost.utils.ARG_URL
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -39,6 +29,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
         private const val ARG_POSITION = "arg_position"
+        private const val ARG_VALID = "arg_valid"
 
         internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
             val fragment = if (Prefs.nativeViews) base() else WebFragment()
@@ -55,6 +46,12 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
+
+    override var valid: Boolean
+        get() = arguments!!.getBoolean(ARG_VALID, true)
+        set(value) {
+            arguments!!.putBoolean(ARG_VALID, value)
+        }
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
