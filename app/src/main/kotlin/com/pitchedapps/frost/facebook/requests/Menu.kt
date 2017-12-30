@@ -57,11 +57,13 @@ data class MenuData(val data: List<MenuHeader>) {
 
 }
 
+interface MenuItemData
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class MenuHeader(val id: String?,
                       val header: String?,
                       val visible: List<MenuItem>,
-                      val all: List<MenuItem>) {
+                      val all: List<MenuItem>) : MenuItemData {
 
     @JsonCreator constructor(
             @JsonProperty("id") id: String?,
@@ -78,7 +80,7 @@ data class MenuItem(val id: String?,
                     val name: String?,
                     val pic: String?,
                     val url: String?,
-                    val count: Int) {
+                    val count: Int) : MenuItemData {
 
     @JsonCreator constructor(
             @JsonProperty("id") id: String?,

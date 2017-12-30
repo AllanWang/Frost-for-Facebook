@@ -32,12 +32,6 @@ class MainActivity : BaseMainActivity() {
         super.onCreate(savedInstanceState)
         setupViewPager()
         setupTabs()
-
-        doAsync {
-            FbCookie.webCookie?.fbRequest {
-                L.e(getMenuData().invoke()?.toString())
-            }
-        }
     }
 
     private fun setupViewPager() {
