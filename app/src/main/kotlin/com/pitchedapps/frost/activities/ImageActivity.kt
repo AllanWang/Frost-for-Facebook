@@ -70,9 +70,9 @@ class ImageActivity : KauBaseActivity() {
             value.update(fab)
         }
 
-    val imageUrl: String by lazy { intent.extras.getString(ARG_IMAGE_URL).trim('"') }
+    val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
 
-    val text: String? by lazy { intent.extras.getString(ARG_TEXT) }
+    val text: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

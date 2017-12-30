@@ -25,6 +25,7 @@
     <string name="select_facebook_account">Select Facebook Account</string>
     <string name="account_not_found">Current account is not in the database</string>
 
+    <string name="frost_requests">Frost Requests</string>
     <string name="frost_notifications">Frost Notifications</string>
     <string name="requires_custom_theme">Requires custom theme</string>
 

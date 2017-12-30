@@ -2,6 +2,7 @@ package com.pitchedapps.frost.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -10,7 +11,6 @@ import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
@@ -22,9 +22,6 @@ import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
@@ -47,7 +44,6 @@ const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
-const val ARG_OVERLAY_CONTEXT = "arg_overlay_context"
 
 fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity(clazz, clearStack, intentBuilder = {
@@ -61,7 +57,7 @@ fun Context.launchLogin(cookieList: ArrayList<CookieModel>, clearStack: Boolean 
 }
 
 fun Activity.cookies(): ArrayList<CookieModel> {
-    return intent?.extras?.getParcelableArrayList<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
+    return intent?.getParcelableArrayListExtra<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
 }
 
 /**
@@ -81,7 +77,7 @@ fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBas
         })
 }
 
-private fun Context.fadeBundle() = ActivityOptionsCompat.makeCustomAnimation(this,
+private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(this,
         android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String?) {
@@ -103,7 +99,7 @@ fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)
         = launchNewTask(IntroActivity::class.java, cookieList, true)
 
 fun WebOverlayActivity.url(): String {
-    return intent.extras?.getString(ARG_URL) ?: FbItem.FEED.url
+    return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
 fun Context.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
@@ -191,8 +187,6 @@ private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snac
 fun Activity.frostNavigationBar() {
     navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
 }
-
-fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!
 
 @Throws(IOException::class)
 fun createMediaFile(extension: String) = createMediaFile("Frost", extension)

@@ -16,7 +16,11 @@ import org.jsoup.nodes.Element
  * We can parse out the content we want directly and load it ourselves
  *
  */
-object MessageParser : FrostParser<FrostMessages> by MessageParserImpl()
+object MessageParser : FrostParser<FrostMessages> by MessageParserImpl() {
+
+    fun queryUser(cookie: String?, name: String) = parseFromUrl(cookie, "${FbItem.MESSAGES.url}/?q=$name")
+
+}
 
 data class FrostMessages(val threads: List<FrostThread>,
                          val seeMore: FrostLink?,
@@ -35,7 +39,7 @@ data class FrostMessages(val threads: List<FrostThread>,
                 with(it) {
                     NotificationContent(
                             data = data,
-                            notifId = Math.abs(id.toInt()),
+                            id = id,
                             href = url,
                             title = title,
                             text = content ?: "",
@@ -55,12 +59,13 @@ data class FrostMessages(val threads: List<FrostThread>,
  * [content] optional string for thread
  */
 data class FrostThread(val id: Long,
-                       val img: String,
+                       val img: String?,
                        val title: String,
                        val time: Long,
                        val url: String,
                        val unread: Boolean,
-                       val content: String?)
+                       val content: String?,
+                       val contentImgUrl: String?)
 
 private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
 
@@ -99,10 +104,11 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
         val id = FB_MESSAGE_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
-                ?: System.currentTimeMillis()
-        val content = element.select("span.snippet").firstOrNull()?.text()?.trim()
+                ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
+        val snippet = element.select("span.snippet").firstOrNull()
+        val content = snippet?.text()?.trim()
+        val contentImg = snippet?.select("i[style*=url]")?.getStyleUrl()
         val img = element.getInnerImgStyle()
-        L.v("url", a.attr("href"))
         return FrostThread(
                 id = id,
                 img = img,
@@ -110,7 +116,8 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
                 time = epoch,
                 url = a.attr("href").formattedFbUrl,
                 unread = !element.hasClass("acw"),
-                content = content
+                content = content,
+                contentImgUrl = contentImg
         )
     }
 

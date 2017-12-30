@@ -1,13 +1,10 @@
 package com.pitchedapps.frost.parsers
 
 import ca.allanwang.kau.searchview.SearchItem
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.parsers.FrostSearch.Companion.create
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostJsoup
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -18,7 +15,7 @@ object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
     fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
         val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
         L.i(null, "Search Query $url")
-        return parse(cookie, frostJsoup(url))
+        return parseFromUrl(cookie, url)
     }
 }
 
@@ -27,7 +24,7 @@ enum class SearchKeys(val key: String) {
     EVENTS("keywords_events")
 }
 
-data class FrostSearches(val results: List<FrostSearch>)  {
+data class FrostSearches(val results: List<FrostSearch>) {
 
     override fun toString() = StringBuilder().apply {
         append("FrostSearches {\n")

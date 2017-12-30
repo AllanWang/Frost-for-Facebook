@@ -11,7 +11,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.BaseBundle
 import android.os.Build
+import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
@@ -28,11 +30,16 @@ import com.pitchedapps.frost.dbflow.NotificationModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.parsers.ParseNotification
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_USER_ID
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostAnswersCustom
 import org.jetbrains.anko.runOnUiThread
 import java.util.*
 
@@ -54,6 +61,7 @@ inline val Context.frostNotification: NotificationCompat.Builder
     get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
         setSmallIcon(R.drawable.frost_f_24)
         setAutoCancel(true)
+        setStyle(NotificationCompat.BigTextStyle())
         color = color(R.color.frost_notification_accent)
     }
 
@@ -67,9 +75,6 @@ fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificatio
     if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
     setDefaults(defaults)
 }
-
-inline val NotificationCompat.Builder.withBigText: NotificationCompat.BigTextStyle
-    get() = NotificationCompat.BigTextStyle(this)
 
 /**
  * Created by Allan Wang on 2017-07-08.
@@ -85,7 +90,7 @@ class FrostNotificationTarget(val context: Context,
 
     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>) {
         builder.setLargeIcon(resource)
-        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.withBigText.build())
+        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.build())
     }
 }
 
@@ -99,12 +104,18 @@ enum class NotificationType(
         private val getTime: (notif: NotificationModel) -> Long,
         private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
         private val ringtone: () -> String) {
+
     GENERAL(OverlayContext.NOTIFICATION,
             FbItem.NOTIFICATIONS,
             NotifParser,
             NotificationModel::epoch,
             { notif, time -> notif.copy(epoch = time) },
-            Prefs::notificationRingtone),
+            Prefs::notificationRingtone) {
+
+        override fun bindRequest(content: NotificationContent, cookie: String) =
+                FrostRunnable.prepareMarkNotificationRead(content.id, cookie)
+    },
+
     MESSAGE(OverlayContext.MESSAGE,
             FbItem.MESSAGES,
             MessageParser,
@@ -113,6 +124,19 @@ enum class NotificationType(
             Prefs::messageRingtone);
 
     private val groupPrefix = "frost_${name.toLowerCase(Locale.CANADA)}"
+
+    /**
+     * Optional binder to return the request bundle builder
+     */
+    internal open fun bindRequest(content: NotificationContent, cookie: String): (BaseBundle.() -> Unit)? = null
+
+    private fun bindRequest(intent: Intent, content: NotificationContent, cookie: String?) {
+        cookie ?: return
+        val binder = bindRequest(content, cookie) ?: return
+        val bundle = Bundle()
+        bundle.binder()
+        intent.putExtras(bundle)
+    }
 
     /**
      * Get unread data from designated parser
@@ -138,7 +162,7 @@ enum class NotificationType(
                 newLatestEpoch = notif.timestamp
             notifCount++
         }
-        if (newLatestEpoch != prevLatestEpoch)
+        if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d("Notif $name new epoch ${getTime(lastNotificationTime(userId))}")
         summaryNotification(context, userId, notifCount)
@@ -154,9 +178,11 @@ enum class NotificationType(
             val intent = Intent(context, FrostWebActivity::class.java)
             intent.data = Uri.parse(href)
             intent.putExtra(ARG_USER_ID, data.id)
-            intent.putExtra(ARG_OVERLAY_CONTEXT, overlayContext)
+            overlayContext.put(intent)
+            bindRequest(intent, content, data.cookie)
+
             val group = "${groupPrefix}_${data.id}"
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val notifBuilder = context.frostNotification
                     .setContentTitle(title ?: context.string(R.string.frost_name))
                     .setContentText(text)
@@ -170,15 +196,15 @@ enum class NotificationType(
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
             L.v("Notif load", context.toString())
-            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.withBigText.build())
+            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
 
-            if (profileUrl.isNotBlank()) {
+            if (profileUrl != null) {
                 context.runOnUiThread {
                     //todo verify if context is valid?
                     Glide.with(context)
                             .asBitmap()
                             .load(profileUrl)
-                            .withRoundIcon()
+                            .transform(FrostGlide.circleCrop)
                             .into(FrostNotificationTarget(context, notifId, group, notifBuilder))
                 }
             }
@@ -196,7 +222,7 @@ enum class NotificationType(
         val intent = Intent(context, FrostWebActivity::class.java)
         intent.data = Uri.parse(fbItem.url)
         intent.putExtra(ARG_USER_ID, userId)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notifBuilder = context.frostNotification.withDefaults(ringtone())
                 .setContentTitle(context.string(R.string.frost_name))
                 .setContentText("$count ${context.string(fbItem.titleId)}")
@@ -213,12 +239,16 @@ enum class NotificationType(
  * Notification data holder
  */
 data class NotificationContent(val data: CookieModel,
-                               val notifId: Int,
+                               val id: Long,
                                val href: String,
                                val title: String? = null, // defaults to frost title
                                val text: String,
                                val timestamp: Long,
-                               val profileUrl: String)
+                               val profileUrl: String?) {
+
+    val notifId = Math.abs(id.toInt())
+
+}
 
 const val NOTIFICATION_PERIODIC_JOB = 7
 
