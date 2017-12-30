@@ -41,6 +41,12 @@ class FbRegexTest {
         assertEquals(id, FB_MESSAGE_NOTIF_ID_MATCHER.find(data)[1]?.toLong(), "thread_fbid mismatch")
         val userData = "threadlist_row_other_user_fbid_${id}thread_fbid_"
         assertEquals(id, FB_MESSAGE_NOTIF_ID_MATCHER.find(userData)[1]?.toLong(), "user_fbid mismatch")
+    }
 
+    @Test
+    fun jsonUrlRegex() {
+        val url = "https://www.hello.world"
+        val data = "\"uri\":\"$url\"}"
+        assertEquals(url, FB_JSON_URL_MATCHER.find(data)[1])
     }
 }

@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.facebook.requests.getAuth
+import com.pitchedapps.frost.facebook.requests.getFullSizedImage
 import com.pitchedapps.frost.facebook.requests.markNotificationRead
 import com.pitchedapps.frost.internal.AUTH
 import com.pitchedapps.frost.internal.COOKIE
@@ -48,6 +49,14 @@ class FbRequestTest {
     fun markNotification() {
         val notifId = 1514443903880
         AUTH.markNotificationRead(notifId).call.assertNoError()
+    }
+
+    @Test
+    fun fullSizeImage() {
+        val fbid = 10155966932992838L // google's current cover photo
+        val url = AUTH.getFullSizedImage(fbid).invoke()
+        println(url)
+        assertTrue(url?.startsWith("https://scontent") == true)
     }
 
 }

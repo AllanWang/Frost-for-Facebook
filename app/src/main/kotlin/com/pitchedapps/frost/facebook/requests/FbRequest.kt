@@ -14,7 +14,7 @@ import org.apache.commons.text.StringEscapeUtils
  */
 private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
 
-fun String.fbRequest(action: RequestAuth.() -> Unit) {
+fun String.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     val savedAuth = authMap[this]
     if (savedAuth != null) {
         savedAuth.action()
@@ -22,7 +22,7 @@ fun String.fbRequest(action: RequestAuth.() -> Unit) {
         val auth = getAuth()
         if (!auth.isValid) {
             L.e("Attempted fbrequest with invalid auth")
-            return
+            return fail()
         }
         authMap.put(this, auth)
         L.i(null, "Found auth $auth")
@@ -41,11 +41,11 @@ data class RequestAuth(val userId: Long = -1,
 /**
  * Request container with the execution call
  */
-class FrostRequest<out T : Any>(val call: Call, private val invoke: (Call) -> T) {
+class FrostRequest<out T : Any?>(val call: Call, private val invoke: (Call) -> T) {
     fun invoke() = invoke(call)
 }
 
-internal inline fun <T : Any> RequestAuth.frostRequest(
+internal inline fun <T : Any?> RequestAuth.frostRequest(
         noinline invoke: (Call) -> T,
         builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
 ): FrostRequest<T> {
@@ -82,7 +82,7 @@ private fun String.requestBuilder() = Request.Builder()
         .header("User-Agent", USER_AGENT_BASIC)
         .cacheControl(CacheControl.FORCE_NETWORK)
 
-private fun Request.Builder.call() = client.newCall(build())
+fun Request.Builder.call() = client.newCall(build())
 
 fun String.getAuth(): RequestAuth {
     var auth = RequestAuth(cookie = this)
@@ -137,4 +137,10 @@ fun executeForNoError(call: Call): Boolean {
         }
     }
     return !empty
+}
+
+fun getJsonUrl(call: Call): String? {
+    val body = call.execute().body() ?: return null
+    val url = FB_JSON_URL_MATCHER.find(body.string())[1] ?: return null
+    return StringEscapeUtils.unescapeEcmaScript(url)
 }
