@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import ca.allanwang.kau.utils.materialDialog
+import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.requests.fbRequest
 import com.pitchedapps.frost.facebook.requests.getMenuData
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,13 +20,7 @@ class MainActivity : BaseMainActivity() {
 
     override val fragmentSubject = PublishSubject.create<Int>()!!
     var lastPosition = -1
-    val headerBadgeObservable = PublishSubject.create<String>()
-    var firstLoadFinished = false
-        set(value) {
-            if (field && value) return //both vals are already true
-            L.i("First fragment load has finished")
-            field = value
-        }
+    val headerBadgeObservable = PublishSubject.create<String>()!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
