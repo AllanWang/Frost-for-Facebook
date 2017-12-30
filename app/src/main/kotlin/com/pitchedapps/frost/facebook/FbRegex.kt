@@ -24,6 +24,7 @@ val FB_EPOCH_MATCHER: Regex by lazy { Regex(":([0-9]+)") }
 val FB_NOTIF_ID_MATCHER: Regex by lazy { Regex("notif_([0-9]+)") }
 val FB_MESSAGE_NOTIF_ID_MATCHER: Regex by lazy { Regex("[thread|user]_fbid_([0-9]+)") }
 val FB_CSS_URL_MATCHER: Regex by lazy { Regex("url\\([\"|']?(.*?)[\"|']?\\)") }
+val FB_JSON_URL_MATCHER: Regex by lazy { Regex("\"(http.*?)\"") }
 
 operator fun MatchResult?.get(groupIndex: Int) = this?.groupValues?.get(groupIndex)
 
