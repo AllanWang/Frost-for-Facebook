@@ -6,13 +6,19 @@
     <item text="" />
     -->
 
+    <version title="v1.7.4" />
+    <item text="Mark notifications as read when clicked!" />
+    <item text="Create menu parser" />
+    <item text="Implement automatic web fallback" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.7.2" />
     <item text="Optimize login view" />
     <item text="Rewrite parsers" />
     <item text="Fix message notification icons" />
     <item text="Small theme updates" />
-    <item text="" />
-    <item text="" />
 
     <version title="v1.7.1" />
     <item text="Fix launching messages in new overlay" />

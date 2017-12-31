@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.7.4
+* Mark notifications as read when clicked!
+* Create menu parser
+* Implement automatic web fallback
+
 ## v1.7.2
 * Optimize login view
 * Rewrite parsers
