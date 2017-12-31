@@ -108,7 +108,6 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
             progress(60)
             val response = parser.parse(cookie, doc)
             if (response == null) {
-                uiThread { context?.toast(R.string.error_generic) }
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
                 return@doAsync callback(false)
             }

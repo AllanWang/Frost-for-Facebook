@@ -56,19 +56,12 @@ class MenuContentIItem(val data: MenuItem)
     }
 }
 
-class MenuHeaderIItem(val data: MenuHeader) : TextIItem(data.header,
-        textColor = Prefs.accentColor,
+class MenuHeaderIItem(val data: MenuHeader) : HeaderIItem(data.header,
         itemId = R.id.item_menu_header)
 
-class MenuFooterIItem(val data: MenuFooterItem) : TextIItem(data.name, itemId = R.id.item_menu_footer),
-        ClickableIItemContract {
-    override val url: String?
-        get() = data.url
-}
+class MenuFooterIItem(val data: MenuFooterItem)
+    : TextIItem(data.name, data.url, R.id.item_menu_footer)
 
-class MenuFooterSmallIItem(val data: MenuFooterItem) : TextIItem(data.name, itemId = R.id.item_menu_footer_small),
-        ClickableIItemContract {
-    override val url: String?
-        get() = data.url
-}
+class MenuFooterSmallIItem(val data: MenuFooterItem)
+    : TextIItem(data.name, data.url, R.id.item_menu_footer_small)
 

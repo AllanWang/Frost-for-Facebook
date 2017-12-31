@@ -4,9 +4,9 @@
     android:id="@+id/item_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/kau_activity_vertical_margin"
+    android:paddingBottom="@dimen/kau_padding_small"
     android:paddingStart="@dimen/kau_activity_horizontal_margin"
-    android:paddingTop="@dimen/kau_activity_vertical_margin">
+    android:paddingTop="@dimen/kau_padding_small">
 
     <ImageView
         android:id="@+id/item_icon"

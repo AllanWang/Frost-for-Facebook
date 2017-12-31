@@ -7,8 +7,6 @@
     <item name="item_menu_footer" type="id" />
     <item name="item_menu_footer_small" type="id" />
 
-    <item name="item_text_view" type="id"/>
-
     <item name="intro_phone" type="id" />
     <item name="intro_phone_screen" type="id" />
     <item name="intro_title" type="id" />
