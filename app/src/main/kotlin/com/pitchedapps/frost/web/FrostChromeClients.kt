@@ -55,7 +55,7 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return true
-        L.d("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
+        L.v("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
         return true
     }
 

@@ -12,10 +12,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.ARG_URL
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.REQUEST_REFRESH
-import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
+import com.pitchedapps.frost.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -31,8 +28,8 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
         private const val ARG_POSITION = "arg_position"
         private const val ARG_VALID = "arg_valid"
 
-        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
-            val fragment = if (Prefs.nativeViews) base() else WebFragment()
+        internal operator fun invoke(base: () -> BaseFragment, useFallback: Boolean, data: FbItem, position: Int): BaseFragment {
+            val fragment = if (!useFallback) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                     ARG_URL to d.url,
@@ -50,7 +47,10 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override var valid: Boolean
         get() = arguments!!.getBoolean(ARG_VALID, true)
         set(value) {
+            if (value || this is WebFragment) return
             arguments!!.putBoolean(ARG_VALID, value)
+            L.d("Invalidating position $position")
+            (context as MainActivityContract).reloadFragment(this)
         }
 
     override var firstLoad: Boolean = true
@@ -144,6 +144,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
+        L.e("On destroy $position ${hashCode()}")
         content?.destroy()
         content = null
         super.onDestroyView()

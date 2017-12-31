@@ -16,7 +16,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -81,7 +80,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         VideoViewHolder, SearchViewHolder,
         FrostBilling by IabMain() {
 
-    lateinit var adapter: SectionsPagerAdapter
+    protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: FrostViewPager by bindView(R.id.container)
@@ -115,7 +114,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview = WebView(this)
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
-        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
+        adapter = SectionsPagerAdapter(loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = TAB_COUNT
         setupDrawer(savedInstanceState)
@@ -336,6 +335,19 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
+    private val STATE_FORCE_FALLBACK = "frost_state_force_fallback"
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(adapter.forcedFallbacks))
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        adapter.forcedFallbacks.clear()
+        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK))
+    }
+
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
@@ -385,11 +397,29 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     inline val currentFragment
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
 
-    inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbItem>) : FragmentPagerAdapter(fm) {
+    override fun reloadFragment(fragment: BaseFragment) {
+        adapter.reloadFragment(fragment)
+    }
+
+    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
+
+        val forcedFallbacks = mutableSetOf<String>()
+
+        fun reloadFragment(fragment: BaseFragment) {
+            if (fragment is WebFragment) return
+            L.e("Reload fragment ${fragment.position}")
+            forcedFallbacks.add(fragment.baseEnum.name)
+            supportFragmentManager.beginTransaction().remove(fragment).commitNowAllowingStateLoss()
+            notifyDataSetChanged()
+        }
 
         override fun getItem(position: Int): Fragment {
+            L.e("Get item $position")
             val item = pages[position]
-            return BaseFragment(item.fragmentCreator, item, position)
+            return BaseFragment(item.fragmentCreator,
+                    forcedFallbacks.contains(item.name),
+                    item,
+                    position)
         }
 
         override fun getCount() = pages.size

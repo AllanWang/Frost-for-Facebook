@@ -1,7 +1,6 @@
 package com.pitchedapps.frost.fragments
 
 import ca.allanwang.kau.adapters.fastAdapter
-import ca.allanwang.kau.utils.snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -34,6 +33,16 @@ abstract class RecyclerFragment : BaseFragment(), RecyclerContentContract {
         }
     }
 
+    override final fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
+        reloadImpl(progress) {
+            if (it)
+                callback(it)
+            else
+                valid = false
+        }
+    }
+
+    protected abstract fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit)
 }
 
 abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment() {
@@ -91,7 +100,7 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
      */
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 
-    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
+    override fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
         doAsync {
             progress(10)
             val cookie = FbCookie.webCookie

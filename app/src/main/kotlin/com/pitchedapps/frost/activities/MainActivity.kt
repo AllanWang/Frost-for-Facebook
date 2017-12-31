@@ -28,17 +28,6 @@ class MainActivity : BaseMainActivity() {
         super.onCreate(savedInstanceState)
         setupViewPager()
         setupTabs()
-
-        doAsync {
-            FbCookie.webCookie?.fbRequest({ uiThread { toast("Fail") } }) {
-                val data = getMenuData().invoke()
-                uiThread {
-                    materialDialog {
-                        content(data.toString())
-                    }
-                }
-            }
-        }
     }
 
     private fun setupViewPager() {

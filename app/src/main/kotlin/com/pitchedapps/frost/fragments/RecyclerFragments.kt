@@ -27,7 +27,13 @@ class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>
             response.data.notifs.map { NotificationIItem(it, response.cookie) }
 
     override fun bindImpl(recyclerView: FrostRecyclerView) {
-        NotificationIItem.bindEvents(adapter)
+        adapter.fastAdapter.withOnClickListener { _, _, _, _ ->
+            adapter.clear()
+            valid = false
+//            context?.toast("hi")
+            true
+        }
+//        NotificationIItem.bindEvents(adapter)
     }
 }
 
@@ -43,7 +49,7 @@ class MenuFragment : GenericRecyclerFragment<MenuItemData, MenuIItem<*, *>>() {
         MenuIItem.bindEvents(adapter)
     }
 
-    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
+    override fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
         doAsync {
             val cookie = FbCookie.webCookie
             progress(10)
