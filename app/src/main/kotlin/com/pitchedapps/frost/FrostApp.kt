@@ -64,7 +64,7 @@ class FrostApp : Application() {
             Fabric.with(this, Crashlytics(), Answers())
             Crashlytics.setUserIdentifier(Prefs.frostId)
         }
-        KL.debug(BuildConfig.DEBUG)
+        KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
         FbCookie()
@@ -87,7 +87,8 @@ class FrostApp : Application() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
                 val c = imageView.context
                 val old = Glide.with(c).load(uri).apply(RequestOptions().placeholder(placeholder))
-                Glide.with(c).load(uri).apply(RequestOptions().signature(ApplicationVersionSignature.obtain(c)))
+                Glide.with(c).load(uri).apply(RequestOptions()
+                        .signature(ApplicationVersionSignature.obtain(c)))
                         .thumbnail(old).into(imageView)
             }
         })
