@@ -11,7 +11,7 @@
     <item text="Create menu parser" />
     <item text="Implement automatic web fallback" />
     <item text="Optimize logging" />
-    <item text="" />
+    <item text="Fix link loading for some locations (eg changing profile pictures)" />
     <item text="" />
 
     <version title="v1.7.2" />
