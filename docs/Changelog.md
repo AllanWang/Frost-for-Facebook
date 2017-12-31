@@ -1,10 +1,11 @@
 # Changelog
 
-## v1.7.4
+## v1.7.5
 * Mark notifications as read when clicked!
 * Create menu parser
 * Implement automatic web fallback
 * Optimize logging
+* Fix link loading for some locations (eg changing profile pictures)
 
 ## v1.7.2
 * Optimize login view
