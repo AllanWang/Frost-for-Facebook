@@ -6,7 +6,7 @@
     <item text="" />
     -->
 
-    <version title="v1.7.4" />
+    <version title="v1.7.5" />
     <item text="Mark notifications as read when clicked!" />
     <item text="Create menu parser" />
     <item text="Implement automatic web fallback" />
