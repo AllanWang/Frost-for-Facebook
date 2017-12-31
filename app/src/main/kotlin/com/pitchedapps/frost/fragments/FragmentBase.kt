@@ -66,6 +66,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firstLoad = true
+        L.e("AAAAAAAAA")
         if (context !is MainActivityContract)
             throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
     }
