@@ -311,7 +311,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ACTIVITY_SETTINGS) {
             if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
-                L.d("Restart Application Requested")
+                L.d { "Restart Application Requested" }
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -356,7 +356,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onPause() {
         controlWebview.pauseTimers()
-        L.v("Pause main web timers")
+        L.v { "Pause main web timers" }
         super.onPause()
     }
 
@@ -407,7 +407,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         fun reloadFragment(fragment: BaseFragment) {
             if (fragment is WebFragment) return
-            L.d("Reload fragment ${fragment.position}: ${fragment.baseEnum.name}")
+            L.d { "Reload fragment ${fragment.position}: ${fragment.baseEnum.name}" }
             forcedFallbacks.add(fragment.baseEnum.name)
             supportFragmentManager.beginTransaction().remove(fragment).commitNowAllowingStateLoss()
             notifyDataSetChanged()

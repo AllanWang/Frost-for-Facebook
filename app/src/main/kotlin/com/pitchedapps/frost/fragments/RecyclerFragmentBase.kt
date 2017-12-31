@@ -11,11 +11,9 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.ParseResponse
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 /**

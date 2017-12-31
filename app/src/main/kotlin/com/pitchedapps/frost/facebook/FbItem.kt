@@ -6,7 +6,10 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.fragments.*
+import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.fragments.MenuFragment
+import com.pitchedapps.frost.fragments.NotificationFragment
+import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion

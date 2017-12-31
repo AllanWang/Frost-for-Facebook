@@ -67,8 +67,7 @@ fun Activity.cookies(): ArrayList<CookieModel> {
  */
 fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBase> = WebOverlayActivity::class.java) {
     val argUrl = url.formattedFbUrl
-    L.v("Launch received", url)
-    L.i("Launch web overlay", argUrl)
+    L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
         FbCookie.logout(this)
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
@@ -162,7 +161,7 @@ fun frostAnswersCustom(name: String, vararg events: Pair<String, Any>) {
  */
 fun Throwable?.logFrostAnswers(text: String) {
     val msg = if (this == null) text else "$text: $message"
-    L.e(msg)
+    L.e { msg }
     frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 

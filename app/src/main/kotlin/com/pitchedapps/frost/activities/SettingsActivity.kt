@@ -64,7 +64,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
             try {
                 grantUriPermission("com.android.systemui", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } catch (e: Exception) {
-                L.e(e, "grantUriPermission")
+                L.e(e) { "grantUriPermission" }
             }
         }
         when (requestCode) {

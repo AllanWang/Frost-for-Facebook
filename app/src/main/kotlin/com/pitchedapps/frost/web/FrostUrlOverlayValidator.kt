@@ -29,34 +29,35 @@ import org.jetbrains.anko.runOnUiThread
  * as we have no need of sending a new intent to the same activity
  */
 fun FrostWebView.requestWebOverlay(url: String): Boolean {
+    L.v { "Request web overlay: $url" }
     val context = context // finalize reference
     if (url.isVideoUrl && context is VideoViewHolder) {
-        L.i("Found video", url)
+        L.d { "Found video" }
         context.runOnUiThread { context.showVideo(url) }
         return true
     }
     if (!url.isIndependent) {
-        L.i("Forbid overlay switch", url)
+        L.d { "Forbid overlay switch" }
         return false
     }
     if (!Prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
-        L.v("Check web request from overlay", url)
+        L.v { "Check web request from overlay" }
         //already overlay; manage user agent
         if (userAgentString != USER_AGENT_BASIC && url.formattedFbUrl.shouldUseBasicAgent) {
-            L.i("Switch to basic agent overlay")
+            L.i { "Switch to basic agent overlay" }
             context.launchWebOverlay(url, WebOverlayBasicActivity::class.java)
             return true
         }
         if (context is WebOverlayBasicActivity && !url.formattedFbUrl.shouldUseBasicAgent) {
-            L.i("Switch from basic agent")
+            L.i { "Switch from basic agent" }
             context.launchWebOverlay(url)
             return true
         }
-        L.i("return false switch")
+        L.i { "return false switch" }
         return false
     }
-    L.v("Request web overlay passed", url)
+    L.v { "Request web overlay passed" }
     context.launchWebOverlay(url)
     return true
 }

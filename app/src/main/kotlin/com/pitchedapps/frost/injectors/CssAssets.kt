@@ -46,7 +46,7 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
             }
             JsBuilder().css(content).build()
         } catch (e: FileNotFoundException) {
-            L.e(e, "CssAssets file not found")
+            L.e(e) { "CssAssets file not found" }
             JsInjector(JsActions.EMPTY.function)
         }
     }

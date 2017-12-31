@@ -65,9 +65,8 @@ class FrostApp : Application() {
             Crashlytics.setUserIdentifier(Prefs.frostId)
         }
         KL.debug(BuildConfig.DEBUG)
-        L.debug(BuildConfig.DEBUG)
         Prefs.verboseLogging = false
-        L.i("Begin Frost for Facebook")
+        L.i { "Begin Frost for Facebook" }
         FbCookie()
         FrostPglAdBlock.init(this)
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
@@ -99,7 +98,7 @@ class FrostApp : Application() {
                 override fun onActivityStarted(activity: Activity) {}
 
                 override fun onActivityDestroyed(activity: Activity) {
-                    L.d("Activity ${activity.localClassName} destroyed")
+                    L.d { "Activity ${activity.localClassName} destroyed" }
                 }
 
                 override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
@@ -107,7 +106,7 @@ class FrostApp : Application() {
                 override fun onActivityStopped(activity: Activity) {}
 
                 override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    L.d("Activity ${activity.localClassName} created")
+                    L.d { "Activity ${activity.localClassName} created" }
                 }
             })
     }
