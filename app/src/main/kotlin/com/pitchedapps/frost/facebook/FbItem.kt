@@ -6,10 +6,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.fragments.BaseFragment
-import com.pitchedapps.frost.fragments.NotificationFragment
-import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.fragments.WebFragmentMenu
+import com.pitchedapps.frost.fragments.*
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion
@@ -30,7 +27,7 @@ enum class FbItem(
     FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "home.php?sk=h_nor"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
     GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
-    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", ::WebFragmentMenu),
+    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", ::MenuFragment),
     MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
     NOTES(R.string.notes, CommunityMaterial.Icon.cmd_note, "notes"),
     NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications", ::NotificationFragment),

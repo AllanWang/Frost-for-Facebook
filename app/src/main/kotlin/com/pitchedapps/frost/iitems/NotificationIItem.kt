@@ -54,8 +54,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
         override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(Prefs.textColor,
-                    Prefs.bgColor.colorToForeground(if (notif.unread) 0.7f else 0.0f)
-                            .withAlpha(30))
+                    Prefs.nativeBgColor(notif.unread))
             content.setTextColor(Prefs.textColor)
             date.setTextColor(Prefs.textColor.withAlpha(150))
 

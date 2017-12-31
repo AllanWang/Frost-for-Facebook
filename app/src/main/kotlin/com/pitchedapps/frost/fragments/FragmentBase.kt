@@ -6,28 +6,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ca.allanwang.kau.adapters.fastAdapter
 import ca.allanwang.kau.utils.withArguments
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter_extensions.items.ProgressItem
-import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.parsers.ParseResponse
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -39,9 +26,10 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
         private const val ARG_POSITION = "arg_position"
+        private const val ARG_VALID = "arg_valid"
 
-        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
-            val fragment = if (Prefs.nativeViews) base() else WebFragment()
+        internal operator fun invoke(base: () -> BaseFragment, useFallback: Boolean, data: FbItem, position: Int): BaseFragment {
+            val fragment = if (!useFallback) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                     ARG_URL to d.url,
@@ -55,6 +43,17 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
+
+    override var valid: Boolean
+        get() = arguments!!.getBoolean(ARG_VALID, true)
+        set(value) {
+            if (value || this is WebFragment) return
+            arguments!!.putBoolean(ARG_VALID, value)
+            L.e("Invalidating position $position")
+            frostAnswersCustom("Native Fallback",
+                    "Item" to baseEnum.name)
+            (context as MainActivityContract).reloadFragment(this)
+        }
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
@@ -147,6 +146,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
+        L.i("Fragment on destroy $position ${hashCode()}")
         content?.destroy()
         content = null
         super.onDestroyView()
@@ -175,92 +175,3 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }
 
-abstract class RecyclerFragment<T : Any, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
-
-    override val layoutRes: Int = R.layout.view_content_recycler
-
-    /**
-     * The parser to make this all happen
-     */
-    abstract val parser: FrostParser<T>
-
-    open fun getDoc(cookie: String?) = frostJsoup(cookie, parser.url)
-
-    val adapter: ItemAdapter<Item> = ItemAdapter()
-
-    abstract fun toItems(response: ParseResponse<T>): List<Item>
-
-    override final fun bind(recyclerView: FrostRecyclerView) {
-        recyclerView.adapter = getAdapter()
-        recyclerView.onReloadClear = { adapter.clear() }
-        bindImpl(recyclerView)
-    }
-
-    override fun firstLoadRequest() {
-        val core = core ?: return
-        if (firstLoad) {
-            core.reloadBase(true)
-            firstLoad = false
-        }
-    }
-
-    /**
-     * Anything to call for one time bindings
-     * At this stage, all adapters will have FastAdapter references
-     */
-    open fun bindImpl(recyclerView: FrostRecyclerView) = Unit
-
-    /**
-     * Create the fast adapter to bind to the recyclerview
-     */
-    open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
-
-    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-        doAsync {
-            progress(10)
-            val cookie = FbCookie.webCookie
-            val doc = getDoc(cookie)
-            progress(60)
-            val response = parser.parse(cookie, doc)
-            if (response == null) {
-                uiThread { context?.toast(R.string.error_generic) }
-                L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
-                Prefs.nativeViews = false
-                return@doAsync callback(false)
-            }
-            progress(80)
-            val items = toItems(response)
-            progress(97)
-            uiThread { adapter.setNewList(items) }
-            callback(true)
-        }
-    }
-}
-
-//abstract class PagedRecyclerFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment<T, Item>() {
-//
-//    var allowPagedLoading = true
-//
-//    val footerAdapter = ItemAdapter<FrostProgress>()
-//
-//    val footerScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
-//        override fun onLoadMore(currentPage: Int) {
-//            TODO("not implemented")
-//
-//        }
-//
-//    }
-//
-//    override fun getAdapter() = fastAdapter(adapter, footerAdapter)
-//
-//    override fun bindImpl(recyclerView: FrostRecyclerView) {
-//        recyclerView.addOnScrollListener(footerScrollListener)
-//    }
-//
-//    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-//        footerScrollListener.
-//        super.reload(progress, callback)
-//    }
-//}
-
-class FrostProgress : ProgressItem()

@@ -19,7 +19,8 @@ private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
  * [action] will only be called if a valid auth is found.
  * Otherwise, [fail] will be called
  */
-fun String.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
+fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
+    if (this == null) return fail()
     val savedAuth = authMap[this]
     if (savedAuth != null) {
         savedAuth.action()

@@ -16,7 +16,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -58,6 +57,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
@@ -80,7 +80,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         VideoViewHolder, SearchViewHolder,
         FrostBilling by IabMain() {
 
-    lateinit var adapter: SectionsPagerAdapter
+    protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: FrostViewPager by bindView(R.id.container)
@@ -114,7 +114,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview = WebView(this)
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
-        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
+        adapter = SectionsPagerAdapter(loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = TAB_COUNT
         setupDrawer(savedInstanceState)
@@ -335,6 +335,19 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
+    private val STATE_FORCE_FALLBACK = "frost_state_force_fallback"
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(adapter.forcedFallbacks))
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        adapter.forcedFallbacks.clear()
+        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK))
+    }
+
     override fun onResume() {
         super.onResume()
         FbCookie.switchBackUser { }
@@ -384,32 +397,41 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     inline val currentFragment
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
 
-    inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbItem>) : FragmentPagerAdapter(fm) {
+    override fun reloadFragment(fragment: BaseFragment) {
+        runOnUiThread { adapter.reloadFragment(fragment) }
+    }
+
+    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
+
+        val forcedFallbacks = mutableSetOf<String>()
+
+        fun reloadFragment(fragment: BaseFragment) {
+            if (fragment is WebFragment) return
+            L.d("Reload fragment ${fragment.position}: ${fragment.baseEnum.name}")
+            forcedFallbacks.add(fragment.baseEnum.name)
+            supportFragmentManager.beginTransaction().remove(fragment).commitNowAllowingStateLoss()
+            notifyDataSetChanged()
+        }
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            val fragment = BaseFragment(item.fragmentCreator, item, position)
-            //If first load hasn't occurred, add a listener
-            // todo check
-//            if (!firstLoadFinished) {
-//                var disposable: Disposable? = null
-//                fragment.post {
-//                    disposable = it.web.refreshObservable.subscribe {
-//                        if (!it) {
-//                            //Ensure first load finisher only happens once
-//                            if (!firstLoadFinished) firstLoadFinished = true
-//                            disposable?.dispose()
-//                            disposable = null
-//                        }
-//                    }
-//                }
-//            }
-            return fragment
+            return BaseFragment(item.fragmentCreator,
+                    forcedFallbacks.contains(item.name),
+                    item,
+                    position)
         }
 
         override fun getCount() = pages.size
 
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
+
+        override fun getItemPosition(fragment: Any) =
+                if (fragment !is BaseFragment)
+                    POSITION_UNCHANGED
+                else if (fragment is WebFragment || fragment.valid)
+                    POSITION_UNCHANGED
+                else
+                    POSITION_NONE
     }
 
     override val lowerVideoPadding: PointF
