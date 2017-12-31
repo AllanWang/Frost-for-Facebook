@@ -27,13 +27,7 @@ class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>
             response.data.notifs.map { NotificationIItem(it, response.cookie) }
 
     override fun bindImpl(recyclerView: FrostRecyclerView) {
-        adapter.fastAdapter.withOnClickListener { _, _, _, _ ->
-            adapter.clear()
-            valid = false
-//            context?.toast("hi")
-            true
-        }
-//        NotificationIItem.bindEvents(adapter)
+        NotificationIItem.bindEvents(adapter)
     }
 }
 
