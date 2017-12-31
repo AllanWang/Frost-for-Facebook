@@ -27,11 +27,11 @@ fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     } else {
         val auth = getAuth()
         if (!auth.isValid) {
-            L.e("Attempted fbrequest with invalid auth")
+            L.e { "Attempted fbrequest with invalid auth" }
             return fail()
         }
         authMap.put(this, auth)
-        L.i(null, "Found auth $auth")
+        L._i { "Found auth $auth" }
         auth.action()
     }
 }
@@ -106,14 +106,14 @@ fun String.getAuth(): RequestAuth {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
-                L.d(null, "fb_dtsg for ${auth.userId}: $fb_dtsg")
+                L._d { "fb_dtsg for ${auth.userId}: $fb_dtsg" }
                 auth = auth.copy(fb_dtsg = fb_dtsg)
                 if (auth.isValid) return auth
             }
 
             val rev = FB_REV_MATCHER.find(text)[1]
             if (rev != null) {
-                L.d(null, "rev for ${auth.userId}: $rev")
+                L._d { "rev for ${auth.userId}: $rev" }
                 auth = auth.copy(rev = rev)
                 if (auth.isValid) return auth
             }

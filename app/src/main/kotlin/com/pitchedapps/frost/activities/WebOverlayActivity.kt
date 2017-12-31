@@ -76,12 +76,14 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
         val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return true
         val url = HttpUrl.parse(text)?.toString()
         if (url == null) {
-            L.i("Attempted to share a non-url", text)
+            L.i { "Attempted to share a non-url" }
+            L._i { "Shared text: $text" }
             copyToClipboard(text, "Text to Share", showToast = false)
             intent.putExtra(ARG_URL, FbItem.FEED.url)
             return false
         } else {
-            L.i("Sharing url through overlay", url)
+            L.i { "Sharing url through overlay" }
+            L._i { "Url: $url" }
             intent.putExtra(ARG_URL, "${FB_URL_BASE}/sharer/sharer.php?u=$url")
             return true
         }
@@ -132,7 +134,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (urlTest == null) {
-            L.e("Empty link on web overlay")
+            L.e { "Empty link on web overlay" }
             toast(R.string.null_url_overlay)
             finish()
             return
@@ -170,7 +172,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         }
 
         FrostRunnable.propagate(this, intent)
-        L.e("Done propagation")
+        L.e { "Done propagation" }
 
         kauSwipeOnCreate {
             if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
@@ -186,7 +188,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val newUrl = (intent.getStringExtra(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
-        L.d("New intent")
+        L.d { "New intent" }
         if (baseUrl != newUrl) {
             this.intent = intent
             content.baseUrl = newUrl
@@ -220,7 +222,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
     override fun onPause() {
         web.pauseTimers()
-        L.v("Pause overlay web timers")
+        L.v { "Pause overlay web timers" }
         super.onPause()
     }
 

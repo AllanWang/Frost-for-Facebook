@@ -47,7 +47,7 @@ fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourc
     if (whitelistHost.contains(host)) return null
     if (!adWhitelistHost.contains(host) && FrostPglAdBlock.isAdHost(host)) return blankResource
 //    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
-    L.v("Intercept Request", "$host $url")
+    L.v { "Intercept Request: $host $url" }
     return null
 }
 

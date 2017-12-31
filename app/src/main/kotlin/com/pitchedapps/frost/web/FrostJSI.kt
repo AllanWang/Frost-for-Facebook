@@ -33,13 +33,13 @@ class FrostJSI(val web: FrostWebView) {
         if (url != null)
             web.post {
                 (context as? VideoViewHolder)?.showVideo(url, isGif)
-                        ?: L.d("Could not load video; contract not implemented")
+                        ?: L.d { "Could not load video; contract not implemented" }
             }
     }
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {
-        L.d("FrostJSI reload")
+        L.d { "FrostJSI reload" }
         web.post {
             web.stopLoading()
             web.reloadBase(animate)

@@ -45,7 +45,7 @@ class FileChooserDelegate : FileChooserContract {
     }
 
     override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
-        L.d("FileChooser On activity results web $requestCode")
+        L.d { "FileChooser On activity results web $requestCode" }
         if (requestCode != MEDIA_CHOOSER_RESULT) return false
         val data = intent?.data
         filePathCallback?.onReceiveValue(if (data != null) arrayOf(data) else null)

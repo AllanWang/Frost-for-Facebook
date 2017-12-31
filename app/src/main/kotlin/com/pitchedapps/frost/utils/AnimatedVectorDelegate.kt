@@ -67,8 +67,8 @@ class AnimatedVectorDelegate(
     override fun animateToggle() = animateImpl(!atStart)
 
     private fun animateImpl(toStart: Boolean) {
-        if ((atStart == toStart)) return L.d("AVD already at ${if (toStart) "start" else "end"}")
-        if (avd == null) return L.d("AVD null resource")//no longer using animated vector; do not modify
+        if ((atStart == toStart)) return L.d { "AVD already at ${if (toStart) "start" else "end"}" }
+        if (avd == null) return L.d { "AVD null resource" }//no longer using animated vector; do not modify
         avd?.stop()
         view.setImageResource(if (toStart) avdEnd else avdStart)
         animatedVectorListener?.invoke(avd!!, !toStart)

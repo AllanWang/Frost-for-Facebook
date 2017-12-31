@@ -70,7 +70,7 @@ fun parseMenu(call: Call): MenuData? {
 
         return data.copy(footer = MenuFooter(footerData, footerSmallData))
     } catch (e: IOException) {
-        L.e(e, "Menu parse fail")
+        L.e(e) { "Menu parse fail" }
         null
     }
 }
@@ -83,7 +83,7 @@ data class MenuData(val data: List<MenuHeader> = emptyList(),
             @JsonProperty("data") data: List<MenuHeader>?
     ) : this(data ?: emptyList(), MenuFooter())
 
-    fun flatMapValid() : List<MenuItemData> {
+    fun flatMapValid(): List<MenuItemData> {
         val items = mutableListOf<MenuItemData>()
         data.forEach {
             if (it.isValid) items.add(it)

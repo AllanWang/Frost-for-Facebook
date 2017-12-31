@@ -33,7 +33,7 @@ data class FbTabModel(@PrimaryKey var position: Int = -1, var tab: FbItem = FbIt
 fun loadFbTabs(): List<FbItem> {
     val tabs: List<FbTabModel>? = (select from (FbTabModel::class)).orderBy(FbTabModel_Table.position, true).queryList()
     if (tabs?.size == TAB_COUNT) return tabs.map(FbTabModel::tab)
-    L.d("No tabs (${tabs?.size}); loading default")
+    L.d { "No tabs (${tabs?.size}); loading default" }
     return defaultTabs()
 }
 

@@ -33,7 +33,7 @@ private enum class FrostRequestCommands : EnumBundle<FrostRequestCommands> {
         override fun invoke(auth: RequestAuth, bundle: PersistableBundle) {
             val id = bundle.getLong(ARG_0, -1L)
             val success = auth.markNotificationRead(id).invoke()
-            L.d("Marked notif $id as read: $success")
+            L.d { "Marked notif $id as read: $success" }
         }
 
         override fun propagate(bundle: BaseBundle) =
@@ -96,7 +96,7 @@ object FrostRunnable {
 
     fun markNotificationRead(context: Context, id: Long, cookie: String): Boolean {
         if (id <= 0) {
-            L.d("Invalid notification id $id for marking as read")
+            L.d { "Invalid notification id $id for marking as read" }
             return false
         }
         return schedule(context, FrostRequestCommands.NOTIF_READ,
@@ -107,7 +107,7 @@ object FrostRunnable {
         intent?.extras ?: return
         val command = FrostRequestCommands[intent] ?: return
         intent.removeExtra(ARG_COMMAND) // reset
-        L.d("Propagating command ${command.name}")
+        L.d { "Propagating command ${command.name}" }
         val builder = command.propagate(intent.extras)
         schedule(context, command, builder)
     }
@@ -122,7 +122,7 @@ object FrostRunnable {
         bundle.putString(ARG_COMMAND, command.name)
 
         if (bundle.getCookie().isNullOrBlank()) {
-            L.e("Scheduled frost request with empty cookie)")
+            L.e { "Scheduled frost request with empty cookie" }
             return false
         }
 
@@ -136,7 +136,7 @@ object FrostRunnable {
             L.eThrow("FrostRequestService scheduler failed for ${command.name}")
             return false
         }
-        L.d("Scheduled ${command.name}")
+        L.d { "Scheduled ${command.name}" }
         return true
     }
 
@@ -171,10 +171,12 @@ class FrostRequestService : JobService() {
         val now = System.currentTimeMillis()
         future = doAsync {
             cookie.fbRequest {
-                L.d("Requesting frost service for ${command.name}")
+                L.d { "Requesting frost service for ${command.name}" }
                 command.invoke(this, bundle)
             }
-            L.d("Finished frost service for ${command.name} in ${System.currentTimeMillis() - now} ms")
+            L.d {
+                "Finished frost service for ${command.name} in ${System.currentTimeMillis()} - now} ms"
+            }
             jobFinished(params, false)
         }
         return true

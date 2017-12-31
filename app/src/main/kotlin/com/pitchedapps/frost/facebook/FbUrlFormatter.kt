@@ -38,7 +38,7 @@ class FbUrlFormatter(url: String) {
         try {
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
         } catch (e: Exception) {
-            L.e(e, "Failed url formatting")
+            L.e(e) { "Failed url formatting" }
             return url
         }
         if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
@@ -57,7 +57,7 @@ class FbUrlFormatter(url: String) {
         if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
         if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
         cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
-        L.v(null, "Formatted url from $url to $cleanedUrl")
+        L.v { "Formatted url from $url to $cleanedUrl" }
         return cleanedUrl
     }
 

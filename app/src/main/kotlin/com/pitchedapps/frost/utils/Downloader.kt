@@ -37,10 +37,10 @@ fun Context.frostDownload(uri: Uri?,
                           mimeType: String? = null,
                           contentLength: Long = 0L) {
     uri ?: return
-    L.d("Received download request", "Download $uri")
+    L.d { "Received download request" }
     if (uri.scheme != "http" && uri.scheme != "https") {
         toast(R.string.error_invalid_download)
-        return L.e(string(R.string.error_invalid_download), uri.toString())
+        return L.e { "Invalid download $uri" }
     }
     if (!isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
         materialDialogThemed {
@@ -70,7 +70,7 @@ fun Context.frostDownload(uri: Uri?,
             dm.enqueue(request)
         } catch (e: Exception) {
             toast(R.string.error_generic)
-            L.e(e, "Download")
+            L.e(e) { "Download" }
         }
     }
 }

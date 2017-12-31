@@ -37,7 +37,7 @@ interface VideoViewHolder : FrameWrapper, FrostVideoContainerContract {
         get() = frameWrapper
 
     override fun onVideoFinished() {
-        L.d("Video view released")
+        L.d { "Video view released" }
         videoViewer = null
     }
 }

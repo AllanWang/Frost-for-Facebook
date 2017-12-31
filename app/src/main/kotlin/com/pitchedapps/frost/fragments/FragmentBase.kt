@@ -49,7 +49,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
         set(value) {
             if (value || this is WebFragment) return
             arguments!!.putBoolean(ARG_VALID, value)
-            L.e("Invalidating position $position")
+            L.e { "Invalidating position $position" }
             frostAnswersCustom("Native Fallback",
                     "Item" to baseEnum.name)
             (context as MainActivityContract).reloadFragment(this)
@@ -146,7 +146,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
-        L.i("Fragment on destroy $position ${hashCode()}")
+        L.i { "Fragment on destroy $position ${hashCode()}" }
         content?.destroy()
         content = null
         super.onDestroyView()

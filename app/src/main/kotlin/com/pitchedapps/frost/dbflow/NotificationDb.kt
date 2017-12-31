@@ -22,7 +22,7 @@ class NotificationMigration2(modelClass: Class<NotificationModel>) : AlterTableM
     override fun onPreMigrate() {
         super.onPreMigrate()
         addColumn(SQLiteType.INTEGER, "epochIm")
-        L.d("Added column")
+        L.d { "Added column" }
     }
 }
 
@@ -33,7 +33,8 @@ fun lastNotificationTime(id: Long): NotificationModel = (select from Notificatio
 
 fun saveNotificationTime(notificationModel: NotificationModel, callback: (() -> Unit)? = null) {
     notificationModel.async save {
-        L.d("Fb notification model saved", notificationModel.toString())
+        L.d { "Fb notification model saved" }
+        L._d { notificationModel }
         callback?.invoke()
     }
 }
