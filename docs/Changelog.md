@@ -4,6 +4,7 @@
 * Mark notifications as read when clicked!
 * Create menu parser
 * Implement automatic web fallback
+* Optimize logging
 
 ## v1.7.2
 * Optimize login view

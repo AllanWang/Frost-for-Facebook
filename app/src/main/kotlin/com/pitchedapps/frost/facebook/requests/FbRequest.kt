@@ -106,14 +106,12 @@ fun String.getAuth(): RequestAuth {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
-                L._d { "fb_dtsg for ${auth.userId}: $fb_dtsg" }
                 auth = auth.copy(fb_dtsg = fb_dtsg)
                 if (auth.isValid) return auth
             }
 
             val rev = FB_REV_MATCHER.find(text)[1]
             if (rev != null) {
-                L._d { "rev for ${auth.userId}: $rev" }
                 auth = auth.copy(rev = rev)
                 if (auth.isValid) return auth
             }
