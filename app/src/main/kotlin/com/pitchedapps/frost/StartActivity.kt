@@ -20,7 +20,8 @@ class StartActivity : KauBaseActivity() {
         super.onCreate(savedInstanceState)
         FbCookie.switchBackUser {
             loadFbCookiesAsync { cookies ->
-                L.d("Cookies loaded at time ${System.currentTimeMillis()}", cookies.toString())
+                L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
+                L._d { "Cookies: ${cookies.joinToString("\t")}" }
                 if (cookies.isNotEmpty())
                     launchNewTask(if (Prefs.userId != -1L) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
                 else

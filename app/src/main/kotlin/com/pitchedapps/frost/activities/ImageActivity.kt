@@ -54,7 +54,7 @@ class ImageActivity : KauBaseActivity() {
      * Should be nonnull if the image is successfully loaded
      * As this is temporary, the image is deleted upon exit
      */
-    internal var tempFilePath: String? = null
+    private var tempFilePath: String? = null
     /**
      * Reference to path for downloaded image
      * Nonnull once the image is downloaded by the user
@@ -77,7 +77,8 @@ class ImageActivity : KauBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent?.extras ?: return finish()
-        L.i("Displaying image", imageUrl)
+        L.i { "Displaying image" }
+        L._i { imageUrl }
         val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
@@ -153,7 +154,7 @@ class ImageActivity : KauBaseActivity() {
                 callback(null)
             } else {
                 tempFilePath = photoFile.absolutePath
-                L.d("Temp image path $tempFilePath")
+                L.d { "Temp image path $tempFilePath" }
                 // File created; proceed with request
                 val photoURI = FileProvider.getUriForFile(this,
                         BuildConfig.APPLICATION_ID + ".provider",
@@ -166,7 +167,7 @@ class ImageActivity : KauBaseActivity() {
 
     internal fun downloadImage() {
         kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
-            L.d("Download image callback granted: $granted")
+            L.d { "Download image callback granted: $granted" }
             if (granted) {
                 doAsync {
                     val destination = createMediaFile(".png")
@@ -179,7 +180,7 @@ class ImageActivity : KauBaseActivity() {
                         errorRef = e
                         success = false
                     } finally {
-                        L.d("Download image async finished: $success")
+                        L.d { "Download image async finished: $success" }
                         activityUiThreadWithContext {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             frostSnackbar(text)
@@ -200,7 +201,7 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onDestroy() {
         deleteTempFile()
-        if (!BuildConfig.DEBUG) L.d("Closing $localClassName")
+        L.d { "Closing $localClassName" }
         super.onDestroy()
     }
 }
@@ -214,7 +215,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 positiveText(R.string.kau_yes)
                 onPositive { _, _ ->
                     if (activity.errorRef != null)
-                        L.e(activity.errorRef, "ImageActivity error report")
+                        L.e(activity.errorRef) { "ImageActivity error report" }
                     activity.sendFrostEmail(R.string.debug_image_link_subject) {
                         addItem("Url", activity.imageUrl)
                         addItem("Message", activity.errorRef?.message ?: "Null")

@@ -152,10 +152,10 @@ enum class NotificationType(
         val userId = data.id
         val prevNotifTime = lastNotificationTime(userId)
         val prevLatestEpoch = getTime(prevNotifTime)
-        L.v("Notif $name prev epoch $prevLatestEpoch")
+        L.v { "Notif $name prev epoch $prevLatestEpoch" }
         var newLatestEpoch = prevLatestEpoch
         notifs.forEach { notif ->
-            L.v("Notif timestamp ${notif.timestamp}")
+            L.v { "Notif timestamp ${notif.timestamp}" }
             if (notif.timestamp <= prevLatestEpoch) return@forEach
             createNotification(context, notif, notifCount == 0)
             if (notif.timestamp > newLatestEpoch)
@@ -164,7 +164,7 @@ enum class NotificationType(
         }
         if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
-        L.d("Notif $name new epoch ${getTime(lastNotificationTime(userId))}")
+        L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
         summaryNotification(context, userId, notifCount)
     }
 
@@ -195,7 +195,7 @@ enum class NotificationType(
                 notifBuilder.withDefaults(ringtone())
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
-            L.v("Notif load", context.toString())
+            L.v { "Notif load $content" }
             NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
 
             if (profileUrl != null) {

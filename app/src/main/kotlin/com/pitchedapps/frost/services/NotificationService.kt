@@ -30,7 +30,7 @@ class NotificationService : JobService() {
 
     override fun onStopJob(params: JobParameters?): Boolean {
         val time = System.currentTimeMillis() - startTime
-        L.d("Notification service has finished abruptly in $time ms")
+        L.d { "Notification service has finished abruptly in $time ms" }
         frostAnswersCustom("NotificationTime",
                 "Type" to "Service force stop",
                 "IM Included" to Prefs.notificationsInstantMessages,
@@ -42,7 +42,7 @@ class NotificationService : JobService() {
 
     fun finish(params: JobParameters?) {
         val time = System.currentTimeMillis() - startTime
-        L.i("Notification service has finished in $time ms")
+        L.i { "Notification service has finished in $time ms" }
         frostAnswersCustom("NotificationTime",
                 "Type" to "Service",
                 "IM Included" to Prefs.notificationsInstantMessages,
@@ -53,7 +53,7 @@ class NotificationService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        L.i("Fetching notifications")
+        L.i { "Fetching notifications" }
         future = doAsync {
             val context = weakRef.get()
                     ?: return@doAsync L.eThrow("NotificationService had null weakRef to self")

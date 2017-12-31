@@ -75,13 +75,13 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         var content = StringEscapeUtils.unescapeEcmaScript(text)
         val begin = content.indexOf("id=\"threadlist_rows\"")
         if (begin <= 0) {
-            L.d("Threadlist not found")
+            L.d { "Threadlist not found" }
             return null
         }
         content = content.substring(begin)
         val end = content.indexOf("</script>")
         if (end <= 0) {
-            L.d("Script tail not found")
+            L.d { "Script tail not found" }
             return null
         }
         content = content.substring(0, end).substringBeforeLast("</div>")

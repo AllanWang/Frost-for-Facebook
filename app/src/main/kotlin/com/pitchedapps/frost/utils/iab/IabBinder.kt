@@ -58,13 +58,13 @@ abstract class IabBinder : FrostBilling {
         bp = null
     }
 
-    override fun onBillingInitialized() = L.i("IAB initialized")
+    override fun onBillingInitialized() = L.i { "IAB initialized" }
 
-    override fun onPurchaseHistoryRestored() = L.d("IAB restored")
+    override fun onPurchaseHistoryRestored() = L.d { "IAB restored" }
 
     override fun onProductPurchased(productId: String, details: TransactionDetails?) {
         bp.doAsync {
-            L.i("IAB $productId purchased")
+            L.i { "IAB $productId purchased" }
             val listing = weakRef.get()?.getPurchaseListingDetails(productId) ?: return@doAsync
             val currency = try {
                 Currency.getInstance(listing.currency)
@@ -127,7 +127,7 @@ class IabSettings : IabBinder() {
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {
         super.onBillingError(errorCode, error)
-        L.e("Billing error $errorCode ${error?.message}")
+        L.e { "Billing error $errorCode ${error?.message}" }
     }
 
     /**
@@ -136,7 +136,7 @@ class IabSettings : IabBinder() {
     override fun restorePurchases() {
         bp.doAsync {
             val load = weakRef.get()?.loadOwnedPurchasesFromGoogle() ?: return@doAsync
-            L.d("IAB settings load from google $load")
+            L.d { "IAB settings load from google $load" }
             uiThread {
                 if (!(weakRef.get()?.isPurchased(FROST_PRO) ?: return@uiThread)) {
                     if (Prefs.pro) activity.playStoreNoLongerPro()
@@ -174,7 +174,7 @@ class IabMain : IabBinder() {
         restored = true
         bp.doAsync {
             val load = weakRef.get()?.loadOwnedPurchasesFromGoogle() ?: false
-            L.d("IAB main load from google $load")
+            L.d { "IAB main load from google $load" }
             onComplete {
                 if (!(weakRef.get()?.isPurchased(FROST_PRO) ?: false)) {
                     if (Prefs.pro) activity.playStoreNoLongerPro()

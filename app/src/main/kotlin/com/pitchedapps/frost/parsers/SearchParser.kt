@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
     fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
         val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
-        L.i(null, "Search Query $url")
+        L._i { "Search Query $url" }
         return parseFromUrl(cookie, url)
     }
 }

@@ -46,7 +46,7 @@ class LoginWebView @JvmOverloads constructor(
     fun loadLogin(progressCallback: (Int) -> Unit, loginCallback: (CookieModel) -> Unit) {
         this.progressCallback = progressCallback
         this.loginCallback = loginCallback
-        L.d("Begin loading login")
+        L.d { "Begin loading login" }
         loadUrl(FB_LOGIN_URL)
     }
 
@@ -62,7 +62,7 @@ class LoginWebView @JvmOverloads constructor(
             doAsync {
                 if (!url.isFacebookUrl) return@doAsync
                 val cookie = CookieManager.getInstance().getCookie(url) ?: return@doAsync
-                L.d("Checking cookie for login", cookie)
+                L.d { "Checking cookie for login" }
                 val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return@doAsync
                 uiThread { onFound(id, cookie) }
             }
@@ -70,7 +70,7 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageCommitVisible(view: WebView, url: String?) {
             super.onPageCommitVisible(view, url)
-            L.d("Login page commit visible")
+            L.d { "Login page commit visible" }
             view.setBackgroundColor(Color.TRANSPARENT)
             if (url.isFacebookUrl)
                 view.jsInject(CssHider.HEADER,
@@ -88,7 +88,7 @@ class LoginWebView @JvmOverloads constructor(
 
     inner class LoginChromeClient : WebChromeClient() {
         override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-            L.d("Login Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
+            L.v { "Login Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
             return true
         }
 

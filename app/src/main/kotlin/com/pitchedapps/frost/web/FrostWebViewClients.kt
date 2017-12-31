@@ -44,10 +44,12 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     private val refresh: Subject<Boolean> = web.parent.refreshObservable
     private val isMain = web.parent.baseEnum != null
 
+    protected inline fun v(crossinline message: () -> Any?) = L.v { "web client: ${message()}" }
+
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
-        L.d("FWV Loading", url)
+        v { "loading $url" }
         refresh.onNext(true)
     }
 
@@ -87,7 +89,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
-        L.d("Page finished", url)
+        v { "finished $url" }
         if (!url.isFacebookUrl) {
             refresh.onNext(false)
             return
@@ -102,7 +104,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     }
 
     internal fun injectAndFinish() {
-        L.d("Page finished reveal")
+        v { "page finished reveal" }
         refresh.onNext(false)
         injectBackgroundColor()
         web.jsInject(
@@ -117,11 +119,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     }
 
     open fun handleHtml(html: String?) {
-        L.d("Handle Html")
+        L.d { "Handle Html" }
     }
 
     open fun emit(flag: Int) {
-        L.d("Emit $flag")
+        L.d { "Emit $flag" }
     }
 
     /**
@@ -130,21 +132,21 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
      * returns false if we are already in an overlaying activity
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
-        L.d("Launching Url", request.url?.toString() ?: "null")
+        v { "Launching url: ${request.url}" }
         return web.requestWebOverlay(request.url.toString())
     }
 
     private fun launchImage(url: String, text: String? = null): Boolean {
-        L.d("Launching Image", url)
+        v { "Launching image: $url" }
         web.context.launchImageActivity(url, text)
         if (web.canGoBack()) web.goBack()
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-        L.i("Url Loading", request.url?.toString())
+        v { "Url loading: ${request.url}" }
         val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
-        L.v("Url Loading Path", path)
+        v { "Url path $path" }
         val url = request.url.toString()
         if (url.isExplicitIntent) {
             view.context.resolveActivityForUri(request.url)
@@ -184,34 +186,7 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
     }
 
     override fun onPageFinishedActions(url: String) {
-        L.d("Should inject ${url.shouldInjectMenu}")
+        v { "Should inject ${url.shouldInjectMenu}" }
         if (!url.shouldInjectMenu) injectAndFinish()
     }
-}
-
-/**
- * Headless client that injects content after a page load
- * The JSI is meant to handle everything else
- */
-class HeadlessWebViewClient(val tag: String, val postInjection: InjectorContract) : BaseWebViewClient() {
-
-    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
-        if (url == null) return
-        L.d("Headless Page $tag Started", url)
-    }
-
-    override fun onPageFinished(view: WebView, url: String?) {
-        super.onPageFinished(view, url)
-        if (url == null) return
-        L.d("Headless Page $tag Finished", url)
-        postInjection.inject(view)
-    }
-
-    /**
-     * In addition to general filtration, we will also strip away css and images
-     */
-    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
-            = super.shouldInterceptRequest(view, request).filterCss(request).filterImage(request)
-
 }

@@ -6,7 +6,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.iitems.KauIItem
 import ca.allanwang.kau.ui.createSimpleRippleDrawable
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.gone
+import ca.allanwang.kau.utils.visible
+import ca.allanwang.kau.utils.withAlpha
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter

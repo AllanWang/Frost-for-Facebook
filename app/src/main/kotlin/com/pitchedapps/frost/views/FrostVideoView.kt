@@ -98,7 +98,7 @@ class FrostVideoView @JvmOverloads constructor(
      */
     private fun mapBounds(): Triple<Float, Float, Float> {
         if (videoDimensions.x <= 0f || videoDimensions.y <= 0f) {
-            L.d("Attempted to toggle video expansion when points have not been finalized")
+            L.d { "Attempted to toggle video expansion when points have not been finalized" }
             val dimen = Math.min(height, width).toFloat()
             videoDimensions.set(dimen, dimen)
         }
@@ -113,12 +113,12 @@ class FrostVideoView @JvmOverloads constructor(
         val tY = offsetY / 2 - padding.y
         videoBounds.set(offsetX, offsetY, width.toFloat(), height.toFloat())
         videoBounds.offset(padding.x, padding.y)
-        L.v("Video bounds: fullwidth $width, fullheight $height, scale $scale, tX $tX, tY $tY")
+        L.v { "Video bounds: fullwidth $width, fullheight $height, scale $scale, tX $tX, tY $tY" }
         return Triple(scale, tX, tY)
     }
 
     fun updateLocation() {
-        L.d("Update video location")
+        L.d { "Update video location" }
         val (scale, tX, tY) = if (isExpanded) Triple(1f, 0f, 0f) else mapBounds()
         scaleXY = scale
         translationX = tX

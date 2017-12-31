@@ -54,14 +54,16 @@ fun loadFbCookiesSync(): List<CookieModel> = (select from CookieModel::class).or
 
 inline fun saveFbCookie(cookie: CookieModel, crossinline callback: (() -> Unit) = {}) {
     cookie.async save {
-        L.d("Fb cookie saved", cookie.toString())
+        L.d { "Fb cookie saved" }
+        L._d { cookie }
         callback()
     }
 }
 
 fun removeCookie(id: Long) {
     loadFbCookie(id)?.async?.delete {
-        L.d("Fb cookie deleted", id.toString())
+        L.d { "Fb cookie deleted" }
+        L._d { id }
     }
 }
 
@@ -71,7 +73,7 @@ inline fun CookieModel.fetchUsername(crossinline callback: (String) -> Unit) {
         var result = ""
         try {
             result = frostJsoup(cookie, FbItem.PROFILE.url).title()
-            L.d("Fetch username found", result)
+            L.d { "Fetch username found" }
         } catch (e: Exception) {
             if (e !is UnknownHostException)
                 e.logFrostAnswers("Fetch username failed")

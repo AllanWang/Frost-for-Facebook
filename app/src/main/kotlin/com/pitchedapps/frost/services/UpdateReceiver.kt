@@ -15,7 +15,7 @@ class UpdateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
-        L.d("Frost has updated")
+        L.d { "Frost has updated" }
         context.scheduleNotifications(Prefs.notificationFreq) //Update notifications
     }
 

@@ -64,7 +64,7 @@ class LoginActivity : BaseActivity() {
         setTitle(R.string.kau_login)
         setFrostColors(toolbar)
         web.loadLogin({ refresh = it != 100 }) { cookie ->
-            L.d("Login found")
+            L.d { "Login found" }
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
                 profile.fadeIn()
@@ -83,8 +83,8 @@ class LoginActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
             refresh = false
             if (!foundImage) {
-                L.e("Could not get profile photo; Invalid userId?")
-                L.i(null, cookie.toString())
+                L.e { "Could not get profile photo; Invalid userId?" }
+                L._i { cookie }
             }
             textview.text = String.format(getString(R.string.welcome), name)
             textview.fadeIn()

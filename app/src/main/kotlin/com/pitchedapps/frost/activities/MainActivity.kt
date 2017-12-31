@@ -3,18 +3,11 @@ package com.pitchedapps.frost.activities
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
-import ca.allanwang.kau.utils.materialDialog
-import ca.allanwang.kau.utils.toast
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.requests.fbRequest
-import com.pitchedapps.frost.facebook.requests.getMenuData
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 

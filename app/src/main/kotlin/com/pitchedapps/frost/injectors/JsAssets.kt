@@ -21,7 +21,7 @@ enum class JsAssets : InjectorContract {
             val content = it.assets.open("js/$file").bufferedReader().use { it.readText() }
             JsBuilder().js(content).single(name).build()
         } catch (e: FileNotFoundException) {
-            L.e(e, "JsAssets file not found")
+            L.e(e) { "JsAssets file not found" }
             JsInjector(JsActions.EMPTY.function)
         }
     }
