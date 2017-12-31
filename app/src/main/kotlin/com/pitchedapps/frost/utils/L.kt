@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.utils
 
 import android.util.Log
+import ca.allanwang.kau.logging.KauLogger
 import com.crashlytics.android.Crashlytics
 import com.pitchedapps.frost.BuildConfig
 
@@ -10,27 +11,11 @@ import com.pitchedapps.frost.BuildConfig
  *
  * Logging for frost
  */
-object L {
-
-    const val TAG = "Frost"
-
-    inline fun v(message: () -> Any?) {
-        if (BuildConfig.DEBUG)
-            logImpl(Log.VERBOSE, message)
-    }
-
-    inline fun i(message: () -> Any?) {
-        logImpl(Log.INFO, message)
-    }
+object L : KauLogger("Frost") {
 
     inline fun _i(message: () -> Any?) {
         if (BuildConfig.DEBUG)
             logImpl(Log.INFO, message)
-    }
-
-    inline fun d(message: () -> Any?) {
-        if (BuildConfig.DEBUG || Prefs.verboseLogging)
-            logImpl(Log.DEBUG, message)
     }
 
     inline fun _d(message: () -> Any?) {
@@ -38,16 +23,26 @@ object L {
             logImpl(Log.DEBUG, message)
     }
 
-    inline fun e(t: Throwable? = null, message: () -> Any?) {
-        logImpl(Log.ERROR, message, t)
+    override fun shouldLog(priority: Int) =
+            if (!enabled) false
+    else if (priority == Log.VERBOSE) BuildConfig.DEBUG
+    else true
+
+    override fun logImpl(priority: Int, message: String, t: Throwable?) {
+        if (BuildConfig.DEBUG) {
+            if (t != null)
+                Log.e(tag, message, t)
+            else
+                Log.println(priority, tag, message)
+        } else {
+            if (msg != null)
+                Crashlytics.log(priority, TAG, msg)
+            if (t != null)
+                Crashlytics.logException(t)
+        }
     }
 
-    fun eThrow(message: Any) {
-        val msg = message.toString()
-        logImpl(Log.ERROR, { msg }, Throwable(msg))
-    }
-
-    inline fun logImpl(priority: Int, message: () -> Any?, t: Throwable? = null) {
+    inline fun logImpl(priority: Int, message: () -> Any?, t: Throwable? ) {
         val msg = message()?.toString()
         if (BuildConfig.DEBUG) {
             if (t != null)
