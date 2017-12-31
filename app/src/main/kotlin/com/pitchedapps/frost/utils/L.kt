@@ -11,49 +11,33 @@ import com.pitchedapps.frost.BuildConfig
  *
  * Logging for frost
  */
-object L : KauLogger("Frost") {
+object L : KauLogger("Frost", {
+    when (it) {
+        Log.VERBOSE -> BuildConfig.DEBUG
+        Log.INFO, Log.ERROR -> true
+        else -> BuildConfig.DEBUG || Prefs.verboseLogging
+    }
+}) {
 
     inline fun _i(message: () -> Any?) {
         if (BuildConfig.DEBUG)
-            logImpl(Log.INFO, message)
+            i(message)
     }
 
     inline fun _d(message: () -> Any?) {
         if (BuildConfig.DEBUG)
-            logImpl(Log.DEBUG, message)
+            d(message)
     }
 
-    override fun shouldLog(priority: Int) =
-            if (!enabled) false
-    else if (priority == Log.VERBOSE) BuildConfig.DEBUG
-    else true
-
-    override fun logImpl(priority: Int, message: String, t: Throwable?) {
-        if (BuildConfig.DEBUG) {
-            if (t != null)
-                Log.e(tag, message, t)
-            else
-                Log.println(priority, tag, message)
-        } else {
-            if (msg != null)
-                Crashlytics.log(priority, TAG, msg)
+    override fun logImpl(priority: Int, message: String?, t: Throwable?) {
+        if (BuildConfig.DEBUG)
+            super.logImpl(priority, message, t)
+        else {
+            if (message != null)
+                Crashlytics.log(priority, tag, message)
             if (t != null)
                 Crashlytics.logException(t)
         }
     }
 
-    inline fun logImpl(priority: Int, message: () -> Any?, t: Throwable? ) {
-        val msg = message()?.toString()
-        if (BuildConfig.DEBUG) {
-            if (t != null)
-                Log.e(TAG, msg, t)
-            else
-                Log.println(priority, TAG, msg ?: "null")
-        } else {
-            if (msg != null)
-                Crashlytics.log(priority, TAG, msg)
-            if (t != null)
-                Crashlytics.logException(t)
-        }
-    }
 }
