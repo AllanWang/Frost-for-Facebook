@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 def withPlaySigning = file('../files/gplay-keys.json').exists()
 /*
@@ -47,6 +48,11 @@ android {
         variant.outputs.all {
             outputFileName = "${project.APP_ID}-${variant.buildType.name}.apk"
         }
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 
     lintOptions {

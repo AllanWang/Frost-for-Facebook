@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.settings
 
+import android.util.Log
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.logging.KL
 import com.pitchedapps.frost.R
@@ -28,8 +29,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, {
         Prefs.verboseLogging = it
-        KL.debug(it)
-        KL.showPrivateText = false
+        KL.shouldLog = { it != Log.VERBOSE }
     }) {
         descRes = R.string.verbose_logging_desc
     }
