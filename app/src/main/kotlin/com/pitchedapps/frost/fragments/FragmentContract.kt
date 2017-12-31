@@ -18,6 +18,7 @@ interface FragmentContract : FrostContentContainer {
     /**
      * Defines whether the fragment is valid in the viewpager
      * Or if it needs to be recreated
+     * May be called from any thread to toggle status
      */
     var valid: Boolean
 
