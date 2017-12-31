@@ -110,7 +110,6 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
             if (response == null) {
                 uiThread { context?.toast(R.string.error_generic) }
                 L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
-                Prefs.nativeViews = false
                 return@doAsync callback(false)
             }
             progress(80)

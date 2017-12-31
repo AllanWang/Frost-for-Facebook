@@ -407,14 +407,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         fun reloadFragment(fragment: BaseFragment) {
             if (fragment is WebFragment) return
-            L.e("Reload fragment ${fragment.position}")
+            L.d("Reload fragment ${fragment.position}: ${fragment.baseEnum.name}")
             forcedFallbacks.add(fragment.baseEnum.name)
             supportFragmentManager.beginTransaction().remove(fragment).commitNowAllowingStateLoss()
             notifyDataSetChanged()
         }
 
         override fun getItem(position: Int): Fragment {
-            L.e("Get item $position")
             val item = pages[position]
             return BaseFragment(item.fragmentCreator,
                     forcedFallbacks.contains(item.name),

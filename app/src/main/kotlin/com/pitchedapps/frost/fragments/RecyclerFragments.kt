@@ -1,18 +1,17 @@
 package com.pitchedapps.frost.fragments
 
+import com.mikepenz.fastadapter.IItem
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.requests.*
-import com.pitchedapps.frost.iitems.MenuContentIItem
-import com.pitchedapps.frost.iitems.MenuHeaderIItem
-import com.pitchedapps.frost.iitems.MenuIItem
-import com.pitchedapps.frost.iitems.NotificationIItem
+import com.pitchedapps.frost.iitems.*
 import com.pitchedapps.frost.parsers.FrostNotifs
 import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.parsers.ParseResponse
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -31,16 +30,19 @@ class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>
     }
 }
 
-class MenuFragment : GenericRecyclerFragment<MenuItemData, MenuIItem<*, *>>() {
+class MenuFragment : GenericRecyclerFragment<MenuItemData, IItem<*, *>>() {
 
-    override fun mapper(data: MenuItemData) = when (data) {
+    override fun mapper(data: MenuItemData): IItem<*, *> = when (data) {
         is MenuHeader -> MenuHeaderIItem(data)
         is MenuItem -> MenuContentIItem(data)
+        is MenuFooterItem ->
+            if (data.isSmall) MenuFooterSmallIItem(data)
+            else MenuFooterIItem(data)
         else -> throw IllegalArgumentException("Menu item in fragment has invalid type ${data::class.java.simpleName}")
     }
 
     override fun bindImpl(recyclerView: FrostRecyclerView) {
-        MenuIItem.bindEvents(adapter)
+        ClickableIItemContract.bindEvents(adapter)
     }
 
     override fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
@@ -51,16 +53,10 @@ class MenuFragment : GenericRecyclerFragment<MenuItemData, MenuIItem<*, *>>() {
                 progress(30)
                 val data = getMenuData().invoke() ?: return@fbRequest callback(false)
                 if (data.data.isEmpty()) return@fbRequest callback(false)
-                progress(60)
-                val items = mutableListOf<MenuItemData>()
-                data.data.forEach {
-                    items.add(it)
-                    it.all.forEach {
-                        items.add(it)
-                    }
-                }
-                progress(80)
-                adapter.add(items)
+                progress(70)
+                val items = data.flatMapValid()
+                progress(90)
+                uiThread { adapter.add(items) }
                 callback(true)
             }
         }
