@@ -1,29 +1,43 @@
 package com.pitchedapps.frost.debugger
 
 import ca.allanwang.kau.logging.KauLoggerExtension
+import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.zip
 import com.pitchedapps.frost.utils.frostJsoup
 import io.reactivex.disposables.Disposable
 import okhttp3.Request
+import okhttp3.ResponseBody
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities
-import org.jsoup.select.Elements
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Created by Allan Wang on 04/01/18.
+ *
+ * Helper to download html files and assets for offline viewing
+ *
+ * Inspired by <a href="https://github.com/JonasCz/save-for-offline">Save for Offline</a>
  */
 class OfflineWebsite(private val url: String,
                      private val cookie: String = "",
-                     baseDirectory: String) {
+                     baseDirectory: String,
+                     private val userAgent: String = USER_AGENT_BASIC) {
 
-    private val baseUrl = url.substringBefore("?")
+    /**
+     * Supplied url without the queries
+     */
+    val baseUrl = url.substringBefore("?").trim('/')
 
-    private val baseDir = File(baseDirectory)
+    /**
+     * Directory that holds all the files
+     */
+    val baseDir = File(baseDirectory)
+
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
 
@@ -32,16 +46,12 @@ class OfflineWebsite(private val url: String,
 
     private val disposables = mutableListOf<Disposable>()
 
+    private val L = KauLoggerExtension("Offline", com.pitchedapps.frost.utils.L)
+
     init {
         if (!baseUrl.startsWith("http"))
             throw IllegalArgumentException("Base Url must start with http")
     }
-
-    companion object {
-        private val L = KauLoggerExtension("Offline", com.pitchedapps.frost.utils.L)
-    }
-
-    var userAgent = USER_AGENT_BASIC
 
     private val fileQueue = mutableSetOf<String>()
 
@@ -54,6 +64,9 @@ class OfflineWebsite(private val url: String,
             .get()
             .call()
 
+    /**
+     * Caller to bind callbacks and start the load
+     */
     fun load(progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
         reset()
 
@@ -80,6 +93,8 @@ class OfflineWebsite(private val url: String,
             return callback(false)
         }
 
+        progress(10)
+
         val doc = frostJsoup(cookie, url)
         doc.setBaseUri(baseUrl)
         doc.outputSettings().escapeMode(Entities.EscapeMode.extended)
@@ -88,14 +103,13 @@ class OfflineWebsite(private val url: String,
             return callback(false)
         }
 
+        progress(35)
+
         doc.collect("link[href][rel=stylesheet]", "href", cssQueue)
         doc.collect("link[href]:not([rel=stylesheet])", "href", fileQueue)
         doc.collect("img[src]", "src", fileQueue)
         doc.collect("img[data-canonical-src]", "data-canonical-src", fileQueue)
         doc.collect("script[src]", "src", fileQueue)
-
-        println(fileQueue.clean())
-        println(cssQueue.clean())
 
         // make links absolute
         doc.select("a[href]").forEach {
@@ -105,31 +119,84 @@ class OfflineWebsite(private val url: String,
 
         mainFile.writeText(doc.html())
 
-        val fileDownloads = fileQueue.downloadUrls().subscribe { success, throwable ->
-            L.v { "All files downloaded: $success with throwable $throwable" }
-            callback(true)
-        }
+        progress(50)
 
-        disposables.add(fileDownloads)
+        downloadCss().subscribe { cssLinks, cssThrowable ->
+            if (cssThrowable != null) {
+                L.e { "CSS parsing failed" }
+            }
+
+            progress(70)
+
+            fileQueue.addAll(cssLinks)
+
+            val fileDownloads = downloadFiles().subscribe { success, throwable ->
+                L.v { "All files downloaded: $success with throwable $throwable" }
+                progress(100)
+                callback(true)
+            }
+
+            disposables.add(fileDownloads)
+        }
     }
 
-    private fun Set<String>.downloadUrls() = clean().toTypedArray().zip<String, Boolean, Boolean>({
+    private fun downloadFiles() = fileQueue.clean().toTypedArray().zip<String, Boolean, Boolean>({
         it.all { it }
     }, {
-        val file = File(assetDir, it.fileName())
-        if (!file.createNewFile()) {
-            L.e { "Could not create path for ${file.absolutePath}" }
-            return@zip false
-        }
-        var success = false
-        request(url).execute().body()?.byteStream()?.use { input ->
-            file.outputStream().use { output ->
-                input.copyTo(output)
-                success = true
+        it.downloadUrl({ false }) { file, body ->
+            body.byteStream().use { input ->
+                file.outputStream().use { output ->
+                    input.copyTo(output)
+                    return@downloadUrl true
+                }
             }
         }
-        return@zip success
     })
+
+    private fun downloadCss() = cssQueue.clean().toTypedArray().zip<String, Set<String>, Set<String>>({
+        it.flatMap { it }.toSet()
+    }, {
+        it.downloadUrl({ emptySet() }) { file, body ->
+            var content = body.string()
+            val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
+            val absLinks = links.mapNotNull {
+                val url = when {
+                    it.startsWith("http") -> it
+                    it.startsWith("/") -> "$baseUrl$it"
+                    else -> return@mapNotNull null
+                }
+                // css files are already in the asset folder,
+                // so the url does not point to another subfolder
+                content = content.replace(it, url.fileName())
+                url
+            }.toSet()
+
+            L.v { "Abs links $absLinks" }
+
+            file.writeText(content)
+            return@downloadUrl absLinks
+        }
+    })
+
+    private inline fun <T> String.downloadUrl(fallback: () -> T,
+                                              action: (file: File, body: ResponseBody) -> T): T {
+
+        val file = File(assetDir, fileName())
+        if (!file.createNewFile()) {
+            L.e { "Could not create path for ${file.absolutePath}" }
+            return fallback()
+        }
+
+        val body = request(this).execute().body() ?: return fallback()
+
+        try {
+            body.use {
+                return action(file, it)
+            }
+        } catch (e: Exception) {
+            return fallback()
+        }
+    }
 
     private fun Element.collect(query: String, key: String, collector: MutableSet<String>) {
         val data = select(query)
@@ -138,11 +205,11 @@ class OfflineWebsite(private val url: String,
             val absLink = it.attr("abs:$key")
             if (!absLink.isValid) return@forEach
             collector.add(absLink)
-            it.attr(key, absLink.fileName())
+            it.attr(key, "assets/${absLink.fileName()}")
         }
     }
 
-    private val String.isValid
+    private inline val String.isValid
         get() = startsWith("http")
 
     /**
@@ -166,28 +233,8 @@ class OfflineWebsite(private val url: String,
     private fun String.shorten() =
             if (length <= 10) this else substring(length - 10)
 
-
-    private fun Elements.updateAttr(key: String) =
-            forEach {
-                val orig = attr("abs:$key")
-                attr(key, orig.fileName())
-            }
-
     private fun Set<String>.clean()
             = filter(String::isNotBlank).filter { it.startsWith("http") }
-
-    private fun String?.addTo(queue: MutableSet<String>) {
-        if (this?.isNotBlank() != true)
-            return
-//        if (this.isNullOrBlank())
-//            return
-        var url = this
-        if (startsWith("/"))
-            url = "$baseUrl$this"
-        if (!url.startsWith("http"))
-            return
-        queue.add(url)
-    }
 
     private fun reset() {
         cancel()
