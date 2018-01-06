@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.DebugActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -16,13 +16,21 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <FrameLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
-        <include layout="@layout/login_webview" />
+        <com.pitchedapps.frost.web.DebugWebView
+            android:id="@+id/debug_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
 
-    </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/view_main_fab" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -97,10 +97,13 @@ class LoginActivity : BaseActivity() {
              * The user may have logged into an account that is already in the database
              * We will let the db handle duplicates and load it now after the new account has been saved
              */
-            loadFbCookiesAsync { cookies ->
+            loadFbCookiesAsync {
+                val cookies = ArrayList(it)
                 Handler().postDelayed({
-                    launchNewTask(if (Showcase.intro) IntroActivity::class.java else MainActivity::class.java,
-                            ArrayList(cookies), clearStack = true)
+                    if (Showcase.intro)
+                        launchNewTask<IntroActivity>(cookies, true)
+                    else
+                        launchNewTask<MainActivity>(cookies, true)
                 }, 1000)
             }
         }

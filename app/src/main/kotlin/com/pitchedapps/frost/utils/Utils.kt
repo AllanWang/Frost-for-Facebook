@@ -45,15 +45,15 @@ const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
 
-fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
-    startActivity(clazz, clearStack, intentBuilder = {
+inline fun <reified T : Activity> Context.launchNewTask(cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
+    startActivity<T>(clearStack, intentBuilder = {
         putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
 }
 
 fun Context.launchLogin(cookieList: ArrayList<CookieModel>, clearStack: Boolean = true) {
-    if (cookieList.isNotEmpty()) launchNewTask(SelectorActivity::class.java, cookieList, clearStack)
-    else launchNewTask(LoginActivity::class.java, clearStack = clearStack)
+    if (cookieList.isNotEmpty()) launchNewTask<SelectorActivity>(cookieList, clearStack)
+    else launchNewTask<LoginActivity>(clearStack = clearStack)
 }
 
 fun Activity.cookies(): ArrayList<CookieModel> {
@@ -65,22 +65,26 @@ fun Activity.cookies(): ArrayList<CookieModel> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBase> = WebOverlayActivity::class.java) {
+private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String) {
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
         FbCookie.logout(this)
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
-        startActivity(clazz, false, intentBuilder = {
+        startActivity<T>(false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })
 }
+
+fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
+
+fun Context.launchWebOverlayBasic(url: String) = launchWebOverlayImpl<WebOverlayBasicActivity>(url)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(this,
         android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String?) {
-    startActivity(ImageActivity::class.java, intentBuilder = {
+    startActivity<ImageActivity>(intentBuilder = {
         putExtras(fadeBundle())
         putExtra(ARG_IMAGE_URL, imageUrl)
         putExtra(ARG_TEXT, text)
@@ -88,14 +92,10 @@ fun Context.launchImageActivity(imageUrl: String, text: String?) {
 }
 
 fun Activity.launchTabCustomizerActivity() {
-    startActivityForResult(TabCustomizerActivity::class.java,
-            SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
+    startActivityForResult<TabCustomizerActivity>(SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
         with(fadeBundle())
     })
 }
-
-fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)
-        = launchNewTask(IntroActivity::class.java, cookieList, true)
 
 fun WebOverlayActivity.url(): String {
     return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url

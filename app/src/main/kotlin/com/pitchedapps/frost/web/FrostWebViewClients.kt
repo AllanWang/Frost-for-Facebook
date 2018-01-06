@@ -55,9 +55,9 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     fun launchLogin(c: Context) {
         if (c is MainActivity && c.cookies().isNotEmpty())
-            c.launchNewTask(SelectorActivity::class.java, c.cookies())
+            c.launchNewTask<SelectorActivity>(c.cookies())
         else
-            c.launchNewTask(LoginActivity::class.java)
+            c.launchNewTask<LoginActivity>()
     }
 
     private fun injectBackgroundColor() {

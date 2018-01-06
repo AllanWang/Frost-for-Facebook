@@ -1,8 +1,19 @@
 package com.pitchedapps.frost.settings
 
+import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.utils.materialDialog
+import ca.allanwang.kau.utils.startActivityForResult
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
+import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQUEST_DEBUG
+import com.pitchedapps.frost.debugger.OfflineWebsite
+import com.pitchedapps.frost.facebook.FbCookie
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import java.io.File
+import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -16,108 +27,39 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.debug_disclaimer_info
     }
 
-//    Debugger.values().forEach {
-//        plainText(it.data.titleId) {
-//            iicon = it.data.icon
-//            onClick = { it.debug(itemView.context) }
-//        }
-//    }
+    plainText(R.string.debug_web) {
+        onClick = { this@getDebugPrefs.startActivityForResult<DebugActivity>(ACTIVITY_REQUEST_DEBUG) }
+    }
+}
+
+fun SettingsActivity.sendDebug(url: String) {
+
+    var future: Future<Unit>? = null
+
+    val md = materialDialog {
+        title(R.string.parsing_data)
+        progress(false, 100)
+        negativeText(R.string.kau_cancel)
+        onNegative { _, _ -> future?.cancel(true) }
+        canceledOnTouchOutside(false)
+    }
+
+    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "", File(cacheDir, "debug").absolutePath)
+
+    future = md.doAsync {
+        downloader.loadAndZip("debug", { progress ->
+            uiThread { it.setProgress(progress) }
+        }) { success ->
+            uiThread {
+                it.dismiss()
+                if (success) {
+sendEmail(R.string.dev_email, R.string.debug_report_email_title)
+                } else {
+
+                }
+            }
+        }
+
+    }
 
 }
-//
-//private enum class Debugger(val data: FbItem, val injector: InjectorContract?, vararg query: String) {
-//    MENU(FbItem.MENU, JsAssets.MENU_DEBUG, "#viewport"), //todo modify menu js for debugging
-//    NOTIFICATIONS(FbItem.NOTIFICATIONS, null, "#notifications_list");
-////    SEARCH(FbItem.SEARCH, JsActions.FETCH_BODY);
-//
-//    val query = if (query.isNotEmpty()) arrayOf(*query, "#root", "main", "body") else emptyArray()
-//
-//    fun debug(context: Context) {
-//        val dialog = context.materialDialogThemed {
-//            title("Debugging")
-//            progress(true, 0)
-//            canceledOnTouchOutside(false)
-//            positiveText(R.string.kau_cancel)
-//            onPositive { dialog, _ -> dialog.cancel() }
-//        }
-//        if (injector != null) dialog.extractHtml(injector)
-//        else dialog.debugAsync {
-//            loadJsoup()
-//        }
-//    }
-//
-//    fun MaterialDialog.debugAsync(task: AnkoAsyncContext<MaterialDialog>.() -> Unit) {
-//        doAsync({ t: Throwable ->
-//            val msg = t.message
-//            L.e{"Debugger failed: $msg"}
-//            context.runOnUiThread {
-//                cancel()
-//                context.materialDialogThemed {
-//                    title(R.string.debug_incomplete)
-//                    if (msg != null) content(msg)
-//                }
-//            }
-//        }, task)
-//    }
-//
-//    /**
-//     * Wait for html to be returned from headless webview
-//     *
-//     * from [debug] to [simplifyJsoup] if [query] is not empty, or [createReport] otherwise
-//     */
-//    @UiThread
-//    private fun MaterialDialog.extractHtml(injector: InjectorContract) {
-//        setContent("Fetching webpage")
-//        var disposable: Disposable? = null
-//        setOnCancelListener { disposable?.dispose() }
-//        context.launchHeadlessHtmlExtractor(data.url, injector) {
-//            disposable = it.subscribe { (html, errorRes) ->
-//                debugAsync {
-//                    if (errorRes == -1) {
-//                        L.i("Debug report successful", html)
-//                        if (query.isNotEmpty()) simplifyJsoup(Jsoup.parseBodyFragment(html))
-//                        else createReport(html)
-//                    } else {
-//                        throw Throwable(context.string(errorRes))
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Get data directly from the link and search for our queries, returning the outerHTML
-//     * of the first query found
-//     *
-//     * from [debug] to [simplifyJsoup]
-//     */
-//    private fun AnkoAsyncContext<MaterialDialog>.loadJsoup() {
-//        uiThread {
-//            it.setContent("Load Jsoup")
-//            it.setOnCancelListener(null)
-//            it.debugAsync { simplifyJsoup(frostJsoup(data.url)) }
-//        }
-//    }
-//
-//    /**
-//     * Takes snippet of given document that matches the first query in the [query] items
-//     * before sending it to [createReport]
-//     */
-//    private fun AnkoAsyncContext<MaterialDialog>.simplifyJsoup(doc: Document) {
-//        weakRef.get() ?: return
-//        val q = query.first { doc.select(it).isNotEmpty() }
-//        createReport(doc.select(q).outerHtml())
-//    }
-//
-//    private fun AnkoAsyncContext<MaterialDialog>.createReport(html: String) {
-//        val cleanHtml = html.cleanHtml()
-//        uiThread {
-//            val c = it.context
-//            it.dismiss()
-//            c.sendFrostEmail("${c.string(R.string.debug_report_email_title)} $name") {
-//                addItem("Query List", query.contentToString())
-//                footer = cleanHtml
-//            }
-//        }
-//    }
-//}

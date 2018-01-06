@@ -11,4 +11,9 @@
     <string name="debug_incomplete">Incomplete report</string>
 
     <string name="debug_report_email_title" translatable="false">Frost for Facebook: Debug Report</string>
+
+    <string name="debug_web">Debug from the Web</string>
+    <string name="deubg_web_desc">Navigate to the page with an issue and send the resources for debugging.</string>
+
+    <string name="parsing_data">Parsing Data</string>
 </resources>

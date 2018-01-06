@@ -192,8 +192,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                 }
                             }
                         }
-                        -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
-                        -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
+                        -3L -> launchNewTask<LoginActivity>(clearStack = false)
+                        -4L -> launchNewTask<SelectorActivity>( cookies(), false)
                         else -> {
                             FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }

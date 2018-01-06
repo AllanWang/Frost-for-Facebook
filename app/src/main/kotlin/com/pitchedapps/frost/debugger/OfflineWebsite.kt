@@ -12,9 +12,13 @@ import okhttp3.Request
 import okhttp3.ResponseBody
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 /**
  * Created by Allan Wang on 04/01/18.
@@ -140,6 +144,45 @@ class OfflineWebsite(private val url: String,
         }
     }
 
+    fun zip(name: String): Boolean {
+        try {
+            val zip = File(baseDir, "$name.zip")
+            if (zip.exists() && (!zip.delete() || !zip.createNewFile())) {
+                L.e { "Filed to create zip at ${zip.absolutePath}" }
+                return false
+            }
+
+            ZipOutputStream(BufferedOutputStream(FileOutputStream(zip))).use { out ->
+
+                fun File.zip(name: String = this.name) = inputStream().use { file ->
+                    out.putNextEntry(ZipEntry(name))
+                    file.copyTo(out)
+                }
+
+                mainFile.zip()
+                assetDir.listFiles().forEach {
+                    it.zip("assets/${it.name}")
+                }
+            }
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    fun loadAndZip(name: String, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
+
+        load({ progress((it * 0.85f).toInt()) }) {
+            if (!it) callback(false)
+            else {
+                val result = zip(name)
+                progress(100)
+                callback(result)
+            }
+        }
+
+    }
+
     private fun downloadFiles() = fileQueue.clean().toTypedArray().zip<String, Boolean, Boolean>({
         it.all { it }
     }, {
@@ -240,6 +283,7 @@ class OfflineWebsite(private val url: String,
         cancel()
         fileQueue.clear()
         cssQueue.clear()
+        baseDir.deleteRecursively()
     }
 
     private fun cancel() {
