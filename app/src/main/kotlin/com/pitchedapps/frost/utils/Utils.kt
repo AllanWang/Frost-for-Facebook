@@ -308,6 +308,7 @@ fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
+    addItem("Locale", Locale.getDefault().displayName)
 }
 
 fun frostJsoup(url: String)
