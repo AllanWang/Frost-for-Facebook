@@ -323,3 +323,20 @@ fun Element.first(vararg select: String): Element? {
     }
     return null
 }
+
+fun File.createFreshFile(): Boolean {
+    if (exists()) {
+        if (!delete()) return false
+    } else {
+        val parent = parentFile
+        if (!parent.exists() && !parent.mkdirs())
+            return false
+    }
+    return createNewFile()
+}
+
+fun File.createFreshDir(): Boolean {
+    if (exists() && !deleteRecursively())
+        return false
+    return mkdirs()
+}

@@ -49,7 +49,7 @@ fun SettingsActivity.sendDebug(urlOrig: String) {
     }
 
     val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            File(externalCacheDir, "offline_debug"))
+            DebugActivity.baseDir(this))
 
     val md = materialDialog {
         title(R.string.parsing_data)
