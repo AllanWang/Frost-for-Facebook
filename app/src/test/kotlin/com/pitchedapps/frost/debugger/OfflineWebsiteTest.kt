@@ -14,10 +14,11 @@ class OfflineWebsiteTest {
     @Test
     fun basic() {
         val countdown = CountDownLatch(1)
-        OfflineWebsite(FB_URL_BASE, COOKIE, "app/build/offline_test").loadAndZip("test") {
-            println("Outcome $it")
-            countdown.countDown()
-        }
+        OfflineWebsite(FB_URL_BASE, COOKIE, File("app/build/offline_test"))
+                .loadAndZip("test") {
+                    println("Outcome $it")
+                    countdown.countDown()
+                }
         countdown.await()
     }
 
