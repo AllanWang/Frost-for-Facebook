@@ -8,12 +8,14 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.support.design.widget.FloatingActionButton
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
@@ -53,17 +55,19 @@ class ImageActivity : KauBaseActivity() {
     val fab: FloatingActionButton by bindView(R.id.image_fab)
     var errorRef: Throwable? = null
 
+    private val tempDir: File by lazy { File(cacheDir, IMAGE_FOLDER) }
+
     /**
      * Reference to the temporary file path
      * Should be nonnull if the image is successfully loaded
      * As this is temporary, the image is deleted upon exit
      */
-    private var tempFile: File? = null
+    internal var tempFile: File? = null
     /**
      * Reference to path for downloaded image
      * Nonnull once the image is downloaded by the user
      */
-    internal var downloadPath: String? = null
+    internal var savedFile: File? = null
     /**
      * Indicator for fab's click result
      */
@@ -80,6 +84,10 @@ class ImageActivity : KauBaseActivity() {
          * Linked to the uri provider
          */
         private const val IMAGE_FOLDER = "images"
+        private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
+        private const val IMG_TAG = "Frost"
+        private const val IMG_EXTENSION = ".png"
+        private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 
     val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
@@ -92,7 +100,6 @@ class ImageActivity : KauBaseActivity() {
         super.onCreate(savedInstanceState)
         intent?.extras ?: return finish()
         L.i { "Displaying image" }
-        L._i { imageUrl }
         val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
@@ -168,6 +175,7 @@ class ImageActivity : KauBaseActivity() {
             photoFile = createPrivateMediaFile()
         } catch (e: IOException) {
             errorRef = e
+            logImage(e)
         } finally {
             if (photoFile == null) {
                 callback(null)
@@ -182,14 +190,29 @@ class ImageActivity : KauBaseActivity() {
         }
     }
 
+    private fun logImage(e: Exception?) {
+        if (!Prefs.analytics) return
+        val error = e ?: IOException("$imageUrl failed to load")
+        L.e(error) { "$imageUrl failed to load" }
+    }
+
     @Throws(IOException::class)
-    private fun Context.createPrivateMediaFile(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val imageFileName = "Frost_${timeStamp}_"
-        val imageDir = File(cacheDir, IMAGE_FOLDER)
-        if (!imageDir.exists())
-            imageDir.mkdirs()
-        return File.createTempFile(imageFileName, ".png", imageDir)
+    private fun createPrivateMediaFile(): File {
+        val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
+        val imageFileName = "${IMG_TAG}_${timeStamp}_"
+        if (!tempDir.exists())
+            tempDir.mkdirs()
+        return File.createTempFile(imageFileName, IMG_EXTENSION, tempDir)
+    }
+
+    @Throws(IOException::class)
+    private fun createPublicMediaFile(): File {
+        val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
+        val imageFileName = "${IMG_TAG}_${timeStamp}_"
+        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val frostDir = File(storageDir, IMG_TAG)
+        if (!frostDir.exists()) frostDir.mkdirs()
+        return File.createTempFile(imageFileName, IMG_EXTENSION, frostDir)
     }
 
     @Throws(IOException::class)
@@ -212,8 +235,7 @@ class ImageActivity : KauBaseActivity() {
             L.d { "Download image callback granted: $granted" }
             if (granted) {
                 doAsync {
-                    val destination = createMediaFile(".png")
-                    downloadPath = destination.absolutePath
+                    val destination = createPublicMediaFile()
                     var success = true
                     try {
                         val temp = tempFile
@@ -226,8 +248,15 @@ class ImageActivity : KauBaseActivity() {
                         success = false
                     } finally {
                         L.d { "Download image async finished: $success" }
-                        if (success)
+                        if (success) {
                             scanMedia(destination)
+                            savedFile = destination
+                        } else {
+                            try {
+                                destination.delete()
+                            } catch (ignore: Exception) {
+                            }
+                        }
                         activityUiThreadWithContext {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             frostSnackbar(text)
@@ -240,8 +269,8 @@ class ImageActivity : KauBaseActivity() {
     }
 
     override fun onDestroy() {
-        tempFile?.delete()
         tempFile = null
+        tempDir.deleteRecursively()
         L.d { "Closing $localClassName" }
         super.onDestroy()
     }
@@ -275,7 +304,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
     SHARE(GoogleMaterial.Icon.gmd_share) {
         override fun onClick(activity: ImageActivity) {
             try {
-                val photoURI = activity.frostUriFromFile(File(activity.downloadPath))
+                val photoURI = activity.frostUriFromFile(activity.savedFile!!)
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     putExtra(Intent.EXTRA_STREAM, photoURI)
