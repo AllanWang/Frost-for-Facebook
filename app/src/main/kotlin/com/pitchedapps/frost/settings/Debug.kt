@@ -31,6 +31,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     plainText(R.string.debug_web) {
+        descRes = R.string.debug_web_desc
         onClick = { this@getDebugPrefs.startActivityForResult<DebugActivity>(ACTIVITY_REQUEST_DEBUG) }
     }
 }

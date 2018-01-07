@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.activities
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -18,6 +19,7 @@ import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.SizeReadyCallback
 import com.bumptech.glide.request.target.Target
@@ -27,12 +29,16 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import okhttp3.Request
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -52,7 +58,7 @@ class ImageActivity : KauBaseActivity() {
      * Should be nonnull if the image is successfully loaded
      * As this is temporary, the image is deleted upon exit
      */
-    private var tempFilePath: String? = null
+    private var tempFile: File? = null
     /**
      * Reference to path for downloaded image
      * Nonnull once the image is downloaded by the user
@@ -68,9 +74,19 @@ class ImageActivity : KauBaseActivity() {
             value.update(fab)
         }
 
+    companion object {
+        /**
+         * Cache folder to store images
+         * Linked to the uri provider
+         */
+        private const val IMAGE_FOLDER = "images"
+    }
+
     val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
 
     val text: String? by lazy { intent.getStringExtra(ARG_TEXT) }
+
+    private val glide: RequestManager by lazy { Glide.with(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +115,7 @@ class ImageActivity : KauBaseActivity() {
                 imageCallback(null, false)
             }
         })
-        Glide.with(this).asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
+        glide.asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
         setFrostColors {
             themeWindow = false
         }
@@ -119,7 +135,7 @@ class ImageActivity : KauBaseActivity() {
                 } else {
                     photo.setImage(ImageSource.uri(it))
                     fabAction = FabStates.DOWNLOAD
-                    photo.animate().alpha(1f).scaleXY(1f).withEndAction { fab.show() }.start()
+                    photo.animate().alpha(1f).scaleXY(1f).withEndAction(fab::show).start()
                 }
             })
         } else {
@@ -149,15 +165,15 @@ class ImageActivity : KauBaseActivity() {
     private fun saveTempImage(resource: Bitmap, callback: (uri: Uri?) -> Unit) {
         var photoFile: File? = null
         try {
-            photoFile = createPrivateMediaFile(".png")
+            photoFile = createPrivateMediaFile()
         } catch (e: IOException) {
             errorRef = e
         } finally {
             if (photoFile == null) {
                 callback(null)
             } else {
-                tempFilePath = photoFile.absolutePath
-                L.d { "Temp image path $tempFilePath" }
+                tempFile = photoFile
+                L.d { "Temp image path ${tempFile?.absolutePath}" }
                 // File created; proceed with request
                 val photoURI = frostUriFromFile(photoFile)
                 photoFile.outputStream().use { resource.compress(Bitmap.CompressFormat.PNG, 100, it) }
@@ -166,7 +182,32 @@ class ImageActivity : KauBaseActivity() {
         }
     }
 
-    internal fun downloadImage() {
+    @Throws(IOException::class)
+    private fun Context.createPrivateMediaFile(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val imageFileName = "Frost_${timeStamp}_"
+        val imageDir = File(cacheDir, IMAGE_FOLDER)
+        if (!imageDir.exists())
+            imageDir.mkdirs()
+        return File.createTempFile(imageFileName, ".png", imageDir)
+    }
+
+    @Throws(IOException::class)
+    private fun downloadImageTo(file: File) {
+        val body = Request.Builder()
+                .url(imageUrl)
+                .get()
+                .call()
+                .execute()
+                .body() ?: throw IOException("Failed to retrieve image body")
+        body.byteStream().use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+    }
+
+    internal fun saveImage() {
         kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
             L.d { "Download image callback granted: $granted" }
             if (granted) {
@@ -175,13 +216,18 @@ class ImageActivity : KauBaseActivity() {
                     downloadPath = destination.absolutePath
                     var success = true
                     try {
-                        File(tempFilePath).copyTo(destination, true)
-                        scanMedia(destination)
+                        val temp = tempFile
+                        if (temp != null)
+                            temp.copyTo(destination, true)
+                        else
+                            downloadImageTo(destination)
                     } catch (e: Exception) {
                         errorRef = e
                         success = false
                     } finally {
                         L.d { "Download image async finished: $success" }
+                        if (success)
+                            scanMedia(destination)
                         activityUiThreadWithContext {
                             val text = if (success) R.string.image_download_success else R.string.image_download_fail
                             frostSnackbar(text)
@@ -193,15 +239,9 @@ class ImageActivity : KauBaseActivity() {
         }
     }
 
-    internal fun deleteTempFile() {
-        if (tempFilePath != null) {
-            File(tempFilePath!!).delete()
-            tempFilePath = null
-        }
-    }
-
     override fun onDestroy() {
-        deleteTempFile()
+        tempFile?.delete()
+        tempFile = null
         L.d { "Closing $localClassName" }
         super.onDestroy()
     }
@@ -230,7 +270,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
         override fun onClick(activity: ImageActivity) {}
     },
     DOWNLOAD(GoogleMaterial.Icon.gmd_file_download) {
-        override fun onClick(activity: ImageActivity) = activity.downloadImage()
+        override fun onClick(activity: ImageActivity) = activity.saveImage()
     },
     SHARE(GoogleMaterial.Icon.gmd_share) {
         override fun onClick(activity: ImageActivity) {
