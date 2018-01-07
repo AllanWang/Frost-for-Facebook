@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <external-path
-        name="Frost_images"
-        path="Android/data/com.pitchedapps.frost/files/Pictures" />
-    <external-path
-        name="Frost_public_images"
-        path="Pictures/Frost" />
+        name="external"
+        path="/" />
+    <cache-path
+        name="cache"
+        path="/" />
+    <files-path
+        name="files"
+        path="/" />
 </paths>

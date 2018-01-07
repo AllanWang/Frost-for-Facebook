@@ -123,7 +123,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 //        }
-        setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
+        setFrostColors {
+            toolbar(toolbar)
+            themeWindow = false
+            header(appBar)
+            background(viewPager)
+        }
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
     }
@@ -192,8 +197,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                 }
                             }
                         }
-                        -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
-                        -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
+                        -3L -> launchNewTask<LoginActivity>(clearStack = false)
+                        -4L -> launchNewTask<SelectorActivity>( cookies(), false)
                         else -> {
                             FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }

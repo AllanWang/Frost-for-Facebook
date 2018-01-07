@@ -6,13 +6,21 @@
     <item text="" />
     -->
 
+    <version title="v1.7.7" />
+    <item text="Fix overlay loading" />
+    <item text="Improve image loading" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.7.5" />
     <item text="Mark notifications as read when clicked!" />
     <item text="Create menu parser" />
     <item text="Implement automatic web fallback" />
     <item text="Optimize logging" />
     <item text="Fix link loading for some locations (eg changing profile pictures)" />
-    <item text="" />
 
     <version title="v1.7.2" />
     <item text="Optimize login view" />

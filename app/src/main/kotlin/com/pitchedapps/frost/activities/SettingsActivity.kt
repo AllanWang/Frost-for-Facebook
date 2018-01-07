@@ -38,14 +38,23 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
         const val REQUEST_NOTIFICATION_RINGTONE = REQUEST_RINGTONE or 1
         const val REQUEST_MESSAGE_RINGTONE = REQUEST_RINGTONE or 2
         const val ACTIVITY_REQUEST_TABS = 29
+        const val ACTIVITY_REQUEST_DEBUG = 53
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (fetchRingtone(requestCode, resultCode, data)) return
-        if (requestCode == ACTIVITY_REQUEST_TABS) {
-            if (resultCode == Activity.RESULT_OK)
-                shouldRestartMain()
-            return
+        when (requestCode) {
+            ACTIVITY_REQUEST_TABS -> {
+                if (resultCode == Activity.RESULT_OK)
+                    shouldRestartMain()
+                return
+            }
+            ACTIVITY_REQUEST_DEBUG -> {
+                val url = data?.extras?.getString(DebugActivity.RESULT_URL)
+                if (url?.isNotBlank() == true)
+                    sendDebug(url)
+                return
+            }
         }
         if (!onActivityResultBilling(requestCode, resultCode, data))
             super.onActivityResult(requestCode, resultCode, data)
@@ -127,7 +136,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = {
-                startActivityForResult(AboutActivity::class.java, 9, bundleBuilder = {
+                startActivityForResult<AboutActivity>(9, bundleBuilder = {
                     withSceneTransitionAnimation(this@SettingsActivity)
                 })
             }
@@ -141,7 +150,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
 
         plainText(R.string.replay_intro) {
             iicon = GoogleMaterial.Icon.gmd_replay
-            onClick = { launchIntroActivity(cookies()) }
+            onClick = { launchNewTask<IntroActivity>(cookies(), true) }
         }
 
         subItems(R.string.debug_frost, getDebugPrefs()) {
