@@ -38,7 +38,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
         const val REQUEST_NOTIFICATION_RINGTONE = REQUEST_RINGTONE or 1
         const val REQUEST_MESSAGE_RINGTONE = REQUEST_RINGTONE or 2
         const val ACTIVITY_REQUEST_TABS = 29
-        const val ACTIVITY_REQUEST_DEBUG = 99701
+        const val ACTIVITY_REQUEST_DEBUG = 53
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

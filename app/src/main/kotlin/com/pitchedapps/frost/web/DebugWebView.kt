@@ -9,6 +9,7 @@ import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
@@ -36,6 +37,7 @@ class DebugWebView @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     fun setupWebview() {
         settings.javaScriptEnabled = true
+        settings.userAgentString = USER_AGENT_BASIC
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = DebugClient()
     }

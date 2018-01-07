@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.content.FileProvider
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -27,7 +26,6 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
-import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -102,7 +100,9 @@ class ImageActivity : KauBaseActivity() {
             }
         })
         Glide.with(this).asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
-        setFrostColors(themeWindow = false)
+        setFrostColors {
+            themeWindow = false
+        }
     }
 
     /**
@@ -135,11 +135,14 @@ class ImageActivity : KauBaseActivity() {
 
         override fun removeCallback(cb: SizeReadyCallback?) {}
 
-        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) = callback(resource, true)
+        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) =
+                callback(resource, true)
 
-        override fun onLoadFailed(errorDrawable: Drawable?) = callback(null, false)
+        override fun onLoadFailed(errorDrawable: Drawable?) =
+                callback(null, false)
 
-        override fun getSize(cb: SizeReadyCallback) = cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+        override fun getSize(cb: SizeReadyCallback) =
+                cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
 
     }
 
@@ -156,9 +159,7 @@ class ImageActivity : KauBaseActivity() {
                 tempFilePath = photoFile.absolutePath
                 L.d { "Temp image path $tempFilePath" }
                 // File created; proceed with request
-                val photoURI = FileProvider.getUriForFile(this,
-                        BuildConfig.APPLICATION_ID + ".provider",
-                        photoFile)
+                val photoURI = frostUriFromFile(photoFile)
                 photoFile.outputStream().use { resource.compress(Bitmap.CompressFormat.PNG, 100, it) }
                 callback(photoURI)
             }
@@ -234,9 +235,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
     SHARE(GoogleMaterial.Icon.gmd_share) {
         override fun onClick(activity: ImageActivity) {
             try {
-                val photoURI = FileProvider.getUriForFile(activity,
-                        BuildConfig.APPLICATION_ID + ".provider",
-                        File(activity.downloadPath))
+                val photoURI = activity.frostUriFromFile(File(activity.downloadPath))
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     putExtra(Intent.EXTRA_STREAM, photoURI)

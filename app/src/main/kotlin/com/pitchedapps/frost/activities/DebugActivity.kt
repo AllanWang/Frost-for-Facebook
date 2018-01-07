@@ -2,6 +2,7 @@ package com.pitchedapps.frost.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.SwipeRefreshLayout
@@ -9,9 +10,11 @@ import android.support.v7.widget.Toolbar
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.visible
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.web.DebugWebView
 
@@ -26,7 +29,6 @@ class DebugActivity : KauBaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     private val fab: FloatingActionButton by bindView(R.id.fab)
 
     companion object {
-        const val REQUEST_CODE = 928
         const val RESULT_URL = "extra_result_url"
     }
 
@@ -35,14 +37,18 @@ class DebugActivity : KauBaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         setContentView(R.layout.activity_debug)
         setSupportActionBar(toolbar)
         setTitle(R.string.debug_frost)
-        setFrostColors(toolbar)
+        setFrostColors {
+            toolbar(toolbar)
+        }
         web.loadUrl(FbItem.FEED.url)
         web.onPageFinished = { swipeRefresh.isRefreshing = false }
-        fab.setIcon(GoogleMaterial.Icon.gmd_bug_report)
+        fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, Prefs.iconColor)
+        fab.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
         fab.setOnClickListener {
             val intent = Intent()
             intent.putExtra(RESULT_URL, web.url)
             setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 
@@ -60,5 +66,10 @@ class DebugActivity : KauBaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         super.onPause()
     }
 
-
+    override fun onBackPressed() {
+        if (web.canGoBack())
+            web.goBack()
+        else
+            super.onBackPressed()
+    }
 }

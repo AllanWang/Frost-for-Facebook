@@ -6,4 +6,7 @@
     <external-path
         name="Frost_public_images"
         path="Pictures/Frost" />
+    <cache-path
+        name="Frost_offline_debug"
+        path="debug" />
 </paths>

@@ -11,6 +11,7 @@ import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
@@ -33,6 +34,7 @@ import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -127,17 +129,49 @@ fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
         setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
 }
 
-fun Activity.setFrostColors(toolbar: Toolbar? = null, themeWindow: Boolean = true,
-                            texts: Array<TextView> = arrayOf(), headers: Array<View> = arrayOf(), backgrounds: Array<View> = arrayOf()) {
-    statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
-    if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
-    if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-    toolbar?.setBackgroundColor(Prefs.headerColor)
-    toolbar?.setTitleTextColor(Prefs.iconColor)
-    toolbar?.overflowIcon?.setTint(Prefs.iconColor)
-    texts.forEach { it.setTextColor(Prefs.textColor) }
-    headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
-    backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+class ActivityThemeUtils {
+
+    private var toolbar: Toolbar? = null
+    var themeWindow = true
+    private var texts = mutableListOf<TextView>()
+    private var headers = mutableListOf<View>()
+    private var backgrounds = mutableListOf<View>()
+
+    fun toolbar(toolbar: Toolbar) {
+        this.toolbar = toolbar
+    }
+
+    fun text(vararg views: TextView) {
+        texts.addAll(views)
+    }
+
+    fun header(vararg views: View) {
+        headers.addAll(views)
+    }
+
+    fun background(vararg views: View) {
+        backgrounds.addAll(views)
+    }
+
+    fun theme(activity: Activity) {
+        with(activity) {
+            statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
+            if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
+            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
+            toolbar?.setBackgroundColor(Prefs.headerColor)
+            toolbar?.setTitleTextColor(Prefs.iconColor)
+            toolbar?.overflowIcon?.setTint(Prefs.iconColor)
+            texts.forEach { it.setTextColor(Prefs.textColor) }
+            headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
+            backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+        }
+    }
+}
+
+inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
+    val themer = ActivityThemeUtils()
+    themer.builder()
+    themer.theme(this)
 }
 
 fun frostAnswers(action: Answers.() -> Unit) {
@@ -262,13 +296,21 @@ fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textCo
     }
 }
 
+fun Context.frostUriFromFile(file: File): Uri =
+        FileProvider.getUriForFile(this,
+                BuildConfig.APPLICATION_ID + ".provider",
+                file)
+
 inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit)
         = sendFrostEmail(string(subjectId), builder)
 
 inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
         = sendEmail(string(R.string.dev_email), subjectId) {
     builder()
+    addFrostDetails()
+}
 
+fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")

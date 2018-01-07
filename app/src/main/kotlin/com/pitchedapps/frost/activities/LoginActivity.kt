@@ -62,7 +62,9 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors(toolbar)
+        setFrostColors{
+            toolbar(toolbar)
+        }
         web.loadLogin({ refresh = it != 100 }) { cookie ->
             L.d { "Login found" }
             FbCookie.save(cookie.id)

@@ -123,7 +123,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 //        }
-        setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
+        setFrostColors {
+            toolbar(toolbar)
+            themeWindow = false
+            header(appBar)
+            background(viewPager)
+        }
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onCreateBilling()
     }

@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.settings
 
-import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
@@ -10,7 +9,10 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQUEST_DEBUG
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.utils.frostUriFromFile
+import com.pitchedapps.frost.utils.sendFrostEmail
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.io.File
 import java.util.concurrent.Future
@@ -32,6 +34,8 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 }
 
+private const val ZIP_NAME = "debug"
+
 fun SettingsActivity.sendDebug(url: String) {
 
     var future: Future<Unit>? = null
@@ -47,15 +51,19 @@ fun SettingsActivity.sendDebug(url: String) {
     val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "", File(cacheDir, "debug").absolutePath)
 
     future = md.doAsync {
-        downloader.loadAndZip("debug", { progress ->
+        downloader.loadAndZip(ZIP_NAME, { progress ->
             uiThread { it.setProgress(progress) }
         }) { success ->
             uiThread {
                 it.dismiss()
                 if (success) {
-sendEmail(R.string.dev_email, R.string.debug_report_email_title)
+                    val zipUri = it.context.frostUriFromFile(File(downloader.baseDir, "$ZIP_NAME.zip"))
+                    sendFrostEmail(R.string.debug_report_email_title) {
+                        addItem("Url", url)
+                        addAttachment(zipUri)
+                    }
                 } else {
-
+                    toast(R.string.error_generic)
                 }
             }
         }

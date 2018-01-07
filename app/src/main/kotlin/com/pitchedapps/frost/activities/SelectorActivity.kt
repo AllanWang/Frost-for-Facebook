@@ -42,6 +42,9 @@ class SelectorActivity : BaseActivity() {
                 else FbCookie.switchUser(item.cookie, { launchNewTask<MainActivity>(cookies()) })
             }
         })
-        setFrostColors(texts = arrayOf(text), backgrounds = arrayOf(container))
+        setFrostColors {
+            text(text)
+            background(container)
+        }
     }
 }
