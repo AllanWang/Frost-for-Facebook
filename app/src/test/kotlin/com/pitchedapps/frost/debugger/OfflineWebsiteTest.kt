@@ -3,6 +3,7 @@ package com.pitchedapps.frost.debugger
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.internal.COOKIE
 import org.junit.Test
+import java.io.File
 import java.util.concurrent.CountDownLatch
 
 /**

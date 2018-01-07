@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <external-path
-        name="Frost_public"
+        name="external"
         path="/" />
     <cache-path
-        name="Frost_offline_debug"
-        path="debug/" />
-    <cache-path
-        name="Frost_cache_images"
-        path="images/" />
+        name="cache"
+        path="/" />
+    <files-path
+        name="files"
+        path="/" />
 </paths>

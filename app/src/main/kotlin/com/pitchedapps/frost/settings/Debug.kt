@@ -1,6 +1,6 @@
 package com.pitchedapps.frost.settings
 
-import android.os.Environment
+import android.net.Uri
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
@@ -39,7 +39,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 }
 
-private const val ZIP_NAME = "debug"
+private const val ZIP_NAME = "contents"
 
 fun SettingsActivity.sendDebug(url: String) {
 
@@ -62,22 +62,24 @@ private fun SettingsActivity.sendDebugImpl(url: String) {
     }
 
     val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            File(cacheDir, "debug").absolutePath)
+            File(externalCacheDir, "asdf"))
 
     future = md.doAsync {
-        val zip = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                "frost/internal/debug.zip")
-        downloader.loadAndZip(zip, { progress ->
+        downloader.loadAndZip(ZIP_NAME, { progress ->
             uiThread { it.setProgress(progress) }
         }) { success ->
             uiThread {
                 it.dismiss()
                 if (success) {
-                    val zipUri = it.context.frostUriFromFile(zip)
+                    val zipUri = it.context.frostUriFromFile(
+                            File(downloader.baseDir, "$ZIP_NAME.zip"))
                     L.i { "Sending debug zip with uri $zipUri" }
                     sendFrostEmail(R.string.debug_report_email_title) {
                         addItem("Url", url)
                         addAttachment(zipUri)
+                        extras = {
+                            type = "application/zip"
+                        }
                     }
                 } else {
                     toast(R.string.error_generic)

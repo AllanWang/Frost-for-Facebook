@@ -29,18 +29,16 @@ import java.util.zip.ZipOutputStream
  */
 class OfflineWebsite(private val url: String,
                      private val cookie: String = "",
-                     baseDirectory: String,
+                     /**
+                      * Directory that holds all the files
+                      */
+                     val baseDir: File,
                      private val userAgent: String = USER_AGENT_BASIC) {
 
     /**
      * Supplied url without the queries
      */
     val baseUrl = url.substringBefore("?").trim('/')
-
-    /**
-     * Directory that holds all the files
-     */
-    val baseDir = File(baseDirectory)
 
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
@@ -144,24 +142,23 @@ class OfflineWebsite(private val url: String,
         }
     }
 
-    fun zip(zip: File): Boolean {
-        L.d { "Zipping contents to ${zip.absolutePath}" }
+    fun zip(name: String): Boolean {
         try {
-            val parent = zip.parentFile
-            if (!parent.exists() && !parent.mkdirs()) {
-                L.e { "Failed to make folder at ${parent.absolutePath}" }
-                return false
-            }
+            val zip = File(baseDir, "$name.zip")
             if (zip.exists() && (!zip.delete() || !zip.createNewFile())) {
                 L.e { "Failed to create zip at ${zip.absolutePath}" }
                 return false
             }
 
-            ZipOutputStream(BufferedOutputStream(FileOutputStream(zip))).use { out ->
+            ZipOutputStream(FileOutputStream(zip)).use { out ->
 
-                fun File.zip(name: String = this.name) = inputStream().use { file ->
-                    out.putNextEntry(ZipEntry(name))
-                    file.copyTo(out)
+                fun File.zip(name: String = this.name) {
+                    inputStream().use { file ->
+                        out.putNextEntry(ZipEntry(name))
+                        file.copyTo(out)
+                    }
+                    out.closeEntry()
+                    delete()
                 }
 
                 mainFile.zip()
@@ -175,15 +172,17 @@ class OfflineWebsite(private val url: String,
         }
     }
 
-    fun loadAndZip(zip: File, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
+    fun loadAndZip(name: String, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit): File {
+
         load({ progress((it * 0.85f).toInt()) }) {
             if (!it) callback(false)
             else {
-                val result = zip(zip)
+                val result = zip(name)
                 progress(100)
                 callback(result)
             }
         }
+        return File(baseDir, "$name.zip")
 
     }
 
