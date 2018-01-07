@@ -7,7 +7,6 @@ import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.zip
 import com.pitchedapps.frost.utils.frostJsoup
-import io.reactivex.disposables.Disposable
 import okhttp3.Request
 import okhttp3.ResponseBody
 import org.jsoup.nodes.Element
@@ -42,10 +41,9 @@ class OfflineWebsite(private val url: String,
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
 
+    private var cancelled = false
     private val urlMapper = ConcurrentHashMap<String, String>()
     private val atomicInt = AtomicInteger()
-
-    private val disposables = mutableListOf<Disposable>()
 
     private val L = KauLoggerExtension("Offline", com.pitchedapps.frost.utils.L)
 
@@ -67,6 +65,7 @@ class OfflineWebsite(private val url: String,
 
     /**
      * Caller to bind callbacks and start the load
+     * Callback is guaranteed to be called unless the load is cancelled
      */
     fun load(progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
         reset()
@@ -96,6 +95,8 @@ class OfflineWebsite(private val url: String,
 
         progress(10)
 
+        if (cancelled) return
+
         val doc = frostJsoup(cookie, url)
         doc.setBaseUri(baseUrl)
         doc.outputSettings().escapeMode(Entities.EscapeMode.extended)
@@ -103,6 +104,8 @@ class OfflineWebsite(private val url: String,
             L.e { "No content found" }
             return callback(false)
         }
+
+        if (cancelled) return
 
         progress(35)
 
@@ -118,6 +121,8 @@ class OfflineWebsite(private val url: String,
             it.attr("href", absLink)
         }
 
+        if (cancelled) return
+
         mainFile.writeText(doc.html())
 
         progress(50)
@@ -131,13 +136,13 @@ class OfflineWebsite(private val url: String,
 
             fileQueue.addAll(cssLinks)
 
-            val fileDownloads = downloadFiles().subscribe { success, throwable ->
+            if (cancelled) return@subscribe
+
+            downloadFiles().subscribe { success, throwable ->
                 L.v { "All files downloaded: $success with throwable $throwable" }
                 progress(100)
                 callback(true)
             }
-
-            disposables.add(fileDownloads)
         }
     }
 
@@ -171,9 +176,10 @@ class OfflineWebsite(private val url: String,
         }
     }
 
-    fun loadAndZip(name: String, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit): File {
+    fun loadAndZip(name: String, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
 
         load({ progress((it * 0.85f).toInt()) }) {
+            if (cancelled) return@load
             if (!it) callback(false)
             else {
                 val result = zip(name)
@@ -181,8 +187,6 @@ class OfflineWebsite(private val url: String,
                 callback(result)
             }
         }
-        return File(baseDir, "$name.zip")
-
     }
 
     private fun downloadFiles() = fileQueue.clean().toTypedArray().zip<String, Boolean, Boolean>({
@@ -266,15 +270,16 @@ class OfflineWebsite(private val url: String,
         val mapped = urlMapper[this]
         if (mapped != null) return mapped
 
-        /**
-         * This is primarily for zipping up and sending via emails
-         * As .js files typically aren't allowed, we'll simply remove all extensions
-         */
         val candidate = substringBefore("?").trim('/')
-                .substringAfterLast("/").replace(".", "_").shorten()
+                .substringAfterLast("/").shorten()
 
         val index = atomicInt.getAndIncrement()
-        val newUrl = "a${index}_$candidate.frost"
+
+        /**
+         * This is primarily for zipping up and sending via emails
+         * As .js files typically aren't allowed, we'll simply make everything txt files
+         */
+        val newUrl = "a${index}_$candidate.txt"
         urlMapper.put(this, newUrl)
         return newUrl
     }
@@ -286,15 +291,17 @@ class OfflineWebsite(private val url: String,
             = filter(String::isNotBlank).filter { it.startsWith("http") }
 
     private fun reset() {
-        cancel()
+        cancelled = false
+        urlMapper.clear()
+        atomicInt.set(0)
         fileQueue.clear()
         cssQueue.clear()
         baseDir.deleteRecursively()
     }
 
-    private fun cancel() {
-        disposables.forEach(Disposable::dispose)
-        disposables.clear()
+    fun cancel() {
+        cancelled = true
+        L.v { "Request cancelled" }
     }
 
 }

@@ -17,7 +17,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.io.File
-import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -49,20 +48,19 @@ fun SettingsActivity.sendDebug(urlOrig: String) {
         else -> urlOrig
     }
 
-    var future: Future<Unit>? = null
+    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
+            File(externalCacheDir, "offline_debug"))
 
     val md = materialDialog {
         title(R.string.parsing_data)
         progress(false, 100)
         negativeText(R.string.kau_cancel)
-        onNegative { _, _ -> future?.cancel(true) }
+        onNegative { dialog, _ -> dialog.dismiss() }
         canceledOnTouchOutside(false)
+        dismissListener { downloader.cancel() }
     }
 
-    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            File(externalCacheDir, "offline_debug"))
-
-    future = md.doAsync {
+    md.doAsync {
         downloader.loadAndZip(ZIP_NAME, { progress ->
             uiThread { it.setProgress(progress) }
         }) { success ->
