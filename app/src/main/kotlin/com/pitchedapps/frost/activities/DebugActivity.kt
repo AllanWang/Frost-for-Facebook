@@ -45,7 +45,7 @@ class DebugActivity : KauBaseActivity() {
             setDisplayShowHomeEnabled(true)
         }
         setTitle(R.string.debug_frost)
-        
+
         setFrostColors {
             toolbar(toolbar)
         }

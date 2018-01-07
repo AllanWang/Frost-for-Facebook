@@ -17,6 +17,7 @@ import ca.allanwang.kau.utils.toast
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -131,6 +132,8 @@ class FrostVideoView @JvmOverloads constructor(
             if (isExpanded) showControls()
         }
         setOnErrorListener {
+            if (Prefs.analytics)
+                L.e(it) { "Failed to load video $videoUri" }
             toast(R.string.video_load_failed, Toast.LENGTH_SHORT)
             destroy()
             true
