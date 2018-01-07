@@ -51,7 +51,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
             }
             ACTIVITY_REQUEST_DEBUG -> {
                 val url = data?.extras?.getString(DebugActivity.RESULT_URL)
-                if (url?.isNotBlank() == true)
+                if (resultCode == Activity.RESULT_OK && url?.isNotBlank() == true)
                     sendDebug(url)
                 return
             }

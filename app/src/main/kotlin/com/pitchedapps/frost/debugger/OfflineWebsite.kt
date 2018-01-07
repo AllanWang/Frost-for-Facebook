@@ -6,6 +6,8 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.zip
+import com.pitchedapps.frost.utils.createFreshDir
+import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.frostJsoup
 import okhttp3.Request
 import okhttp3.ResponseBody
@@ -71,16 +73,11 @@ class OfflineWebsite(private val url: String,
         reset()
 
         L.v { "Saving $url to ${baseDir.absolutePath}" }
-        if (baseDir.exists() && !baseDir.deleteRecursively()) {
-            L.e { "Could not clean directory" }
-            return callback(false)
-        }
 
-        if (!baseDir.mkdirs()) {
+        if (!baseDir.exists() && !baseDir.mkdirs()) {
             L.e { "Could not make directory" }
             return callback(false)
         }
-
 
         if (!mainFile.createNewFile()) {
             L.e { "Could not create ${mainFile.absolutePath}" }
@@ -88,7 +85,7 @@ class OfflineWebsite(private val url: String,
         }
 
 
-        if (!assetDir.mkdirs()) {
+        if (!assetDir.createFreshDir()) {
             L.e { "Could not create ${assetDir.absolutePath}" }
             return callback(false)
         }
@@ -149,7 +146,7 @@ class OfflineWebsite(private val url: String,
     fun zip(name: String): Boolean {
         try {
             val zip = File(baseDir, "$name.zip")
-            if (zip.exists() && (!zip.delete() || !zip.createNewFile())) {
+            if (!zip.createFreshFile()) {
                 L.e { "Failed to create zip at ${zip.absolutePath}" }
                 return false
             }
@@ -157,6 +154,7 @@ class OfflineWebsite(private val url: String,
             ZipOutputStream(FileOutputStream(zip)).use { out ->
 
                 fun File.zip(name: String = this.name) {
+                    if (!isFile) return
                     inputStream().use { file ->
                         out.putNextEntry(ZipEntry(name))
                         file.copyTo(out)
@@ -165,13 +163,14 @@ class OfflineWebsite(private val url: String,
                     delete()
                 }
 
-                mainFile.zip()
+                baseDir.listFiles({ _, n -> n != "$name.zip" }).forEach { it.zip() }
                 assetDir.listFiles().forEach {
                     it.zip("assets/${it.name}")
                 }
             }
             return true
         } catch (e: Exception) {
+            L.e { "Zip failed: ${e.message}" }
             return false
         }
     }
@@ -275,11 +274,16 @@ class OfflineWebsite(private val url: String,
 
         val index = atomicInt.getAndIncrement()
 
+
+        var newUrl = "a${index}_$candidate"
+
         /**
          * This is primarily for zipping up and sending via emails
          * As .js files typically aren't allowed, we'll simply make everything txt files
          */
-        val newUrl = "a${index}_$candidate.txt"
+        if (newUrl.endsWith(".js"))
+            newUrl = "$newUrl.txt"
+
         urlMapper.put(this, newUrl)
         return newUrl
     }
@@ -296,7 +300,6 @@ class OfflineWebsite(private val url: String,
         atomicInt.set(0)
         fileQueue.clear()
         cssQueue.clear()
-        baseDir.deleteRecursively()
     }
 
     fun cancel() {
