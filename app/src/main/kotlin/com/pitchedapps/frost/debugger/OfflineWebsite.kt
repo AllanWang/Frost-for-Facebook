@@ -144,9 +144,14 @@ class OfflineWebsite(private val url: String,
         }
     }
 
-    fun zip(name: String): Boolean {
+    fun zip(zip: File): Boolean {
+        L.d { "Zipping contents to ${zip.absolutePath}" }
         try {
-            val zip = File(baseDir, "$name.zip")
+            val parent = zip.parentFile
+            if (!parent.exists() && !parent.mkdirs()) {
+                L.e { "Failed to make folder at ${parent.absolutePath}" }
+                return false
+            }
             if (zip.exists() && (!zip.delete() || !zip.createNewFile())) {
                 L.e { "Failed to create zip at ${zip.absolutePath}" }
                 return false
@@ -170,12 +175,11 @@ class OfflineWebsite(private val url: String,
         }
     }
 
-    fun loadAndZip(name: String, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
-
+    fun loadAndZip(zip: File, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
         load({ progress((it * 0.85f).toInt()) }) {
             if (!it) callback(false)
             else {
-                val result = zip(name)
+                val result = zip(zip)
                 progress(100)
                 callback(result)
             }

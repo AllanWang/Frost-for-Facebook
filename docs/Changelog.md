@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.7.7
+* Fix overlay loading
+* Improve image loading
+
 ## v1.7.5
 * Mark notifications as read when clicked!
 * Create menu parser

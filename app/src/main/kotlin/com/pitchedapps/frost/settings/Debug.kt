@@ -1,6 +1,9 @@
 package com.pitchedapps.frost.settings
 
+import android.os.Environment
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
+import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
 import com.pitchedapps.frost.R
@@ -40,6 +43,14 @@ private const val ZIP_NAME = "debug"
 
 fun SettingsActivity.sendDebug(url: String) {
 
+    kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
+        if (granted)
+            sendDebugImpl(url)
+    }
+
+}
+
+private fun SettingsActivity.sendDebugImpl(url: String) {
     var future: Future<Unit>? = null
 
     val md = materialDialog {
@@ -54,14 +65,15 @@ fun SettingsActivity.sendDebug(url: String) {
             File(cacheDir, "debug").absolutePath)
 
     future = md.doAsync {
-        downloader.loadAndZip(ZIP_NAME, { progress ->
+        val zip = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                "frost/internal/debug.zip")
+        downloader.loadAndZip(zip, { progress ->
             uiThread { it.setProgress(progress) }
         }) { success ->
             uiThread {
                 it.dismiss()
                 if (success) {
-                    val zipUri = it.context.frostUriFromFile(
-                            File(downloader.baseDir, "$ZIP_NAME.zip"))
+                    val zipUri = it.context.frostUriFromFile(zip)
                     L.i { "Sending debug zip with uri $zipUri" }
                     sendFrostEmail(R.string.debug_report_email_title) {
                         addItem("Url", url)
@@ -74,5 +86,4 @@ fun SettingsActivity.sendDebug(url: String) {
         }
 
     }
-
 }
