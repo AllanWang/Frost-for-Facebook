@@ -142,6 +142,9 @@
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
+        <activity
+            android:name=".activities.DebugActivity"
+            android:theme="@style/FrostTheme" />
 
         <service
             android:name=".services.NotificationService"

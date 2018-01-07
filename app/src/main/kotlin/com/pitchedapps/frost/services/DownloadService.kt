@@ -9,13 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.content.FileProvider
 import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.string
-import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createMediaFile
+import com.pitchedapps.frost.utils.frostUriFromFile
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -105,7 +104,7 @@ class DownloadService : IntentService("FrostVideoDownloader") {
 
 
     private fun getPendingIntent(context: Context, file: File): PendingIntent {
-        val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+        val uri = context.frostUriFromFile(file)
         val type = context.contentResolver.getType(uri)
         L.i { "DownloadType: retrieved pending intent" }
         L._i { "Contents: $uri $type" }

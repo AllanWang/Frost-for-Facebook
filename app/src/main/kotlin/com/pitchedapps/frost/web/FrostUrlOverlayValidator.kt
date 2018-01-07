@@ -46,7 +46,7 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         //already overlay; manage user agent
         if (userAgentString != USER_AGENT_BASIC && url.formattedFbUrl.shouldUseBasicAgent) {
             L.i { "Switch to basic agent overlay" }
-            context.launchWebOverlay(url, WebOverlayBasicActivity::class.java)
+            context.launchWebOverlayBasic(url)
             return true
         }
         if (context is WebOverlayBasicActivity && !url.formattedFbUrl.shouldUseBasicAgent) {

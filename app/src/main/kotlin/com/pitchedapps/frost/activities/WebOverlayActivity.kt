@@ -147,7 +147,10 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
 
-        setFrostColors(toolbar, themeWindow = false)
+        setFrostColors {
+            toolbar(toolbar)
+            themeWindow = false
+        }
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
         content.bind(this)

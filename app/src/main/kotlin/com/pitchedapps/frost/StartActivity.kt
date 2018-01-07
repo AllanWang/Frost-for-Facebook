@@ -19,13 +19,17 @@ class StartActivity : KauBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FbCookie.switchBackUser {
-            loadFbCookiesAsync { cookies ->
+            loadFbCookiesAsync {
+                val cookies = ArrayList(it)
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d { "Cookies: ${cookies.joinToString("\t")}" }
-                if (cookies.isNotEmpty())
-                    launchNewTask(if (Prefs.userId != -1L) MainActivity::class.java else SelectorActivity::class.java, ArrayList(cookies))
-                else
-                    launchNewTask(LoginActivity::class.java)
+                if (cookies.isNotEmpty()) {
+                    if (Prefs.userId != -1L)
+                        launchNewTask<MainActivity>(cookies)
+                    else
+                        launchNewTask<SelectorActivity>(cookies)
+                } else
+                    launchNewTask<LoginActivity>()
             }
         }
     }
