@@ -148,7 +148,7 @@ class OfflineWebsite(private val url: String,
         try {
             val zip = File(baseDir, "$name.zip")
             if (zip.exists() && (!zip.delete() || !zip.createNewFile())) {
-                L.e { "Filed to create zip at ${zip.absolutePath}" }
+                L.e { "Failed to create zip at ${zip.absolutePath}" }
                 return false
             }
 

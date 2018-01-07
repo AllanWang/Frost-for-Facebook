@@ -9,6 +9,7 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQUEST_DEBUG
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
 import org.jetbrains.anko.doAsync
@@ -48,7 +49,8 @@ fun SettingsActivity.sendDebug(url: String) {
         canceledOnTouchOutside(false)
     }
 
-    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "", File(cacheDir, "debug").absolutePath)
+    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
+            File(cacheDir, "debug").absolutePath)
 
     future = md.doAsync {
         downloader.loadAndZip(ZIP_NAME, { progress ->
@@ -57,7 +59,9 @@ fun SettingsActivity.sendDebug(url: String) {
             uiThread {
                 it.dismiss()
                 if (success) {
-                    val zipUri = it.context.frostUriFromFile(File(downloader.baseDir, "$ZIP_NAME.zip"))
+                    val zipUri = it.context.frostUriFromFile(
+                            File(downloader.baseDir, "$ZIP_NAME.zip"))
+                    L.i { "Sending debug zip with uri $zipUri" }
                     sendFrostEmail(R.string.debug_report_email_title) {
                         addItem("Url", url)
                         addAttachment(zipUri)
