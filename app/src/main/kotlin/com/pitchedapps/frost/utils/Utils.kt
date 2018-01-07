@@ -261,15 +261,9 @@ inline val String?.isIndependent: Boolean
         if (this == null || length < 5) return false                // ignore short queries
         if (this[0] == '#' && !contains('/')) return false          // ignore element values
         if (startsWith("http") && !isFacebookUrl) return true       // ignore non facebook urls
-        if (independentSegments.any { contains(it) }) return true   // known independent segments
-        if (this.startsWith("#!/")) return false                    // ignore these links for now
         if (dependentSegments.any { contains(it) }) return false    // ignore known dependent segments
         return true
     }
-
-val independentSegments = arrayOf(
-        "messages/read/?tid=cid"
-)
 
 val dependentSegments = arrayOf(
         "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
