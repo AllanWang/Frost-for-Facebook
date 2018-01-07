@@ -12,7 +12,6 @@ import okhttp3.Request
 import okhttp3.ResponseBody
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.ConcurrentHashMap
@@ -267,11 +266,15 @@ class OfflineWebsite(private val url: String,
         val mapped = urlMapper[this]
         if (mapped != null) return mapped
 
+        /**
+         * This is primarily for zipping up and sending via emails
+         * As .js files typically aren't allowed, we'll simply remove all extensions
+         */
         val candidate = substringBefore("?").trim('/')
-                .substringAfterLast("/").shorten()
+                .substringAfterLast("/").replace(".", "_").shorten()
 
         val index = atomicInt.getAndIncrement()
-        val newUrl = "a${index}_$candidate"
+        val newUrl = "a${index}_$candidate.frost"
         urlMapper.put(this, newUrl)
         return newUrl
     }
