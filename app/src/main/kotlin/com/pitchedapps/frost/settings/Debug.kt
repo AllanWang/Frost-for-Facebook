@@ -37,7 +37,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 }
 
-private const val ZIP_NAME = "contents"
+private const val ZIP_NAME = "debug"
 
 fun SettingsActivity.sendDebug(urlOrig: String) {
 
