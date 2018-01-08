@@ -69,6 +69,8 @@ data class FrostThread(val id: Long,
 
 private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
 
+    override var nameRes = FbItem.MESSAGES.titleId
+
     override val url = FbItem.MESSAGES.url
 
     override fun textToDoc(text: String): Document? {

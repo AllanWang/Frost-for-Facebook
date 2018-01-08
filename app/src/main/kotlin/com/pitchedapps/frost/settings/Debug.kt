@@ -3,6 +3,7 @@ package com.pitchedapps.frost.settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
+import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
@@ -10,6 +11,9 @@ import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQU
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.parsers.MessageParser
+import com.pitchedapps.frost.parsers.NotifParser
+import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
@@ -33,6 +37,23 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     plainText(R.string.debug_web) {
         descRes = R.string.debug_web_desc
         onClick = { this@getDebugPrefs.startActivityForResult<DebugActivity>(ACTIVITY_REQUEST_DEBUG) }
+    }
+
+    plainText(R.string.debug_parsers) {
+        descRes = R.string.debug_parsers_desc
+        onClick = {
+
+            val parsers = arrayOf(NotifParser, MessageParser, SearchParser)
+
+            materialDialog {
+                items(parsers.map { string(it.nameRes) })
+                itemsCallback { dialog, _, position, _ ->
+                    dialog.dismiss()
+                    // todo add debugging
+                }
+            }
+
+        }
     }
 }
 
