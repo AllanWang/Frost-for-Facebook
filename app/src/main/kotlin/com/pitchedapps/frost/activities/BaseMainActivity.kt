@@ -111,9 +111,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         "Frost id" to Prefs.frostId)
             }
         }
+        L.e { 2 }
         controlWebview = WebView(this)
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
+        L.e { 3 }
         adapter = SectionsPagerAdapter(loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = TAB_COUNT
@@ -198,7 +200,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             }
                         }
                         -3L -> launchNewTask<LoginActivity>(clearStack = false)
-                        -4L -> launchNewTask<SelectorActivity>( cookies(), false)
+                        -4L -> launchNewTask<SelectorActivity>(cookies(), false)
                         else -> {
                             FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }
