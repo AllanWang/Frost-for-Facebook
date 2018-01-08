@@ -21,7 +21,6 @@
   <string name="notification_sound">通知提示音</string>
   <string name="notification_ringtone">通知铃声</string>
   <string name="message_ringtone">消息铃声</string>
-  <string name="select_ringtone">选择铃声</string>
   <string name="notification_vibrate">通知振动</string>
   <string name="notification_lights">通知指示灯</string>
 </resources>

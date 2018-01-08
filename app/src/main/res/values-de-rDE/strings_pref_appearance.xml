@@ -10,7 +10,6 @@
   <string name="icon_color">Symbol Farbe</string>
   <string name="global_customization">Globale Anpassung</string>
   <string name="main_activity_layout">Haupt-Aktivitäten Layout</string>
-  <string name="main_activity_layout_desc">Setzte das Haupt-Aktivitäten Layout</string>
   <string name="rounded_icons">Runde Symbole</string>
   <string name="rounded_icons_desc">Profilfotos und Gruppengespräch Symbole werden abgerundet</string>
   <string name="tint_nav">Färbe Navigationsbar</string>
