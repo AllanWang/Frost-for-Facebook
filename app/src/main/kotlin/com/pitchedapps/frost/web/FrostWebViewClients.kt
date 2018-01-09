@@ -1,15 +1,11 @@
 package com.pitchedapps.frost.web
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.pitchedapps.frost.activities.LoginActivity
-import com.pitchedapps.frost.activities.MainActivity
-import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*

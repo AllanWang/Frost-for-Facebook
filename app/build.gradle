@@ -177,6 +177,7 @@ dependencies {
     implementation"com.mikepenz:fastadapter-extensions:${FAST_ADAPTER_EXTENSIONS}@aar"
 
     implementation "com.github.bumptech.glide:okhttp3-integration:${GLIDE}"
+    kapt "com.github.bumptech.glide:compiler:${GLIDE}"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.3"
 
