@@ -15,6 +15,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.parsers.FrostNotif
 import com.pitchedapps.frost.services.FrostRunnable
@@ -52,7 +53,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
         val thumbnail: ImageView by bindView(R.id.item_thumbnail)
 
         private val glide
-            get() = Glide.with(itemView)
+            get() = GlideApp.with(itemView)
 
         override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
             val notif = item.notification

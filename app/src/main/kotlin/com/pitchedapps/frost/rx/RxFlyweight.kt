@@ -58,7 +58,7 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
             if (source != null && condition != null && validate(input, condition))
                 return source
 
-            val newSource = createNewSource(input).cache()
+            val newSource = createNewSource(input).cache().doOnError { sources.remove(input) }
 
             sources.put(input, newSource)
             return newSource

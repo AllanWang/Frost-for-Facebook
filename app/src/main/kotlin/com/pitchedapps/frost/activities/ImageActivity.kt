@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap

@@ -31,6 +31,7 @@ import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.MessageParser
@@ -201,7 +202,7 @@ enum class NotificationType(
             if (profileUrl != null) {
                 context.runOnUiThread {
                     //todo verify if context is valid?
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .asBitmap()
                             .load(profileUrl)
                             .transform(FrostGlide.circleCrop)
