@@ -3,7 +3,6 @@ package com.pitchedapps.frost.web
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
-
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
@@ -36,6 +35,11 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         context.runOnUiThread { context.showVideo(url) }
         return true
     }
+    if (url.isImageUrl) {
+        L.d { "Found fb image" }
+        context.launchImageActivity(url.formattedFbUrl, null)
+        return true
+    }
     if (!url.isIndependent) {
         L.d { "Forbid overlay switch" }
         return false
@@ -43,13 +47,14 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     if (!Prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
         L.v { "Check web request from overlay" }
+        val shouldUseBasic = url.formattedFbUrl.shouldUseBasicAgent
         //already overlay; manage user agent
-        if (userAgentString != USER_AGENT_BASIC && url.formattedFbUrl.shouldUseBasicAgent) {
+        if (userAgentString != USER_AGENT_BASIC && shouldUseBasic) {
             L.i { "Switch to basic agent overlay" }
             context.launchWebOverlayBasic(url)
             return true
         }
-        if (context is WebOverlayBasicActivity && !url.formattedFbUrl.shouldUseBasicAgent) {
+        if (context is WebOverlayBasicActivity && !shouldUseBasic) {
             L.i { "Switch from basic agent" }
             context.launchWebOverlay(url)
             return true

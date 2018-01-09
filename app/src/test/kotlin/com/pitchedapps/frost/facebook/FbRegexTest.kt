@@ -56,4 +56,5 @@ class FbRegexTest {
         val img = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/89056_${id}_98239_o.jpg"
         assertEquals(id, FB_IMAGE_ID_MATCHER.find(img)[1]?.toLongOrNull())
     }
+
 }
