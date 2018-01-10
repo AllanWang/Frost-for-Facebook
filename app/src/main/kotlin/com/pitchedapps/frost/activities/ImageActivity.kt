@@ -82,7 +82,7 @@ class ImageActivity : KauBaseActivity() {
         private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
         private const val IMG_TAG = "Frost"
         private const val IMG_EXTENSION = ".png"
-        private const val PURGE_TIME: Long = 60 * 60 * 1000 // 1 hour block
+        private const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 
@@ -90,9 +90,8 @@ class ImageActivity : KauBaseActivity() {
 
     val TEXT: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
-    val IMAGE_HASH: String by lazy {
-        FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1] ?: IMAGE_URL.hashCode().toString()
-    }
+    // a unique image identifier based on the id (if it exists), and its hash
+    val IMAGE_HASH: String by lazy { "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode() ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,7 +123,8 @@ class ImageActivity : KauBaseActivity() {
             themeWindow = false
         }
         doAsync({
-            L.e(it) { "Failed to load image" }
+            L.e(it) { "Failed to load image $IMAGE_HASH" }
+            errorRef = it
             fabAction = FabStates.ERROR
         }) {
             loadImage { file ->
@@ -149,15 +149,21 @@ class ImageActivity : KauBaseActivity() {
     private inline fun loadImage(callback: (file: File?) -> Unit) {
         val local = File(tempDir, IMAGE_HASH)
         if (local.exists() && local.length() > 1) {
+            local.setLastModified(System.currentTimeMillis())
             L.d { "Loading from local cache ${local.absolutePath}" }
             return callback(local)
         }
         val response = Request.Builder()
                 .url(IMAGE_URL)
                 .get()
-                .call().execute()
-        if (!response.isSuccessful)
+                .call()
+                .execute()
+
+        if (!response.isSuccessful) {
+            L.e { "Unsuccessful response for image" }
+            errorRef = Throwable("Unsuccessful response for image")
             return callback(null)
+        }
 
         if (!local.createFreshFile()) {
             L.e { "Could not create temp file" }
