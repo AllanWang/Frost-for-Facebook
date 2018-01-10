@@ -3,6 +3,8 @@
 ## v1.7.7
 * Fix overlay loading
 * Improve image loading
+* Launch image viewer when opening full sized image
+* Improve filtering system
 
 ## v1.7.5
 * Mark notifications as read when clicked!
