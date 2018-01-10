@@ -147,7 +147,10 @@ enum class NotificationType(
     fun fetch(context: Context, data: CookieModel) {
         val response = parser.parse(data.cookie)
                 ?: return L.v { "$name notification data not found" }
-        val notifs = response.data.getUnreadNotifications(data)
+        val notifs = response.data.getUnreadNotifications(data).filter {
+            val text = it.text
+            Prefs.notificationKeywords.any { text.contains(it, true) }
+        }
         if (notifs.isEmpty()) return
         var notifCount = 0
         val userId = data.id
