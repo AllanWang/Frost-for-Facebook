@@ -10,7 +10,6 @@ import android.widget.ImageView
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -24,6 +23,7 @@ import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.LoginWebView
@@ -62,7 +62,7 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors{
+        setFrostColors {
             toolbar(toolbar)
         }
         web.loadLogin({ refresh = it != 100 }) { cookie ->
@@ -73,7 +73,7 @@ class LoginActivity : BaseActivity() {
                 loadInfo(cookie)
             })
         }
-        profileLoader = Glide.with(profile)
+        profileLoader = GlideApp.with(profile)
     }
 
     private fun loadInfo(cookie: CookieModel) {

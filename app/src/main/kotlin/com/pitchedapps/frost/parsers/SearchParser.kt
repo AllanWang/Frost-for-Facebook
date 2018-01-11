@@ -55,6 +55,8 @@ data class FrostSearch(val href: String, val title: String, val description: Str
 
 private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
+    override var nameRes = FbItem._SEARCH.titleId
+
     override val url = "${FbItem._SEARCH.url}?q=a"
 
     override fun parseImpl(doc: Document): FrostSearches? {

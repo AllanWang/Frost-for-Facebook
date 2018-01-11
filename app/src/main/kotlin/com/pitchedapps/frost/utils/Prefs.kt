@@ -113,6 +113,8 @@ object Prefs : KPref() {
 
     var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf())
 
+    var notificationsGeneral: Boolean by kpref("notification_general", true)
+
     var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
 
     var notificationsInstantMessages: Boolean by kpref("notification_im", true)

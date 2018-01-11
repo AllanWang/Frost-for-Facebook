@@ -1,12 +1,8 @@
 package com.pitchedapps.frost.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.FloatingActionButton
@@ -20,24 +16,22 @@ import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.*
-import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.request.target.BaseTarget
-import com.bumptech.glide.request.target.SizeReadyCallback
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
+import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import okhttp3.Request
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.io.File
+import java.io.FileFilter
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -70,12 +64,13 @@ class ImageActivity : KauBaseActivity() {
     internal var savedFile: File? = null
     /**
      * Indicator for fab's click result
+     * Can be called from any thread
      */
     internal var fabAction: FabStates = FabStates.NOTHING
         set(value) {
             if (field == value) return
             field = value
-            value.update(fab)
+            runOnUiThread { value.update(fab) }
         }
 
     companion object {
@@ -87,25 +82,27 @@ class ImageActivity : KauBaseActivity() {
         private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
         private const val IMG_TAG = "Frost"
         private const val IMG_EXTENSION = ".png"
+        private const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 
-    val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
+    val IMAGE_URL: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
 
-    val text: String? by lazy { intent.getStringExtra(ARG_TEXT) }
+    val TEXT: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
-    private val glide: RequestManager by lazy { Glide.with(this) }
+    // a unique image identifier based on the id (if it exists), and its hash
+    val IMAGE_HASH: String by lazy { "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode() ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}" }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent?.extras ?: return finish()
         L.i { "Displaying image" }
-        val layout = if (!text.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
+        val layout = if (!TEXT.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
         caption?.setTextColor(Prefs.textColor)
         caption?.setBackgroundColor(Prefs.bgColor.colorToForeground(0.2f).withAlpha(255))
-        caption?.text = text
+        caption?.text = TEXT
         progress.tint(Prefs.accentColor)
         panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
@@ -119,90 +116,76 @@ class ImageActivity : KauBaseActivity() {
             override fun onImageLoadError(e: Exception?) {
                 errorRef = e
                 e.logFrostAnswers("Image load error")
-                imageCallback(null, false)
+                fabAction = FabStates.ERROR
             }
         })
-        glide.asBitmap().load(imageUrl).into(PhotoTarget(this::imageCallback))
         setFrostColors {
             themeWindow = false
         }
-    }
-
-    /**
-     * Callback to add image to view
-     * [resource] is guaranteed to be nonnull when [success] is true
-     * and null when it is false
-     */
-    private fun imageCallback(resource: Bitmap?, success: Boolean) {
-        if (progress.isVisible) progress.fadeOut()
-        if (success) {
-            saveTempImage(resource!!, {
-                if (it == null) {
-                    imageCallback(null, false)
-                } else {
-                    photo.setImage(ImageSource.uri(it))
-                    fabAction = FabStates.DOWNLOAD
-                    photo.animate().alpha(1f).scaleXY(1f).withEndAction(fab::show).start()
-                }
-            })
-        } else {
+        doAsync({
+            L.e(it) { "Failed to load image $IMAGE_HASH" }
+            errorRef = it
             fabAction = FabStates.ERROR
-            fab.show()
-        }
-    }
-
-    /**
-     * Bitmap load handler
-     */
-    class PhotoTarget(val callback: (resource: Bitmap?, success: Boolean) -> Unit) : BaseTarget<Bitmap>() {
-
-        override fun removeCallback(cb: SizeReadyCallback?) {}
-
-        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) =
-                callback(resource, true)
-
-        override fun onLoadFailed(errorDrawable: Drawable?) =
-                callback(null, false)
-
-        override fun getSize(cb: SizeReadyCallback) =
-                cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-
-    }
-
-    private fun saveTempImage(resource: Bitmap, callback: (uri: Uri?) -> Unit) {
-        var photoFile: File? = null
-        try {
-            photoFile = createPrivateMediaFile()
-        } catch (e: IOException) {
-            errorRef = e
-            logImage(e)
-        } finally {
-            if (photoFile == null) {
-                callback(null)
-            } else {
-                tempFile = photoFile
-                L.d { "Temp image path ${tempFile?.absolutePath}" }
-                // File created; proceed with request
-                val photoURI = frostUriFromFile(photoFile)
-                photoFile.outputStream().use { resource.compress(Bitmap.CompressFormat.PNG, 100, it) }
-                callback(photoURI)
+        }) {
+            loadImage { file ->
+                if (file == null) {
+                    fabAction = FabStates.ERROR
+                    return@loadImage
+                }
+                tempFile = file
+                L.d { "Temp image path ${file.absolutePath}" }
+                uiThread {
+                    photo.setImage(ImageSource.uri(frostUriFromFile(file)))
+                    fabAction = FabStates.DOWNLOAD
+                    photo.animate().alpha(1f).scaleXY(1f).start()
+                }
             }
         }
     }
 
-    private fun logImage(e: Exception?) {
-        if (!Prefs.analytics) return
-        val error = e ?: IOException("$imageUrl failed to load")
-        L.e(error) { "$imageUrl failed to load" }
-    }
+    /**
+     * Returns a file pointing to the image, or null if something goes wrong
+     */
+    private inline fun loadImage(callback: (file: File?) -> Unit) {
+        val local = File(tempDir, IMAGE_HASH)
+        if (local.exists() && local.length() > 1) {
+            local.setLastModified(System.currentTimeMillis())
+            L.d { "Loading from local cache ${local.absolutePath}" }
+            return callback(local)
+        }
+        val response = Request.Builder()
+                .url(IMAGE_URL)
+                .get()
+                .call()
+                .execute()
 
-    @Throws(IOException::class)
-    private fun createPrivateMediaFile(): File {
-        val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
-        val imageFileName = "${IMG_TAG}_${timeStamp}_"
-        if (!tempDir.exists())
-            tempDir.mkdirs()
-        return File.createTempFile(imageFileName, IMG_EXTENSION, tempDir)
+        if (!response.isSuccessful) {
+            L.e { "Unsuccessful response for image" }
+            errorRef = Throwable("Unsuccessful response for image")
+            return callback(null)
+        }
+
+        if (!local.createFreshFile()) {
+            L.e { "Could not create temp file" }
+            return callback(null)
+        }
+
+        var valid = false
+
+        response.body()?.byteStream()?.use { input ->
+            local.outputStream().use { output ->
+                input.copyTo(output)
+                valid = true
+            }
+        }
+
+        if (!valid) {
+            L.e { "Failed to copy file" }
+            local.delete()
+            return callback(null)
+        }
+
+        callback(local)
     }
 
     @Throws(IOException::class)
@@ -218,7 +201,7 @@ class ImageActivity : KauBaseActivity() {
     @Throws(IOException::class)
     private fun downloadImageTo(file: File) {
         val body = Request.Builder()
-                .url(imageUrl)
+                .url(IMAGE_URL)
                 .get()
                 .call()
                 .execute()
@@ -270,8 +253,10 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onDestroy() {
         tempFile = null
-        tempDir.deleteRecursively()
-        L.d { "Closing $localClassName" }
+        val purge = System.currentTimeMillis() - PURGE_TIME
+        tempDir.listFiles(FileFilter { it.isFile && it.lastModified() < purge }).forEach {
+            it.delete()
+        }
         super.onDestroy()
     }
 }
@@ -287,7 +272,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                     if (activity.errorRef != null)
                         L.e(activity.errorRef) { "ImageActivity error report" }
                     activity.sendFrostEmail(R.string.debug_image_link_subject) {
-                        addItem("Url", activity.imageUrl)
+                        addItem("Url", activity.IMAGE_URL)
                         addItem("Message", activity.errorRef?.message ?: "Null")
                     }
                 }

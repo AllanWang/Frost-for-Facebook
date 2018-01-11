@@ -8,8 +8,8 @@
   <string name="add_keyword">Dodaj słowo kluczowe</string>
   <string name="hint_keyword">Wpisz słowo kluczowe i naciśnij +</string>
   <string name="empty_keyword">Puste słowo kluczowe</string>
-  <string name="notification_all_accounts">Powiadamiaj ze wszystkich kont</string>
-  <string name="notification_all_accounts_desc">Otrzymuj powiadomienia dla każdego zalogowanego konta. Wyłączenie spowoduje sprawdzanie powiadomień, tylko z obecnie wybranego konta.</string>
+  <string name="notification_general_all_accounts">Powiadamiaj ze wszystkich kont</string>
+  <string name="notification_general_all_accounts_desc">Otrzymuj powiadomienia dla każdego zalogowanego konta. Wyłączenie spowoduje sprawdzanie powiadomień, tylko z obecnie wybranego konta.</string>
   <string name="notification_messages">Włącz powiadomienia o wiadomościach</string>
   <string name="notification_messages_desc">Otrzymuj natychmiastowe powiadomienia dla obecnego konta.</string>
   <string name="notification_messages_all_accounts">Powiadamiaj ze wszystkich kont</string>

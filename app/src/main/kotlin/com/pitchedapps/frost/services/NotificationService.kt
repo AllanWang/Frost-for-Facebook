@@ -61,7 +61,8 @@ class NotificationService : JobService() {
             val cookies = loadFbCookiesSync()
             cookies.forEach {
                 val current = it.id == currentId
-                if (current || Prefs.notificationAllAccounts)
+                if (Prefs.notificationsGeneral
+                        && (current || Prefs.notificationAllAccounts))
                     NotificationType.GENERAL.fetch(context, it)
                 if (Prefs.notificationsInstantMessages
                         && (current || Prefs.notificationsImAllAccounts))
