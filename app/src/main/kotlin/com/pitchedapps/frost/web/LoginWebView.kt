@@ -31,12 +31,8 @@ class LoginWebView @JvmOverloads constructor(
     private lateinit var loginCallback: (CookieModel) -> Unit
     private lateinit var progressCallback: (Int) -> Unit
 
-    init {
-        FbCookie.reset(this::setupWebview)
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview() {
+    private fun setupWebview() {
         settings.javaScriptEnabled = true
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = LoginClient()
@@ -47,7 +43,10 @@ class LoginWebView @JvmOverloads constructor(
         this.progressCallback = progressCallback
         this.loginCallback = loginCallback
         L.d { "Begin loading login" }
-        loadUrl(FB_LOGIN_URL)
+        FbCookie.reset {
+            setupWebview()
+            loadUrl(FB_LOGIN_URL)
+        }
     }
 
     private inner class LoginClient : BaseWebViewClient() {
@@ -86,7 +85,7 @@ class LoginWebView @JvmOverloads constructor(
         }
     }
 
-    inner class LoginChromeClient : WebChromeClient() {
+    private inner class LoginChromeClient : WebChromeClient() {
         override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
             L.v { "Login Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
             return true
