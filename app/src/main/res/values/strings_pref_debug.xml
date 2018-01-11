@@ -16,4 +16,7 @@
     <string name="debug_web_desc">Navigate to the page with an issue and send the resources for debugging.</string>
 
     <string name="parsing_data">Parsing Data</string>
+
+    <string name="debug_parsers">Debug Parsers</string>
+    <string name="debug_parsers_desc">Launch one of the available parsers to debug its response data</string>
 </resources>

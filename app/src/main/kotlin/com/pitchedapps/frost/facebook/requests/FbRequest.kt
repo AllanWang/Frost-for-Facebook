@@ -2,6 +2,7 @@ package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.rx.RxFlyweight
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -12,7 +13,17 @@ import org.apache.commons.text.StringEscapeUtils
 /**
  * Created by Allan Wang on 21/12/17.
  */
-private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
+private class RxAuth : RxFlyweight<String, Long, RequestAuth>() {
+
+    override fun call(input: String) = input.getAuth()
+
+    override fun validate(input: String, cond: Long) =
+            System.currentTimeMillis() - cond < 3600000 // valid for an hour
+
+    override fun cache(input: String) = System.currentTimeMillis()
+}
+
+private val auth = RxAuth()
 
 /**
  * Synchronously fetch [RequestAuth] from cookie
@@ -21,18 +32,13 @@ private val authMap: MutableMap<String, RequestAuth> = mutableMapOf()
  */
 fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     if (this == null) return fail()
-    val savedAuth = authMap[this]
-    if (savedAuth != null) {
-        savedAuth.action()
-    } else {
-        val auth = getAuth()
-        if (!auth.isValid) {
-            L.e { "Attempted fbrequest with invalid auth" }
-            return fail()
+    auth(this).subscribe { a: RequestAuth?, _ ->
+        if (a?.isValid == true)
+            a.action()
+        else {
+            L.e { "Failed auth for ${hashCode()}" }
+            fail()
         }
-        authMap.put(this, auth)
-        L._i { "Found auth $auth" }
-        auth.action()
     }
 }
 
@@ -94,6 +100,7 @@ private fun String.requestBuilder() = Request.Builder()
 fun Request.Builder.call() = client.newCall(build())!!
 
 fun String.getAuth(): RequestAuth {
+    L.v { "Getting auth for ${hashCode()}" }
     var auth = RequestAuth(cookie = this)
     val id = FB_USER_MATCHER.find(this)[1]?.toLong() ?: return auth
     auth = auth.copy(userId = id)

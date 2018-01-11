@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
@@ -18,6 +17,7 @@ import com.pitchedapps.frost.dbflow.CookiesDb
 import com.pitchedapps.frost.dbflow.FbTabsDb
 import com.pitchedapps.frost.dbflow.NotificationDb
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.FrostPglAdBlock
@@ -86,8 +86,9 @@ class FrostApp : Application() {
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
                 val c = imageView.context
-                val old = Glide.with(c).load(uri).apply(RequestOptions().placeholder(placeholder))
-                Glide.with(c).load(uri).apply(RequestOptions()
+                val request = GlideApp.with(c)
+                val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
+                request.load(uri).apply(RequestOptions()
                         .signature(ApplicationVersionSignature.obtain(c)))
                         .thumbnail(old).into(imageView)
             }

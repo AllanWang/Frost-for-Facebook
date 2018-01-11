@@ -8,8 +8,8 @@
   <string name="add_keyword">Schlagwort hinzufügen</string>
   <string name="hint_keyword">Gebe das Schlagwort ein und drücke +</string>
   <string name="empty_keyword">Leeres Schlagwort</string>
-  <string name="notification_all_accounts">Benachrichtigungen von allen Accounts</string>
-  <string name="notification_all_accounts_desc">Bekomme Benachrichtigungen von allen Accounts die eingeloggt sind. Deaktiviere dies, um nur noch Benachrichtigungen von dem aktuellen Account zu bekommen.</string>
+  <string name="notification_general_all_accounts">Benachrichtigungen von allen Accounts</string>
+  <string name="notification_general_all_accounts_desc">Bekomme Benachrichtigungen von allen Accounts die eingeloggt sind. Deaktiviere dies, um nur noch Benachrichtigungen von dem aktuellen Account zu bekommen.</string>
   <string name="notification_messages">Aktiviere Nachrichten Benachrichtigungen</string>
   <string name="notification_messages_desc">Bekomme sofortige Benachrichtigungen für deine Nachrichten für den aktuellen Account.</string>
   <string name="notification_messages_all_accounts">Benachrichtigungen für Nachrichten von allen Accounts</string>

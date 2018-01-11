@@ -8,8 +8,8 @@
   <string name="add_keyword">Aggiungi parole chiave</string>
   <string name="hint_keyword">Scrivi la parola e premi +</string>
   <string name="empty_keyword">Parola Chiave Vuota</string>
-  <string name="notification_all_accounts">Notifica da tutti gli accounts</string>
-  <string name="notification_all_accounts_desc">Ricevi notifiche per ogni account registrato. Disattivando questa opzione riceverai notifiche solo dall\'account selezionato.</string>
+  <string name="notification_general_all_accounts">Notifica da tutti gli accounts</string>
+  <string name="notification_general_all_accounts_desc">Ricevi notifiche per ogni account registrato. Disattivando questa opzione riceverai notifiche solo dall\'account selezionato.</string>
   <string name="notification_messages">Attiva notifiche messaggi</string>
   <string name="notification_messages_desc">Ricevi notifiche istantanee di messaggi per il tuo account.</string>
   <string name="notification_messages_all_accounts">Notifica messaggi da tutti gli account</string>

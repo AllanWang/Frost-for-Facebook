@@ -250,8 +250,15 @@ inline val String?.isFacebookUrl
 /**
  * [true] if url is a video and can be accepted by VideoViewer
  */
-inline val String?.isVideoUrl
-    get() = this != null && (startsWith(VIDEO_REDIRECT) || startsWith("https://video-"))
+inline val String.isVideoUrl
+    get() = startsWith(VIDEO_REDIRECT) || startsWith("https://video-")
+
+/**
+ * [true] if url is or redirects to an explicit facebook image
+ */
+inline val String.isImageUrl
+    get() = (contains("fbcdn.net") && (contains(".png") || contains(".jpg")))
+            || contains("/photo/view_full_size")
 
 /**
  * [true] if url can be displayed in a different webview
@@ -308,6 +315,7 @@ fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
+    addItem("Locale", Locale.getDefault().displayName)
 }
 
 fun frostJsoup(url: String)

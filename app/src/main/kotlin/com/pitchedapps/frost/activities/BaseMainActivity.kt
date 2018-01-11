@@ -119,10 +119,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         viewPager.offscreenPageLimit = TAB_COUNT
         setupDrawer(savedInstanceState)
 
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
         setFrostColors {
             toolbar(toolbar)
             themeWindow = false
@@ -198,7 +194,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             }
                         }
                         -3L -> launchNewTask<LoginActivity>(clearStack = false)
-                        -4L -> launchNewTask<SelectorActivity>( cookies(), false)
+                        -4L -> launchNewTask<SelectorActivity>(cookies(), false)
                         else -> {
                             FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }

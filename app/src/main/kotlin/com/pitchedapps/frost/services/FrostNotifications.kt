@@ -19,7 +19,6 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.pitchedapps.frost.BuildConfig
@@ -31,7 +30,7 @@ import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.glide.FrostGlide
-import com.pitchedapps.frost.glide.transform
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.parsers.NotifParser
@@ -146,7 +145,10 @@ enum class NotificationType(
     fun fetch(context: Context, data: CookieModel) {
         val response = parser.parse(data.cookie)
                 ?: return L.v { "$name notification data not found" }
-        val notifs = response.data.getUnreadNotifications(data)
+        val notifs = response.data.getUnreadNotifications(data).filter {
+            val text = it.text
+            Prefs.notificationKeywords.any { text.contains(it, true) }
+        }
         if (notifs.isEmpty()) return
         var notifCount = 0
         val userId = data.id
@@ -201,7 +203,7 @@ enum class NotificationType(
             if (profileUrl != null) {
                 context.runOnUiThread {
                     //todo verify if context is valid?
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .asBitmap()
                             .load(profileUrl)
                             .transform(FrostGlide.circleCrop)

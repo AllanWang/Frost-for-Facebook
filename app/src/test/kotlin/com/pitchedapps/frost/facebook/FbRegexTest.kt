@@ -49,4 +49,12 @@ class FbRegexTest {
         val data = "\"uri\":\"$url\"}"
         assertEquals(url, FB_JSON_URL_MATCHER.find(data)[1])
     }
+
+    @Test
+    fun imageIdRegex() {
+        val id = 123456L
+        val img = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/89056_${id}_98239_o.jpg"
+        assertEquals(id, FB_IMAGE_ID_MATCHER.find(img)[1]?.toLongOrNull())
+    }
+
 }

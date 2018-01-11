@@ -25,6 +25,12 @@ import org.jsoup.select.Elements
 interface FrostParser<out T : Any> {
 
     /**
+     * Name associated to parser
+     * Purely for display
+     */
+    var nameRes: Int
+
+    /**
      * Url to request from
      */
     val url: String

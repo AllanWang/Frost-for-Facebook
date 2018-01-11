@@ -8,8 +8,8 @@
   <string name="add_keyword">Engadir palabra chave</string>
   <string name="hint_keyword">Escribe a palabra e toca en +</string>
   <string name="empty_keyword">Palabra chave baleira</string>
-  <string name="notification_all_accounts">Notificar de todas as contas</string>
-  <string name="notification_all_accounts_desc">Obtén notificacións de todas as contas con que iniciaras sesión. Ao desactivar isto, só obterás notificacións da conta actualmente seleccionada.</string>
+  <string name="notification_general_all_accounts">Notificar de todas as contas</string>
+  <string name="notification_general_all_accounts_desc">Obtén notificacións de todas as contas con que iniciaras sesión. Ao desactivar isto, só obterás notificacións da conta actualmente seleccionada.</string>
   <string name="notification_messages">Activar notificacións de mensaxes</string>
   <string name="notification_messages_desc">Obtén notificacións instantáneas de mensaxes para a túa conta actual.</string>
   <string name="notification_messages_all_accounts">Notificar mensaxes de todas as contas</string>

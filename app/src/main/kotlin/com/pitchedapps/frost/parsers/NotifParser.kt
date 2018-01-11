@@ -60,6 +60,8 @@ data class FrostNotif(val id: Long,
 
 private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
 
+    override var nameRes = FbItem.NOTIFICATIONS.titleId
+
     override val url = FbItem.NOTIFICATIONS.url
 
     override fun parseImpl(doc: Document): FrostNotifs? {
