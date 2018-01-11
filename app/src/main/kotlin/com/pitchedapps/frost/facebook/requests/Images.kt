@@ -14,7 +14,6 @@ import com.bumptech.glide.signature.ObjectKey
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.utils.L
 import okhttp3.Call
 import okhttp3.Request
 import java.io.IOException

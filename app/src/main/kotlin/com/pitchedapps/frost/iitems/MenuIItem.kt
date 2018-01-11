@@ -11,7 +11,6 @@ import ca.allanwang.kau.utils.gone
 import ca.allanwang.kau.utils.visible
 import com.mikepenz.fastadapter.FastAdapter
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.requests.HdImageMaybe
 import com.pitchedapps.frost.facebook.requests.MenuFooterItem
 import com.pitchedapps.frost.facebook.requests.MenuHeader
 import com.pitchedapps.frost.facebook.requests.MenuItem

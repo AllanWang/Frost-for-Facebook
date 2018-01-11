@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import ca.allanwang.kau.iitems.KauIItem
 import ca.allanwang.kau.utils.*
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -18,7 +17,6 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.utils.Prefs
 
 /**

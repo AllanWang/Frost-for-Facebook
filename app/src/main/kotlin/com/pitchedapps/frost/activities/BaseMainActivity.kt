@@ -111,20 +111,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         "Frost id" to Prefs.frostId)
             }
         }
-        L.e { 2 }
         controlWebview = WebView(this)
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)
         setSupportActionBar(toolbar)
-        L.e { 3 }
         adapter = SectionsPagerAdapter(loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = TAB_COUNT
         setupDrawer(savedInstanceState)
 
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
         setFrostColors {
             toolbar(toolbar)
             themeWindow = false

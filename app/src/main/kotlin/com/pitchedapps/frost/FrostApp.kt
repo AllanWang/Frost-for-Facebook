@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
