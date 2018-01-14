@@ -6,14 +6,14 @@
     <item text="" />
     -->
 
+    <version title="v1.7.8" />
+    <item text="Emergency fix for notifications" />
+
     <version title="v1.7.7" />
     <item text="Fix overlay loading" />
     <item text="Improve image loading" />
     <item text="Launch image viewer when opening full sized image" />
     <item text="Improve filtering system" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v1.7.5" />
     <item text="Mark notifications as read when clicked!" />
