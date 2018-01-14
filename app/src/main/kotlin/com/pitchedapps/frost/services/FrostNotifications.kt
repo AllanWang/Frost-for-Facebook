@@ -147,7 +147,7 @@ enum class NotificationType(
                 ?: return L.v { "$name notification data not found" }
         val notifs = response.data.getUnreadNotifications(data).filter {
             val text = it.text
-            Prefs.notificationKeywords.any { text.contains(it, true) }
+            Prefs.notificationKeywords.none { text.contains(it, true) }
         }
         if (notifs.isEmpty()) return
         var notifCount = 0
