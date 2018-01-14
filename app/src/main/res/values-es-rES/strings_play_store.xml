@@ -8,7 +8,7 @@
   <string name="play_store_unsupported">Esta versión de la app no fue diseñada para compras. Por favor vuelve a instalarla desde Google Play Store si persiste el error.\nSi deseas donar, sin obtener características adicionales, puedes hacerlo vía PayPal.</string>
   <string name="play_thank_you">Gracias!</string>
   <string name="purchases_restored">Compras restauradas</string>
-  <string name="purchases_restored_with_pro">Frost Pro ha sido restaurado. Disfruta!</string>
+  <string name="purchases_restored_with_pro">Frost Pro ha sido restaurado. ¡Disfrutalo!</string>
   <string name="purchases_restored_without_pro">Parece que esta no es la versión Pro. Si este problema persiste, contactame y adjuntame tu recibo de compra.</string>
   <string name="restoring_purchases">Restaurando compras…</string>
   <string name="custom_pro">Personalizado [Pro]</string>
