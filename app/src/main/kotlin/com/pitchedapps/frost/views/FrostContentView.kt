@@ -85,10 +85,12 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             else
                 progress.progress = it
         }
-        refreshObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            refresh.isRefreshing = it
-            refresh.isEnabled = true
-        }
+        refreshObservable.observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe {
+                    refresh.isRefreshing = it
+                    refresh.isEnabled = true
+                }
         refresh.setOnRefreshListener { coreView.reload(true) }
 
         reloadThemeSelf()

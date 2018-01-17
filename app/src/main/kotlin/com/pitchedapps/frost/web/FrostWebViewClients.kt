@@ -77,6 +77,8 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                             && Prefs.aggressiveRecents)) {
                 postDelayed(WEB_COMMIT_LOAD_DELAY) { refresh.onNext(false) }
             }
+        else
+            refresh.onNext(false)
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
