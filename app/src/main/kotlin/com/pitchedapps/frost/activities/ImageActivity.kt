@@ -116,6 +116,7 @@ class ImageActivity : KauBaseActivity() {
             override fun onImageLoadError(e: Exception?) {
                 errorRef = e
                 e.logFrostAnswers("Image load error")
+                L.e { "Failed to load image $IMAGE_URL" }
                 fabAction = FabStates.ERROR
             }
         })
@@ -128,6 +129,7 @@ class ImageActivity : KauBaseActivity() {
             fabAction = FabStates.ERROR
         }) {
             loadImage { file ->
+                uiThread { progress.fadeOut() }
                 if (file == null) {
                     fabAction = FabStates.ERROR
                     return@loadImage

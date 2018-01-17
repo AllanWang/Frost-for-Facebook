@@ -156,6 +156,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
 }
 
+private const val EMIT_THEME = 0b1
+private const val EMIT_ID = 0b10
+private const val EMIT_COMPLETE = EMIT_THEME or EMIT_ID
+private const val EMIT_FINISH = 0
+
 /**
  * Client variant for the menu view
  */
@@ -177,7 +182,9 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     override fun emit(flag: Int) {
         super.emit(flag)
-        super.injectAndFinish()
+        when (flag) {
+            EMIT_FINISH -> super.injectAndFinish()
+        }
     }
 
     override fun onPageFinishedActions(url: String) {

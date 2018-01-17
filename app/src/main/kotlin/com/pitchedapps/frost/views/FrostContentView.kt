@@ -143,12 +143,12 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
                 if (it) {
                     loading = true
-                    if (isVisible) fadeOut(duration = 200L, offset = WEB_LOAD_DELAY)
+                    if (isVisible) fadeOut(duration = 200L)
                     start = System.currentTimeMillis()
                 } else if (loading) {
                     dispose?.dispose()
                     if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
-                    else fadeIn(duration = 100L)
+                    else fadeIn(duration = 100L, offset = WEB_LOAD_DELAY)
                     L.v { "Transition loaded in ${System.currentTimeMillis() - start} ms" }
                 }
             }

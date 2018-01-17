@@ -84,4 +84,10 @@ class FbUrlTest {
 
     }
 
+    @Test
+    fun viewFullImage() {
+        val url = "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/asdf_n.jpg?efg=asdf&oh=asdf&oe=asdf"
+        assertFbFormat(url, "#!$url")
+    }
+
 }

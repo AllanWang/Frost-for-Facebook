@@ -26,30 +26,35 @@ class JsBuilder {
     }
 
     fun single(tag: String): JsBuilder {
-        this.tag = tag
+        this.tag = "_frost_${tag.toLowerCase(Locale.CANADA)}"
         return this
     }
 
     fun build() = JsInjector(toString())
 
     override fun toString(): String {
-        val builder = StringBuilder().append("!function(){")
-        if (css.isNotBlank()) {
-            val cssMin = css.replace(Regex("\\s*\n\\s*"), "")
-            builder.append("var a=document.createElement('style');a.innerHTML='$cssMin';document.head.appendChild(a);")
+        val tag = this.tag
+        val builder = StringBuilder().apply {
+            append("!function(){")
+            if (css.isNotBlank()) {
+                val cssMin = css.replace(Regex("\\s*\n\\s*"), "")
+                append("var a=document.createElement('style');")
+                append("a.innerHTML='$cssMin';")
+                if (tag != null) append("a.id='$tag';")
+                append("document.head.appendChild(a);")
+            }
+            if (js.isNotBlank())
+                append(js)
         }
-        if (js.isNotBlank())
-            builder.append(js)
         var content = builder.append("}()").toString()
-        if (tag != null) content = singleInjector(tag!!, content)
+        if (tag != null) content = singleInjector(tag, content)
         return content
     }
 
     private fun singleInjector(tag: String, content: String) = StringBuilder().apply {
-        val name = "_frost_${tag.toLowerCase(Locale.CANADA)}"
-        append("if (!window.hasOwnProperty(\"$name\")) {")
-        append("console.log(\"Registering $name\");")
-        append("window.$name = true;")
+        append("if (!window.hasOwnProperty(\"$tag\")) {")
+        append("console.log(\"Registering $tag\");")
+        append("window.$tag = true;")
         append(content)
         append("}")
     }.toString()
