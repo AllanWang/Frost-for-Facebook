@@ -14,6 +14,7 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.web.WEB_LOAD_DELAY
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -136,14 +137,17 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         with(coreView) {
             var dispose: Disposable? = null
             var loading = false
+            var start = -1L
             dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
                 if (it) {
                     loading = true
-                    if (isVisible) fadeOut(duration = 200L)
+                    if (isVisible) fadeOut(duration = 200L, offset = WEB_LOAD_DELAY)
+                    start = System.currentTimeMillis()
                 } else if (loading) {
                     dispose?.dispose()
                     if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
                     else fadeIn(duration = 100L)
+                    L.v { "Transition loaded in ${System.currentTimeMillis() - start} ms" }
                 }
             }
         }

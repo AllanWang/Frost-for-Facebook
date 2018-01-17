@@ -17,10 +17,9 @@ class MainActivity : BaseMainActivity() {
     var lastPosition = -1
     val headerBadgeObservable = PublishSubject.create<String>()!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupViewPager()
+    override fun onNestedCreate(savedInstanceState: Bundle?) {
         setupTabs()
+        setupViewPager()
     }
 
     private fun setupViewPager() {

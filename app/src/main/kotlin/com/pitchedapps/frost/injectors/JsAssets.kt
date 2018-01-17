@@ -26,7 +26,7 @@ enum class JsAssets : InjectorContract {
         }
     }
 
-    override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
+    override fun inject(webView: WebView, callback: () -> Unit) {
         injector(webView.context).inject(webView, callback)
     }
 

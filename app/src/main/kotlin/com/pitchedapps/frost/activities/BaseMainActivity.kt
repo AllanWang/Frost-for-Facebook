@@ -94,10 +94,30 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
-    private lateinit var controlWebview: WebView
+    private var controlWebview: WebView? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override final fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val start = System.currentTimeMillis()
+        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
+        setFrostColors {
+            toolbar(toolbar)
+            themeWindow = false
+            header(appBar)
+            background(viewPager)
+        }
+        L.i { "Main AAA ${System.currentTimeMillis() - start} ms" }
+        setSupportActionBar(toolbar)
+        adapter = SectionsPagerAdapter(loadFbTabs())
+        viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = TAB_COUNT
+        L.i { "Main BBB ${System.currentTimeMillis() - start} ms" }
+        L.i { "Main CCC ${System.currentTimeMillis() - start} ms" }
+        tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
+        onNestedCreate(savedInstanceState)
+        L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
+        controlWebview = WebView(this)
+        onCreateBilling()
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.prevVersionCode = Prefs.versionCode
             Prefs.versionCode = BuildConfig.VERSION_CODE
@@ -111,23 +131,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         "Frost id" to Prefs.frostId)
             }
         }
-        controlWebview = WebView(this)
-        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
-        setSupportActionBar(toolbar)
-        adapter = SectionsPagerAdapter(loadFbTabs())
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = TAB_COUNT
         setupDrawer(savedInstanceState)
-
-        setFrostColors {
-            toolbar(toolbar)
-            themeWindow = false
-            header(appBar)
-            background(viewPager)
-        }
-        tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
-        onCreateBilling()
+        L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
     }
+
+    /**
+     * Injector to handle creation for sub classes
+     */
+    protected abstract fun onNestedCreate(savedInstanceState: Bundle?)
 
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
@@ -351,12 +362,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onResume() {
         super.onResume()
-        FbCookie.switchBackUser { }
-        controlWebview.resumeTimers()
+        FbCookie.switchBackUser{}
+        controlWebview?.resumeTimers()
     }
 
     override fun onPause() {
-        controlWebview.pauseTimers()
+        controlWebview?.pauseTimers()
         L.v { "Pause main web timers" }
         super.onPause()
     }
@@ -371,7 +382,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onDestroy() {
         onDestroyBilling()
-        controlWebview.destroy()
+        controlWebview?.destroy()
         super.onDestroy()
     }
 
