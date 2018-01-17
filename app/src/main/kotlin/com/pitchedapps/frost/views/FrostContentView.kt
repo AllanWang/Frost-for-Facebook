@@ -16,7 +16,7 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.web.WEB_LOAD_DELAY
+import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
