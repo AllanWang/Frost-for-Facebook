@@ -6,7 +6,7 @@ package com.pitchedapps.frost.facebook
 
 const val FACEBOOK_COM = "facebook.com"
 const val HTTPS_FACEBOOK_COM = "https://$FACEBOOK_COM"
-const val FB_URL_BASE = "https://touch.$FACEBOOK_COM/"
+const val FB_URL_BASE = "https://m.$FACEBOOK_COM/"
 fun PROFILE_PICTURE_URL(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
 

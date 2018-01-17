@@ -20,7 +20,7 @@ class FbUrlTest {
 
     @Test
     fun base() {
-        val url = "https://touch.facebook.com/relative/?asdf=1234&hjkl=7890"
+        val url = "${FB_URL_BASE}relative/?asdf=1234&hjkl=7890"
         assertFbFormat(url, url)
     }
 

@@ -117,7 +117,7 @@ data class MenuHeader(val id: String? = null,
     ) : this(id, header, visible ?: emptyList(), all ?: emptyList())
 
     override val isValid: Boolean
-        get() = header != null
+        get() = !header.isNullOrBlank()
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -139,7 +139,7 @@ data class MenuItem(val id: String? = null,
     ) : this(id, name, pic?.formattedFbUrl, url?.formattedFbUrl, count ?: 0, countDetails)
 
     override val isValid: Boolean
-        get() = name != null && url != null
+        get() = !name.isNullOrBlank() && !url.isNullOrBlank()
 }
 
 data class MenuFooter(val data: List<MenuFooterItem> = emptyList(),

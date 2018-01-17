@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.8
+* Emergency fix for notifications
+
 ## v1.7.7
 * Fix overlay loading
 * Improve image loading
