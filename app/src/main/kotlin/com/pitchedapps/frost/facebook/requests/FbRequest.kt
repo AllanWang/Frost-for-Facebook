@@ -9,7 +9,6 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -34,13 +33,12 @@ private val auth = RxAuth()
  */
 fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     if (this == null) return fail()
-    auth(this).subscribe { a: RequestAuth?, _ ->
-        if (a?.isValid == true)
-            a.action()
-        else {
-            L.e { "Failed auth for ${hashCode()}" }
-            fail()
-        }
+    try {
+        val auth = auth(this).blockingGet()
+        auth.action()
+    } catch (e: Exception) {
+        L.e { "Failed auth for ${hashCode()}: ${e.message}" }
+        fail()
     }
 }
 
