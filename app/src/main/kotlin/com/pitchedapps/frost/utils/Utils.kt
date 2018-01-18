@@ -245,7 +245,7 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
  * [true] if url contains [FACEBOOK_COM]
  */
 inline val String?.isFacebookUrl
-    get() = this != null && contains(FACEBOOK_COM)
+    get() = this != null && (contains(FACEBOOK_COM) || contains("fbcdn.net"))
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer

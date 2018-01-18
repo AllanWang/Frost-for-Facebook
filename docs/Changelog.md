@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.7.9
+* Fix image loading
+* Fix sending emails
+* Greatly improve load time by displaying page sooner
+
 ## v1.7.8
 * Emergency fix for notifications
 

@@ -1,10 +1,8 @@
 package com.pitchedapps.frost.rx
 
+import com.pitchedapps.frost.internal.concurrentTest
 import org.junit.Before
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 
 /**
  * Created by Allan Wang on 07/01/18.
@@ -27,34 +25,34 @@ class ResettableFlyweightTest {
     }
 
     private lateinit var flyweight: IntFlyweight
-    private lateinit var latch: CountDownLatch
 
     @Before
     fun init() {
         flyweight = IntFlyweight()
-        latch = CountDownLatch(1)
     }
 
     @Test
-    fun testCache() {
-        flyweight(1).subscribe { i ->
-            flyweight(1).subscribe { j ->
-                assertEquals(i, j, "Did not use cache during calls")
-                latch.countDown()
+    fun testCache() = concurrentTest { result ->
+        flyweight(1).subscribe { i, _ ->
+            flyweight(1).subscribe { j, _ ->
+                if (i != null && i == j)
+                    result.onComplete()
+                else
+                    result.onError("Did not use cache during calls")
             }
         }
-        latch.await()
     }
 
     @Test
-    fun testNoCache() {
-        flyweight(1).subscribe { i ->
-            flyweight(2).subscribe { j ->
-                assertNotEquals(i, j, "Should not use cache for calls with different keys")
-                latch.countDown()
+    fun testNoCache() = concurrentTest { result ->
+        flyweight(1).subscribe { i, _ ->
+            flyweight(2).subscribe { j, _ ->
+                if (i != null && i != j)
+                    result.onComplete()
+                else
+                    result.onError("Should not use cache for calls with different keys")
             }
         }
-        latch.await()
     }
 
 

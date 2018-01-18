@@ -9,6 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -21,6 +22,7 @@ private class RxAuth : RxFlyweight<String, Long, RequestAuth>() {
             System.currentTimeMillis() - cond < 3600000 // valid for an hour
 
     override fun cache(input: String) = System.currentTimeMillis()
+
 }
 
 private val auth = RxAuth()
