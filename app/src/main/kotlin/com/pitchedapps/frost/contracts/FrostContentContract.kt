@@ -78,8 +78,9 @@ interface FrostContentParent : DynamicUiContract {
      * there may have been another process when this is registered
      *
      * Returns true to proceed with load
-     * In some cases, it may also not be advisable to proceed with the load
-     * In that case, we will return false to stop it
+     * In some cases when the url has not changed,
+     * it may not be advisable to proceed with the load
+     * For those cases, we will return false to stop it
      */
     fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean
 
