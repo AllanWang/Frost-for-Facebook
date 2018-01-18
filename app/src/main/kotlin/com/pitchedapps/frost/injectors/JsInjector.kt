@@ -64,8 +64,8 @@ class JsBuilder {
  * Contract for all injectors to allow it to interact properly with a webview
  */
 interface InjectorContract {
-    fun inject(webView: WebView) = inject(webView, {})
-    fun inject(webView: WebView, callback: () -> Unit)
+    fun inject(webView: WebView) = inject(webView, null)
+    fun inject(webView: WebView, callback: (() -> Unit)?)
     /**
      * Toggle the injector (usually through Prefs
      * If false, will fallback to an empty action
@@ -76,28 +76,39 @@ interface InjectorContract {
 /**
  * Helper method to inject multiple functions simultaneously with a single callback
  */
-fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Unit) = {}) {
+fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Unit)? = null) {
     val validInjectors = injectors.filter { it != JsActions.EMPTY }
-    if (validInjectors.isEmpty()) return callback(0)
+    if (validInjectors.isEmpty()) {
+        callback?.invoke(0)
+        return
+    }
+    L.d { "Injecting ${validInjectors.size} items" }
+    if (callback == null) {
+        validInjectors.forEach { it.inject(this) }
+        return
+    }
     val observables = Array(validInjectors.size, { SingleSubject.create<Unit>() })
-    L.d { "Injecting ${observables.size} items" }
     Single.zip<Unit, Int>(observables.asList(), { it.size })
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { res, _ ->
                 callback(res)
             }
-    (0 until validInjectors.size).forEach { i -> validInjectors[i].inject(this, { observables[i].onSuccess(Unit) }) }
+    (0 until validInjectors.size).forEach { i ->
+        validInjectors[i].inject(this, {
+            observables[i].onSuccess(Unit)
+        })
+    }
 }
 
 fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract,
-                                callback: ((Int) -> Unit) = {})
+                                callback: ((Int) -> Unit)? = null)
         = web.jsInject(*injectors, callback = callback)
 
 /**
  * Wrapper class to convert a function into an injector
  */
 class JsInjector(val function: String) : InjectorContract {
-    override fun inject(webView: WebView, callback: () -> Unit) {
-        webView.evaluateJavascript(function, { callback() })
+    override fun inject(webView: WebView, callback: (() -> Unit)?) {
+        webView.evaluateJavascript(function, { callback?.invoke() })
     }
 }

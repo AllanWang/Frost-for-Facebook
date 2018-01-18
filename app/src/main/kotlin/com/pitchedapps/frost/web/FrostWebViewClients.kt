@@ -6,10 +6,8 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import ca.allanwang.kau.utils.postDelayed
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.WEB_COMMIT_LOAD_DELAY
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
@@ -75,9 +73,8 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
-                            && Prefs.aggressiveRecents)) {
-                postDelayed(WEB_COMMIT_LOAD_DELAY) { refresh.onNext(false) }
-            }
+                            && Prefs.aggressiveRecents),
+                    JsAssets.DOCUMENT_WATCHER)
         else
             refresh.onNext(false)
     }

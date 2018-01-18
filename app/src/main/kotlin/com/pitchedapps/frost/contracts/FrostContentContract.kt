@@ -76,8 +76,12 @@ interface FrostContentParent : DynamicUiContract {
      * Animate toggles between the fancy ripple and the basic fade
      * The cycle only starts on the first load since
      * there may have been another process when this is registered
+     *
+     * Returns true to proceed with load
+     * In some cases, it may also not be advisable to proceed with the load
+     * In that case, we will return false to stop it
      */
-    fun registerTransition(animate: Boolean)
+    fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean
 
 }
 

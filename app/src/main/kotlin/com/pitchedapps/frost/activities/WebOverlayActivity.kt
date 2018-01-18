@@ -175,7 +175,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         }
 
         FrostRunnable.propagate(this, intent)
-        L.e { "Done propagation" }
+        L.v { "Done propagation" }
 
         kauSwipeOnCreate {
             if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx

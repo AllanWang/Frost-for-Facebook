@@ -13,6 +13,7 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.*
@@ -27,8 +28,8 @@ class FrostWebView @JvmOverloads constructor(
         FrostContentCore {
 
     override fun reload(animate: Boolean) {
-        parent.registerTransition(animate)
-        super.reload()
+        if (parent.registerTransition(false, animate))
+            super.reload()
     }
 
     override lateinit var parent: FrostContentParent
@@ -80,8 +81,8 @@ class FrostWebView @JvmOverloads constructor(
 
     fun loadUrl(url: String?, animate: Boolean) {
         if (url == null) return
-        parent.registerTransition(animate)
-        super.loadUrl(url)
+        if (parent.registerTransition(this.url != url, animate))
+            super.loadUrl(url)
     }
 
     override fun reloadBase(animate: Boolean) {
