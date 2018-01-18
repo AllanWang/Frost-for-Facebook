@@ -12,6 +12,8 @@ import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.commons.utils.DiffCallback
+import com.mikepenz.fastadapter.commons.utils.FastAdapterDiffUtil
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
@@ -39,6 +41,22 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
                         v.context.launchWebOverlay(notif.url)
                         true
                     }
+        }
+
+        //todo see if necessary
+        val DIFF: DiffCallback<NotificationIItem> by lazy(::Diff)
+    }
+
+    private class Diff : DiffCallback<NotificationIItem> {
+
+        override fun areItemsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
+                oldItem.notification.id == newItem.notification.id
+
+        override fun areContentsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
+                oldItem.notification == newItem.notification
+
+        override fun getChangePayload(oldItem: NotificationIItem, oldItemPosition: Int, newItem: NotificationIItem, newItemPosition: Int): Any? {
+            return newItem
         }
     }
 
