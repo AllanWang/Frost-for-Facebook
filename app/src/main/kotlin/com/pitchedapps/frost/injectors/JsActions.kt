@@ -23,5 +23,6 @@ enum class JsActions(body: String) : InjectorContract {
 
     val function = "!function(){$body}();"
 
-    override fun inject(webView: WebView, callback: ((String) -> Unit)?) = JsInjector(function).inject(webView, callback)
+    override fun inject(webView: WebView, callback: (() -> Unit)?) =
+            JsInjector(function).inject(webView, callback)
 }

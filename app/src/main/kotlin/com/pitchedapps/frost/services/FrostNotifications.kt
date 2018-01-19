@@ -87,7 +87,7 @@ class FrostNotificationTarget(val context: Context,
                               val builder: NotificationCompat.Builder
 ) : SimpleTarget<Bitmap>(40.dpToPx, 40.dpToPx) {
 
-    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>) {
+    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
         builder.setLargeIcon(resource)
         NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.build())
     }

@@ -73,7 +73,7 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
      */
     open protected fun createNewSource(input: T): Single<R> =
             Single.fromCallable { call(input) }
-                    .timeout(20, TimeUnit.SECONDS)
+                    .timeout(15, TimeUnit.SECONDS)
                     .subscribeOn(Schedulers.io())
 
     fun reset() {

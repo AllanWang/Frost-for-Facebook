@@ -6,6 +6,18 @@
     <item text="" />
     -->
 
+    <version title="v1.7.9" />
+    <item text="Fix image loading" />
+    <item text="Fix sending emails" />
+    <item text="Greatly improve load time by displaying page sooner" />
+    <item text="Fix blank web overlays" />
+    <item text="Revert back to m.facebook.com" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.7.8" />
     <item text="Emergency fix for notifications" />
 

@@ -32,8 +32,10 @@ class FbUrlFormatter(url: String) {
     fun clean(url: String): String {
         if (url.isBlank()) return ""
         var cleanedUrl = url
+        if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
+        val urlRef = cleanedUrl
         discardable.forEach { cleanedUrl = cleanedUrl.replace(it, "", true) }
-        val changed = cleanedUrl != url
+        val changed = cleanedUrl != urlRef
         converter.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
         try {
             cleanedUrl = URLDecoder.decode(cleanedUrl, StandardCharsets.UTF_8.name())
@@ -54,7 +56,6 @@ class FbUrlFormatter(url: String) {
         discardableQueries.forEach { queries.remove(it) }
         //final cleanup
         misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
-        if (cleanedUrl.startsWith("#!")) cleanedUrl = cleanedUrl.substring(2)
         if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
         cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
         L.v { "Formatted url from $url to $cleanedUrl" }

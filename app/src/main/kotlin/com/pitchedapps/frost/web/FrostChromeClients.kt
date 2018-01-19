@@ -30,14 +30,13 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
     private val context = web.context!!
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return true
         L.v { "Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
         return true
     }
 
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
-        if (title.contains("http") || this.title.value == title) return
+        if (title.startsWith("http") || this.title.value == title) return
         this.title.onNext(title)
     }
 

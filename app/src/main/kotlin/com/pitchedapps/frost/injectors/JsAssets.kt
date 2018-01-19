@@ -12,7 +12,8 @@ import java.util.*
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG
+    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
+    DOCUMENT_WATCHER
     ;
 
     var file = "${name.toLowerCase(Locale.CANADA)}.js"
@@ -26,7 +27,7 @@ enum class JsAssets : InjectorContract {
         }
     }
 
-    override fun inject(webView: WebView, callback: ((String) -> Unit)?) {
+    override fun inject(webView: WebView, callback: (() -> Unit)?) {
         injector(webView.context).inject(webView, callback)
     }
 

@@ -33,12 +33,14 @@ object FbCookie {
                 L.d { "Setting cookie" }
                 val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
                 cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie, { callback.onSuccess(it) }) }
-                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {}).subscribeOn(AndroidSchedulers.mainThread()).subscribe {
-                    callback?.invoke()
-                    L.d { "Cookies set" }
-                    L._d { cookie }
-                    flush()
-                }
+                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {})
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            callback?.invoke()
+                            L.d { "Cookies set" }
+                            L._d { cookie }
+                            flush()
+                        }
             }
         }
     }

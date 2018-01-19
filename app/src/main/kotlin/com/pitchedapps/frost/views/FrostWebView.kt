@@ -27,8 +27,8 @@ class FrostWebView @JvmOverloads constructor(
         FrostContentCore {
 
     override fun reload(animate: Boolean) {
-        parent.registerTransition(animate)
-        super.reload()
+        if (parent.registerTransition(false, animate))
+            super.reload()
     }
 
     override lateinit var parent: FrostContentParent
@@ -80,8 +80,8 @@ class FrostWebView @JvmOverloads constructor(
 
     fun loadUrl(url: String?, animate: Boolean) {
         if (url == null) return
-        parent.registerTransition(animate)
-        super.loadUrl(url)
+        if (parent.registerTransition(this.url != url, animate))
+            super.loadUrl(url)
     }
 
     override fun reloadBase(animate: Boolean) {
