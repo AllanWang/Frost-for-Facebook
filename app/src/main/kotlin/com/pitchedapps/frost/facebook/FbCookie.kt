@@ -36,11 +36,11 @@ object FbCookie {
                 Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {})
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                    callback?.invoke()
-                    L.d { "Cookies set" }
-                    L._d { cookie }
-                    flush()
-                }
+                            callback?.invoke()
+                            L.d { "Cookies set" }
+                            L._d { cookie }
+                            flush()
+                        }
             }
         }
     }

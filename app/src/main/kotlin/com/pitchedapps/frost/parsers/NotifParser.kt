@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.parsers
 
-import com.mikepenz.fastadapter.commons.utils.DiffCallbackImpl
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.services.NotificationContent

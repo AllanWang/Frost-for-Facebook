@@ -13,7 +13,6 @@ import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.commons.utils.DiffCallback
-import com.mikepenz.fastadapter.commons.utils.FastAdapterDiffUtil
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
@@ -62,11 +61,11 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
 
-        val frame: ViewGroup by bindView(R.id.item_frame)
-        val avatar: ImageView by bindView(R.id.item_avatar)
-        val content: TextView by bindView(R.id.item_content)
-        val date: TextView by bindView(R.id.item_date)
-        val thumbnail: ImageView by bindView(R.id.item_thumbnail)
+        private val frame: ViewGroup by bindView(R.id.item_frame)
+        private val avatar: ImageView by bindView(R.id.item_avatar)
+        private val content: TextView by bindView(R.id.item_content)
+        private val date: TextView by bindView(R.id.item_date)
+        private val thumbnail: ImageView by bindView(R.id.item_thumbnail)
 
         private val glide
             get() = GlideApp.with(itemView)
