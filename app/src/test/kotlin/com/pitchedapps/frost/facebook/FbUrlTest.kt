@@ -62,7 +62,7 @@ class FbUrlTest {
 
 
     @Test
-    fun imageRegex() {
+    fun image() {
         arrayOf(
                 "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/229_546131_836546862_n.jpg?efg=e343J9&oh=d4245b1&oe=5453"
 //                "/photo/view_full_size/?fbid=1523&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=153&_ft_=...",
