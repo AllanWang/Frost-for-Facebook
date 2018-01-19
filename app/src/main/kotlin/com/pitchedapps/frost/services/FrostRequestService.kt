@@ -177,7 +177,7 @@ class FrostRequestService : JobService() {
                 failed = false
             }
             L.d {
-                "Finished frost service for ${command.name} in ${System.currentTimeMillis() - now} ms"
+                "${if (failed) "Failed" else "Finished"} frost service for ${command.name} in ${System.currentTimeMillis() - now} ms"
             }
             jobFinished(params, false)
         }

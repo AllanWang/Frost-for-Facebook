@@ -11,6 +11,7 @@
     <string name="frost_prefix" translatable="false">Frost for Facebook:</string>
     <string name="feedback" translatable="false">Feedback</string>
     <string name="bug_report" translatable="false">Bug Report</string>
+    <string name="debug_report" translatable="false">Debug Report</string>
     <string name="theme_issue" translatable="false">Theme Issue</string>
     <string name="feature_request" translatable="false">Feature Request</string>
 </resources>

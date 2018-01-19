@@ -67,8 +67,6 @@ import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -274,19 +272,20 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
         searchViewBindIfNull {
             bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textCallback = { query, _ ->
+                textCallback = { query, searchView ->
                     val results = searchViewCache[query]
                     if (results != null)
-                        runOnUiThread { searchView?.results = results }
-                    else
-                        doAsync {
-                            val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results ?: return@doAsync
+                        searchView.results = results
+                    else {
+                        val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results
+                        if (data != null) {
                             val items = data.map(FrostSearch::toSearchItem).toMutableList()
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
                             searchViewCache.put(query, items)
-                            uiThread { searchView?.results = items }
+                            searchView.results = items
                         }
+                    }
                 }
                 textDebounceInterval = 300
                 searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
@@ -362,7 +361,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onResume() {
         super.onResume()
-        FbCookie.switchBackUser{}
+        FbCookie.switchBackUser {}
         controlWebview?.resumeTimers()
     }
 

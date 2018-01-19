@@ -4,6 +4,7 @@
 * Fix image loading
 * Fix sending emails
 * Greatly improve load time by displaying page sooner
+* Fix blank web overlays
 
 ## v1.7.8
 * Emergency fix for notifications
