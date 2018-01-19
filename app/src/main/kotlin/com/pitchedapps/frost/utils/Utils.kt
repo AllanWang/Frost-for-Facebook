@@ -245,7 +245,7 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
  * [true] if url contains [FACEBOOK_COM]
  */
 inline val String?.isFacebookUrl
-    get() = this != null && contains(FACEBOOK_COM)
+    get() = this != null && (contains(FACEBOOK_COM) || contains("fbcdn.net"))
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer
@@ -257,8 +257,7 @@ inline val String.isVideoUrl
  * [true] if url is or redirects to an explicit facebook image
  */
 inline val String.isImageUrl
-    get() = (contains("fbcdn.net") && (contains(".png") || contains(".jpg")))
-            || contains("/photo/view_full_size")
+    get() = contains("fbcdn.net") && (contains(".png") || contains(".jpg"))
 
 /**
  * [true] if url can be displayed in a different webview
@@ -274,6 +273,7 @@ inline val String?.isIndependent: Boolean
 
 val dependentSegments = arrayOf(
         "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
+        "events/permalink",
         /**
          * Editing images
          */

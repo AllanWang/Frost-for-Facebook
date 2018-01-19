@@ -17,10 +17,9 @@ class MainActivity : BaseMainActivity() {
     var lastPosition = -1
     val headerBadgeObservable = PublishSubject.create<String>()!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupViewPager()
+    override fun onNestedCreate(savedInstanceState: Bundle?) {
         setupTabs()
+        setupViewPager()
     }
 
     private fun setupViewPager() {
@@ -63,7 +62,8 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        headerBadgeObservable.throttleFirst(15, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())
+        headerBadgeObservable.throttleFirst(15, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.newThread())
                 .map { Jsoup.parse(it) }
                 .filter { it.select("[data-sigil=count]").size >= 0 } //ensure headers exist
                 .map {

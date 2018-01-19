@@ -176,7 +176,7 @@ class IabMain : IabBinder() {
             val load = weakRef.get()?.loadOwnedPurchasesFromGoogle() ?: false
             L.d { "IAB main load from google $load" }
             onComplete {
-                if (!(weakRef.get()?.isPurchased(FROST_PRO) ?: false)) {
+                if (weakRef.get()?.isPurchased(FROST_PRO) != true) {
                     if (Prefs.pro) activity.playStoreNoLongerPro()
                 } else {
                     if (!Prefs.pro) activity.playStoreFoundPro()

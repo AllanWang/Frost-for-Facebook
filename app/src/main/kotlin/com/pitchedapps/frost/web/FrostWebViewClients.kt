@@ -73,7 +73,10 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
-                            && Prefs.aggressiveRecents))
+                            && Prefs.aggressiveRecents),
+                    JsAssets.DOCUMENT_WATCHER)
+        else
+            refresh.onNext(false)
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
@@ -142,13 +145,18 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             return true
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
-        if (url.contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
+        if (url.isImageUrl)
             return launchImage(url)
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
 
 }
+
+private const val EMIT_THEME = 0b1
+private const val EMIT_ID = 0b10
+private const val EMIT_COMPLETE = EMIT_THEME or EMIT_ID
+private const val EMIT_FINISH = 0
 
 /**
  * Client variant for the menu view
@@ -171,7 +179,9 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     override fun emit(flag: Int) {
         super.emit(flag)
-        super.injectAndFinish()
+        when (flag) {
+            EMIT_FINISH -> super.injectAndFinish()
+        }
     }
 
     override fun onPageFinishedActions(url: String) {

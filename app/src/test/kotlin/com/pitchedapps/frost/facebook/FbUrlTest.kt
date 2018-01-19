@@ -20,7 +20,7 @@ class FbUrlTest {
 
     @Test
     fun base() {
-        val url = "https://touch.facebook.com/relative/?asdf=1234&hjkl=7890"
+        val url = "${FB_URL_BASE}relative/?asdf=1234&hjkl=7890"
         assertFbFormat(url, url)
     }
 
@@ -62,11 +62,11 @@ class FbUrlTest {
 
 
     @Test
-    fun imageRegex() {
+    fun image() {
         arrayOf(
-                "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/229_546131_836546862_n.jpg?efg=e343J9&oh=d4245b1&oe=5453",
-                "/photo/view_full_size/?fbid=1523&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=153&_ft_=...",
-                "#!/photo/view_full_size/?fbid=1523&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=153&_ft_=..."
+                "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/229_546131_836546862_n.jpg?efg=e343J9&oh=d4245b1&oe=5453"
+//                "/photo/view_full_size/?fbid=1523&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=153&_ft_=...",
+//                "#!/photo/view_full_size/?fbid=1523&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=153&_ft_=..."
         ).forEach {
             assertTrue(it.isImageUrl, "Failed to match image for $it")
         }
@@ -82,6 +82,12 @@ class FbUrlTest {
             assertFalse(it.isImageUrl, "Should not have matched image for $it")
         }
 
+    }
+
+    @Test
+    fun viewFullImage() {
+        val url = "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/asdf_n.jpg?efg=asdf&oh=asdf&oe=asdf"
+        assertFbFormat(url, "#!$url")
     }
 
 }

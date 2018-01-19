@@ -21,6 +21,7 @@ private class RxAuth : RxFlyweight<String, Long, RequestAuth>() {
             System.currentTimeMillis() - cond < 3600000 // valid for an hour
 
     override fun cache(input: String) = System.currentTimeMillis()
+
 }
 
 private val auth = RxAuth()
@@ -32,13 +33,12 @@ private val auth = RxAuth()
  */
 fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     if (this == null) return fail()
-    auth(this).subscribe { a: RequestAuth?, _ ->
-        if (a?.isValid == true)
-            a.action()
-        else {
-            L.e { "Failed auth for ${hashCode()}" }
-            fail()
-        }
+    try {
+        val auth = auth(this).blockingGet()
+        auth.action()
+    } catch (e: Exception) {
+        L.e { "Failed auth for ${hashCode()}: ${e.message}" }
+        fail()
     }
 }
 

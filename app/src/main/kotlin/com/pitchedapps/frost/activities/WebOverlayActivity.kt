@@ -154,7 +154,6 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
 
         content.bind(this)
-        web.reloadBase(true)
 
         content.titleObservable
                 .observeOn(AndroidSchedulers.mainThread())
@@ -175,7 +174,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         }
 
         FrostRunnable.propagate(this, intent)
-        L.e { "Done propagation" }
+        L.v { "Done propagation" }
 
         kauSwipeOnCreate {
             if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
@@ -190,8 +189,8 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
      */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        val newUrl = (intent.getStringExtra(ARG_URL) ?: intent.dataString ?: return).formattedFbUrl
         L.d { "New intent" }
+        val newUrl = (intent.getStringExtra(ARG_URL) ?: intent.dataString)?.formattedFbUrl ?: return
         if (baseUrl != newUrl) {
             this.intent = intent
             content.baseUrl = newUrl

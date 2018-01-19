@@ -14,8 +14,9 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.web.WEB_LOAD_DELAY
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
@@ -84,10 +85,13 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             else
                 progress.progress = it
         }
-        refreshObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            refresh.isRefreshing = it
-            refresh.isEnabled = true
-        }
+
+        refreshObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    refresh.isRefreshing = it
+                    refresh.isEnabled = true
+                }
         refresh.setOnRefreshListener { coreView.reload(true) }
 
         reloadThemeSelf()
@@ -127,25 +131,42 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         core.destroy()
     }
 
+    private var dispose: Disposable? = null
+    private var transitionStart: Long = -1
+
     /**
      * Hook onto the refresh observable for one cycle
      * Animate toggles between the fancy ripple and the basic fade
      * The cycle only starts on the first load since there may have been another process when this is registered
      */
-    override fun registerTransition(animate: Boolean) {
-        with(coreView) {
-            var dispose: Disposable? = null
-            var loading = false
-            dispose = refreshObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe {
-                if (it) {
-                    loading = true
-                    if (isVisible) fadeOut(duration = 200L)
-                } else if (loading) {
-                    dispose?.dispose()
-                    if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
-                    else fadeIn(duration = 100L)
-                }
-            }
+    override fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean {
+        if (!urlChanged && dispose != null) {
+            L.v { "Consuming url load" }
+            return false // still in progress; do not bother with load
         }
+        L.v { "Registered transition" }
+        with(coreView) {
+            var loading = dispose != null
+            dispose?.dispose()
+            dispose = refreshObservable
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        if (it) {
+                            loading = true
+                            transitionStart = System.currentTimeMillis()
+                            clearAnimation()
+                            if (isVisible)
+                                fadeOut(duration = 200L)
+                        } else if (loading) {
+                            loading = false
+                            if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                            else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
+                            L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
+                            dispose?.dispose()
+                            dispose = null
+                        }
+                    }
+        }
+        return true
     }
 }
