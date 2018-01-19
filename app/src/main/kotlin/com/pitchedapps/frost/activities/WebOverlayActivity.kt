@@ -84,7 +84,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
         } else {
             L.i { "Sharing url through overlay" }
             L._i { "Url: $url" }
-            intent.putExtra(ARG_URL, "${FB_URL_BASE}/sharer/sharer.php?u=$url")
+            intent.putExtra(ARG_URL, "${FB_URL_BASE}sharer/sharer.php?u=$url")
             return true
         }
     }
