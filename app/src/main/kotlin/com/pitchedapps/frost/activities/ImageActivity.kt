@@ -88,15 +88,18 @@ class ImageActivity : KauBaseActivity() {
 
     val IMAGE_URL: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
 
-    val TEXT: String? by lazy { intent.getStringExtra(ARG_TEXT) }
+    private val TEXT: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
     // a unique image identifier based on the id (if it exists), and its hash
-    val IMAGE_HASH: String by lazy { "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode() ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}" }
+    private val IMAGE_HASH: String by lazy {
+        "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode() ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent?.extras ?: return finish()
         L.i { "Displaying image" }
+        L.v { "Displaying image $IMAGE_URL" }
         val layout = if (!TEXT.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
@@ -116,6 +119,8 @@ class ImageActivity : KauBaseActivity() {
             override fun onImageLoadError(e: Exception?) {
                 errorRef = e
                 e.logFrostAnswers("Image load error")
+                L.e { "Failed to load image $IMAGE_URL" }
+                tempFile?.delete()
                 fabAction = FabStates.ERROR
             }
         })
@@ -125,9 +130,12 @@ class ImageActivity : KauBaseActivity() {
         doAsync({
             L.e(it) { "Failed to load image $IMAGE_HASH" }
             errorRef = it
+            runOnUiThread { progress.fadeOut() }
+            tempFile?.delete()
             fabAction = FabStates.ERROR
         }) {
             loadImage { file ->
+                uiThread { progress.fadeOut() }
                 if (file == null) {
                     fabAction = FabStates.ERROR
                     return@loadImage
@@ -153,11 +161,7 @@ class ImageActivity : KauBaseActivity() {
             L.d { "Loading from local cache ${local.absolutePath}" }
             return callback(local)
         }
-        val response = Request.Builder()
-                .url(IMAGE_URL)
-                .get()
-                .call()
-                .execute()
+        val response = getImageResponse()
 
         if (!response.isSuccessful) {
             L.e { "Unsuccessful response for image" }
@@ -198,14 +202,16 @@ class ImageActivity : KauBaseActivity() {
         return File.createTempFile(imageFileName, IMG_EXTENSION, frostDir)
     }
 
+    private fun getImageResponse() = Request.Builder()
+            .url(IMAGE_URL)
+            .get()
+            .call()
+            .execute()
+
     @Throws(IOException::class)
     private fun downloadImageTo(file: File) {
-        val body = Request.Builder()
-                .url(IMAGE_URL)
-                .get()
-                .call()
-                .execute()
-                .body() ?: throw IOException("Failed to retrieve image body")
+        val body = getImageResponse().body()
+                ?: throw IOException("Failed to retrieve image body")
         body.byteStream().use { input ->
             file.outputStream().use { output ->
                 input.copyTo(output)

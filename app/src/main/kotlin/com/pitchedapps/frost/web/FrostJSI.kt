@@ -17,6 +17,7 @@ class FrostJSI(val web: FrostWebView) {
     private val context = web.context
     private val activity = context as? MainActivity
     private val header: Subject<String>? = activity?.headerBadgeObservable
+    private val refresh: Subject<Boolean> = web.parent.refreshObservable
     private val cookies = activity?.cookies() ?: arrayListOf()
 
     /**
@@ -86,6 +87,11 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun emit(flag: Int) {
         web.post { web.frostWebClient.emit(flag) }
+    }
+
+    @JavascriptInterface
+    fun isReady() {
+        refresh.onNext(false)
     }
 
     @JavascriptInterface

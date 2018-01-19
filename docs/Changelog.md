@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.7.9
+* Fix image loading
+* Fix sending emails
+* Greatly improve load time by displaying page sooner
+* Fix blank web overlays
+* Revert back to m.facebook.com
+
+## v1.7.8
+* Emergency fix for notifications
+
 ## v1.7.7
 * Fix overlay loading
 * Improve image loading

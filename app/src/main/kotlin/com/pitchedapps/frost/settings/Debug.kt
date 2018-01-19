@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.settings
 
+import android.content.Context
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
@@ -11,6 +12,7 @@ import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQU
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.parsers.MessageParser
 import com.pitchedapps.frost.parsers.NotifParser
 import com.pitchedapps.frost.parsers.SearchParser
@@ -21,6 +23,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 import java.io.File
+import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -49,13 +52,41 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 items(parsers.map { string(it.nameRes) })
                 itemsCallback { dialog, _, position, _ ->
                     dialog.dismiss()
-                    // todo add debugging
+                    val parser = parsers[position]
+                    var attempt: Future<Unit>? = null
+                    val loading = materialDialog {
+                        content(parser.nameRes)
+                        progress(true, 100)
+                        negativeText(R.string.kau_cancel)
+                        onNegative { dialog, _ ->
+                            attempt?.cancel(true)
+                            dialog.dismiss()
+                        }
+                        canceledOnTouchOutside(false)
+                    }
+
+                    attempt = loading.doAsync({
+                        createEmail(parser, "Error: ${it.message}")
+                    }) {
+                        val data = parser.parse(FbCookie.webCookie)
+                        uiThread {
+                            if (it.isCancelled) return@uiThread
+                            it.dismiss()
+                            createEmail(parser, data?.data)
+                        }
+                    }
                 }
             }
 
         }
     }
 }
+
+private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
+        sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
+            addItem("Url", parser.url)
+            addItem("Contents", "$content")
+        }
 
 private const val ZIP_NAME = "debug"
 

@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import io.fabric.sdk.android.Fabric
+import io.reactivex.plugins.RxJavaPlugins
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -111,6 +112,11 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} created" }
                 }
             })
+
+        RxJavaPlugins.setErrorHandler {
+            L.e(it) { "RxJava error" }
+        }
+
     }
 
 

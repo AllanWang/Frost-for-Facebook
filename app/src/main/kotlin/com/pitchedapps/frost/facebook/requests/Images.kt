@@ -67,7 +67,7 @@ class HdImageLoading : ModelLoader<HdImageMaybe, InputStream> {
     override fun buildLoadData(model: HdImageMaybe,
                                width: Int,
                                height: Int,
-                               options: Options?): ModelLoader.LoadData<InputStream>? =
+                               options: Options): ModelLoader.LoadData<InputStream>? =
             if (!model.isValid) null
             else ModelLoader.LoadData(ObjectKey(model), HdImageFetcher(model))
 

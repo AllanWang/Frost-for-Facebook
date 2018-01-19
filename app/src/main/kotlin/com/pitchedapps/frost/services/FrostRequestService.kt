@@ -168,14 +168,16 @@ class FrostRequestService : JobService() {
             L.eThrow("Launched ${this::class.java.simpleName} without command")
             return false
         }
-        val now = System.currentTimeMillis()
         future = doAsync {
+            val now = System.currentTimeMillis()
+            var failed = true
             cookie.fbRequest {
                 L.d { "Requesting frost service for ${command.name}" }
                 command.invoke(this, bundle)
+                failed = false
             }
             L.d {
-                "Finished frost service for ${command.name} in ${System.currentTimeMillis()} - now} ms"
+                "${if (failed) "Failed" else "Finished"} frost service for ${command.name} in ${System.currentTimeMillis() - now} ms"
             }
             jobFinished(params, false)
         }

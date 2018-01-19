@@ -29,7 +29,7 @@
     attributes: true
   });
 
-  x = new MutationObserver(function (mutations) {
+  x = new MutationObserver(function () {
     var menu;
     menu = document.querySelector(".mSideMenu");
     if (menu !== null) {
