@@ -145,7 +145,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             return true
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
-        if (url.contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
+        if (url.isImageUrl)
             return launchImage(url)
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
