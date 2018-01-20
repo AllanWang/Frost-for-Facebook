@@ -41,4 +41,7 @@
   <string name="file_chooser_not_found">O selecionador de arquivos não foi encontrado</string>
   <string name="top_bar">Barra superior</string>
   <string name="bottom_bar">Barra inferior</string>
+  <string name="preview">Visualizar</string>
+  <string name="options">Opções</string>
+  <string name="tab_customizer_instructions">Mantenha pressionado e arraste para reorganizar os ícones superiores.</string>
 </resources>
