@@ -10,6 +10,7 @@
   <string name="intro_easy_navigation">简易导航</string>
   <string name="intro_easy_navigation_desc">滑动左右以切换图标，并单击要回到顶部 \nClick 的图标，再重新加载页面的选项卡图标。</string>
   <string name="intro_context_aware">上下文感知</string>
+  <string name="intro_context_aware_desc">长按链接复制并共享它们. \n长按图像进行缩放和下载. \n长按卡进行水平滚动。</string>
   <string name="intro_end">开始吧！</string>
   <string name="intro_tap_to_exit">点击任何地方退出</string>
 </resources>

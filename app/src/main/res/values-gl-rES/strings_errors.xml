@@ -7,4 +7,6 @@
   <string name="invalid_share_url_desc">Compartiches un bloque de texto que non é un URL. Copiouse no teu portapapeis para que poidas compartilo manualmente.</string>
   <string name="no_download_manager">Sen administrador de descargas</string>
   <string name="no_download_manager_desc">O administrador de descargas está desactivado. Queres activalo para permitilas?</string>
+  <string name="error_generic">Produciuse un erro.</string>
+  <string name="video_load_failed">Erro ao cargar o vídeo</string>
 </resources>

@@ -15,7 +15,6 @@
   <string name="notification_messages_all_accounts">Notifier les messages de tous les comptes</string>
   <string name="notification_messages_all_accounts_desc">Recevoir des notifications de messagerie instantanée de tous les comptes</string>
   <string name="notification_fetch_now">Récupérer notifications maintenant</string>
-  <string name="notification_fetch_now_desc">Déclencher une fois l’outil de récupération de notification. Notez que la récupération de messages instantanés prend du temps.</string>
   <string name="notification_fetch_success">Récupération des notifications…</string>
   <string name="notification_fetch_fail">Récupération des notifications impossible</string>
   <string name="notification_sound">Son de notification</string>

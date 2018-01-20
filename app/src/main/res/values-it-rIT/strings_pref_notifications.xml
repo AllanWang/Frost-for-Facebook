@@ -15,13 +15,11 @@
   <string name="notification_messages_all_accounts">Notifica messaggi da tutti gli account</string>
   <string name="notification_messages_all_accounts_desc">Ricevi notifiche di messaggio immediate da tutti gli account</string>
   <string name="notification_fetch_now">Recupera le notifiche ora</string>
-  <string name="notification_fetch_now_desc">Innesca il recupero delle notifiche una volta sola. Nota che il recupero di messaggi istantanei richiede tempo.</string>
   <string name="notification_fetch_success">Recupero le notifiche…</string>
   <string name="notification_fetch_fail">Impossibile recuperare le notifiche</string>
   <string name="notification_sound">Suono notifiche</string>
   <string name="notification_ringtone">Suoneria della Notifica</string>
   <string name="message_ringtone">Suoneria dei messaggi</string>
-  <string name="select_ringtone">Seleziona suoneria</string>
   <string name="notification_vibrate">Vibrazione notifiche</string>
   <string name="notification_lights">LED di notifica</string>
 </resources>

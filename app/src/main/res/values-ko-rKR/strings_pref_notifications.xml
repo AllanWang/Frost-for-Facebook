@@ -15,13 +15,11 @@
   <string name="notification_messages_all_accounts">모든 계정의 메시지 받기</string>
   <string name="notification_messages_all_accounts_desc">모든 계정으로부터 메시지를 받습니다.</string>
   <string name="notification_fetch_now">지금 알림 확인하기</string>
-  <string name="notification_fetch_now_desc">한번 알림을 확인합니다. 메시지를 확인하는 데에는 시간이 걸립니다.</string>
   <string name="notification_fetch_success">알림 확인 중…</string>
   <string name="notification_fetch_fail">알림 확인 실패</string>
   <string name="notification_sound">알림 소리</string>
   <string name="notification_ringtone">알림 벨소리</string>
   <string name="message_ringtone">메시지 벨소리</string>
-  <string name="select_ringtone">벨소리 선택</string>
   <string name="notification_vibrate">알림 진동</string>
   <string name="notification_lights">알림 LED</string>
 </resources>

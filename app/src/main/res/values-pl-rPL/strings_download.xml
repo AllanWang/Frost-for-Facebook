@@ -11,4 +11,5 @@
   <string name="downloaded_video">Pobrano film</string>
   <string name="downloading_file">Pobieranie pliku</string>
   <string name="downloaded_file">Pobrano plik</string>
+  <string name="error_invalid_download">Nieprawidłowa próba pobrania</string>
 </resources>

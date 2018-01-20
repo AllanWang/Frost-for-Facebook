@@ -7,4 +7,6 @@
   <string name="invalid_share_url_desc">Udostępniłeś tekst, który nie jest adresem URL. Tekst został skopiowany do twojego schowka, abyś mógł udostępnić go ręcznie.</string>
   <string name="no_download_manager">Brak menadżera pobierania</string>
   <string name="no_download_manager_desc">Menedżer pobierania plików nie jest włączony. Czy chcesz go włączyć aby umożliwić pobieranie?</string>
+  <string name="error_generic">Wystąpił błąd.</string>
+  <string name="video_load_failed">Nie udało się załadować filmu</string>
 </resources>

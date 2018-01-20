@@ -15,7 +15,6 @@
   <string name="notification_messages_all_accounts">Notificar mensajes de todas las cuentas</string>
   <string name="notification_messages_all_accounts_desc">Obtén notificaciones instantáneas de mensajes para tu cuenta actual</string>
   <string name="notification_fetch_now">Obtener notificaciones ahora</string>
-  <string name="notification_fetch_now_desc">Activa el buscador de notificaciones una vez. Ten en cuenta que recibir los mensajes instantáneos toma tiempo.</string>
   <string name="notification_fetch_success">Recuperando Notificaciones…</string>
   <string name="notification_fetch_fail">No se pudieron recuperar las notificaciones</string>
   <string name="notification_sound">Sonido de notificación</string>

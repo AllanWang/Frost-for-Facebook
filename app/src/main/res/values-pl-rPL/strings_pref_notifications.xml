@@ -15,7 +15,6 @@
   <string name="notification_messages_all_accounts">Powiadamiaj ze wszystkich kont</string>
   <string name="notification_messages_all_accounts_desc">Otrzymuj natychmiastowe powiadomienia dla wszystkich kont</string>
   <string name="notification_fetch_now">Sprawdź powiadomienia teraz</string>
-  <string name="notification_fetch_now_desc">Wywołaj sprawdzenie powiadomień jeden raz. Zauważ, że sprawdzenie wiadomości wymaga czasu.</string>
   <string name="notification_fetch_success">Sprawdzanie powiadomień…</string>
   <string name="notification_fetch_fail">Nie udało się sprawdzić powiadomień</string>
   <string name="notification_sound">Dźwięk powiadomienia</string>
