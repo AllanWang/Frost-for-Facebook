@@ -10,7 +10,6 @@ import android.widget.ImageView
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -23,12 +22,14 @@ import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
+import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.web.LoginWebView
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
-import io.reactivex.internal.operators.single.SingleToObservable
 import io.reactivex.subjects.SingleSubject
 
 
@@ -37,18 +38,18 @@ import io.reactivex.subjects.SingleSubject
  */
 class LoginActivity : BaseActivity() {
 
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-    val web: LoginWebView by bindView(R.id.login_webview)
-    val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-    val textview: AppCompatTextView by bindView(R.id.textview)
-    val profile: ImageView by bindView(R.id.profile)
+    private val toolbar: Toolbar by bindView(R.id.toolbar)
+    private val web: LoginWebView by bindView(R.id.login_webview)
+    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private val textview: AppCompatTextView by bindView(R.id.textview)
+    private val profile: ImageView by bindView(R.id.profile)
 
-    val profileObservable = SingleSubject.create<Boolean>()
-    val usernameObservable = SingleSubject.create<String>()
-    lateinit var profileLoader: RequestManager
+    private val profileSubject = SingleSubject.create<Boolean>()
+    private val usernameSubject = SingleSubject.create<String>()
+    private lateinit var profileLoader: RequestManager
 
     // Helper to set and enable swipeRefresh
-    var refresh: Boolean
+    private var refresh: Boolean
         get() = swipeRefresh.isRefreshing
         set(value) {
             if (value) swipeRefresh.isEnabled = true
@@ -61,39 +62,50 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors(toolbar)
+        setFrostColors {
+            toolbar(toolbar)
+        }
         web.loadLogin({ refresh = it != 100 }) { cookie ->
-            L.d("Login found")
+            L.d { "Login found" }
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
                 profile.fadeIn()
                 loadInfo(cookie)
             })
         }
-        profileLoader = Glide.with(profile)
+        profileLoader = GlideApp.with(profile)
     }
 
-    fun loadInfo(cookie: CookieModel) {
+    private fun loadInfo(cookie: CookieModel) {
         refresh = true
-        Observable.zip(SingleToObservable(profileObservable), SingleToObservable(usernameObservable),
-                BiFunction<Boolean, String, Pair<Boolean, String>> { foundImage, name -> Pair(foundImage, name) })
+        Single.zip<Boolean, String, Pair<Boolean, String>>(
+                profileSubject,
+                usernameSubject,
+                BiFunction(::Pair))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
             refresh = false
             if (!foundImage) {
-                L.e("Could not get profile photo; Invalid userId?")
-                L.i(null, cookie.toString())
+                L.e { "Could not get profile photo; Invalid userId?" }
+                L._i { cookie }
             }
             textview.text = String.format(getString(R.string.welcome), name)
             textview.fadeIn()
-            frostAnswers { logLogin(LoginEvent().putMethod("frost_browser").putSuccess(true)) }
+            frostAnswers {
+                logLogin(LoginEvent()
+                        .putMethod("frost_browser")
+                        .putSuccess(true))
+            }
             /*
              * The user may have logged into an account that is already in the database
              * We will let the db handle duplicates and load it now after the new account has been saved
              */
-            loadFbCookiesAsync { cookies ->
+            loadFbCookiesAsync {
+                val cookies = ArrayList(it)
                 Handler().postDelayed({
-                    launchNewTask(if (Showcase.intro) IntroActivity::class.java else MainActivity::class.java,
-                            ArrayList(cookies), clearStack = true)
+                    if (Showcase.intro)
+                        launchNewTask<IntroActivity>(cookies, true)
+                    else
+                        launchNewTask<MainActivity>(cookies, true)
                 }, 1000)
             }
         }
@@ -102,23 +114,24 @@ class LoginActivity : BaseActivity() {
     }
 
 
-    fun loadProfile(id: Long) {
-        profileLoader.load(PROFILE_PICTURE_URL(id)).withRoundIcon().listener(object : RequestListener<Drawable> {
+    private fun loadProfile(id: Long) {
+        profileLoader.load(PROFILE_PICTURE_URL(id))
+                .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                profileObservable.onSuccess(true)
+                profileSubject.onSuccess(true)
                 return false
             }
 
             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                 e.logFrostAnswers("Profile loading exception")
-                profileObservable.onSuccess(false)
+                profileSubject.onSuccess(false)
                 return false
             }
         }).into(profile)
     }
 
-    fun loadUsername(cookie: CookieModel) {
-        cookie.fetchUsername { usernameObservable.onSuccess(it) }
+    private fun loadUsername(cookie: CookieModel) {
+        cookie.fetchUsername(usernameSubject::onSuccess)
     }
 
     override fun backConsumer(): Boolean {
@@ -127,6 +140,16 @@ class LoginActivity : BaseActivity() {
             return true
         }
         return false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        web.resumeTimers()
+    }
+
+    override fun onPause() {
+        web.pauseTimers()
+        super.onPause()
     }
 
 }

@@ -20,30 +20,6 @@ import io.reactivex.subjects.Subject
  */
 
 /**
- * Fully quiet client that disables any prompts relating to the UI
- * (as nothing is attached)
- */
-class HeadlessChromeClient : WebChromeClient() {
-
-    override fun onConsoleMessage(consoleMessage: ConsoleMessage) = true
-
-    override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-        result.cancel()
-        return true
-    }
-
-    override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-        result.cancel()
-        return true
-    }
-
-    override fun onJsPrompt(view: WebView, url: String?, message: String?, defaultValue: String?, result: JsPromptResult): Boolean {
-        result.cancel()
-        return true
-    }
-}
-
-/**
  * The default chrome client
  */
 class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
@@ -54,14 +30,13 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
     private val context = web.context!!
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        if (consoleBlacklist.any { consoleMessage.message().contains(it) }) return true
-        L.d("Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}")
+        L.v { "Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
         return true
     }
 
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
-        if (title.contains("http") || this.title.value == title) return
+        if (title.startsWith("http") || this.title.value == title) return
         this.title.onNext(title)
     }
 
@@ -76,9 +51,9 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
     }
 
     override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
-        L.i("Requesting geolocation")
+        L.i { "Requesting geolocation" }
         context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) { granted, _ ->
-            L.i("Geolocation response received; ${if (granted) "granted" else "denied"}")
+            L.i { "Geolocation response received; ${if (granted) "granted" else "denied"}" }
             callback(origin, granted, true)
         }
     }

@@ -8,6 +8,8 @@
   <string name="add_keyword">Thêm từ khoá</string>
   <string name="hint_keyword">Nhập từ khoá rồi bấm +</string>
   <string name="empty_keyword">Từ khoá trống</string>
+  <string name="notification_general_all_accounts">Thông báo từ tất cả các tài khoản</string>
+  <string name="notification_general_all_accounts_desc">Hiện thông báo từ tất cả các tài khoản đăng đăng nhập. Khi tắt, sẽ chỉ hiện thông báo từ tài khoản hiện tại.</string>
   <string name="notification_messages">Bật thông báo tin nhắn</string>
   <string name="notification_messages_desc">Nhận thông báo tin nhắn cho tài khoản hiện tại.</string>
   <string name="notification_messages_all_accounts">Thông báo tin nhắn từ tất cả các tài khoản</string>

@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import ca.allanwang.kau.utils.AnimHolder
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
@@ -26,8 +27,8 @@ class FrostWebView @JvmOverloads constructor(
         FrostContentCore {
 
     override fun reload(animate: Boolean) {
-        parent.registerTransition(animate)
-        super.reload()
+        if (parent.registerTransition(false, animate))
+            super.reload()
     }
 
     override lateinit var parent: FrostContentParent
@@ -79,8 +80,8 @@ class FrostWebView @JvmOverloads constructor(
 
     fun loadUrl(url: String?, animate: Boolean) {
         if (url == null) return
-        parent.registerTransition(animate)
-        super.loadUrl(url)
+        if (parent.registerTransition(this.url != url, animate))
+            super.loadUrl(url)
     }
 
     override fun reloadBase(animate: Boolean) {
@@ -147,4 +148,11 @@ class FrostWebView @JvmOverloads constructor(
         settings.textZoom = Prefs.webTextScaling
     }
 
+    override fun destroy() {
+        val parent = getParent() as? ViewGroup
+        if (parent != null) {
+            parent.removeView(this)
+            super.destroy()
+        }
+    }
 }

@@ -1,15 +1,11 @@
 package com.pitchedapps.frost.web
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.pitchedapps.frost.activities.LoginActivity
-import com.pitchedapps.frost.activities.MainActivity
-import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*
@@ -44,18 +40,13 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     private val refresh: Subject<Boolean> = web.parent.refreshObservable
     private val isMain = web.parent.baseEnum != null
 
+    protected inline fun v(crossinline message: () -> Any?) = L.v { "web client: ${message()}" }
+
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
-        L.d("FWV Loading", url)
+        v { "loading $url" }
         refresh.onNext(true)
-    }
-
-    fun launchLogin(c: Context) {
-        if (c is MainActivity && c.cookies().isNotEmpty())
-            c.launchNewTask(SelectorActivity::class.java, c.cookies())
-        else
-            c.launchNewTask(LoginActivity::class.java)
     }
 
     private fun injectBackgroundColor() {
@@ -82,12 +73,15 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
-                            && Prefs.aggressiveRecents))
+                            && Prefs.aggressiveRecents),
+                    JsAssets.DOCUMENT_WATCHER)
+        else
+            refresh.onNext(false)
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
-        L.d("Page finished", url)
+        v { "finished $url" }
         if (!url.isFacebookUrl) {
             refresh.onNext(false)
             return
@@ -102,7 +96,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     }
 
     internal fun injectAndFinish() {
-        L.d("Page finished reveal")
+        v { "page finished reveal" }
         refresh.onNext(false)
         injectBackgroundColor()
         web.jsInject(
@@ -117,11 +111,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     }
 
     open fun handleHtml(html: String?) {
-        L.d("Handle Html")
+        L.d { "Handle Html" }
     }
 
     open fun emit(flag: Int) {
-        L.d("Emit $flag")
+        L.d { "Emit $flag" }
     }
 
     /**
@@ -130,34 +124,39 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
      * returns false if we are already in an overlaying activity
      */
     private fun launchRequest(request: WebResourceRequest): Boolean {
-        L.d("Launching Url", request.url?.toString() ?: "null")
+        v { "Launching url: ${request.url}" }
         return web.requestWebOverlay(request.url.toString())
     }
 
     private fun launchImage(url: String, text: String? = null): Boolean {
-        L.d("Launching Image", url)
+        v { "Launching image: $url" }
         web.context.launchImageActivity(url, text)
         if (web.canGoBack()) web.goBack()
         return true
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-        L.i("Url Loading", request.url?.toString())
+        v { "Url loading: ${request.url}" }
         val path = request.url?.path ?: return super.shouldOverrideUrlLoading(view, request)
-        L.v("Url Loading Path", path)
+        v { "Url path $path" }
         val url = request.url.toString()
         if (url.isExplicitIntent) {
             view.context.resolveActivityForUri(request.url)
             return true
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
-        if (url.contains("scontent-sea1-1.xx.fbcdn.net") && (path.endsWith(".jpg") || path.endsWith(".png")))
+        if (url.isImageUrl)
             return launchImage(url)
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
 
 }
+
+private const val EMIT_THEME = 0b1
+private const val EMIT_ID = 0b10
+private const val EMIT_COMPLETE = EMIT_THEME or EMIT_ID
+private const val EMIT_FINISH = 0
 
 /**
  * Client variant for the menu view
@@ -180,38 +179,13 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     override fun emit(flag: Int) {
         super.emit(flag)
-        super.injectAndFinish()
+        when (flag) {
+            EMIT_FINISH -> super.injectAndFinish()
+        }
     }
 
     override fun onPageFinishedActions(url: String) {
-        L.d("Should inject ${url.shouldInjectMenu}")
+        v { "Should inject ${url.shouldInjectMenu}" }
         if (!url.shouldInjectMenu) injectAndFinish()
     }
-}
-
-/**
- * Headless client that injects content after a page load
- * The JSI is meant to handle everything else
- */
-class HeadlessWebViewClient(val tag: String, val postInjection: InjectorContract) : BaseWebViewClient() {
-
-    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
-        if (url == null) return
-        L.d("Headless Page $tag Started", url)
-    }
-
-    override fun onPageFinished(view: WebView, url: String?) {
-        super.onPageFinished(view, url)
-        if (url == null) return
-        L.d("Headless Page $tag Finished", url)
-        postInjection.inject(view)
-    }
-
-    /**
-     * In addition to general filtration, we will also strip away css and images
-     */
-    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
-            = super.shouldInterceptRequest(view, request).filterCss(request).filterImage(request)
-
 }

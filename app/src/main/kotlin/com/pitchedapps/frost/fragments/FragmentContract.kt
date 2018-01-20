@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.fragments
 
-import android.content.Context
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -15,6 +14,13 @@ import io.reactivex.disposables.Disposable
 interface FragmentContract : FrostContentContainer {
 
     val content: FrostContentParent?
+
+    /**
+     * Defines whether the fragment is valid in the viewpager
+     * Or if it needs to be recreated
+     * May be called from any thread to toggle status
+     */
+    var valid: Boolean
 
     /**
      * Helper to retrieve the core from [content]
@@ -53,11 +59,6 @@ interface FragmentContract : FrostContentContainer {
      * to activity emissions
      */
     fun attachMainObservable(contract: MainActivityContract): Disposable
-
-    /**
-     * Load custom layout to container
-     */
-    fun innerView(context: Context): FrostContentCore
 
     /**
      * Call when fragment is detached so that any existing

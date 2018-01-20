@@ -17,37 +17,15 @@ import java.io.ByteArrayInputStream
  */
 private val blankResource: WebResourceResponse by lazy { WebResourceResponse("text/plain", "utf-8", ByteArrayInputStream("".toByteArray())) }
 
-//these hosts will redirect to a blank resource
-private val blacklistHost: Set<String> =
-        setOf(
-                //                "edge-chat.facebook.com" //todo make more specific? This is required for message responses
-        )
-
-//these hosts will return null and skip logging
-private val whitelistHost: Set<String> =
-        setOf(
-                "static.xx.fbcdn.net",
-                "m.facebook.com",
-                "touch.facebook.com"
-        )
-
-//these hosts will skip ad inspection
-//this list does not have to include anything from the two above
-private val adWhitelistHost: Set<String> =
-        setOf(
-                "scontent-sea1-1.xx.fbcdn.net"
-        )
-
 fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourceResponse? {
-    request.url ?: return null
-    val httpUrl = HttpUrl.parse(request.url.toString()) ?: return null
+    val requestUrl = request.url?.toString() ?: return null
+    val httpUrl = HttpUrl.parse(requestUrl) ?: return null
     val host = httpUrl.host()
     val url = httpUrl.toString()
-//    if (blacklistHost.contains(host)) return blankResource
-    if (whitelistHost.contains(host)) return null
-    if (!adWhitelistHost.contains(host) && FrostPglAdBlock.isAdHost(host)) return blankResource
+    if (host.contains("facebook") || host.contains("fbcdn")) return null
+    if (FrostPglAdBlock.isAdHost(host)) return blankResource
 //    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
-    L.v("Intercept Request", "$host $url")
+    L.v { "Intercept Request: $host $url" }
     return null
 }
 

@@ -9,13 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.content.FileProvider
 import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.string
-import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createMediaFile
+import com.pitchedapps.frost.utils.frostUriFromFile
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -54,7 +53,7 @@ class DownloadService : IntentService("FrostVideoDownloader") {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null && intent.flags == PendingIntent.FLAG_CANCEL_CURRENT) {
-            L.i("Cancelling download service")
+            L.i { "Cancelling download service" }
             cancelDownload()
             return Service.START_NOT_STICKY
         }
@@ -84,7 +83,7 @@ class DownloadService : IntentService("FrostVideoDownloader") {
 
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
-                L.e("Video download failed")
+                L.e { "Video download failed" }
                 toast("Video download failed")
                 return@use
             }
@@ -105,9 +104,10 @@ class DownloadService : IntentService("FrostVideoDownloader") {
 
 
     private fun getPendingIntent(context: Context, file: File): PendingIntent {
-        val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+        val uri = context.frostUriFromFile(file)
         val type = context.contentResolver.getType(uri)
-        L.i("DownloadType: retrieved pending intent - $uri $type")
+        L.i { "DownloadType: retrieved pending intent" }
+        L._i { "Contents: $uri $type" }
         val intent = Intent(Intent.ACTION_VIEW, uri)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 .setDataAndType(uri, type)
@@ -119,7 +119,7 @@ class DownloadService : IntentService("FrostVideoDownloader") {
      * Does not show the new notification
      */
     private fun finishDownload(url: String) {
-        L.i("Video download finished", url)
+        L.i { "Video download finished" }
         downloaded.add(url)
         notifBuilder.setContentTitle(string(R.string.downloaded_video))
                 .setProgress(0, 0, false).setOngoing(false).setAutoCancel(true)
@@ -132,7 +132,7 @@ class DownloadService : IntentService("FrostVideoDownloader") {
     }
 
     private fun onProgressUpdate(url: String, type: MediaType?, percentage: Float, done: Boolean) {
-        L.v("Download request progress $percentage", url)
+        L.v { "Download request progress $percentage for $url" }
         notifBuilder.setProgress(MAX_PROGRESS, (percentage * MAX_PROGRESS).toInt(), false)
         if (done) finishDownload(url)
         notifBuilder.show()

@@ -12,7 +12,7 @@ y = new MutationObserver((mutations) ->
 )
 y.observe viewport, attributes: true
 y.observe root, attributes: true
-x = new MutationObserver((mutations) ->
+x = new MutationObserver(() ->
     menu = document.querySelector(".mSideMenu")
     if menu != null
         x.disconnect()

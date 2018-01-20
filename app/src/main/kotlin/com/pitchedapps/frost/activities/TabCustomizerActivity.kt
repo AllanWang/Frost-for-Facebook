@@ -79,7 +79,9 @@ class TabCustomizerActivity : BaseActivity() {
         fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
         fabCancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
         fabCancel.setOnClickListener { finish() }
-        setFrostColors(themeWindow = true)
+        setFrostColors {
+            themeWindow = true
+        }
     }
 
     private fun View.wobble() = startAnimation(wobble(context))

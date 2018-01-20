@@ -134,7 +134,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     }
 
     override fun finish() {
-        launchNewTask(MainActivity::class.java, cookies())
+        launchNewTask<MainActivity>(cookies(), false)
         super.finish()
     }
 

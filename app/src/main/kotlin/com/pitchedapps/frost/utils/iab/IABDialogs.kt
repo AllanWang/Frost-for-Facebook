@@ -15,7 +15,7 @@ import com.pitchedapps.frost.utils.*
  */
 
 private fun playStoreLog(text: String) {
-    L.e(Throwable(text), "IAB Play Store Exception")
+    L.e(Throwable(text)) { "IAB Play Store Exception" }
 }
 
 /**
@@ -30,7 +30,7 @@ private fun Activity.playRestart() {
 
 fun Activity?.playStoreNoLongerPro() {
     Prefs.pro = false
-    L.d("IAB No longer pro")
+    L.d { "IAB No longer pro" }
     frostAnswers {
         logPurchase(PurchaseEvent()
                 .putCustomAttribute("result", "no longer pro")
@@ -49,7 +49,7 @@ fun Activity?.playStoreNoLongerPro() {
 
 fun Activity?.playStoreFoundPro() {
     Prefs.pro = true
-    L.d("Found pro")
+    L.d { "Found pro" }
     if (this == null) return
     materialDialogThemed {
         title(R.string.found_pro)
@@ -62,7 +62,7 @@ fun Activity?.playStoreFoundPro() {
 }
 
 fun Activity.playStorePurchaseUnsupported() {
-    L.d("Play store not found")
+    L.d { "Play store not found" }
     materialDialogThemed {
         title(R.string.uh_oh)
         content(R.string.play_store_unsupported)
@@ -75,7 +75,7 @@ fun Activity.playStorePurchaseUnsupported() {
 }
 
 fun Activity.playStorePurchasedSuccessfully(key: String) {
-    L.d("Play store purchased $key successfully")
+    L.d { "Play store purchased $key successfully" }
     materialDialogThemed {
         title(R.string.play_thank_you)
         content(R.string.play_purchased_pro)
@@ -86,7 +86,7 @@ fun Activity.playStorePurchasedSuccessfully(key: String) {
 }
 
 fun Activity.purchaseRestored() {
-    L.d("Purchase restored")
+    L.d { "Purchase restored" }
     materialDialogThemed {
         title(R.string.play_thank_you)
         content(R.string.purchases_restored_with_pro)

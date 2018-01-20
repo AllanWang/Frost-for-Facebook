@@ -84,7 +84,8 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     fun setVideo(url: String, repeat: Boolean = false) {
         val formattedUrl = url.formattedFbUrl
-        L.d("Load video view; repeat: $repeat", url)
+        L.d { "Load video; repeat: $repeat" }
+        L._d { "Video Url\t\t\t$url\nformatted\t$formattedUrl" }
         animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
         video.setVideoURI(Uri.parse(formattedUrl))
         video.repeat = repeat

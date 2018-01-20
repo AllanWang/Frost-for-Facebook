@@ -5,7 +5,9 @@ import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.kpref.kpref
+import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -59,10 +61,17 @@ object Prefs : KPref() {
     val accentColor: Int
         get() = t.accentColor
 
-    val accentColorForWhite: Int
+    inline val accentColorForWhite: Int
         get() = if (accentColor.isColorVisibleOn(Color.WHITE)) accentColor
         else if (textColor.isColorVisibleOn(Color.WHITE)) textColor
         else FACEBOOK_BLUE
+
+    inline val nativeBgColor: Int
+        get() = Prefs.bgColor.withAlpha(30)
+
+    fun nativeBgColor(unread: Boolean) = Prefs.bgColor
+            .colorToForeground(if (unread) 0.7f else 0.0f)
+            .withAlpha(30)
 
     val bgColor: Int
         get() = t.bgColor
@@ -79,8 +88,8 @@ object Prefs : KPref() {
     val isCustomTheme: Boolean
         get() = t == Theme.CUSTOM
 
-    val frostId: String
-        get() = "${installDate}-${identifier}"
+    inline val frostId: String
+        get() = "$installDate-$identifier"
 
     var tintNavBar: Boolean by kpref("tint_nav_bar", true)
 
@@ -102,7 +111,9 @@ object Prefs : KPref() {
 
     var animate: Boolean by kpref("fancy_animations", true)
 
-    var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf<String>())
+    var notificationKeywords: StringSet by kpref("notification_keywords", mutableSetOf())
+
+    var notificationsGeneral: Boolean by kpref("notification_general", true)
 
     var notificationAllAccounts: Boolean by kpref("notification_all_accounts", true)
 
@@ -150,10 +161,8 @@ object Prefs : KPref() {
 
     var mainActivityLayoutType: Int by kpref("main_activity_layout_type", 0)
 
-    val mainActivityLayout: MainActivityLayout
+    inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
-
-    var nativeViews: Boolean by kpref("native_views", true)
 
     override fun deleteKeys() = arrayOf("search_bar")
 }

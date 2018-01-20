@@ -7,49 +7,53 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.withArguments
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
-import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.parsers.FrostParser
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.views.FrostRecyclerView
-import com.pitchedapps.frost.views.FrostWebView
-import com.pitchedapps.frost.web.FrostWebViewClient
-import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
 
 /**
  * Created by Allan Wang on 2017-11-07.
+ *
+ * All fragments pertaining to the main view
+ * Must be attached to activities implementing [MainActivityContract]
  */
 abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
-        private const val ARG_URL_ENUM = "arg_url_enum"
         private const val ARG_POSITION = "arg_position"
+        private const val ARG_VALID = "arg_valid"
 
-        internal operator fun invoke(base: () -> BaseFragment, data: FbItem, position: Int): BaseFragment {
-            val fragment = if (Prefs.nativeViews) base() else WebFragment()
+        internal operator fun invoke(base: () -> BaseFragment, useFallback: Boolean, data: FbItem, position: Int): BaseFragment {
+            val fragment = if (!useFallback) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                     ARG_URL to d.url,
-                    ARG_POSITION to position,
-                    ARG_URL_ENUM to d
+                    ARG_POSITION to position
             )
+            d.put(fragment.arguments!!)
             return fragment
         }
     }
 
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
-    override val baseEnum: FbItem by lazy { arguments!!.getSerializable(ARG_URL_ENUM) as FbItem }
+    override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
+
+    override var valid: Boolean
+        get() = arguments!!.getBoolean(ARG_VALID, true)
+        set(value) {
+            if (value || this is WebFragment) return
+            arguments!!.putBoolean(ARG_VALID, value)
+            L.e { "Invalidating position $position" }
+            frostAnswersCustom("Native Fallback",
+                    "Item" to baseEnum.name)
+            (context as MainActivityContract).reloadFragment(this)
+        }
 
     override var firstLoad: Boolean = true
     private var activityDisposable: Disposable? = null
@@ -58,6 +62,13 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override var content: FrostContentParent? = null
 
     protected abstract val layoutRes: Int
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        firstLoad = true
+        if (context !is MainActivityContract)
+            throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
+    }
 
     override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutRes, container, false)
@@ -81,8 +92,9 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun firstLoadRequest() {
+        val core = core ?: return
         if (userVisibleHint && isVisible && firstLoad) {
-            core?.reloadBase(true)
+            core.reloadBase(true)
             firstLoad = false
         }
     }
@@ -134,6 +146,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun onDestroyView() {
+        L.i { "Fragment on destroy $position ${hashCode()}" }
         content?.destroy()
         content = null
         super.onDestroyView()
@@ -162,73 +175,3 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }
 
-abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
-
-    override val layoutRes: Int = R.layout.view_content_recycler
-
-    /**
-     * The parser to make this all happen
-     */
-    abstract val parser: FrostParser<T>
-
-    abstract val adapter: FastItemAdapter<Item>
-
-    abstract fun toItems(data: T): List<Item>
-
-    override fun bind(recyclerView: FrostRecyclerView) {
-        recyclerView.adapter = this.adapter
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val tail = tailMapper(baseEnum)
-        if (tail.isNotEmpty()) {
-            val baseUrl = baseEnum.url
-            L.d("Adding $tail to $baseUrl for RecyclerFragment")
-            arguments!!.putString(ARG_URL, "$baseUrl$tail")
-        }
-    }
-
-    private fun tailMapper(item: FbItem) = when (item) {
-        FbItem.NOTIFICATIONS, FbItem.MESSAGES -> "/?more"
-        else -> ""
-    }
-
-    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-        doAsync {
-            progress(10)
-            val doc = frostJsoup(baseUrl)
-            progress(60)
-            val data = parser.parse(doc)
-            if (data == null) {
-                context?.toast(R.string.error_generic)
-                L.eThrow("RecyclerFragment failed for ${baseEnum.name}")
-                Prefs.nativeViews = false
-                return@doAsync callback(false)
-            }
-            progress(80)
-            val items = toItems(data)
-            progress(97)
-            adapter.setNewList(items)
-        }
-    }
-}
-
-open class WebFragment : BaseFragment(), FragmentContract {
-
-    override val layoutRes: Int = R.layout.view_content_web
-
-    /**
-     * Given a webview, output a client
-     */
-    open fun client(web: FrostWebView) = FrostWebViewClient(web)
-
-    override fun innerView(context: Context) = FrostWebView(context)
-
-}
-
-class WebFragmentMenu : WebFragment() {
-
-    override fun client(web: FrostWebView) = FrostWebViewClientMenu(web)
-
-}

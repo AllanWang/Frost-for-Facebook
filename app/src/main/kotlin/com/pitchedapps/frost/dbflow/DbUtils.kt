@@ -18,7 +18,7 @@ object DbUtils {
 }
 
 inline fun <reified T : Any> List<T>.replace(dbName: String) {
-    L.d("Replacing $dbName.db")
+    L.d { "Replacing $dbName.db" }
     DbUtils.db(dbName).reset()
     FastStoreModelTransaction.saveBuilder(FlowManager.getModelAdapter(T::class.java)).addAll(this).build()
 }

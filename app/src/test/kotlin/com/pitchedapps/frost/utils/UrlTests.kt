@@ -2,6 +2,7 @@ package com.pitchedapps.frost.utils
 
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import org.junit.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -14,15 +15,22 @@ class UrlTests {
 
     @Test
     fun independence() {
-        assertTrue(GOOGLE.isIndependent, "google")
-        assertTrue(FACEBOOK_COM.isIndependent, "facebook")
-        assertFalse("#!/photos/viewer/?photoset_token=pcb.1234".isIndependent, "photo")
-        assertFalse("#test-id".isIndependent, "id")
-        assertFalse("#".isIndependent, "#")
-        assertFalse("#!".isIndependent, "#!")
-        assertFalse("#!/".isIndependent, "#!/")
-        assertTrue("/this/is/valid".isIndependent, "url segments")
-        assertTrue("#!/facebook/segment".isIndependent, "facebook segments")
+
+        mapOf(
+                GOOGLE to true,
+                FACEBOOK_COM to true,
+                "#!/photos/viewer/?photoset_token=pcb.1234" to false,
+                "#test-id" to false,
+                "#" to false,
+                "#!" to false,
+                "#!/" to false,
+                "#!/events/permalink/going/?event_id=" to false,
+                "/this/is/valid" to true,
+                "#!/facebook/segment" to true
+        ).forEach { (url, valid) ->
+            assertEquals(valid, url.isIndependent,
+                    "Independence test failed for $url; should be $valid")
+        }
     }
 
     @Test

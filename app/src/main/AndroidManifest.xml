@@ -142,11 +142,19 @@
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
+        <activity
+            android:name=".activities.DebugActivity"
+            android:theme="@style/FrostTheme" />
 
         <service
             android:name=".services.NotificationService"
             android:enabled="true"
             android:label="@string/frost_notifications"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.FrostRequestService"
+            android:enabled="true"
+            android:label="@string/frost_requests"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver

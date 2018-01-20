@@ -2,6 +2,7 @@ package com.pitchedapps.frost.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -10,7 +11,7 @@ import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
@@ -22,9 +23,6 @@ import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.request.RequestOptions
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
@@ -36,6 +34,7 @@ import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -47,21 +46,20 @@ const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
-const val ARG_OVERLAY_CONTEXT = "arg_overlay_context"
 
-fun Context.launchNewTask(clazz: Class<out Activity>, cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
-    startActivity(clazz, clearStack, intentBuilder = {
+inline fun <reified T : Activity> Context.launchNewTask(cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
+    startActivity<T>(clearStack, intentBuilder = {
         putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
 }
 
 fun Context.launchLogin(cookieList: ArrayList<CookieModel>, clearStack: Boolean = true) {
-    if (cookieList.isNotEmpty()) launchNewTask(SelectorActivity::class.java, cookieList, clearStack)
-    else launchNewTask(LoginActivity::class.java, clearStack = clearStack)
+    if (cookieList.isNotEmpty()) launchNewTask<SelectorActivity>(cookieList, clearStack)
+    else launchNewTask<LoginActivity>(clearStack = clearStack)
 }
 
 fun Activity.cookies(): ArrayList<CookieModel> {
-    return intent?.extras?.getParcelableArrayList<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
+    return intent?.getParcelableArrayListExtra<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
 }
 
 /**
@@ -69,23 +67,26 @@ fun Activity.cookies(): ArrayList<CookieModel> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-fun Context.launchWebOverlay(url: String, clazz: Class<out WebOverlayActivityBase> = WebOverlayActivity::class.java) {
+private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String) {
     val argUrl = url.formattedFbUrl
-    L.v("Launch received", url)
-    L.i("Launch web overlay", argUrl)
+    L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
         FbCookie.logout(this)
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
-        startActivity(clazz, false, intentBuilder = {
+        startActivity<T>(false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })
 }
 
-private fun Context.fadeBundle() = ActivityOptionsCompat.makeCustomAnimation(this,
+fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
+
+fun Context.launchWebOverlayBasic(url: String) = launchWebOverlayImpl<WebOverlayBasicActivity>(url)
+
+private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(this,
         android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String?) {
-    startActivity(ImageActivity::class.java, intentBuilder = {
+    startActivity<ImageActivity>(intentBuilder = {
         putExtras(fadeBundle())
         putExtra(ARG_IMAGE_URL, imageUrl)
         putExtra(ARG_TEXT, text)
@@ -93,17 +94,13 @@ fun Context.launchImageActivity(imageUrl: String, text: String?) {
 }
 
 fun Activity.launchTabCustomizerActivity() {
-    startActivityForResult(TabCustomizerActivity::class.java,
-            SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
+    startActivityForResult<TabCustomizerActivity>(SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
         with(fadeBundle())
     })
 }
 
-fun Activity.launchIntroActivity(cookieList: ArrayList<CookieModel>)
-        = launchNewTask(IntroActivity::class.java, cookieList, true)
-
 fun WebOverlayActivity.url(): String {
-    return intent.extras?.getString(ARG_URL) ?: FbItem.FEED.url
+    return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
 fun Context.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
@@ -132,17 +129,49 @@ fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
         setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
 }
 
-fun Activity.setFrostColors(toolbar: Toolbar? = null, themeWindow: Boolean = true,
-                            texts: Array<TextView> = arrayOf(), headers: Array<View> = arrayOf(), backgrounds: Array<View> = arrayOf()) {
-    statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
-    if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
-    if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-    toolbar?.setBackgroundColor(Prefs.headerColor)
-    toolbar?.setTitleTextColor(Prefs.iconColor)
-    toolbar?.overflowIcon?.setTint(Prefs.iconColor)
-    texts.forEach { it.setTextColor(Prefs.textColor) }
-    headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
-    backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+class ActivityThemeUtils {
+
+    private var toolbar: Toolbar? = null
+    var themeWindow = true
+    private var texts = mutableListOf<TextView>()
+    private var headers = mutableListOf<View>()
+    private var backgrounds = mutableListOf<View>()
+
+    fun toolbar(toolbar: Toolbar) {
+        this.toolbar = toolbar
+    }
+
+    fun text(vararg views: TextView) {
+        texts.addAll(views)
+    }
+
+    fun header(vararg views: View) {
+        headers.addAll(views)
+    }
+
+    fun background(vararg views: View) {
+        backgrounds.addAll(views)
+    }
+
+    fun theme(activity: Activity) {
+        with(activity) {
+            statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
+            if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
+            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
+            toolbar?.setBackgroundColor(Prefs.headerColor)
+            toolbar?.setTitleTextColor(Prefs.iconColor)
+            toolbar?.overflowIcon?.setTint(Prefs.iconColor)
+            texts.forEach { it.setTextColor(Prefs.textColor) }
+            headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
+            backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+        }
+    }
+}
+
+inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
+    val themer = ActivityThemeUtils()
+    themer.builder()
+    themer.theme(this)
 }
 
 fun frostAnswers(action: Answers.() -> Unit) {
@@ -166,7 +195,7 @@ fun frostAnswersCustom(name: String, vararg events: Pair<String, Any>) {
  */
 fun Throwable?.logFrostAnswers(text: String) {
     val msg = if (this == null) text else "$text: $message"
-    L.e(msg)
+    L.e { msg }
     frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
@@ -192,8 +221,6 @@ fun Activity.frostNavigationBar() {
     navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
 }
 
-fun <T> RequestBuilder<T>.withRoundIcon() = apply(RequestOptions().transform(CircleCrop()))!!
-
 @Throws(IOException::class)
 fun createMediaFile(extension: String) = createMediaFile("Frost", extension)
 
@@ -218,28 +245,39 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
  * [true] if url contains [FACEBOOK_COM]
  */
 inline val String?.isFacebookUrl
-    get() = this != null && contains(FACEBOOK_COM)
+    get() = this != null && (contains(FACEBOOK_COM) || contains("fbcdn.net"))
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer
  */
-inline val String?.isVideoUrl
-    get() = this != null && (startsWith(VIDEO_REDIRECT) || startsWith("https://video-"))
+inline val String.isVideoUrl
+    get() = startsWith(VIDEO_REDIRECT) || startsWith("https://video-")
+
+/**
+ * [true] if url is or redirects to an explicit facebook image
+ */
+inline val String.isImageUrl
+    get() = contains("fbcdn.net") && (contains(".png") || contains(".jpg"))
 
 /**
  * [true] if url can be displayed in a different webview
  */
 inline val String?.isIndependent: Boolean
     get() {
-        if (this == null || length < 5) return false            // ignore short queries
-        if (this[0] == '#' && !contains('/')) return false      // ignore element values
-        if (startsWith("http") && !isFacebookUrl) return true   // ignore non facebook urls
-        if (dependentSet.any { contains(it) }) return false     // ignore known dependent segments
+        if (this == null || length < 5) return false                // ignore short queries
+        if (this[0] == '#' && !contains('/')) return false          // ignore element values
+        if (startsWith("http") && !isFacebookUrl) return true       // ignore non facebook urls
+        if (dependentSegments.any { contains(it) }) return false    // ignore known dependent segments
         return true
     }
 
-val dependentSet = setOf(
+val dependentSegments = arrayOf(
         "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
+        "events/permalink",
+        /**
+         * Editing images
+         */
+        "/confirmation/?",
         /*
          * Facebook messages have the following cases for the tid query
          * mid* or id* for newer threads, which can be launched in new windows
@@ -259,16 +297,25 @@ fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textCo
     }
 }
 
+fun Context.frostUriFromFile(file: File): Uri =
+        FileProvider.getUriForFile(this,
+                BuildConfig.APPLICATION_ID + ".provider",
+                file)
+
 inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit)
         = sendFrostEmail(string(subjectId), builder)
 
 inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
         = sendEmail(string(R.string.dev_email), subjectId) {
     builder()
+    addFrostDetails()
+}
 
+fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
     val proTag = if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
+    addItem("Locale", Locale.getDefault().displayName)
 }
 
 fun frostJsoup(url: String)
@@ -283,4 +330,21 @@ fun Element.first(vararg select: String): Element? {
         if (e.size > 0) return e.first()
     }
     return null
+}
+
+fun File.createFreshFile(): Boolean {
+    if (exists()) {
+        if (!delete()) return false
+    } else {
+        val parent = parentFile
+        if (!parent.exists() && !parent.mkdirs())
+            return false
+    }
+    return createNewFile()
+}
+
+fun File.createFreshDir(): Boolean {
+    if (exists() && !deleteRecursively())
+        return false
+    return mkdirs()
 }

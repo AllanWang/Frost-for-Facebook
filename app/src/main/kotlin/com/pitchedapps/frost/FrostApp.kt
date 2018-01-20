@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
@@ -18,6 +17,7 @@ import com.pitchedapps.frost.dbflow.CookiesDb
 import com.pitchedapps.frost.dbflow.FbTabsDb
 import com.pitchedapps.frost.dbflow.NotificationDb
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.FrostPglAdBlock
@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import io.fabric.sdk.android.Fabric
+import io.reactivex.plugins.RxJavaPlugins
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -64,10 +65,9 @@ class FrostApp : Application() {
             Fabric.with(this, Crashlytics(), Answers())
             Crashlytics.setUserIdentifier(Prefs.frostId)
         }
-        KL.debug(BuildConfig.DEBUG)
-        L.debug(BuildConfig.DEBUG)
+        KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
-        L.i("Begin Frost for Facebook")
+        L.i { "Begin Frost for Facebook" }
         FbCookie()
         FrostPglAdBlock.init(this)
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
@@ -87,8 +87,10 @@ class FrostApp : Application() {
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
                 val c = imageView.context
-                val old = Glide.with(c).load(uri).apply(RequestOptions().placeholder(placeholder))
-                Glide.with(c).load(uri).apply(RequestOptions().signature(ApplicationVersionSignature.obtain(c)))
+                val request = GlideApp.with(c)
+                val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
+                request.load(uri).apply(RequestOptions()
+                        .signature(ApplicationVersionSignature.obtain(c)))
                         .thumbnail(old).into(imageView)
             }
         })
@@ -99,7 +101,7 @@ class FrostApp : Application() {
                 override fun onActivityStarted(activity: Activity) {}
 
                 override fun onActivityDestroyed(activity: Activity) {
-                    L.d("Activity ${activity.localClassName} destroyed")
+                    L.d { "Activity ${activity.localClassName} destroyed" }
                 }
 
                 override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
@@ -107,9 +109,14 @@ class FrostApp : Application() {
                 override fun onActivityStopped(activity: Activity) {}
 
                 override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    L.d("Activity ${activity.localClassName} created")
+                    L.d { "Activity ${activity.localClassName} created" }
                 }
             })
+
+        RxJavaPlugins.setErrorHandler {
+            L.e(it) { "RxJava error" }
+        }
+
     }
 
 

@@ -44,7 +44,7 @@ abstract class BaseActivity : KauBaseActivity() {
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe { connectivity: Connectivity ->
 //                    connectivity.apply {
-//                        L.d("Network connectivity changed: isAvailable: $isAvailable isRoaming: $isRoaming")
+//                        L.d{"Network connectivity changed: isAvailable: $isAvailable isRoaming: $isRoaming"}
 //                        consumer(connectivity)
 //                    }
 //                }

@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.activities
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -14,9 +15,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TabLayout
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -58,6 +57,8 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
 import com.pitchedapps.frost.fragments.BaseFragment
+import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
@@ -66,8 +67,6 @@ import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -79,7 +78,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         VideoViewHolder, SearchViewHolder,
         FrostBilling by IabMain() {
 
-    lateinit var adapter: SectionsPagerAdapter
+    protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.toolbar)
     val viewPager: FrostViewPager by bindView(R.id.container)
@@ -93,10 +92,30 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
-    private lateinit var controlWebview: WebView
+    private var controlWebview: WebView? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override final fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val start = System.currentTimeMillis()
+        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
+        setFrostColors {
+            toolbar(toolbar)
+            themeWindow = false
+            header(appBar)
+            background(viewPager)
+        }
+        L.i { "Main AAA ${System.currentTimeMillis() - start} ms" }
+        setSupportActionBar(toolbar)
+        adapter = SectionsPagerAdapter(loadFbTabs())
+        viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = TAB_COUNT
+        L.i { "Main BBB ${System.currentTimeMillis() - start} ms" }
+        L.i { "Main CCC ${System.currentTimeMillis() - start} ms" }
+        tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
+        onNestedCreate(savedInstanceState)
+        L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
+        controlWebview = WebView(this)
+        onCreateBilling()
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.prevVersionCode = Prefs.versionCode
             Prefs.versionCode = BuildConfig.VERSION_CODE
@@ -110,22 +129,15 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         "Frost id" to Prefs.frostId)
             }
         }
-        controlWebview = WebView(this)
-        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
-        setSupportActionBar(toolbar)
-        adapter = SectionsPagerAdapter(supportFragmentManager, loadFbTabs())
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = TAB_COUNT
         setupDrawer(savedInstanceState)
-
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
-        setFrostColors(toolbar, themeWindow = false, headers = arrayOf(appBar), backgrounds = arrayOf(viewPager))
-        tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
-        onCreateBilling()
+        L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
     }
+
+    /**
+     * Injector to handle creation for sub classes
+     */
+    protected abstract fun onNestedCreate(savedInstanceState: Bundle?)
+
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
         (0 until tabs.tabCount).asSequence().forEach { i ->
@@ -190,10 +202,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                 }
                             }
                         }
-                        -3L -> launchNewTask(LoginActivity::class.java, clearStack = false)
-                        -4L -> launchNewTask(SelectorActivity::class.java, cookies(), false)
+                        -3L -> launchNewTask<LoginActivity>(clearStack = false)
+                        -4L -> launchNewTask<SelectorActivity>(cookies(), false)
                         else -> {
-                            FbCookie.switchUser(profile.identifier, { refreshAll() })
+                            FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
                             tabsForEachView { _, view -> view.badgeText = null }
                         }
                     }
@@ -248,7 +260,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onClick { _ -> onClick(); false }
     }
 
-    fun refreshAll() {
+    private fun refreshAll() {
         fragmentSubject.onNext(REQUEST_REFRESH)
     }
 
@@ -260,19 +272,20 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 R.id.action_search to GoogleMaterial.Icon.gmd_search)
         searchViewBindIfNull {
             bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
-                textCallback = { query, _ ->
+                textCallback = { query, searchView ->
                     val results = searchViewCache[query]
                     if (results != null)
-                        runOnUiThread { searchView?.results = results }
-                    else
-                        doAsync {
-                            val data = SearchParser.query(query) ?: return@doAsync
-                            val items = data.map { SearchItem(it.href, it.title, it.description) }.toMutableList()
+                        searchView.results = results
+                    else {
+                        val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results
+                        if (data != null) {
+                            val items = data.map(FrostSearch::toSearchItem).toMutableList()
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
                             searchViewCache.put(query, items)
-                            uiThread { searchView?.results = items }
+                            searchView.results = items
                         }
+                    }
                 }
                 textDebounceInterval = 300
                 searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
@@ -291,7 +304,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
-                val bundle = ActivityOptionsCompat.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
+                val bundle = ActivityOptions.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
                 startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }
             else -> return super.onOptionsItemSelected(item)
@@ -309,7 +322,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ACTIVITY_SETTINGS) {
             if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
-                L.d("Restart Application Requested")
+                L.d { "Restart Application Requested" }
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -333,15 +346,28 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
+    private val STATE_FORCE_FALLBACK = "frost_state_force_fallback"
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(adapter.forcedFallbacks))
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        adapter.forcedFallbacks.clear()
+        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK))
+    }
+
     override fun onResume() {
         super.onResume()
-        FbCookie.switchBackUser { }
-        controlWebview.resumeTimers()
+        FbCookie.switchBackUser {}
+        controlWebview?.resumeTimers()
     }
 
     override fun onPause() {
-        controlWebview.pauseTimers()
-        L.v("Pause main web timers")
+        controlWebview?.pauseTimers()
+        L.v { "Pause main web timers" }
         super.onPause()
     }
 
@@ -355,7 +381,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onDestroy() {
         onDestroyBilling()
-        controlWebview.destroy()
+        controlWebview?.destroy()
         super.onDestroy()
     }
 
@@ -382,32 +408,41 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     inline val currentFragment
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
 
-    inner class SectionsPagerAdapter(fm: FragmentManager, val pages: List<FbItem>) : FragmentPagerAdapter(fm) {
+    override fun reloadFragment(fragment: BaseFragment) {
+        runOnUiThread { adapter.reloadFragment(fragment) }
+    }
+
+    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
+
+        val forcedFallbacks = mutableSetOf<String>()
+
+        fun reloadFragment(fragment: BaseFragment) {
+            if (fragment is WebFragment) return
+            L.d { "Reload fragment ${fragment.position}: ${fragment.baseEnum.name}" }
+            forcedFallbacks.add(fragment.baseEnum.name)
+            supportFragmentManager.beginTransaction().remove(fragment).commitNowAllowingStateLoss()
+            notifyDataSetChanged()
+        }
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            val fragment = BaseFragment(item.fragmentCreator, item, position)
-            //If first load hasn't occurred, add a listener
-            // todo check
-//            if (!firstLoadFinished) {
-//                var disposable: Disposable? = null
-//                fragment.post {
-//                    disposable = it.web.refreshObservable.subscribe {
-//                        if (!it) {
-//                            //Ensure first load finisher only happens once
-//                            if (!firstLoadFinished) firstLoadFinished = true
-//                            disposable?.dispose()
-//                            disposable = null
-//                        }
-//                    }
-//                }
-//            }
-            return fragment
+            return BaseFragment(item.fragmentCreator,
+                    forcedFallbacks.contains(item.name),
+                    item,
+                    position)
         }
 
         override fun getCount() = pages.size
 
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
+
+        override fun getItemPosition(fragment: Any) =
+                if (fragment !is BaseFragment)
+                    POSITION_UNCHANGED
+                else if (fragment is WebFragment || fragment.valid)
+                    POSITION_UNCHANGED
+                else
+                    POSITION_NONE
     }
 
     override val lowerVideoPadding: PointF

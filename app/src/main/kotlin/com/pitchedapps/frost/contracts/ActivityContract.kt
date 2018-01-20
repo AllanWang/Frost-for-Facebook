@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.contracts
 
+import com.pitchedapps.frost.fragments.BaseFragment
 import io.reactivex.subjects.PublishSubject
 
 /**
@@ -12,4 +13,5 @@ interface MainActivityContract : ActivityContract {
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
     fun collapseAppBar()
+    fun reloadFragment(fragment: BaseFragment)
 }

@@ -7,6 +7,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 def withPlaySigning = file('../files/gplay-keys.json').exists()
 /*
@@ -47,6 +48,11 @@ android {
         variant.outputs.all {
             outputFileName = "${project.APP_ID}-${variant.buildType.name}.apk"
         }
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 
     lintOptions {
@@ -142,6 +148,7 @@ dependencies {
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
     androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
     testImplementation "junit:junit:${JUNIT}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
@@ -168,6 +175,11 @@ dependencies {
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
     implementation"com.mikepenz:fastadapter-extensions:${FAST_ADAPTER_EXTENSIONS}@aar"
+
+    implementation "com.github.bumptech.glide:okhttp3-integration:${GLIDE}"
+    kapt "com.github.bumptech.glide:compiler:${GLIDE}"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.3"
 
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"

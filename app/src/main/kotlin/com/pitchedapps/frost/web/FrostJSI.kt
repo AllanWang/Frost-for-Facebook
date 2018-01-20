@@ -17,6 +17,7 @@ class FrostJSI(val web: FrostWebView) {
     private val context = web.context
     private val activity = context as? MainActivity
     private val header: Subject<String>? = activity?.headerBadgeObservable
+    private val refresh: Subject<Boolean> = web.parent.refreshObservable
     private val cookies = activity?.cookies() ?: arrayListOf()
 
     /**
@@ -33,13 +34,13 @@ class FrostJSI(val web: FrostWebView) {
         if (url != null)
             web.post {
                 (context as? VideoViewHolder)?.showVideo(url, isGif)
-                        ?: L.d("Could not load video; contract not implemented")
+                        ?: L.d { "Could not load video; contract not implemented" }
             }
     }
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {
-        L.d("FrostJSI reload")
+        L.d { "FrostJSI reload" }
         web.post {
             web.stopLoading()
             web.reloadBase(animate)
@@ -86,6 +87,11 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun emit(flag: Int) {
         web.post { web.frostWebClient.emit(flag) }
+    }
+
+    @JavascriptInterface
+    fun isReady() {
+        refresh.onNext(false)
     }
 
     @JavascriptInterface

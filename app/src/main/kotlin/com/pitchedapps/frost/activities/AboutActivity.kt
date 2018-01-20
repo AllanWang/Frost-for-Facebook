@@ -60,7 +60,7 @@ class AboutActivity : AboutActivityBase(null, {
         )
 
         val l = libs.prepareLibraries(this, include, null, false, true)
-//        l.forEach { KL.d("Lib ${it.definedName}") }
+//        l.forEach { KL.d{"Lib ${it.definedName}"} }
         return l
     }
 
@@ -94,7 +94,7 @@ class AboutActivity : AboutActivityBase(null, {
                 lastClick = now
                 if (clickCount == 7 && !Prefs.debugSettings) {
                     Prefs.debugSettings = true
-                    L.d("Debugging section enabled")
+                    L.d { "Debugging section enabled" }
                     toast(R.string.debug_toast_enabled)
                 }
             }
