@@ -18,7 +18,7 @@
   <string name="notification_messages_all_accounts_desc">รับการแจ้งเตือนข้อความโต้ตอบแบบทันทีจากบัญชีทั้งหมด</string>
   <string name="notification_fetch_now">ดึงการแจ้งเตือนเดี๋ยวนี้</string>
   <string name="notification_fetch_now_desc">ดึกการแจ้งเตือนแค่ครั้งเดียว</string>
-  <string name="notification_fetch_success">ดึงข้อมูลการแจ้งเตือน...</string>
+  <string name="notification_fetch_success">ดึงข้อมูลการแจ้งเตือน…</string>
   <string name="notification_fetch_fail">ไม่สามารถดึงการแจ้งเตือนได้</string>
   <string name="notification_sound">เสียงการแจ้งเตือน</string>
   <string name="notification_ringtone">เสียงการแจ้งเตือน</string>
