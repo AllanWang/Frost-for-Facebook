@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.0
+* Add Chinese, Indonesian, Norwegian, Polish, Thai, and Turkish translations
+
 ## v1.7.9
 * Fix image loading
 * Fix sending emails
