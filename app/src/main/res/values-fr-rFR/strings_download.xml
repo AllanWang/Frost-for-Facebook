@@ -11,4 +11,5 @@
   <string name="downloaded_video">Vidéo téléchargée</string>
   <string name="downloading_file">Téléchargement du fichier</string>
   <string name="downloaded_file">Fichier téléchargé</string>
+  <string name="error_invalid_download">Tentative de téléchargement invalide</string>
 </resources>
