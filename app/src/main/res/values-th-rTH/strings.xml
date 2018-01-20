@@ -19,7 +19,7 @@
   <string name="photos">รูปภาพ</string>
   <string name="notes">โน้ต</string>
   <string name="on_this_day">ในวันนี้</string>
-  <string name="loading_account">กำลังเตรียมความพร้อม...</string>
+  <string name="loading_account">กำลังเตรียมความพร้อม…</string>
   <string name="welcome">ยินดีต้อนรับ%s</string>
   <string name="select_facebook_account">เลือกบัญชี Facebook</string>
   <string name="account_not_found">บัญชีปัจจุบันไม่ได้อยู่ในฐานข้อมูล</string>
