@@ -7,4 +7,6 @@
   <string name="invalid_share_url_desc">Vous avez partagé un bloc de texte qui n’est pas une url. Le texte a été copié dans votre presse-papiers, donc vous pouvez le partager manuellement vous-même.</string>
   <string name="no_download_manager">Aucun gestionnaire de téléchargement</string>
   <string name="no_download_manager_desc">Le gestionnaire de téléchargement n’est pas activé. Souhaitez-vous l\'activer afin d\'autoriser les téléchargements ?</string>
+  <string name="error_generic">Une erreur est survenue.</string>
+  <string name="video_load_failed">Impossible de charger la vidéo</string>
 </resources>

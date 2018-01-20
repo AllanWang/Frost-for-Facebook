@@ -7,4 +7,7 @@
         \n\nAo tocar nas opcións de embaixo, preparase un correo de resposta cos datos da páxina web.
     </string>
   <string name="debug_incomplete">Informe incompleto</string>
+  <string name="debug_web">Depurar desde a páxina web</string>
+  <string name="debug_web_desc">Navega ata a páxina web que presenta un problema e envía os recursos para a súa depuración.</string>
+  <string name="parsing_data">Análise de datos</string>
 </resources>

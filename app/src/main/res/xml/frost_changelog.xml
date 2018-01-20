@@ -6,6 +6,9 @@
     <item text="" />
     -->
 
+    <version title="v1.8.0" />
+    <item text="Add Chinese, Indonesian, Norwegian, Polish, Thai, and Turkish translations" />
+
     <version title="v1.7.9" />
     <item text="Fix image loading" />
     <item text="Fix sending emails" />
