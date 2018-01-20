@@ -11,4 +11,5 @@
   <string name="downloaded_video">Vídeo descargado</string>
   <string name="downloading_file">Descargando archivo</string>
   <string name="downloaded_file">Archivo descargado</string>
+  <string name="error_invalid_download">Intento de descarga no válido</string>
 </resources>

@@ -23,6 +23,7 @@
   <string name="welcome">Willkommen %s</string>
   <string name="select_facebook_account">Facebook-Account auswählen</string>
   <string name="account_not_found">Der aktuelle Account besteht nicht in der Datenbank</string>
+  <string name="frost_requests">Frost Anfragen</string>
   <string name="frost_notifications">Frost Benachrichtigungen</string>
   <string name="requires_custom_theme">Erfordert benutzerdefiniertes Thema</string>
   <string name="subject">Betreff</string>
@@ -40,4 +41,6 @@
   <string name="file_chooser_not_found">Datei-Auswähler nicht gefunden</string>
   <string name="top_bar">Oberer Balken</string>
   <string name="bottom_bar">Unterer Balken</string>
+  <string name="preview">Vorschau</string>
+  <string name="options">Optionen</string>
 </resources>

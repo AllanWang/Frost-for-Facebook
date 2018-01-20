@@ -20,6 +20,7 @@
   <string name="notification_sound">Dźwięk powiadomienia</string>
   <string name="notification_ringtone">Dzwonek powiadomienia</string>
   <string name="message_ringtone">Dzwonek wiadomości</string>
+  <string name="select_ringtone">Wybierz dzwonek</string>
   <string name="notification_vibrate">Wibracja powiadomienia</string>
   <string name="notification_lights">Dioda LED powiadomienia</string>
 </resources>

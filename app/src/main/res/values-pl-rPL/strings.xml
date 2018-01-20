@@ -40,4 +40,7 @@
   <string name="file_chooser_not_found">Nie znaleziono selektora plików</string>
   <string name="top_bar">Górny pasek</string>
   <string name="bottom_bar">Dolny pasek</string>
+  <string name="preview">Podgląd</string>
+  <string name="options">Opcje</string>
+  <string name="tab_customizer_instructions">Długie naciśnięcie i przeciągnięcie, aby zmienić kolejność ikon.</string>
 </resources>
