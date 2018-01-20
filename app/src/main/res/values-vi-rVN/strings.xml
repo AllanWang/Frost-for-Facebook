@@ -23,6 +23,7 @@
   <string name="welcome">Chào mừng %s</string>
   <string name="select_facebook_account">Chọn tài khoản Facebook</string>
   <string name="account_not_found">Tài khoản không có trong dữ liệu</string>
+  <string name="frost_requests">Yêu cầu Frost</string>
   <string name="frost_notifications">Thông báo từ Frost</string>
   <string name="requires_custom_theme">Yêu cầu gói giao diện riêng</string>
   <string name="subject">Chủ đề</string>
@@ -40,4 +41,7 @@
   <string name="file_chooser_not_found">Không thể chọn tập tin</string>
   <string name="top_bar">Thanh phía trên</string>
   <string name="bottom_bar">Thanh phía dưới</string>
+  <string name="preview">Xem trước</string>
+  <string name="options">Tuỳ chọn</string>
+  <string name="tab_customizer_instructions">Bấm giữ và kéo để sắp xếp biểu tượng trên cùng.</string>
 </resources>
