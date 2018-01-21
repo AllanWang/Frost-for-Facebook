@@ -30,11 +30,11 @@ import org.jetbrains.anko.runOnUiThread
 fun FrostWebView.requestWebOverlay(url: String): Boolean {
     L.v { "Request web overlay: $url" }
     val context = context // finalize reference
-//    if (url.isVideoUrl && context is VideoViewHolder) {
-//        L.d { "Found video" }
-//        context.runOnUiThread { context.showVideo(url) }
-//        return true
-//    }
+    if (url.isVideoUrl && context is VideoViewHolder) {
+        L.d { "Found video through overlay" }
+        context.runOnUiThread { context.showVideo(url.formattedFbUrl) }
+        return true
+    }
     if (url.isImageUrl) {
         L.d { "Found fb image" }
         context.launchImageActivity(url.formattedFbUrl, null)

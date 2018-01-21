@@ -1,34 +1,53 @@
 "use strict";
 
 (function () {
-  // we will handle media events
-  var _frostMediaClick;
+  var _frostMediaClick, addPip, frostPip, observer;
+
+  frostPip = function frostPip(element) {
+    var data, isGif, url;
+    data = JSON.parse(element.dataset.store);
+    url = data.src;
+    isGif = data.animatedGifVideo;
+    console.log("Launching pip video for " + url + " " + isGif);
+    return typeof Frost !== "undefined" && Frost !== null ? Frost.loadVideo(url, isGif) : void 0;
+  };
+
+  addPip = function addPip(element) {
+    var child, j, len, ref;
+    element.className += " frost-video";
+    delete element.dataset.sigil;
+    ref = element.querySelectorAll("[data-sigil");
+    for (j = 0, len = ref.length; j < len; j++) {
+      child = ref[j];
+      delete child.dataset.sigil;
+    }
+  };
+
+  observer = new MutationObserver(function () {
+    var j, len, player, ref;
+    ref = document.querySelectorAll("[data-sigil=inlineVideo]:not(.frost-video)");
+    for (j = 0, len = ref.length; j < len; j++) {
+      player = ref[j];
+      addPip(player);
+    }
+  });
+
+  observer.observe(document, {
+    childList: true,
+    subtree: true
+  });
 
   _frostMediaClick = function _frostMediaClick(e) {
-    var dataStore, element, playerChild, url;
+    var element, i;
     element = e.target || e.srcElement;
-    if (!element) {
-      return;
+    i = 0;
+    while (!element.className.includes("frost-video")) {
+      if (i++ > 3) {
+        return;
+      }
+      element = element.parentElement;
     }
-    // Get first player child. May be self or parent
-    // Depending on what is clicked
-    playerChild = element.parentElement.parentElement.querySelector("[data-sigil*=playInlineVideo]");
-    if (!playerChild) {
-      return;
-    }
-    try {
-      dataStore = JSON.parse(playerChild.parentElement.getAttribute("data-store"));
-    } catch (error) {
-      return;
-    }
-    url = dataStore != null ? dataStore.src : void 0;
-    if (!url || !url.startsWith("http")) {
-      return;
-    }
-    console.log("Inline video " + url);
-    if (typeof Frost !== "undefined" && Frost !== null) {
-      Frost.loadVideo(url, dataStore.animatedGifVideo);
-    }
+    frostPip(element);
     e.stopPropagation();
     e.preventDefault();
   };

@@ -1,32 +1,38 @@
-# we will handle media events
+frostPip = (element) ->
+  data = JSON.parse(element.dataset.store)
+  url = data.src
+  isGif = data.animatedGifVideo
+  console.log("Launching pip video for #{url} #{isGif}")
+  Frost?.loadVideo url, isGif
+
+addPip = (element) ->
+  element.className += " frost-video"
+  delete element.dataset.sigil
+  for child in element.querySelectorAll("[data-sigil")
+    delete child.dataset.sigil
+  return
+
+observer = new MutationObserver(() ->
+  for player in document.querySelectorAll("[data-sigil=inlineVideo]:not(.frost-video)")
+    addPip player
+  return
+)
+
+observer.observe document,
+  childList: true
+  subtree: true
+
 _frostMediaClick = (e) ->
   element = e.target or e.srcElement
+  i = 0
+  while !element.className.includes("frost-video")
+    if i++ > 3
+      return
+    element = element.parentElement
 
-  if !element
-    return
-
-  # Get first player child. May be self or parent
-  # Depending on what is clicked
-  playerChild = element.parentElement.parentElement.querySelector("[data-sigil*=playInlineVideo]")
-
-  if !playerChild
-    return
-
-  try
-    dataStore = JSON.parse(playerChild.parentElement.getAttribute("data-store"))
-  catch
-    return
-
-  url = dataStore?.src
-
-  if !url || !url.startsWith("http")
-    return
-
-  console.log "Inline video #{url}"
-  Frost?.loadVideo url, dataStore.animatedGifVideo
+  frostPip(element)
   e.stopPropagation()
   e.preventDefault()
   return
 
 document.addEventListener "click", _frostMediaClick, true
-

@@ -27,8 +27,7 @@ import org.jetbrains.anko.withAlpha
  */
 open class BaseWebViewClient : WebViewClient() {
 
-    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse?
-            = view.shouldFrostInterceptRequest(request)
+    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? = view.shouldFrostInterceptRequest(request)
 
 }
 
@@ -74,7 +73,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
                             && Prefs.aggressiveRecents),
-                    JsAssets.DOCUMENT_WATCHER)
+                    JsAssets.DOCUMENT_WATCHER,
+                    JsAssets.CLICK_A,
+                    CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
+                    JsAssets.CONTEXT_A,
+                    JsAssets.MEDIA)
         else
             refresh.onNext(false)
     }
@@ -101,13 +104,8 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         injectBackgroundColor()
         web.jsInject(
                 JsActions.LOGIN_CHECK,
-                JsAssets.CLICK_A,
                 JsAssets.TEXTAREA_LISTENER,
-                CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
-                JsAssets.CONTEXT_A,
-                JsAssets.MEDIA,
-                JsAssets.HEADER_BADGES.maybe(web.parent.baseEnum != null)
-        )
+                JsAssets.HEADER_BADGES.maybe(isMain))
     }
 
     open fun handleHtml(html: String?) {

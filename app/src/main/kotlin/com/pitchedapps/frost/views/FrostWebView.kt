@@ -40,10 +40,10 @@ class FrostWebView @JvmOverloads constructor(
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun bind(container: FrostContentContainer): View {
+        if (parent.baseEnum != null || parent.baseUrl.shouldUseBasicAgent)
+            userAgentString = USER_AGENT_BASIC // go through our own agent ref
         with(settings) {
             javaScriptEnabled = true
-            if (parent.baseUrl.shouldUseBasicAgent)
-                userAgentString = USER_AGENT_BASIC
             allowFileAccess = true
             textZoom = Prefs.webTextScaling
         }
