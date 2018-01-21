@@ -34,7 +34,7 @@ class FrostJSI(val web: FrostWebView) {
         if (url != null)
             web.post {
                 (context as? VideoViewHolder)?.showVideo(url, isGif)
-                        ?: L.d { "Could not load video; contract not implemented" }
+                        ?: L.e { "Could not load video; contract not implemented" }
             }
     }
 

@@ -5,32 +5,29 @@
   var _frostMediaClick;
 
   _frostMediaClick = function _frostMediaClick(e) {
-    /*
-     * Commonality; check for valid target
-     */
-    var dataStore, element;
+    var dataStore, element, playerChild, url;
     element = e.target || e.srcElement;
-    if (!element.hasAttribute("data-sigil") || !element.getAttribute("data-sigil").toLowerCase().includes("inlinevideo")) {
+    if (!element) {
       return;
     }
-    console.log("Found inline video");
-    element = element.parentNode;
-    if (!element.hasAttribute("data-store")) {
+    // Get first player child. May be self or parent
+    // Depending on what is clicked
+    playerChild = element.parentElement.parentElement.querySelector("[data-sigil*=playInlineVideo]");
+    if (!playerChild) {
       return;
     }
-    dataStore = void 0;
     try {
-      dataStore = JSON.parse(element.getAttribute("data-store"));
+      dataStore = JSON.parse(playerChild.parentElement.getAttribute("data-store"));
     } catch (error) {
-      e = error;
       return;
     }
-    if (!dataStore.src) {
+    url = dataStore != null ? dataStore.src : void 0;
+    if (!url || !url.startsWith("http")) {
       return;
     }
-    console.log("Inline video " + dataStore.src);
+    console.log("Inline video " + url);
     if (typeof Frost !== "undefined" && Frost !== null) {
-      Frost.loadVideo(dataStore.src, dataStore.animatedGifVideo);
+      Frost.loadVideo(url, dataStore.animatedGifVideo);
     }
     e.stopPropagation();
     e.preventDefault();
