@@ -25,8 +25,8 @@ if (withPlaySigning)
     }
 
 android {
-    compileSdkVersion Integer.parseInt(project.TARGET_SDK)
-    buildToolsVersion project.BUILD_TOOLS
+    compileSdkVersion kau.targetSdk
+    buildToolsVersion kau.buildTools
 
     androidGitVersion {
         codeFormat = 'MMNNPPXX'
@@ -36,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase(Locale.CANADA)
-        minSdkVersion Integer.parseInt(project.MIN_SDK)
-        targetSdkVersion Integer.parseInt(project.TARGET_SDK)
+        minSdkVersion kau.minSdk
+        targetSdkVersion kau.targetSdk
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
@@ -134,17 +134,17 @@ repositories {
 }
 
 dependencies {
-    androidTestImplementation("com.android.support.test:runner:${TEST_RUNNER}") {
+    androidTestImplementation("com.android.support.test:runner:${kau.testRunner}") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
-    implementation "com.android.support:exifinterface:${ANDROID_SUPPORT_LIBS}"
+    implementation "com.android.support:exifinterface:${kau.supportLibs}"
 
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    androidTestImplementation kauDependency.kotlinTest
     androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${KOTLIN}"
+    testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
-    testImplementation "junit:junit:${JUNIT}"
+    testImplementation kauDependency.junit
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
 
@@ -169,10 +169,10 @@ dependencies {
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
-    implementation"com.mikepenz:fastadapter-extensions:${FAST_ADAPTER_EXTENSIONS}@aar"
+    implementation"com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
 
-    implementation "com.github.bumptech.glide:okhttp3-integration:${GLIDE}"
-    kapt "com.github.bumptech.glide:compiler:${GLIDE}"
+    implementation "com.github.bumptech.glide:okhttp3-integration:${kau.glide}"
+    kapt "com.github.bumptech.glide:compiler:${kau.glide}"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.3"
 
@@ -190,8 +190,8 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
 
     //Icons
-    implementation "com.mikepenz:material-design-iconic-typeface:${IICON_MATERIAL}@aar"
-    implementation "com.mikepenz:community-material-typeface:${IICON_COMMUNITY}@aar"
+    implementation "com.mikepenz:material-design-iconic-typeface:${kau.iconicsMaterial}@aar"
+    implementation "com.mikepenz:community-material-typeface:${kau.iconicsCommunity}@aar"
 
     implementation "org.jsoup:jsoup:${JSOUP}"
 
@@ -207,7 +207,7 @@ dependencies {
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
-        transitive = true;
+        transitive = true
     }
 
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
