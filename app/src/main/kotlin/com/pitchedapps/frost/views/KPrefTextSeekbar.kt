@@ -29,15 +29,14 @@ class KPrefTextSeekbar(builder: KPrefSeekbarContract) : KPrefSeekbar(builder) {
     }
 
     @SuppressLint("MissingSuperCall")
-    override fun onPostBindView(viewHolder: ViewHolder, textColor: Int?, accentColor: Int?) {
-        descOriginalSize = viewHolder.desc?.textSize ?: 1f
-        viewHolder.desc?.layoutParams
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
+        super.bindView(holder, payloads)
+        descOriginalSize = holder.desc?.textSize ?: 1f
+        holder.desc?.layoutParams
         builder.toText = {
-            viewHolder.desc?.setTextSize(TypedValue.COMPLEX_UNIT_PX, descOriginalSize * it.toFloat() / 100)
+            holder.desc?.setTextSize(TypedValue.COMPLEX_UNIT_PX, descOriginalSize * it.toFloat() / 100)
             "$it%"
         }
-
-        super.onPostBindView(viewHolder, textColor, accentColor)
     }
 
     override fun unbindView(holder: ViewHolder) {

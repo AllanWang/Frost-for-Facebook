@@ -50,11 +50,6 @@ android {
         }
     }
 
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
-
     lintOptions {
         warningsAsErrors true
         disable 'TrustAllX509TrustManager',

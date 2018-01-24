@@ -64,6 +64,11 @@
   border-color: $divider !important;
 }
 
+// like, comment, share divider
+._15ks ._15kl::before {
+  border-left: 1px solid transparent !important;
+}
+
 ._56bf, .touch .btn {
   border-radius: 0 !important;
   border: 0 !important;
