@@ -21,7 +21,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.theme_customization)
 
-    text(R.string.theme, { Prefs.theme }, { Prefs.theme = it }) {
+    text(R.string.theme, Prefs::theme, { Prefs.theme = it }) {
         onClick = {
             materialDialogThemed {
                 title(R.string.theme)
@@ -52,7 +52,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
-        enabler = { Prefs.isCustomTheme }
+        enabler = Prefs::isCustomTheme
         onDisabledClick = { frostSnackbar(R.string.requires_custom_theme) }
         allowCustom = true
     }
@@ -61,7 +61,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         CssAssets.CUSTOM.injector.invalidate()
     }
 
-    colorPicker(R.string.text_color, { Prefs.customTextColor }, {
+    colorPicker(R.string.text_color, Prefs::customTextColor, {
         Prefs.customTextColor = it
         reload()
         invalidateCustomTheme()
@@ -71,7 +71,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         allowCustomAlpha = false
     }
 
-    colorPicker(R.string.accent_color, { Prefs.customAccentColor }, {
+    colorPicker(R.string.accent_color, Prefs::customAccentColor, {
         Prefs.customAccentColor = it
         reload()
         invalidateCustomTheme()
@@ -82,7 +82,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
 
-    colorPicker(R.string.background_color, { Prefs.customBackgroundColor }, {
+    colorPicker(R.string.background_color, Prefs::customBackgroundColor, {
         Prefs.customBackgroundColor = it
         bgCanvas.ripple(it, duration = 500L)
         invalidateCustomTheme()
@@ -93,7 +93,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         allowCustomAlpha = true
     }
 
-    colorPicker(R.string.header_color, { Prefs.customHeaderColor }, {
+    colorPicker(R.string.header_color, Prefs::customHeaderColor, {
         Prefs.customHeaderColor = it
         frostNavigationBar()
         toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
@@ -104,7 +104,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         allowCustomAlpha = true
     }
 
-    colorPicker(R.string.icon_color, { Prefs.customIconColor }, {
+    colorPicker(R.string.icon_color, Prefs::customIconColor, {
         Prefs.customIconColor = it
         invalidateOptionsMenu()
         shouldRestartMain()
@@ -115,7 +115,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.global_customization)
 
-    text(R.string.main_activity_layout, { Prefs.mainActivityLayoutType }, { Prefs.mainActivityLayoutType = it }) {
+    text(R.string.main_activity_layout, Prefs::mainActivityLayoutType, { Prefs.mainActivityLayoutType = it }) {
         textGetter = { string(Prefs.mainActivityLayout.titleRes) }
         onClick = {
             materialDialogThemed {
@@ -138,14 +138,14 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         onClick = { launchTabCustomizerActivity() }
     }
 
-    checkbox(R.string.rounded_icons, { Prefs.showRoundedIcons }, {
+    checkbox(R.string.rounded_icons, Prefs::showRoundedIcons, {
         Prefs.showRoundedIcons = it
         setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.rounded_icons_desc
     }
 
-    checkbox(R.string.tint_nav, { Prefs.tintNavBar }, {
+    checkbox(R.string.tint_nav, Prefs::tintNavBar, {
         Prefs.tintNavBar = it
         frostNavigationBar()
         setFrostResult(REQUEST_NAV)
@@ -156,5 +156,5 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     list.add(KPrefTextSeekbar(
             KPrefSeekbar.KPrefSeekbarBuilder(
                     globalOptions,
-                    R.string.web_text_scaling, { Prefs.webTextScaling }, { Prefs.webTextScaling = it; setFrostResult(REQUEST_TEXT_ZOOM) })))
+                    R.string.web_text_scaling, Prefs::webTextScaling, { Prefs.webTextScaling = it; setFrostResult(REQUEST_TEXT_ZOOM) })))
 }

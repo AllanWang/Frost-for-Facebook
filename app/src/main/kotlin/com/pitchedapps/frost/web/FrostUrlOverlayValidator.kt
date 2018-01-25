@@ -31,8 +31,8 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     L.v { "Request web overlay: $url" }
     val context = context // finalize reference
     if (url.isVideoUrl && context is VideoViewHolder) {
-        L.d { "Found video" }
-        context.runOnUiThread { context.showVideo(url) }
+        L.d { "Found video through overlay" }
+        context.runOnUiThread { context.showVideo(url.formattedFbUrl) }
         return true
     }
     if (url.isImageUrl) {

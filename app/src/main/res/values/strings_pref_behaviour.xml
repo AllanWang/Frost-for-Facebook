@@ -15,6 +15,8 @@
     <string name="search_bar_desc">Enable the search bar instead of a search overlay</string>
     <string name="force_message_bottom">Force Message Bottom</string>
     <string name="force_message_bottom_desc">When loading a message thread, trigger a scroll to the bottom of the page rather than loading the page as is.</string>
+    <string name="enable_pip">Enable PIP</string>
+    <string name="enable_pip_desc">Enable picture in picture videos</string>
     <string name="exit_confirmation">Exit Confirmation</string>
     <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
     <string name="analytics">Analytics</string>

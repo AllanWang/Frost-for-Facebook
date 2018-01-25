@@ -199,11 +199,9 @@ fun Throwable?.logFrostAnswers(text: String) {
     frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
-        = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {})
-        = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
 
 @SuppressLint("RestrictedApi")
 private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
@@ -245,19 +243,20 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
  * [true] if url contains [FACEBOOK_COM]
  */
 inline val String?.isFacebookUrl
-    get() = this != null && (contains(FACEBOOK_COM) || contains("fbcdn.net"))
+    get() = this != null && (contains(FACEBOOK_COM) || contains(FBCDN_NET))
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer
  */
 inline val String.isVideoUrl
-    get() = startsWith(VIDEO_REDIRECT) || startsWith("https://video-")
+    get() = startsWith(VIDEO_REDIRECT) ||
+            (startsWith("https://video-") && contains(FBCDN_NET))
 
 /**
  * [true] if url is or redirects to an explicit facebook image
  */
 inline val String.isImageUrl
-    get() = contains("fbcdn.net") && (contains(".png") || contains(".jpg"))
+    get() = contains(FBCDN_NET) && (contains(".png") || contains(".jpg"))
 
 /**
  * [true] if url can be displayed in a different webview
@@ -302,11 +301,9 @@ fun Context.frostUriFromFile(file: File): Uri =
                 BuildConfig.APPLICATION_ID + ".provider",
                 file)
 
-inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit)
-        = sendFrostEmail(string(subjectId), builder)
+inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) = sendFrostEmail(string(subjectId), builder)
 
-inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit)
-        = sendEmail(string(R.string.dev_email), subjectId) {
+inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) = sendEmail(string(R.string.dev_email), subjectId) {
     builder()
     addFrostDetails()
 }
@@ -318,11 +315,9 @@ fun EmailBuilder.addFrostDetails() {
     addItem("Locale", Locale.getDefault().displayName)
 }
 
-fun frostJsoup(url: String)
-        = frostJsoup(FbCookie.webCookie, url)
+fun frostJsoup(url: String) = frostJsoup(FbCookie.webCookie, url)
 
-fun frostJsoup(cookie: String?, url: String)
-        = Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
+fun frostJsoup(cookie: String?, url: String) = Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
 
 fun Element.first(vararg select: String): Element? {
     select.forEach {

@@ -2,6 +2,8 @@
 
 ## v1.8.0
 * Add Chinese, Indonesian, Norwegian, Polish, Thai, and Turkish translations
+* Update theme to fix comments
+* Add option to disable pip (settings > behaviour)
 
 ## v1.7.9
 * Fix image loading

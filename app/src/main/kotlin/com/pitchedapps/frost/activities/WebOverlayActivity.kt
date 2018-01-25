@@ -160,7 +160,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
                 .subscribe { toolbar.title = it }
 
         with(web) {
-            if (forceBasicAgent)
+            if (forceBasicAgent) //todo check; the webview already adds it dynamically
                 userAgentString = USER_AGENT_BASIC
             Prefs.prevId = Prefs.userId
             if (userId != Prefs.userId) FbCookie.switchUser(userId) { reloadBase(true) }
