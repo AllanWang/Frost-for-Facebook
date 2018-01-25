@@ -4,9 +4,12 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
         maven { url 'https://maven.fabric.io/public' }
     }
+
     dependencies {
+        classpath "ca.allanwang:kau:${KAU}"
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
         classpath 'io.fabric.tools:gradle:1.+'
@@ -15,24 +18,12 @@ buildscript {
     }
 }
 
+apply plugin: 'ca.allanwang.kau'
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
 task generateChangelogMd() {
-    def parsedProjectXml = (new XmlParser()).parse("$project.rootDir/app/src/main/res/xml/frost_changelog.xml")
-    def sw = new StringWriter()
-    sw.append("# Changelog\n")
-    parsedProjectXml.depthFirst().each {
-        switch (it.name()) {
-            case "version":
-                sw.append("\n## ${it.@title}\n")
-                break
-            case "item":
-                if (it.@text?.trim())
-                    sw.append("* ${it.@text}\n")
-        }
-    }
-    def changelogMd = new File("$project.rootDir/docs/Changelog.md")
-    changelogMd.write(sw.toString())
+    kauChangelog.generate("$project.rootDir/app/src/main/res/xml/frost_changelog.xml")
 }

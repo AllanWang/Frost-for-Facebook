@@ -30,6 +30,7 @@ import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import io.fabric.sdk.android.Fabric
 import io.reactivex.plugins.RxJavaPlugins
+import java.net.SocketTimeoutException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -114,7 +115,10 @@ class FrostApp : Application() {
             })
 
         RxJavaPlugins.setErrorHandler {
-            L.e(it) { "RxJava error" }
+            when (it) {
+                is SocketTimeoutException -> Unit
+                else -> L.e(it) { "RxJava error" }
+            }
         }
 
     }

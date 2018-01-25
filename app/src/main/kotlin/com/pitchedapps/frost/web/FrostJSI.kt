@@ -26,17 +26,19 @@ class FrostJSI(val web: FrostWebView) {
      * or {@code false} otherwise, meaning the event should be propagated
      */
     @JavascriptInterface
-    fun loadUrl(url: String?): Boolean
-            = if (url == null) false else web.requestWebOverlay(url)
+    fun loadUrl(url: String?): Boolean = if (url == null) false else web.requestWebOverlay(url)
 
     @JavascriptInterface
-    fun loadVideo(url: String?, isGif: Boolean) {
-        if (url != null)
-            web.post {
-                (context as? VideoViewHolder)?.showVideo(url, isGif)
-                        ?: L.d { "Could not load video; contract not implemented" }
+    fun loadVideo(url: String?, isGif: Boolean): Boolean =
+            if (url != null && Prefs.enablePip) {
+                web.post {
+                    (context as? VideoViewHolder)?.showVideo(url, isGif)
+                            ?: L.e { "Could not load video; contract not implemented" }
+                }
+                true
+            } else {
+                false
             }
-    }
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {

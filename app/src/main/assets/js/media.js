@@ -5,35 +5,33 @@
   var _frostMediaClick;
 
   _frostMediaClick = function _frostMediaClick(e) {
-    /*
-     * Commonality; check for valid target
-     */
-    var dataStore, element;
+    var dataStore, element, i, ref, url;
     element = e.target || e.srcElement;
-    if (!element.hasAttribute("data-sigil") || !element.getAttribute("data-sigil").toLowerCase().includes("inlinevideo")) {
+    if (!(element != null ? (ref = element.dataset.sigil) != null ? ref.toLowerCase().includes("inlinevideo") : void 0 : void 0)) {
       return;
     }
-    console.log("Found inline video");
-    element = element.parentNode;
-    if (!element.hasAttribute("data-store")) {
-      return;
+    i = 0;
+    while (!element.hasAttribute("data-store")) {
+      if (++i > 2) {
+        return;
+      }
+      element = element.parentNode;
     }
-    dataStore = void 0;
     try {
-      dataStore = JSON.parse(element.getAttribute("data-store"));
+      dataStore = JSON.parse(element.dataset.store);
     } catch (error) {
       e = error;
       return;
     }
-    if (!dataStore.src) {
+    url = dataStore.src;
+    if (!url || !url.startsWith("http")) {
       return;
     }
-    console.log("Inline video " + dataStore.src);
-    if (typeof Frost !== "undefined" && Frost !== null) {
-      Frost.loadVideo(dataStore.src, dataStore.animatedGifVideo);
+    console.log("Inline video " + url);
+    if (typeof Frost !== "undefined" && Frost !== null ? Frost.loadVideo(url, dataStore.animatedGifVideo) : void 0) {
+      e.stopPropagation();
+      e.preventDefault();
     }
-    e.stopPropagation();
-    e.preventDefault();
   };
 
   document.addEventListener("click", _frostMediaClick, true);

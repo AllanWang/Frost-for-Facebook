@@ -18,7 +18,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.experimental_disclaimer_info
     }
 
-    checkbox(R.string.experimental_by_default, { Showcase.experimentalDefault }, { Showcase.experimentalDefault = it }) {
+    checkbox(R.string.experimental_by_default, Showcase::experimentalDefault, { Showcase.experimentalDefault = it }) {
         descRes = R.string.experimental_by_default_desc
     }
 
@@ -27,7 +27,7 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     // Experimental content ends here --------------------
 
-    checkbox(R.string.verbose_logging, { Prefs.verboseLogging }, {
+    checkbox(R.string.verbose_logging, Prefs::verboseLogging, {
         Prefs.verboseLogging = it
         KL.shouldLog = { it != Log.VERBOSE }
     }) {
