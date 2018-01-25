@@ -22,9 +22,9 @@ _frostMediaClick = (e) ->
     return
 
   console.log "Inline video #{url}"
-  Frost?.loadVideo url, dataStore.animatedGifVideo
-  e.stopPropagation()
-  e.preventDefault()
+  if Frost?.loadVideo url, dataStore.animatedGifVideo
+    e.stopPropagation()
+    e.preventDefault()
   return
 
 document.addEventListener "click", _frostMediaClick, true

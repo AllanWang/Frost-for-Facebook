@@ -28,11 +28,10 @@
       return;
     }
     console.log("Inline video " + url);
-    if (typeof Frost !== "undefined" && Frost !== null) {
-      Frost.loadVideo(url, dataStore.animatedGifVideo);
+    if (typeof Frost !== "undefined" && Frost !== null ? Frost.loadVideo(url, dataStore.animatedGifVideo) : void 0) {
+      e.stopPropagation();
+      e.preventDefault();
     }
-    e.stopPropagation();
-    e.preventDefault();
   };
 
   document.addEventListener("click", _frostMediaClick, true);
