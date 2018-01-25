@@ -14,7 +14,7 @@ import com.pitchedapps.frost.utils.materialDialogThemed
  */
 fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
-    text(R.string.newsfeed_sort, { Prefs.feedSort }, { Prefs.feedSort = it }) {
+    text(R.string.newsfeed_sort, Prefs::feedSort, { Prefs.feedSort = it }) {
         descRes = R.string.newsfeed_sort_desc
         onClick = {
             materialDialogThemed {
@@ -32,14 +32,14 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         textGetter = { string(FeedSort(it).textRes) }
     }
 
-    checkbox(R.string.aggressive_recents, { Prefs.aggressiveRecents }, {
+    checkbox(R.string.aggressive_recents, Prefs::aggressiveRecents, {
         Prefs.aggressiveRecents = it
         setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.aggressive_recents_desc
     }
 
-    checkbox(R.string.composer, { Prefs.showComposer }, {
+    checkbox(R.string.composer, Prefs::showComposer, {
         Prefs.showComposer = it
         setFrostResult(REQUEST_REFRESH)
     }) {
@@ -48,7 +48,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.pro_features)
 
-    checkbox(R.string.suggested_friends, { Prefs.showSuggestedFriends }, {
+    checkbox(R.string.suggested_friends, Prefs::showSuggestedFriends, {
         Prefs.showSuggestedFriends = it
         setFrostResult(REQUEST_REFRESH)
     }) {
@@ -56,7 +56,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         dependsOnPro()
     }
 
-    checkbox(R.string.suggested_groups, { Prefs.showSuggestedGroups }, {
+    checkbox(R.string.suggested_groups, Prefs::showSuggestedGroups, {
         Prefs.showSuggestedGroups = it
         setFrostResult(REQUEST_REFRESH)
     }) {
@@ -64,7 +64,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         dependsOnPro()
     }
 
-    checkbox(R.string.facebook_ads, { Prefs.showFacebookAds }, {
+    checkbox(R.string.facebook_ads, Prefs::showFacebookAds, {
         Prefs.showFacebookAds = it
         setFrostResult(REQUEST_REFRESH)
     }) {

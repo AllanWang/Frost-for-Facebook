@@ -133,6 +133,8 @@ object Prefs : KPref() {
 
     var messageScrollToBottom: Boolean by kpref("message_scroll_to_bottom", false)
 
+    var enablePip: Boolean by kpref("enable_pip", true)
+
     /**
      * Cache like value to determine if user has or had pro
      * In most cases, [com.pitchedapps.frost.utils.iab.IS_FROST_PRO] should be looked at instead
