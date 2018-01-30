@@ -10,4 +10,6 @@
   <string name="debug_web">Depurar desde a páxina web</string>
   <string name="debug_web_desc">Navega ata a páxina web que presenta un problema e envía os recursos para a súa depuración.</string>
   <string name="parsing_data">Análise de datos</string>
+  <string name="debug_parsers">Analizadores para depurar</string>
+  <string name="debug_parsers_desc">Executa un dos analizadores dispoñibles para depurar os datos de resposta</string>
 </resources>
