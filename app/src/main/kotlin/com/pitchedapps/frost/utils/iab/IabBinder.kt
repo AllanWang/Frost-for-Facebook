@@ -44,7 +44,7 @@ abstract class IabBinder : FrostBilling {
     val activity
         get() = activityRef.get()
 
-    override final fun Activity.onCreateBilling() {
+    final override fun Activity.onCreateBilling() {
         activityRef = WeakReference(this)
         doAsync {
             bp = BillingProcessor.newBillingProcessor(this@onCreateBilling, PUBLIC_BILLING_KEY, this@IabBinder)

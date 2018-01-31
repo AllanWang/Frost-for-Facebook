@@ -94,7 +94,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
     private var controlWebview: WebView? = null
 
-    override final fun onCreate(savedInstanceState: Bundle?) {
+    final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val start = System.currentTimeMillis()
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)

@@ -70,7 +70,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
             throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
     }
 
-    override final fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutRes, container, false)
         val content = view  as? FrostContentParent
                 ?: throw IllegalArgumentException("layoutRes for fragment must return view implementing FrostContentParent")
