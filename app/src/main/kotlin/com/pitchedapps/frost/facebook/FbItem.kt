@@ -45,6 +45,12 @@ enum class FbItem(
 
     val url = "$FB_URL_BASE$relativeUrl"
 
+    val isFeed: Boolean
+        get() = when (this) {
+            FEED, FEED_MOST_RECENT, FEED_TOP_STORIES -> true
+            else -> false
+        }
+
     override val bundleContract: EnumBundleCompanion<FbItem>
         get() = Companion
 
