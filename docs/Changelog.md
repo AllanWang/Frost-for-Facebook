@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.1
+* Theme new Facebook update
+* Fix layout issue for posting messages
+* Create FAB for posting
+
 ## v1.8.0
 * Add Chinese, Indonesian, Norwegian, Polish, Thai, and Turkish translations
 * Update theme to fix comments

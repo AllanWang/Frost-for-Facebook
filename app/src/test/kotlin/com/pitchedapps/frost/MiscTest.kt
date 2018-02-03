@@ -10,11 +10,6 @@ import kotlin.test.assertTrue
  */
 class MiscTest {
 
-    @Test
-    fun headerFunction() {
-        print(CssHider.HEADER.injector.function)
-    }
-
     /**
      * Spin off 15 threads
      * Pause each for 1 - 2s

@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.contracts
 
+import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.fragments.BaseFragment
 import io.reactivex.subjects.PublishSubject
 
@@ -8,10 +9,15 @@ import io.reactivex.subjects.PublishSubject
  */
 interface ActivityContract : FileChooserActivityContract
 
-interface MainActivityContract : ActivityContract {
+interface MainActivityContract : ActivityContract, MainFabContract {
     val fragmentSubject: PublishSubject<Int>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
     fun collapseAppBar()
     fun reloadFragment(fragment: BaseFragment)
+}
+
+interface MainFabContract {
+    fun showFab(iicon: IIcon, clickEvent: () -> Unit)
+    fun hideFab()
 }

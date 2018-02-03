@@ -6,6 +6,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -40,6 +41,7 @@ import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import com.crashlytics.android.answers.ContentViewEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.BuildConfig
@@ -94,7 +96,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
     private var controlWebview: WebView? = null
 
-    override final fun onCreate(savedInstanceState: Bundle?) {
+    final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val start = System.currentTimeMillis()
         setFrameContentView(Prefs.mainActivityLayout.layoutRes)
@@ -104,13 +106,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             header(appBar)
             background(viewPager)
         }
-        L.i { "Main AAA ${System.currentTimeMillis() - start} ms" }
         setSupportActionBar(toolbar)
         adapter = SectionsPagerAdapter(loadFbTabs())
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = TAB_COUNT
-        L.i { "Main BBB ${System.currentTimeMillis() - start} ms" }
-        L.i { "Main CCC ${System.currentTimeMillis() - start} ms" }
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
@@ -131,6 +130,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         setupDrawer(savedInstanceState)
         L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
+        initFab()
     }
 
     /**
@@ -138,6 +138,45 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
      */
     protected abstract fun onNestedCreate(savedInstanceState: Bundle?)
 
+    private var hasFab = false
+    private var shouldShow = false
+
+    private fun initFab() {
+        hasFab = false
+        shouldShow = false
+        fab.backgroundTintList = ColorStateList.valueOf(Prefs.headerColor.withMinAlpha(200))
+        fab.hide()
+        appBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (!hasFab) return@addOnOffsetChangedListener
+            val percent = Math.abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
+            val shouldShow = percent < 0.2
+            if (this.shouldShow != shouldShow) {
+                this.shouldShow = shouldShow
+                fab.showIf(shouldShow)
+            }
+        }
+    }
+
+    override fun showFab(iicon: IIcon, clickEvent: () -> Unit) {
+        hasFab = true
+        fab.setOnClickListener { clickEvent() }
+        if (shouldShow) {
+            if (fab.isShown) {
+                fab.fadeScaleTransition {
+                    setIcon(iicon, Prefs.iconColor)
+                }
+                return
+            }
+        }
+        fab.setIcon(iicon, Prefs.iconColor)
+        fab.showIf(shouldShow)
+    }
+
+    override fun hideFab() {
+        hasFab = false
+        fab.setOnClickListener(null)
+        fab.hide()
+    }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
         (0 until tabs.tabCount).asSequence().forEach { i ->
@@ -195,7 +234,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             } else {
                                 materialDialogThemed {
                                     title(R.string.kau_logout)
-                                    content(String.format(string(R.string.kau_logout_confirm_as_x), currentCookie.name ?: Prefs.userId.toString()))
+                                    content(String.format(string(R.string.kau_logout_confirm_as_x), currentCookie.name
+                                            ?: Prefs.userId.toString()))
                                     positiveText(R.string.kau_yes)
                                     negativeText(R.string.kau_no)
                                     onPositive { _, _ -> FbCookie.logout(this@BaseMainActivity) }

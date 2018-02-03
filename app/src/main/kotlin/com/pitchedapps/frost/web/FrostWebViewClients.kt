@@ -65,7 +65,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         if (url.isFacebookUrl)
             view.jsInject(
                     CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
-                    CssHider.HEADER,
                     CssHider.CORE,
                     CssHider.COMPOSER.maybe(!Prefs.showComposer),
                     CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
@@ -77,6 +76,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     JsAssets.CLICK_A,
                     CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
                     JsAssets.CONTEXT_A,
+                    JsAssets.HEADER_HIDER,
                     JsAssets.MEDIA)
         else
             refresh.onNext(false)
