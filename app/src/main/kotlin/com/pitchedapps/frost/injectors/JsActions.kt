@@ -16,7 +16,8 @@ enum class JsActions(body: String) : InjectorContract {
     LOGIN_CHECK("document.getElementById('signup-button')&&Frost.loadLogin();"),
     BASE_HREF("""document.write("<base href='$FB_URL_BASE'/>");"""),
     FETCH_BODY("""setTimeout(function(){var e=document.querySelector("main");e||(e=document.querySelector("body")),Frost.handleHtml(e.outerHTML)},1e2);"""),
-    CREATE_POST("""document.querySelector("button[name=view_overview]").click()"""),
+    CREATE_POST(clickBySelector("button[name=view_overview]")),
+//    CREATE_MSG(clickBySelector("a[rel=dialog]")),
     /**
      * Used as a pseudoinjector for maybe functions
      */
@@ -26,4 +27,9 @@ enum class JsActions(body: String) : InjectorContract {
 
     override fun inject(webView: WebView, callback: (() -> Unit)?) =
             JsInjector(function).inject(webView, callback)
+
 }
+
+@Suppress("NOTHING_TO_INLINE")
+private inline fun clickBySelector(selector: String): String =
+        """document.querySelector("$selector").click()"""
