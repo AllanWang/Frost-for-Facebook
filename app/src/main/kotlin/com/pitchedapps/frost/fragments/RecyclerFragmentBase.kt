@@ -31,7 +31,7 @@ abstract class RecyclerFragment : BaseFragment(), RecyclerContentContract {
         }
     }
 
-    override final fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
+    final override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
         reloadImpl(progress) {
             if (it)
                 callback(it)
@@ -49,7 +49,7 @@ abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment
 
     val adapter: ModelAdapter<T, Item> = ModelAdapter(this::mapper)
 
-    override final fun bind(recyclerView: FrostRecyclerView) {
+    final override fun bind(recyclerView: FrostRecyclerView) {
         recyclerView.adapter = getAdapter()
         recyclerView.onReloadClear = { adapter.clear() }
         bindImpl(recyclerView)
@@ -81,7 +81,7 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
 
     val adapter: ItemAdapter<Item> = ItemAdapter()
 
-    override final fun bind(recyclerView: FrostRecyclerView) {
+    final override fun bind(recyclerView: FrostRecyclerView) {
         recyclerView.adapter = getAdapter()
         recyclerView.onReloadClear = { adapter.clear() }
         bindImpl(recyclerView)

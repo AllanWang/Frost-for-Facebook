@@ -17,7 +17,7 @@ abstract class BaseActivity : KauBaseActivity() {
      */
     protected open fun backConsumer(): Boolean = false
 
-    override final fun onBackPressed() {
+    final override fun onBackPressed() {
         if (this is SearchViewHolder && searchViewOnBackPress()) return
         if (this is VideoViewHolder && videoOnBackPress()) return
         if (backConsumer()) return

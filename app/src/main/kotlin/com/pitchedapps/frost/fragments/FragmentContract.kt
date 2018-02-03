@@ -1,9 +1,7 @@
 package com.pitchedapps.frost.fragments
 
-import com.pitchedapps.frost.contracts.FrostContentContainer
-import com.pitchedapps.frost.contracts.FrostContentCore
-import com.pitchedapps.frost.contracts.FrostContentParent
-import com.pitchedapps.frost.contracts.MainActivityContract
+import android.support.design.widget.FloatingActionButton
+import com.pitchedapps.frost.contracts.*
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
 
@@ -47,6 +45,8 @@ interface FragmentContract : FrostContentContainer {
      * the fragment should call [reload] and make [firstLoad] false
      */
     fun firstLoadRequest()
+
+    fun updateFab(contract: MainFabContract)
 
     /**
      * Single callable action to be executed upon creation

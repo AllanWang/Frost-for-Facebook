@@ -43,15 +43,15 @@ interface EnumBundleCompanion<E : Enum<E>> {
 }
 
 open class EnumCompanion<E : Enum<E>>(
-        override final val argTag: String,
-        override final val values: Array<E>) : EnumBundleCompanion<E> {
+        final override val argTag: String,
+        final override val values: Array<E>) : EnumBundleCompanion<E> {
 
-    override final val valueMap: Map<String, E> = values.map { it.name to it }.toMap()
+    final override val valueMap: Map<String, E> = values.map { it.name to it }.toMap()
 
-    override final fun get(name: String?) = super.get(name)
+    final override fun get(name: String?) = super.get(name)
 
-    override final fun get(bundle: BaseBundle?) = super.get(bundle)
+    final override fun get(bundle: BaseBundle?) = super.get(bundle)
 
-    override final fun get(intent: Intent?) = super.get(intent)
+    final override fun get(intent: Intent?) = super.get(intent)
 
 }
