@@ -2,6 +2,7 @@ package com.pitchedapps.frost.web
 
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.*
@@ -72,6 +73,10 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun disableSwipeRefresh(disable: Boolean) {
         web.parent.swipeEnabled = !disable
+        if (disable) {
+            // locked onto an input field; ensure content is visible
+            (context as? MainActivityContract)?.collapseAppBar()
+        }
     }
 
     @JavascriptInterface

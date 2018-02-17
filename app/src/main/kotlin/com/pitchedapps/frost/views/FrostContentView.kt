@@ -64,18 +64,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             if (!field && !value) // already disabled and requesting disable; we will allow multiple posts for enabling though
                 return
             field = value
-            refresh.post {
-                refresh.isEnabled = value
-                if (!value) {
-                    // locked onto an input field; ensure content is visible
-                    (context as? MainActivityContract)?.collapseAppBar()
-                }
-            }
-            refresh.isEnabled = value
-            if (!value) {
-                // locked onto an input field; ensure content is visible
-                (context as? MainActivityContract)?.collapseAppBar()
-            }
+            refresh.post { refresh.isEnabled = value }
         }
 
     /**
