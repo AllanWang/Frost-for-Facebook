@@ -65,7 +65,7 @@ class TabCustomizerActivity : BaseActivity() {
         adapter.add(tabs.map(::TabIItem))
         bindSwapper(adapter, recycler)
 
-        adapter.withOnClickListener { view, _, _, _ -> view.wobble(); true }
+        adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
 
         setResult(Activity.RESULT_CANCELED)
 

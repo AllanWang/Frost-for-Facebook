@@ -77,6 +77,13 @@ android {
             }
         }
 
+        debug {
+            storeFile file("../files/debug.keystore")
+            storePassword "debugKey"
+            keyAlias "debugKey"
+            keyPassword "debugKey"
+        }
+
         test {
             storeFile file("../files/test.keystore")
             storePassword "testkey"
@@ -91,6 +98,7 @@ android {
             shrinkResources false
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            signingConfig signingConfigs.debug
             resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableCrashlytics = false
@@ -100,8 +108,8 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".test"
-            signingConfig signingConfigs.test
             versionNameSuffix "-test"
+            signingConfig signingConfigs.test
             resValue "string", "frost_name", "Frost Test"
             resValue "string", "frost_web", "Frost Web Test"
         }
