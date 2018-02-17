@@ -25,9 +25,9 @@
     @content;
   }
 
-  @-ms-keyframes #{$name} {
-    @content;
-  }
+  //@-ms-keyframes #{$name} {
+  //  @content;
+  //}
 
   @keyframes #{$name} {
     @content;
