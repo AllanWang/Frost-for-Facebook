@@ -59,7 +59,7 @@ class AboutActivity : AboutActivityBase(null, {
                 "subsamplingscaleimageview"
         )
 
-        val l = libs.prepareLibraries(this, include, null, false, true)
+        val l = libs.prepareLibraries(this, include, null, false, true,true)
 //        l.forEach { KL.d{"Lib ${it.definedName}"} }
         return l
     }

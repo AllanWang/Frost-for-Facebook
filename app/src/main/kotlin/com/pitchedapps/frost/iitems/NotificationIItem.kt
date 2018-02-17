@@ -34,10 +34,10 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
                     .withOnClickListener { v, _, item, position ->
                         val notif = item.notification
                         if (notif.unread) {
-                            FrostRunnable.markNotificationRead(v.context, notif.id, item.cookie)
+                            FrostRunnable.markNotificationRead(v!!.context, notif.id, item.cookie)
                             adapter.set(position, NotificationIItem(notif.copy(unread = false), item.cookie))
                         }
-                        v.context.launchWebOverlay(notif.url)
+                        v!!.context.launchWebOverlay(notif.url)
                         true
                     }
         }

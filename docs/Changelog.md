@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.8.2
+* Fix duplicate notification sounds
+* Fix map redirecting to blackberry
+* Fix event reservation
+
 ## v1.8.1
 * Theme new Facebook update
 * Fix layout issue for posting messages

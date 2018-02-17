@@ -12,7 +12,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
-import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
@@ -59,14 +58,12 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     protected abstract val layoutRes: Int
 
-    override var swipeEnabled: Boolean
-        get() = refresh.isEnabled
+    override var swipeEnabled = true
         set(value) {
-            refresh.isEnabled = value
-            if (!value) {
-                // locked onto an input field; ensure content is visible
-                (context as? MainActivityContract)?.collapseAppBar()
-            }
+            if (field == value)
+                return
+            field = value
+            refresh.post { refresh.isEnabled = value }
         }
 
     /**
