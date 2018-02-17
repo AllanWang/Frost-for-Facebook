@@ -55,6 +55,7 @@ interface FrostContentParent : DynamicUiContract {
 
     /**
      * Toggle state for allowing swipes
+     * Allowed on any thread
      */
     var swipeEnabled: Boolean
 

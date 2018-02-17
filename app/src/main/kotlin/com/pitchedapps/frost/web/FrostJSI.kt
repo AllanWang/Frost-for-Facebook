@@ -63,6 +63,7 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun longClick(start: Boolean) {
         activity?.viewPager?.enableSwipe = !start
+        web.parent.swipeEnabled = !start
     }
 
     /**
@@ -70,7 +71,7 @@ class FrostJSI(val web: FrostWebView) {
      */
     @JavascriptInterface
     fun disableSwipeRefresh(disable: Boolean) {
-        web.post { web.parent.swipeEnabled = !disable }
+        web.parent.swipeEnabled = !disable
     }
 
     @JavascriptInterface
