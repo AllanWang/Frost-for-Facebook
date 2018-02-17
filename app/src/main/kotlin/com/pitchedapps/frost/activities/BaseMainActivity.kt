@@ -426,7 +426,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun collapseAppBar() {
-        appBar.setExpanded(false)
+        appBar.post { appBar.setExpanded(false) }
     }
 
     override fun backConsumer(): Boolean {

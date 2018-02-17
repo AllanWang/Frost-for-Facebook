@@ -34,7 +34,7 @@ interface ClickableIItemContract {
             adapter.fastAdapter.withSelectable(false)
                     .withOnClickListener { v, _, item, _ ->
                         if (item is ClickableIItemContract) {
-                            item.click(v.context)
+                            item.click(v!!.context)
                             true
                         } else
                             false

@@ -9,7 +9,6 @@ import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.BaseBundle
 import android.os.Build
@@ -19,8 +18,6 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
@@ -39,7 +36,6 @@ import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostAnswersCustom
-import org.jetbrains.anko.runOnUiThread
 import java.util.*
 
 /**
@@ -75,23 +71,7 @@ fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificatio
     setDefaults(defaults)
 }
 
-/**
- * Created by Allan Wang on 2017-07-08.
- *
- * Custom target to set the content view and update a given notification
- * 40dp is the size of the right avatar
- */
-class FrostNotificationTarget(val context: Context,
-                              val notifId: Int,
-                              val notifTag: String,
-                              val builder: NotificationCompat.Builder
-) : SimpleTarget<Bitmap>(40.dpToPx, 40.dpToPx) {
-
-    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-        builder.setLargeIcon(resource)
-        NotificationManagerCompat.from(context).notify(notifTag, notifId, builder.build())
-    }
-}
+private val _40_DP = 40.dpToPx
 
 /**
  * Enum to handle notification creations
@@ -170,6 +150,17 @@ enum class NotificationType(
         summaryNotification(context, userId, notifCount)
     }
 
+    private fun debugNotification(context: Context, data: CookieModel) {
+        val content = NotificationContent(data,
+                System.currentTimeMillis(),
+                "https://github.com/AllanWang/Frost-for-Facebook",
+                "Debug Notif",
+                "Test 123",
+                System.currentTimeMillis() / 1000,
+                "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png")
+        createNotification(context, content, true)
+    }
+
     /**
      * Create and submit a new notification with the given [content]
      * If [withDefaults] is set, it will also add the appropriate sound, vibration, and light
@@ -198,18 +189,22 @@ enum class NotificationType(
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
             L.v { "Notif load $content" }
-            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
 
             if (profileUrl != null) {
-                context.runOnUiThread {
-                    //todo verify if context is valid?
-                    GlideApp.with(context)
+                try {
+                    val profileImg = GlideApp.with(context)
                             .asBitmap()
                             .load(profileUrl)
                             .transform(FrostGlide.circleCrop)
-                            .into(FrostNotificationTarget(context, notifId, group, notifBuilder))
+                            .submit(_40_DP, _40_DP)
+                            .get()
+                    notifBuilder.setLargeIcon(profileImg)
+                } catch (e: Exception) {
+                    L.e { "Failed to get image $profileUrl" }
                 }
             }
+
+            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
         }
     }
 
