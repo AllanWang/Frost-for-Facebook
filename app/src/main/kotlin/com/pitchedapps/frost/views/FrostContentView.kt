@@ -12,7 +12,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
-import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
@@ -61,7 +60,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     override var swipeEnabled = true
         set(value) {
-            if (!field && !value) // already disabled and requesting disable; we will allow multiple posts for enabling though
+            if (field == value)
                 return
             field = value
             refresh.post { refresh.isEnabled = value }

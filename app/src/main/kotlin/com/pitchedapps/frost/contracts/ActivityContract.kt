@@ -13,6 +13,9 @@ interface MainActivityContract : ActivityContract, MainFabContract {
     val fragmentSubject: PublishSubject<Int>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
+    /**
+     * Available on all threads
+     */
     fun collapseAppBar()
     fun reloadFragment(fragment: BaseFragment)
 }

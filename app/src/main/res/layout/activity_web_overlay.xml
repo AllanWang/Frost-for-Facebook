@@ -23,17 +23,4 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" />
 
-    <!--<com.pitchedapps.frost.views.FrostRefreshView-->
-    <!--android:id="@+id/overlay_frost_refresh_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_marginTop="?attr/actionBarSize">-->
-
-    <!--<com.pitchedapps.frost.views.FrostWebView-->
-    <!--android:id="@+id/overlay_frost_web_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-    <!--</com.pitchedapps.frost.views.FrostRefreshView>-->
-
 </android.support.design.widget.CoordinatorLayout>
