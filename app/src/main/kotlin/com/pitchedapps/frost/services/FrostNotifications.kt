@@ -9,7 +9,6 @@ import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.BaseBundle
 import android.os.Build
@@ -19,8 +18,6 @@ import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
@@ -151,6 +148,17 @@ enum class NotificationType(
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
         summaryNotification(context, userId, notifCount)
+    }
+
+    private fun debugNotification(context: Context, data: CookieModel) {
+        val content = NotificationContent(data,
+                System.currentTimeMillis(),
+                "https://github.com/AllanWang/Frost-for-Facebook",
+                "Debug Notif",
+                "Test 123",
+                System.currentTimeMillis() / 1000,
+                "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png")
+        createNotification(context, content, true)
     }
 
     /**

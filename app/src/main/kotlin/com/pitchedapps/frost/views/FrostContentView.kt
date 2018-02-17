@@ -59,7 +59,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     protected abstract val layoutRes: Int
 
-    override var swipeEnabled = refresh.isEnabled
+    override var swipeEnabled = true
         set(value) {
             if (!field && !value) // already disabled and requesting disable; we will allow multiple posts for enabling though
                 return
