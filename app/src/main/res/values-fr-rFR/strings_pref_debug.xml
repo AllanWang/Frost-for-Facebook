@@ -4,4 +4,9 @@
   <string name="debug_toast_enabled">Section de débogage est activé ! Revenir aux réglages.</string>
   <string name="debug_disclaimer_info">Bien que le contenu privé est automatiquement supprimé dans le rapport, certaines informations sensibles peuvent être encore visibles.         \nVeuillez donc vérifier le rapport de débogage avant de l’envoyer.         \n\nChoisir une des options ci-dessous vous préparera un courriel avec les données de la page web.    </string>
   <string name="debug_incomplete">Rapport incomplet</string>
+  <string name="debug_web">Déboguer à partir du Web</string>
+  <string name="debug_web_desc">Naviguer vers la page qui pose problème et envoyer les ressources pour le débogage.</string>
+  <string name="parsing_data">Analyse des données</string>
+  <string name="debug_parsers">Analyseurs de débogage</string>
+  <string name="debug_parsers_desc">Lancer l\'une des analyses disponibles pour déboguer les données reçues</string>
 </resources>
