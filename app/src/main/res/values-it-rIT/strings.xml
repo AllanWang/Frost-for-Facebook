@@ -23,6 +23,7 @@
   <string name="welcome">Benvenuto %s</string>
   <string name="select_facebook_account">Scegli l\'Account Facebook</string>
   <string name="account_not_found">L\'account non è presente nel database</string>
+  <string name="frost_requests">Richieste a Frost</string>
   <string name="frost_notifications">Notifiche di Frost</string>
   <string name="requires_custom_theme">Richiede un tema personalizzato</string>
   <string name="subject">Soggetto</string>
@@ -40,4 +41,7 @@
   <string name="file_chooser_not_found">Gestore file non trovato</string>
   <string name="top_bar">Barra Superiore</string>
   <string name="bottom_bar">Barra Inferiore</string>
+  <string name="preview">Anteprima</string>
+  <string name="options">Opzioni</string>
+  <string name="tab_customizer_instructions">Tieni premuto e trascina per riordinare le icone.</string>
 </resources>
