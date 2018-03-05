@@ -65,10 +65,10 @@ class NotificationService : JobService() {
                 val current = it.id == currentId
                 if (Prefs.notificationsGeneral
                         && (current || Prefs.notificationAllAccounts))
-                    notifCount += NotificationType.GENERAL.fetch(context, it)
+                    notifCount += fetch(jobId, NotificationType.GENERAL, it)
                 if (Prefs.notificationsInstantMessages
                         && (current || Prefs.notificationsImAllAccounts))
-                    notifCount += NotificationType.MESSAGE.fetch(context, it)
+                    notifCount += fetch(jobId, NotificationType.MESSAGE, it)
             }
 
             if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
@@ -100,7 +100,7 @@ class NotificationService : JobService() {
 
     private fun generalNotification(id: Int, textRes: Int, withDefaults: Boolean) {
         val notifBuilder = frostNotification(NOTIF_CHANNEL_GENERAL)
-                .apply { if (withDefaults) withDefaults() }
+                .setFrostAlert(withDefaults, Prefs.notificationRingtone)
                 .setContentTitle(string(R.string.frost_name))
                 .setContentText(string(textRes))
         NotificationManagerCompat.from(this).notify(id, notifBuilder.build())
