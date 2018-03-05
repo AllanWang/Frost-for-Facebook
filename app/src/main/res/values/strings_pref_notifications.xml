@@ -21,6 +21,8 @@
     <string name="notification_fetch_success">Fetching Notifications…</string>
     <string name="notification_fetch_fail">Couldn\'t fetch notifications</string>
     <string name="notification_sound">Notification sound</string>
+    <string name="notification_channel">Customize notification channels</string>
+    <string name="notification_channel_desc">Modify sound, vibration, priority, etc</string>
 
     <string name="notification_ringtone">Notification Ringtone</string>
     <string name="message_ringtone">Message Ringtone</string>
