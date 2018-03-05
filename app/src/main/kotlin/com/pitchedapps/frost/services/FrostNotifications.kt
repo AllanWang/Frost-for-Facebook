@@ -1,9 +1,7 @@
 package com.pitchedapps.frost.services
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.annotation.SuppressLint
+import android.app.*
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -14,6 +12,7 @@ import android.os.BaseBundle
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
@@ -25,6 +24,7 @@ import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.NotificationModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
+import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.glide.FrostGlide
@@ -44,23 +44,49 @@ import java.util.*
  *
  * Logic for build notifications, scheduling notifications, and showing notifications
  */
+const val NOTIF_CHANNEL_GENERAL = "general"
+const val NOTIF_CHANNEL_MESSAGES = "messages"
+
 fun setupNotificationChannels(c: Context) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
     val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    val mainChannel = NotificationChannel(BuildConfig.APPLICATION_ID, c.getString(R.string.frost_name), NotificationManager.IMPORTANCE_DEFAULT)
-    mainChannel.lightColor = c.color(R.color.facebook_blue)
-    mainChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-    manager.createNotificationChannel(mainChannel)
+    val appName = c.string(R.string.frost_name)
+    val msg = c.string(R.string.messages)
+    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
+    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
+    manager.deleteNotificationChannel(BuildConfig.APPLICATION_ID)
+    val cookies = loadFbCookiesSync()
+    val idMap = cookies.map { it.id.toString() to it.name }.toMap()
+    manager.notificationChannelGroups
+            .filter { !idMap.contains(it.id) }
+            .forEach { manager.deleteNotificationChannelGroup(it.id) }
+    val groups = idMap.map { (id, name) ->
+        NotificationChannelGroup(id, name)
+    }
+    manager.createNotificationChannelGroups(groups)
+    L.d { "Created notification channels: ${manager.notificationChannels.size} channels, ${manager.notificationChannelGroups.size} groups" }
 }
 
-inline val Context.frostNotification: NotificationCompat.Builder
-    get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
-        setSmallIcon(R.drawable.frost_f_24)
-        setAutoCancel(true)
-        setOnlyAlertOnce(true)
-        setStyle(NotificationCompat.BigTextStyle())
-        color = color(R.color.frost_notification_accent)
-    }
+@RequiresApi(Build.VERSION_CODES.O)
+private fun NotificationManager.createNotificationChannel(id: String, name: String): NotificationChannel {
+    val channel = NotificationChannel("${BuildConfig.APPLICATION_ID}_$id",
+            name, NotificationManager.IMPORTANCE_DEFAULT)
+    channel.enableLights(true)
+    channel.lightColor = Prefs.accentColor
+    channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+    createNotificationChannel(channel)
+    return channel
+}
+
+fun Context.frostNotification(id: String) =
+        NotificationCompat.Builder(this, "${BuildConfig.APPLICATION_ID}_$id")
+                .apply {
+                    setSmallIcon(R.drawable.frost_f_24)
+                    setAutoCancel(true)
+                    setOnlyAlertOnce(true)
+                    setStyle(NotificationCompat.BigTextStyle())
+                    color = color(R.color.frost_notification_accent)
+                }
 
 fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificationRingtone) = apply {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return this // defaults no longer applies for android o
@@ -80,6 +106,7 @@ private val _40_DP = 40.dpToPx
  * Enum to handle notification creations
  */
 enum class NotificationType(
+        private val channelId: String,
         private val overlayContext: OverlayContext,
         private val fbItem: FbItem,
         private val parser: FrostParser<ParseNotification>,
@@ -87,7 +114,8 @@ enum class NotificationType(
         private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
         private val ringtone: () -> String) {
 
-    GENERAL(OverlayContext.NOTIFICATION,
+    GENERAL(NOTIF_CHANNEL_GENERAL,
+            OverlayContext.NOTIFICATION,
             FbItem.NOTIFICATIONS,
             NotifParser,
             NotificationModel::epoch,
@@ -98,7 +126,8 @@ enum class NotificationType(
                 FrostRunnable.prepareMarkNotificationRead(content.id, cookie)
     },
 
-    MESSAGE(OverlayContext.MESSAGE,
+    MESSAGE(NOTIF_CHANNEL_MESSAGES,
+            OverlayContext.MESSAGE,
             FbItem.MESSAGES,
             MessageParser,
             NotificationModel::epochIm,
@@ -134,30 +163,46 @@ enum class NotificationType(
             L.v { "$name notification data not found" }
             return -1
         }
-        val notifs = response.data.getUnreadNotifications(data).filter {
+        val notifContents = response.data.getUnreadNotifications(data).filter {
             val text = it.text
             Prefs.notificationKeywords.none { text.contains(it, true) }
         }
-        if (notifs.isEmpty()) return 0
-        var notifCount = 0
+        if (notifContents.isEmpty()) return 0
         val userId = data.id
         val prevNotifTime = lastNotificationTime(userId)
         val prevLatestEpoch = getTime(prevNotifTime)
         L.v { "Notif $name prev epoch $prevLatestEpoch" }
         var newLatestEpoch = prevLatestEpoch
-        notifs.forEach { notif ->
+        val notifs = mutableListOf<FrostNotification>()
+        notifContents.forEach { notif ->
             L.v { "Notif timestamp ${notif.timestamp}" }
             if (notif.timestamp <= prevLatestEpoch) return@forEach
-            createNotification(context, notif, notifCount == 0)
+            notifs.add(createNotification(context, notif))
             if (notif.timestamp > newLatestEpoch)
                 newLatestEpoch = notif.timestamp
-            notifCount++
         }
         if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
-        summaryNotification(context, userId, notifCount)
-        return notifCount
+        frostAnswersCustom("Notifications", "Type" to name, "Count" to notifs.size)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.getNotificationChannel("${BuildConfig.APPLICATION_ID}_$channelId").group = data.id.toString()
+
+            L.e {
+                "MM ${manager.notificationChannelGroups
+                        .joinToString(".") { "${it.name} ${it.channels.joinToString(".") { it.name }}" }}"
+            }
+
+            L.e { manager.getNotificationChannel("asdf") == null }
+        }
+        if (notifs.size > 1)
+            summaryNotification(context, userId, notifs.size).notify(context)
+        val ringtone = ringtone()
+        notifs.forEachIndexed { i, notif ->
+            notif.withAlert(i < 2, ringtone).notify(context)
+        }
+        return notifs.size
     }
 
     fun debugNotification(context: Context, data: CookieModel) {
@@ -168,15 +213,13 @@ enum class NotificationType(
                 "Test 123",
                 System.currentTimeMillis() / 1000,
                 "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png")
-        createNotification(context, content, true)
+        createNotification(context, content).notify(context)
     }
 
     /**
      * Create and submit a new notification with the given [content]
-     * If [withDefaults] is set, it will also add the appropriate sound, vibration, and light
-     * Note that when we have multiple notifications coming in at once, we don't want to have defaults for all of them
      */
-    private fun createNotification(context: Context, content: NotificationContent, withDefaults: Boolean) {
+    private fun createNotification(context: Context, content: NotificationContent): FrostNotification {
         with(content) {
             val intent = Intent(context, FrostWebActivity::class.java)
             intent.data = Uri.parse(href)
@@ -184,18 +227,14 @@ enum class NotificationType(
             overlayContext.put(intent)
             bindRequest(intent, content, data.cookie)
 
-            val group = "${groupPrefix}_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            val notifBuilder = context.frostNotification
+            val notifBuilder = context.frostNotification(channelId)
                     .setContentTitle(title ?: context.string(R.string.frost_name))
                     .setContentText(text)
                     .setContentIntent(pendingIntent)
                     .setCategory(Notification.CATEGORY_SOCIAL)
                     .setSubText(data.name)
-                    .setGroup(group)
-
-            if (withDefaults)
-                notifBuilder.withDefaults(ringtone())
+                    .setGroup(data.id.toString())
 
             if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
             L.v { "Notif load $content" }
@@ -214,31 +253,34 @@ enum class NotificationType(
                 }
             }
 
-            NotificationManagerCompat.from(context).notify(group, notifId, notifBuilder.build())
+            return FrostNotification("${groupPrefix}_${data.id}", notifId, notifBuilder)
         }
     }
+
 
     /**
      * Create a summary notification to wrap the previous ones
      * This will always produce sound, vibration, and lights based on preferences
      * and will only show if we have at least 2 notifications
      */
-    private fun summaryNotification(context: Context, userId: Long, count: Int) {
-        frostAnswersCustom("Notifications", "Type" to name, "Count" to count)
-        if (count <= 1) return
+    private fun summaryNotification(context: Context, userId: Long, count: Int): FrostNotification {
         val intent = Intent(context, FrostWebActivity::class.java)
         intent.data = Uri.parse(fbItem.url)
         intent.putExtra(ARG_USER_ID, userId)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val notifBuilder = context.frostNotification.withDefaults(ringtone())
+        val notifBuilder = context.frostNotification(channelId)
                 .setContentTitle(context.string(R.string.frost_name))
                 .setContentText("$count ${context.string(fbItem.titleId)}")
-                .setGroup("${groupPrefix}_$userId")
+                .setGroup(userId.toString())
                 .setGroupSummary(true)
                 .setContentIntent(pendingIntent)
                 .setCategory(Notification.CATEGORY_SOCIAL)
 
-        NotificationManagerCompat.from(context).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notifBuilder.setGroupAlertBehavior(Notification.GROUP_ALERT_CHILDREN)
+        }
+
+        return FrostNotification("${groupPrefix}_summary", userId.toInt(), notifBuilder)
     }
 
 }
@@ -256,6 +298,24 @@ data class NotificationContent(val data: CookieModel,
 
     val notifId = Math.abs(id.toInt())
 
+}
+
+data class FrostNotification(val tag: String, val id: Int, val notif: NotificationCompat.Builder) {
+
+    @SuppressLint("InlinedApi")
+    fun withAlert(enable: Boolean, ringtone: String): FrostNotification {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> notif.setGroupAlertBehavior(
+                    if (enable) Notification.GROUP_ALERT_CHILDREN
+                    else Notification.GROUP_ALERT_SUMMARY)
+            enable -> notif.withDefaults(ringtone)
+            else -> notif.setDefaults(0)
+        }
+        return this
+    }
+
+    fun notify(context: Context) =
+            NotificationManagerCompat.from(context).notify(tag, id, notif.build())
 }
 
 const val NOTIFICATION_PARAM_ID = "notif_param_id"

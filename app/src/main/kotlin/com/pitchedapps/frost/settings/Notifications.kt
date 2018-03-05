@@ -10,8 +10,11 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefText
 import ca.allanwang.kau.utils.minuteToText
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
+import com.pitchedapps.frost.dbflow.NotificationModel
+import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
 import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
@@ -146,6 +149,16 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
         checkbox(R.string.notification_lights, Prefs::notificationLights,
                 { Prefs.notificationLights = it })
+    }
+
+    if (BuildConfig.DEBUG) {
+        plainText(R.string.reset_notif_epoch) {
+            onClick = {
+                loadFbCookiesAsync {
+                    it.map { NotificationModel(it.id) }.forEach { it.save() }
+                }
+            }
+        }
     }
 
     plainText(R.string.notification_fetch_now) {
