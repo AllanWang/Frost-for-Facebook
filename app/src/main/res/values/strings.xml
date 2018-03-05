@@ -59,4 +59,6 @@
     <string name="options">Options</string>
     <string name="tab_customizer_instructions">Long press and drag to rearrange the top icons.</string>
 
+    <string name="no_new_notifications">No new notifications found</string>
+
 </resources>

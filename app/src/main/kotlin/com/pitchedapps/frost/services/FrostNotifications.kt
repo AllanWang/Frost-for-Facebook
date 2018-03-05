@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.BaseBundle
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.color
@@ -56,11 +57,13 @@ inline val Context.frostNotification: NotificationCompat.Builder
     get() = NotificationCompat.Builder(this, BuildConfig.APPLICATION_ID).apply {
         setSmallIcon(R.drawable.frost_f_24)
         setAutoCancel(true)
+        setOnlyAlertOnce(true)
         setStyle(NotificationCompat.BigTextStyle())
         color = color(R.color.frost_notification_accent)
     }
 
 fun NotificationCompat.Builder.withDefaults(ringtone: String = Prefs.notificationRingtone) = apply {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return this // defaults no longer applies for android o
     var defaults = 0
     if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
     if (Prefs.notificationSound) {
@@ -121,15 +124,21 @@ enum class NotificationType(
      * Get unread data from designated parser
      * Display notifications for those after old epoch
      * Save new epoch
+     *
+     * Returns the number of notifications generated,
+     * or -1 if an error occurred
      */
-    fun fetch(context: Context, data: CookieModel) {
+    fun fetch(context: Context, data: CookieModel): Int {
         val response = parser.parse(data.cookie)
-                ?: return L.v { "$name notification data not found" }
+        if (response == null) {
+            L.v { "$name notification data not found" }
+            return -1
+        }
         val notifs = response.data.getUnreadNotifications(data).filter {
             val text = it.text
             Prefs.notificationKeywords.none { text.contains(it, true) }
         }
-        if (notifs.isEmpty()) return
+        if (notifs.isEmpty()) return 0
         var notifCount = 0
         val userId = data.id
         val prevNotifTime = lastNotificationTime(userId)
@@ -148,9 +157,10 @@ enum class NotificationType(
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
         summaryNotification(context, userId, notifCount)
+        return notifCount
     }
 
-    private fun debugNotification(context: Context, data: CookieModel) {
+    fun debugNotification(context: Context, data: CookieModel) {
         val content = NotificationContent(data,
                 System.currentTimeMillis(),
                 "https://github.com/AllanWang/Frost-for-Facebook",
@@ -230,6 +240,7 @@ enum class NotificationType(
 
         NotificationManagerCompat.from(context).notify("${groupPrefix}_$userId", userId.toInt(), notifBuilder.build())
     }
+
 }
 
 /**
@@ -247,6 +258,14 @@ data class NotificationContent(val data: CookieModel,
 
 }
 
+const val NOTIFICATION_PARAM_ID = "notif_param_id"
+
+private fun JobInfo.Builder.setExtras(id: Int): JobInfo.Builder {
+    val bundle = PersistableBundle()
+    bundle.putInt(NOTIFICATION_PARAM_ID, id)
+    return setExtras(bundle)
+}
+
 const val NOTIFICATION_PERIODIC_JOB = 7
 
 /**
@@ -260,6 +279,7 @@ fun Context.scheduleNotifications(minutes: Long): Boolean {
     val serviceComponent = ComponentName(this, NotificationService::class.java)
     val builder = JobInfo.Builder(NOTIFICATION_PERIODIC_JOB, serviceComponent)
             .setPeriodic(minutes * 60000)
+            .setExtras(NOTIFICATION_PERIODIC_JOB)
             .setPersisted(true)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) //TODO add options
     val result = scheduler.schedule(builder.build())
@@ -280,6 +300,7 @@ fun Context.fetchNotifications(): Boolean {
     val serviceComponent = ComponentName(this, NotificationService::class.java)
     val builder = JobInfo.Builder(NOTIFICATION_JOB_NOW, serviceComponent)
             .setMinimumLatency(0L)
+            .setExtras(NOTIFICATION_JOB_NOW)
             .setOverrideDeadline(2000L)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
     val result = scheduler.schedule(builder.build())

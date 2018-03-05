@@ -1,5 +1,6 @@
 package com.pitchedapps.frost.settings
 
+import android.app.NotificationChannel
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
@@ -7,6 +8,7 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefText
 import ca.allanwang.kau.utils.minuteToText
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.services.fetchNotifications
@@ -101,7 +103,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         textGetter = {
             if (it.isBlank()) string(R.string.kau_default)
             else RingtoneManager.getRingtone(this@getNotificationPrefs, Uri.parse(it))
-                    ?.getTitle(this@getNotificationPrefs) ?: "---" //todo figure out why this happens
+                    ?.getTitle(this@getNotificationPrefs)
+                    ?: "---" //todo figure out why this happens
         }
         onClick = {
             val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
