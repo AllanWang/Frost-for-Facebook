@@ -14,4 +14,5 @@
     <string name="debug_report" translatable="false">Debug Report</string>
     <string name="theme_issue" translatable="false">Theme Issue</string>
     <string name="feature_request" translatable="false">Feature Request</string>
+    <string name="reset_notif_epoch" translatable="false">Reset Notif Epoch</string>
 </resources>

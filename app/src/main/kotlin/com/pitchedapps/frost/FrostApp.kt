@@ -77,9 +77,9 @@ class FrostApp : Application() {
 
         super.onCreate()
 
-        applicationContext.scheduleNotifications(Prefs.notificationFreq)
-
         setupNotificationChannels(applicationContext)
+
+        applicationContext.scheduleNotifications(Prefs.notificationFreq)
 
         /**
          * Drawer profile loading logic
