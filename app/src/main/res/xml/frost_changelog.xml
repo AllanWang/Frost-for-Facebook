@@ -6,14 +6,16 @@
     <item text="" />
     -->
 
+    <version title="v1.8.3" />
+    <item text="Add full notification channel support" />
+    <item text="Fix sound spam for multiple notifications" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.8.2" />
     <item text="Fix duplicate notification sounds" />
     <item text="Fix map redirecting to blackberry" />
     <item text="Fix event reservation" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v1.8.1" />
     <item text="Theme new Facebook update" />

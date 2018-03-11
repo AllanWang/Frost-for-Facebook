@@ -1,5 +1,7 @@
 # Changelog
 
+## v
+
 ## v1.8.2
 * Fix duplicate notification sounds
 * Fix map redirecting to blackberry
