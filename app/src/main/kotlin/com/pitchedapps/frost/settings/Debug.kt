@@ -91,15 +91,7 @@ private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
 
 private const val ZIP_NAME = "debug"
 
-fun SettingsActivity.sendDebug(urlOrig: String, html: String?) {
-
-    val url = when {
-        urlOrig.endsWith("soft=requests") -> FbItem.FRIENDS.url
-        urlOrig.endsWith("soft=messages") -> FbItem.MESSAGES.url
-        urlOrig.endsWith("soft=notifications") -> FbItem.NOTIFICATIONS.url
-        urlOrig.endsWith("soft=search") -> "${FbItem._SEARCH.url}?q=a"
-        else -> urlOrig
-    }
+fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
             baseUrl = FB_URL_BASE,
