@@ -83,32 +83,32 @@ class LoginActivity : BaseActivity() {
                 usernameSubject,
                 BiFunction(::Pair))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
-            refresh = false
-            if (!foundImage) {
-                L.e { "Could not get profile photo; Invalid userId?" }
-                L._i { cookie }
-            }
-            textview.text = String.format(getString(R.string.welcome), name)
-            textview.fadeIn()
-            frostAnswers {
-                logLogin(LoginEvent()
-                        .putMethod("frost_browser")
-                        .putSuccess(true))
-            }
-            /*
-             * The user may have logged into an account that is already in the database
-             * We will let the db handle duplicates and load it now after the new account has been saved
-             */
-            loadFbCookiesAsync {
-                val cookies = ArrayList(it)
-                Handler().postDelayed({
-                    if (Showcase.intro)
-                        launchNewTask<IntroActivity>(cookies, true)
-                    else
-                        launchNewTask<MainActivity>(cookies, true)
-                }, 1000)
-            }
-        }
+                    refresh = false
+                    if (!foundImage) {
+                        L.e { "Could not get profile photo; Invalid userId?" }
+                        L._i { cookie }
+                    }
+                    textview.text = String.format(getString(R.string.welcome), name)
+                    textview.fadeIn()
+                    frostAnswers {
+                        logLogin(LoginEvent()
+                                .putMethod("frost_browser")
+                                .putSuccess(true))
+                    }
+                    /*
+                     * The user may have logged into an account that is already in the database
+                     * We will let the db handle duplicates and load it now after the new account has been saved
+                     */
+                    loadFbCookiesAsync {
+                        val cookies = ArrayList(it)
+                        Handler().postDelayed({
+                            if (Showcase.intro)
+                                launchNewTask<IntroActivity>(cookies, true)
+                            else
+                                launchNewTask<MainActivity>(cookies, true)
+                        }, 1000)
+                    }
+                }
         loadProfile(cookie.id)
         loadUsername(cookie)
     }
@@ -117,17 +117,17 @@ class LoginActivity : BaseActivity() {
     private fun loadProfile(id: Long) {
         profileLoader.load(PROFILE_PICTURE_URL(id))
                 .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
-            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                profileSubject.onSuccess(true)
-                return false
-            }
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        profileSubject.onSuccess(true)
+                        return false
+                    }
 
-            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                e.logFrostAnswers("Profile loading exception")
-                profileSubject.onSuccess(false)
-                return false
-            }
-        }).into(profile)
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        e.logFrostAnswers("Profile loading exception")
+                        profileSubject.onSuccess(false)
+                        return false
+                    }
+                }).into(profile)
     }
 
     private fun loadUsername(cookie: CookieModel) {

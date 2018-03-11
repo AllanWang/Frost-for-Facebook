@@ -32,6 +32,7 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
+import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
@@ -343,3 +344,8 @@ fun File.createFreshDir(): Boolean {
         return false
     return mkdirs()
 }
+
+fun String.unescapeHtml(): String =
+        StringEscapeUtils.unescapeXml(this)
+                .replace("\\u003C", "<")
+                .replace("\\\"", "\"")

@@ -52,8 +52,7 @@ class Keywords @JvmOverloads constructor(
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = adapter
         adapter.withEventHook(object : ClickEventHook<KeywordItem>() {
-            override fun onBind(viewHolder: RecyclerView.ViewHolder): View?
-                    = (viewHolder as? KeywordItem.ViewHolder)?.delete
+            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? = (viewHolder as? KeywordItem.ViewHolder)?.delete
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<KeywordItem>, item: KeywordItem) {
                 adapter.remove(position)

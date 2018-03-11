@@ -17,6 +17,7 @@ interface MainActivityContract : ActivityContract, MainFabContract {
      * Available on all threads
      */
     fun collapseAppBar()
+
     fun reloadFragment(fragment: BaseFragment)
 }
 

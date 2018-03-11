@@ -101,8 +101,7 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Uni
 }
 
 fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract,
-                                callback: ((Int) -> Unit)? = null)
-        = web.jsInject(*injectors, callback = callback)
+                                callback: ((Int) -> Unit)? = null) = web.jsInject(*injectors, callback = callback)
 
 /**
  * Wrapper class to convert a function into an injector

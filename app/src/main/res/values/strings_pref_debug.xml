@@ -2,6 +2,7 @@
 <resources>
 
     <string name="debug_toast_enabled">Debugging section is enabled! Go back to settings.</string>
+    <string name="debug_toast_already_enabled">Debugging section is already enabled. Go back to settings.</string>
 
     <string name="debug_disclaimer_info">Though most private content is automatically removed in the report, some sensitive info may still be visible.
         \nPlease have a look at the debug report before sending it.

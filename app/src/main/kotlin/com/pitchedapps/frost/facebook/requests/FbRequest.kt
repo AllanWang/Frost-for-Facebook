@@ -130,6 +130,8 @@ fun String.getAuth(): RequestAuth {
 
 inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) -> O,
                                                 crossinline caller: (T) -> R): Single<O> {
+    if (isEmpty())
+        return Single.just(mapper(emptyList()))
     val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
     return Single.zip(singles) {
         val results = it.mapNotNull { it as? R }
