@@ -76,7 +76,8 @@ class HdImageLoading : ModelLoader<HdImageMaybe, InputStream> {
 
 class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream> {
 
-    @Volatile private var cancelled: Boolean = false
+    @Volatile
+    private var cancelled: Boolean = false
     private var urlCall: Call? = null
     private var inputStream: InputStream? = null
 
@@ -92,7 +93,8 @@ class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream>
         if (!model.isValid) return callback.fail("Model is invalid")
         model.cookie.fbRequest(fail = { callback.fail("Invalid auth") }) {
             if (cancelled) return@fbRequest callback.fail("Cancelled")
-            val url = getFullSizedImage(model.id).invoke() ?: return@fbRequest callback.fail("Null url")
+            val url = getFullSizedImage(model.id).invoke()
+                    ?: return@fbRequest callback.fail("Null url")
             if (cancelled) return@fbRequest callback.fail("Cancelled")
             if (!url.contains("png") && !url.contains("jpg")) return@fbRequest callback.fail("Invalid format")
             urlCall = Request.Builder().url(url).get().call()

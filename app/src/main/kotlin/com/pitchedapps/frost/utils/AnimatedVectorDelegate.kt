@@ -54,8 +54,10 @@ class AnimatedVectorDelegate(
 
     override fun bind(view: ImageView) {
         this.view = view
-        view.context.drawable(avdStart) as? AnimatedVectorDrawable ?: throw IllegalArgumentException("AnimatedVectorDelegate has a starting drawable that isn't an avd")
-        view.context.drawable(avdEnd) as? AnimatedVectorDrawable ?: throw IllegalArgumentException("AnimatedVectorDelegate has an ending drawable that isn't an avd")
+        view.context.drawable(avdStart) as? AnimatedVectorDrawable
+                ?: throw IllegalArgumentException("AnimatedVectorDelegate has a starting drawable that isn't an avd")
+        view.context.drawable(avdEnd) as? AnimatedVectorDrawable
+                ?: throw IllegalArgumentException("AnimatedVectorDelegate has an ending drawable that isn't an avd")
         view.setImageResource(avdStart)
         if (emitOnBind) animatedVectorListener?.invoke(avd!!, false)
     }

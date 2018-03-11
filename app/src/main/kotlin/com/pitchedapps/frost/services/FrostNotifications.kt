@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.services
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -93,7 +92,7 @@ fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String):
                 if (enable) Notification.GROUP_ALERT_CHILDREN
                 else Notification.GROUP_ALERT_SUMMARY)
     } else if (!enable) {
-       setDefaults(0)
+        setDefaults(0)
     } else {
         var defaults = 0
         if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE

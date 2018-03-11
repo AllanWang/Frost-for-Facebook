@@ -34,16 +34,16 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
                 text.text = cookie.name
                 GlideApp.with(itemView).load(PROFILE_PICTURE_URL(cookie.id))
                         .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        text.fadeIn()
-                        return false
-                    }
+                            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                                text.fadeIn()
+                                return false
+                            }
 
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        text.fadeIn()
-                        return false
-                    }
-                }).into(image)
+                            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                                text.fadeIn()
+                                return false
+                            }
+                        }).into(image)
             } else {
                 text.visible()
                 image.setImageDrawable(GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(itemView.context, 100, Prefs.textColor))

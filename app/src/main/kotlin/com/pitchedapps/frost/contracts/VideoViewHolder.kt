@@ -15,8 +15,7 @@ interface VideoViewHolder : FrameWrapper, FrostVideoContainerContract {
 
     var videoViewer: FrostVideoViewer?
 
-    fun showVideo(url: String)
-            = showVideo(url, false)
+    fun showVideo(url: String) = showVideo(url, false)
 
     /**
      * Create new viewer and reuse existing one

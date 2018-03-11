@@ -1,6 +1,5 @@
 package com.pitchedapps.frost.fragments
 
-import android.support.design.widget.FloatingActionButton
 import com.pitchedapps.frost.contracts.*
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable

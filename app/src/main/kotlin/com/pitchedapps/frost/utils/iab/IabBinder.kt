@@ -94,8 +94,8 @@ abstract class IabBinder : FrostBilling {
         error.logFrostAnswers("IAB error $errorCode")
     }
 
-    override fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean
-            = bp?.handleActivityResult(requestCode, resultCode, data) ?: false
+    override fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean = bp?.handleActivityResult(requestCode, resultCode, data)
+            ?: false
 
     override fun purchasePro() {
         val bp = this.bp

@@ -16,7 +16,6 @@ import ca.allanwang.kau.utils.*
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload

@@ -46,15 +46,12 @@ val WebResourceRequest.isMedia: Boolean
  * Generic filter passthrough
  * If Resource is already nonnull, pass it, otherwise check if filter is met and override the response accordingly
  */
-fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean)
-        = filter(request.query { filter(it) })
+fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean) = filter(request.query { filter(it) })
 
-fun WebResourceResponse?.filter(filter: Boolean): WebResourceResponse?
-        = this ?: if (filter) blankResource else null
+fun WebResourceResponse?.filter(filter: Boolean): WebResourceResponse? = this
+        ?: if (filter) blankResource else null
 
-fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse?
-        = filter(request) { it.endsWith(".css") }
+fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse? = filter(request) { it.endsWith(".css") }
 
-fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse?
-        = filter(request.isImage)
+fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse? = filter(request.isImage)
 

@@ -92,7 +92,8 @@ class ImageActivity : KauBaseActivity() {
 
     // a unique image identifier based on the id (if it exists), and its hash
     private val IMAGE_HASH: String by lazy {
-        "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode() ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}"
+        "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode()
+                ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

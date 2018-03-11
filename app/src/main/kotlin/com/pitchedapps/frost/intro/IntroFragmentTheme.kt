@@ -22,8 +22,7 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
     val themeList
         get() = listOf(light, dark, amoled, glass)
 
-    override fun viewArray(): Array<Array<out View>>
-            = arrayOf(arrayOf(title), arrayOf(light, dark), arrayOf(amoled, glass))
+    override fun viewArray(): Array<Array<out View>> = arrayOf(arrayOf(title), arrayOf(light, dark), arrayOf(amoled, glass))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
