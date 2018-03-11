@@ -25,8 +25,7 @@ abstract class BaseImageIntroFragment(
     val screen: Drawable by lazyResettableRegistered { imageDrawable.findDrawableByLayerId(R.id.intro_phone_screen) }
     val icon: ImageView by bindViewResettable(R.id.intro_button)
 
-    override fun viewArray(): Array<Array<out View>>
-            = arrayOf(arrayOf(title), arrayOf(desc))
+    override fun viewArray(): Array<Array<out View>> = arrayOf(arrayOf(title), arrayOf(desc))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         title.setText(titleRes)

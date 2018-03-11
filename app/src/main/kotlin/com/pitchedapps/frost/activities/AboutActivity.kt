@@ -59,7 +59,7 @@ class AboutActivity : AboutActivityBase(null, {
                 "subsamplingscaleimageview"
         )
 
-        val l = libs.prepareLibraries(this, include, null, false, true,true)
+        val l = libs.prepareLibraries(this, include, null, false, true, true)
 //        l.forEach { KL.d{"Lib ${it.definedName}"} }
         return l
     }
@@ -88,14 +88,18 @@ class AboutActivity : AboutActivityBase(null, {
             if (item is LibraryIItem) {
                 val now = System.currentTimeMillis()
                 if (now - lastClick > 500)
-                    clickCount = 0
+                    clickCount = 1
                 else
                     clickCount++
                 lastClick = now
-                if (clickCount == 7 && !Prefs.debugSettings) {
-                    Prefs.debugSettings = true
-                    L.d { "Debugging section enabled" }
-                    toast(R.string.debug_toast_enabled)
+                if (clickCount == 8) {
+                    if (!Prefs.debugSettings) {
+                        Prefs.debugSettings = true
+                        L.d { "Debugging section enabled" }
+                        toast(R.string.debug_toast_enabled)
+                    } else {
+                        toast(R.string.debug_toast_already_enabled)
+                    }
                 }
             }
             false

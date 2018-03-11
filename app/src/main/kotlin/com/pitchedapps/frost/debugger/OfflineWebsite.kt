@@ -9,8 +9,11 @@ import com.pitchedapps.frost.facebook.requests.zip
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.frostJsoup
+import com.pitchedapps.frost.utils.unescapeHtml
 import okhttp3.Request
 import okhttp3.ResponseBody
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities
 import java.io.File
@@ -29,6 +32,8 @@ import java.util.zip.ZipOutputStream
  */
 class OfflineWebsite(private val url: String,
                      private val cookie: String = "",
+                     baseUrl: String? = null,
+                     private val html: String? = null,
                      /**
                       * Directory that holds all the files
                       */
@@ -38,7 +43,8 @@ class OfflineWebsite(private val url: String,
     /**
      * Supplied url without the queries
      */
-    val baseUrl = url.substringBefore("?").trim('/')
+    private val baseUrl = (baseUrl ?: url.substringBefore("?")
+            .substringBefore(".com")).trim('/')
 
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
@@ -50,7 +56,7 @@ class OfflineWebsite(private val url: String,
     private val L = KauLoggerExtension("Offline", com.pitchedapps.frost.utils.L)
 
     init {
-        if (!baseUrl.startsWith("http"))
+        if (!this.baseUrl.startsWith("http"))
             throw IllegalArgumentException("Base Url must start with http")
     }
 
@@ -94,8 +100,16 @@ class OfflineWebsite(private val url: String,
 
         if (cancelled) return
 
-        val doc = frostJsoup(cookie, url)
+        val doc: Document
+        if (html == null || html.length < 100) {
+            doc = frostJsoup(cookie, url)
+        } else {
+            doc = Jsoup.parse("<html>${html.unescapeHtml()}</html>")
+            L.d { "Building data from supplied content of size ${html.length}" }
+        }
         doc.setBaseUri(baseUrl)
+        L.d { "${html?.unescapeHtml()}\n\n\n\n\n" }
+        L.e { doc.html() }
         doc.outputSettings().escapeMode(Entities.EscapeMode.extended)
         if (doc.childNodeSize() == 0) {
             L.e { "No content found" }
@@ -114,7 +128,7 @@ class OfflineWebsite(private val url: String,
 
         // make links absolute
         doc.select("a[href]").forEach {
-            val absLink = it.attr("abs:href")
+            val absLink = it.attr("abs:href").trim()
             it.attr("href", absLink)
         }
 
@@ -125,8 +139,11 @@ class OfflineWebsite(private val url: String,
         progress(50)
 
         downloadCss().subscribe { cssLinks, cssThrowable ->
+
             if (cssThrowable != null) {
-                L.e { "CSS parsing failed" }
+                L.e { "CSS parsing failed: ${cssThrowable.message} $cssThrowable" }
+                callback(false)
+                return@subscribe
             }
 
             progress(70)
@@ -204,10 +221,11 @@ class OfflineWebsite(private val url: String,
     private fun downloadCss() = cssQueue.clean().toTypedArray().zip<String, Set<String>, Set<String>>({
         it.flatMap { it }.toSet()
     }, {
+        L.d { "CSSS Url $it" }
         it.downloadUrl({ emptySet() }) { file, body ->
             var content = body.string()
             val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
-            val absLinks = links.mapNotNull {
+            val absLinks: Set<String> = links.mapNotNull {
                 val url = when {
                     it.startsWith("http") -> it
                     it.startsWith("/") -> "$baseUrl$it"
@@ -291,8 +309,9 @@ class OfflineWebsite(private val url: String,
     private fun String.shorten() =
             if (length <= 10) this else substring(length - 10)
 
-    private fun Set<String>.clean()
-            = filter(String::isNotBlank).filter { it.startsWith("http") }
+    private fun Set<String>.clean(): List<String> {
+        return filter(String::isNotBlank).filter { it.startsWith("http") }
+    }
 
     private fun reset() {
         cancelled = false

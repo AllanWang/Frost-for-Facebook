@@ -15,10 +15,15 @@ import ca.allanwang.kau.utils.visible
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.injectors.JsActions
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.web.DebugWebView
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.File
 
 /**
@@ -33,6 +38,8 @@ class DebugActivity : KauBaseActivity() {
 
     companion object {
         const val RESULT_URL = "extra_result_url"
+        const val RESULT_SCREENSHOT = "extra_result_screenshot"
+        const val RESULT_BODY = "extra_result_body"
         fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
     }
 
@@ -61,13 +68,34 @@ class DebugActivity : KauBaseActivity() {
 
             val parent = baseDir(this)
             parent.createFreshDir()
-            val file = File(parent, "screenshot.png")
-            web.getScreenshot(file) {
-                val intent = Intent()
-                intent.putExtra(RESULT_URL, web.url)
-                setResult(Activity.RESULT_OK, intent)
-                finish()
-            }
+            val rxScreenshot = Single.fromCallable {
+                web.getScreenshot(File(parent, "screenshot.png"))
+            }.subscribeOn(Schedulers.io())
+            val rxBody = Single.create<String> { emitter ->
+                web.evaluateJavascript(JsActions.RETURN_BODY.function) {
+                    emitter.onSuccess(it)
+                }
+            }.subscribeOn(AndroidSchedulers.mainThread())
+            Single.zip(listOf(rxScreenshot, rxBody), {
+                val screenshot = it[0] == true
+                val body = it[1] as? String
+                screenshot to body
+            }).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { (screenshot, body), err ->
+                        if (err != null) {
+                            L.e { "DebugActivity error ${err.message}" }
+                            setResult(Activity.RESULT_CANCELED)
+                            finish()
+                            return@subscribe
+                        }
+                        val intent = Intent()
+                        intent.putExtra(RESULT_URL, web.url)
+                        intent.putExtra(RESULT_SCREENSHOT, screenshot)
+                        if (body != null)
+                            intent.putExtra(RESULT_BODY, body)
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    }
         }
 
     }

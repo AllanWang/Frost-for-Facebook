@@ -99,15 +99,11 @@ open class NestedWebView @JvmOverloads constructor(
 
     final override fun hasNestedScrollingParent() = childHelper.hasNestedScrollingParent()
 
-    final override fun dispatchNestedScroll(dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, offsetInWindow: IntArray?)
-            = childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
+    final override fun dispatchNestedScroll(dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, offsetInWindow: IntArray?) = childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
 
-    final override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?)
-            = childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
+    final override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?) = childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
-    final override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean)
-            = childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
+    final override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean) = childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
 
-    final override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float)
-            = childHelper.dispatchNestedPreFling(velocityX, velocityY)
+    final override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float) = childHelper.dispatchNestedPreFling(velocityX, velocityY)
 }

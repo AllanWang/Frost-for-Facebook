@@ -1,6 +1,8 @@
 # Changelog
 
-## v
+## v1.8.3
+* Add full notification channel support
+* Fix sound spam for multiple notifications
 
 ## v1.8.2
 * Fix duplicate notification sounds

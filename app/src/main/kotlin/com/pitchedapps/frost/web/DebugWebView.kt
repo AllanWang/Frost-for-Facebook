@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.support.annotation.WorkerThread
 import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
@@ -16,8 +17,6 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.isFacebookUrl
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.jetbrains.anko.withAlpha
 import java.io.File
 
@@ -45,27 +44,22 @@ class DebugWebView @JvmOverloads constructor(
         isDrawingCacheEnabled = true
     }
 
-    fun getScreenshot(output: File, callback: (Boolean) -> Unit) {
+    @WorkerThread
+    fun getScreenshot(output: File): Boolean {
 
         if (!output.createFreshFile()) {
             L.e { "Failed to create ${output.absolutePath} for debug screenshot" }
-            return callback(false)
+            return false
         }
-        doAsync {
-            var valid = true
-            try {
-                output.outputStream().use {
-                    drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
-                }
-                L.d { "Created screenshot at ${output.absolutePath}" }
-            } catch (e: Exception) {
-                L.e { "An error occurred ${e.message}" }
-                valid = false
-            } finally {
-                uiThread {
-                    callback(valid)
-                }
+        return try {
+            output.outputStream().use {
+                drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
+            L.d { "Created screenshot at ${output.absolutePath}" }
+            true
+        } catch (e: Exception) {
+            L.e { "An error occurred ${e.message}" }
+            false
         }
     }
 

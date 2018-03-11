@@ -10,6 +10,7 @@ import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQUEST_DEBUG
 import com.pitchedapps.frost.debugger.OfflineWebsite
+import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.parsers.FrostParser
@@ -90,7 +91,7 @@ private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
 
 private const val ZIP_NAME = "debug"
 
-fun SettingsActivity.sendDebug(urlOrig: String) {
+fun SettingsActivity.sendDebug(urlOrig: String, html: String?) {
 
     val url = when {
         urlOrig.endsWith("soft=requests") -> FbItem.FRIENDS.url
@@ -101,7 +102,9 @@ fun SettingsActivity.sendDebug(urlOrig: String) {
     }
 
     val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            DebugActivity.baseDir(this))
+            baseUrl = FB_URL_BASE,
+            html = html,
+            baseDir = DebugActivity.baseDir(this))
 
     val md = materialDialog {
         title(R.string.parsing_data)

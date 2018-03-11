@@ -15,7 +15,7 @@ class OfflineWebsiteTest {
     fun basic() {
         val countdown = CountDownLatch(1)
         val buildPath = if (File(".").parentFile?.name == "app") "build/offline_test" else "app/build/offline_test"
-        OfflineWebsite(FB_URL_BASE, COOKIE, File(buildPath))
+        OfflineWebsite(FB_URL_BASE, COOKIE, baseDir = File(buildPath))
                 .loadAndZip("test") {
                     println("Outcome $it")
                     countdown.countDown()
