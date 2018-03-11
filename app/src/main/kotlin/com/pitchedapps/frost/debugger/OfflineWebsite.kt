@@ -108,8 +108,6 @@ class OfflineWebsite(private val url: String,
             L.d { "Building data from supplied content of size ${html.length}" }
         }
         doc.setBaseUri(baseUrl)
-        L.d { "${html?.unescapeHtml()}\n\n\n\n\n" }
-        L.e { doc.html() }
         doc.outputSettings().escapeMode(Entities.EscapeMode.extended)
         if (doc.childNodeSize() == 0) {
             L.e { "No content found" }
@@ -221,7 +219,6 @@ class OfflineWebsite(private val url: String,
     private fun downloadCss() = cssQueue.clean().toTypedArray().zip<String, Set<String>, Set<String>>({
         it.flatMap { it }.toSet()
     }, {
-        L.d { "CSSS Url $it" }
         it.downloadUrl({ emptySet() }) { file, body ->
             var content = body.string()
             val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
