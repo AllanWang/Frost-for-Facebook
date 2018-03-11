@@ -126,7 +126,7 @@ class OfflineWebsite(private val url: String,
 
         // make links absolute
         doc.select("a[href]").forEach {
-            val absLink = it.attr("abs:href").trim()
+            val absLink = it.attr("abs:href")
             it.attr("href", absLink)
         }
 
@@ -222,7 +222,7 @@ class OfflineWebsite(private val url: String,
         it.downloadUrl({ emptySet() }) { file, body ->
             var content = body.string()
             val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
-            val absLinks: Set<String> = links.mapNotNull {
+            val absLinks = links.mapNotNull {
                 val url = when {
                     it.startsWith("http") -> it
                     it.startsWith("/") -> "$baseUrl$it"
@@ -306,9 +306,8 @@ class OfflineWebsite(private val url: String,
     private fun String.shorten() =
             if (length <= 10) this else substring(length - 10)
 
-    private fun Set<String>.clean(): List<String> {
-        return filter(String::isNotBlank).filter { it.startsWith("http") }
-    }
+    private fun Set<String>.clean(): List<String> =
+            filter(String::isNotBlank).filter { it.startsWith("http") }
 
     private fun reset() {
         cancelled = false
