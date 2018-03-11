@@ -41,7 +41,7 @@ object Prefs : KPref() {
 
     var exitConfirmation: Boolean by kpref("exit_confirmation", true)
 
-    var notificationFreq: Long by kpref("notification_freq", 60L)
+    var notificationFreq: Long by kpref("notification_freq", 15L)
 
     var versionCode: Int by kpref("version_code", -1)
 
