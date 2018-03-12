@@ -103,11 +103,13 @@ class ImageActivity : KauBaseActivity() {
         L.v { "Displaying image $imageUrl" }
         val layout = if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
-        container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
-        caption?.setTextColor(Prefs.textColor)
-        caption?.setBackgroundColor(Prefs.bgColor.colorToForeground(0.2f).withAlpha(255))
+        container.setBackgroundColor(if (Prefs.blackMediaBg) Color.BLACK
+        else Prefs.bgColor.withMinAlpha(222))
+        caption?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
+        caption?.setBackgroundColor((if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
+                .colorToForeground(0.2f).withAlpha(255))
         caption?.text = imageText
-        progress.tint(Prefs.accentColor)
+        progress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
         panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset == 0f && !fab.isShown) fab.show()

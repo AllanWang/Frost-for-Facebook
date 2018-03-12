@@ -3,6 +3,9 @@
 ## v1.8.3
 * Add full notification channel support
 * Fix sound spam for multiple notifications
+* Send feedback if no new notifications exist after manual refresh
+* Automatically refresh if idled for a long time
+* Clean up url queries
 
 ## v1.8.2
 * Fix duplicate notification sounds

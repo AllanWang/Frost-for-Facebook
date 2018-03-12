@@ -26,4 +26,6 @@
     <string name="web_text_scaling">Web Text Scaling</string>
     <string name="web_text_scaling_desc">Text Scaling Example; Long press the percentage text to reset.</string>
 
+    <string name="enforce_black_media_bg">Enforce black media background</string>
+    <string name="enforce_black_media_bg_desc">Make media backgrounds black; default is the selected background above</string>
 </resources>
