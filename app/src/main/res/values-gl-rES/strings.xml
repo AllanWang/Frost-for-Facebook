@@ -46,4 +46,5 @@
   <string name="preview">Vista previa</string>
   <string name="options">Opcións</string>
   <string name="tab_customizer_instructions">Toque longo e arrastra para reorganizar as iconas superiores.</string>
+  <string name="no_new_notifications">Non se atopou ningunha nova notificación</string>
 </resources>
