@@ -163,6 +163,8 @@ object Prefs : KPref() {
 
     var mainActivityLayoutType: Int by kpref("main_activity_layout_type", 0)
 
+    var blackMediaBg: Boolean by kpref("black_media_bg", false)
+
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 

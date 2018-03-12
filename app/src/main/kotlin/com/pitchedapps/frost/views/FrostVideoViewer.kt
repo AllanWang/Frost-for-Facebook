@@ -59,7 +59,11 @@ class FrostVideoViewer @JvmOverloads constructor(
     init {
         inflate(R.layout.view_video, true)
         alpha = 0f
-        background.setBackgroundColor(if (Prefs.bgColor.isColorDark) Prefs.bgColor.withMinAlpha(200) else Color.BLACK)
+        background.setBackgroundColor(
+                if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
+                    Prefs.bgColor.withMinAlpha(200)
+                else
+                    Color.BLACK)
         video.setViewerContract(this)
         video.pause()
         toolbar.inflateMenu(R.menu.menu_video)

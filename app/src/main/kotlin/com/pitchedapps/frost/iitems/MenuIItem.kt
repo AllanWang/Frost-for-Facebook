@@ -48,10 +48,13 @@ class MenuContentIItem(val data: MenuItem)
             else
                 icon.gone()
             content.text = item.data.name
+            badge.text = item.data.badge
         }
 
         override fun unbindView(item: MenuContentIItem) {
-            badge.gone()
+            GlideApp.with(itemView).clear(icon)
+            content.text = null
+            badge.text = null
         }
     }
 }
