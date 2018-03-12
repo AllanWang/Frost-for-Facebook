@@ -86,27 +86,27 @@ class ImageActivity : KauBaseActivity() {
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 
-    val IMAGE_URL: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
+    val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
 
-    private val TEXT: String? by lazy { intent.getStringExtra(ARG_TEXT) }
+    private val imageText: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
     // a unique image identifier based on the id (if it exists), and its hash
-    private val IMAGE_HASH: String by lazy {
-        "${Math.abs(FB_IMAGE_ID_MATCHER.find(IMAGE_URL)[1]?.hashCode()
-                ?: 0)}_${Math.abs(IMAGE_URL.hashCode())}"
+    private val imageHash: String by lazy {
+        "${Math.abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode()
+                ?: 0)}_${Math.abs(imageUrl.hashCode())}"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent?.extras ?: return finish()
         L.i { "Displaying image" }
-        L.v { "Displaying image $IMAGE_URL" }
-        val layout = if (!TEXT.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
+        L.v { "Displaying image $imageUrl" }
+        val layout = if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         container.setBackgroundColor(Prefs.bgColor.withMinAlpha(222))
         caption?.setTextColor(Prefs.textColor)
         caption?.setBackgroundColor(Prefs.bgColor.colorToForeground(0.2f).withAlpha(255))
-        caption?.text = TEXT
+        caption?.text = imageText
         progress.tint(Prefs.accentColor)
         panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
@@ -120,7 +120,7 @@ class ImageActivity : KauBaseActivity() {
             override fun onImageLoadError(e: Exception?) {
                 errorRef = e
                 e.logFrostAnswers("Image load error")
-                L.e { "Failed to load image $IMAGE_URL" }
+                L.e { "Failed to load image $imageUrl" }
                 tempFile?.delete()
                 fabAction = FabStates.ERROR
             }
@@ -129,7 +129,7 @@ class ImageActivity : KauBaseActivity() {
             themeWindow = false
         }
         doAsync({
-            L.e(it) { "Failed to load image $IMAGE_HASH" }
+            L.e(it) { "Failed to load image $imageHash" }
             errorRef = it
             runOnUiThread { progress.fadeOut() }
             tempFile?.delete()
@@ -156,7 +156,7 @@ class ImageActivity : KauBaseActivity() {
      * Returns a file pointing to the image, or null if something goes wrong
      */
     private inline fun loadImage(callback: (file: File?) -> Unit) {
-        val local = File(tempDir, IMAGE_HASH)
+        val local = File(tempDir, imageHash)
         if (local.exists() && local.length() > 1) {
             local.setLastModified(System.currentTimeMillis())
             L.d { "Loading from local cache ${local.absolutePath}" }
@@ -204,7 +204,7 @@ class ImageActivity : KauBaseActivity() {
     }
 
     private fun getImageResponse() = Request.Builder()
-            .url(IMAGE_URL)
+            .url(imageUrl)
             .get()
             .call()
             .execute()
@@ -279,7 +279,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                     if (activity.errorRef != null)
                         L.e(activity.errorRef) { "ImageActivity error report" }
                     activity.sendFrostEmail(R.string.debug_image_link_subject) {
-                        addItem("Url", activity.IMAGE_URL)
+                        addItem("Url", activity.imageUrl)
                         addItem("Message", activity.errorRef?.message ?: "Null")
                     }
                 }
