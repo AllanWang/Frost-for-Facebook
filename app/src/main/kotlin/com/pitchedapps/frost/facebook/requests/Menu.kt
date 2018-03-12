@@ -125,7 +125,7 @@ data class MenuItem(val id: String? = null,
                     val name: String? = null,
                     val pic: String? = null,
                     val url: String? = null,
-                    val count: Int = 0,
+                    val badge: String? = null,
                     val countDetails: String? = null) : MenuItemData {
 
     @JsonCreator constructor(
@@ -133,10 +133,13 @@ data class MenuItem(val id: String? = null,
             @JsonProperty("name") name: String?,
             @JsonProperty("pic") pic: String?,
             @JsonProperty("url") url: String?,
-            @JsonProperty("count") count: Int?,
+            @JsonProperty("count") badge: String?,
             @JsonProperty("count_details") countDetails: String?,
             @JsonProperty("fake") fake: Boolean?
-    ) : this(id, name, pic?.formattedFbUrl, url?.formattedFbUrl, count ?: 0, countDetails)
+    ) : this(id, name, pic?.formattedFbUrl,
+            url?.formattedFbUrl,
+            if (badge == "0") null else badge,
+            countDetails)
 
     override val isValid: Boolean
         get() = !name.isNullOrBlank() && !url.isNullOrBlank()

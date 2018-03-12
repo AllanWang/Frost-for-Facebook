@@ -60,7 +60,7 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
 
             val newSource = createNewSource(input).cache().doOnError { sources.remove(input) }
 
-            sources.put(input, newSource)
+            sources[input] = newSource
             return newSource
         }
     }
