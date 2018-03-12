@@ -21,6 +21,8 @@
   <string name="notification_fetch_success">Obtendo notificacións…</string>
   <string name="notification_fetch_fail">Non se puideron obter notificacións</string>
   <string name="notification_sound">Son das notificacións</string>
+  <string name="notification_channel">Personalizar as canles de notificación</string>
+  <string name="notification_channel_desc">Modificar o son, a vibración, a prioridade etc.</string>
   <string name="notification_ringtone">Ton das notificacións</string>
   <string name="message_ringtone">Ton das mensaxes</string>
   <string name="select_ringtone">Seleccionar ton</string>
