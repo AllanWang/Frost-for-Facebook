@@ -136,7 +136,10 @@ data class MenuItem(val id: String? = null,
             @JsonProperty("count") badge: String?,
             @JsonProperty("count_details") countDetails: String?,
             @JsonProperty("fake") fake: Boolean?
-    ) : this(id, name, pic?.formattedFbUrl, url?.formattedFbUrl, badge, countDetails)
+    ) : this(id, name, pic?.formattedFbUrl,
+            url?.formattedFbUrl,
+            if (badge == "0") null else badge,
+            countDetails)
 
     override val isValid: Boolean
         get() = !name.isNullOrBlank() && !url.isNullOrBlank()

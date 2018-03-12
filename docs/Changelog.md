@@ -7,6 +7,7 @@
 * Automatically refresh if idled for a long time
 * Clean up url queries
 * Add option to force black background for media views
+* Fix menu fragment parsing
 
 ## v1.8.2
 * Fix duplicate notification sounds
