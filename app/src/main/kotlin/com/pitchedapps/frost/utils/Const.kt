@@ -14,3 +14,5 @@ const val REQUEST_REFRESH = 1 shl 13
 const val REQUEST_TEXT_ZOOM = 1 shl 14
 const val REQUEST_NAV = 1 shl 15
 const val REQUEST_SEARCH = 1 shl 16
+
+const val MAIN_TIMEOUT_DURATION = 30 * 60 * 1000 // 30 min

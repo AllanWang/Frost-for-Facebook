@@ -91,6 +91,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override var videoViewer: FrostVideoViewer? = null
     private lateinit var drawer: Drawer
     private lateinit var drawerHeader: AccountHeader
+    private var lastAccessTime = -1L
 
     override var searchView: SearchView? = null
     private val searchViewCache = mutableMapOf<String, List<SearchItem>>()
@@ -131,6 +132,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         setupDrawer(savedInstanceState)
         L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
         initFab()
+        lastAccessTime = System.currentTimeMillis()
     }
 
     /**
@@ -301,6 +303,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     private fun refreshAll() {
+        L.d { "Refresh all" }
         fragmentSubject.onNext(REQUEST_REFRESH)
     }
 
@@ -403,11 +406,16 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         super.onResume()
         FbCookie.switchBackUser {}
         controlWebview?.resumeTimers()
+        if (System.currentTimeMillis() - lastAccessTime > MAIN_TIMEOUT_DURATION) {
+            refreshAll()
+        }
+        lastAccessTime = System.currentTimeMillis() // precaution to avoid loops
     }
 
     override fun onPause() {
         controlWebview?.pauseTimers()
         L.v { "Pause main web timers" }
+        lastAccessTime = System.currentTimeMillis()
         super.onPause()
     }
 

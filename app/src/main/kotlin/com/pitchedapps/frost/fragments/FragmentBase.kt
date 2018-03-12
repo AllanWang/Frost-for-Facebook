@@ -117,8 +117,9 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
                 when (it) {
                     REQUEST_REFRESH -> {
                         core?.apply {
-                            reload(true)
                             clearHistory()
+                            firstLoad = true
+                            firstLoadRequest()
                         }
                     }
                     position -> {
