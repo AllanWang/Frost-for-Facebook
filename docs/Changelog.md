@@ -6,6 +6,7 @@
 * Send feedback if no new notifications exist after manual refresh
 * Automatically refresh if idled for a long time
 * Clean up url queries
+* Add option to force black background for media views
 
 ## v1.8.2
 * Fix duplicate notification sounds
