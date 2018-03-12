@@ -103,7 +103,7 @@ class FbUrlFormatter(url: String) {
 
         val misc = arrayOf("&amp;" to "&")
 
-        val discardableQueries = arrayOf("ref", "refid")
+        val discardableQueries = arrayOf("ref", "refid", "acontext", "h", "SharedWith")
 
         val converter = listOf(
                 "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
