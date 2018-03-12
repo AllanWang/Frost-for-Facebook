@@ -12,6 +12,7 @@
     <item text="Send feedback if no new notifications exist after manual refresh" />
     <item text="Automatically refresh if idled for a long time" />
     <item text="Clean up url queries" />
+    <item text="Add option to force black background for media views" />
 
     <version title="v1.8.2" />
     <item text="Fix duplicate notification sounds" />
