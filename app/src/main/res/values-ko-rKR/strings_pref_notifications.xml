@@ -8,8 +8,6 @@
   <string name="add_keyword">키워드 추가</string>
   <string name="hint_keyword">키워드를 작성하고 + 를 누르세요.</string>
   <string name="empty_keyword">키워드 비어있음</string>
-  <string name="notification_general_all_accounts">모든 계정에서 알림</string>
-  <string name="notification_general_all_accounts_desc">로그인 되어 있는 모든 계정에서 알림을 받습니다. 이 옺션을 해제하면 현재 로그인된 계정의 알림만 받게 됩니다.</string>
   <string name="notification_messages">메시지 알림 활성화</string>
   <string name="notification_messages_desc">현재 계정의 메시지 알림을 받습니다.</string>
   <string name="notification_messages_all_accounts">모든 계정의 메시지 받기</string>

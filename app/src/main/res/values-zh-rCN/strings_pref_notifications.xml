@@ -8,8 +8,6 @@
   <string name="add_keyword">添加关键字</string>
   <string name="hint_keyword">输入关键字并按 +</string>
   <string name="empty_keyword">空关键字</string>
-  <string name="notification_general_all_accounts">所有帐户通知</string>
-  <string name="notification_general_all_accounts_desc">从每个登录帐户中获取通知。如果禁用则只从当前选择帐户中获取通知。</string>
   <string name="notification_messages">启用通知</string>
   <string name="notification_messages_desc">获得当前帐户即时消息通知。</string>
   <string name="notification_messages_all_accounts">所有帐户消息通知</string>

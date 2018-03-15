@@ -15,6 +15,8 @@
   <string name="search_bar_desc">Aktifkan bilah pencarian sebagai gantinya jadi hamparan pencarian</string>
   <string name="force_message_bottom">Memaksa Pesan Bawah</string>
   <string name="force_message_bottom_desc">Ketika memuat lembar pesan, memicu gulir ke bawah halaman daripada memuat halaman seperti apa adanya.</string>
+  <string name="enable_pip">Mengaktifkan PIP</string>
+  <string name="enable_pip_desc">Mengaktifkan gambar dalam gambar video</string>
   <string name="exit_confirmation">Konfirmasi Keluar</string>
   <string name="exit_confirmation_desc">Tampilkan dialog konfirmasi sebelum keluar aplikasi</string>
   <string name="analytics">Analisis</string>

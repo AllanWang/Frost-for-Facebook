@@ -15,6 +15,8 @@
   <string name="search_bar_desc">Dùng thanh tìm kiếm thay cho lớp phủ tìm kiếm</string>
   <string name="force_message_bottom">Luôn xuống cuối hội thoại</string>
   <string name="force_message_bottom_desc">Khi hiện hội thoại, di chuyển xuống dưới cùng trang thay vì chỉ hiện trang.</string>
+  <string name="enable_pip">Bật PIP</string>
+  <string name="enable_pip_desc">Bật video lồng</string>
   <string name="exit_confirmation">Xác nhận thoát</string>
   <string name="exit_confirmation_desc">Hiện hộp thoại xác nhận khi thoát ứng dụng</string>
   <string name="analytics">Phân tích</string>

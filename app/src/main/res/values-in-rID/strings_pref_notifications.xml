@@ -8,11 +8,16 @@
   <string name="add_keyword">Tambahkan Kata kunci</string>
   <string name="hint_keyword">Ketik kata kunci dan tekan +</string>
   <string name="empty_keyword">Kata kunci kosong</string>
+  <string name="notification_general">Aktifkan pemberitahuan umum</string>
+  <string name="notification_general_desc">Mendapatkan pemberitahuan umum untuk akun anda saat ini.</string>
+  <string name="notification_general_all_accounts">Memberitahu dari semua akun</string>
+  <string name="notification_general_all_accounts_desc">Dapatkan pemberitahuan umum untuk setiap akun yang masuk.</string>
   <string name="notification_messages">Aktifkan pesan pemberitahuan</string>
   <string name="notification_messages_desc">Mendapatkan pemberitahuan pesan instan dari akun Anda saat ini.</string>
   <string name="notification_messages_all_accounts">Memberitahu pesan dari semua akun</string>
   <string name="notification_messages_all_accounts_desc">Mendapatkan pemberitahuan pesan instan dari semua akun</string>
   <string name="notification_fetch_now">Mengambil pemberitahuan sekarang</string>
+  <string name="notification_fetch_now_desc">Memicu pemberitahuan fetcher sekali.</string>
   <string name="notification_fetch_success">Pengambilan pemberitahuan…</string>
   <string name="notification_fetch_fail">Tidak bisa mengambil pemberitahuan</string>
   <string name="notification_sound">Suara pemberitahuan</string>

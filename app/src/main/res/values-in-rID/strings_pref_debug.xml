@@ -7,4 +7,9 @@
         \n\nMengklik salah satu pilihan di bawah akan menyiapkan respon surel dengan data halaman web.
     </string>
   <string name="debug_incomplete">Laporan tidak lengkap</string>
+  <string name="debug_web">Debug dari web</string>
+  <string name="debug_web_desc">Menavigasi ke halaman dengan masalah dan mengirim sumber daya untuk debugging.</string>
+  <string name="parsing_data">Parsing Data</string>
+  <string name="debug_parsers">Debug Parsers</string>
+  <string name="debug_parsers_desc">Memulai salah satu parsers yang tersedia untuk men-debug data respon</string>
 </resources>
