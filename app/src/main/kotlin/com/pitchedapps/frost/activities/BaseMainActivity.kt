@@ -53,7 +53,6 @@ import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
-import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
@@ -63,7 +62,6 @@ import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -412,14 +410,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         L.v { "Pause main web timers" }
         lastAccessTime = System.currentTimeMillis()
         super.onPause()
-    }
-
-    override fun onStart() {
-        //validate some pro features
-        if (!IS_FROST_PRO) {
-            if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
-        }
-        super.onStart()
     }
 
     override fun onDestroy() {

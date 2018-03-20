@@ -15,7 +15,6 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.isFacebookUrl
 import org.jetbrains.anko.withAlpha
 import java.io.File
@@ -85,8 +84,8 @@ class DebugWebView @JvmOverloads constructor(
                         CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
                         CssHider.CORE,
                         CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                        CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
-                        CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
+                        CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
+                        CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
                         Prefs.themeInjector,
                         CssHider.NON_RECENT.maybe((url?.contains("?sk=h_chr") ?: false)
                                 && Prefs.aggressiveRecents))

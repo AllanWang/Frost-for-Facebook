@@ -135,16 +135,6 @@ object Prefs : KPref() {
 
     var enablePip: Boolean by kpref("enable_pip", true)
 
-    /**
-     * Cache like value to determine if user has or had pro
-     * In most cases, [com.pitchedapps.frost.utils.iab.IS_FROST_PRO] should be looked at instead
-     * This has been renamed to pro for short, but keep in mind that it only reflects the value
-     * of when it was previously verified
-     */
-    var pro: Boolean by kpref("previously_pro", false)
-
-    var debugPro: Boolean by kpref("debug_pro", false)
-
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", true)

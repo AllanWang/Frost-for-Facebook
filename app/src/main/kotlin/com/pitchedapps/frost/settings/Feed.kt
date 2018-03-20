@@ -46,14 +46,11 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.composer_desc
     }
 
-    header(R.string.pro_features)
-
     checkbox(R.string.suggested_friends, Prefs::showSuggestedFriends, {
         Prefs.showSuggestedFriends = it
         setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.suggested_friends_desc
-        dependsOnPro()
     }
 
     checkbox(R.string.suggested_groups, Prefs::showSuggestedGroups, {
@@ -61,7 +58,6 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.suggested_groups_desc
-        dependsOnPro()
     }
 
     checkbox(R.string.facebook_ads, Prefs::showFacebookAds, {
@@ -69,6 +65,5 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         setFrostResult(REQUEST_REFRESH)
     }) {
         descRes = R.string.facebook_ads_desc
-        dependsOnPro()
     }
 }

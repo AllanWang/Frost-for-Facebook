@@ -7,8 +7,7 @@
   <string name="aggressive_recents_desc">Filtra de manera adicional las publicaciones más antiguas de Facebook de las noticias recientes. Deshabilita esta opción si el feed se encuentra vacio.</string>
     <string name="composer">Escritor de Estado</string>
   <string name="composer_desc">Mostrar escritor de estado en el feed</string>
-  <string name="pro_features">Características Pro</string>
-  <string name="suggested_friends">Sugerencias de Amigos</string>
+    <string name="suggested_friends">Sugerencias de Amigos</string>
   <string name="suggested_friends_desc">Mostrar \"Gente que quizá conozcas\" en el feed</string>
   <string name="suggested_groups">Grupos sugeridos</string>
   <string name="suggested_groups_desc">Mostrar \"grupos sugeridos\" en el feed</string>

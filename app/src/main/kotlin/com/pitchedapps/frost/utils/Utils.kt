@@ -29,7 +29,6 @@ import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -279,10 +278,6 @@ inline val String?.isExplicitIntent
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
     theme()
-    if (System.currentTimeMillis() - Prefs.installDate > 2592000000) { //show after 1 month
-        neutralText(R.string.kau_rate)
-        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
-    }
 }
 
 fun Context.frostUriFromFile(file: File): Uri =
@@ -299,7 +294,8 @@ inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailB
 
 fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
-    val proTag = if (IS_FROST_PRO) "TY" else "FP"
+    val proTag = "FO"
+//    if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
     addItem("Locale", Locale.getDefault().displayName)
 }

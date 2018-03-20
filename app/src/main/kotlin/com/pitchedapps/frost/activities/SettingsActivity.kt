@@ -11,18 +11,15 @@ import android.view.MenuItem
 import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
-import ca.allanwang.kau.kpref.activity.items.KPrefItemBase
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.*
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.utils.iab.IabSettings
 
 
@@ -125,12 +122,7 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
             iicon = CommunityMaterial.Icon.cmd_flask_outline
         }
 
-        plainText(R.string.get_pro) {
-            descRes = R.string.get_pro_desc
-            iicon = GoogleMaterial.Icon.gmd_star
-            visible = { !IS_FROST_PRO }
-            onClick = { restorePurchases() }
-        }
+        // todo add donation?
 
         plainText(R.string.about_frost) {
             descRes = R.string.about_frost_desc
@@ -159,14 +151,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
             visible = { Prefs.debugSettings }
         }
 
-        if (BuildConfig.DEBUG) {
-            checkbox(R.string.custom_pro, { Prefs.debugPro }, { Prefs.debugPro = it })
-        }
-    }
-
-    fun KPrefItemBase.BaseContract<*>.dependsOnPro() {
-        onDisabledClick = { purchasePro() }
-        enabler = { IS_FROST_PRO }
     }
 
     fun shouldRestartMain() {

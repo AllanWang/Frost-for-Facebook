@@ -205,8 +205,6 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
 
-    implementation "com.anjlab.android.iab.v3:library:${IAB}"
-
     implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 
     implementation "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"

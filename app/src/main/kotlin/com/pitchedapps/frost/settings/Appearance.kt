@@ -11,7 +11,6 @@ import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.KPrefTextSeekbar
 
 /**
@@ -25,15 +24,9 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         onClick = {
             materialDialogThemed {
                 title(R.string.theme)
-                items(Theme.values()
-                        .map { if (it == Theme.CUSTOM && !IS_FROST_PRO) R.string.custom_pro else it.textRes }
-                        .map { string(it) })
+                items(Theme.values().map { string(it.textRes) })
                 itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
                     if (item.pref != which) {
-                        if (which == Theme.CUSTOM.ordinal && !IS_FROST_PRO) {
-                            purchasePro()
-                            return@itemsCallbackSingleChoice true
-                        }
                         item.pref = which
                         shouldRestartMain()
                         reload()
