@@ -36,7 +36,7 @@ import com.pitchedapps.frost.parsers.ParseNotification
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.frostAnswersCustom
+import com.pitchedapps.frost.utils.frostEvent
 import java.util.*
 
 /**
@@ -190,7 +190,7 @@ enum class NotificationType(
         if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
-        frostAnswersCustom("Notifications", "Type" to name, "Count" to notifs.size)
+        frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
         val ringtone = ringtone()

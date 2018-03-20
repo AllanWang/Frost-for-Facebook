@@ -15,7 +15,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.crashlytics.android.answers.LoginEvent
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
@@ -90,11 +89,7 @@ class LoginActivity : BaseActivity() {
                     }
                     textview.text = String.format(getString(R.string.welcome), name)
                     textview.fadeIn()
-                    frostAnswers {
-                        logLogin(LoginEvent()
-                                .putMethod("frost_browser")
-                                .putSuccess(true))
-                    }
+                    frostEvent("Login" , "success" to true )
                     /*
                      * The user may have logged into an account that is already in the database
                      * We will let the db handle duplicates and load it now after the new account has been saved
@@ -123,7 +118,7 @@ class LoginActivity : BaseActivity() {
                     }
 
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        e.logFrostAnswers("Profile loading exception")
+                        e.logFrostEvent("Profile loading exception")
                         profileSubject.onSuccess(false)
                         return false
                     }

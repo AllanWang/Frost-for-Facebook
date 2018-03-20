@@ -40,7 +40,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                         setFrostTheme(true)
                         themeExterior()
                         invalidateOptionsMenu()
-                        frostAnswersCustom("Theme", "Count" to Theme(which).name)
+                        frostEvent("Theme", "Count" to Theme(which).name)
                     }
                     true
                 }
@@ -125,7 +125,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                     if (item.pref != which) {
                         item.pref = which
                         shouldRestartMain()
-                        frostAnswersCustom("Main Layout", "Type" to MainActivityLayout(which).name)
+                        frostEvent("Main Layout", "Type" to MainActivityLayout(which).name)
                     }
                     true
                 }

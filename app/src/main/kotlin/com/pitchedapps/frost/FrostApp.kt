@@ -10,8 +10,6 @@ import ca.allanwang.kau.logging.KL
 import com.bugsnag.android.Bugsnag
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.dbflow.CookiesDb
@@ -29,7 +27,6 @@ import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
-import io.fabric.sdk.android.Fabric
 import io.reactivex.plugins.RxJavaPlugins
 import java.net.SocketTimeoutException
 import java.util.*
@@ -64,8 +61,6 @@ class FrostApp : Application() {
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (!BuildConfig.DEBUG) {
-            Fabric.with(this, Crashlytics(), Answers())
-            Crashlytics.setUserIdentifier(Prefs.frostId)
             Bugsnag.init(this)
             Bugsnag.setAutoCaptureSessions(true)
             Bugsnag.getClient().setUserId(Prefs.frostId)

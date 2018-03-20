@@ -4,17 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
-import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.frostAnswers
-import com.pitchedapps.frost.utils.logFrostAnswers
+import com.pitchedapps.frost.utils.logFrostEvent
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.onComplete
 import org.jetbrains.anko.uiThread
 import java.lang.ref.WeakReference
-import java.math.BigDecimal
 import java.util.*
 
 /**
@@ -71,27 +68,27 @@ abstract class IabBinder : FrostBilling {
             } catch (e: Exception) {
                 null
             }
-            frostAnswers {
-                logPurchase(PurchaseEvent().apply {
-                    putItemId(productId)
-                    putSuccess(true)
-                    if (currency != null) {
-                        putCurrency(currency)
-                        putItemType(productId)
-                        putItemPrice(BigDecimal.valueOf(listing.priceValue))
-                    }
-                })
-            }
+//            frostAnswers {
+//                logPurchase(PurchaseEvent().apply {
+//                    putItemId(productId)
+//                    putSuccess(true)
+//                    if (currency != null) {
+//                        putCurrency(currency)
+//                        putItemType(productId)
+//                        putItemPrice(BigDecimal.valueOf(listing.priceValue))
+//                    }
+//                })
+//            }
         }
     }
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {
-        frostAnswers {
-            logPurchase(PurchaseEvent()
-                    .putCustomAttribute("result", errorCode.toString())
-                    .putSuccess(false))
-        }
-        error.logFrostAnswers("IAB error $errorCode")
+//        frostAnswers {
+//            logPurchase(PurchaseEvent()
+//                    .putCustomAttribute("result", errorCode.toString())
+//                    .putSuccess(false))
+//        }
+        error.logFrostEvent("IAB error $errorCode")
     }
 
     override fun onActivityResultBilling(requestCode: Int, resultCode: Int, data: Intent?): Boolean = bp?.handleActivityResult(requestCode, resultCode, data)
@@ -100,11 +97,11 @@ abstract class IabBinder : FrostBilling {
     override fun purchasePro() {
         val bp = this.bp
         if (bp == null) {
-            frostAnswers {
-                logPurchase(PurchaseEvent()
-                        .putCustomAttribute("result", "null bp")
-                        .putSuccess(false))
-            }
+//            frostAnswers {
+//                logPurchase(PurchaseEvent()
+//                        .putCustomAttribute("result", "null bp")
+//                        .putSuccess(false))
+//            }
             L.eThrow("IAB null bp on purchase attempt")
             return
         }

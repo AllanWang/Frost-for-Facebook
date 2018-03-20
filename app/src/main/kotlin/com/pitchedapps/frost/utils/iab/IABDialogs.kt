@@ -5,10 +5,12 @@ import ca.allanwang.kau.utils.restart
 import ca.allanwang.kau.utils.startLink
 import ca.allanwang.kau.utils.startPlayStoreLink
 import ca.allanwang.kau.utils.string
-import com.crashlytics.android.answers.PurchaseEvent
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_RESTART
+import com.pitchedapps.frost.utils.materialDialogThemed
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -31,11 +33,11 @@ private fun Activity.playRestart() {
 fun Activity?.playStoreNoLongerPro() {
     Prefs.pro = false
     L.d { "IAB No longer pro" }
-    frostAnswers {
-        logPurchase(PurchaseEvent()
-                .putCustomAttribute("result", "no longer pro")
-                .putSuccess(false))
-    }
+//    frostAnswers {
+//        logPurchase(PurchaseEvent()
+//                .putCustomAttribute("result", "no longer pro")
+//                .putSuccess(false))
+//    }
     if (this == null) return
     materialDialogThemed {
         title(R.string.uh_oh)

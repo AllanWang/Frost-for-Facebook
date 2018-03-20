@@ -23,8 +23,6 @@ import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
@@ -175,29 +173,19 @@ inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
     themer.theme(this)
 }
 
-fun frostAnswers(action: Answers.() -> Unit) {
-    if (BuildConfig.DEBUG || !Prefs.analytics) return
-    Answers.getInstance().action()
-}
 
-fun frostAnswersCustom(name: String, vararg events: Pair<String, Any>) {
-    frostAnswers {
-        logCustom(CustomEvent("Frost $name").apply {
-            events.forEach { (key, value) ->
-                if (value is Number) putCustomAttribute(key, value)
-                else putCustomAttribute(key, value.toString())
-            }
-        })
-    }
+fun frostEvent(name: String, vararg events: Pair<String, Any>) {
+    // todo bind
+    L.v { "Event: $name ${events.joinToString(", ")}" }
 }
 
 /**
  * Helper method to quietly keep track of throwable issues
  */
-fun Throwable?.logFrostAnswers(text: String) {
+fun Throwable?.logFrostEvent(text: String) {
     val msg = if (this == null) text else "$text: $message"
     L.e { msg }
-    frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
+    frostEvent("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
 fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))

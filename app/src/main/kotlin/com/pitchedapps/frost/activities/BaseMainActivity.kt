@@ -38,7 +38,6 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
-import com.crashlytics.android.answers.ContentViewEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
@@ -121,7 +120,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 frostChangelog()
-                frostAnswersCustom("Version",
+                frostEvent("Version",
                         "Version code" to BuildConfig.VERSION_CODE,
                         "Prev version code" to Prefs.prevVersionCode,
                         "Version name" to BuildConfig.VERSION_NAME,
@@ -283,11 +282,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         selectedColor = 0x00000001.toLong()
         identifier = item.titleId.toLong()
         onClick { _ ->
-            frostAnswers {
-                logContentView(ContentViewEvent()
-                        .putContentName(item.name)
-                        .putContentType("drawer_item"))
-            }
+            frostEvent("Drawer Tab", "name" to item.name)
             launchWebOverlay(item.url)
             false
         }

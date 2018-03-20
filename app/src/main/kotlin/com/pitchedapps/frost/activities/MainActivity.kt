@@ -3,7 +3,6 @@ package com.pitchedapps.frost.activities
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
-import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,7 +23,6 @@ class MainActivity : BaseMainActivity() {
     }
 
     private fun setupViewPager() {
-        Bugsnag.notify(RuntimeException("Test error"))
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
