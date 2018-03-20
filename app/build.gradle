@@ -102,6 +102,7 @@ android {
             resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableCrashlytics = false
+            ext.enableBugsnag = false
         }
         releaseTest {
             minifyEnabled true
@@ -214,6 +215,8 @@ dependencies {
     implementation "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
     kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
+    implementation "com.bugsnag:bugsnag-android:${BUGSNAG}"
+
     implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS}@aar") {
         transitive = true
     }
@@ -229,3 +232,5 @@ dependencies {
     implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
 
 }
+
+apply plugin: 'com.bugsnag.android.gradle'

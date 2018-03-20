@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
+import com.bugsnag.android.Bugsnag
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.crashlytics.android.Crashlytics
@@ -65,6 +66,11 @@ class FrostApp : Application() {
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, Crashlytics(), Answers())
             Crashlytics.setUserIdentifier(Prefs.frostId)
+            Bugsnag.init(this)
+            Bugsnag.setAutoCaptureSessions(true)
+            Bugsnag.getClient().setUserId(Prefs.frostId)
+
+//            setUser("userId", "user@email.com", "User Name")
         }
         KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false

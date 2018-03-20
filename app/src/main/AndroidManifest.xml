@@ -182,6 +182,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="18b3c223b96b7e7fc1fac372e36b8f4d49a193c7" />
+        <meta-data
+            android:name="com.bugsnag.android.API_KEY"
+            android:value="83cf680ed01a6fda10fe497d1c0962bb"/>
     </application>
 
 </manifest>
