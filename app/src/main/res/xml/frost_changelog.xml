@@ -6,6 +6,14 @@
     <item text="" />
     -->
 
+    <version title="v2.0.0" />
+    <item text="A new beginning: Frost is completely FOSS" />
+    <item text="Remove crashlytics in favour of another open source bug tracker" />
+    <item text="Remove all google play dependencies" />
+    <item text="Make analytics opt in" />
+    <item text="" />
+    <item text="" />
+
     <version title="v1.8.3" />
     <item text="Add full notification channel support" />
     <item text="Fix sound spam for multiple notifications" />
