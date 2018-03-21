@@ -12,8 +12,6 @@
   <string name="network_desc">กำหนดตัวเลือกที่มีผลต่อปริมาณข้อมูลเครือข่าย</string>
   <string name="experimental">ทดลอง</string>
   <string name="experimental_desc">เปิดใช้งานการเข้าถึงคุณลักษณะที่อาจไม่เสถียร</string>
-  <string name="get_pro">รับ Frost Pro</string>
-  <string name="get_pro_desc">ซื้อหรือเรียกคืนเวอชั่นโปร และปลดล็อคคุณสมบัติทั้งหมดของ Frost! ประกอบด้วย บล๊อคโฆษณา ธีมแบบกำหนดเอง การตั้งค่าทุกอย่าง และอื่นๆที่จะตามมา</string>
   <string name="about_frost">เกี่ยวกับ Frost for Facebook</string>
   <string name="about_frost_desc">รุ่น, เครดิต และถามตอบ</string>
   <string name="help_translate">ช่วยแปล</string>
