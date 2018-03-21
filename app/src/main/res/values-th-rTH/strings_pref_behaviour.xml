@@ -18,5 +18,4 @@
   <string name="exit_confirmation">ยืนยันตอนออก</string>
   <string name="exit_confirmation_desc">แสดงหน้าต่างยินยันก่อนที่จะออกแอพ</string>
   <string name="analytics">การวิเคราะห์</string>
-  <string name="analytics_desc">เปิดใช้งานการวิเคราะห์แบบไม่ระบุชื่อเพื่อช่วยปรับปรุงแอป ข้อมูลส่วนบุคคลจะไม่ถูกส่งไป</string>
 </resources>
