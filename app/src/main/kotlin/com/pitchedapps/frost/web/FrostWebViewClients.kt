@@ -10,7 +10,6 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
 import org.jetbrains.anko.withAlpha
@@ -67,14 +66,14 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
                     CssHider.CORE,
                     CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends && IS_FROST_PRO),
-                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups && IS_FROST_PRO),
+                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
+                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
                             && Prefs.aggressiveRecents),
                     JsAssets.DOCUMENT_WATCHER,
                     JsAssets.CLICK_A,
-                    CssHider.ADS.maybe(!Prefs.showFacebookAds && IS_FROST_PRO),
+                    CssHider.ADS.maybe(!Prefs.showFacebookAds),
                     JsAssets.CONTEXT_A,
                     JsAssets.HEADER_HIDER,
                     JsAssets.MEDIA)

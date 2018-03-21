@@ -121,7 +121,7 @@ class ImageActivity : KauBaseActivity() {
         photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception?) {
                 errorRef = e
-                e.logFrostAnswers("Image load error")
+                e.logFrostEvent("Image load error")
                 L.e { "Failed to load image $imageUrl" }
                 tempFile?.delete()
                 fabAction = FabStates.ERROR
@@ -307,7 +307,7 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
                 activity.startActivity(intent)
             } catch (e: Exception) {
                 activity.errorRef = e
-                e.logFrostAnswers("Image share failed")
+                e.logFrostEvent("Image share failed")
                 activity.frostSnackbar(R.string.image_share_failed)
             }
         }

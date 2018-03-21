@@ -10,7 +10,7 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.frostAnswersCustom
+import com.pitchedapps.frost.utils.frostEvent
 import org.jetbrains.anko.doAsync
 import java.util.concurrent.Future
 
@@ -31,7 +31,7 @@ class NotificationService : JobService() {
     override fun onStopJob(params: JobParameters?): Boolean {
         val time = System.currentTimeMillis() - startTime
         L.d { "Notification service has finished abruptly in $time ms" }
-        frostAnswersCustom("NotificationTime",
+        frostEvent("NotificationTime",
                 "Type" to "Service force stop",
                 "IM Included" to Prefs.notificationsInstantMessages,
                 "Duration" to time)
@@ -43,7 +43,7 @@ class NotificationService : JobService() {
     fun finish(params: JobParameters?) {
         val time = System.currentTimeMillis() - startTime
         L.i { "Notification service has finished in $time ms" }
-        frostAnswersCustom("NotificationTime",
+        frostEvent("NotificationTime",
                 "Type" to "Service",
                 "IM Included" to Prefs.notificationsInstantMessages,
                 "Duration" to time)

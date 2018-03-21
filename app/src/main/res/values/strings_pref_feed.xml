@@ -8,7 +8,6 @@
     <string name="composer">Status Composer</string>
     <string name="composer_desc">Show status composer in the feed</string>
 
-    <string name="pro_features">Pro Features</string>
     <string name="suggested_friends">Suggested Friends</string>
     <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>
     <string name="suggested_groups">Suggested Groups</string>

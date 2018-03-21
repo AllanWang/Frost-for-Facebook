@@ -55,7 +55,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
             if (value || this is WebFragment) return
             arguments!!.putBoolean(ARG_VALID, value)
             L.e { "Invalidating position $position" }
-            frostAnswersCustom("Native Fallback",
+            frostEvent("Native Fallback",
                     "Item" to baseEnum.name)
             (context as MainActivityContract).reloadFragment(this)
         }

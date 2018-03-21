@@ -23,15 +23,12 @@ import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -175,29 +172,19 @@ inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
     themer.theme(this)
 }
 
-fun frostAnswers(action: Answers.() -> Unit) {
-    if (BuildConfig.DEBUG || !Prefs.analytics) return
-    Answers.getInstance().action()
-}
 
-fun frostAnswersCustom(name: String, vararg events: Pair<String, Any>) {
-    frostAnswers {
-        logCustom(CustomEvent("Frost $name").apply {
-            events.forEach { (key, value) ->
-                if (value is Number) putCustomAttribute(key, value)
-                else putCustomAttribute(key, value.toString())
-            }
-        })
-    }
+fun frostEvent(name: String, vararg events: Pair<String, Any>) {
+    // todo bind
+    L.v { "Event: $name ${events.joinToString(", ")}" }
 }
 
 /**
  * Helper method to quietly keep track of throwable issues
  */
-fun Throwable?.logFrostAnswers(text: String) {
+fun Throwable?.logFrostEvent(text: String) {
     val msg = if (this == null) text else "$text: $message"
     L.e { msg }
-    frostAnswersCustom("Errors", "text" to text, "message" to (this?.message ?: "NA"))
+    frostEvent("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
 fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
@@ -291,10 +278,6 @@ inline val String?.isExplicitIntent
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
     theme()
-    if (System.currentTimeMillis() - Prefs.installDate > 2592000000) { //show after 1 month
-        neutralText(R.string.kau_rate)
-        onNeutral { _, _ -> startPlayStoreLink(R.string.play_store_package_id) }
-    }
 }
 
 fun Context.frostUriFromFile(file: File): Uri =
@@ -311,7 +294,8 @@ inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailB
 
 fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
-    val proTag = if (IS_FROST_PRO) "TY" else "FP"
+    val proTag = "FO"
+//    if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
     addItem("Locale", Locale.getDefault().displayName)
 }

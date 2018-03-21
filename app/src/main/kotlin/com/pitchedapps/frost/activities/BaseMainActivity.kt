@@ -38,7 +38,6 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
-import com.crashlytics.android.answers.ContentViewEvent
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
@@ -54,7 +53,6 @@ import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
-import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
@@ -63,9 +61,6 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IS_FROST_PRO
-import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
@@ -77,8 +72,7 @@ import com.pitchedapps.frost.views.FrostViewPager
  */
 abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         FileChooserContract by FileChooserDelegate(),
-        VideoViewHolder, SearchViewHolder,
-        FrostBilling by IabMain() {
+        VideoViewHolder, SearchViewHolder {
 
     protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
@@ -115,13 +109,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
         controlWebview = WebView(this)
-        onCreateBilling()
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.prevVersionCode = Prefs.versionCode
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 frostChangelog()
-                frostAnswersCustom("Version",
+                frostEvent("Version",
                         "Version code" to BuildConfig.VERSION_CODE,
                         "Prev version code" to Prefs.prevVersionCode,
                         "Version name" to BuildConfig.VERSION_NAME,
@@ -283,11 +276,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         selectedColor = 0x00000001.toLong()
         identifier = item.titleId.toLong()
         onClick { _ ->
-            frostAnswers {
-                logContentView(ContentViewEvent()
-                        .putContentName(item.name)
-                        .putContentType("drawer_item"))
-            }
+            frostEvent("Drawer Tab", "name" to item.name)
             launchWebOverlay(item.url)
             false
         }
@@ -419,16 +408,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         super.onPause()
     }
 
-    override fun onStart() {
-        //validate some pro features
-        if (!IS_FROST_PRO) {
-            if (Prefs.theme == Theme.CUSTOM.ordinal) Prefs.theme = Theme.DEFAULT.ordinal
-        }
-        super.onStart()
-    }
-
     override fun onDestroy() {
-        onDestroyBilling()
         controlWebview?.destroy()
         super.onDestroy()
     }
