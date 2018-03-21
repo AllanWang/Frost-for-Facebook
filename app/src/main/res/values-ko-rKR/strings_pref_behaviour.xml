@@ -18,5 +18,4 @@
   <string name="exit_confirmation">종료 전에 물어보기</string>
   <string name="exit_confirmation_desc">앱을 종료하기 전에 확인 창을 띄웁니다.</string>
   <string name="analytics">통계</string>
-  <string name="analytics_desc">앱을 개선하기 위한 통계 자료를 수집합니다. 개인 정보는 포함되지 않습니다.</string>
 </resources>
