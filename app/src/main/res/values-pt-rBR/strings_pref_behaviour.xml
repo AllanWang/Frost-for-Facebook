@@ -18,5 +18,4 @@
   <string name="exit_confirmation">Confirmação de Saída</string>
   <string name="exit_confirmation_desc">Mostrar caixa de diálogo de confirmação antes de sair do aplicativo</string>
   <string name="analytics">Telemetria</string>
-  <string name="analytics_desc">Habilite o envio de diagnósticos anônimas para ajudar a melhorar o aplicativo. Nenhuma informação pessoal é exposta.</string>
 </resources>
