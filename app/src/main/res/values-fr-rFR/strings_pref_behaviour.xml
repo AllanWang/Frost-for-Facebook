@@ -20,5 +20,4 @@
   <string name="exit_confirmation">Confirmation de la sortie</string>
   <string name="exit_confirmation_desc">Afficher la boîte de dialogue de confirmation avant de quitter l’application</string>
   <string name="analytics">Analytics</string>
-  <string name="analytics_desc">Activez l\'analytique anonyme afin d’améliorer l’application. Aucune information personnelle n’est jamais exposée.</string>
 </resources>
