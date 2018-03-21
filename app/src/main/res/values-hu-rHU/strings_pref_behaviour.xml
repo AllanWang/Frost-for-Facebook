@@ -20,5 +20,4 @@
   <string name="exit_confirmation">Kilépés megerősítése</string>
   <string name="exit_confirmation_desc">Megerősítési párbeszédpanel megjelenítése kilépés előtt</string>
   <string name="analytics">Használati adatok</string>
-  <string name="analytics_desc">Anonim adatok küldése az alkalmazás fejlesztése érdekében. Semmilyen személyes adat nem kerül feldolgozásra.</string>
 </resources>
