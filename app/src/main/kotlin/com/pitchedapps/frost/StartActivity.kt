@@ -1,9 +1,16 @@
 package com.pitchedapps.frost
 
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.utils.buildIsLollipopAndUp
+import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.startActivity
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
@@ -13,6 +20,7 @@ import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
+import java.util.*
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -21,6 +29,12 @@ class StartActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!buildIsLollipopAndUp) { // not supported
+            showInvalidSdkView()
+            return
+        }
+
         FbCookie.switchBackUser {
             loadFbCookiesAsync {
                 val cookies = ArrayList(it)
@@ -30,12 +44,27 @@ class StartActivity : KauBaseActivity() {
                     if (Prefs.userId != -1L)
                         startActivity<MainActivity>(intentBuilder = {
                             putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                         })
                     else
                         launchNewTask<SelectorActivity>(cookies)
                 } else
                     launchNewTask<LoginActivity>()
+            }
+        }
+        
+    }
+
+    private fun showInvalidSdkView() {
+        setContentView(R.layout.activity_invalid_sdk)
+        findViewById<ImageView>(R.id.invalid_icon)
+                .setIcon(GoogleMaterial.Icon.gmd_adb, -1, Color.WHITE)
+
+        findViewById<TextView>(R.id.invalid_text).apply {
+            try {
+                text = String.format(getString(R.string.error_sdk), Build.VERSION.SDK_INT)
+            } catch (e: IllegalFormatException) {
+                setText(R.string.error_sdk)
             }
         }
     }

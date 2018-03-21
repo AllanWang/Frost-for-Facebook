@@ -89,7 +89,7 @@ class LoginActivity : BaseActivity() {
                     }
                     textview.text = String.format(getString(R.string.welcome), name)
                     textview.fadeIn()
-                    frostEvent("Login" , "success" to true )
+                    frostEvent("Login", "success" to true)
                     /*
                      * The user may have logged into an account that is already in the database
                      * We will let the db handle duplicates and load it now after the new account has been saved

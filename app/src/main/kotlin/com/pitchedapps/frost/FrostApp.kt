@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
+import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
@@ -51,6 +52,11 @@ class FrostApp : Application() {
                     .build())
 
     override fun onCreate() {
+        if (!buildIsLollipopAndUp) { // not supported
+            super.onCreate()
+            return
+        }
+
         FlowManager.init(FlowConfig.Builder(this)
                 .withDatabase(CookiesDb.NAME, CookiesDb::class)
                 .withDatabase(FbTabsDb.NAME, FbTabsDb::class)

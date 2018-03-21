@@ -23,7 +23,7 @@
         android:label="@string/frost_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/FrostTheme.Splash">
+        android:theme="@style/FrostTheme">
         <activity
             android:name=".StartActivity"
             android:label="@string/frost_name"
@@ -38,8 +38,7 @@
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
-            android:label="@string/frost_name"
-            android:theme="@style/FrostTheme" />
+            android:label="@string/frost_name" />
         <activity
             android:name=".activities.WebOverlayActivity"
             android:configChanges="orientation|screenSize|locale"
@@ -124,15 +123,9 @@
         <activity
             android:name=".activities.IntroActivity"
             android:theme="@style/FrostTheme.Intro" />
-        <activity
-            android:name=".activities.LoginActivity"
-            android:theme="@style/FrostTheme" />
-        <activity
-            android:name=".activities.SelectorActivity"
-            android:theme="@style/FrostTheme" />
-        <activity
-            android:name=".activities.TabCustomizerActivity"
-            android:theme="@style/FrostTheme" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.SelectorActivity" />
+        <activity android:name=".activities.TabCustomizerActivity" />
         <activity
             android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
@@ -142,9 +135,7 @@
         <activity
             android:name=".activities.ImageActivity"
             android:theme="@style/FrostTheme.Transparent" />
-        <activity
-            android:name=".activities.DebugActivity"
-            android:theme="@style/FrostTheme" />
+        <activity android:name=".activities.DebugActivity" />
 
         <service
             android:name=".services.NotificationService"
@@ -180,11 +171,8 @@
             android:exported="false" />
 
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="18b3c223b96b7e7fc1fac372e36b8f4d49a193c7" />
-        <meta-data
             android:name="com.bugsnag.android.API_KEY"
-            android:value="83cf680ed01a6fda10fe497d1c0962bb"/>
+            android:value="83cf680ed01a6fda10fe497d1c0962bb" />
     </application>
 
 </manifest>

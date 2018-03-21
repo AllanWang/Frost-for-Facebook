@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.0
+* A new beginning: Frost is completely FOSS
+* Remove crashlytics in favour of another open source bug tracker
+* Remove all google play dependencies
+* Make analytics opt in
+
 ## v1.8.3
 * Add full notification channel support
 * Fix sound spam for multiple notifications
