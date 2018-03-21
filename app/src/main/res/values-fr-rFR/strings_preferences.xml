@@ -12,8 +12,6 @@
   <string name="network_desc">Définir les options qui affectent les réseaux limités</string>
   <string name="experimental">Expérimental</string>
   <string name="experimental_desc">Accès en avant première aux fonctionnalités potentiellement instables</string>
-  <string name="get_pro">Obtenir Frost Pro</string>
-  <string name="get_pro_desc">Acheter ou restaurer pro et libérer tout le potentiel de Frost! Comprend des bloqueurs de publicités, des thèmes personnalisés, des configurations complètes et bien plus encore à venir !</string>
   <string name="about_frost">À propos de Frost pour Facebook</string>
   <string name="about_frost_desc">Version, crédits et FAQ</string>
   <string name="help_translate">Aider à traduire</string>
