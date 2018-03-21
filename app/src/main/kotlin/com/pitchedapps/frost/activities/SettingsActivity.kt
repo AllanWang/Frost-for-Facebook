@@ -19,14 +19,12 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.*
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IabSettings
 
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
-class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
+class SettingsActivity : KPrefActivity() {
 
     var resultFlag = Activity.RESULT_CANCELED
 
@@ -53,8 +51,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
                 return
             }
         }
-        if (!onActivityResultBilling(requestCode, resultCode, data))
-            super.onActivityResult(requestCode, resultCode, data)
         reloadList()
     }
 
@@ -163,7 +159,6 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
         super.onCreate(savedInstanceState)
         animate = Prefs.animate
         themeExterior(false)
-        onCreateBilling()
     }
 
     fun themeExterior(animate: Boolean = true) {
@@ -205,10 +200,5 @@ class SettingsActivity : KPrefActivity(), FrostBilling by IabSettings() {
 
     fun setFrostResult(flag: Int) {
         resultFlag = resultFlag or flag
-    }
-
-    override fun onDestroy() {
-        onDestroyBilling()
-        super.onDestroy()
     }
 }
