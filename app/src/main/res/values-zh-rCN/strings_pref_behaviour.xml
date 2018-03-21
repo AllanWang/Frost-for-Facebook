@@ -18,5 +18,4 @@
   <string name="exit_confirmation">退出确认</string>
   <string name="exit_confirmation_desc">关闭前显示确认对话框</string>
   <string name="analytics">统计</string>
-  <string name="analytics_desc">统计说明</string>
 </resources>
