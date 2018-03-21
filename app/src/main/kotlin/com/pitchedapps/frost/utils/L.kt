@@ -2,7 +2,7 @@ package com.pitchedapps.frost.utils
 
 import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
-import com.crashlytics.android.Crashlytics
+import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 
 
@@ -34,9 +34,9 @@ object L : KauLogger("Frost", {
             super.logImpl(priority, message, t)
         else {
             if (message != null)
-                Crashlytics.log(priority, tag, message)
+                Bugsnag.leaveBreadcrumb(message)
             if (t != null)
-                Crashlytics.logException(t)
+                Bugsnag.notify(t)
         }
     }
 

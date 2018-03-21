@@ -3,7 +3,6 @@
     <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
     <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
     <string name="paypal" translatable="false">PayPal</string>
-    <string name="play_store_package_id" translatable="false">com.pitchedapps.frost</string>
     <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
     <string name="github_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook</string>
     <string name="reddit_url" translatable="false">https://www.reddit.com/r/FrostForFacebook</string>

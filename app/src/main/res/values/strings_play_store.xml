@@ -1,21 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="found_pro">Found Frost Pro!</string>
-    <string name="found_pro_desc">Looks like you have frost pro! We\'ll reload the app so you can enjoy the awesome features!</string>
-
-    <string name="play_purchased_pro">Thank you for your support! Enjoy all the features in Frost.\n\nIf you like this app, please consider rating it and supporting this open source project.\n\nIf you have comments, please do not hesitate to contact me!</string>
-    <string name="play_store_not_pro">It seems like you are a pro user, but we couldn\'t find your purchasing info. If this error persists, please try clearing the Play Store cache and reinstalling the app.</string>
-    <string name="play_store_unsupported">It seems like this app version can\'t purchase pro. Please reinstall from the play store if this is a persistent issue.
-    \nIf you would like to donate without any additional features, you may do so through PayPal.</string>
-    <string name="play_thank_you">Thank you!</string>
-
-    <string name="purchases_restored">Purchases Restored</string>
-    <string name="purchases_restored_with_pro">Frost Pro has been restored. Enjoy the features!</string>
-    <string name="purchases_restored_without_pro">It seems like you don\'t have pro. If this is a persistent issue, contact me and attach your purchase receipt.</string>
 
     <string name="restoring_purchases">Restoring purchases…</string>
 
-    <string name="custom_pro">Custom [Pro]</string>
     <string name="uh_oh">Uh Oh</string>
     <string name="reload">Reload</string>
 </resources>

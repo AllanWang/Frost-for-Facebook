@@ -6,7 +6,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
-import com.pitchedapps.frost.utils.logFrostAnswers
+import com.pitchedapps.frost.utils.logFrostEvent
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -76,7 +76,7 @@ inline fun CookieModel.fetchUsername(crossinline callback: (String) -> Unit) {
             L.d { "Fetch username found" }
         } catch (e: Exception) {
             if (e !is UnknownHostException)
-                e.logFrostAnswers("Fetch username failed")
+                e.logFrostEvent("Fetch username failed")
         } finally {
             if (result.isBlank() && (name?.isNotBlank() == true)) {
                 callback(name!!)

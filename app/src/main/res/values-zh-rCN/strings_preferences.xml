@@ -12,9 +12,7 @@
   <string name="network_desc">定义影响计量网络的选项</string>
   <string name="experimental">实验性功能</string>
   <string name="experimental_desc">启用对潜在不稳定功能</string>
-  <string name="get_pro">获得Frost Pro</string>
-  <string name="get_pro_desc">购买或恢复临, 并解开Frost Pro的全部潜力! 包括广告拦截, 自定义主题, 完整配置, 还有更多的东西!</string>
-  <string name="about_frost">关于Frost</string>
+    <string name="about_frost">关于Frost</string>
   <string name="about_frost_desc">版本、学分、归功于和常见问题</string>
   <string name="help_translate">帮助我们翻译</string>
   <string name="help_translate_desc">帮助我们翻译说明</string>

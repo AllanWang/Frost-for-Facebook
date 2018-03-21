@@ -20,6 +20,6 @@
     <string name="exit_confirmation">Exit Confirmation</string>
     <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
     <string name="analytics">Analytics</string>
-    <string name="analytics_desc">Enable anonymous analytics to help improve the app. No personal information is ever exposed.</string>
+    <string name="analytics_desc">Enable anonymous analytics and bug reports to help improve the app. No personal information is ever exposed.</string>
 
 </resources>
