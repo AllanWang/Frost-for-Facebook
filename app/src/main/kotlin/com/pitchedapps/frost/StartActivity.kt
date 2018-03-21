@@ -52,7 +52,7 @@ class StartActivity : KauBaseActivity() {
                     launchNewTask<LoginActivity>()
             }
         }
-        
+
     }
 
     private fun showInvalidSdkView() {
