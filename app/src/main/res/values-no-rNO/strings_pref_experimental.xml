@@ -8,5 +8,4 @@
   <string name="verbose_logging">Detaljert logging</string>
   <string name="verbose_logging_desc">Aktiver detaljert logging for å hjelpe med feilrapporter. Logging sendes bare når en feil oppstår, så fremtving feil for å varsle utvikler. Dette vil automatisk bli deaktivert hvis programmet startes på nytt.</string>
   <string name="restart_frost">Start Frost på nytt</string>
-  <string name="restart_frost_desc">Crashlytics vil bare sende loggene når en krasj oppstår, eller hvis feil oppstår og programmet startes på nytt. Klikke her vil starte appen på nytt og fjerne problemer som finnes for øyeblikket.</string>
 </resources>
