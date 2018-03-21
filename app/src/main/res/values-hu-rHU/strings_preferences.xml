@@ -12,8 +12,6 @@
   <string name="network_desc">Forgalomkorlátos hálózatokra vonatkozó beállítások</string>
   <string name="experimental">Kísérleti</string>
   <string name="experimental_desc">Előzetes hozzáférés potenciálisan instabil funkciókhoz</string>
-  <string name="get_pro">Frost Pro beszerzése</string>
-  <string name="get_pro_desc">Vásárold meg vagy állítsd vissza a pro-t, és szerezz hozzáférést Frost teljes potenciáljához! Tartalmaz reklámblokkolót, egyéni témákat, és még sok minden jön!</string>
   <string name="about_frost">Frost for Facebookról</string>
   <string name="about_frost_desc">Verzió, közreműködők és GyIK</string>
   <string name="help_translate">Segíts lefordítani</string>
