@@ -20,5 +20,4 @@
   <string name="exit_confirmation">Confirmación de saída</string>
   <string name="exit_confirmation_desc">Mostra un diálogo de confirmación antes de saír</string>
   <string name="analytics">Estatísticas</string>
-  <string name="analytics_desc">Activa estatísticas anónimas que axudan a mellorar a aplicación. Ningunha información persoal será exposta.</string>
 </resources>
