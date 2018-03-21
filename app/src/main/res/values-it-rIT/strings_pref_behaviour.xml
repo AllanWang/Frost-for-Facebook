@@ -21,5 +21,4 @@ Si noti che potrebbe causare un caricamento leggermente più lungo dovuto al fat
   <string name="exit_confirmation">Conferma Uscita</string>
   <string name="exit_confirmation_desc">Mostra un avviso prima di uscire dall\'applicazione</string>
   <string name="analytics">Statistiche</string>
-  <string name="analytics_desc">Abilita le statistiche anonime per migliorare l\'applicazione. Nessun informazione personale sarà mai pubblicata.</string>
 </resources>
