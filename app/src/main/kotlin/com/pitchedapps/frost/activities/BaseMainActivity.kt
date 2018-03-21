@@ -61,8 +61,6 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.FrostSearch
 import com.pitchedapps.frost.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
-import com.pitchedapps.frost.utils.iab.FrostBilling
-import com.pitchedapps.frost.utils.iab.IabMain
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
@@ -74,8 +72,7 @@ import com.pitchedapps.frost.views.FrostViewPager
  */
 abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         FileChooserContract by FileChooserDelegate(),
-        VideoViewHolder, SearchViewHolder,
-        FrostBilling by IabMain() {
+        VideoViewHolder, SearchViewHolder {
 
     protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
@@ -112,7 +109,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
         controlWebview = WebView(this)
-        onCreateBilling()
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.prevVersionCode = Prefs.versionCode
             Prefs.versionCode = BuildConfig.VERSION_CODE
@@ -413,7 +409,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun onDestroy() {
-        onDestroyBilling()
         controlWebview?.destroy()
         super.onDestroy()
     }
