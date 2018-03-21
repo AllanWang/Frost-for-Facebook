@@ -20,5 +20,4 @@
   <string name="exit_confirmation">Konfirmasi Keluar</string>
   <string name="exit_confirmation_desc">Tampilkan dialog konfirmasi sebelum keluar aplikasi</string>
   <string name="analytics">Analisis</string>
-  <string name="analytics_desc">Aktifkan analisis anonim untuk bantuan memperbaiki aplikasi. Informasi pribadi tidak pernah terpapar.</string>
 </resources>
