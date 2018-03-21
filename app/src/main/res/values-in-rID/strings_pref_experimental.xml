@@ -8,5 +8,4 @@
   <string name="verbose_logging">Mencatat banyak kata</string>
   <string name="verbose_logging_desc">Aktifkan mencatat banyak kata untuk membantu laporan kerusakan. Pencatatan hanya akan dikirim setelah terjadi kesalahan, jadi ulangi masalahnya untuk memberitahukan dev. Ini akan secara otomatis dinonaktifkan jika mengulang kembali aplikasi.</string>
   <string name="restart_frost">Mengulang kembali Frost</string>
-  <string name="restart_frost_desc">Analisis kerusakan hanya akan mengirimkan catatan ketika terjadi kerusakan atau jika ditemukan kesalahan dan aplikasinya dimulai ulang. Mengklik di sini akan memulai ulang aplikasi dan menghalau apapun masalah yang ditemukan.</string>
 </resources>
