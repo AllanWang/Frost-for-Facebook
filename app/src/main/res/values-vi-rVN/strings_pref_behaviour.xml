@@ -20,5 +20,4 @@
   <string name="exit_confirmation">Xác nhận thoát</string>
   <string name="exit_confirmation_desc">Hiện hộp thoại xác nhận khi thoát ứng dụng</string>
   <string name="analytics">Phân tích</string>
-  <string name="analytics_desc">Cho phép gửi phân tích để giúp cải thiện ứng dụng. Các thông tin cá nhân sẽ không bị lộ.</string>
 </resources>
