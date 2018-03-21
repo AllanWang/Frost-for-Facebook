@@ -2,9 +2,6 @@ package com.pitchedapps.frost.activities
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PointF
@@ -356,15 +353,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
                 L.d { "Restart Application Requested" }
                 val intent = packageManager.getLaunchIntentForPackage(packageName)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                val pending = PendingIntent.getActivity(this, 666, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-                val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                if (buildIsMarshmallowAndUp)
-                    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
-                else
-                    alarm.setExact(AlarmManager.RTC, System.currentTimeMillis() + 100, pending)
-                finish()
-                System.exit(0)
+                Intent.makeRestartActivityTask(intent.component)
+                Runtime.getRuntime().exit(0)
                 return
             }
             if (resultCode and REQUEST_RESTART > 0) return restart()

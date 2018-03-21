@@ -9,4 +9,5 @@
     <string name="error_generic">An error occurred.</string>
     <string name="video_load_failed">Failed to load video</string>
     <string name="error_notification">An error occurred when fetching notifications</string>
+    <string name="error_sdk">Your device\'s SDK (%d) is incompatible. Frost only supports Lollipop (SDK 21) and above</string>
 </resources>

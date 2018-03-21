@@ -5,8 +5,6 @@
 [![ZenHub](https://img.shields.io/badge/Shipping%20faster%20with-ZenHub-45529A.svg)](https://app.zenhub.com/workspace/o/allanwang/frost-for-facebook/boards)
 [![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/master/LICENSE)
 
-<a href='https://play.google.com/store/apps/details?id=com.pitchedapps.frost&utm_source=github'><img alt='Get it on Google Play' width="30%" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-
 Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
 * Support for multiple accounts and fast switching
