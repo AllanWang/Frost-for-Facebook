@@ -4,6 +4,8 @@
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
@@ -16,17 +18,17 @@
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/black</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@null</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <style name="FrostTheme.Transparent">
         <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="FrostTheme.Light.Transparent">
         <item name="android:windowShowWallpaper">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="FrostTheme.Overlay">
