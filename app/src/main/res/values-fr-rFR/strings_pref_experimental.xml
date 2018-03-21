@@ -8,5 +8,4 @@
   <string name="verbose_logging">Logs détaillés</string>
   <string name="verbose_logging_desc">Activer les logs détaillés pour aider avec les rapports d\'incidents. Les logs seront seulement envoyés lorsqu\'un erreur est rencontré, alors répétez le problème pour aviser le développeur. Ceci sera automatiquement désactivé si l\'application redémarre.</string>
   <string name="restart_frost">Redémarrer Frost</string>
-  <string name="restart_frost_desc">Crashlytics soumettra seulement les journaux lorsqu’un incident se produit ou si des erreurs sont détectées et que l’application est redémarrée. Cliquer ici va redémarrer l’application et corriger tous les problèmes présentement trouvés.</string>
 </resources>
