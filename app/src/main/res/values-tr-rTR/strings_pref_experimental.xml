@@ -8,5 +8,4 @@
   <string name="verbose_logging">Ayrıntılı günlüğe kaydetme</string>
   <string name="verbose_logging_desc">Kilitlenme raporlarıyla yardımcı olmak için ayrıntılı günlüğü etkinleştirin. Günlüğe kaydetme yalnızca bir hata ile karşılaştığında gönderilir, bu nedenle devi bilgilendirmek için sorunu tekrarlayın. Uygulama yeniden başlatılırsa, bu otomatik olarak devre dışı bırakılacaktır.</string>
   <string name="restart_frost">Frostu yeniden başlatın</string>
-  <string name="restart_frost_desc">Crashlytics, yalnızca bir kilitlenme meydana geldiğinde veya hatalar bulunursa ve uygulamalar yeniden başlatıldığında günlükleri gönderir. Burayı tıklamak, uygulamayı yeniden başlatacak ve şu anda bulunmakta olan herhangi bir konuyu temizleyecektir.</string>
 </resources>
