@@ -7,7 +7,6 @@
   <string name="aggressive_recents_desc">Régi bejegyzések kiszűrése az eredeti szemponthoz képest. Tiltsd le ezt, ha a hírcsatorna üres.</string>
   <string name="composer">Új bejegyzés</string>
   <string name="composer_desc">Bejegyzés-készítő megjelenítése a hírcsatornában</string>
-  <string name="pro_features">Pro funkciók</string>
   <string name="suggested_friends">Javasolt ismerősök</string>
   <string name="suggested_friends_desc">\"Emberek, akiket ismerhetsz\" megjelenítése a hírcsatornában</string>
   <string name="suggested_groups">Javasolt csoportok</string>
