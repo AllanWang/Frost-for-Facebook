@@ -22,5 +22,4 @@
   <string name="exit_confirmation">Çıkış Onayı</string>
   <string name="exit_confirmation_desc">Uygulamadan çıkmadanönce onay iletişim kutusunu göster</string>
   <string name="analytics">Analiz</string>
-  <string name="analytics_desc">Uygulamanın geliştirilmesi için anonim analitics etkinleştirin. Asla kişisel bilgileriniz korumasiz kalmaz.</string>
 </resources>
