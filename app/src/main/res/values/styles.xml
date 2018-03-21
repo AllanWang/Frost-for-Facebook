@@ -25,10 +25,12 @@
 
     <style name="FrostTheme.Transparent">
         <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="FrostTheme.Light.Transparent">
         <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="FrostTheme.Overlay">
