@@ -8,5 +8,4 @@
   <string name="verbose_logging">Ausführliche Protokollierung</string>
   <string name="verbose_logging_desc">Aktivieren Sie die ausführliche Protokollierung um bei Crash-Berichten zu helfen. Die Protokollierung wird erst dann gesendet, wenn ein Fehler auftritt. Wiederhole das Problem um den Entwickler zu Informieren. Dies wird automatisch deaktiviert, wenn die App neustartet.</string>
   <string name="restart_frost">Starte Frost neu</string>
-  <string name="restart_frost_desc">Chrashlytics wird nur nach Abstürzen oder bei App-Neustart nach einem Fehler, Logs übermitteln. Hier Tippen um die App neu zu starten und alle Fehler die bisher gefunden wurden zu löschen.</string>
 </resources>
