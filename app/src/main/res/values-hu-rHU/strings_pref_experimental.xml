@@ -8,5 +8,4 @@
   <string name="verbose_logging">Verbose Logging</string>
   <string name="verbose_logging_desc">Részletes naplózás engedélyezése a hibajelentések segítésére. A napló csak akkor lesz elküldve, ha hiba lép fel, ezért ismételd meg a problémát, hogy értesítsd a fejlesztőt. Ez automatikusan le lesz tiltva, ha az alkalmazás újraindul.</string>
   <string name="restart_frost">Frost újraindítása</string>
-  <string name="restart_frost_desc">A Crashlytics csak összeomláskor küldi el a naplót, vagy ha hibák léptek fel és az alkalmazás újraindul. Ide kattintva újraindul az alkalmazás, és a talált hibákat jelenti.</string>
 </resources>
