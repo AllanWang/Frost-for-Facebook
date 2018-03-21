@@ -8,5 +8,4 @@
   <string name="verbose_logging">Registro detallado</string>
   <string name="verbose_logging_desc">Habilita los registros detallados para ayudar con los informes de errores. El registro sólo será enviado una vez se detecte el error, debes repetir el fallo para notificar al desarrollador. Esta función quedará desactivada una vez se reinicie la app.</string>
   <string name="restart_frost">Reiniciar Frost</string>
-  <string name="restart_frost_desc">Crashlytics sólo presentará los registros cuando se produce un cierre o si se encuentran errores y se reinicia la aplicación. Toca aquí para reiniciar la aplicación y eliminar cualquier registro generado previamente.</string>
 </resources>
