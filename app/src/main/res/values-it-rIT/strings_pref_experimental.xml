@@ -8,5 +8,4 @@
   <string name="verbose_logging">Log Dettagliato</string>
   <string name="verbose_logging_desc">Abilita log dettagliati per aiutare con il report dei crash. Il log verrà mandato solamente quando verrà riscontrato un errore, quindi ricrea la situazione per evidenziare la dev. Verrà automaticamente disattivato se si riavvia l\'applicazione.</string>
   <string name="restart_frost">Riavvia Frost</string>
-  <string name="restart_frost_desc">L\'analisi dei crash sarà inviata solamente quando avviene un crash oppure se l\'errore provoca il riavvio dell\'applicazione. Cliccando qui l\'applicazione sarà riavvia e verrà rimosso ogni problema riscontrato finora.</string>
 </resources>
