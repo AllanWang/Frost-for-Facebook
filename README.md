@@ -1,9 +1,10 @@
 # Frost-for-Facebook
 
-[![Build Status](https://travis-ci.org/AllanWang/Frost-for-Facebook.svg?branch=master)](https://travis-ci.org/AllanWang/Frost-for-Facebook)
+[![Build Status](https://travis-ci.org/AllanWang/Frost-for-Facebook.svg?branch=dev)](https://travis-ci.org/AllanWang/Frost-for-Facebook)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/frost-for-facebook/localized.svg)](https://crowdin.com/project/frost-for-facebook)
 [![ZenHub](https://img.shields.io/badge/Shipping%20faster%20with-ZenHub-45529A.svg)](https://app.zenhub.com/workspace/o/allanwang/frost-for-facebook/boards)
-[![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/master/LICENSE)
+[![BugSnag](https://img.shields.io/badge/Bug%20tracking%20with-BugSnag-37C2D9.svg)](https://www.bugsnag.com/)
+[![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/dev/LICENSE)
 
 Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
@@ -23,7 +24,7 @@ Frost is the only third party Facebook app to have:
 * Fully swipable overlays
 * Fully customizable tabs
 
-For testers and users without a play store account, test builds can be found [here](https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases).
+Test builds can be found [here](https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases).
 Note that these builds occur for every commit, including unstable ones.
 Typically, those merged into `master` are stable, and those merged into `dev` have been tested.
 
