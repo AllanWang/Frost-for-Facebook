@@ -8,5 +8,4 @@
   <string name="verbose_logging">Pełne zbieranie logów</string>
   <string name="verbose_logging_desc">Włącz pełne zbieranie logów żeby pomóc z raportami o awariach. Logi będą wysłane tylko kiedy błąd wystąpi, więc odtwórz problem, aby powiadomić dewelopera. Ta opcja zostanie automatycznie wyłączona po restarcie aplikacji.</string>
   <string name="restart_frost">Uruchom ponownie Frost</string>
-  <string name="restart_frost_desc">Crashlytics wyśle logi tylko przy crashu lub kiedy błędy zostaną odnalezione i aplikacja zostanie zrestartowana. Kliknięcie tutaj zrestartuje aplikacje i wyczyści wszystkie problemy które zostały znalezione.</string>
 </resources>
