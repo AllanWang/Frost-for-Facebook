@@ -15,8 +15,9 @@
   <string name="search_bar_desc">Activa la barra de búsqueda en lugar de la búsqueda superpuesta</string>
   <string name="force_message_bottom">Forzar último mensaje</string>
   <string name="force_message_bottom_desc">Al cargar un hilo de mensaje, activa un desplazamiento hacia la parte inferior de la página en lugar de cargar la página tal como es.</string>
+  <string name="enable_pip">Activar PIP</string>
+  <string name="enable_pip_desc">Activar función de video en miniatura</string>
   <string name="exit_confirmation">Confirmar salida</string>
   <string name="exit_confirmation_desc">Muestra un diálogo de confirmación antes de salir de la app</string>
   <string name="analytics">Analytics</string>
-  <string name="analytics_desc">Habilitar análisis anónimos, para ayudar a mejorar la aplicación. Tu información personal no será expuesta.</string>
 </resources>
