@@ -9,4 +9,6 @@
   <string name="no_download_manager_desc">O administrador de descargas está desactivado. Queres activalo para permitilas?</string>
   <string name="error_generic">Produciuse un erro.</string>
   <string name="video_load_failed">Erro ao cargar o vídeo</string>
+  <string name="error_notification">Produciuse un erro mentres se obtiñan as notificacións</string>
+  <string name="error_sdk">A versión do SDK (%d) do teu dispositivo é incompatible. Frost só admite Lollipop (SDK 21) e superiores</string>
 </resources>
