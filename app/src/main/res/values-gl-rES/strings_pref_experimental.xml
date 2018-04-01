@@ -8,5 +8,5 @@
   <string name="verbose_logging">Rexistros detallados</string>
   <string name="verbose_logging_desc">Activa os rexistros detallados o cal resultará de axuda cos informes de erros. Os informes enviaranse de cada vez que se atope un erro, de modo que ao se repetir o problema notificarase ao desenvolvedor. Esta función quedará deshabilitada unha vez que se reinicie a aplicación.</string>
   <string name="restart_frost">Reiniciar Frost</string>
-  <string name="restart_frost_desc">Crashlytics só enviará informes cando se produza un erro que supoña o peche da aplicación ou se cando se atopan erro e se reinicia esta. Ao tocar aquí reiniciarase a aplicación e eliminaranse os problemas que se atopen actualmente.</string>
+  <string name="restart_frost_desc">Reinicio en frío da aplicación.</string>
 </resources>
