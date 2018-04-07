@@ -10,16 +10,13 @@ buildscript {
 
     dependencies {
         classpath "ca.allanwang:kau:${KAU}"
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
         classpath "com.bugsnag:bugsnag-android-gradle-plugin:${BUGSNAG_PLUGIN}"
-        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
     }
-    
-    wrapper {
-        distributionType = "all"
-    }
+
+    wrapper.setDistributionType(DistributionType.ALL)
 }
 
 apply plugin: 'ca.allanwang.kau'
