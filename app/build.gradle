@@ -1,27 +1,8 @@
-plugins {
-    id 'com.gladed.androidgitversion' version '0.4.3'
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.github.triplet.play'
 apply plugin: 'com.getkeepsafe.dexcount'
-
-def withPlaySigning = file('../files/gplay-keys.json').exists()
-/*
- * Feel free to check the gitignore under the files/ folder to see what is required for the signing
- * It is assumed that if one of those files exist, all remaining ones exist as well
- */
-
-if (withPlaySigning)
-    play {
-        jsonFile = file('../files/gplay-keys.json')
-        track = 'alpha'
-        errorOnSizeLimit = true
-        uploadImages = false
-        untrackOld = true
-    }
+apply plugin: 'com.gladed.androidgitversion'
 
 android {
     compileSdkVersion kau.targetSdk
@@ -64,18 +45,6 @@ android {
 
     signingConfigs {
 
-        if (withPlaySigning) {
-            def releaseProps = new Properties()
-            file("../files/play.properties").withInputStream { releaseProps.load(it) }
-
-            release {
-                storeFile file("../files/play.keystore")
-                storePassword releaseProps.getProperty('storePassword')
-                keyAlias releaseProps.getProperty('keyAlias')
-                keyPassword releaseProps.getProperty('keyPassword')
-            }
-        }
-
         debug {
             storeFile file("../files/debug.keystore")
             storePassword "debugKey"
@@ -89,6 +58,7 @@ android {
             keyAlias "testKey"
             keyPassword "testkey"
         }
+
     }
 
     buildTypes {
@@ -116,7 +86,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (withPlaySigning) signingConfig signingConfigs.release
             resValue "string", "frost_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
         }
@@ -137,7 +106,6 @@ repositories {
     google()
     jcenter()
     maven { url "https://jitpack.io" }
-    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -178,7 +146,9 @@ dependencies {
 
     implementation"com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
 
+    //noinspection GradleDependency
     implementation "com.github.bumptech.glide:okhttp3-integration:${kau.glide}"
+    //noinspection GradleDependency
     kapt "com.github.bumptech.glide:compiler:${kau.glide}"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:2.9.3"

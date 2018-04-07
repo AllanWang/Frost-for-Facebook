@@ -1,25 +1,21 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
         classpath "ca.allanwang:kau:${KAU}"
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
         classpath "com.bugsnag:bugsnag-android-gradle-plugin:${BUGSNAG_PLUGIN}"
-        classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
+        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${DEX_PLUGIN}"
+        classpath "gradle.plugin.com.gladed.gradle.androidgitversion:gradle-android-git-version:${GIT_PLUGIN}"
     }
-    
-    wrapper {
-        distributionType = "all"
-    }
+
+    wrapper.setDistributionType(Wrapper.DistributionType.ALL)
 }
 
 apply plugin: 'ca.allanwang.kau'

@@ -14,7 +14,7 @@ import com.bumptech.glide.request.target.Target
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
+import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.Prefs
@@ -32,7 +32,7 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
             text.setTextColor(Prefs.textColor)
             if (cookie != null) {
                 text.text = cookie.name
-                GlideApp.with(itemView).load(PROFILE_PICTURE_URL(cookie.id))
+                GlideApp.with(itemView).load(profilePictureUrl(cookie.id))
                         .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
                             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                                 text.fadeIn()

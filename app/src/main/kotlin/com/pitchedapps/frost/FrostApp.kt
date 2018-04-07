@@ -68,10 +68,18 @@ class FrostApp : Application() {
 //        refWatcher = LeakCanary.install(this)
         if (!BuildConfig.DEBUG) {
             Bugsnag.init(this)
-            Bugsnag.setAutoCaptureSessions(true)
-            Bugsnag.getClient().setUserId(Prefs.frostId)
+            val releaseStage = setOf("production", "releaseTest", "github", "release")
+            Bugsnag.setNotifyReleaseStages(*releaseStage.toTypedArray(), "unnamed")
+            val versionSegments = BuildConfig.VERSION_NAME.split("_")
+            if (versionSegments.size > 1) {
+                Bugsnag.setAppVersion(versionSegments.first())
+                Bugsnag.setReleaseStage(if (versionSegments.last() in releaseStage) versionSegments.last()
+                else "unnamed")
+                Bugsnag.setUserName(BuildConfig.VERSION_NAME)
+            }
 
-//            setUser("userId", "user@email.com", "User Name")
+            Bugsnag.setAutoCaptureSessions(true)
+            Bugsnag.setUserId(Prefs.frostId)
         }
         KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false

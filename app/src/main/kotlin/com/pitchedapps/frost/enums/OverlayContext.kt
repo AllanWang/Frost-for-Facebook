@@ -54,7 +54,7 @@ enum class OverlayContext(private val menuItem: FrostMenuItem?) : EnumBundle<Ove
 class FrostMenuItem(
         val id: Int,
         val fbItem: FbItem,
-        val showAsAction: Int = MenuItem.SHOW_AS_ACTION_ALWAYS) {
+        val showAsAction: Int = MenuItem.SHOW_AS_ACTION_IF_ROOM) {
     fun addToMenu(context: Context, menu: Menu, index: Int) {
         val item = menu.add(Menu.NONE, id, index, fbItem.titleId)
         item.icon = fbItem.icon.toDrawable(context, 18)
