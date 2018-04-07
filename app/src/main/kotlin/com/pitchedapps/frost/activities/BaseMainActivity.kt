@@ -52,7 +52,7 @@ import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.PROFILE_PICTURE_URL
+import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.parsers.FrostSearch
@@ -191,7 +191,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 selectionSecondLineShown = false
                 cookies().forEach { (id, name) ->
                     profile(name = name ?: "") {
-                        iconUrl = PROFILE_PICTURE_URL(id)
+                        iconUrl = profilePictureUrl(id)
                         textColor = Prefs.textColor.toLong()
                         selectedTextColor = Prefs.textColor.toLong()
                         selectedColor = 0x00000001.toLong()
