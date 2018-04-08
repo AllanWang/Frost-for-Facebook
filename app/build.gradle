@@ -172,6 +172,8 @@ dependencies {
 
     implementation "org.jsoup:jsoup:${JSOUP}"
 
+    implementation "joda-time:joda-time:${JODA}"
+
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
 
