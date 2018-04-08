@@ -5,8 +5,6 @@ import android.app.job.JobService
 import android.content.Context
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.kotlin.firstOrNull
-import ca.allanwang.kau.kpref.KPref
-import ca.allanwang.kau.kpref.kpref
 import ca.allanwang.kau.utils.string
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -15,6 +13,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.requests.httpClient
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.ReleasePrefs
 import com.pitchedapps.frost.utils.frostEvent
 import okhttp3.Request
 import org.jetbrains.anko.doAsync
@@ -77,11 +76,6 @@ object UpdateManager {
                 downloadCount = apkRelease.get("download_count").asLong())
         return release.copy(apk = apk)
     }
-}
-
-object ReleasePrefs : KPref() {
-    var lastTimeStamp: Long by kpref("last_time_stamp", -1L)
-    var enableUpdater: Boolean by kpref("enable_updater", true)
 }
 
 class UpdateService : JobService() {
