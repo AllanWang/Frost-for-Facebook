@@ -18,8 +18,7 @@ import com.pitchedapps.frost.dbflow.FbTabsDb
 import com.pitchedapps.frost.dbflow.NotificationDb
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.services.scheduleNotifications
-import com.pitchedapps.frost.services.setupNotificationChannels
+import com.pitchedapps.frost.services.*
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -64,6 +63,7 @@ class FrostApp : Application() {
                 .build())
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        ReleasePrefs.initialize(this, "${BuildConfig.APPLICATION_ID}.manager")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (!BuildConfig.DEBUG) {
@@ -95,6 +95,7 @@ class FrostApp : Application() {
         setupNotificationChannels(applicationContext)
 
         applicationContext.scheduleNotifications(Prefs.notificationFreq)
+        applicationContext.scheduleUpdater(ReleasePrefs.enableUpdater)
 
         /**
          * Drawer profile loading logic

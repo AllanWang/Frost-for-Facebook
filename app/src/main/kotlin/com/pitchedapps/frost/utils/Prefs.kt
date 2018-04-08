@@ -137,7 +137,7 @@ object Prefs : KPref() {
 
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
-    var analytics: Boolean by kpref("analytics", false)
+    var analytics: Boolean by kpref("analytics", true)
 
     var overlayEnabled: Boolean by kpref("overlay_enabled", true)
 
