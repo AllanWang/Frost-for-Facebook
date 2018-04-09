@@ -15,8 +15,9 @@
   <string name="search_bar_desc">Activer la barre de recherche au lieu d’une superposition de recherche</string>
   <string name="force_message_bottom">Forcer le bas du message</string>
   <string name="force_message_bottom_desc">Lors du chargement d’un fil de message, déclencher un défilement vers le bas de la page au lieu de charger la page telle quelle.</string>
+  <string name="enable_pip">Activer le PIP</string>
+  <string name="enable_pip_desc">Activer les vidéos Picture In Picture</string>
   <string name="exit_confirmation">Confirmation de la sortie</string>
   <string name="exit_confirmation_desc">Afficher la boîte de dialogue de confirmation avant de quitter l’application</string>
   <string name="analytics">Analytics</string>
-  <string name="analytics_desc">Activez l\'analytique anonyme afin d’améliorer l’application. Aucune information personnelle n’est jamais exposée.</string>
 </resources>
