@@ -7,4 +7,9 @@
         \n\nWybierając jedną z poniższych opcji, przygotuj odpowiedź e-mail z danymi.
     </string>
   <string name="debug_incomplete">Niekompletny raport</string>
+  <string name="debug_web">Debugowanie przez internet</string>
+  <string name="debug_web_desc">Przejdź do strony z problemami oraz wyślij logi do dewelopera.</string>
+  <string name="parsing_data">Przetwarzanie danych</string>
+  <string name="debug_parsers">Analizatory</string>
+  <string name="debug_parsers_desc">Uruchom jeden z dostępnych analizatorów składni aby sprawdzić jego wynik</string>
 </resources>
