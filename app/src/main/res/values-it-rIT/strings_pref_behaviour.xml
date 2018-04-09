@@ -16,8 +16,9 @@ Si noti che potrebbe causare un caricamento leggermente più lungo dovuto al fat
   <string name="search_bar_desc">Abilita la barra di ricerca al posto di un pannello ricerca sovrapposto</string>
   <string name="force_message_bottom">Salta all\'ultimo messaggio</string>
   <string name="force_message_bottom_desc">Quando carichi una conversazione, si attiva uno scorrimento fino al fondo della pagina piuttosto che caricarla com\'è.</string>
+  <string name="enable_pip">Attiva PIP</string>
+  <string name="enable_pip_desc">Attiva video in modalità picture-in-picture</string>
   <string name="exit_confirmation">Conferma Uscita</string>
   <string name="exit_confirmation_desc">Mostra un avviso prima di uscire dall\'applicazione</string>
   <string name="analytics">Statistiche</string>
-  <string name="analytics_desc">Abilita le statistiche anonime per migliorare l\'applicazione. Nessun informazione personale sarà mai pubblicata.</string>
 </resources>
