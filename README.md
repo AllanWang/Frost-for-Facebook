@@ -6,6 +6,8 @@
 [![BugSnag](https://img.shields.io/badge/Bug%20tracking%20with-BugSnag-37C2D9.svg)](https://www.bugsnag.com/)
 [![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/dev/LICENSE)
 
+[Download from XDA Labs](https://labs.xda-developers.com/store/app/com.pitchedapps.frost)
+
 Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
 * Support for multiple accounts and fast switching
