@@ -10,8 +10,7 @@
     <item text="A new beginning: Frost is completely FOSS" />
     <item text="Remove crashlytics in favour of another open source bug tracker" />
     <item text="Remove all google play dependencies" />
-    <item text="Make analytics opt in" />
-    <item text="" />
+    <item text="Fix Facebook UI change" />
     <item text="" />
 
     <version title="v1.8.3" />
@@ -22,7 +21,6 @@
     <item text="Clean up url queries" />
     <item text="Add option to force black background for media views" />
     <item text="Fix menu fragment parsing" />
-    <item text="" />
 
     <version title="v1.8.2" />
     <item text="Fix duplicate notification sounds" />
