@@ -8,5 +8,4 @@
   <string name="verbose_logging">Verbose Logging</string>
   <string name="verbose_logging_desc">启用详细日志记录以帮助崩溃报告。所以一旦遇到错误时，才会发送日志记录重复问题通知行业的发展现状如果应用程序重新启动，这将自动禁用。</string>
   <string name="restart_frost">重启Frost</string>
-  <string name="restart_frost_desc">Crashlytics 只须将提交日志发生崩溃时，或如果发现错误，并重新启动该应用程序。单击此处将重新启动该应用程序并刷新目前发现任何问题。</string>
 </resources>
