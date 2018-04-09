@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">페이스북의 원 최신 글 피드에서 조금 오래된 글을 제외합니다. 피드가 비었다면 비활성화 하세요.</string>
   <string name="composer">상태 도우미</string>
   <string name="composer_desc">상태 도우미를 피드에 표시할지 결정합니다.</string>
-    <string name="suggested_friends">추천 친구</string>
+  <string name="suggested_friends">추천 친구</string>
   <string name="suggested_friends_desc">\"당신을 알 수도 있는 사람\" 피드를 보여줍니다.</string>
   <string name="suggested_groups">추천 그룹</string>
   <string name="suggested_groups_desc">\"추천 그룹\"을 피드에 보여줍니다.</string>
