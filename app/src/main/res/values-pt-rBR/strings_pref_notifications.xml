@@ -8,8 +8,6 @@
   <string name="add_keyword">Adicionar Palavra-Chave</string>
   <string name="hint_keyword">Escreva a palavra-chave e pressione +</string>
   <string name="empty_keyword">Palavra-chave Vazia</string>
-  <string name="notification_general_all_accounts">Notificações de todas as contas</string>
-  <string name="notification_general_all_accounts_desc">Receber notificações para qualquer conta que esteja logada. Desativar esta opção vai apenas buscar as notificações da conta atualmente selecionada.</string>
   <string name="notification_messages">Ativar as notificações de mensagem</string>
   <string name="notification_messages_desc">Receber notificações de conversas de sua conta atual.</string>
   <string name="notification_messages_all_accounts">Notificar mensagens de todas as contas</string>
