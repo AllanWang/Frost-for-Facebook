@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Filtrer les vieilles publications additionnelles du fil d\'actualité les plus récentes de Facebook. Désactivez cette option si votre fil d\'actualités est vide.</string>
   <string name="composer">Compositeur de statut</string>
   <string name="composer_desc">Montrer le compositeur de statut dans le fil d\'actualité</string>
-    <string name="suggested_friends">Amis suggérés</string>
+  <string name="suggested_friends">Amis suggérés</string>
   <string name="suggested_friends_desc">Afficher les «Personnes que vous pouvez connaître» dans le fil d\'actualité</string>
   <string name="suggested_groups">Groupes Suggérés</string>
   <string name="suggested_groups_desc">Afficher les «Groupes Suggérés» dans le fil d\'actualité</string>
