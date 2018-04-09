@@ -18,5 +18,4 @@
   <string name="exit_confirmation">Avslutnings bekreftelse</string>
   <string name="exit_confirmation_desc">Vis bekreftelsesdialog før du avslutter programmet</string>
   <string name="analytics">Analyser</string>
-  <string name="analytics_desc">Aktivere anonym analyse for å forbedre programmet. Ingen personlige opplysninger blir innhentet.</string>
 </resources>
