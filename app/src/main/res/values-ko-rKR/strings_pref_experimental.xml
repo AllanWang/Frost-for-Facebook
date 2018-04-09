@@ -8,5 +8,4 @@
   <string name="verbose_logging">자세한 로그</string>
   <string name="verbose_logging_desc">충돌 보고서에 도움을 주기 위해 자세한 로그를 켭니다. 로그는 에러가 발생했을 때 한번만 보내지며, 문제를 개발자에게 알리려면 문제를 재현하세요. 앱이 재시작되면 이 옵션은 자동으로 꺼집니다.</string>
   <string name="restart_frost">Frost 재시작</string>
-  <string name="restart_frost_desc">Crashlytics 는 충돌이 발생하거나 오류가 발생하여 앱이 재시작 되었을 때만 로그를 보냅니다. 여기를 눌러 앱을 재시작하고 지금까지 찾은 문제들을 정리하세요.</string>
 </resources>
