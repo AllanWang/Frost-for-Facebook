@@ -12,7 +12,7 @@
   <string name="network_desc">Define as opcións que afectan ás redes limitadas</string>
   <string name="experimental">Funcións experimentais</string>
   <string name="experimental_desc">Permite o acceso previo a funcionalidades en proba aínda inestables</string>
-    <string name="about_frost">Acerca de Frost para Facebook</string>
+  <string name="about_frost">Acerca de Frost para Facebook</string>
   <string name="about_frost_desc">Versión, créditos e preguntas frecuentes</string>
   <string name="help_translate">Axuda a traducir</string>
   <string name="help_translate_desc">Frost tradúcese a través de Crowdin. Bota unha man se o queres ver no teu idioma!</string>
