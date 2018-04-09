@@ -1,4 +1,3 @@
-gplay-keys.json
-play.keystore
-play.properties
+release.keystore
+release.properties
 update-dev.sh

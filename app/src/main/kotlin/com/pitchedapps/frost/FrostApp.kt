@@ -18,12 +18,8 @@ import com.pitchedapps.frost.dbflow.FbTabsDb
 import com.pitchedapps.frost.dbflow.NotificationDb
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.services.scheduleNotifications
-import com.pitchedapps.frost.services.setupNotificationChannels
-import com.pitchedapps.frost.utils.FrostPglAdBlock
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.Showcase
+import com.pitchedapps.frost.services.*
+import com.pitchedapps.frost.utils.*
 import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -64,17 +60,21 @@ class FrostApp : Application() {
                 .build())
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        ReleasePrefs.initialize(this, "${BuildConfig.APPLICATION_ID}.manager")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (!BuildConfig.DEBUG) {
             Bugsnag.init(this)
-            val releaseStage = setOf("production", "releaseTest", "github", "release")
-            Bugsnag.setNotifyReleaseStages(*releaseStage.toTypedArray(), "unnamed")
+            val releaseStage = setOf(FLAVOUR_PRODUCTION,
+                    FLAVOUR_TEST,
+                    FLAVOUR_GITHUB,
+                    FLAVOUR_RELEASE)
+            Bugsnag.setNotifyReleaseStages(*releaseStage.toTypedArray(), FLAVOUR_UNNAMED)
             val versionSegments = BuildConfig.VERSION_NAME.split("_")
             if (versionSegments.size > 1) {
                 Bugsnag.setAppVersion(versionSegments.first())
                 Bugsnag.setReleaseStage(if (versionSegments.last() in releaseStage) versionSegments.last()
-                else "unnamed")
+                else FLAVOUR_UNNAMED)
                 Bugsnag.setUserName(BuildConfig.VERSION_NAME)
             }
 
@@ -95,6 +95,7 @@ class FrostApp : Application() {
         setupNotificationChannels(applicationContext)
 
         applicationContext.scheduleNotifications(Prefs.notificationFreq)
+        applicationContext.scheduleUpdater(ReleasePrefs.enableUpdater)
 
         /**
          * Drawer profile loading logic
