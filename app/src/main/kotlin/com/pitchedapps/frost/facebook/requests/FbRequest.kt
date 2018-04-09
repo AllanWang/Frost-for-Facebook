@@ -69,7 +69,7 @@ internal inline fun <T : Any?> RequestAuth.frostRequest(
     return FrostRequest(request.call(), invoke)
 }
 
-private val client: OkHttpClient by lazy {
+val httpClient: OkHttpClient by lazy {
     val builder = OkHttpClient.Builder()
     if (BuildConfig.DEBUG)
         builder.addInterceptor(HttpLoggingInterceptor()
@@ -97,7 +97,7 @@ private fun String.requestBuilder() = Request.Builder()
         .header("User-Agent", USER_AGENT_BASIC)
         .cacheControl(CacheControl.FORCE_NETWORK)
 
-fun Request.Builder.call() = client.newCall(build())!!
+fun Request.Builder.call() = httpClient.newCall(build())!!
 
 fun String.getAuth(): RequestAuth {
     L.v { "Getting auth for ${hashCode()}" }

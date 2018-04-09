@@ -43,6 +43,8 @@ android {
         textOutput 'stdout'
     }
 
+    def withReleaseSigning = file('../files/release.keystore').exists()
+
     signingConfigs {
 
         debug {
@@ -57,6 +59,18 @@ android {
             storePassword "testkey"
             keyAlias "testKey"
             keyPassword "testkey"
+        }
+
+        if (withReleaseSigning) {
+            def releaseProps = new Properties()
+            file("../files/release.properties").withInputStream { releaseProps.load(it) }
+
+            release {
+                storeFile file("../files/release.keystore")
+                storePassword releaseProps.getProperty('storePassword')
+                keyAlias releaseProps.getProperty('keyAlias')
+                keyPassword releaseProps.getProperty('keyPassword')
+            }
         }
 
     }
@@ -85,6 +99,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+            if (withReleaseSigning) signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "frost_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
@@ -171,6 +186,8 @@ dependencies {
     implementation "com.mikepenz:community-material-typeface:${kau.iconicsCommunity}@aar"
 
     implementation "org.jsoup:jsoup:${JSOUP}"
+
+    implementation "joda-time:joda-time:${JODA}"
 
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
