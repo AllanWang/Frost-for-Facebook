@@ -12,7 +12,7 @@
   <string name="network_desc">定义影响计量网络的选项</string>
   <string name="experimental">实验性功能</string>
   <string name="experimental_desc">启用对潜在不稳定功能</string>
-    <string name="about_frost">关于Frost</string>
+  <string name="about_frost">关于Frost</string>
   <string name="about_frost_desc">版本、学分、归功于和常见问题</string>
   <string name="help_translate">帮助我们翻译</string>
   <string name="help_translate_desc">帮助我们翻译说明</string>
