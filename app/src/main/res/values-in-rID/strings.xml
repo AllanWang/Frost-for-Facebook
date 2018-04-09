@@ -23,6 +23,7 @@
   <string name="welcome">Selamat Datang %s</string>
   <string name="select_facebook_account">Pilih Akun Facebook</string>
   <string name="account_not_found">Akun saat ini tidak ada dalam database</string>
+  <string name="frost_requests">Permintaan Frost</string>
   <string name="frost_notifications">Pemberitahuan Frost</string>
   <string name="requires_custom_theme">Memerlukan tema kustom</string>
   <string name="subject">Perihal</string>
