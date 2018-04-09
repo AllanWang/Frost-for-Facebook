@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Filtra ulteriori post vecchi dalla sezione originale più recenti di Facebook. Disabilita se il tuo feed è vuoto.</string>
   <string name="composer">Compositore di Stato</string>
   <string name="composer_desc">Mostra la casella per comporre uno stato nelle Notizie</string>
-    <string name="suggested_friends">Amici consigliati</string>
+  <string name="suggested_friends">Amici consigliati</string>
   <string name="suggested_friends_desc">Mostra \"Persone che potresti conoscere\" nelle notizie</string>
   <string name="suggested_groups">Gruppi suggeriti</string>
   <string name="suggested_groups_desc">Mostra \"Gruppi suggeriti\" nelle notizie</string>
