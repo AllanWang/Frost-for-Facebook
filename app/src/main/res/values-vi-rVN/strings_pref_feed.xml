@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Lọc bớt những bài đăng cũ trên bảng tin gần đây của Facebook. Tắt nếu bạn thấy bảng tin trống.</string>
   <string name="composer">Soạn trạng thái</string>
   <string name="composer_desc">Hiện mục soạn trạng thái trên bảng tin</string>
-    <string name="suggested_friends">Gợi ý bạn</string>
+  <string name="suggested_friends">Gợi ý bạn</string>
   <string name="suggested_friends_desc">Hiện \'Gợi ý nhóm\' trên bảng tin</string>
   <string name="suggested_groups">Gợi ý nhóm</string>
   <string name="suggested_groups_desc">Hiện \'Gợi ý nhóm\' trên bảng tin</string>
