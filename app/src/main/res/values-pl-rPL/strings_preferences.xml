@@ -12,7 +12,7 @@
   <string name="network_desc">Opcje wpływające na wykorzystanie sieci</string>
   <string name="experimental">Eksperymentalne</string>
   <string name="experimental_desc">Włącz wcześniejszy dostęp do potencjalnie niestabilnych funkcji</string>
-    <string name="about_frost">O aplikacji Frost for Facebook</string>
+  <string name="about_frost">O aplikacji Frost for Facebook</string>
   <string name="about_frost_desc">Wersja, podziękowania i FAQ</string>
   <string name="help_translate">Pomóż tłumaczyć</string>
   <string name="help_translate_desc">Frost jest tłumaczony w witrynie crowdin. Dołącz, jeśli chcesz zobaczyć go w swoim języku!</string>
