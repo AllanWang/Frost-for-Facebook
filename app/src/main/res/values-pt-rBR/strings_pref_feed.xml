@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Filtra as postagens mais antigas do Feed das postagens recentes. Desative esta opção se o Feed estiver vazio.</string>
   <string name="composer">Compositor de Status</string>
   <string name="composer_desc">Mostrar o compositor de status no Feed</string>
-    <string name="suggested_friends">Amigos Sugeridos</string>
+  <string name="suggested_friends">Amigos Sugeridos</string>
   <string name="suggested_friends_desc">Mostra \"Pessoas Que Talvez Você Conheça\" no Feed</string>
   <string name="suggested_groups">Grupos Sugeridos</string>
   <string name="suggested_groups_desc">Mostra \"Grupos Sugeridos\" no Feed</string>
