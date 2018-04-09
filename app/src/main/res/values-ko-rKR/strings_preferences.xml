@@ -12,7 +12,7 @@
   <string name="network_desc">네트워크 문제에 관한 옵션 설정</string>
   <string name="experimental">실험적 기능</string>
   <string name="experimental_desc">불안정할 수 있는 기능들을 미리 활성화</string>
-    <string name="about_frost">Facebook 을 위한 Frost 정보</string>
+  <string name="about_frost">Facebook 을 위한 Frost 정보</string>
   <string name="about_frost_desc">버전, 제작자, FAQ</string>
   <string name="help_translate">번역 돕기</string>
   <string name="help_translate_desc">Frost 는 crowdin 을 통해 번역할 수 있습니다. 여러분의 언어로 사용하고 싶으시다면 기여해 주세요!</string>
