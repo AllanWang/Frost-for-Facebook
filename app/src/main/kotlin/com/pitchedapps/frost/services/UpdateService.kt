@@ -107,12 +107,13 @@ class UpdateService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        L.i { "Fetching update" }
-        future = doAsync {
-            fetch()
-            finish(params)
-        }
-        return true
+//        L.i { "Fetching update" }
+//        future = doAsync {
+//            fetch()
+//            finish(params)
+//        }
+//        return true
+        return false
     }
 
     private fun fetch() {
