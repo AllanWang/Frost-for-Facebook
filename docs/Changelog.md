@@ -4,7 +4,7 @@
 * A new beginning: Frost is completely FOSS
 * Remove crashlytics in favour of another open source bug tracker
 * Remove all google play dependencies
-* Make analytics opt in
+* Fix Facebook UI change
 
 ## v1.8.3
 * Add full notification channel support

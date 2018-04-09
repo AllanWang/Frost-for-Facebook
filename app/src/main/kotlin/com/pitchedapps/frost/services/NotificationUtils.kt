@@ -24,24 +24,20 @@ import com.pitchedapps.frost.utils.Prefs
  */
 const val NOTIF_CHANNEL_GENERAL = "general"
 const val NOTIF_CHANNEL_MESSAGES = "messages"
-const val NOTIF_CHANNEL_UPDATES = "updates"
 
 fun setupNotificationChannels(c: Context) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
     val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val appName = c.string(R.string.frost_name)
     val msg = c.string(R.string.messages)
-    val updates = c.string(R.string.updates)
     manager.notificationChannels
             .filter {
                 it.id != NOTIF_CHANNEL_GENERAL
                         && it.id != NOTIF_CHANNEL_MESSAGES
-                        && it.id != NOTIF_CHANNEL_UPDATES
             }
             .forEach { manager.deleteNotificationChannel(it.id) }
     manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
     manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
-    manager.createNotificationChannel(NOTIF_CHANNEL_UPDATES, "$appName: $updates")
     L.d { "Created notification channels: ${manager.notificationChannels.size} channels, ${manager.notificationChannelGroups.size} groups" }
 }
 
