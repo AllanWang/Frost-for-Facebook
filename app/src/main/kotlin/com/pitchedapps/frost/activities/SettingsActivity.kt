@@ -141,11 +141,11 @@ class SettingsActivity : KPrefActivity() {
             onClick = { launchNewTask<IntroActivity>(cookies(), true) }
         }
 
-        plainText(R.string.updates) {
-            descRes = R.string.updates_desc
-            iicon = CommunityMaterial.Icon.cmd_github_circle
-            onClick = { launchNewTask<UpdateActivity>() }
-        }
+//        plainText(R.string.updates) {
+//            descRes = R.string.updates_desc
+//            iicon = CommunityMaterial.Icon.cmd_github_circle
+//            onClick = { launchNewTask<UpdateActivity>() }
+//        }
 
         subItems(R.string.debug_frost, getDebugPrefs()) {
             descRes = R.string.debug_frost_desc
