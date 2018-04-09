@@ -12,7 +12,7 @@
   <string name="network_desc">กำหนดตัวเลือกที่มีผลต่อปริมาณข้อมูลเครือข่าย</string>
   <string name="experimental">ทดลอง</string>
   <string name="experimental_desc">เปิดใช้งานการเข้าถึงคุณลักษณะที่อาจไม่เสถียร</string>
-    <string name="about_frost">เกี่ยวกับ Frost for Facebook</string>
+  <string name="about_frost">เกี่ยวกับ Frost for Facebook</string>
   <string name="about_frost_desc">รุ่น, เครดิต และถามตอบ</string>
   <string name="help_translate">ช่วยแปล</string>
   <string name="help_translate_desc">Frost จะถูกแปลผ่าน crowdin คุณสามารถช่วยแปลภาษาของคุณได้ถ้าต้องการ!</string>
