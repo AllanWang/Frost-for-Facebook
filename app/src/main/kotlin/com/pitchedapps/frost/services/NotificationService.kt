@@ -55,8 +55,6 @@ class NotificationService : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         L.i { "Fetching notifications" }
         future = doAsync {
-            val context = weakRef.get()
-                    ?: return@doAsync L.eThrow("NotificationService had null weakRef to self")
             val currentId = Prefs.userId
             val cookies = loadFbCookiesSync()
             val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
