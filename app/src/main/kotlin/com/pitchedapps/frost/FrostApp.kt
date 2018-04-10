@@ -85,7 +85,11 @@ class FrostApp : Application() {
         KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
-        FbCookie()
+        try {
+            FbCookie()
+        } catch (e: Exception) {
+            // no webview found; error will be handled in start activity
+        }
         FrostPglAdBlock.init(this)
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
         if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
