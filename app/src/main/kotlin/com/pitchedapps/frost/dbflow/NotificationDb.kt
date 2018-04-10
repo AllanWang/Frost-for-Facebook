@@ -27,7 +27,9 @@ class NotificationMigration2(modelClass: Class<NotificationModel>) : AlterTableM
 }
 
 @Table(database = NotificationDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
-data class NotificationModel(@PrimaryKey var id: Long = -1L, var epoch: Long = -1L, var epochIm: Long = -1) : BaseModel()
+data class NotificationModel(@PrimaryKey var id: Long = -1L,
+                             var epoch: Long = System.currentTimeMillis(),
+                             var epochIm: Long = System.currentTimeMillis()) : BaseModel()
 
 fun lastNotificationTime(id: Long): NotificationModel = (select from NotificationModel::class where (NotificationModel_Table.id eq id)).querySingle()
         ?: NotificationModel(id = id)
