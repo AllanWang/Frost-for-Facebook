@@ -8,6 +8,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.FrostWebView
@@ -143,7 +144,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (url.isImageUrl)
-            return launchImage(url)
+            return launchImage(url.formattedFbUrl)
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }

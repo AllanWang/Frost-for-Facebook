@@ -243,8 +243,14 @@ inline val String.isVideoUrl
 /**
  * [true] if url is or redirects to an explicit facebook image
  */
-inline val String.isImageUrl
-    get() = contains(FBCDN_NET) && (contains(".png") || contains(".jpg"))
+inline val String.isImageUrl: Boolean
+    get() {
+        if (contains(FBCDN_NET) && (contains(".png") || contains(".jpg")))
+            return true
+        if (contains("/photo/view_full_size/?fbid="))
+            return true
+        return false
+    }
 
 /**
  * [true] if url can be displayed in a different webview
