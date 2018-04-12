@@ -32,22 +32,22 @@ public class Log {
         return 0;
     }
 
-    public static int println(int priority, String tag, String message) {
+    public static int println(int priority, String tag, String msg) {
         switch (priority) {
             case VERBOSE:
-                p("V", tag, message);
+                p("V", tag, msg);
                 break;
             case INFO:
-                p("I", tag, message);
+                p("I", tag, msg);
                 break;
             case DEBUG:
-                p("D", tag, message);
+                p("D", tag, msg);
                 break;
             case ERROR:
-                p("E", tag, message);
+                p("E", tag, msg);
                 break;
             default:
-                p("L " + priority, tag, message);
+                p("L " + priority, tag, msg);
                 break;
         }
         return 0;

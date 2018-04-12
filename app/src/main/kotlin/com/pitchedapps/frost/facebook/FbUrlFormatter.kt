@@ -49,7 +49,7 @@ class FbUrlFormatter(url: String) {
         if (qm > -1) {
             cleanedUrl.substring(qm + 1).split("&").forEach {
                 val p = it.split("=")
-                queries.put(p[0], p.elementAtOrNull(1) ?: "")
+                queries[p[0]] = p.elementAtOrNull(1) ?: ""
             }
             cleanedUrl = cleanedUrl.substring(0, qm)
         }

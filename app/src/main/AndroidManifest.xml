@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--<uses-permission android:name="android.permission.USE_FINGERPRINT" />-->
-    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name=".FrostApp"
@@ -127,9 +126,6 @@
         <activity android:name=".activities.SelectorActivity" />
         <activity android:name=".activities.TabCustomizerActivity" />
         <activity
-            android:name=".activities.UpdateActivity"
-            android:theme="@style/FrostTheme.Settings" />
-        <activity
             android:name=".activities.SettingsActivity"
             android:theme="@style/FrostTheme.Settings" />
         <activity
@@ -144,11 +140,6 @@
             android:name=".services.NotificationService"
             android:enabled="true"
             android:label="@string/frost_notifications"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".services.UpdateService"
-            android:enabled="true"
-            android:label="@string/updates"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.FrostRequestService"

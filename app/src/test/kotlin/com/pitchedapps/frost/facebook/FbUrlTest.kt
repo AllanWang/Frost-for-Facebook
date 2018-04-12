@@ -42,7 +42,7 @@ class FbUrlTest {
      */
     @Test
     fun queryConversion() {
-        val url = "https://m.facebook.com/l.php?u=https%3A%2F%2Fgoogle.ca&h=hi"
+        val url = "${FB_URL_BASE}l.php?u=https%3A%2F%2Fgoogle.ca&h=hi"
         val expected = "https://google.ca?h=hi"
         assertFbFormat(expected, url)
     }
@@ -89,5 +89,11 @@ class FbUrlTest {
         val url = "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/asdf_n.jpg?efg=asdf&oh=asdf&oe=asdf"
         assertFbFormat(url, "#!$url")
     }
+
+//    @Test
+//    fun viewFullImageIndirect() {
+//        val urlBase = "photo/view_full_size/?fbid=1234&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=13&_ft_=qid.1234%3Amf_story_key.1234%3Atop_level_post_id"
+//        assertFbFormat("$FB_URL_BASE$urlBase", "#!/$urlBase")
+//    }
 
 }
