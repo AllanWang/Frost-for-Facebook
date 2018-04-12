@@ -1,10 +1,16 @@
 # Changelog
 
+## v2.0.1
+* Update theme
+* Catch crashes if device has no webview
+* Fix all the notifications coming in for the first load
+* Reorder settings
+
 ## v2.0.0
 * A new beginning: Frost is completely FOSS
 * Remove crashlytics in favour of another open source bug tracker
 * Remove all google play dependencies
-* Make analytics opt in
+* Fix Facebook UI change
 
 ## v1.8.3
 * Add full notification channel support

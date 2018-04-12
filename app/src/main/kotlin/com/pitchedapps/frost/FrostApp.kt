@@ -18,12 +18,14 @@ import com.pitchedapps.frost.dbflow.FbTabsDb
 import com.pitchedapps.frost.dbflow.NotificationDb
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.services.*
+import com.pitchedapps.frost.services.scheduleNotifications
+import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.*
 import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
+import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import java.net.SocketTimeoutException
 import java.util.*
@@ -60,7 +62,6 @@ class FrostApp : Application() {
                 .build())
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
-        ReleasePrefs.initialize(this, "${BuildConfig.APPLICATION_ID}.manager")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         if (!BuildConfig.DEBUG) {
@@ -84,7 +85,11 @@ class FrostApp : Application() {
         KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
-        FbCookie()
+        try {
+            FbCookie()
+        } catch (e: Exception) {
+            // no webview found; error will be handled in start activity
+        }
         FrostPglAdBlock.init(this)
         if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
         if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
@@ -95,7 +100,6 @@ class FrostApp : Application() {
         setupNotificationChannels(applicationContext)
 
         applicationContext.scheduleNotifications(Prefs.notificationFreq)
-        applicationContext.scheduleUpdater(ReleasePrefs.enableUpdater)
 
         /**
          * Drawer profile loading logic
@@ -132,8 +136,10 @@ class FrostApp : Application() {
 
         RxJavaPlugins.setErrorHandler {
             when (it) {
-                is SocketTimeoutException -> Unit
-                else -> L.e(it) { "RxJava error" }
+                is SocketTimeoutException, is UndeliverableException ->
+                    L.e { "RxJava common error ${it.message}" }
+                else ->
+                    L.e(it) { "RxJava error" }
             }
         }
 
