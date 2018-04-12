@@ -18,6 +18,7 @@ import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
@@ -135,9 +136,10 @@ class AboutActivity : AboutActivityBase(null, {
                 val c = itemView.context
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
-//                        GoogleMaterial.Icon.gmd_star to { c.startPlayStoreLink(R.string.play_store_package_id) },
+                        GoogleMaterial.Icon.gmd_star to { c.startLink(R.string.xda_labs_url) },
                         CommunityMaterial.Icon.cmd_reddit to { c.startLink(R.string.reddit_url) },
                         CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
+                        CommunityMaterial.Icon.cmd_slack to { c.startLink(R.string.slack_url) },
                         CommunityMaterial.Icon.cmd_xda to { c.startLink(R.string.xda_url) }
                 ).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
