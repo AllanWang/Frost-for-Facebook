@@ -71,7 +71,7 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
      * If you don't have a need for cache,
      * you likely won't have a need for flyweights
      */
-    open protected fun createNewSource(input: T): Single<R> =
+    protected open fun createNewSource(input: T): Single<R> =
             Single.fromCallable { call(input) }
                     .timeout(15, TimeUnit.SECONDS)
                     .subscribeOn(Schedulers.io())

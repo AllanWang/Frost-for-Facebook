@@ -107,7 +107,7 @@ object Prefs : KPref() {
 
     var showSuggestedGroups: Boolean by kpref("suggested_groups_feed", true)
 
-    var showFacebookAds: Boolean by kpref("facebook_ads", true)
+    var showFacebookAds: Boolean by kpref("facebook_ads", false)
 
     var animate: Boolean by kpref("fancy_animations", true)
 

@@ -113,11 +113,6 @@ class SettingsActivity : KPrefActivity() {
 //            iicon = GoogleMaterial.Icon.gmd_network_cell
 //        }
 
-        subItems(R.string.experimental, getExperimentalPrefs()) {
-            descRes = R.string.experimental_desc
-            iicon = CommunityMaterial.Icon.cmd_flask_outline
-        }
-
         // todo add donation?
 
         plainText(R.string.about_frost) {
@@ -141,11 +136,10 @@ class SettingsActivity : KPrefActivity() {
             onClick = { launchNewTask<IntroActivity>(cookies(), true) }
         }
 
-//        plainText(R.string.updates) {
-//            descRes = R.string.updates_desc
-//            iicon = CommunityMaterial.Icon.cmd_github_circle
-//            onClick = { launchNewTask<UpdateActivity>() }
-//        }
+        subItems(R.string.experimental, getExperimentalPrefs()) {
+            descRes = R.string.experimental_desc
+            iicon = CommunityMaterial.Icon.cmd_flask_outline
+        }
 
         subItems(R.string.debug_frost, getDebugPrefs()) {
             descRes = R.string.debug_frost_desc

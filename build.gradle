@@ -27,3 +27,7 @@ task clean(type: Delete) {
 task generateChangelogMd() {
     kauChangelog.generate("$project.rootDir/app/src/main/res/xml/frost_changelog.xml")
 }
+
+task fullRelease(type: GradleBuild) {
+    tasks = ['clean', 'lintRelease', 'test', 'assembleRelease']
+}
