@@ -24,11 +24,13 @@ import kotlin.test.fail
 
 private const val FILE = "priv.properties"
 
+private val propPaths = arrayOf(FILE, "../$FILE")
+
 val PROPS: Properties by lazy {
     val props = Properties()
-    val file = File(FILE)
-    if (!file.exists()) {
-        println("$FILE not found")
+    val file = propPaths.map(::File).firstOrNull { it.isFile }
+    if (file == null) {
+        println("$FILE not found at ${File(".").absolutePath}")
         return@lazy props
     }
     println("Found properties at ${file.absolutePath}")

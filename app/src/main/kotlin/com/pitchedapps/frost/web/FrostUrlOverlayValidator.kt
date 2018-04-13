@@ -4,6 +4,7 @@ import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -37,7 +38,12 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     }
     if (url.isImageUrl) {
         L.d { "Found fb image" }
-        context.launchImageActivity(url.formattedFbUrl, null)
+        context.launchImageActivity(url.formattedFbUrl)
+        return true
+    }
+    if (url.isIndirectImageUrl) {
+        L.d { "Found indirect fb image" }
+        context.launchImageActivity(url.formattedFbUrl, cookie = FbCookie.webCookie)
         return true
     }
     if (!url.isIndependent) {

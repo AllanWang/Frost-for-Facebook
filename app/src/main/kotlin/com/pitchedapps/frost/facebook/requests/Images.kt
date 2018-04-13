@@ -11,9 +11,8 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
-import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
-import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.get
+import com.pitchedapps.frost.facebook.*
+import io.reactivex.Maybe
 import okhttp3.Call
 import okhttp3.Request
 import java.io.IOException
@@ -26,6 +25,15 @@ fun RequestAuth.getFullSizedImage(fbid: Long) = frostRequest(::getJsonUrl) {
     url("${FB_URL_BASE}photo/view_full_size/?fbid=$fbid&__ajax__=&__user=$userId")
     get()
 }
+
+val test: () -> InputStream? = { null }
+
+fun String.getFullSizedImageUrl(url: String): Maybe<String?> = Maybe.fromCallable {
+    val redirect = requestBuilder().url(url).get().call()
+            .execute().body()?.string() ?: return@fromCallable null
+    return@fromCallable FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
+            ?: return@fromCallable null
+}.onErrorComplete()
 
 /**
  * Request loader for a potentially hd version of a url
