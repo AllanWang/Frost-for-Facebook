@@ -28,6 +28,9 @@ fun RequestAuth.getFullSizedImage(fbid: Long) = frostRequest(::getJsonUrl) {
 
 val test: () -> InputStream? = { null }
 
+/**
+ * Attempts to get the fbcdn url of the supplied image redirect url
+ */
 fun String.getFullSizedImageUrl(url: String): Maybe<String?> = Maybe.fromCallable {
     val redirect = requestBuilder().url(url).get().call()
             .execute().body()?.string() ?: return@fromCallable null
