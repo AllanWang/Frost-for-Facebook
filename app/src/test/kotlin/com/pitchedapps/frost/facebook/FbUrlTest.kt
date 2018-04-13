@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.utils.isImageUrl
+import com.pitchedapps.frost.utils.isIndirectImageUrl
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -48,6 +49,13 @@ class FbUrlTest {
     }
 
     @Test
+    fun ampersand() {
+        val url = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/123.jpg?_nc_cat=0&amp;efg=asdf"
+        val formattedUrl = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/123.jpg?_nc_cat=0&efg=asdf"
+        assertFbFormat(formattedUrl, url)
+    }
+
+    @Test
     fun doubleDash() {
         assertFbFormat("${FB_URL_BASE}relative", "$FB_URL_BASE/relative")
     }
@@ -69,6 +77,15 @@ class FbUrlTest {
 //                "#!/photo/view_full_size/?fbid=1523&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=153&_ft_=..."
         ).forEach {
             assertTrue(it.isImageUrl, "Failed to match image for $it")
+        }
+    }
+
+    @Test
+    fun indirectImage() {
+        arrayOf(
+                "#!/photo/view_full_size/?fbid=107368839645039"
+        ).forEach {
+            assertTrue(it.isIndirectImageUrl, "Failed to match indirect image for $it")
         }
     }
 
