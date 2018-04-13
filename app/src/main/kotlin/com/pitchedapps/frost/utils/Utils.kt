@@ -44,6 +44,7 @@ const val ARG_URL = "arg_url"
 const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
+const val ARG_COOKIE = "arg_cookie"
 
 inline fun <reified T : Activity> Context.launchNewTask(cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
     startActivity<T>(clearStack, intentBuilder = {
@@ -83,11 +84,12 @@ fun Context.launchWebOverlayBasic(url: String) = launchWebOverlayImpl<WebOverlay
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(this,
         android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
 
-fun Context.launchImageActivity(imageUrl: String, text: String?) {
+fun Context.launchImageActivity(imageUrl: String, text: String? = null, cookie: String? = null) {
     startActivity<ImageActivity>(intentBuilder = {
         putExtras(fadeBundle())
         putExtra(ARG_IMAGE_URL, imageUrl)
         putExtra(ARG_TEXT, text)
+        putExtra(ARG_COOKIE, cookie)
     })
 }
 
@@ -241,10 +243,20 @@ inline val String.isVideoUrl
             (startsWith("https://video-") && contains(FBCDN_NET))
 
 /**
- * [true] if url is or redirects to an explicit facebook image
+ * [true] if url directly leads to a usable image
  */
-inline val String.isImageUrl
-    get() = contains(FBCDN_NET) && (contains(".png") || contains(".jpg"))
+inline val String.isImageUrl: Boolean
+    get() {
+        return contains(FBCDN_NET) && (contains(".png") || contains(".jpg"))
+    }
+
+/**
+ * [true] if url can be retrieved to get a direct image url
+ */
+inline val String.isIndirectImageUrl: Boolean
+    get() {
+        return contains("/photo/view_full_size/") && contains("fbid=")
+    }
 
 /**
  * [true] if url can be displayed in a different webview

@@ -20,6 +20,10 @@ import io.reactivex.subjects.SingleSubject
  */
 object FbCookie {
 
+    /**
+     * Retrieves the facebook cookie if it exists
+     * Note that this is a synchronized call
+     */
     inline val webCookie: String?
         get() = CookieManager.getInstance().getCookie(FB_URL_BASE)
 

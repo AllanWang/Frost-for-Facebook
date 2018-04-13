@@ -6,7 +6,10 @@ import com.pitchedapps.frost.rx.RxFlyweight
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
 
@@ -92,12 +95,16 @@ internal fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pa
     return newList
 }
 
-private fun String.requestBuilder() = Request.Builder()
-        .header("Cookie", this)
-        .header("User-Agent", USER_AGENT_BASIC)
-        .cacheControl(CacheControl.FORCE_NETWORK)
+internal fun String?.requestBuilder(): Request.Builder {
+    val builder = Request.Builder()
+            .header("User-Agent", USER_AGENT_BASIC)
+    if (this != null)
+        builder.header("Cookie", this)
+//        .cacheControl(CacheControl.FORCE_NETWORK)
+    return builder
+}
 
-fun Request.Builder.call() = httpClient.newCall(build())!!
+fun Request.Builder.call(): Call = httpClient.newCall(build())
 
 fun String.getAuth(): RequestAuth {
     L.v { "Getting auth for ${hashCode()}" }

@@ -24,9 +24,11 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
+import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
+import com.pitchedapps.frost.facebook.requests.requestBuilder
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import okhttp3.Request
+import okhttp3.Response
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -86,7 +88,17 @@ class ImageActivity : KauBaseActivity() {
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 
+    private val cookie: String? by lazy { intent.getStringExtra(ARG_COOKIE) }
+
     val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
+
+    private val trueImageUrl: String by lazy {
+        val result = if (!imageUrl.isIndirectImageUrl) imageUrl
+        else cookie?.getFullSizedImageUrl(imageUrl)?.blockingGet() ?: imageUrl
+        if (result != imageUrl)
+            L.v { "Launching with true url $result" }
+        result
+    }
 
     private val imageText: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
@@ -205,11 +217,12 @@ class ImageActivity : KauBaseActivity() {
         return File.createTempFile(imageFileName, IMG_EXTENSION, frostDir)
     }
 
-    private fun getImageResponse() = Request.Builder()
-            .url(imageUrl)
+    private fun getImageResponse(): Response = cookie.requestBuilder()
+            .url(trueImageUrl)
             .get()
             .call()
             .execute()
+
 
     @Throws(IOException::class)
     private fun downloadImageTo(file: File) {
@@ -263,7 +276,7 @@ class ImageActivity : KauBaseActivity() {
     override fun onDestroy() {
         tempFile = null
         val purge = System.currentTimeMillis() - PURGE_TIME
-        tempDir.listFiles(FileFilter { it.isFile && it.lastModified() < purge }).forEach {
+        tempDir.listFiles(FileFilter { it.isFile && it.lastModified() < purge })?.forEach {
             it.delete()
         }
         super.onDestroy()

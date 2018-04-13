@@ -43,6 +43,7 @@ class FbUrlFormatter(url: String) {
             L.e(e) { "Failed url formatting" }
             return url
         }
+        cleanedUrl = cleanedUrl.replace("&amp;", "&")
         if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
             cleanedUrl = cleanedUrl.replaceFirst("&", "?")
         val qm = cleanedUrl.indexOf("?")
@@ -54,8 +55,6 @@ class FbUrlFormatter(url: String) {
             cleanedUrl = cleanedUrl.substring(0, qm)
         }
         discardableQueries.forEach { queries.remove(it) }
-        //final cleanup
-        misc.forEach { (k, v) -> cleanedUrl = cleanedUrl.replace(k, v, true) }
         if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
         cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
         L.v { "Formatted url from $url to $cleanedUrl" }
@@ -100,8 +99,6 @@ class FbUrlFormatter(url: String) {
                 "https://touch.facebook.com/l.php?u=",
                 VIDEO_REDIRECT
         )
-
-        val misc = arrayOf("&amp;" to "&")
 
         val discardableQueries = arrayOf("ref", "refid", "acontext", "SharedWith")
 

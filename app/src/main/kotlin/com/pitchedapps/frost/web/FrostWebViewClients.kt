@@ -7,7 +7,9 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.*
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.FrostWebView
@@ -57,7 +59,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         )
     }
 
-
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
@@ -91,7 +92,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         onPageFinishedActions(url)
     }
 
-    open internal fun onPageFinishedActions(url: String) {
+    internal open fun onPageFinishedActions(url: String) {
         if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom)
             web.pageDown(true)
         injectAndFinish()
@@ -125,9 +126,9 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         return web.requestWebOverlay(request.url.toString())
     }
 
-    private fun launchImage(url: String, text: String? = null): Boolean {
+    private fun launchImage(url: String, text: String? = null, cookie: String? = null): Boolean {
         v { "Launching image: $url" }
-        web.context.launchImageActivity(url, text)
+        web.context.launchImageActivity(url, text, cookie)
         if (web.canGoBack()) web.goBack()
         return true
     }
@@ -143,7 +144,9 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         }
         if (path.startsWith("/composer/")) return launchRequest(request)
         if (url.isImageUrl)
-            return launchImage(url)
+            return launchImage(url.formattedFbUrl)
+        if (url.isIndirectImageUrl)
+            return launchImage(url.formattedFbUrl, cookie = FbCookie.webCookie)
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
