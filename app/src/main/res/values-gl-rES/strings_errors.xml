@@ -11,4 +11,5 @@
   <string name="video_load_failed">Erro ao cargar o vídeo</string>
   <string name="error_notification">Produciuse un erro mentres se obtiñan as notificacións</string>
   <string name="error_sdk">A versión do SDK (%d) do teu dispositivo é incompatible. Frost só admite Lollipop (SDK 21) e superiores</string>
+  <string name="error_webview">Semella que o teu dispositivo non ten navegador web interno (webview). Engade ou activa un.</string>
 </resources>
