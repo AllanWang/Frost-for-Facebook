@@ -104,6 +104,15 @@ android {
             resValue "string", "frost_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
         }
+        fdroid {
+            minifyEnabled true
+            shrinkResources true
+            applicationIdSuffix ".fdroid"
+            versionNameSuffix "-fdroid"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "frost_name", "Frost"
+            resValue "string", "frost_web", "Frost Web"
+        }
     }
 
     sourceSets {
