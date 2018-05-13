@@ -5,6 +5,7 @@
 * Catch crashes if device has no webview
 * Fix all the notifications coming in for the first load
 * Reorder settings
+* Fix view full image
 
 ## v2.0.0
 * A new beginning: Frost is completely FOSS

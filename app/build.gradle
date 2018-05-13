@@ -104,14 +104,14 @@ android {
             resValue "string", "frost_name", "Frost"
             resValue "string", "frost_web", "Frost Web"
         }
+    }
+
+    flavorDimensions "store"
+
+    productFlavors {
         fdroid {
-            minifyEnabled true
-            shrinkResources true
+            dimension "store"
             applicationIdSuffix ".fdroid"
-            versionNameSuffix "-fdroid"
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "frost_name", "Frost"
-            resValue "string", "frost_web", "Frost Web"
         }
     }
 
@@ -168,7 +168,7 @@ dependencies {
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
-    implementation"com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
+    implementation "com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
 
     //noinspection GradleDependency
     implementation "com.github.bumptech.glide:okhttp3-integration:${kau.glide}"
