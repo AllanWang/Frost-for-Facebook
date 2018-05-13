@@ -109,6 +109,10 @@ android {
     flavorDimensions "store"
 
     productFlavors {
+        standard {
+            dimension "store"
+        }
+
         fdroid {
             dimension "store"
             applicationIdSuffix ".fdroid"

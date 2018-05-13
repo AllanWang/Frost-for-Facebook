@@ -21,7 +21,7 @@ script:
 - printf "Starting script\n"
 - chmod +x gradlew
 - "./gradlew --quiet androidGitVersion"
-- "./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest"
+- "./gradlew lintStandardReleaseTest testStandardReleaseUnitTest assembleStandardReleaseTest"
 notifications:
   email: false
   slack:
