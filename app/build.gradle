@@ -54,19 +54,30 @@ android {
             keyPassword "debugKey"
         }
 
-        test {
-            storeFile file("../files/test.keystore")
-            storePassword "testkey"
-            keyAlias "testKey"
-            keyPassword "testkey"
+        def testKeystoreFile = file('../files/test.keystore')
+        def testPropFile = file('../files/test.properties')
+
+        if (testKeystoreFile.exists() && testPropFile.exists()) {
+            def testProps = new Properties()
+            testPropFile.withInputStream { testProps.load(it) }
+
+            test {
+                storeFile testKeystoreFile
+                storePassword testProps.getProperty('storePassword')
+                keyAlias testProps.getProperty('keyAlias')
+                keyPassword testProps.getProperty('keyPassword')
+            }
         }
 
-        if (withReleaseSigning) {
+        def releaseKeystoreFile = file('../files/release.keystore')
+        def releasePropFile = file('../files/release.properties')
+
+        if (releaseKeystoreFile.exists() && releasePropFile.exists()) {
             def releaseProps = new Properties()
-            file("../files/release.properties").withInputStream { releaseProps.load(it) }
+            releasePropFile.withInputStream { releaseProps.load(it) }
 
             release {
-                storeFile file("../files/release.keystore")
+                storeFile releaseKeystoreFile
                 storePassword releaseProps.getProperty('storePassword')
                 keyAlias releaseProps.getProperty('keyAlias')
                 keyPassword releaseProps.getProperty('keyPassword')

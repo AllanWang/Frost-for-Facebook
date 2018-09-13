@@ -204,9 +204,9 @@ class FrostVideoView @JvmOverloads constructor(
     fun destroy() {
         stopPlayback()
         if (alpha > 0f)
-            ProgressAnimator.ofFloat(alpha, 0f) {
+            ProgressAnimator.ofFloat {
                 duration = FAST_ANIMATION_DURATION
-                withAnimator { alpha = it }
+                withAnimator(alpha, 0f) { alpha = it }
                 withEndAction { onFinishedListener() }
             }
         else

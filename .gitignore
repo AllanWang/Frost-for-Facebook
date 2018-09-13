@@ -2,6 +2,7 @@
 .gradle
 /priv.properties
 /local.properties
+/signing.properties
 /crowdin.properties
 /.idea
 .DS_Store
