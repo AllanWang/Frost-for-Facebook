@@ -106,6 +106,19 @@ android {
         }
     }
 
+    flavorDimensions "store"
+
+    productFlavors {
+        standard {
+            dimension "store"
+        }
+
+        fdroid {
+            dimension "store"
+            applicationIdSuffix ".fdroid"
+        }
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
@@ -159,7 +172,7 @@ dependencies {
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
-    implementation"com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
+    implementation "com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
 
     //noinspection GradleDependency
     implementation "com.github.bumptech.glide:okhttp3-integration:${kau.glide}"
