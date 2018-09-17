@@ -17,7 +17,9 @@ import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
@@ -53,6 +55,8 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     override val refreshObservable: PublishSubject<Boolean> = PublishSubject.create()
     override val titleObservable: BehaviorSubject<String> = BehaviorSubject.create()
 
+    private val compositeDisposable = CompositeDisposable()
+
     override lateinit var baseUrl: String
     override var baseEnum: FbItem? = null
 
@@ -81,14 +85,14 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
                 progress.setProgress(it, true)
             else
                 progress.progress = it
-        }
+        }.addTo(compositeDisposable)
 
         refreshObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     refresh.isRefreshing = it
                     refresh.isEnabled = true
-                }
+                }.addTo(compositeDisposable)
         refresh.setOnRefreshListener { coreView.reload(true) }
 
         reloadThemeSelf()
@@ -126,6 +130,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         progressObservable.onComplete()
         refreshObservable.onComplete()
         core.destroy()
+        compositeDisposable.dispose()
     }
 
     private var dispose: Disposable? = null
