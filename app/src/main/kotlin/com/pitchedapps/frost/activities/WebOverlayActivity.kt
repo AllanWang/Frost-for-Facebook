@@ -158,6 +158,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         content.titleObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { toolbar.title = it }
+                .disposeOnDestroy()
 
         with(web) {
             if (forceBasicAgent) //todo check; the webview already adds it dynamically

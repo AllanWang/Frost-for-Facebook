@@ -10,6 +10,8 @@ import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.unescapeHtml
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import okhttp3.Request
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
@@ -70,6 +72,8 @@ class OfflineWebsite(private val url: String,
             .url(url)
             .get()
             .call()
+
+    private val compositeDisposable = CompositeDisposable()
 
     /**
      * Caller to bind callbacks and start the load
@@ -155,7 +159,7 @@ class OfflineWebsite(private val url: String,
                 progress(100)
                 callback(true)
             }
-        }
+        }.addTo(compositeDisposable)
     }
 
     fun zip(name: String): Boolean {
@@ -217,7 +221,7 @@ class OfflineWebsite(private val url: String,
     })
 
     private fun downloadCss() = cssQueue.clean().toTypedArray().zip<String, Set<String>, Set<String>>({
-        it.flatMap { it }.toSet()
+        it.flatMap { l -> l }.toSet()
     }, {
         it.downloadUrl({ emptySet() }) { file, body ->
             var content = body.string()
@@ -319,6 +323,7 @@ class OfflineWebsite(private val url: String,
 
     fun cancel() {
         cancelled = true
+        compositeDisposable.dispose()
         L.v { "Request cancelled" }
     }
 

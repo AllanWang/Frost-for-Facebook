@@ -138,15 +138,15 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         shouldShow = false
         fab.backgroundTintList = ColorStateList.valueOf(Prefs.headerColor.withMinAlpha(200))
         fab.hide()
-        appBar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            if (!hasFab) return@addOnOffsetChangedListener
+        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (!hasFab) return@OnOffsetChangedListener
             val percent = Math.abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
             val shouldShow = percent < 0.2
             if (this.shouldShow != shouldShow) {
                 this.shouldShow = shouldShow
                 fab.showIf(shouldShow)
             }
-        }
+        })
     }
 
     override fun showFab(iicon: IIcon, clickEvent: () -> Unit) {

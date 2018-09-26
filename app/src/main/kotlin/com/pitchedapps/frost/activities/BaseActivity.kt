@@ -6,6 +6,9 @@ import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.searchview.SearchViewHolder
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.utils.setFrostTheme
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.addTo
 
 /**
  * Created by Allan Wang on 2017-06-12.
@@ -16,6 +19,8 @@ abstract class BaseActivity : KauBaseActivity() {
      * Inherited consumer to customize back press
      */
     protected open fun backConsumer(): Boolean = false
+
+    private val compositeDisposable = CompositeDisposable()
 
     final override fun onBackPressed() {
         if (this is SearchViewHolder && searchViewOnBackPress()) return
@@ -29,7 +34,16 @@ abstract class BaseActivity : KauBaseActivity() {
         if (this !is WebOverlayActivityBase) setFrostTheme()
     }
 
-//
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
+    }
+
+    fun Disposable.disposeOnDestroy() {
+        compositeDisposable.add(this)
+    }
+
+    //
 //    private var networkDisposable: Disposable? = null
 //    private var networkConsumer: ((Connectivity) -> Unit)? = null
 //

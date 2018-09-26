@@ -8,6 +8,9 @@
 
 [Download from XDA Labs](https://labs.xda-developers.com/store/app/com.pitchedapps.frost)
 
+**Note** Some keystores are public for the sake of automatic builds and consistent signing across devices.
+This means that others can build apps with the same signature. The only valid download sources are through my github releases and xda labs.
+
 Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
 * Support for multiple accounts and fast switching
