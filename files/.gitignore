@@ -1,3 +1,5 @@
 release.keystore
 release.properties
+test.keystore
+test.properties
 update-dev.sh

@@ -9,8 +9,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.support.annotation.StringRes
-import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
+import android.support.design.widget.SnackbarContentLayout
 import android.support.v4.content.FileProvider
 import android.support.v7.widget.Toolbar
 import android.view.View

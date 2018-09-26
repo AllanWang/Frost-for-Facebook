@@ -4,7 +4,7 @@
 
 rm frost.tar.enc
 cd ..
-tar cvf frost.tar files/gplay-keys.json files/play.keystore files/play.properties files/test.keystore app/fabric.properties
+tar cvf frost.tar files/release.keystore files/release.properties files/test.keystore files/test.properties
 travis encrypt-file frost.tar --add
 rm frost.tar
 mv frost.tar.enc files/

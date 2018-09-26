@@ -6,6 +6,8 @@ import android.support.v4.view.ViewPager
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.jsoup.Jsoup
@@ -83,7 +85,7 @@ class MainActivity : BaseMainActivity() {
                             FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
                         }
                     }
-                }
+                }.disposeOnDestroy()
         adapter.pages.forEach {
             tabs.addTab(tabs.newTab()
                     .setCustomView(BadgedIcon(this).apply { iicon = it.icon }))
