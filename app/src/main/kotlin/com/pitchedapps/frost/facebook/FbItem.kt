@@ -39,7 +39,7 @@ enum class FbItem(
     PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     SAVED(R.string.saved, GoogleMaterial.Icon.gmd_bookmark, "saved"),
-    _SEARCH(R.string.search_menu_title, GoogleMaterial.Icon.gmd_search, "search/top"),
+    _SEARCH(R.string.kau_search, GoogleMaterial.Icon.gmd_search, "search/top"),
     SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
     ;
 

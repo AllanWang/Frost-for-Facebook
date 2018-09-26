@@ -103,7 +103,7 @@ class LoginActivity : BaseActivity() {
                                 launchNewTask<MainActivity>(cookies, true)
                         }, 1000)
                     }
-                }
+                }.disposeOnDestroy()
         loadProfile(cookie.id)
         loadUsername(cookie)
     }
@@ -126,7 +126,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun loadUsername(cookie: CookieModel) {
-        cookie.fetchUsername(usernameSubject::onSuccess)
+        cookie.fetchUsername(usernameSubject::onSuccess).disposeOnDestroy()
     }
 
     override fun backConsumer(): Boolean {

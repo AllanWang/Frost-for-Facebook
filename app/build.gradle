@@ -43,7 +43,13 @@ android {
         textOutput 'stdout'
     }
 
-    def withReleaseSigning = file('../files/release.keystore').exists()
+    def testKeystoreFile = file('../files/test.keystore')
+    def testPropFile = file('../files/test.properties')
+    def withTestSigning = testKeystoreFile.exists() && testPropFile.exists()
+
+    def releaseKeystoreFile = file('../files/release.keystore')
+    def releasePropFile = file('../files/release.properties')
+    def withReleaseSigning = releaseKeystoreFile.exists() && releasePropFile.exists()
 
     signingConfigs {
 
@@ -54,10 +60,7 @@ android {
             keyPassword "debugKey"
         }
 
-        def testKeystoreFile = file('../files/test.keystore')
-        def testPropFile = file('../files/test.properties')
-
-        if (testKeystoreFile.exists() && testPropFile.exists()) {
+        if (withTestSigning) {
             def testProps = new Properties()
             testPropFile.withInputStream { testProps.load(it) }
 
@@ -69,10 +72,7 @@ android {
             }
         }
 
-        def releaseKeystoreFile = file('../files/release.keystore')
-        def releasePropFile = file('../files/release.properties')
-
-        if (releaseKeystoreFile.exists() && releasePropFile.exists()) {
+        if (withReleaseSigning) {
             def releaseProps = new Properties()
             releasePropFile.withInputStream { releaseProps.load(it) }
 
@@ -103,7 +103,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".test"
             versionNameSuffix "-test"
-            signingConfig signingConfigs.test
+            if (withTestSigning) signingConfig signingConfigs.test
             resValue "string", "frost_name", "Frost Test"
             resValue "string", "frost_web", "Frost Web Test"
         }
@@ -170,14 +170,14 @@ dependencies {
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
-    implementation"com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
+    implementation "com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
 
     //noinspection GradleDependency
     implementation "com.github.bumptech.glide:okhttp3-integration:${kau.glide}"
     //noinspection GradleDependency
     kapt "com.github.bumptech.glide:compiler:${kau.glide}"
 
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.3"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON}"
 
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"

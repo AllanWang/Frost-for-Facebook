@@ -5,6 +5,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.SingleSubject
 import org.apache.commons.text.StringEscapeUtils
 import java.util.*
@@ -76,28 +77,29 @@ interface InjectorContract {
 /**
  * Helper method to inject multiple functions simultaneously with a single callback
  */
-fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Unit)? = null) {
+fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Unit)? = null): Disposable? {
     val validInjectors = injectors.filter { it != JsActions.EMPTY }
     if (validInjectors.isEmpty()) {
         callback?.invoke(0)
-        return
+        return null
     }
     L.d { "Injecting ${validInjectors.size} items" }
     if (callback == null) {
         validInjectors.forEach { it.inject(this) }
-        return
+        return null
     }
-    val observables = Array(validInjectors.size, { SingleSubject.create<Unit>() })
-    Single.zip<Unit, Int>(observables.asList(), { it.size })
+    val observables = Array(validInjectors.size) { SingleSubject.create<Unit>() }
+    val disposable = Single.zip<Unit, Int>(observables.asList()) { it.size }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { res, _ ->
                 callback(res)
             }
     (0 until validInjectors.size).forEach { i ->
-        validInjectors[i].inject(this, {
+        validInjectors[i].inject(this) {
             observables[i].onSuccess(Unit)
-        })
+        }
     }
+    return disposable
 }
 
 fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract,

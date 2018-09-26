@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
-import ca.allanwang.kau.kpref.StringSet
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
@@ -42,10 +41,10 @@ class Keywords @JvmOverloads constructor(
         editText.tint(Prefs.textColor)
         addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context))
         addIcon.setOnClickListener {
-            if (editText.text.isEmpty()) editText.error = context.string(R.string.empty_keyword)
+            if (editText.text.isNullOrEmpty()) editText.error = context.string(R.string.empty_keyword)
             else {
                 adapter.add(0, KeywordItem(editText.text.toString()))
-                editText.text.clear()
+                editText.text?.clear()
             }
         }
         adapter.add(Prefs.notificationKeywords.map { KeywordItem(it) })
@@ -61,10 +60,8 @@ class Keywords @JvmOverloads constructor(
     }
 
     fun save() {
-        val keywords = adapter.adapterItems.map { it.keyword }
-        Prefs.notificationKeywords = StringSet(keywords)
+        Prefs.notificationKeywords = adapter.adapterItems.mapTo(mutableSetOf()) { it.keyword }
     }
-
 
 }
 

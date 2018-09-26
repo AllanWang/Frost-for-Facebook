@@ -15,7 +15,6 @@ import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.toast
 import com.devbrackets.android.exomedia.ui.widget.VideoControls
-import com.devbrackets.android.exomedia.ui.widget.VideoControlsCore
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
@@ -80,7 +79,7 @@ class FrostVideoView @JvmOverloads constructor(
                         if (!isPlaying) showControls()
                         else viewerContract.onControlsHidden()
                     }
-                }
+                }.start()
             } else {
                 hideControls()
                 val (scale, tX, tY) = mapBounds()
@@ -91,7 +90,7 @@ class FrostVideoView @JvmOverloads constructor(
                     withAnimator(origScale, scale) { scaleXY = it }
                     withAnimator(origX, tX) { translationX = it }
                     withAnimator(origY, tY) { translationY = it }
-                }
+                }.start()
             }
         }
 
@@ -211,7 +210,7 @@ class FrostVideoView @JvmOverloads constructor(
                 duration = FAST_ANIMATION_DURATION
                 withAnimator(alpha, 0f) { alpha = it }
                 withEndAction { onFinishedListener() }
-            }
+            }.start()
         else
             onFinishedListener()
     }
