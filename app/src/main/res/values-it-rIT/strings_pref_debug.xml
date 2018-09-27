@@ -9,4 +9,9 @@ Per favore dai un\'occhiata al report prima di inviarlo.
 
 Cliccando su una delle opzioni sottostanti preparerà un\'email con i dati della schermata.    </string>
   <string name="debug_incomplete">Report incompleto</string>
+  <string name="debug_web">Debug dal Web</string>
+  <string name="debug_web_desc">Naviga alla pagina con il problema e invia dati per il debug.</string>
+  <string name="parsing_data">Analisi Dati</string>
+  <string name="debug_parsers">Parser di Debug</string>
+  <string name="debug_parsers_desc">Avvia uno dei parser disponibili per fare il debug sui dati di risposta</string>
 </resources>

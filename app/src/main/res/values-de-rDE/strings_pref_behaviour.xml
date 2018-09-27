@@ -18,5 +18,4 @@
   <string name="exit_confirmation">Beenden bestätigen</string>
   <string name="exit_confirmation_desc">Zeigen Sie einen Bestätigungsdialog vor dem Beenden der app</string>
   <string name="analytics">Statistik</string>
-  <string name="analytics_desc">Erlaube Anonyme Analyse der Daten, um bei der Verbesserung der App zu helfen. Persönliche Informationen werden nicht hochgeladen.</string>
 </resources>

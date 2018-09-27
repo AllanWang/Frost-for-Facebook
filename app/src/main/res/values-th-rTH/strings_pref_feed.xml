@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">กรองออกโพสต์เก่าเพิ่มเติมจาก Facebook ในส่วนใหญ่ล่าสุดฟีด ปิดใช้งานนี้ถ้าฟีดของคุณว่างเปล่า</string>
   <string name="composer">สร้างโพสต์</string>
   <string name="composer_desc">แสดงสร้างโพสตืในฟีท</string>
-    <string name="suggested_friends">เพื่อนที่แนะนำ</string>
+  <string name="suggested_friends">เพื่อนที่แนะนำ</string>
   <string name="suggested_friends_desc">แสดงเพื่อนที่คุยอาจรู้จักในฟีด</string>
   <string name="suggested_groups">กลุ่มแนะนำ</string>
   <string name="suggested_groups_desc">แสดงกลุ่มแนะนำในฟีด</string>

@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Odfiltruj dodatkowe stare posty z najnowszych aktualności Facebooka. Wyłączyć tę opcję, jeśli twoje aktualności są puste.</string>
   <string name="composer">Aktualizacja statusu</string>
   <string name="composer_desc">Wyświetlaj aktualizację statusu</string>
-    <string name="suggested_friends">Proponowani znajomi</string>
+  <string name="suggested_friends">Proponowani znajomi</string>
   <string name="suggested_friends_desc">Wyświetlaj \"Osoby, które możesz znać\"</string>
   <string name="suggested_groups">Proponowane grupy</string>
   <string name="suggested_groups_desc">Wyświetlaj \"Proponowane grupy\"</string>

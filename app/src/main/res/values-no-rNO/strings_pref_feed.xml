@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Filtrere ut flere gamle innlegg fra Facebooks opprinnelige siste brukte innlegg. Deaktiver dette hvis listen er tom.</string>
   <string name="composer">Lag en status oppdatering</string>
   <string name="composer_desc">Vis \"lag en status oppdatering\" i feeden</string>
-    <string name="suggested_friends">Foreslåtte venner</string>
+  <string name="suggested_friends">Foreslåtte venner</string>
   <string name="suggested_friends_desc">Vis \"Folk du kanskje kjenner\" i feeden</string>
   <string name="suggested_groups">Foreslåtte grupper</string>
   <string name="suggested_groups_desc">Vis \"Foreslåtte grupper\" i feeden</string>

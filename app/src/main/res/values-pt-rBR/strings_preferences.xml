@@ -12,7 +12,7 @@
   <string name="network_desc">Definir opções que afetam planos de dados</string>
   <string name="experimental">Experimental</string>
   <string name="experimental_desc">Permitir acesso antecipado a recursos potencialmente instáveis</string>
-    <string name="about_frost">Sobre Frost for Facebook</string>
+  <string name="about_frost">Sobre Frost for Facebook</string>
   <string name="about_frost_desc">Versão, Créditos, e FAQs</string>
   <string name="help_translate">Ajudar a Traduzir</string>
   <string name="help_translate_desc">Frost é traduzido através do Crowdin. Contribua se você o quer em sua língua!</string>

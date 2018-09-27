@@ -12,7 +12,7 @@
   <string name="network_desc">Definere alternativer som påvirker mobilnettverk</string>
   <string name="experimental">Eksperimentell</string>
   <string name="experimental_desc">Få tidlig tilgang til potensielt ustabile funksjoner</string>
-    <string name="about_frost">Om Frost for Facebook</string>
+  <string name="about_frost">Om Frost for Facebook</string>
   <string name="about_frost_desc">Versjon, kreditter og vanlige spørsmål</string>
   <string name="help_translate">Hjelp til å oversette</string>
   <string name="help_translate_desc">Frost er oversatt gjennom crowdin. Bidra hvis du ønsker det på ditt språk!</string>

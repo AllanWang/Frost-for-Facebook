@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Filtra as publicacións máis antigas do Facebook daquelas máis recentes. Desactiva esta opción se a canle se atopa baleira.</string>
   <string name="composer">Editor de estado</string>
   <string name="composer_desc">Mostra o editor de estado na canle</string>
-    <string name="suggested_friends">Amizades suxeridas</string>
+  <string name="suggested_friends">Amizades suxeridas</string>
   <string name="suggested_friends_desc">Mostra persoas que quizais coñezas na canle</string>
   <string name="suggested_groups">Grupos suxeridos</string>
   <string name="suggested_groups_desc">Suxire grupos na canle</string>

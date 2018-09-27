@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Saring postingan lama tambahan dari umpan yang terbaru Facebook. Nonaktifkan ini jika Umpan Anda kosong.</string>
   <string name="composer">Komposer Status</string>
   <string name="composer_desc">Tampilkan komposer status dalam umpan</string>
-    <string name="suggested_friends">Teman yang Disarankan</string>
+  <string name="suggested_friends">Teman yang Disarankan</string>
   <string name="suggested_friends_desc">Tampilkan \"Orang yang mungkin dikenal\" dalam umpan</string>
   <string name="suggested_groups">Grup yang Disarankan</string>
   <string name="suggested_groups_desc">Tampilkan \"Grup yang disarankan\" pada Umpan</string>

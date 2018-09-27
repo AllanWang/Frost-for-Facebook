@@ -12,7 +12,7 @@
   <string name="network_desc">Chọn các tuỳ chọn đối với mạng di động</string>
   <string name="experimental">Thử nghiệm</string>
   <string name="experimental_desc">Bật các tính năng chưa hoàn thiện</string>
-    <string name="about_frost">Giới thiệu về Frost for Facebook</string>
+  <string name="about_frost">Giới thiệu về Frost for Facebook</string>
   <string name="about_frost_desc">Phiên bản, tác giả, và câu hỏi thường gặp</string>
   <string name="help_translate">Tham gia dịch</string>
   <string name="help_translate_desc">Frost được dịch thông qua crowdin. Hãy đóng góp bản dịch để có ứng dụng theo ngôn ngữ của bạn!</string>

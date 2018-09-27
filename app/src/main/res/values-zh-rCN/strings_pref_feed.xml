@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">过滤掉原先Facebook最新更新当中的过时发贴。如果新闻源是空的，请禁用此选项。</string>
   <string name="composer">状态编辑器</string>
   <string name="composer_desc">在新闻源中显示状态编辑器</string>
-    <string name="suggested_friends">推荐好友</string>
+  <string name="suggested_friends">推荐好友</string>
   <string name="suggested_friends_desc">在新闻源中现实\"你可能认识的人\"</string>
   <string name="suggested_groups">推荐群组</string>
   <string name="suggested_groups_desc">在新闻源中显示\"推荐群组\"</string>

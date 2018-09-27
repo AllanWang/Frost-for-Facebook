@@ -7,7 +7,7 @@
   <string name="aggressive_recents_desc">Filtert alte, zusätzliche Post von Facebook\'s originalen Neuigkeiten heraus. Deaktivieren falls der Feed leer ist.</string>
   <string name="composer">Status Composer</string>
   <string name="composer_desc">Zeige den Status Composer im Feed</string>
-    <string name="suggested_friends">Empfohlene Freunde</string>
+  <string name="suggested_friends">Empfohlene Freunde</string>
   <string name="suggested_friends_desc">Zeige \"Leute die du vielleicht kennst\" im Feed</string>
   <string name="suggested_groups">Empfohlene Gruppen</string>
   <string name="suggested_groups_desc">Zeige \"Empfohlene Gruppen\" im Feed</string>

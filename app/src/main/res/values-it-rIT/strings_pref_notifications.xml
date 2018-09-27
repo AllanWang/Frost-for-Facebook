@@ -8,18 +8,22 @@
   <string name="add_keyword">Aggiungi parole chiave</string>
   <string name="hint_keyword">Scrivi la parola e premi +</string>
   <string name="empty_keyword">Parola Chiave Vuota</string>
-  <string name="notification_general_all_accounts">Notifica da tutti gli accounts</string>
-  <string name="notification_general_all_accounts_desc">Ricevi notifiche per ogni account registrato. Disattivando questa opzione riceverai notifiche solo dall\'account selezionato.</string>
+  <string name="notification_general">Abilita notifiche generali</string>
+  <string name="notification_general_desc">Ricevi notifiche generali per il tuo account.</string>
+  <string name="notification_general_all_accounts">Notifica da tutti gli account</string>
+  <string name="notification_general_all_accounts_desc">Ricevi notifiche generali per ogni account connesso.</string>
   <string name="notification_messages">Attiva notifiche messaggi</string>
   <string name="notification_messages_desc">Ricevi notifiche istantanee di messaggi per il tuo account.</string>
   <string name="notification_messages_all_accounts">Notifica messaggi da tutti gli account</string>
   <string name="notification_messages_all_accounts_desc">Ricevi notifiche di messaggio immediate da tutti gli account</string>
   <string name="notification_fetch_now">Recupera le notifiche ora</string>
+  <string name="notification_fetch_now_desc">Avvia il recupero delle notifiche attuali.</string>
   <string name="notification_fetch_success">Recupero le notifiche…</string>
   <string name="notification_fetch_fail">Impossibile recuperare le notifiche</string>
   <string name="notification_sound">Suono notifiche</string>
   <string name="notification_ringtone">Suoneria della Notifica</string>
   <string name="message_ringtone">Suoneria dei messaggi</string>
+  <string name="select_ringtone">Seleziona Suoneria</string>
   <string name="notification_vibrate">Vibrazione notifiche</string>
   <string name="notification_lights">LED di notifica</string>
 </resources>

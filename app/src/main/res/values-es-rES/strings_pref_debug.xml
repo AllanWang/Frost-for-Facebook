@@ -4,4 +4,9 @@
   <string name="debug_toast_enabled">Sección de Depuración habilitada! Vuelve al menú de configuración.</string>
   <string name="debug_disclaimer_info">Aunque la mayor parte del contenido privado se elimina en el reporte, algunos datos sencibles pueden seguir siendo visibles.\nPor favor, echa un vistazo al informe de errores antes de enviarlo.\n\nAl hacer clic en una de las siguientes opciones, se preparará una respuesta por correo electrónico con los datos de la página web.    </string>
   <string name="debug_incomplete">Reporte incompleto</string>
+  <string name="debug_web">Depurar desde la Web</string>
+  <string name="debug_web_desc">Navegue a la página con un problema y envíe los recursos para la depuración.</string>
+  <string name="parsing_data">Análisis de datos por</string>
+  <string name="debug_parsers">Analizador de depuración</string>
+  <string name="debug_parsers_desc">Lanzar uno de los analizadores disponibles para depurar los datos de respuesta</string>
 </resources>

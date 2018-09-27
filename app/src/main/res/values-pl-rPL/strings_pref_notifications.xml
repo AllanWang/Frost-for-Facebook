@@ -8,13 +8,16 @@
   <string name="add_keyword">Dodaj słowo kluczowe</string>
   <string name="hint_keyword">Wpisz słowo kluczowe i naciśnij +</string>
   <string name="empty_keyword">Puste słowo kluczowe</string>
+  <string name="notification_general">Włącz powiadomienia</string>
+  <string name="notification_general_desc">Otrzymuj powiadomienia dla obecnego konta.</string>
   <string name="notification_general_all_accounts">Powiadamiaj ze wszystkich kont</string>
-  <string name="notification_general_all_accounts_desc">Otrzymuj powiadomienia dla każdego zalogowanego konta. Wyłączenie spowoduje sprawdzanie powiadomień, tylko z obecnie wybranego konta.</string>
+  <string name="notification_general_all_accounts_desc">Otrzymuj powiadomienia dla każdego konta które jest zalogowane.</string>
   <string name="notification_messages">Włącz powiadomienia o wiadomościach</string>
   <string name="notification_messages_desc">Otrzymuj natychmiastowe powiadomienia dla obecnego konta.</string>
   <string name="notification_messages_all_accounts">Powiadamiaj ze wszystkich kont</string>
   <string name="notification_messages_all_accounts_desc">Otrzymuj natychmiastowe powiadomienia dla wszystkich kont</string>
   <string name="notification_fetch_now">Sprawdź powiadomienia teraz</string>
+  <string name="notification_fetch_now_desc">Wywołaj jednorazowe odświeżenie powiadomień.</string>
   <string name="notification_fetch_success">Sprawdzanie powiadomień…</string>
   <string name="notification_fetch_fail">Nie udało się sprawdzić powiadomień</string>
   <string name="notification_sound">Dźwięk powiadomienia</string>

@@ -8,5 +8,4 @@
   <string name="verbose_logging">Relatório Detalhado</string>
   <string name="verbose_logging_desc">Habilite o relatório detalhado para ajudar com relatórios de falhas. O relatório só será enviado quando um erro for encontrado, então repita o problema para notificar o desenvolvedor. Isso será automaticamente desabilitado se o aplicativo for reiniciado.</string>
   <string name="restart_frost">Reiniciar o Frost</string>
-  <string name="restart_frost_desc">O relator de falhas só enviará relatórios quando uma falha ocorrer ou se forem encontrados erros e o aplicativo for reiniciado. Clique aqui para reiniciar o aplicativo e liberar quaisquer problemas atualmente encontrados.</string>
 </resources>

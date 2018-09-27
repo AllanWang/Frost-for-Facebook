@@ -10,9 +10,12 @@
   <string name="icon_color">Colore dell\'Icona</string>
   <string name="global_customization">Personalizzazione Globale</string>
   <string name="main_activity_layout">Layout Pagina Principale</string>
+  <string name="main_activity_layout_desc">Layout Pagina Principale</string>
+  <string name="main_tabs">Schede Pagina Principale</string>
+  <string name="main_tabs_desc">Imposta quali schede visualizzare nella pagina principale</string>
   <string name="rounded_icons">Icone Arrotondate</string>
   <string name="rounded_icons_desc">Le immagini profilo e le conversazioni di gruppo saranno arrotondate</string>
-  <string name="tint_nav">Barra di Navigazione in tinta</string>
+  <string name="tint_nav">Barra di Navigazione in Tinta</string>
   <string name="tint_nav_desc">La barra di navigazione sarà dello stesso colore dell\'intestazione</string>
   <string name="web_text_scaling">Scala del Testo</string>
   <string name="web_text_scaling_desc">Testo di Esempio; Tieni premuta la percentuale per reimpostare.</string>

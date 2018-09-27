@@ -15,8 +15,10 @@
   <string name="search_bar_desc">Activa a barra de buscas no canto de buscas superpostas</string>
   <string name="force_message_bottom">Forzar última mensaxe</string>
   <string name="force_message_bottom_desc">Ao cargar o fío dunha mensaxe, activa o desprazamento cara á parte inferior en vez de cargar a páxina tal como é.</string>
+  <string name="enable_pip">Activar PIP</string>
+  <string name="enable_pip_desc">Activa a función dos vídeos en miniatura</string>
   <string name="exit_confirmation">Confirmación de saída</string>
   <string name="exit_confirmation_desc">Mostra un diálogo de confirmación antes de saír</string>
   <string name="analytics">Estatísticas</string>
-  <string name="analytics_desc">Activa estatísticas anónimas que axudan a mellorar a aplicación. Ningunha información persoal será exposta.</string>
+  <string name="analytics_desc">Activa as estatísticas e os informes de erros anónimos que axudan a mellorar a aplicación. Ningunha información persoal será exposta.</string>
 </resources>
