@@ -15,9 +15,9 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseMainActivity() {
 
-    override val fragmentSubject = PublishSubject.create<Int>()!!
+    override val fragmentSubject = PublishSubject.create<Int>()
     var lastPosition = -1
-    val headerBadgeObservable = PublishSubject.create<String>()!!
+    val headerBadgeObservable = PublishSubject.create<String>()
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
         setupTabs()

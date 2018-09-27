@@ -352,7 +352,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         if (requestCode == ACTIVITY_SETTINGS) {
             if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
                 L.d { "Restart Application Requested" }
-                val intent = packageManager.getLaunchIntentForPackage(packageName)
+                val intent = packageManager.getLaunchIntentForPackage(packageName)!!
                 Intent.makeRestartActivityTask(intent.component)
                 Runtime.getRuntime().exit(0)
                 return
@@ -378,7 +378,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         adapter.forcedFallbacks.clear()
-        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK))
+        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK) ?: emptyList())
     }
 
     override fun onResume() {
