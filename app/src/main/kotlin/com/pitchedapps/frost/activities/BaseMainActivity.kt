@@ -55,8 +55,8 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.parsers.FrostSearch
-import com.pitchedapps.frost.parsers.SearchParser
+import com.pitchedapps.frost.facebook.parsers.FrostSearch
+import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer

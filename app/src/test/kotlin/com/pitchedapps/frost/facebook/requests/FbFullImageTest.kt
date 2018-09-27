@@ -1,4 +1,4 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.facebook.requests.getFullSizedImage
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl

@@ -12,10 +12,10 @@ import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQU
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.parsers.MessageParser
-import com.pitchedapps.frost.parsers.NotifParser
-import com.pitchedapps.frost.parsers.SearchParser
+import com.pitchedapps.frost.facebook.parsers.FrostParser
+import com.pitchedapps.frost.facebook.parsers.MessageParser
+import com.pitchedapps.frost.facebook.parsers.NotifParser
+import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
