@@ -21,10 +21,10 @@ import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.parsers.MessageParser
-import com.pitchedapps.frost.parsers.NotifParser
-import com.pitchedapps.frost.parsers.ParseNotification
+import com.pitchedapps.frost.facebook.parsers.FrostParser
+import com.pitchedapps.frost.facebook.parsers.MessageParser
+import com.pitchedapps.frost.facebook.parsers.NotifParser
+import com.pitchedapps.frost.facebook.parsers.ParseNotification
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs

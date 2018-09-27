@@ -52,7 +52,7 @@ data class RequestAuth(val userId: Long = -1,
                        val cookie: String = "",
                        val fb_dtsg: String = "",
                        val rev: String = "") {
-    val isValid
+    val isComplete
         get() = userId > 0 && cookie.isNotEmpty() && fb_dtsg.isNotEmpty() && rev.isNotEmpty()
 }
 
@@ -121,13 +121,13 @@ fun String.getAuth(): RequestAuth {
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
                 auth = auth.copy(fb_dtsg = fb_dtsg)
-                if (auth.isValid) return auth
+                if (auth.isComplete) return auth
             }
 
             val rev = FB_REV_MATCHER.find(text)[1]
             if (rev != null) {
                 auth = auth.copy(rev = rev)
-                if (auth.isValid) return auth
+                if (auth.isComplete) return auth
             }
         }
     }

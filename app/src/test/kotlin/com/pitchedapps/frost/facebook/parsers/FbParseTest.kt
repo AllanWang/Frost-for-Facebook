@@ -1,10 +1,9 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.facebook.parsers
 
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.assertComponentsNotEmpty
 import com.pitchedapps.frost.internal.assertDescending
 import com.pitchedapps.frost.internal.authDependent
-import com.pitchedapps.frost.parsers.*
 import org.junit.BeforeClass
 import org.junit.Test
 import kotlin.test.assertNotNull

@@ -42,7 +42,7 @@ val COOKIE: String by lazy { PROPS.getProperty("COOKIE") ?: "" }
 val USER_ID: Long by lazy { FB_USER_MATCHER.find(COOKIE)[1]?.toLong() ?: -1 }
 val AUTH: RequestAuth by lazy {
     COOKIE.getAuth().apply {
-        println("Auth:\nuser:$userId\nfb_dtsg: $fb_dtsg\nrev: $rev\nvalid: $isValid")
+        println("Auth:\nuser:$userId\nfb_dtsg: $fb_dtsg\nrev: $rev\ncomplete: $isComplete")
     }
 }
 
@@ -56,7 +56,6 @@ fun testJsoup(url: String) = frostJsoup(COOKIE, url)
 fun authDependent() {
     println("Auth Dependent")
     Assume.assumeTrue(COOKIE.isNotEmpty() && VALID_COOKIE)
-    Assume.assumeTrue(AUTH.isValid)
 }
 
 /**
