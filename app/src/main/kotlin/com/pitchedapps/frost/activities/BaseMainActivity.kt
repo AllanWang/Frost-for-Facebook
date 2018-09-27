@@ -52,11 +52,11 @@ import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.parsers.FrostSearch
+import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.facebook.parsers.FrostSearch
-import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -378,7 +378,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         adapter.forcedFallbacks.clear()
-        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK) ?: emptyList())
+        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
+                ?: emptyList())
     }
 
     override fun onResume() {

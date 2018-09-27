@@ -47,7 +47,7 @@ abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment
 
     abstract fun mapper(data: T): Item
 
-    val adapter: ModelAdapter<T, Item> = ModelAdapter(this::mapper)
+    val adapter: ModelAdapter<T, Item> = ModelAdapter { this.mapper(it) }
 
     final override fun bind(recyclerView: FrostRecyclerView) {
         recyclerView.adapter = getAdapter()

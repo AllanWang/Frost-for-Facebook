@@ -116,7 +116,7 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
     protected fun Elements.getStyleUrl() =
             FB_CSS_URL_MATCHER.find(attr("style"))[1]?.formattedFbUrl
 
-    protected open fun textToDoc(text: String) = if (!redirectToText)
+    protected open fun textToDoc(text: String): Document = if (!redirectToText)
         Jsoup.parse(text)
     else
         throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
