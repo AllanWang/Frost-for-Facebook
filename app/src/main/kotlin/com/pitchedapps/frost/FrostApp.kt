@@ -83,6 +83,7 @@ class FrostApp : Application() {
             Bugsnag.setUserId(Prefs.frostId)
             Bugsnag.beforeNotify { error ->
                 when {
+                    error.exception is UndeliverableException -> false
                     error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
                     else -> true
                 }
