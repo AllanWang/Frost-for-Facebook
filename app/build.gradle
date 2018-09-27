@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
@@ -117,8 +118,41 @@ android {
         }
     }
 
+    def srcDirs = [
+            'about',
+            'main',
+            'debug',
+            'image',
+            'intro',
+            'login',
+            'settings',
+            'overlay',
+            'enums',
+            'dbflow',
+            'facebook',
+            'glide',
+            'injector',
+            'parser',
+            'rx',
+            'service',
+            'utils',
+            'web'
+    ]
+
+    def mainPath = 'src/main/kotlin'
+    def namespace = 'com/pitchedapps/frost'
+
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main {
+            manifest.srcFile "$mainPath/$namespace/AndroidManifest.xml"
+            java.srcDir mainPath
+            java.includes = srcDirs.collect { "$namespace/$it/**/*.kt" }
+            java.excludes = srcDirs.collect { "$namespace/$it/res" }
+            res.srcDirs = ["$mainPath/$namespace/res"]
+            srcDirs.forEach {
+                res.srcDirs += "$mainPath/$namespace/$it/res"
+            }
+        }
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }

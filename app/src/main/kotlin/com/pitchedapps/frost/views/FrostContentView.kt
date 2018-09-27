@@ -44,8 +44,8 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
         FrostContentParent where T : View, T : FrostContentCore {
 
-    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
-    private val progress: ProgressBar by bindView(R.id.content_progress)
+    private val content_refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
+    private val content_progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
 
     override val core: FrostContentCore
@@ -67,7 +67,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             if (field == value)
                 return
             field = value
-            refresh.post { refresh.isEnabled = value }
+            content_refresh.post { content_refresh.isEnabled = value }
         }
 
     /**
@@ -80,20 +80,20 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
         // bind observables
         progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            progress.invisibleIf(it == 100)
+            content_progress.invisibleIf(it == 100)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                progress.setProgress(it, true)
+                content_progress.setProgress(it, true)
             else
-                progress.progress = it
+                content_progress.progress = it
         }.addTo(compositeDisposable)
 
         refreshObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    refresh.isRefreshing = it
-                    refresh.isEnabled = true
+                    content_refresh.isRefreshing = it
+                    content_refresh.isEnabled = true
                 }.addTo(compositeDisposable)
-        refresh.setOnRefreshListener { coreView.reload(true) }
+        content_refresh.setOnRefreshListener { coreView.reload(true) }
 
         reloadThemeSelf()
 
@@ -116,9 +116,9 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun reloadThemeSelf() {
-        progress.tint(Prefs.textColor.withAlpha(180))
-        refresh.setColorSchemeColors(Prefs.iconColor)
-        refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
+        content_progress.tint(Prefs.textColor.withAlpha(180))
+        content_refresh.setColorSchemeColors(Prefs.iconColor)
+        content_refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
     }
 
     override fun reloadTextSizeSelf() {
