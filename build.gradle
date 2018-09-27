@@ -25,7 +25,7 @@ task clean(type: Delete) {
 }
 
 task generateChangelogMd() {
-    kauChangelog.generate("$project.rootDir/app/src/main/kotlin/com/pitchedapps/frost/res/xml/frost_changelog.xml")
+    kauChangelog.generate("$project.rootDir/app/src/main/kotlin/com/pitchedapps/frost/application/res/xml/frost_changelog.xml")
 }
 
 task fullRelease(type: GradleBuild) {

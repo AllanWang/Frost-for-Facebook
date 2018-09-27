@@ -14,7 +14,7 @@ textarea, ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782,
 ._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._38d-, ._3n8y, ._38dt,
 ._27vp, ._4nwe, ._4nw9, ._27vi, .appCenterAppInfo, .appCenterPermissions,
 ._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g,
-._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6,
+._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6, ._mxb,
 div.sharerSelector, .footer, ._4pv_, ._1dbp, ._3kad, ._20zc, ._2i5v, ._2i5w,
 .mentions-input, .mentions-placeholder, .largeStatusBox .placeHolder, .fcw,
 ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4,
@@ -40,7 +40,7 @@ a,
   background: $B$ !important;
 }
 
-body, #root, #header, [style*=background-color], ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4,
+body, #root, #header, #MComposer [style*=background-color], ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4,
 ._5lp5, .container, .subpage, ._5n_f, #static_templates, ._22_8, ._1t4h, ._uoq, ._3qdh, ._8ca, ._3h8i,
 ._6-l ._2us7, ._6-l ._6-p, ._333v, div.sharerSelector, ._529j, ._305j, ._1pph, ._3t_l, ._4pvz,
 ._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._24e1,
@@ -57,7 +57,7 @@ body, #root, #header, [style*=background-color], ._1upc, input, ._2f9r, ._59e9, 
 .acw, ._4_xl, ._1p70, ._1p70, ._1ih_, ._51v6, ._u2c, ._484w, ._3ils, ._rm7, ._32qk, ._d01,
 ._2y60, ._5fu3, ._2foa, ._2y5_, ._38o9, ._1kb, .mAppCenterFatLabel, ._3bmj, ._5zmb, ._2x2s, ._3kac, ._3kad,
 ._3f50, .mentions-placeholder, .mentions, .mentions-shadow, .mentions-measurer, .acg, ._59tu,
-._4l9b, ._4gj3, .groupChromeView, ._i3g, ._3jcf, .error, ._1dbp, ._5zma,
+._4l9b, ._4gj3, .groupChromeView, ._i3g, ._3jcf, .error, ._1dbp, ._5zma, ._vi6,
 ._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1, ._35au, ._cwy,
 ._1rfn ._1rfk ._4vc-, ._1rfk, ._1rfk ._2v9s, ._301x {
   background: $BT$ !important;
