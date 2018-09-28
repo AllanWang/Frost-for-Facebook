@@ -150,42 +150,42 @@ enum class NotificationType(
      * Create and submit a new notification with the given [content]
      */
     private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
-        with(content) {
-            val intent = Intent(context, FrostWebActivity::class.java)
-            intent.data = Uri.parse(href)
-            intent.putExtra(ARG_USER_ID, data.id)
-            overlayContext.put(intent)
-            bindRequest(intent, content, data.cookie)
+            with(content) {
+                val intent = Intent(context, FrostWebActivity::class.java)
+                intent.data = Uri.parse(href)
+                intent.putExtra(ARG_USER_ID, data.id)
+                overlayContext.put(intent)
+                bindRequest(intent, content, data.cookie)
 
-            val group = "${groupPrefix}_${data.id}"
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            val notifBuilder = context.frostNotification(channelId)
-                    .setContentTitle(title ?: context.string(R.string.frost_name))
-                    .setContentText(text)
-                    .setContentIntent(pendingIntent)
-                    .setCategory(Notification.CATEGORY_SOCIAL)
-                    .setSubText(data.name)
-                    .setGroup(group)
+                val group = "${groupPrefix}_${data.id}"
+                val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val notifBuilder = context.frostNotification(channelId)
+                        .setContentTitle(title ?: context.string(R.string.frost_name))
+                        .setContentText(text)
+                        .setContentIntent(pendingIntent)
+                        .setCategory(Notification.CATEGORY_SOCIAL)
+                        .setSubText(data.name)
+                        .setGroup(group)
 
-            if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
-            L.v { "Notif load $content" }
+                if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
+                L.v { "Notif load $content" }
 
-            if (profileUrl != null) {
-                try {
-                    val profileImg = GlideApp.with(context)
-                            .asBitmap()
-                            .load(profileUrl)
-                            .transform(FrostGlide.circleCrop)
-                            .submit(_40_DP, _40_DP)
-                            .get()
-                    notifBuilder.setLargeIcon(profileImg)
-                } catch (e: Exception) {
-                    L.e { "Failed to get image $profileUrl" }
+                if (profileUrl != null) {
+                    try {
+                        val profileImg = GlideApp.with(context)
+                                .asBitmap()
+                                .load(profileUrl)
+                                .transform(FrostGlide.circleCrop)
+                                .submit(_40_DP, _40_DP)
+                                .get()
+                        notifBuilder.setLargeIcon(profileImg)
+                    } catch (e: Exception) {
+                        L.e { "Failed to get image $profileUrl" }
+                    }
                 }
-            }
 
-             FrostNotification(group, notifId, notifBuilder)
-        }
+                FrostNotification(group, notifId, notifBuilder)
+            }
 
 
     /**

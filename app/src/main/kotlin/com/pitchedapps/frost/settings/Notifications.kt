@@ -154,8 +154,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
     if (BuildConfig.DEBUG) {
         plainText(R.string.reset_notif_epoch) {
             onClick = {
-                loadFbCookiesAsync {
-                    cookies ->
+                loadFbCookiesAsync { cookies ->
                     cookies.map { NotificationModel(it.id) }.forEach { it.save() }
                 }
             }

@@ -63,8 +63,7 @@ class DebugActivity : KauBaseActivity() {
 
         fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, Prefs.iconColor)
         fab.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
-        fab.setOnClickListener {
-            _ ->
+        fab.setOnClickListener { _ ->
             fab.hide()
 
             val parent = baseDir(this)

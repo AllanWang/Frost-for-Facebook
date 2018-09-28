@@ -1,7 +1,5 @@
 package com.pitchedapps.frost.facebook
 
-import org.apache.commons.text.StringEscapeUtils
-
 /**
  * Created by Allan Wang on 21/12/17.
  *

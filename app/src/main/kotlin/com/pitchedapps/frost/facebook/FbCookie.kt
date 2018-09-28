@@ -29,8 +29,7 @@ object FbCookie {
 
     private fun setWebCookie(cookie: String?, callback: (() -> Unit)?) {
         with(CookieManager.getInstance()) {
-            removeAllCookies {
-                _ ->
+            removeAllCookies { _ ->
                 if (cookie == null) {
                     callback?.invoke()
                     return@removeAllCookies
