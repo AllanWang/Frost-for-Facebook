@@ -110,6 +110,6 @@ fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract,
  */
 class JsInjector(val function: String) : InjectorContract {
     override fun inject(webView: WebView, callback: (() -> Unit)?) {
-        webView.evaluateJavascript(function, { callback?.invoke() })
+        webView.evaluateJavascript(function) { callback?.invoke() }
     }
 }

@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -19,12 +20,12 @@ import com.pitchedapps.frost.dbflow.NotificationModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.glide.FrostGlide
-import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.facebook.parsers.FrostParser
 import com.pitchedapps.frost.facebook.parsers.MessageParser
 import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseNotification
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -99,8 +100,8 @@ enum class NotificationType(
             L.v { "$name notification data not found" }
             return -1
         }
-        val notifContents = response.data.getUnreadNotifications(data).filter {
-            val text = it.text
+        val notifContents = response.data.getUnreadNotifications(data).filter { notif ->
+            val text = notif.text
             Prefs.notificationKeywords.none { text.contains(it, true) }
         }
         if (notifContents.isEmpty()) return 0
@@ -120,8 +121,10 @@ enum class NotificationType(
         if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
-        if (prevLatestEpoch == -1L)
+        if (prevLatestEpoch == -1L && !BuildConfig.DEBUG) {
+            L.d { "Skipping first notification fetch" }
             return 0 // do not notify the first time
+        }
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
@@ -146,44 +149,43 @@ enum class NotificationType(
     /**
      * Create and submit a new notification with the given [content]
      */
-    private fun createNotification(context: Context, content: NotificationContent): FrostNotification {
-        with(content) {
-            val intent = Intent(context, FrostWebActivity::class.java)
-            intent.data = Uri.parse(href)
-            intent.putExtra(ARG_USER_ID, data.id)
-            overlayContext.put(intent)
-            bindRequest(intent, content, data.cookie)
+    private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
+            with(content) {
+                val intent = Intent(context, FrostWebActivity::class.java)
+                intent.data = Uri.parse(href)
+                intent.putExtra(ARG_USER_ID, data.id)
+                overlayContext.put(intent)
+                bindRequest(intent, content, data.cookie)
 
-            val group = "${groupPrefix}_${data.id}"
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            val notifBuilder = context.frostNotification(channelId)
-                    .setContentTitle(title ?: context.string(R.string.frost_name))
-                    .setContentText(text)
-                    .setContentIntent(pendingIntent)
-                    .setCategory(Notification.CATEGORY_SOCIAL)
-                    .setSubText(data.name)
-                    .setGroup(group)
+                val group = "${groupPrefix}_${data.id}"
+                val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val notifBuilder = context.frostNotification(channelId)
+                        .setContentTitle(title ?: context.string(R.string.frost_name))
+                        .setContentText(text)
+                        .setContentIntent(pendingIntent)
+                        .setCategory(Notification.CATEGORY_SOCIAL)
+                        .setSubText(data.name)
+                        .setGroup(group)
 
-            if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
-            L.v { "Notif load $content" }
+                if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
+                L.v { "Notif load $content" }
 
-            if (profileUrl != null) {
-                try {
-                    val profileImg = GlideApp.with(context)
-                            .asBitmap()
-                            .load(profileUrl)
-                            .transform(FrostGlide.circleCrop)
-                            .submit(_40_DP, _40_DP)
-                            .get()
-                    notifBuilder.setLargeIcon(profileImg)
-                } catch (e: Exception) {
-                    L.e { "Failed to get image $profileUrl" }
+                if (profileUrl != null) {
+                    try {
+                        val profileImg = GlideApp.with(context)
+                                .asBitmap()
+                                .load(profileUrl)
+                                .transform(FrostGlide.circleCrop)
+                                .submit(_40_DP, _40_DP)
+                                .get()
+                        notifBuilder.setLargeIcon(profileImg)
+                    } catch (e: Exception) {
+                        L.e { "Failed to get image $profileUrl" }
+                    }
                 }
-            }
 
-            return FrostNotification(group, notifId, notifBuilder)
-        }
-    }
+                FrostNotification(group, notifId, notifBuilder)
+            }
 
 
     /**

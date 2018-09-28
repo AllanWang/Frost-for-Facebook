@@ -182,7 +182,7 @@ class OfflineWebsite(private val url: String,
                     delete()
                 }
 
-                baseDir.listFiles({ _, n -> n != "$name.zip" }).forEach { it.zip() }
+                baseDir.listFiles { _, n -> n != "$name.zip" }.forEach { it.zip() }
                 assetDir.listFiles().forEach {
                     it.zip("assets/${it.name}")
                 }
@@ -208,7 +208,7 @@ class OfflineWebsite(private val url: String,
     }
 
     private fun downloadFiles() = fileQueue.clean().toTypedArray().zip<String, Boolean, Boolean>({
-        it.all { it }
+        it.all { self -> self }
     }, {
         it.downloadUrl({ false }) { file, body ->
             body.byteStream().use { input ->
@@ -222,8 +222,8 @@ class OfflineWebsite(private val url: String,
 
     private fun downloadCss() = cssQueue.clean().toTypedArray().zip<String, Set<String>, Set<String>>({
         it.flatMap { l -> l }.toSet()
-    }, {
-        it.downloadUrl({ emptySet() }) { file, body ->
+    }, { cssUrl ->
+        cssUrl.downloadUrl({ emptySet() }) { file, body ->
             var content = body.string()
             val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
             val absLinks = links.mapNotNull {
@@ -303,7 +303,7 @@ class OfflineWebsite(private val url: String,
         if (newUrl.endsWith(".js"))
             newUrl = "$newUrl.txt"
 
-        urlMapper.put(this, newUrl)
+        urlMapper[this] = newUrl
         return newUrl
     }
 

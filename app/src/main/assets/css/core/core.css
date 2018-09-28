@@ -210,7 +210,7 @@ button ._v89 ._54k8._1fl1 {
   box-shadow: none !important;
 }
 
-[data-sigil="m-loading-indicator-animate m-loading-indicator-root"] {
+[data-sigil=m_login_upsell] [data-sigil="m-loading-indicator-animate m-loading-indicator-root"] {
   display: none !important;
 }
 

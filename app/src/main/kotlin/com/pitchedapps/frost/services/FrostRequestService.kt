@@ -104,11 +104,11 @@ object FrostRunnable {
     }
 
     fun propagate(context: Context, intent: Intent?) {
-        intent?.extras ?: return
+        val extras = intent?.extras ?: return
         val command = FrostRequestCommands[intent] ?: return
         intent.removeExtra(ARG_COMMAND) // reset
         L.d { "Propagating command ${command.name}" }
-        val builder = command.propagate(intent.extras)
+        val builder = command.propagate(extras)
         schedule(context, command, builder)
     }
 

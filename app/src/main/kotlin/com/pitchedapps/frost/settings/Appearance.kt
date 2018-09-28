@@ -149,7 +149,10 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     list.add(KPrefTextSeekbar(
             KPrefSeekbar.KPrefSeekbarBuilder(
                     globalOptions,
-                    R.string.web_text_scaling, Prefs::webTextScaling, { Prefs.webTextScaling = it; setFrostResult(REQUEST_TEXT_ZOOM) })))
+                    R.string.web_text_scaling, Prefs::webTextScaling) {
+                Prefs.webTextScaling = it
+                setFrostResult(REQUEST_TEXT_ZOOM)
+            }))
 
     checkbox(R.string.enforce_black_media_bg, Prefs::blackMediaBg, {
         Prefs.blackMediaBg = it

@@ -47,7 +47,7 @@ class SettingsActivity : KPrefActivity() {
             ACTIVITY_REQUEST_DEBUG -> {
                 val url = data?.extras?.getString(DebugActivity.RESULT_URL)
                 if (resultCode == Activity.RESULT_OK && url?.isNotBlank() == true)
-                    sendDebug(url, data.extras.getString(DebugActivity.RESULT_BODY))
+                    sendDebug(url, data.getStringExtra(DebugActivity.RESULT_BODY))
                 return
             }
         }
