@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -120,8 +121,10 @@ enum class NotificationType(
         if (newLatestEpoch > prevLatestEpoch)
             putTime(prevNotifTime, newLatestEpoch).save()
         L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
-        if (prevLatestEpoch == -1L)
+        if (prevLatestEpoch == -1L && !BuildConfig.DEBUG) {
+            L.d { "Skipping first notification fetch" }
             return 0 // do not notify the first time
+        }
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
@@ -146,7 +149,7 @@ enum class NotificationType(
     /**
      * Create and submit a new notification with the given [content]
      */
-    private fun createNotification(context: Context, content: NotificationContent): FrostNotification {
+    private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
         with(content) {
             val intent = Intent(context, FrostWebActivity::class.java)
             intent.data = Uri.parse(href)
@@ -181,9 +184,8 @@ enum class NotificationType(
                 }
             }
 
-            return FrostNotification(group, notifId, notifBuilder)
+             FrostNotification(group, notifId, notifBuilder)
         }
-    }
 
 
     /**
