@@ -1,6 +1,5 @@
 @import "colors";
 @import "base";
-
 @import "core_text";
 @import "core_bg";
 @import "core_border";
@@ -15,7 +14,7 @@
 //   box-shadow: none !important;
 // }
 
-//menu spinner
+[data-sigil=m_login_upsell],
 [data-sigil="m-loading-indicator-animate m-loading-indicator-root"] {
   display: none !important;
 }
@@ -23,8 +22,6 @@
 @include placeholder {
   color: $text !important;
 }
-
-
 
 .excessItem {
   outline: $divider !important;
