@@ -69,7 +69,7 @@ class NotificationService : JobService() {
                     notifCount += fetch(jobId, NotificationType.MESSAGE, it)
             }
 
-            L.v { "Sent $notifCount notifications" }
+            L.i { "Sent $notifCount notifications" }
             if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
                 generalNotification(665, R.string.no_new_notifications, BuildConfig.DEBUG)
 
