@@ -104,22 +104,19 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
 
     protected abstract fun parseImpl(doc: Document): T?
 
-    //    protected abstract fun parse(doc: Document): T?
-
     /**
      * Attempts to find inner <i> element with some style containing a url
      * Returns the formatted url, or an empty string if nothing was found
      */
-    protected fun Element.getInnerImgStyle() =
+    protected fun Element.getInnerImgStyle(): String? =
             select("i.img[style*=url]").getStyleUrl()
 
-    protected fun Elements.getStyleUrl() =
+    protected fun Elements.getStyleUrl(): String? =
             FB_CSS_URL_MATCHER.find(attr("style"))[1]?.formattedFbUrl
 
-    protected open fun textToDoc(text: String): Document = if (!redirectToText)
-        Jsoup.parse(text)
-    else
-        throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
+    protected open fun textToDoc(text: String): Document? =
+            if (!redirectToText) Jsoup.parse(text)
+            else throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
 
     protected fun parseLink(element: Element?): FrostLink? {
         val a = element?.getElementsByTag("a")?.first() ?: return null
