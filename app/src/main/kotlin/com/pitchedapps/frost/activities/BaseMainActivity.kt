@@ -308,10 +308,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     else {
                         val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results
                         if (data != null) {
-                            val items = data.map(FrostSearch::toSearchItem).toMutableList()
+                            val items = data.mapTo(mutableListOf(), FrostSearch::toSearchItem)
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
-                            searchViewCache.put(query, items)
+                            searchViewCache[query] = items
                             searchView.results = items
                         }
                     }
@@ -417,7 +417,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 positiveText(R.string.kau_yes)
                 negativeText(R.string.kau_no)
                 onPositive { _, _ -> finish() }
-                checkBoxPromptRes(R.string.kau_do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
+                checkBoxPromptRes(R.string.kau_do_not_show_again, false) { _, b -> Prefs.exitConfirmation = !b }
             }
             return true
         }

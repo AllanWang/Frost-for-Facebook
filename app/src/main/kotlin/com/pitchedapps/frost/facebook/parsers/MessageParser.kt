@@ -35,7 +35,7 @@ data class FrostMessages(val threads: List<FrostThread>,
     }.toString()
 
     override fun getUnreadNotifications(data: CookieModel) =
-            threads.filter(FrostThread::unread).map {
+            threads.asSequence().filter(FrostThread::unread).map {
                 with(it) {
                     NotificationContent(
                             data = data,
@@ -47,7 +47,7 @@ data class FrostMessages(val threads: List<FrostThread>,
                             profileUrl = img
                     )
                 }
-            }
+            }.toList()
 }
 
 /**

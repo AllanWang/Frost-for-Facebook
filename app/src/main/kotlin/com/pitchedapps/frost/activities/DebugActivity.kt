@@ -64,6 +64,7 @@ class DebugActivity : KauBaseActivity() {
         fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, Prefs.iconColor)
         fab.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
         fab.setOnClickListener {
+            _ ->
             fab.hide()
 
             val parent = baseDir(this)
@@ -76,11 +77,11 @@ class DebugActivity : KauBaseActivity() {
                     emitter.onSuccess(it)
                 }
             }.subscribeOn(AndroidSchedulers.mainThread())
-            Single.zip(listOf(rxScreenshot, rxBody), {
+            Single.zip(listOf(rxScreenshot, rxBody)) {
                 val screenshot = it[0] == true
                 val body = it[1] as? String
                 screenshot to body
-            }).observeOn(AndroidSchedulers.mainThread())
+            }.observeOn(AndroidSchedulers.mainThread())
                     .subscribe { (screenshot, body), err ->
                         if (err != null) {
                             L.e { "DebugActivity error ${err.message}" }

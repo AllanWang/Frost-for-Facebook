@@ -30,14 +30,15 @@ object FbCookie {
     private fun setWebCookie(cookie: String?, callback: (() -> Unit)?) {
         with(CookieManager.getInstance()) {
             removeAllCookies {
+                _ ->
                 if (cookie == null) {
                     callback?.invoke()
                     return@removeAllCookies
                 }
                 L.d { "Setting cookie" }
                 val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
-                cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie, { callback.onSuccess(it) }) }
-                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }, {})
+                cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie) { callback.onSuccess(it) } }
+                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }) {}
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             callback?.invoke()

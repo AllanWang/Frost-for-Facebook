@@ -71,7 +71,7 @@ class MainActivity : BaseMainActivity() {
                     val requests = it.select("[data-sigil*=requests] [data-sigil=count]")
                     val messages = it.select("[data-sigil*=messages] [data-sigil=count]")
                     val notifications = it.select("[data-sigil*=notifications] [data-sigil=count]")
-                    return@map arrayOf(feed, requests, messages, notifications).map { it?.getOrNull(0)?.ownText() }
+                    return@map arrayOf(feed, requests, messages, notifications).map { e -> e?.getOrNull(0)?.ownText() }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { (feed, requests, messages, notifications) ->

@@ -19,12 +19,12 @@ import com.pitchedapps.frost.dbflow.NotificationModel
 import com.pitchedapps.frost.dbflow.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.glide.FrostGlide
-import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.facebook.parsers.FrostParser
 import com.pitchedapps.frost.facebook.parsers.MessageParser
 import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseNotification
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -99,8 +99,8 @@ enum class NotificationType(
             L.v { "$name notification data not found" }
             return -1
         }
-        val notifContents = response.data.getUnreadNotifications(data).filter {
-            val text = it.text
+        val notifContents = response.data.getUnreadNotifications(data).filter { notif ->
+            val text = notif.text
             Prefs.notificationKeywords.none { text.contains(it, true) }
         }
         if (notifContents.isEmpty()) return 0

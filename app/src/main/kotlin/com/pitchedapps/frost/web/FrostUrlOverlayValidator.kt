@@ -76,7 +76,9 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
 /**
  * If the url contains any one of the whitelist segments, switch to the chat overlay
  */
-val messageWhitelist = setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES).map { it.url }.toSet()
+val messageWhitelist: Set<String> =
+        setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
+                .mapTo(mutableSetOf(), FbItem::url)
 
 val String.shouldUseBasicAgent: Boolean
     get() {
