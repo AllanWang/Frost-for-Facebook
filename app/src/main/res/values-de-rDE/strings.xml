@@ -43,4 +43,6 @@
   <string name="bottom_bar">Unterer Balken</string>
   <string name="preview">Vorschau</string>
   <string name="options">Optionen</string>
+  <string name="tab_customizer_instructions">Durch langes Drücken und Ziehen können Sie die oberen Symbole neu anordnen.</string>
+  <string name="no_new_notifications">Keine neue Benachrichtigungen gefunden</string>
 </resources>
