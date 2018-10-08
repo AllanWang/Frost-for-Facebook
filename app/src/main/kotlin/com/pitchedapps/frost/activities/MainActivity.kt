@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseMainActivity() {
 
-    override val fragmentSubject = PublishSubject.create<Int>()!!
+    override val fragmentSubject = PublishSubject.create<Int>()
     var lastPosition = -1
-    val headerBadgeObservable = PublishSubject.create<String>()!!
+    val headerBadgeObservable = PublishSubject.create<String>()
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
         setupTabs()
@@ -71,7 +71,7 @@ class MainActivity : BaseMainActivity() {
                     val requests = it.select("[data-sigil*=requests] [data-sigil=count]")
                     val messages = it.select("[data-sigil*=messages] [data-sigil=count]")
                     val notifications = it.select("[data-sigil*=notifications] [data-sigil=count]")
-                    return@map arrayOf(feed, requests, messages, notifications).map { it?.getOrNull(0)?.ownText() }
+                    return@map arrayOf(feed, requests, messages, notifications).map { e -> e?.getOrNull(0)?.ownText() }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { (feed, requests, messages, notifications) ->

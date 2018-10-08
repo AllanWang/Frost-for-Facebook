@@ -23,7 +23,9 @@ open class AdBlocker(val assetPath: String) {
 
     fun init(context: Context) {
         doAsync {
-            val content = context.assets.open(assetPath).bufferedReader().use { it.readLines().filter { !it.startsWith("#") } }
+            val content = context.assets.open(assetPath).bufferedReader().use { f ->
+                f.readLines().filter { !it.startsWith("#") }
+            }
             data.addAll(content)
             L.i { "Initialized adblock for $assetPath with ${data.size} hosts" }
         }

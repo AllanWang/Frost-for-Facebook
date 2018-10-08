@@ -23,7 +23,7 @@ fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourc
     val host = httpUrl.host()
     val url = httpUrl.toString()
     if (host.contains("facebook") || host.contains("fbcdn")) return null
-    if (FrostPglAdBlock.isAdHost(host)) return blankResource
+    if (FrostPglAdBlock.isAd(host)) return blankResource
 //    if (!shouldLoadImages && !Prefs.loadMediaOnMeteredNetwork && request.isMedia) return blankResource
     L.v { "Intercept Request: $host $url" }
     return null

@@ -61,9 +61,11 @@ object Prefs : KPref() {
         get() = t.accentColor
 
     inline val accentColorForWhite: Int
-        get() = if (accentColor.isColorVisibleOn(Color.WHITE)) accentColor
-        else if (textColor.isColorVisibleOn(Color.WHITE)) textColor
-        else FACEBOOK_BLUE
+        get() = when {
+            accentColor.isColorVisibleOn(Color.WHITE) -> accentColor
+            textColor.isColorVisibleOn(Color.WHITE) -> textColor
+            else -> FACEBOOK_BLUE
+        }
 
     inline val nativeBgColor: Int
         get() = Prefs.bgColor.withAlpha(30)

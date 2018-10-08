@@ -39,7 +39,7 @@ class SelectorActivity : BaseActivity() {
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<AccountItem>, item: AccountItem) {
                 if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
-                else FbCookie.switchUser(item.cookie, { launchNewTask<MainActivity>(cookies()) })
+                else FbCookie.switchUser(item.cookie) { launchNewTask<MainActivity>(cookies()) }
             }
         })
         setFrostColors {

@@ -75,17 +75,17 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
         if (intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return true
         val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return true
         val url = HttpUrl.parse(text)?.toString()
-        if (url == null) {
+        return if (url == null) {
             L.i { "Attempted to share a non-url" }
             L._i { "Shared text: $text" }
             copyToClipboard(text, "Text to Share", showToast = false)
             intent.putExtra(ARG_URL, FbItem.FEED.url)
-            return false
+            false
         } else {
             L.i { "Sharing url through overlay" }
             L._i { "Url: $url" }
             intent.putExtra(ARG_URL, "${FB_URL_BASE}sharer/sharer.php?u=$url")
-            return true
+            true
         }
     }
 }

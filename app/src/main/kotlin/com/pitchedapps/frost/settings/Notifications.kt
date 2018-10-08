@@ -36,11 +36,11 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             materialDialogThemed {
                 title(R.string.notification_frequency)
                 items(texts)
-                itemsCallbackSingleChoice(options.indexOf(item.pref), { _, _, which, _ ->
+                itemsCallbackSingleChoice(options.indexOf(item.pref)) { _, _, which, _ ->
                     item.pref = options[which]
                     scheduleNotifications(item.pref)
                     true
-                })
+                }
             }
         }
         enabler = {
@@ -154,8 +154,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
     if (BuildConfig.DEBUG) {
         plainText(R.string.reset_notif_epoch) {
             onClick = {
-                loadFbCookiesAsync {
-                    it.map { NotificationModel(it.id) }.forEach { it.save() }
+                loadFbCookiesAsync { cookies ->
+                    cookies.map { NotificationModel(it.id) }.forEach { it.save() }
                 }
             }
         }

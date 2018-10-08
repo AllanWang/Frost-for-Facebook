@@ -18,10 +18,11 @@ class MiscTest {
     fun zip() {
         val now = System.currentTimeMillis()
         val base = 1
-        val data = (0..15).map { Math.random() + base }.toTypedArray().zip(
-                List<Long>::toLongArray,
-                { Thread.sleep((it * 1000).toLong()); System.currentTimeMillis() - now }
-        ).blockingGet()
+        val data: LongArray = (0..15).map { Math.random() + base }
+                .toTypedArray().zip(List<Long>::toLongArray) {
+                    Thread.sleep((it * 1000).toLong())
+                    System.currentTimeMillis() - now
+                }.blockingGet()
         println(data.contentToString())
         assertTrue(data.all { it >= base * 1000 && it < base * 1000 * 5 },
                 "zip did not seem to work on different threads")
