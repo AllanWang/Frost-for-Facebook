@@ -10,7 +10,7 @@ android {
 
     androidGitVersion {
         codeFormat = 'MMNNPPXX'
-        format = '%tag%%.count%%-commit%'
+        format = '%tag%%-count%%-commit%'
         prefix 'v'
     }
 
