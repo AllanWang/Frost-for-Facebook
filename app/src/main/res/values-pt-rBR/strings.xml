@@ -23,6 +23,7 @@
   <string name="welcome">Bem-vindo(a) %s</string>
   <string name="select_facebook_account">Selecione a conta do Facebook</string>
   <string name="account_not_found">A conta atual não está no banco de dados</string>
+  <string name="frost_requests">Solicitações de Frost</string>
   <string name="frost_notifications">Notificações do Frost</string>
   <string name="requires_custom_theme">Requer tema personalizado</string>
   <string name="subject">Sujeito</string>
@@ -44,4 +45,5 @@
   <string name="preview">Visualizar</string>
   <string name="options">Opções</string>
   <string name="tab_customizer_instructions">Mantenha pressionado e arraste para reorganizar os ícones superiores.</string>
+  <string name="no_new_notifications">Nenhuma nova notificação encontrada</string>
 </resources>
