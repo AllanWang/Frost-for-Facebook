@@ -115,8 +115,8 @@ fun String.getAuth(): RequestAuth {
             .url(FB_URL_BASE)
             .get()
             .call()
-    call.execute().body()?.charStream()?.useLines {
-        it.forEach {
+    call.execute().body()?.charStream()?.useLines { lines ->
+        lines.forEach {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
@@ -153,8 +153,8 @@ inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) ->
 fun executeForNoError(call: Call): Boolean {
     val body = call.execute().body() ?: return false
     var empty = true
-    body.charStream().useLines {
-        it.forEach {
+    body.charStream().useLines { lines ->
+        lines.forEach {
             if (it.contains("error")) return false
             if (empty && it.isNotEmpty()) empty = false
         }

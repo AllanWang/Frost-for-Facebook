@@ -52,11 +52,11 @@ import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.parsers.FrostSearch
+import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.facebook.parsers.FrostSearch
-import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.utils.*
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -308,10 +308,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     else {
                         val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results
                         if (data != null) {
-                            val items = data.map(FrostSearch::toSearchItem).toMutableList()
+                            val items = data.mapTo(mutableListOf(), FrostSearch::toSearchItem)
                             if (items.isNotEmpty())
                                 items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
-                            searchViewCache.put(query, items)
+                            searchViewCache[query] = items
                             searchView.results = items
                         }
                     }
@@ -352,7 +352,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         if (requestCode == ACTIVITY_SETTINGS) {
             if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
                 L.d { "Restart Application Requested" }
-                val intent = packageManager.getLaunchIntentForPackage(packageName)
+                val intent = packageManager.getLaunchIntentForPackage(packageName)!!
                 Intent.makeRestartActivityTask(intent.component)
                 Runtime.getRuntime().exit(0)
                 return
@@ -378,7 +378,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         adapter.forcedFallbacks.clear()
-        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK))
+        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
+                ?: emptyList())
     }
 
     override fun onResume() {
@@ -416,7 +417,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 positiveText(R.string.kau_yes)
                 negativeText(R.string.kau_no)
                 onPositive { _, _ -> finish() }
-                checkBoxPromptRes(R.string.kau_do_not_show_again, false, { _, b -> Prefs.exitConfirmation = !b })
+                checkBoxPromptRes(R.string.kau_do_not_show_again, false) { _, b -> Prefs.exitConfirmation = !b }
             }
             return true
         }

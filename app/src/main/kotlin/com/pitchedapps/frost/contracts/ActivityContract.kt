@@ -1,6 +1,7 @@
 package com.pitchedapps.frost.contracts
 
 import com.mikepenz.iconics.typeface.IIcon
+import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.fragments.BaseFragment
 import io.reactivex.subjects.PublishSubject
 

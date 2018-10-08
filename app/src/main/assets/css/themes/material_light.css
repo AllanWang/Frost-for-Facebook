@@ -11,10 +11,10 @@
 ._14v5 ._14v8, ._1440, ._1442, ._1448, ._4ks_, .mCount, ._27vc, ._24e1, ._2rbw, ._3iyw ._3mzw,
 textarea, ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782,
 ._3u9u, ._3u9_, ._3u9s, ._1hcx, ._2066, ._1_-1, ._cv_, ._1nbx, ._2cuh,
-._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._38d-, ._3n8y, ._38dt,
+._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._38d-, ._3n8y, ._38dt, ._3oyg,
 ._27vp, ._4nwe, ._4nw9, ._27vi, .appCenterAppInfo, .appCenterPermissions,
 ._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g,
-._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6, ._6ber, ._mxb,
+._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6, ._6ber, ._mxb, ._3oyd,
 div.sharerSelector, .footer, ._4pv_, ._1dbp, ._3kad, ._20zc, ._2i5v, ._2i5w,
 .mentions-input, .mentions-placeholder, .largeStatusBox .placeHolder, .fcw,
 ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4,
@@ -45,7 +45,7 @@ body, :root, #root, #header, [style*=background-color], ._1upc, input, ._2f9r, .
 ._6-l ._2us7, ._6-l ._6-p, ._333v, div.sharerSelector, ._529j, ._305j, ._1pph, ._3t_l, ._4pvz,
 ._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._24e1,
 ._3bg5 ._56do, ._5hfh, ._52e-, .mQuestionsPollResultsBar, ._5hoc, ._5oxw, ._32_4, ._1hiz,
-._38do, .bo, .cq, ._234-, ._a-5, ._2zh4, ._15ks, ._36dc, ._3iyw ._3iyx, ._6bes, ._55wo, ._4-dy,
+._38do, .bo, .cq, ._234-, ._a-5, ._2zh4, ._15ks, ._3oyc, ._36dc, ._3iyw ._3iyx, ._6bes, ._55wo, ._4-dy,
 .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0,
 .al, ._1gkq, ._5c5b, ._1qxg, ._5luf, ._2new, ._cld, ._3zvb, ._2nk0, .btnD, .btnI, ._2bdb, ._3ci9,
 ._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18,
@@ -93,10 +93,10 @@ button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS
 .timeline .timelinePublisher, .touched, .sharerAttachment,
 .item a.primary.touched .primarywrap, ._38nq, ._537a,
 ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj,
-.excessItem, .acr, ._5-lx, ._3g9-, ._55ws, ._6dsj ._3gin,
+.excessItem, .acr, ._5-lx, ._3g9-, ._55ws, ._6dsj ._3gin, ._69aj,
 ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._2k51,
 ._10sb li.selected, ._2z4j, ._ib-, ._1bhl, ._5a5j,
-._2b06, ._2tsf, ._3gka, .mCount, ._27vc, ._4pv-,
+._2b06, ._2tsf, ._3gka, .mCount, ._27vc, ._4pv-, .fcg, ._6pk5,
 ._4qax, ._4756, ._w34, ._56bv::before, ._5769, ._34iv, ._z-w, ._t21, .mToken,
 #addMembersTypeahead .mToken.mTokenWeakReference,
 .acbk {
@@ -107,7 +107,7 @@ button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS
   background: #3b5998 !important;
 }
 
-._220g, ._1_y8:after,
+._220g, ._1_y8:after, ._6pk6,
 ._2zh4::before, ._2ip_ ._2zh4::before, ._2ip_ ._15kk::before, ._2ip_ ._15kk + ._4u3j::before,
 ._58a0:before, ._43mh::before, ._43mh::after, ._1_-1::before, ._1kmv:after, ._1_ac:before {
   background: rgba(0, 0, 0, 0.3) !important;
@@ -148,7 +148,7 @@ button ._v89 ._54k8._1fl1 {
   border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
 }
 
-.item a.primary.touched .primarywrap, ._4dwt ._5y33, ._1ih_, ._5_50, ._6beq,
+.item a.primary.touched .primarywrap, ._4dwt ._5y33, ._1ih_, ._5_50, ._6beq, ._69aj,
 ._5fjv, ._3on6, ._2u4w, ._2om3, ._2ol-, ._5fjw, ._4z83, ._1gkq, ._4-dy {
   border-top: 1px solid rgba(0, 0, 0, 0.3) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
@@ -210,6 +210,7 @@ button ._v89 ._54k8._1fl1 {
   box-shadow: none !important;
 }
 
+[data-sigil=m_login_upsell],
 [data-sigil="m-loading-indicator-animate m-loading-indicator-root"] {
   display: none !important;
 }
