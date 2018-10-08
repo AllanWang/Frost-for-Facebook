@@ -19,4 +19,6 @@
   <string name="tint_nav_desc">A barra de navegação será da mesma cor que o cabeçalho</string>
   <string name="web_text_scaling">Escala de Texto da Web</string>
   <string name="web_text_scaling_desc">Exemplo de escala de texto; Pressione e segure o texto de porcentagem para redefinir.</string>
+  <string name="enforce_black_media_bg">Reforçar o fundo de mídia preto</string>
+  <string name="enforce_black_media_bg_desc">Torne os fundos de mídia pretos; o padrão é o fundo selecionado acima</string>
 </resources>
