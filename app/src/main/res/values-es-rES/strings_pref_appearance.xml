@@ -19,4 +19,6 @@
   <string name="tint_nav_desc">La barra de navegación será del mismo color que la cabecera</string>
   <string name="web_text_scaling">Tamaño de texto Web</string>
   <string name="web_text_scaling_desc">Ejemplo de tamaño de texto; Mantén presionado el texto de porcentaje para restablecer.</string>
+  <string name="enforce_black_media_bg">Aplicar el fondo de los medios negros</string>
+  <string name="enforce_black_media_bg_desc">Haga que los fondos de los medios sean negros; por defecto es el fondo seleccionado arriba</string>
 </resources>
