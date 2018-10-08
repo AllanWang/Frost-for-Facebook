@@ -12,6 +12,8 @@ android:
   - extra-google-m2repository
   licenses:
   - ".+"
+git:
+  depth: 500
 before_install:
 - openssl aes-256-cbc -K $encrypted_0454d0cf846c_key -iv $encrypted_0454d0cf846c_iv
   -in files/frost.tar.enc -out files/frost.tar -d
