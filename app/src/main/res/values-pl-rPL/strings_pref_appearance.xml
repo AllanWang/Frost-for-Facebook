@@ -19,4 +19,6 @@
   <string name="tint_nav_desc">Pasek nawigacyjny będzie miał taki sam kolor jak nagłówek</string>
   <string name="web_text_scaling">Skalowanie tekstu</string>
   <string name="web_text_scaling_desc">Przykład skalowania tekstu; Długie naciśnięcie wartości, aby zresetować.</string>
+  <string name="enforce_black_media_bg">Wymuś czarne tło dla mediów</string>
+  <string name="enforce_black_media_bg_desc">Czarne tło dla mediów; domyślnie jest wybrane powyżej</string>
 </resources>
