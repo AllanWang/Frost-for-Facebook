@@ -1,4 +1,4 @@
-package com.pitchedapps.frost.parsers
+package com.pitchedapps.frost.facebook.parsers
 
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.*

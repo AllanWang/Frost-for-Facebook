@@ -1,10 +1,6 @@
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost.facebook.requests
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.pitchedapps.frost.facebook.requests.getAuth
-import com.pitchedapps.frost.facebook.requests.getFullSizedImage
-import com.pitchedapps.frost.facebook.requests.getMenuData
-import com.pitchedapps.frost.facebook.requests.markNotificationRead
 import com.pitchedapps.frost.internal.AUTH
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.USER_ID
@@ -58,7 +54,7 @@ class FbRequestTest {
         val fbid = 10155966932992838L // google's current cover photo
         val url = AUTH.getFullSizedImage(fbid).invoke()
         println(url)
-        assertTrue(url?.startsWith("https://scontent") == true)
+        assertEquals(url?.startsWith("https://scontent"), true)
     }
 
     @Test

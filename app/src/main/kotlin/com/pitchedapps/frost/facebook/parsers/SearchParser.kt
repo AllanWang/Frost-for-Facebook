@@ -1,9 +1,9 @@
-package com.pitchedapps.frost.parsers
+package com.pitchedapps.frost.facebook.parsers
 
 import ca.allanwang.kau.searchview.SearchItem
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.parsers.FrostSearch.Companion.create
+import com.pitchedapps.frost.facebook.parsers.FrostSearch.Companion.create
 import com.pitchedapps.frost.utils.L
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element

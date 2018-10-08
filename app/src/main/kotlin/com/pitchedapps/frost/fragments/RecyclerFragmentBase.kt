@@ -8,8 +8,8 @@ import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter_extensions.items.ProgressItem
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.parsers.FrostParser
-import com.pitchedapps.frost.parsers.ParseResponse
+import com.pitchedapps.frost.facebook.parsers.FrostParser
+import com.pitchedapps.frost.facebook.parsers.ParseResponse
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView

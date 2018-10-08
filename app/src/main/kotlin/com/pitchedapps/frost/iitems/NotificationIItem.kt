@@ -16,7 +16,7 @@ import com.mikepenz.fastadapter.commons.utils.DiffCallback
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.parsers.FrostNotif
+import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
