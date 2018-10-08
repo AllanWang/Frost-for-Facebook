@@ -15,8 +15,10 @@
   <string name="search_bar_desc">Aktiviere die Suchleiste anstelle des Suchen Overlays</string>
   <string name="force_message_bottom">Nachrichten unten</string>
   <string name="force_message_bottom_desc">Beim Laden eines Nachrichten-Threads, direkt nach ganz unten scrollen anstatt die Seite normal zu laden.</string>
+  <string name="enable_pip">PIP aktivieren</string>
+  <string name="enable_pip_desc">Bild-in-Bild-Videos aktivieren</string>
   <string name="exit_confirmation">Beenden bestätigen</string>
   <string name="exit_confirmation_desc">Zeigen Sie einen Bestätigungsdialog vor dem Beenden der app</string>
   <string name="analytics">Statistik</string>
-  <string name="analytics_desc">Erlaube Anonyme Analyse der Daten, um bei der Verbesserung der App zu helfen. Persönliche Informationen werden nicht hochgeladen.</string>
+  <string name="analytics_desc">Aktiviere anonyme Analyse der Daten und Fehlerberichte, um die App zu verbessern. Keine persönlichen Informationen werden jemals weitergegeben.</string>
 </resources>
