@@ -15,8 +15,10 @@
   <string name="search_bar_desc">Ativar a barra de pesquisa em vez de uma sobreposição de pesquisa</string>
   <string name="force_message_bottom">Forçar Mensagem Embaixo</string>
   <string name="force_message_bottom_desc">Ao carregar um tópico de mensagem, aciona uma rolagem para a parte inferior da página em vez de carregar a página como está.</string>
+  <string name="enable_pip">Habilitar o PIP</string>
+  <string name="enable_pip_desc">Habilita o Picture in Picture (janelas flutuantes de vídeos)</string>
   <string name="exit_confirmation">Confirmação de Saída</string>
   <string name="exit_confirmation_desc">Mostrar caixa de diálogo de confirmação antes de sair do aplicativo</string>
   <string name="analytics">Telemetria</string>
-  <string name="analytics_desc">Habilite o envio de diagnósticos anônimas para ajudar a melhorar o aplicativo. Nenhuma informação pessoal é exposta.</string>
+  <string name="analytics_desc">Habilitar o envio de diagnósticos anônimos para ajudar a melhorar o aplicativo. Nenhuma informação pessoal é exposta.</string>
 </resources>
