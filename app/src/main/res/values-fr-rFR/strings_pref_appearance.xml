@@ -19,4 +19,6 @@
   <string name="tint_nav_desc">La barre de navigation sera de la même couleur que l\'en-tête</string>
   <string name="web_text_scaling">Échelle de texte Web</string>
   <string name="web_text_scaling_desc">Exemple de la mise à l\'échelle du texte; Appuyez longuement sur le pourcentage de texte pour réinitialiser.</string>
+  <string name="enforce_black_media_bg">Imposer l\'arrière-plan du média en noir</string>
+  <string name="enforce_black_media_bg_desc">Rendre les arrière-plans du média noir; Par défaut est l’arrière-plan sélectionné ci-dessus</string>
 </resources>
