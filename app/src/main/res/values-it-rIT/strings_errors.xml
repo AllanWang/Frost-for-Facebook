@@ -7,4 +7,9 @@
   <string name="invalid_share_url_desc">Hai selezionato un blocco di testo che non è un url. Il testo è stato copiato negli appunti in modo da poterlo condividere manualmente.</string>
   <string name="no_download_manager">Nessun Download Manager</string>
   <string name="no_download_manager_desc">Il download manager non è abilitato. Vuoi attivarlo per consentire il download?</string>
+  <string name="error_generic">Si è verificato un errore.</string>
+  <string name="video_load_failed">Impossibile caricare il video</string>
+  <string name="error_notification">Errore durante il recupero delle notifiche</string>
+  <string name="error_sdk">La versione dell\' SDK del tuo dispositivo (%d) non è compatibile. Frost supporta solo Lollipop (SDK 21) e superiori</string>
+  <string name="error_webview">Il tuo dispositivo sembra non avere una webview. Aggiungine o abilitane una.</string>
 </resources>
