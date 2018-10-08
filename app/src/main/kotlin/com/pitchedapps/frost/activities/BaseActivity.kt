@@ -8,7 +8,6 @@ import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.utils.setFrostTheme
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.addTo
 
 /**
  * Created by Allan Wang on 2017-06-12.

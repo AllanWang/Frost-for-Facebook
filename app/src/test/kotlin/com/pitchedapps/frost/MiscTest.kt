@@ -1,7 +1,6 @@
 package com.pitchedapps.frost
 
 import com.pitchedapps.frost.facebook.requests.zip
-import com.pitchedapps.frost.injectors.CssHider
 import org.junit.Test
 import kotlin.test.assertTrue
 

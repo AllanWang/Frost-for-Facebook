@@ -1,13 +1,11 @@
 package com.pitchedapps.frost.facebook
 
-import com.pitchedapps.frost.facebook.requests.getFullSizedImage
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.authDependent
 import org.junit.BeforeClass
 import org.junit.Test
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 /**
  * Created by Allan Wang on 12/04/18.
