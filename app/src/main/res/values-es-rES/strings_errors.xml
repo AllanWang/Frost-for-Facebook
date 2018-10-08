@@ -9,4 +9,7 @@
   <string name="no_download_manager_desc">El gestor de descargas no está habilitado. ¿Te gustaría habilitarlo para que pueda descargar?</string>
   <string name="error_generic">Ocurrió un error.</string>
   <string name="video_load_failed">Error al cargar video</string>
+  <string name="error_notification">Ha producido un error al recuperar las notificaciones</string>
+  <string name="error_sdk">SDK de su dispositivo (%d) no es compatible. Frost sólo admite Lollipop (SDK 21) y arriba</string>
+  <string name="error_webview">Your device does not seem to have a webview. Please add or enable one.</string>
 </resources>

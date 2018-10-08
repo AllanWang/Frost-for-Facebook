@@ -19,4 +19,6 @@
   <string name="tint_nav_desc">Navigationsleiste wird die gleiche Farbe wie die Kopfzeile sein</string>
   <string name="web_text_scaling">Web Textskalierung</string>
   <string name="web_text_scaling_desc">Textskalierung Beispiel; Langes Drücken des Prozentsatzes zum zurücksetzen. </string>
+  <string name="enforce_black_media_bg">Schwarzer Medienhintergrund erzwingen</string>
+  <string name="enforce_black_media_bg_desc">Medienhintergründe schwarz machen; Standard ist der oben ausgewählte Hintergrund</string>
 </resources>

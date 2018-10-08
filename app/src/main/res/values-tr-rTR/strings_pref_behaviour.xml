@@ -19,8 +19,10 @@
   <string name="search_bar_desc">Arama üstü katmanı yerine arama çubuğunu etkinlestir</string>
   <string name="force_message_bottom">Mesaj Altını Güçlendir</string>
   <string name="force_message_bottom_desc">Birileti dizisi yüklerken, sayfayı olduğu gibi yüklemek yerine, sayfanın altına kaydırma yapın.</string>
+  <string name="enable_pip">PIP\'i etkinleştir</string>
+  <string name="enable_pip_desc">PIP (Picture in Picture) videolarını etkinleştir</string>
   <string name="exit_confirmation">Çıkış Onayı</string>
   <string name="exit_confirmation_desc">Uygulamadan çıkmadanönce onay iletişim kutusunu göster</string>
   <string name="analytics">Analiz</string>
-  <string name="analytics_desc">Uygulamanın geliştirilmesi için anonim analitics etkinleştirin. Asla kişisel bilgileriniz korumasiz kalmaz.</string>
+  <string name="analytics_desc">Bu uygulamanın gelişmesi için anonim analitiğini ve hata raporlarını aktifleştir. Kişisel bilgiler açığa çıkmayacaktır.</string>
 </resources>

@@ -9,4 +9,7 @@
   <string name="no_download_manager_desc">Menedżer pobierania plików nie jest włączony. Czy chcesz go włączyć aby umożliwić pobieranie?</string>
   <string name="error_generic">Wystąpił błąd.</string>
   <string name="video_load_failed">Nie udało się załadować filmu</string>
+  <string name="error_notification">Wystąpił błąd podczas pobierania powiadomień</string>
+  <string name="error_sdk">SDK (%d) twojego urządzenia jest niekompatybilne. Frost wspiera tylko wersje Lollipop (SDK 21) i wyższe</string>
+  <string name="error_webview">Twoje urządzenie nie ma widoku internetowego. Dodaj lub włącz jeden.</string>
 </resources>

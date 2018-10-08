@@ -11,4 +11,5 @@
   <string name="downloaded_video">Video heruntergeladen</string>
   <string name="downloading_file">Datei wird heruntergeladen</string>
   <string name="downloaded_file">Datei heruntergeladen</string>
+  <string name="error_invalid_download">Ungültige Download-URL</string>
 </resources>

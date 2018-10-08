@@ -10,4 +10,7 @@
   <string name="no_download_manager_desc">İndirme yöneticiniz aktif değil. İndirme işlemine izin vermek için aktif hala getirmek ister misin?</string>
   <string name="error_generic">Bir hata oluştu.</string>
   <string name="video_load_failed">Video yükleme başarısız oldu</string>
+  <string name="error_notification">Bildirimleri alırken bir hata meydana geldi</string>
+  <string name="error_sdk">Cihazının SDK\'sı (%d) uyumlu değil. Frost sadece Lollipop (SDK 21) ve üzerini destekler</string>
+  <string name="error_webview">Cihazının bir Webview\'i yok gibi görünüyor. Lütfen bir tane ekle veya aktifleştir.</string>
 </resources>

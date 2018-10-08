@@ -9,4 +9,7 @@
   <string name="no_download_manager_desc">Der Download Manager ist nicht aktiv. Willst du ihn  aktivieren um Downloads zu erlauben?</string>
   <string name="error_generic">Es ist ein Fehler aufgetreten.</string>
   <string name="video_load_failed">Fehler beim laden des Videos</string>
+  <string name="error_notification">Beim Abrufen der Benachrichtigungen ist ein Fehler aufgetreten</string>
+  <string name="error_sdk">Ihre Geräte SDK (%d) ist inkompatibel. Frost unterstützt nur Lollipop (SDK 21) und höher</string>
+  <string name="error_webview">Auf dem Gerät scheint kein Webview installiert zu sein. Bitte installiere oder aktiviere eins.</string>
 </resources>

@@ -9,4 +9,7 @@
   <string name="no_download_manager_desc">Le gestionnaire de téléchargement n’est pas activé. Souhaitez-vous l\'activer afin d\'autoriser les téléchargements ?</string>
   <string name="error_generic">Une erreur est survenue.</string>
   <string name="video_load_failed">Impossible de charger la vidéo</string>
+  <string name="error_notification">Une erreur s’est produite lors de la récupération des notifications</string>
+  <string name="error_sdk">Le SDK de votre appareil (%d) est incompatible. Frost supporte seulement Lollipop (SDK 21) et plus récent</string>
+  <string name="error_webview">Votre appareil ne semble pas avoir un webview. S’il vous plaît en ajouter ou en activer un.</string>
 </resources>

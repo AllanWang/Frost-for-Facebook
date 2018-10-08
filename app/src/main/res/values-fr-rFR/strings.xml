@@ -44,4 +44,5 @@
   <string name="preview">Aperçu</string>
   <string name="options">Options</string>
   <string name="tab_customizer_instructions">Appuyez longuement et faites glisser pour réorganiser les icônes du haut.</string>
+  <string name="no_new_notifications">Pas de nouvelles notifications trouvées</string>
 </resources>

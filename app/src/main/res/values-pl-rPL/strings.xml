@@ -23,6 +23,7 @@
   <string name="welcome">Witaj %s</string>
   <string name="select_facebook_account">Wybierz konto Facebooka</string>
   <string name="account_not_found">Obecnego konta nie ma w bazie danych</string>
+  <string name="frost_requests">Żądania Frost</string>
   <string name="frost_notifications">Powiadomienia Frost</string>
   <string name="requires_custom_theme">Wymaga motywu niestandardowego</string>
   <string name="subject">Temat</string>
@@ -43,4 +44,5 @@
   <string name="preview">Podgląd</string>
   <string name="options">Opcje</string>
   <string name="tab_customizer_instructions">Długie naciśnięcie i przeciągnięcie, aby zmienić kolejność ikon.</string>
+  <string name="no_new_notifications">Brak nowych powiadomień</string>
 </resources>

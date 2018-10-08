@@ -44,4 +44,5 @@
   <string name="preview">Önizleme</string>
   <string name="options">Seçenekler</string>
   <string name="tab_customizer_instructions">Üstteki simgeleri yeniden düzenlemek için uzun basın ve sonra sürükleyin.</string>
+  <string name="no_new_notifications">Yeni bildirim bulunmadı</string>
 </resources>
