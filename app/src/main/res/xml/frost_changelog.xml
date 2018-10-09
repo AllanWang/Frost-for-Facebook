@@ -6,15 +6,20 @@
     <item text="" />
     -->
 
+    <version title="v2.1.0" />
+    <item text="Changed signing key; requires clean install" />
+    <item text="Update lots of theme components" />
+    <item text="Fix create post button" />
+    <item text="Add translations for Danish, Ukranian, and Swedish" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.0.1" />
     <item text="Update theme" />
     <item text="Catch crashes if device has no webview" />
     <item text="Fix all the notifications coming in for the first load" />
     <item text="Reorder settings" />
     <item text="Fix view full image" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.0.0" />
     <item text="A new beginning: Frost is completely FOSS" />
