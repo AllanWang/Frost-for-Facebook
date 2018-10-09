@@ -12,7 +12,7 @@ object BuildUtils {
     private const val BUILD_UNNAMED = "unnamed"
 
     fun match(version: String): Data? {
-        val regex = Regex("([0-9]+\\.[0-9]+\\.[0-9]+)-?([0-9]*-?[0-9a-zA-Z]*)")
+        val regex = Regex("([0-9]+\\.[0-9]+\\.[0-9]+)-?(.*?)")
         val result = regex.matchEntire(version)?.groupValues ?: return null
         return Data(result[1], result[2])
     }

@@ -66,8 +66,8 @@ class FrostApp : Application() {
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
-        KL.shouldLog = { BuildConfig.DEBUG }
         initBugsnag()
+        KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
         try {
@@ -143,6 +143,9 @@ class FrostApp : Application() {
         Bugsnag.setReleaseStage(BuildUtils.getStage(BuildConfig.BUILD_TYPE))
         Bugsnag.setAutoCaptureSessions(true)
         Bugsnag.setUserId(Prefs.frostId)
+        Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
+        Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
+
         Bugsnag.beforeNotify { error ->
             when {
                 error.exception is UndeliverableException -> false
