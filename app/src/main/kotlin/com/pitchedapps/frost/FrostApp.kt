@@ -11,6 +11,7 @@ import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.dbflow.CookiesDb
@@ -28,6 +29,7 @@ import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -142,6 +144,9 @@ class FrostApp : Application() {
         Bugsnag.beforeNotify { error ->
             when {
                 error.exception is UndeliverableException -> false
+                error.exception is ExoPlaybackException -> false
+                error.exception is SocketTimeoutException -> false
+                error.exception is UnknownHostException -> false
                 error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
                 else -> true
             }
