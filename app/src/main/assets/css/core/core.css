@@ -3,7 +3,7 @@
 .touched *, ._1_yj, ._1_yl, ._4pj9, ._2bdc, ._3qdh ._3qdn ._3qdk, ._3qdk ._48_q,
 ._z-z, ._z-v, ._1e8d, ._36nl, ._36nm, ._2_11, ._2_rf, ._2ip_, ._403p, .cq, ._usr,
 ._5xu2, ._3ml8, ._3mla, ._50vk, ._1m2u, ._31y7, ._4kcb, ._1lf6, ._1lf5,
-._1lf4, ._1hiz, ._xod, ._5ag5, ._zmk, ._3t_h, ._5lm6, ._3clv, ._3zlc,
+._1lf4, ._1hiz, ._xod, ._5ag5, ._zmk, ._3t_h, ._5lm6, ._3clv, ._3zlc, ._36rd,
 ._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35,
 ._rnk, ._24u0, ._1g06, ._14ye, .fcb, ._56cz._56c_, ._1gk_, ._55fj, ._45fu,
 ._18qg, ._1_ac, ._529p, ._4dwt ._1vh3, ._4a5f, ._23_t, ._2rzc, ._23_s, ._2rzd,
@@ -48,7 +48,7 @@ body, :root, #root, #header, [style*=background-color], ._1upc, input, ._2f9r, .
 ._38do, .bo, .cq, ._234-, ._a-5, ._2zh4, ._15ks, ._3oyc, ._36dc, ._3iyw ._3iyx, ._6bes, ._55wo, ._4-dy,
 .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0,
 .al, ._1gkq, ._5c5b, ._1qxg, ._5luf, ._2new, ._cld, ._3zvb, ._2nk0, .btnD, .btnI, ._2bdb, ._3ci9,
-._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18,
+._11ub, ._5p7j, ._55wm, ._5rgs, ._5xuj, ._1sv1, ._45fu, ._18qg, ._1_ac, ._5w3g, ._3e18, ._6be7,
 ._5q_r, ._5yt8, ._idb, ._2ip_, ._f6s, ._2l5v, ._8i2, ._kr5, ._2q7u, ._2q7v, ._5xp2, div.fullwidthMore,
 ._577z, ._2u4w, ._3u9p, ._3u9t, ._cw4, ._5_y-, ._5_y_, ._5_z3, ._cwy, ._5_z0, ._voz, ._vos,
 ._5_z1, ._5_z2, ._2mtc, ._206a, ._1_-1, ._1ybg, .appCenterCategorySelectorButton, ._5_ee, ._3clk,
@@ -88,7 +88,7 @@ body, :root, #root, #header, [style*=background-color], ._1upc, input, ._2f9r, .
   background: #c74646 !important;
 }
 
-button:not([style*=image]), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
+button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
 ._590n, ._4g8h, ._2cpp, ._58a0.touched:after,
 .timeline .timelinePublisher, .touched, .sharerAttachment,
 .item a.primary.touched .primarywrap, ._38nq, ._537a,
