@@ -132,10 +132,12 @@ class FrostApp : Application() {
 
     private fun initBugsnag() {
         if (BuildConfig.DEBUG) return
+        Bugsnag.init(this)
+        Bugsnag.disableExceptionHandler()
         if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) return
         val version = BuildUtils.match(BuildConfig.VERSION_NAME)
                 ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
-        Bugsnag.init(this)
+        Bugsnag.enableExceptionHandler()
         Bugsnag.setNotifyReleaseStages(*BuildUtils.getAllStages())
         Bugsnag.setAppVersion(version.versionName)
         Bugsnag.setReleaseStage(BuildUtils.getStage(BuildConfig.BUILD_TYPE))
