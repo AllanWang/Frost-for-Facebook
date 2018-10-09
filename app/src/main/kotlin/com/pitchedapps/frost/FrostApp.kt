@@ -64,32 +64,8 @@ class FrostApp : Application() {
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
-        if (!BuildConfig.DEBUG) {
-            Bugsnag.init(this)
-            val releaseStage = setOf(FLAVOUR_PRODUCTION,
-                    FLAVOUR_TEST,
-                    FLAVOUR_GITHUB,
-                    FLAVOUR_RELEASE)
-            Bugsnag.setNotifyReleaseStages(*releaseStage.toTypedArray(), FLAVOUR_UNNAMED)
-            val versionSegments = BuildConfig.VERSION_NAME.split("_")
-            if (versionSegments.size > 1) {
-                Bugsnag.setAppVersion(versionSegments.first())
-                Bugsnag.setReleaseStage(if (versionSegments.last() in releaseStage) versionSegments.last()
-                else FLAVOUR_UNNAMED)
-                Bugsnag.setUserName(BuildConfig.VERSION_NAME)
-            }
-
-            Bugsnag.setAutoCaptureSessions(true)
-            Bugsnag.setUserId(Prefs.frostId)
-            Bugsnag.beforeNotify { error ->
-                when {
-                    error.exception is UndeliverableException -> false
-                    error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
-                    else -> true
-                }
-            }
-        }
         KL.shouldLog = { BuildConfig.DEBUG }
+        initBugsnag()
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
         try {
@@ -152,5 +128,24 @@ class FrostApp : Application() {
 
     }
 
+    private fun initBugsnag() {
+        if (BuildConfig.DEBUG) return
+        if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) return
+        val version = BuildUtils.match(BuildConfig.VERSION_NAME)
+                ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
+        Bugsnag.init(this)
+        Bugsnag.setNotifyReleaseStages(*BuildUtils.getAllStages())
+        Bugsnag.setAppVersion(version.versionName)
+        Bugsnag.setReleaseStage(BuildUtils.getStage(BuildConfig.BUILD_TYPE))
+        Bugsnag.setAutoCaptureSessions(true)
+        Bugsnag.setUserId(Prefs.frostId)
+        Bugsnag.beforeNotify { error ->
+            when {
+                error.exception is UndeliverableException -> false
+                error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
+                else -> true
+            }
+        }
+    }
 
 }
