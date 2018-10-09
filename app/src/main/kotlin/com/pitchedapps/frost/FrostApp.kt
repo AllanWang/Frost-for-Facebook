@@ -11,6 +11,7 @@ import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.dbflow.CookiesDb
@@ -28,6 +29,7 @@ import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -64,8 +66,8 @@ class FrostApp : Application() {
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
-        KL.shouldLog = { BuildConfig.DEBUG }
         initBugsnag()
+        KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
         try {
@@ -130,18 +132,26 @@ class FrostApp : Application() {
 
     private fun initBugsnag() {
         if (BuildConfig.DEBUG) return
+        Bugsnag.init(this)
+        Bugsnag.disableExceptionHandler()
         if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) return
         val version = BuildUtils.match(BuildConfig.VERSION_NAME)
                 ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
-        Bugsnag.init(this)
+        Bugsnag.enableExceptionHandler()
         Bugsnag.setNotifyReleaseStages(*BuildUtils.getAllStages())
         Bugsnag.setAppVersion(version.versionName)
         Bugsnag.setReleaseStage(BuildUtils.getStage(BuildConfig.BUILD_TYPE))
         Bugsnag.setAutoCaptureSessions(true)
         Bugsnag.setUserId(Prefs.frostId)
+        Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
+        Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
+
         Bugsnag.beforeNotify { error ->
             when {
                 error.exception is UndeliverableException -> false
+                error.exception is ExoPlaybackException -> false
+                error.exception is SocketTimeoutException -> false
+                error.exception is UnknownHostException -> false
                 error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
                 else -> true
             }

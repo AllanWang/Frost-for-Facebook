@@ -7,9 +7,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.FloatingActionButton
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.mediapicker.scanMedia
@@ -28,6 +25,7 @@ import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
 import com.pitchedapps.frost.facebook.requests.requestBuilder
 import com.pitchedapps.frost.utils.*
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import kotlinx.android.synthetic.main.activity_image.*
 import okhttp3.Response
 import org.jetbrains.anko.activityUiThreadWithContext
 import org.jetbrains.anko.doAsync
@@ -43,22 +41,14 @@ import java.util.*
  */
 class ImageActivity : KauBaseActivity() {
 
-    val progress: ProgressBar by bindView(R.id.image_progress)
-    val container: ViewGroup by bindView(R.id.image_container)
-    val panel: SlidingUpPanelLayout? by bindOptionalView(R.id.image_panel)
-    val photo: SubsamplingScaleImageView by bindView(R.id.image_photo)
-    val caption: TextView? by bindOptionalView(R.id.image_text)
-    val fab: FloatingActionButton by bindView(R.id.image_fab)
-    var errorRef: Throwable? = null
+    internal var errorRef: Throwable? = null
 
-    private val tempDir: File by lazy { File(cacheDir, IMAGE_FOLDER) }
+    private lateinit var tempDir: File
 
     /**
      * Reference to the temporary file path
-     * Should be nonnull if the image is successfully loaded
-     * As this is temporary, the image is deleted upon exit
      */
-    internal var tempFile: File? = null
+    private lateinit var tempFile: File
     /**
      * Reference to path for downloaded image
      * Nonnull once the image is downloaded by the user
@@ -72,7 +62,7 @@ class ImageActivity : KauBaseActivity() {
         set(value) {
             if (field == value) return
             field = value
-            runOnUiThread { value.update(fab) }
+            runOnUiThread { value.update(image_fab) }
         }
 
     companion object {
@@ -115,22 +105,22 @@ class ImageActivity : KauBaseActivity() {
         L.v { "Displaying image $imageUrl" }
         val layout = if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
-        container.setBackgroundColor(if (Prefs.blackMediaBg) Color.BLACK
+        image_container.setBackgroundColor(if (Prefs.blackMediaBg) Color.BLACK
         else Prefs.bgColor.withMinAlpha(222))
-        caption?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
-        caption?.setBackgroundColor((if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
+        image_text?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
+        image_text?.setBackgroundColor((if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
                 .colorToForeground(0.2f).withAlpha(255))
-        caption?.text = imageText
-        progress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
-        panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
+        image_text?.text = imageText
+        image_progress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
+        image_panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
-                if (slideOffset == 0f && !fab.isShown) fab.show()
-                else if (slideOffset != 0f && fab.isShown) fab.hide()
-                caption?.alpha = slideOffset / 2 + 0.5f
+                if (slideOffset == 0f && !image_fab.isShown) image_fab.show()
+                else if (slideOffset != 0f && image_fab.isShown) image_fab.hide()
+                image_text?.alpha = slideOffset / 2 + 0.5f
             }
         })
-        fab.setOnClickListener { fabAction.onClick(this) }
-        photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
+        image_fab.setOnClickListener { fabAction.onClick(this) }
+        image_photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception?) {
                 errorRef = e
                 e.logFrostEvent("Image load error")
@@ -142,57 +132,57 @@ class ImageActivity : KauBaseActivity() {
         setFrostColors {
             themeWindow = false
         }
+        tempDir = File(cacheDir, IMAGE_FOLDER)
+        tempFile = File(tempDir, imageHash)
         doAsync({
             L.e(it) { "Failed to load image $imageHash" }
             errorRef = it
-            runOnUiThread { progress.fadeOut() }
-            tempFile?.delete()
+            runOnUiThread { image_progress.fadeOut() }
+            tempFile.delete()
             fabAction = FabStates.ERROR
         }) {
-            loadImage { file ->
-                uiThread { progress.fadeOut() }
-                if (file == null) {
+            val loaded = loadImage(tempFile)
+            uiThread {
+                image_progress.fadeOut()
+                if (!loaded) {
                     fabAction = FabStates.ERROR
-                    return@loadImage
-                }
-                tempFile = file
-                L.d { "Temp image path ${file.absolutePath}" }
-                uiThread {
-                    photo.setImage(ImageSource.uri(frostUriFromFile(file)))
+                } else {
+                    image_photo.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
                     fabAction = FabStates.DOWNLOAD
-                    photo.animate().alpha(1f).scaleXY(1f).start()
+                    image_photo.animate().alpha(1f).scaleXY(1f).start()
                 }
             }
         }
     }
 
     /**
-     * Returns a file pointing to the image, or null if something goes wrong
+     * Attempts to load the image to [file]
+     * Returns true if successful
+     * Note that this is a long execution and should not be done on the UI thread
      */
-    private inline fun loadImage(callback: (file: File?) -> Unit) {
-        val local = File(tempDir, imageHash)
-        if (local.exists() && local.length() > 1) {
-            local.setLastModified(System.currentTimeMillis())
-            L.d { "Loading from local cache ${local.absolutePath}" }
-            return callback(local)
+    private fun loadImage(file: File): Boolean {
+        if (file.exists() && file.length() > 1) {
+            file.setLastModified(System.currentTimeMillis())
+            L.d { "Loading from local cache ${file.absolutePath}" }
+            return true
         }
         val response = getImageResponse()
 
         if (!response.isSuccessful) {
             L.e { "Unsuccessful response for image" }
             errorRef = Throwable("Unsuccessful response for image")
-            return callback(null)
+            return false
         }
 
-        if (!local.createFreshFile()) {
+        if (!file.createFreshFile()) {
             L.e { "Could not create temp file" }
-            return callback(null)
+            return false
         }
 
         var valid = false
 
         response.body()?.byteStream()?.use { input ->
-            local.outputStream().use { output ->
+            file.outputStream().use { output ->
                 input.copyTo(output)
                 valid = true
             }
@@ -200,11 +190,11 @@ class ImageActivity : KauBaseActivity() {
 
         if (!valid) {
             L.e { "Failed to copy file" }
-            local.delete()
-            return callback(null)
+            file.delete()
+            return false
         }
 
-        callback(local)
+        return true
     }
 
     @Throws(IOException::class)
@@ -274,7 +264,6 @@ class ImageActivity : KauBaseActivity() {
     }
 
     override fun onDestroy() {
-        tempFile = null
         val purge = System.currentTimeMillis() - PURGE_TIME
         tempDir.listFiles(FileFilter { it.isFile && it.lastModified() < purge })?.forEach {
             it.delete()

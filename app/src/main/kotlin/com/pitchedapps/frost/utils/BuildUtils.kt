@@ -5,14 +5,14 @@ object BuildUtils {
     data class Data(val versionName: String, val tail: String)
 
     // Builds
-    const val BUILD_PRODUCTION = "production"
-    const val BUILD_TEST = "releaseTest"
-    const val BUILD_GITHUB = "github"
-    const val BUILD_RELEASE = "release"
-    const val BUILD_UNNAMED = "unnamed"
-    
+    private const val BUILD_PRODUCTION = "production"
+    private const val BUILD_TEST = "releaseTest"
+    private const val BUILD_GITHUB = "github"
+    private const val BUILD_RELEASE = "release"
+    private const val BUILD_UNNAMED = "unnamed"
+
     fun match(version: String): Data? {
-        val regex = Regex("([0-9]+\\.[0-9]+\\.[0-9]+)-?([0-9]*-?[0-9a-zA-Z]*)")
+        val regex = Regex("([0-9]+\\.[0-9]+\\.[0-9]+)-?(.*?)")
         val result = regex.matchEntire(version)?.groupValues ?: return null
         return Data(result[1], result[2])
     }
