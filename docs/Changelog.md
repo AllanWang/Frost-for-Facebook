@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.1.0
+* Changed signing key; requires clean install
+* Update lots of theme components
+* Fix create post button
+* Add translations for Danish, Ukranian, and Swedish
+
 ## v2.0.1
 * Update theme
 * Catch crashes if device has no webview
