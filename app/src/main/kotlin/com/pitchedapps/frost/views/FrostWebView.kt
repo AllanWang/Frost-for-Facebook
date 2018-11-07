@@ -14,6 +14,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.*
@@ -99,7 +100,7 @@ class FrostWebView @JvmOverloads constructor(
             return true
         }
         val list = copyBackForwardList()
-        if (list.currentIndex == 1 && list.getItemAtIndex(0).originalUrl == FB_HOME_URL) {
+        if (list.currentIndex == 1 && list.getItemAtIndex(0).url == FB_HOME_URL) {
             return false
         }
         if (list.currentIndex > 0) {
