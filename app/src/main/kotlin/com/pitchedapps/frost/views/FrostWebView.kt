@@ -14,7 +14,6 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.*

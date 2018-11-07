@@ -26,10 +26,7 @@ import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseNotification
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.utils.ARG_USER_ID
-import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.utils.*
 import java.util.*
 
 /**
@@ -152,7 +149,8 @@ enum class NotificationType(
     private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
             with(content) {
                 val intent = Intent(context, FrostWebActivity::class.java)
-                intent.data = Uri.parse(href)
+                // TODO temp fix; we will show notification page for dependent urls. We can trigger a click next time
+                intent.data = Uri.parse(if (href.isIndependent) href else FbItem.NOTIFICATIONS.url)
                 intent.putExtra(ARG_USER_ID, data.id)
                 overlayContext.put(intent)
                 bindRequest(intent, content, data.cookie)
