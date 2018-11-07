@@ -19,6 +19,12 @@ object L : KauLogger("Frost", {
     }
 }) {
 
+    inline fun test(message: () -> Any?) {
+        _d {
+            "Test1234 ${message()}"
+        }
+    }
+
     inline fun _i(message: () -> Any?) {
         if (BuildConfig.DEBUG)
             i(message)
