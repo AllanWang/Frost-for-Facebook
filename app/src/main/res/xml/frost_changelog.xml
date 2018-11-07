@@ -6,13 +6,18 @@
     <item text="" />
     -->
 
+    <version title="v2.1.1" />
+    <item text="Fix link loading for some notifications. Some will redirect to the main notification page" />
+    <item text="Fix double back click problem" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.1.0" />
     <item text="Changed signing key; requires clean install" />
     <item text="Update lots of theme components" />
     <item text="Fix create post button" />
     <item text="Add translations for Danish, Ukranian, and Swedish" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.0.1" />
     <item text="Update theme" />
