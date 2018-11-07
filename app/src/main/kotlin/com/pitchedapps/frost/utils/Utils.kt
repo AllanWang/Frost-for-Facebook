@@ -273,6 +273,10 @@ inline val String?.isIndependent: Boolean
 val dependentSegments = arrayOf(
         "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
         "events/permalink", "events/feed/watch",
+        /*
+         * Add new members to groups
+         */
+        "madminpanel",
         /**
          * Editing images
          */

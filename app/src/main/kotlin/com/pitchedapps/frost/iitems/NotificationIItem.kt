@@ -14,11 +14,13 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.commons.utils.DiffCallback
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**
@@ -37,7 +39,8 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
                             FrostRunnable.markNotificationRead(v!!.context, notif.id, item.cookie)
                             adapter.set(position, NotificationIItem(notif.copy(unread = false), item.cookie))
                         }
-                        v!!.context.launchWebOverlay(notif.url)
+                        // TODO temp fix. If url is dependent, we cannot load it directly
+                        v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
                         true
                     }
         }

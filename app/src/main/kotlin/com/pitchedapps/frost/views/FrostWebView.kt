@@ -11,6 +11,7 @@ import ca.allanwang.kau.utils.AnimHolder
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
@@ -88,8 +89,20 @@ class FrostWebView @JvmOverloads constructor(
         loadUrl(parent.baseUrl, animate)
     }
 
+    /**
+     * By 2018-10-17, facebook automatically adds their home page to the back stack,
+     * regardless of the loaded url. We will make sure we skip it when going back.
+     */
     override fun onBackPressed(): Boolean {
-        if (canGoBack()) {
+        if (canGoBackOrForward(-2)) {
+            goBack()
+            return true
+        }
+        val list = copyBackForwardList()
+        if (list.currentIndex == 1 && list.getItemAtIndex(0).url == FB_HOME_URL) {
+            return false
+        }
+        if (list.currentIndex > 0) {
             goBack()
             return true
         }

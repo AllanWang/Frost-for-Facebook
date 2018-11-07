@@ -10,6 +10,7 @@ const val HTTPS_FACEBOOK_COM = "https://$FACEBOOK_COM"
 const val FB_URL_BASE = "https://m.$FACEBOOK_COM/"
 fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
+const val FB_HOME_URL = "${FB_URL_BASE}home.php"
 
 const val USER_AGENT_FULL = "Mozilla/5.0 (Linux; Android 4.4.2; en-us; SAMSUNG SM-G900T Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.6 Chrome/28.0.1500.94 Mobile Safari/537.36"
 const val USER_AGENT_BASIC_OLD = "Mozilla/5.0 (Linux; Android 6.0) AppleWebKit/537.10+ (KHTML, like Gecko) Version/10.1.0.4633 Mobile Safari/537.10+"

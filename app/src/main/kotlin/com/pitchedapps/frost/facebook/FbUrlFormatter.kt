@@ -100,7 +100,12 @@ class FbUrlFormatter(url: String) {
                 VIDEO_REDIRECT
         )
 
-        val discardableQueries = arrayOf("ref", "refid", "acontext", "SharedWith")
+        /**
+         * Queries that are not necessary for independent links
+         *
+         * acontext is not required for "friends interested in" notifications
+         */
+        val discardableQueries = arrayOf("ref", "refid", "SharedWith")
 
         val converter = listOf(
                 "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
