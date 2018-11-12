@@ -6,7 +6,8 @@
 [![BugSnag](https://img.shields.io/badge/Bug%20tracking%20with-BugSnag-37C2D9.svg)](https://www.bugsnag.com/)
 [![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/dev/LICENSE)
 
-[Download from XDA Labs](https://labs.xda-developers.com/store/app/com.pitchedapps.frost)
+[Download from Github Releases](https://github.com/AllanWang/Frost-for-Facebook/releases) <br/>
+[Join the Slack Workspace](https://join.slack.com/t/frost-for-facebook/shared_invite/enQtMzQ1NzI3NzA0OTc5LWEwNjM3YzA1NDE1ZmNmMWRiNmRhNzNjYTkzNThkOTczZjZkOGRkNzc1MDU0ZDIwNWFmMjU0NWQ2NWI1NTQwNjA)
 
 **Note** Some keystores are public for the sake of automatic builds and consistent signing across devices.
 This means that others can build apps with the same signature. The only valid download sources are through my github releases and xda labs.

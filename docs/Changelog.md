@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.1
+* Fix link loading for some notifications. Some will redirect to the main notification page
+* Fix double back click problem
+
 ## v2.1.0
 * Changed signing key; requires clean install
 * Update lots of theme components
