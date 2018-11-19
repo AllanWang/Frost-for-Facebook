@@ -10,7 +10,7 @@
 [Join the Slack Workspace](https://join.slack.com/t/frost-for-facebook/shared_invite/enQtMzQ1NzI3NzA0OTc5LWEwNjM3YzA1NDE1ZmNmMWRiNmRhNzNjYTkzNThkOTczZjZkOGRkNzc1MDU0ZDIwNWFmMjU0NWQ2NWI1NTQwNjA)
 
 **Note** Some keystores are public for the sake of automatic builds and consistent signing across devices.
-This means that others can build apps with the same signature. The only valid download sources are through my github releases and xda labs.
+This means that others can build apps with the same signature. The only valid download sources are through my github releases.
 
 Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
@@ -55,19 +55,23 @@ Special thanks to the following awesome people for translating significant porti
 
 | Language | Contributors |
 |----------|--------------|
-| Chinese (Simplified) | |
+| Chinese (Simplified) | [Zhengang](https://crowdin.com/profile/Zhengang) |
+| Danish | [mhtorp](https://crowdin.com/profile/mhtorp) |
 | French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
 | Galician | [Xesús M. Mosquera](https://twitter.com/xesusmmc?lang=en) |
 | German | [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) &bull; [Marcel Soehnchen](https://crowdin.com/profile/msoehnchen) &bull; [3LD0mi HA](https://forum.xda-developers.com/member.php?u=5860523) |
+| Hungarian | [János Erkli](https://crowdin.com/profile/erklijani0521) &bull; [Bálint Csurgai-Horváth](https://crowdin.com/profile/cshbalint) |
 | Indonesian | [M. Angga Ariska](https://www.youtube.com/channel/UCkqMw81s2aw7bYO-U2YhD7w) |
 | Italian | [Bonnee](https://github.com/Bonnee) |
 | Korean | [잇스테이크](https://crowdin.com/profile/bexco2010) |
-| Norwegian | |
-| Polish | |
-| Portuguese | [TheusKhan](https://crowdin.com/profile/TheusKhan) |
-| Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431)|
-| Thai | |
-| Turkish | |
-| Vietnamese | [Alienz](https://crowdin.com/profile/alienyd) |
+| Norwegian | [Julian Madsen](https://crowdin.com/profile/julianmadsen1) |
+| Polish | [Mroczny](https://crowdin.com/profile/Mroczny) &bull; [pantinPL](https://crowdin.com/profile/pantinPL) |
+| Portuguese, Brazilian | [TheusKhan](https://crowdin.com/profile/TheusKhan) |
+| Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) |
+| Swedish | [Artswitcher](https://crowdin.com/profile/Artswitcher) &bull; [Henrik Mattsson-Mårn](https://crowdin.com/profile/rchk) |
+| Thai | [Thanawat Hanthong](https://crowdin.com/profile/peet6015) |
+| Turkish | [upvotelife](https://crowdin.com/profile/upvotelife) &bull; [Kardelen Sepetçi](https://crowdin.com/profile/kardeland) |
+| Ukrainian | [Таня Делікатна](https://crowdin.com/profile/delikatna_i) &bull; [Вадим Жушман](https://crowdin.com/profile/android54544) |
+| Vietnamese | [Alienz](https://crowdin.com/profile/alienyd) &bull; [Nguyễn Thành Nam](https://crowdin.com/profile/nguyenthanhnam_246) &bull; [Volodymyr Lisivka](https://crowdin.com/profile/vlisivka) |
 
 The full activity stream for the translations can be found [here](https://crowdin.com/project/frost-for-facebook/activity_stream)
