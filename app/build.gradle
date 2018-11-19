@@ -128,6 +128,12 @@ android {
     packagingOptions {
         pickFirst 'META-INF/library_release.kotlin_module'
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 repositories {
@@ -221,6 +227,23 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
     implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
 
+}
+
+def kotlinResolutions = ['kotlin-reflect',
+                         'kotlin-stdlib',
+                         'kotlin-stdlib-jdk7',
+                         'kotlin-stdlib-jdk8',
+                         'kotlin-test',
+                         'kotlin-test-junit4',
+                         'kotlin-test-junit5']
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
+            details.useVersion KOTLIN
+        }
+    }
 }
 
 apply plugin: 'com.bugsnag.android.gradle'
