@@ -6,12 +6,15 @@
     <item text="" />
     -->
 
+    <version title="v2.1.2" />
+    <item text="Fix message notifications with just one other user" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.1.1" />
     <item text="Fix link loading for some notifications. Some will redirect to the main notification page" />
     <item text="Fix double back click problem" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.1.0" />
     <item text="Changed signing key; requires clean install" />

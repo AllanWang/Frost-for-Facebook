@@ -35,7 +35,8 @@ public class Log {
     public static int println(int priority, String tag, String msg) {
         switch (priority) {
             case VERBOSE:
-                p("V", tag, msg);
+                // Ignore verbose logging
+                // p("V", tag, msg);
                 break;
             case INFO:
                 p("I", tag, msg);

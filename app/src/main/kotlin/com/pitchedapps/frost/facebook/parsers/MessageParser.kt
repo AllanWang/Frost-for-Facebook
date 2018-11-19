@@ -92,7 +92,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
 
     override fun parseImpl(doc: Document): FrostMessages? {
         val threadList = doc.getElementById("threadlist_rows") ?: return null
-        val threads: List<FrostThread> = threadList.getElementsByAttributeValueContaining("id", "thread_fbid_")
+        val threads: List<FrostThread> = threadList.getElementsByAttributeValueMatching("id", ".*${FB_MESSAGE_NOTIF_ID_MATCHER.pattern}.*")
                 .mapNotNull(this::parseMessage)
         val seeMore = parseLink(doc.getElementById("see_older_threads"))
         val extraLinks = threadList.nextElementSibling().select("a")
