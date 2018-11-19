@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.1.2
+* Fix message notifications with just one other user
+
 ## v2.1.1
 * Fix link loading for some notifications. Some will redirect to the main notification page
 * Fix double back click problem
