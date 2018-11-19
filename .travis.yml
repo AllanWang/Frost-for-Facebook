@@ -43,6 +43,7 @@ notifications:
 sudo: false
 branches:
   except:
+  - master
   - l10n_dev
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
