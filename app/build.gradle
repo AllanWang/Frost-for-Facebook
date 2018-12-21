@@ -179,6 +179,8 @@ dependencies {
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES"
+
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
