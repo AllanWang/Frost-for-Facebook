@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.views
 
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import ca.allanwang.kau.iitems.KauIItem
@@ -60,7 +60,7 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
         }
     }
 
-    class ViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(val v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
         val image: ImageView by bindView(R.id.account_image)
         val text: AppCompatTextView by bindView(R.id.account_text)
     }

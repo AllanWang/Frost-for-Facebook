@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.views
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import ca.allanwang.kau.utils.circularReveal
@@ -19,7 +19,7 @@ import com.pitchedapps.frost.utils.Prefs
  */
 class FrostRecyclerView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr),
+) : androidx.recyclerview.widget.RecyclerView(context, attrs, defStyleAttr),
         FrostContentCore {
 
     override fun reload(animate: Boolean) = reloadBase(animate)
@@ -32,7 +32,7 @@ class FrostRecyclerView @JvmOverloads constructor(
     lateinit var recyclerContract: RecyclerContentContract
 
     init {
-        layoutManager = LinearLayoutManager(context)
+        layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
     }
 
     override fun bind(container: FrostContentContainer): View {
@@ -74,7 +74,7 @@ class FrostRecyclerView @JvmOverloads constructor(
      * Otherwise scroll to top
      */
     override fun onTabClicked() {
-        val firstPosition = (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        val firstPosition = (layoutManager as androidx.recyclerview.widget.LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         if (firstPosition == 0) reloadBase(true)
         else scrollToTop()
     }

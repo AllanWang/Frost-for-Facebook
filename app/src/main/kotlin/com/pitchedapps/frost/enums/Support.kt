@@ -1,7 +1,7 @@
 package com.pitchedapps.frost.enums
 
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.sendFrostEmail

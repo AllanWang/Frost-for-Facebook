@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.Toolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.widget.Toolbar
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.setIcon
@@ -33,7 +33,7 @@ class DebugActivity : KauBaseActivity() {
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val web: DebugWebView by bindView(R.id.debug_webview)
-    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private val swipeRefresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val fab: FloatingActionButton by bindView(R.id.fab)
 
     companion object {

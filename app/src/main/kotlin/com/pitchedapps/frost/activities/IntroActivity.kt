@@ -4,10 +4,10 @@ import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -32,10 +32,10 @@ import org.jetbrains.anko.find
  * A beautiful intro activity
  * Phone showcases are drawn via layers
  */
-class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
+class IntroActivity : KauBaseActivity(), androidx.viewpager.widget.ViewPager.PageTransformer, androidx.viewpager.widget.ViewPager.OnPageChangeListener {
 
     val ripple: RippleCanvas by bindView(R.id.intro_ripple)
-    val viewpager: ViewPager by bindView(R.id.intro_viewpager)
+    val viewpager: androidx.viewpager.widget.ViewPager by bindView(R.id.intro_viewpager)
     lateinit var adapter: IntroPageAdapter
     val indicator: InkPageIndicator by bindView(R.id.intro_indicator)
     val skip: Button by bindView(R.id.intro_skip)
@@ -167,9 +167,9 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         skip.animate().scaleXY(if (barHasNext) 1f else 0f)
     }
 
-    class IntroPageAdapter(fm: FragmentManager, private val fragments: List<BaseIntroFragment>) : FragmentPagerAdapter(fm) {
+    class IntroPageAdapter(fm: androidx.fragment.app.FragmentManager, private val fragments: List<BaseIntroFragment>) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment = fragments[position]
+        override fun getItem(position: Int): androidx.fragment.app.Fragment = fragments[position]
 
         override fun getCount(): Int = fragments.size
     }

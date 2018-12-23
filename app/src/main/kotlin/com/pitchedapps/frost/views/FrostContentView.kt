@@ -2,7 +2,7 @@ package com.pitchedapps.frost.views
 
 import android.content.Context
 import android.os.Build
-import android.support.v4.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -44,7 +44,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
         FrostContentParent where T : View, T : FrostContentCore {
 
-    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
+    private val refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
 

@@ -1,6 +1,6 @@
 package com.pitchedapps.frost.facebook
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon

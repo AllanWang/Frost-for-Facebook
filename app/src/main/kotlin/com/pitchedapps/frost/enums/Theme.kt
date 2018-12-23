@@ -1,7 +1,7 @@
 package com.pitchedapps.frost.enums
 
 import android.graphics.Color
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.InjectorContract

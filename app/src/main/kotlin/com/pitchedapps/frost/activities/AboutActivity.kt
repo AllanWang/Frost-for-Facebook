@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.activities
 
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -121,7 +121,7 @@ class AboutActivity : AboutActivityBase(null, {
             }
         }
 
-        class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
 
             val container: ConstraintLayout by bindView(R.id.about_icons_container)
             val images: List<ImageView>

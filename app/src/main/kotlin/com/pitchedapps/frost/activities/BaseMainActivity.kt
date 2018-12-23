@@ -8,14 +8,14 @@ import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v7.widget.Toolbar
+import androidx.annotation.StringRes
+import com.google.android.material.appbar.AppBarLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
@@ -78,7 +78,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
-    val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+    val coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout by bindView(R.id.main_content)
     override var videoViewer: FrostVideoViewer? = null
     private lateinit var drawer: Drawer
     private lateinit var drawerHeader: AccountHeader
@@ -431,7 +431,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         runOnUiThread { adapter.reloadFragment(fragment) }
     }
 
-    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
+    inner class SectionsPagerAdapter(val pages: List<FbItem>) : androidx.fragment.app.FragmentPagerAdapter(supportFragmentManager) {
 
         val forcedFallbacks = mutableSetOf<String>()
 
@@ -443,7 +443,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             notifyDataSetChanged()
         }
 
-        override fun getItem(position: Int): Fragment {
+        override fun getItem(position: Int): androidx.fragment.app.Fragment {
             val item = pages[position]
             return BaseFragment(item.fragmentCreator,
                     forcedFallbacks.contains(item.name),

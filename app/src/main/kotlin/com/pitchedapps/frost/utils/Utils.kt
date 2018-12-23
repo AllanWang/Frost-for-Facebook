@@ -8,11 +8,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
-import android.support.design.widget.SnackbarContentLayout
-import android.support.v4.content.FileProvider
-import android.support.v7.widget.Toolbar
+import androidx.annotation.StringRes
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.content.FileProvider
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -23,6 +22,7 @@ import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.*
 import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.snackbar.SnackbarContentLayout
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.*

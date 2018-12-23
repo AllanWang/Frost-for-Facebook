@@ -2,8 +2,8 @@ package com.pitchedapps.frost.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +27,7 @@ import io.reactivex.disposables.Disposable
  * All fragments pertaining to the main view
  * Must be attached to activities implementing [MainActivityContract]
  */
-abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
+abstract class BaseFragment : androidx.fragment.app.Fragment(), FragmentContract, DynamicUiContract {
 
     companion object {
         private const val ARG_POSITION = "arg_position"

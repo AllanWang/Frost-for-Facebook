@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.net.Uri
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View

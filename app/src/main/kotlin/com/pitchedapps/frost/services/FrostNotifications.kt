@@ -8,8 +8,8 @@ import android.net.Uri
 import android.os.BaseBundle
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig

@@ -3,9 +3,9 @@ package com.pitchedapps.frost.activities
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.Toolbar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.Toolbar
 import android.widget.ImageView
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn
@@ -39,7 +39,7 @@ class LoginActivity : BaseActivity() {
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val web: LoginWebView by bindView(R.id.login_webview)
-    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private val swipeRefresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
 
