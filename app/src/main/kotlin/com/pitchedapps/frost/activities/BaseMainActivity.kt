@@ -78,7 +78,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     val fab: FloatingActionButton by bindView(R.id.fab)
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
-    val coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout by bindView(R.id.main_content)
+    val coordinator: CoordinatorLayout by bindView(R.id.main_content)
     override var videoViewer: FrostVideoViewer? = null
     private lateinit var drawer: Drawer
     private lateinit var drawerHeader: AccountHeader
@@ -431,7 +431,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         runOnUiThread { adapter.reloadFragment(fragment) }
     }
 
-    inner class SectionsPagerAdapter(val pages: List<FbItem>) : androidx.fragment.app.FragmentPagerAdapter(supportFragmentManager) {
+    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
 
         val forcedFallbacks = mutableSetOf<String>()
 
@@ -443,7 +443,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             notifyDataSetChanged()
         }
 
-        override fun getItem(position: Int): androidx.fragment.app.Fragment {
+        override fun getItem(position: Int): Fragment {
             val item = pages[position]
             return BaseFragment(item.fragmentCreator,
                     forcedFallbacks.contains(item.name),

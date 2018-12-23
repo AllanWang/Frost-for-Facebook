@@ -33,7 +33,7 @@ class DebugActivity : KauBaseActivity() {
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val web: DebugWebView by bindView(R.id.debug_webview)
-    private val swipeRefresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val fab: FloatingActionButton by bindView(R.id.fab)
 
     companion object {

@@ -12,7 +12,7 @@ import com.pitchedapps.frost.utils.Prefs
  *
  * Basic override to allow us to control swiping
  */
-class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : androidx.viewpager.widget.ViewPager(context, attrs) {
+class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
     var enableSwipe = true
 
     override fun onInterceptTouchEvent(ev: MotionEvent?) =

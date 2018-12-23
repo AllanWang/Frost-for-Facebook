@@ -35,7 +35,7 @@ import java.util.*
 class TabCustomizerActivity : BaseActivity() {
 
     val toolbar: View by bindView(R.id.pseudo_toolbar)
-    val recycler: androidx.recyclerview.widget.RecyclerView by bindView(R.id.tab_recycler)
+    val recycler: RecyclerView by bindView(R.id.tab_recycler)
     val instructions: TextView by bindView(R.id.instructions)
     val divider: View by bindView(R.id.divider)
     val adapter = FastItemAdapter<TabIItem>()
@@ -50,7 +50,7 @@ class TabCustomizerActivity : BaseActivity() {
 
         toolbar.setBackgroundColor(Prefs.headerColor)
 
-        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, TAB_COUNT, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
+        recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, GridLayoutManager.VERTICAL, false)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
 
@@ -86,7 +86,7 @@ class TabCustomizerActivity : BaseActivity() {
 
     private fun View.wobble() = startAnimation(wobble(context))
 
-    private fun bindSwapper(adapter: FastItemAdapter<*>, recycler: androidx.recyclerview.widget.RecyclerView) {
+    private fun bindSwapper(adapter: FastItemAdapter<*>, recycler: RecyclerView) {
         val dragCallback = TabDragCallback(SimpleDragCallback.ALL, swapper(adapter))
         ItemTouchHelper(dragCallback).attachToRecyclerView(recycler)
     }
@@ -108,7 +108,7 @@ class TabCustomizerActivity : BaseActivity() {
 
         private var draggingView: TabIItem.ViewHolder? = null
 
-        override fun onSelectedChanged(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder?, actionState: Int) {
+        override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
             when (actionState) {
                 ItemTouchHelper.ACTION_STATE_DRAG -> {

@@ -33,7 +33,7 @@ class Keywords @JvmOverloads constructor(
 
     val editText: AppCompatEditText by bindView(R.id.edit_text)
     val addIcon: ImageView by bindView(R.id.add_icon)
-    val recycler: androidx.recyclerview.widget.RecyclerView by bindView(R.id.recycler)
+    val recycler: RecyclerView by bindView(R.id.recycler)
     val adapter = FastItemAdapter<KeywordItem>()
 
     init {
@@ -48,10 +48,10 @@ class Keywords @JvmOverloads constructor(
             }
         }
         adapter.add(Prefs.notificationKeywords.map { KeywordItem(it) })
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = adapter
         adapter.withEventHook(object : ClickEventHook<KeywordItem>() {
-            override fun onBind(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder): View? = (viewHolder as? KeywordItem.ViewHolder)?.delete
+            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? = (viewHolder as? KeywordItem.ViewHolder)?.delete
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<KeywordItem>, item: KeywordItem) {
                 adapter.remove(position)
@@ -85,7 +85,7 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem, KeywordItem.V
         holder.text.text = null
     }
 
-    class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val text: AppCompatTextView by bindView(R.id.keyword_text)
         val delete: ImageView by bindView(R.id.keyword_delete)
 

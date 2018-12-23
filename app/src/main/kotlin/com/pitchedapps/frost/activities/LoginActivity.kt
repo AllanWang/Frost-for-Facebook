@@ -39,7 +39,7 @@ class LoginActivity : BaseActivity() {
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val web: LoginWebView by bindView(R.id.login_webview)
-    private val swipeRefresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
 

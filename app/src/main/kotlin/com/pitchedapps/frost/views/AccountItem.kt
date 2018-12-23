@@ -60,7 +60,7 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
         }
     }
 
-    class ViewHolder(val v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+    class ViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
         val image: ImageView by bindView(R.id.account_image)
         val text: AppCompatTextView by bindView(R.id.account_text)
     }

@@ -23,7 +23,7 @@ class MainActivity : BaseMainActivity() {
     }
 
     private fun setupViewPager() {
-        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if (lastPosition == position) return

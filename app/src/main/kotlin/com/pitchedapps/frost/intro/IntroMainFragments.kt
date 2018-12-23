@@ -28,7 +28,7 @@ import org.jetbrains.anko.childrenSequence
 /**
  * The core intro fragment for all other fragments
  */
-abstract class BaseIntroFragment(val layoutRes: Int) : androidx.fragment.app.Fragment() {
+abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
 
     val screenWidth
         get() = resources.displayMetrics.widthPixels

@@ -121,7 +121,7 @@ class AboutActivity : AboutActivityBase(null, {
             }
         }
 
-        class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+        class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             val container: ConstraintLayout by bindView(R.id.about_icons_container)
             val images: List<ImageView>

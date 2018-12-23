@@ -111,7 +111,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
     val content: FrostContentWeb by bindView(R.id.frost_content_web)
     val web: FrostWebView
         get() = content.coreView
-    val coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout by bindView(R.id.overlay_main_content)
+    val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
     private inline val urlTest: String?
         get() = intent.getStringExtra(ARG_URL) ?: intent.dataString

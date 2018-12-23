@@ -44,7 +44,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
         FrostContentParent where T : View, T : FrostContentCore {
 
-    private val refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout by bindView(R.id.content_refresh)
+    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
 

@@ -22,7 +22,7 @@ import com.pitchedapps.frost.views.AccountItem
  */
 class SelectorActivity : BaseActivity() {
 
-    val recycler: androidx.recyclerview.widget.RecyclerView by bindView(R.id.selector_recycler)
+    val recycler: RecyclerView by bindView(R.id.selector_recycler)
     val adapter = FastItemAdapter<AccountItem>()
     val text: AppCompatTextView by bindView(R.id.text_select_account)
     val container: ConstraintLayout by bindView(R.id.container)
@@ -30,12 +30,12 @@ class SelectorActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selector)
-        recycler.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 2)
+        recycler.layoutManager = GridLayoutManager(this, 2)
         recycler.adapter = adapter
         adapter.add(cookies().map { AccountItem(it) })
         adapter.add(AccountItem(null)) // add account
         adapter.withEventHook(object : ClickEventHook<AccountItem>() {
-            override fun onBind(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder): View? = (viewHolder as? AccountItem.ViewHolder)?.v
+            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? = (viewHolder as? AccountItem.ViewHolder)?.v
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<AccountItem>, item: AccountItem) {
                 if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
