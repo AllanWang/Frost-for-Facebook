@@ -168,6 +168,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             else reloadBase(true)
             if (Showcase.firstWebOverlay) {
                 coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                    //noinspection WrongConstant
                     duration = Snackbar.LENGTH_INDEFINITE
                     setAction(R.string.kau_got_it) { _ -> this.dismiss() }
                 }

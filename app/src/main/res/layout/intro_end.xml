@@ -23,7 +23,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/frost_f_256"
+        android:src="@drawable/frost_f_200"
         app:layout_constraintBottom_toTopOf="@id/intro_desc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
