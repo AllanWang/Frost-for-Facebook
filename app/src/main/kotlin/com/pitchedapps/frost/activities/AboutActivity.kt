@@ -137,10 +137,10 @@ class AboutActivity : AboutActivityBase(null, {
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
                         GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
-                        CommunityMaterial.Icon.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                        CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
                         CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
-                        CommunityMaterial.Icon.cmd_slack to { c.startLink(R.string.slack_url) },
-                        CommunityMaterial.Icon.cmd_xda to { c.startLink(R.string.xda_url) }
+                        CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
+                        CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) }
                 ).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
                         layoutParams = ViewGroup.LayoutParams(size, size)

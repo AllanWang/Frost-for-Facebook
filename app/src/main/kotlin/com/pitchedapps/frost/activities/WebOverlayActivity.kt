@@ -248,7 +248,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         overlayContext?.onMenuCreate(this, menu)
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_share to CommunityMaterial.Icon.cmd_share,
+                R.id.action_share to CommunityMaterial.Icon2.cmd_share,
                 R.id.action_copy_link to GoogleMaterial.Icon.gmd_content_copy)
         return true
     }
