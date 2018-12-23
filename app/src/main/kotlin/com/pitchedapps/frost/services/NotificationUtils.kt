@@ -70,8 +70,8 @@ fun Context.frostNotification(id: String) =
 fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
-                if (enable) Notification.GROUP_ALERT_CHILDREN
-                else Notification.GROUP_ALERT_SUMMARY)
+                if (enable) NotificationCompat.GROUP_ALERT_CHILDREN
+                else NotificationCompat.GROUP_ALERT_SUMMARY)
     } else if (!enable) {
         setDefaults(0)
     } else {

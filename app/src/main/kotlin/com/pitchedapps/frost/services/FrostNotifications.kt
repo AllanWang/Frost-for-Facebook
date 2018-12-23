@@ -206,7 +206,7 @@ enum class NotificationType(
                 .setCategory(Notification.CATEGORY_SOCIAL)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notifBuilder.setGroupAlertBehavior(Notification.GROUP_ALERT_CHILDREN)
+            notifBuilder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
         }
 
         return FrostNotification(group, 1, notifBuilder)

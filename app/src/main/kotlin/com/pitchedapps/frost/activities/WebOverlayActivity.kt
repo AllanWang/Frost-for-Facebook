@@ -16,6 +16,7 @@ import android.widget.FrameLayout
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
 import ca.allanwang.kau.utils.*
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
@@ -168,8 +169,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             else reloadBase(true)
             if (Showcase.firstWebOverlay) {
                 coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
-                    //noinspection WrongConstant
-                    duration = Snackbar.LENGTH_INDEFINITE
+                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                     setAction(R.string.kau_got_it) { _ -> this.dismiss() }
                 }
             }

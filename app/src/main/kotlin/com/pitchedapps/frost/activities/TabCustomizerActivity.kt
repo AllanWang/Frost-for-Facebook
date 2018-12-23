@@ -50,7 +50,7 @@ class TabCustomizerActivity : BaseActivity() {
 
         toolbar.setBackgroundColor(Prefs.headerColor)
 
-        recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, GridLayoutManager.VERTICAL, false)
+        recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, RecyclerView.VERTICAL, false)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
 

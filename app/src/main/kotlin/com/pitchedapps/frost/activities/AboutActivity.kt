@@ -34,7 +34,7 @@ class AboutActivity : AboutActivityBase(null, {
     accentColor = Prefs.accentColor
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
     cutoutForeground = Prefs.accentColor
-    cutoutDrawableRes = R.drawable.frost_f_256
+    cutoutDrawableRes = R.drawable.frost_f_200
     faqPageTitleRes = R.string.faq_title
     faqXmlRes = R.xml.frost_faq
     faqParseNewLine = false
