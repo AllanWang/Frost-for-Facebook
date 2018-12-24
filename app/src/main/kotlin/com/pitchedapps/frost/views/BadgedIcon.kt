@@ -4,12 +4,11 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
-import android.widget.ImageView
-import android.widget.TextView
 import ca.allanwang.kau.utils.*
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
+import kotlinx.android.synthetic.main.view_badged_icon.view.*
 
 
 /**
@@ -19,36 +18,33 @@ class BadgedIcon @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    val badgeTextView: TextView by bindView(R.id.badge_text)
-    val badgeImage: ImageView by bindView(R.id.badge_image)
-
     init {
         inflate(context, R.layout.view_badged_icon, this)
         val badgeColor = Prefs.mainActivityLayout.backgroundColor().withAlpha(255).colorToForeground(0.2f)
         val badgeBackground = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(badgeColor, badgeColor))
         badgeBackground.cornerRadius = 13.dpToPx.toFloat()
-        badgeTextView.background = badgeBackground
-        badgeTextView.setTextColor(Prefs.mainActivityLayout.iconColor())
+        badge_text.background = badgeBackground
+        badge_text.setTextColor(Prefs.mainActivityLayout.iconColor())
     }
 
     var iicon: IIcon? = null
         set(value) {
             field = value
-            badgeImage.setImageDrawable(value?.toDrawable(context, sizeDp = 20, color = Prefs.mainActivityLayout.iconColor()))
+            badge_image.setImageDrawable(value?.toDrawable(context, sizeDp = 20, color = Prefs.mainActivityLayout.iconColor()))
         }
 
     fun setAllAlpha(alpha: Float) {
         //badgeTextView.setTextColor(Prefs.textColor.withAlpha(alpha.toInt()))
-        badgeImage.drawable.alpha = alpha.toInt()
+        badge_image.drawable.alpha = alpha.toInt()
     }
 
     var badgeText: String?
-        get() = badgeTextView.text.toString()
+        get() = badge_text.text.toString()
         set(value) {
-            if (badgeTextView.text == value) return
-            badgeTextView.text = value
-            if (value != null && value != "0") badgeTextView.visible()
-            else badgeTextView.gone()
+            if (badge_text.text == value) return
+            badge_text.text = value
+            if (value != null && value != "0") badge_text.visible()
+            else badge_text.gone()
         }
 
 }

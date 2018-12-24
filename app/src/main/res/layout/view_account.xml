@@ -10,7 +10,7 @@
         android:layout_width="@dimen/account_image_size"
         android:layout_height="@dimen/account_image_size" />
 
-    <androidx.legacy.widget.Space
+    <Space
         android:layout_width="1dp"
         android:layout_height="20dp" />
 

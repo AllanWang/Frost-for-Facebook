@@ -5,36 +5,28 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.appcompat.widget.Toolbar
 import ca.allanwang.kau.internal.KauBaseActivity
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.visible
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
-import com.pitchedapps.frost.web.DebugWebView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_debug.*
+import kotlinx.android.synthetic.main.view_main_fab.*
 import java.io.File
 
 /**
  * Created by Allan Wang on 05/01/18.
  */
 class DebugActivity : KauBaseActivity() {
-
-    private val toolbar: Toolbar by bindView(R.id.toolbar)
-    private val web: DebugWebView by bindView(R.id.debug_webview)
-    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-    private val fab: FloatingActionButton by bindView(R.id.fab)
 
     companion object {
         const val RESULT_URL = "extra_result_url"
@@ -56,10 +48,10 @@ class DebugActivity : KauBaseActivity() {
         setFrostColors {
             toolbar(toolbar)
         }
-        web.loadUrl(FbItem.FEED.url)
-        web.onPageFinished = { swipeRefresh.isRefreshing = false }
+        debug_webview.loadUrl(FbItem.FEED.url)
+        debug_webview.onPageFinished = { swipe_refresh.isRefreshing = false }
 
-        swipeRefresh.setOnRefreshListener(web::reload)
+        swipe_refresh.setOnRefreshListener(debug_webview::reload)
 
         fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, Prefs.iconColor)
         fab.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
@@ -69,10 +61,10 @@ class DebugActivity : KauBaseActivity() {
             val parent = baseDir(this)
             parent.createFreshDir()
             val rxScreenshot = Single.fromCallable {
-                web.getScreenshot(File(parent, "screenshot.png"))
+                debug_webview.getScreenshot(File(parent, "screenshot.png"))
             }.subscribeOn(Schedulers.io())
             val rxBody = Single.create<String> { emitter ->
-                web.evaluateJavascript(JsActions.RETURN_BODY.function) {
+                debug_webview.evaluateJavascript(JsActions.RETURN_BODY.function) {
                     emitter.onSuccess(it)
                 }
             }.subscribeOn(AndroidSchedulers.mainThread())
@@ -89,7 +81,7 @@ class DebugActivity : KauBaseActivity() {
                             return@subscribe
                         }
                         val intent = Intent()
-                        intent.putExtra(RESULT_URL, web.url)
+                        intent.putExtra(RESULT_URL, debug_webview.url)
                         intent.putExtra(RESULT_SCREENSHOT, screenshot)
                         if (body != null)
                             intent.putExtra(RESULT_BODY, body)
@@ -107,17 +99,17 @@ class DebugActivity : KauBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        web.resumeTimers()
+        debug_webview.resumeTimers()
     }
 
     override fun onPause() {
-        web.pauseTimers()
+        debug_webview.pauseTimers()
         super.onPause()
     }
 
     override fun onBackPressed() {
-        if (web.canGoBack())
-            web.goBack()
+        if (debug_webview.canGoBack())
+            debug_webview.goBack()
         else
             super.onBackPressed()
     }
