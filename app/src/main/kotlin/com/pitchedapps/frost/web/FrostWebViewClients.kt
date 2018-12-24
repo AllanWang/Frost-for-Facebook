@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.web
 
 import android.graphics.Bitmap
@@ -10,8 +26,19 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.injectors.*
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.JsActions
+import com.pitchedapps.frost.injectors.JsAssets
+import com.pitchedapps.frost.injectors.jsInject
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.isExplicitIntent
+import com.pitchedapps.frost.utils.isFacebookUrl
+import com.pitchedapps.frost.utils.isImageUrl
+import com.pitchedapps.frost.utils.isIndirectImageUrl
+import com.pitchedapps.frost.utils.launchImageActivity
+import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
 import org.jetbrains.anko.withAlpha
@@ -28,8 +55,8 @@ import org.jetbrains.anko.withAlpha
  */
 open class BaseWebViewClient : WebViewClient() {
 
-    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? = view.shouldFrostInterceptRequest(request)
-
+    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? =
+        view.shouldFrostInterceptRequest(request)
 }
 
 /**
@@ -51,11 +78,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     private fun injectBackgroundColor() {
         web.setBackgroundColor(
-                when {
-                    isMain -> Color.TRANSPARENT
-                    web.url.isFacebookUrl -> Prefs.bgColor.withAlpha(255)
-                    else -> Color.WHITE
-                }
+            when {
+                isMain -> Color.TRANSPARENT
+                web.url.isFacebookUrl -> Prefs.bgColor.withAlpha(255)
+                else -> Color.WHITE
+            }
         )
     }
 
@@ -64,21 +91,24 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         injectBackgroundColor()
         if (url.isFacebookUrl)
             view.jsInject(
-                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
 //                    CssHider.CORE,
-                    CssHider.HEADER,
-                    CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
-                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
-                    Prefs.themeInjector,
-                    CssHider.NON_RECENT.maybe((web.url?.contains("?sk=h_chr") ?: false)
-                            && Prefs.aggressiveRecents),
-                    JsAssets.DOCUMENT_WATCHER,
-                    JsAssets.CLICK_A,
-                    CssHider.ADS.maybe(!Prefs.showFacebookAds),
-                    JsAssets.CONTEXT_A,
+                CssHider.HEADER,
+                CssHider.COMPOSER.maybe(!Prefs.showComposer),
+                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
+                CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
+                Prefs.themeInjector,
+                CssHider.NON_RECENT.maybe(
+                    (web.url?.contains("?sk=h_chr") ?: false) &&
+                        Prefs.aggressiveRecents
+                ),
+                JsAssets.DOCUMENT_WATCHER,
+                JsAssets.CLICK_A,
+                CssHider.ADS.maybe(!Prefs.showFacebookAds),
+                JsAssets.CONTEXT_A,
 //                    JsAssets.HEADER_HIDER,
-                    JsAssets.MEDIA)
+                JsAssets.MEDIA
+            )
         else
             refresh.onNext(false)
     }
@@ -104,9 +134,10 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         refresh.onNext(false)
         injectBackgroundColor()
         web.jsInject(
-                JsActions.LOGIN_CHECK,
-                JsAssets.TEXTAREA_LISTENER,
-                JsAssets.HEADER_BADGES.maybe(isMain))
+            JsActions.LOGIN_CHECK,
+            JsAssets.TEXTAREA_LISTENER,
+            JsAssets.HEADER_BADGES.maybe(isMain)
+        )
     }
 
     open fun handleHtml(html: String?) {
@@ -151,7 +182,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
         return super.shouldOverrideUrlLoading(view, request)
     }
-
 }
 
 private const val EMIT_THEME = 0b1

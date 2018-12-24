@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook.parsers
 
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -54,7 +70,6 @@ interface FrostParser<out T : Any> {
      * Call parsing with given data
      */
     fun parseFromData(cookie: String?, text: String): ParseResponse<T>?
-
 }
 
 const val FALLBACK_TIME_MOD = 1000000
@@ -92,7 +107,7 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
     }
 
     final override fun parseFromUrl(cookie: String?, url: String): ParseResponse<T>? =
-            parse(cookie, frostJsoup(cookie, url))
+        parse(cookie, frostJsoup(cookie, url))
 
     override fun parse(cookie: String?, document: Document): ParseResponse<T>? {
         cookie ?: return null
@@ -109,14 +124,14 @@ internal abstract class FrostParserBase<out T : Any>(private val redirectToText:
      * Returns the formatted url, or an empty string if nothing was found
      */
     protected fun Element.getInnerImgStyle(): String? =
-            select("i.img[style*=url]").getStyleUrl()
+        select("i.img[style*=url]").getStyleUrl()
 
     protected fun Elements.getStyleUrl(): String? =
-            FB_CSS_URL_MATCHER.find(attr("style"))[1]?.formattedFbUrl
+        FB_CSS_URL_MATCHER.find(attr("style"))[1]?.formattedFbUrl
 
     protected open fun textToDoc(text: String): Document? =
-            if (!redirectToText) Jsoup.parse(text)
-            else throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
+        if (!redirectToText) Jsoup.parse(text)
+        else throw RuntimeException("${this::class.java.simpleName} requires text redirect but did not implement textToDoc")
 
     protected fun parseLink(element: Element?): FrostLink? {
         val a = element?.getElementsByTag("a")?.first() ?: return null

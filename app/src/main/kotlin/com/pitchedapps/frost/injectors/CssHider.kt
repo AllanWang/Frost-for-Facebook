@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
@@ -9,10 +25,14 @@ import android.webkit.WebView
  */
 enum class CssHider(vararg val items: String) : InjectorContract {
     CORE("[data-sigil=m_login_upsell]", "[role=progressbar]"),
-    HEADER("#header", "#mJewelNav", "[data-sigil=MTopBlueBarHeader]",
-            "#header-notices", "[data-sigil*=m-promo-jewel-header]"),
-    ADS("article[data-xt*=sponsor]",
-            "article[data-store*=sponsor]"),
+    HEADER(
+        "#header", "#mJewelNav", "[data-sigil=MTopBlueBarHeader]",
+        "#header-notices", "[data-sigil*=m-promo-jewel-header]"
+    ),
+    ADS(
+        "article[data-xt*=sponsor]",
+        "article[data-store*=sponsor]"
+    ),
     PEOPLE_YOU_MAY_KNOW("article._d2r"),
     SUGGESTED_GROUPS("article[data-ft*=\"ei\":]"),
     COMPOSER("#MComposer"),
@@ -22,11 +42,10 @@ enum class CssHider(vararg val items: String) : InjectorContract {
 
     val injector: JsInjector by lazy {
         JsBuilder().css("${items.joinToString(separator = ",")}{display:none !important}")
-                .single(name).build()
+            .single(name).build()
     }
 
     override fun inject(webView: WebView, callback: (() -> Unit)?) {
         injector.inject(webView, callback)
     }
-
 }

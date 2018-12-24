@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook.requests
 
 import com.bumptech.glide.Priority
@@ -11,7 +27,11 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.signature.ObjectKey
-import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
+import com.pitchedapps.frost.facebook.FB_REDIRECT_URL_MATCHER
+import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.facebook.get
 import io.reactivex.Maybe
 import okhttp3.Call
 import okhttp3.Request
@@ -33,9 +53,9 @@ val test: () -> InputStream? = { null }
  */
 fun String.getFullSizedImageUrl(url: String): Maybe<String?> = Maybe.fromCallable {
     val redirect = requestBuilder().url(url).get().call()
-            .execute().body()?.string() ?: return@fromCallable null
+        .execute().body()?.string() ?: return@fromCallable null
     return@fromCallable FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
-            ?: return@fromCallable null
+        ?: return@fromCallable null
 }.onErrorComplete()
 
 /**
@@ -51,7 +71,6 @@ data class HdImageMaybe(val url: String, val cookie: String) {
     val isValid: Boolean by lazy {
         id != -1L && cookie.isNotBlank()
     }
-
 }
 
 /*
@@ -69,18 +88,20 @@ class HdImageLoadingFactory : ModelLoaderFactory<HdImageMaybe, InputStream> {
 }
 
 fun <T> RequestBuilder<T>.loadWithPotentialHd(model: HdImageMaybe) =
-        thumbnail(clone().load(model.url))
-                .load(model)
-                .apply(RequestOptions().override(Target.SIZE_ORIGINAL))
+    thumbnail(clone().load(model.url))
+        .load(model)
+        .apply(RequestOptions().override(Target.SIZE_ORIGINAL))
 
 class HdImageLoading : ModelLoader<HdImageMaybe, InputStream> {
 
-    override fun buildLoadData(model: HdImageMaybe,
-                               width: Int,
-                               height: Int,
-                               options: Options): ModelLoader.LoadData<InputStream>? =
-            if (!model.isValid) null
-            else ModelLoader.LoadData(ObjectKey(model), HdImageFetcher(model))
+    override fun buildLoadData(
+        model: HdImageMaybe,
+        width: Int,
+        height: Int,
+        options: Options
+    ): ModelLoader.LoadData<InputStream>? =
+        if (!model.isValid) null
+        else ModelLoader.LoadData(ObjectKey(model), HdImageFetcher(model))
 
     override fun handles(model: HdImageMaybe) = model.isValid
 }
@@ -105,7 +126,7 @@ class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream>
         model.cookie.fbRequest(fail = { callback.fail("Invalid auth") }) {
             if (cancelled) return@fbRequest callback.fail("Cancelled")
             val url = getFullSizedImage(model.id).invoke()
-                    ?: return@fbRequest callback.fail("Null url")
+                ?: return@fbRequest callback.fail("Null url")
             if (cancelled) return@fbRequest callback.fail("Cancelled")
             if (!url.contains("png") && !url.contains("jpg")) return@fbRequest callback.fail("Invalid format")
             urlCall = Request.Builder().url(url).get().call()

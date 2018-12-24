@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.debugger
 
 import ca.allanwang.kau.logging.KauLoggerExtension
@@ -32,21 +48,23 @@ import java.util.zip.ZipOutputStream
  *
  * Inspired by <a href="https://github.com/JonasCz/save-for-offline">Save for Offline</a>
  */
-class OfflineWebsite(private val url: String,
-                     private val cookie: String = "",
-                     baseUrl: String? = null,
-                     private val html: String? = null,
-                     /**
-                      * Directory that holds all the files
-                      */
-                     val baseDir: File,
-                     private val userAgent: String = USER_AGENT_BASIC) {
+class OfflineWebsite(
+    private val url: String,
+    private val cookie: String = "",
+    baseUrl: String? = null,
+    private val html: String? = null,
+    /**
+     * Directory that holds all the files
+     */
+    val baseDir: File,
+    private val userAgent: String = USER_AGENT_BASIC
+) {
 
     /**
      * Supplied url without the queries
      */
     private val baseUrl = (baseUrl ?: url.substringBefore("?")
-            .substringBefore(".com")).trim('/')
+        .substringBefore(".com")).trim('/')
 
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
@@ -67,11 +85,11 @@ class OfflineWebsite(private val url: String,
     private val cssQueue = mutableSetOf<String>()
 
     private fun request(url: String) = Request.Builder()
-            .header("Cookie", cookie)
-            .header("User-Agent", userAgent)
-            .url(url)
-            .get()
-            .call()
+        .header("Cookie", cookie)
+        .header("User-Agent", userAgent)
+        .url(url)
+        .get()
+        .call()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -93,7 +111,6 @@ class OfflineWebsite(private val url: String,
             L.e { "Could not create ${mainFile.absolutePath}" }
             return callback(false)
         }
-
 
         if (!assetDir.createFreshDir()) {
             L.e { "Could not create ${assetDir.absolutePath}" }
@@ -245,8 +262,10 @@ class OfflineWebsite(private val url: String,
         }
     })
 
-    private inline fun <T> String.downloadUrl(fallback: () -> T,
-                                              action: (file: File, body: ResponseBody) -> T): T {
+    private inline fun <T> String.downloadUrl(
+        fallback: () -> T,
+        action: (file: File, body: ResponseBody) -> T
+    ): T {
 
         val file = File(assetDir, fileName())
         if (!file.createNewFile()) {
@@ -289,10 +308,9 @@ class OfflineWebsite(private val url: String,
         if (mapped != null) return mapped
 
         val candidate = substringBefore("?").trim('/')
-                .substringAfterLast("/").shorten()
+            .substringAfterLast("/").shorten()
 
         val index = atomicInt.getAndIncrement()
-
 
         var newUrl = "a${index}_$candidate"
 
@@ -308,10 +326,10 @@ class OfflineWebsite(private val url: String,
     }
 
     private fun String.shorten() =
-            if (length <= 10) this else substring(length - 10)
+        if (length <= 10) this else substring(length - 10)
 
     private fun Set<String>.clean(): List<String> =
-            filter(String::isNotBlank).filter { it.startsWith("http") }
+        filter(String::isNotBlank).filter { it.startsWith("http") }
 
     private fun reset() {
         cancelled = false
@@ -326,5 +344,4 @@ class OfflineWebsite(private val url: String,
         compositeDisposable.dispose()
         L.v { "Request cancelled" }
     }
-
 }

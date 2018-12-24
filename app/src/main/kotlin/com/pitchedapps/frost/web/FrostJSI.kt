@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.web
 
 import android.webkit.JavascriptInterface
@@ -5,10 +21,15 @@ import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.WebContext
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.isIndependent
+import com.pitchedapps.frost.utils.launchImageActivity
+import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
-
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -31,15 +52,15 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun loadVideo(url: String?, isGif: Boolean): Boolean =
-            if (url != null && Prefs.enablePip) {
-                web.post {
-                    (context as? VideoViewHolder)?.showVideo(url, isGif)
-                            ?: L.e { "Could not load video; contract not implemented" }
-                }
-                true
-            } else {
-                false
+        if (url != null && Prefs.enablePip) {
+            web.post {
+                (context as? VideoViewHolder)?.showVideo(url, isGif)
+                    ?: L.e { "Could not load video; contract not implemented" }
             }
+            true
+        } else {
+            false
+        }
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {
@@ -113,5 +134,4 @@ class FrostJSI(val web: FrostWebView) {
         html ?: return
         header?.onNext(html)
     }
-
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook
 
 import org.apache.commons.text.StringEscapeUtils
@@ -18,7 +34,8 @@ class FbRegexTest {
     @Test
     fun fbDtsgRegex() {
         val fb_dtsg = "readme"
-        val input = "data-sigil=\"mbasic_inline_feed_composer\">\u003Cinput type=\"hidden\" name=\"fb_dtsg\" value=\"$fb_dtsg\" autocomplete=\"off\" \\/>\u003Cinput type=\"hidden\" name=\"privacyx\" value=\"12345\""
+        val input =
+            "data-sigil=\"mbasic_inline_feed_composer\">\u003Cinput type=\"hidden\" name=\"fb_dtsg\" value=\"$fb_dtsg\" autocomplete=\"off\" \\/>\u003Cinput type=\"hidden\" name=\"privacyx\" value=\"12345\""
         assertEquals(fb_dtsg, FB_DTSG_MATCHER.find(input)[1])
     }
 
@@ -56,5 +73,4 @@ class FbRegexTest {
         val img = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/89056_${id}_98239_o.jpg"
         assertEquals(id, FB_IMAGE_ID_MATCHER.find(img)[1]?.toLongOrNull())
     }
-
 }

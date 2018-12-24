@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.utils.L
@@ -91,13 +107,13 @@ class FbUrlFormatter(url: String) {
          * That shouldn't break anything
          */
         val discardable = arrayOf(
-                "http://lm.facebook.com/l.php?u=",
-                "https://lm.facebook.com/l.php?u=",
-                "http://m.facebook.com/l.php?u=",
-                "https://m.facebook.com/l.php?u=",
-                "http://touch.facebook.com/l.php?u=",
-                "https://touch.facebook.com/l.php?u=",
-                VIDEO_REDIRECT
+            "http://lm.facebook.com/l.php?u=",
+            "https://lm.facebook.com/l.php?u=",
+            "http://m.facebook.com/l.php?u=",
+            "https://m.facebook.com/l.php?u=",
+            "http://touch.facebook.com/l.php?u=",
+            "https://touch.facebook.com/l.php?u=",
+            VIDEO_REDIRECT
         )
 
         /**
@@ -108,13 +124,13 @@ class FbUrlFormatter(url: String) {
         val discardableQueries = arrayOf("ref", "refid", "SharedWith")
 
         val converter = listOf(
-                "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
-                "\\7B " to "%7B", "\\7D " to "%7D", "\\7C " to "%7C", "\\5C " to "%5C",
-                "\\5E " to "%5E", "\\7E " to "%7E", "\\5B " to "%5B", "\\5D " to "%5D",
-                "\\60 " to "%60", "\\3B " to "%3B", "\\2F " to "%2F", "\\3F " to "%3F",
-                "\\3A " to "%3A", "\\40 " to "%40", "\\3D " to "%3D", "\\26 " to "%26",
-                "\\24 " to "%24", "\\2B " to "%2B", "\\22 " to "%22", "\\2C " to "%2C",
-                "\\20 " to "%20"
+            "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
+            "\\7B " to "%7B", "\\7D " to "%7D", "\\7C " to "%7C", "\\5C " to "%5C",
+            "\\5E " to "%5E", "\\7E " to "%7E", "\\5B " to "%5B", "\\5D " to "%5D",
+            "\\60 " to "%60", "\\3B " to "%3B", "\\2F " to "%2F", "\\3F " to "%3F",
+            "\\3A " to "%3A", "\\40 " to "%40", "\\3D " to "%3D", "\\26 " to "%26",
+            "\\24 " to "%24", "\\2B " to "%2B", "\\22 " to "%22", "\\2C " to "%2C",
+            "\\20 " to "%20"
         )
     }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost
 
 import android.app.Activity
@@ -21,7 +37,11 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.services.setupNotificationChannels
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.BuildUtils
+import com.pitchedapps.frost.utils.FrostPglAdBlock
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.Showcase
 import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -30,9 +50,8 @@ import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.*
+import java.util.Random
 import kotlin.reflect.KClass
-
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -46,10 +65,12 @@ class FrostApp : Application() {
 //    lateinit var refWatcher: RefWatcher
 
     private fun FlowConfig.Builder.withDatabase(name: String, klass: KClass<*>) =
-            addDatabaseConfig(DatabaseConfig.builder(klass.java)
-                    .databaseName(name)
-                    .modelNotifier(ContentResolverNotifier("${BuildConfig.APPLICATION_ID}.dbflow.provider"))
-                    .build())
+        addDatabaseConfig(
+            DatabaseConfig.builder(klass.java)
+                .databaseName(name)
+                .modelNotifier(ContentResolverNotifier("${BuildConfig.APPLICATION_ID}.dbflow.provider"))
+                .build()
+        )
 
     override fun onCreate() {
         if (!buildIsLollipopAndUp) { // not supported
@@ -57,11 +78,13 @@ class FrostApp : Application() {
             return
         }
 
-        FlowManager.init(FlowConfig.Builder(this)
+        FlowManager.init(
+            FlowConfig.Builder(this)
                 .withDatabase(CookiesDb.NAME, CookiesDb::class)
                 .withDatabase(FbTabsDb.NAME, FbTabsDb::class)
                 .withDatabase(NotificationDb.NAME, NotificationDb::class)
-                .build())
+                .build()
+        )
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         //        if (LeakCanary.isInAnalyzerProcess(this)) return
@@ -95,9 +118,11 @@ class FrostApp : Application() {
                 val c = imageView.context
                 val request = GlideApp.with(c)
                 val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
-                request.load(uri).apply(RequestOptions()
-                        .signature(ApplicationVersionSignature.obtain(c)))
-                        .thumbnail(old).into(imageView)
+                request.load(uri).apply(
+                    RequestOptions()
+                        .signature(ApplicationVersionSignature.obtain(c))
+                )
+                    .thumbnail(old).into(imageView)
             }
         })
         if (BuildConfig.DEBUG)
@@ -127,7 +152,6 @@ class FrostApp : Application() {
                     L.e(it) { "RxJava error" }
             }
         }
-
     }
 
     private fun initBugsnag() {
@@ -136,7 +160,7 @@ class FrostApp : Application() {
         Bugsnag.disableExceptionHandler()
         if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) return
         val version = BuildUtils.match(BuildConfig.VERSION_NAME)
-                ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
+            ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
         Bugsnag.enableExceptionHandler()
         Bugsnag.setNotifyReleaseStages(*BuildUtils.getAllStages())
         Bugsnag.setAppVersion(version.versionName)
@@ -157,5 +181,4 @@ class FrostApp : Application() {
             }
         }
     }
-
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.settings
 
 import android.content.Context
@@ -77,25 +93,26 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     }
                 }
             }
-
         }
     }
 }
 
 private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
-        sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
-            addItem("Url", parser.url)
-            addItem("Contents", "$content")
-        }
+    sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
+        addItem("Url", parser.url)
+        addItem("Contents", "$content")
+    }
 
 private const val ZIP_NAME = "debug"
 
 fun SettingsActivity.sendDebug(url: String, html: String?) {
 
-    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            baseUrl = FB_URL_BASE,
-            html = html,
-            baseDir = DebugActivity.baseDir(this))
+    val downloader = OfflineWebsite(
+        url, FbCookie.webCookie ?: "",
+        baseUrl = FB_URL_BASE,
+        html = html,
+        baseDir = DebugActivity.baseDir(this)
+    )
 
     val md = materialDialog {
         title(R.string.parsing_data)
@@ -114,7 +131,8 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
                 it.dismiss()
                 if (success) {
                     val zipUri = it.context.frostUriFromFile(
-                            File(downloader.baseDir, "$ZIP_NAME.zip"))
+                        File(downloader.baseDir, "$ZIP_NAME.zip")
+                    )
                     L.i { "Sending debug zip with uri $zipUri" }
                     sendFrostEmail(R.string.debug_report_email_title) {
                         addItem("Url", url)
@@ -128,7 +146,5 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
                 }
             }
         }
-
     }
-
 }

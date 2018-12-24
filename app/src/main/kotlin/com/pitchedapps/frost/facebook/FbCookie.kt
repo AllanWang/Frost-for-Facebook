@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook
 
 import android.app.Activity
@@ -38,13 +54,13 @@ object FbCookie {
                 val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
                 cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie) { callback.onSuccess(it) } }
                 Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }) {}
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            callback?.invoke()
-                            L.d { "Cookies set" }
-                            L._d { cookie }
-                            flush()
-                        }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        callback?.invoke()
+                        L.d { "Cookies set" }
+                        L._d { cookie }
+                        flush()
+                    }
             }
         }
     }

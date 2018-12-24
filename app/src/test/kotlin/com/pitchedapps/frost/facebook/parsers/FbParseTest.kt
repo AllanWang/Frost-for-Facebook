@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook.parsers
 
 import com.pitchedapps.frost.internal.COOKIE
@@ -24,11 +40,11 @@ class FbParseTest {
     }
 
     private inline fun <reified T : Any> FrostParser<T>.test(action: T.() -> Unit = {}) =
-            parse(COOKIE).test(url, action)
+        parse(COOKIE).test(url, action)
 
     private inline fun <reified T : Any> ParseResponse<T>?.test(url: String, action: T.() -> Unit = {}) {
         val response = this
-                ?: fail("${T::class.simpleName} parser returned null for $url")
+            ?: fail("${T::class.simpleName} parser returned null for $url")
         println(response)
         response.data.action()
     }
