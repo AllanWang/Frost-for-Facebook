@@ -39,8 +39,6 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -76,18 +74,18 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
-            checkForLogin(url) { id, cookie -> loginCallback(CookieModel(id, "", cookie)) }
+            val cookieModel = checkForLogin(url)
+            if (cookieModel != null)
+                loginCallback(cookieModel)
             if (!view.isVisible) view.fadeIn()
         }
 
-        fun checkForLogin(url: String?, onFound: (id: Long, cookie: String) -> Unit) {
-            doAsync {
-                if (!url.isFacebookUrl) return@doAsync
-                val cookie = CookieManager.getInstance().getCookie(url) ?: return@doAsync
-                L.d { "Checking cookie for login" }
-                val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return@doAsync
-                uiThread { onFound(id, cookie) }
-            }
+        fun checkForLogin(url: String?): CookieModel? {
+            if (!url.isFacebookUrl) return null
+            val cookie = CookieManager.getInstance().getCookie(url) ?: return null
+            L.d { "Checking cookie for login" }
+            val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return null
+            return CookieModel(id, "", cookie)
         }
 
         override fun onPageCommitVisible(view: WebView, url: String?) {
