@@ -185,7 +185,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             translucentStatusBar = false
             sliderBackgroundColor = navBg
             drawerHeader = accountHeader {
-                customViewRes = R.layout.material_drawer_header
                 textColor = Prefs.iconColor.toLong()
                 backgroundDrawable = ColorDrawable(navHeader)
                 selectionSecondLineShown = false
