@@ -1,10 +1,10 @@
 package com.pitchedapps.frost.views
 
 import android.content.Context
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeOut
 import com.pitchedapps.frost.contracts.FrostContentContainer
@@ -18,9 +18,9 @@ import com.pitchedapps.frost.utils.Prefs
  *
  */
 class FrostRecyclerView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr),
-        FrostContentCore {
+    FrostContentCore {
 
     override fun reload(animate: Boolean) = reloadBase(animate)
 
@@ -102,5 +102,4 @@ class FrostRecyclerView @JvmOverloads constructor(
     override fun reloadTextSizeSelf() {
         // todo
     }
-
 }

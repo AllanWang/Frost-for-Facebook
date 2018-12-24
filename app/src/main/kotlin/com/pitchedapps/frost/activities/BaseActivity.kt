@@ -80,7 +80,6 @@ abstract class BaseActivity : KauBaseActivity() {
 ////        disposeNetworkConnectivity()
 //    }
 
-
     override fun onStop() {
         if (this is VideoViewHolder) videoOnStop()
         super.onStop()

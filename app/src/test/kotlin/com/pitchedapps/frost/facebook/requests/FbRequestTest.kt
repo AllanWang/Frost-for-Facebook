@@ -8,7 +8,11 @@ import com.pitchedapps.frost.internal.authDependent
 import okhttp3.Call
 import org.junit.BeforeClass
 import org.junit.Test
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 /**
  * Created by Allan Wang on 21/12/17.

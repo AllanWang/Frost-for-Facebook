@@ -15,10 +15,10 @@ import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion
 
 enum class FbItem(
-        @StringRes val titleId: Int,
-        val icon: IIcon,
-        relativeUrl: String,
-        val fragmentCreator: () -> BaseFragment = ::WebFragment
+    @StringRes val titleId: Int,
+    val icon: IIcon,
+    relativeUrl: String,
+    val fragmentCreator: () -> BaseFragment = ::WebFragment
 ) : EnumBundle<FbItem> {
 
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),

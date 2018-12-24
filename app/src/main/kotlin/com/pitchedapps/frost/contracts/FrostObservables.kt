@@ -27,5 +27,4 @@ interface FrostObservables {
         other.progressObservable = progressObservable
         other.titleObservable = titleObservable
     }
-
 }

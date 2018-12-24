@@ -5,7 +5,11 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
-import android.webkit.*
+import android.webkit.ConsoleMessage
+import android.webkit.CookieManager
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -26,7 +30,7 @@ import org.jetbrains.anko.uiThread
  * Created by Allan Wang on 2017-05-29.
  */
 class LoginWebView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
     private lateinit var loginCallback: (CookieModel) -> Unit
@@ -73,9 +77,11 @@ class LoginWebView @JvmOverloads constructor(
             L.d { "Login page commit visible" }
             view.setBackgroundColor(Color.TRANSPARENT)
             if (url.isFacebookUrl)
-                view.jsInject(JsAssets.HEADER_HIDER,
-                        CssHider.CORE,
-                        Prefs.themeInjector)
+                view.jsInject(
+                    JsAssets.HEADER_HIDER,
+                    CssHider.CORE,
+                    Prefs.themeInjector
+                )
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {

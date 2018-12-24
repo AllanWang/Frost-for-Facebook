@@ -11,7 +11,7 @@ import org.junit.Assume
 import org.junit.Test
 import java.io.File
 import java.io.FileInputStream
-import java.util.*
+import java.util.Properties
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.full.starProjectedType
 import kotlin.test.assertEquals

@@ -17,12 +17,19 @@ import com.pitchedapps.frost.utils.L
 const val MEDIA_CHOOSER_RESULT = 67
 
 interface FileChooserActivityContract {
-    fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams)
+    fun openFileChooser(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    )
 }
 
 interface FileChooserContract {
     var filePathCallback: ValueCallback<Array<Uri>?>?
-    fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams)
+    fun Activity.openMediaPicker(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    )
+
     fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean
 }
 
@@ -30,7 +37,10 @@ class FileChooserDelegate : FileChooserContract {
 
     override var filePathCallback: ValueCallback<Array<Uri>?>? = null
 
-    override fun Activity.openMediaPicker(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
+    override fun Activity.openMediaPicker(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    ) {
         kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
             if (!granted) {
                 filePathCallback.onReceiveValue(null)
@@ -52,5 +62,4 @@ class FileChooserDelegate : FileChooserContract {
         filePathCallback = null
         return true
     }
-
 }

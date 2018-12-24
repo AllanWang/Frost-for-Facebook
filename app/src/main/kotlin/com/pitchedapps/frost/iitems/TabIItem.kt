@@ -4,7 +4,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.iitems.KauIItem
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.invisible
+import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.visible
+import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter_extensions.drag.IDraggable
@@ -16,8 +20,8 @@ import com.pitchedapps.frost.utils.Prefs
  * Created by Allan Wang on 26/11/17.
  */
 class TabIItem(val item: FbItem) : KauIItem<TabIItem, TabIItem.ViewHolder>(
-        R.layout.iitem_tab_preview,
-        { ViewHolder(it) }
+    R.layout.iitem_tab_preview,
+    { ViewHolder(it) }
 ), IDraggable<TabIItem, IItem<*, *>> {
 
     override fun withIsDraggable(draggable: Boolean): TabIItem = this
@@ -45,6 +49,5 @@ class TabIItem(val item: FbItem) : KauIItem<TabIItem, TabIItem.ViewHolder>(
             image.setImageDrawable(null)
             text.visible().text = null
         }
-
     }
 }

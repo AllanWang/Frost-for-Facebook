@@ -1,17 +1,24 @@
 package com.pitchedapps.frost.activities
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.about.AboutActivityBase
 import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.dimenPixelSize
+import ca.allanwang.kau.utils.resolveDrawable
+import ca.allanwang.kau.utils.startLink
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.withMinAlpha
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
@@ -24,7 +31,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-
 
 /**
  * Created by Allan Wang on 2017-06-26.
@@ -42,21 +48,21 @@ class AboutActivity : AboutActivityBase(null, {
 
     override fun getLibraries(libs: Libs): List<Library> {
         val include = arrayOf(
-                "AboutLibraries",
-                "AndroidIconics",
-                "androidin_appbillingv3",
-                "androidslidinguppanel",
-                "Crashlytics",
-                "dbflow",
-                "fastadapter",
-                "glide",
-                "Jsoup",
-                "kau",
-                "kotterknife",
-                "materialdialogs",
-                "materialdrawer",
-                "rxjava",
-                "subsamplingscaleimageview"
+            "AboutLibraries",
+            "AndroidIconics",
+            "androidin_appbillingv3",
+            "androidslidinguppanel",
+            "Crashlytics",
+            "dbflow",
+            "fastadapter",
+            "glide",
+            "Jsoup",
+            "kau",
+            "kotterknife",
+            "materialdialogs",
+            "materialdrawer",
+            "rxjava",
+            "subsamplingscaleimageview"
         )
 
         val l = libs.prepareLibraries(this, include, null, false, true, true)
@@ -136,11 +142,11 @@ class AboutActivity : AboutActivityBase(null, {
                 val c = itemView.context
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
-                        GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
-                        CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
-                        CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
-                        CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
-                        CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) }
+                    GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
+                    CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                    CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
+                    CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
+                    CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) }
                 ).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
                         layoutParams = ViewGroup.LayoutParams(size, size)
@@ -154,8 +160,14 @@ class AboutActivity : AboutActivityBase(null, {
                 }
                 val set = ConstraintSet()
                 set.clone(container)
-                set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
-                        images.map { it.id }.toIntArray(), null, ConstraintSet.CHAIN_SPREAD_INSIDE)
+                set.createHorizontalChain(ConstraintSet.PARENT_ID,
+                    ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.RIGHT,
+                    images.map { it.id }.toIntArray(),
+                    null,
+                    ConstraintSet.CHAIN_SPREAD_INSIDE
+                )
                 set.applyTo(container)
             }
         }

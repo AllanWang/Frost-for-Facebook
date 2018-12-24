@@ -22,5 +22,4 @@ class FbDomTest {
         assertNotNull(doc.getElementById("header"))
         assertNotNull(doc.getElementById("mJewelNav"))
     }
-
 }

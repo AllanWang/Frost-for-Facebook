@@ -65,7 +65,6 @@ abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment
      * Create the fast adapter to bind to the recyclerview
      */
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
-
 }
 
 abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment() {

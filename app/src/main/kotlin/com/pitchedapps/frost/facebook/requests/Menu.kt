@@ -19,28 +19,27 @@ import java.io.IOException
 fun RequestAuth.getMenuData(): FrostRequest<MenuData?> {
 
     val body = listOf(
-            "fb_dtsg" to fb_dtsg,
-            "__user" to userId
+        "fb_dtsg" to fb_dtsg,
+        "__user" to userId
     ).withEmptyData("m_sess", "__dyn", "__req", "__ajax__")
 
     return frostRequest(::parseMenu) {
         url("${FB_URL_BASE}bookmarks/flyout/body/?id=u_0_2")
         post(body.toForm())
     }
-
 }
 
 fun parseMenu(call: Call): MenuData? {
     val fullString = call.execute().body()?.string() ?: return null
     var jsonString = fullString.substringAfter("bookmarkGroups", "")
-            .substringAfter("[", "")
+        .substringAfter("[", "")
 
     if (jsonString.isBlank()) return null
 
     jsonString = "{ \"data\" : [${StringEscapeUtils.unescapeEcmaScript(jsonString)}"
 
     val mapper = ObjectMapper()
-            .disable(MapperFeature.AUTO_DETECT_SETTERS)
+        .disable(MapperFeature.AUTO_DETECT_SETTERS)
 
     return try {
         val data = mapper.readValue(jsonString, MenuData::class.java)
@@ -48,11 +47,14 @@ fun parseMenu(call: Call): MenuData? {
         // parse footer content
 
         val footer = fullString.substringAfter("footerMarkup", "")
-                .substringAfter("{", "")
-                .substringBefore("}", "")
+            .substringAfter("{", "")
+            .substringBefore("}", "")
 
-        val doc = Jsoup.parseBodyFragment(StringEscapeUtils.unescapeEcmaScript(
-                StringEscapeUtils.unescapeEcmaScript(footer)))
+        val doc = Jsoup.parseBodyFragment(
+            StringEscapeUtils.unescapeEcmaScript(
+                StringEscapeUtils.unescapeEcmaScript(footer)
+            )
+        )
         val footerData = mutableListOf<MenuFooterItem>()
         val footerSmallData = mutableListOf<MenuFooterItem>()
 
@@ -76,11 +78,14 @@ fun parseMenu(call: Call): MenuData? {
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class MenuData(val data: List<MenuHeader> = emptyList(),
-                    val footer: MenuFooter = MenuFooter()) {
+data class MenuData(
+    val data: List<MenuHeader> = emptyList(),
+    val footer: MenuFooter = MenuFooter()
+) {
 
-    @JsonCreator constructor(
-            @JsonProperty("data") data: List<MenuHeader>?
+    @JsonCreator
+    constructor(
+        @JsonProperty("data") data: List<MenuHeader>?
     ) : this(data ?: emptyList(), MenuFooter())
 
     fun flatMapValid(): List<MenuItemData> {
@@ -95,7 +100,6 @@ data class MenuData(val data: List<MenuHeader> = emptyList(),
 
         return items
     }
-
 }
 
 interface MenuItemData {
@@ -103,17 +107,20 @@ interface MenuItemData {
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class MenuHeader(val id: String? = null,
-                      val header: String? = null,
-                      val visible: List<MenuItem> = emptyList(),
-                      val all: List<MenuItem> = emptyList()) : MenuItemData {
+data class MenuHeader(
+    val id: String? = null,
+    val header: String? = null,
+    val visible: List<MenuItem> = emptyList(),
+    val all: List<MenuItem> = emptyList()
+) : MenuItemData {
 
-    @JsonCreator constructor(
-            @JsonProperty("id") id: String?,
-            @JsonProperty("header") header: String?,
-            @JsonProperty("visible") visible: List<MenuItem>?,
-            @JsonProperty("all") all: List<MenuItem>?,
-            @JsonProperty("fake") fake: Boolean?
+    @JsonCreator
+    constructor(
+        @JsonProperty("id") id: String?,
+        @JsonProperty("header") header: String?,
+        @JsonProperty("visible") visible: List<MenuItem>?,
+        @JsonProperty("all") all: List<MenuItem>?,
+        @JsonProperty("fake") fake: Boolean?
     ) : this(id, header, visible ?: emptyList(), all ?: emptyList())
 
     override val isValid: Boolean
@@ -121,41 +128,49 @@ data class MenuHeader(val id: String? = null,
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class MenuItem(val id: String? = null,
-                    val name: String? = null,
-                    val pic: String? = null,
-                    val url: String? = null,
-                    val badge: String? = null,
-                    val countDetails: String? = null) : MenuItemData {
+data class MenuItem(
+    val id: String? = null,
+    val name: String? = null,
+    val pic: String? = null,
+    val url: String? = null,
+    val badge: String? = null,
+    val countDetails: String? = null
+) : MenuItemData {
 
-    @JsonCreator constructor(
-            @JsonProperty("id") id: String?,
-            @JsonProperty("name") name: String?,
-            @JsonProperty("pic") pic: String?,
-            @JsonProperty("url") url: String?,
-            @JsonProperty("count") badge: String?,
-            @JsonProperty("count_details") countDetails: String?,
-            @JsonProperty("fake") fake: Boolean?
-    ) : this(id, name, pic?.formattedFbUrl,
-            url?.formattedFbUrl,
-            if (badge == "0") null else badge,
-            countDetails)
+    @JsonCreator
+    constructor(
+        @JsonProperty("id") id: String?,
+        @JsonProperty("name") name: String?,
+        @JsonProperty("pic") pic: String?,
+        @JsonProperty("url") url: String?,
+        @JsonProperty("count") badge: String?,
+        @JsonProperty("count_details") countDetails: String?,
+        @JsonProperty("fake") fake: Boolean?
+    ) : this(
+        id, name, pic?.formattedFbUrl,
+        url?.formattedFbUrl,
+        if (badge == "0") null else badge,
+        countDetails
+    )
 
     override val isValid: Boolean
         get() = !name.isNullOrBlank() && !url.isNullOrBlank()
 }
 
-data class MenuFooter(val data: List<MenuFooterItem> = emptyList(),
-                      val smallData: List<MenuFooterItem> = emptyList()) {
+data class MenuFooter(
+    val data: List<MenuFooterItem> = emptyList(),
+    val smallData: List<MenuFooterItem> = emptyList()
+) {
 
     val hasContent
         get() = data.isNotEmpty() || smallData.isNotEmpty()
-
 }
 
-data class MenuFooterItem(val name: String? = null,
-                          val url: String? = null,
-                          val isSmall: Boolean = false) : MenuItemData {
+data class MenuFooterItem(
+    val name: String? = null,
+    val url: String? = null,
+    val isSmall: Boolean = false
+) : MenuItemData {
     override val isValid: Boolean
         get() = name != null && url != null
 }

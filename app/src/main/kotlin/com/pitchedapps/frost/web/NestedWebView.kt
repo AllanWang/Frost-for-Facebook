@@ -2,13 +2,12 @@ package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.core.view.NestedScrollingChild
-import androidx.core.view.NestedScrollingChildHelper
-import androidx.core.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.webkit.WebView
-
+import androidx.core.view.NestedScrollingChild
+import androidx.core.view.NestedScrollingChildHelper
+import androidx.core.view.ViewCompat
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -16,7 +15,7 @@ import android.webkit.WebView
  * Webview extension that handles nested scrolls
  */
 open class NestedWebView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr), NestedScrollingChild {
 
     private lateinit var childHelper: NestedScrollingChildHelper
@@ -99,11 +98,20 @@ open class NestedWebView @JvmOverloads constructor(
 
     final override fun hasNestedScrollingParent() = childHelper.hasNestedScrollingParent()
 
-    final override fun dispatchNestedScroll(dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, offsetInWindow: IntArray?) = childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
+    final override fun dispatchNestedScroll(
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        offsetInWindow: IntArray?
+    ) = childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
 
-    final override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?) = childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
+    final override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?) =
+        childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
-    final override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean) = childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
+    final override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean) =
+        childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
 
-    final override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float) = childHelper.dispatchNestedPreFling(velocityX, velocityY)
+    final override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float) =
+        childHelper.dispatchNestedPreFling(velocityX, velocityY)
 }

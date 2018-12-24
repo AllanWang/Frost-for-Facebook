@@ -4,27 +4,40 @@ import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.ui.widgets.InkPageIndicator
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.blendWith
+import ca.allanwang.kau.utils.color
+import ca.allanwang.kau.utils.fadeScaleTransition
+import ca.allanwang.kau.utils.navigationBarColor
+import ca.allanwang.kau.utils.postDelayed
+import ca.allanwang.kau.utils.scaleXY
+import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.statusBarColor
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.intro.*
+import com.pitchedapps.frost.intro.BaseIntroFragment
+import com.pitchedapps.frost.intro.IntroAccountFragment
+import com.pitchedapps.frost.intro.IntroFragmentEnd
+import com.pitchedapps.frost.intro.IntroFragmentTheme
+import com.pitchedapps.frost.intro.IntroFragmentWelcome
+import com.pitchedapps.frost.intro.IntroTabContextFragment
+import com.pitchedapps.frost.intro.IntroTabTouchFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import org.jetbrains.anko.find
-
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -43,12 +56,12 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     private var barHasNext = true
 
     val fragments = listOf(
-            IntroFragmentWelcome(),
-            IntroFragmentTheme(),
-            IntroAccountFragment(),
-            IntroTabTouchFragment(),
-            IntroTabContextFragment(),
-            IntroFragmentEnd()
+        IntroFragmentWelcome(),
+        IntroFragmentTheme(),
+        IntroAccountFragment(),
+        IntroTabTouchFragment(),
+        IntroTabContextFragment(),
+        IntroFragmentEnd()
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +110,6 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             page.alpha = 1f
             page.translationX = 0f
         }
-
     }
 
     fun finish(x: Float, y: Float) {
@@ -107,9 +119,11 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             postDelayed(1000) { finish() }
         }
         val lastView: View? = fragments.last().view
-        arrayOf<View?>(skip, indicator, next,
-                lastView?.find(R.id.intro_title),
-                lastView?.find(R.id.intro_desc)).forEach {
+        arrayOf<View?>(
+            skip, indicator, next,
+            lastView?.find(R.id.intro_title),
+            lastView?.find(R.id.intro_desc)
+        ).forEach {
             it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
         if (Prefs.textColor != Color.WHITE) {
@@ -147,7 +161,6 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -162,16 +175,19 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         if (barHasNext == hasNext) return
         barHasNext = hasNext
         next.fadeScaleTransition {
-            setIcon(if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done, color = Prefs.textColor)
+            setIcon(
+                if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done,
+                color = Prefs.textColor
+            )
         }
         skip.animate().scaleXY(if (barHasNext) 1f else 0f)
     }
 
-    class IntroPageAdapter(fm: FragmentManager, private val fragments: List<BaseIntroFragment>) : FragmentPagerAdapter(fm) {
+    class IntroPageAdapter(fm: FragmentManager, private val fragments: List<BaseIntroFragment>) :
+        FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment = fragments[position]
 
         override fun getCount(): Int = fragments.size
     }
-
 }

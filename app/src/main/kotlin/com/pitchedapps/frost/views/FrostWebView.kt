@@ -16,16 +16,20 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
-import com.pitchedapps.frost.web.*
+import com.pitchedapps.frost.web.FrostChromeClient
+import com.pitchedapps.frost.web.FrostJSI
+import com.pitchedapps.frost.web.FrostWebViewClient
+import com.pitchedapps.frost.web.NestedWebView
+import com.pitchedapps.frost.web.shouldUseBasicAgent
 
 /**
  * Created by Allan Wang on 2017-05-29.
  *
  */
 class FrostWebView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : NestedWebView(context, attrs, defStyleAttr),
-        FrostContentCore {
+    FrostContentCore {
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -58,7 +62,6 @@ class FrostWebView @JvmOverloads constructor(
         setDownloadListener(context::frostDownload)
         return this
     }
-
 
     /**
      * Wrapper to the main userAgentString to cache it.

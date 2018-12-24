@@ -9,9 +9,9 @@ import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.visible
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
-import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshDir
@@ -73,23 +73,22 @@ class DebugActivity : KauBaseActivity() {
                 val body = it[1] as? String
                 screenshot to body
             }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { (screenshot, body), err ->
-                        if (err != null) {
-                            L.e { "DebugActivity error ${err.message}" }
-                            setResult(Activity.RESULT_CANCELED)
-                            finish()
-                            return@subscribe
-                        }
-                        val intent = Intent()
-                        intent.putExtra(RESULT_URL, debug_webview.url)
-                        intent.putExtra(RESULT_SCREENSHOT, screenshot)
-                        if (body != null)
-                            intent.putExtra(RESULT_BODY, body)
-                        setResult(Activity.RESULT_OK, intent)
+                .subscribe { (screenshot, body), err ->
+                    if (err != null) {
+                        L.e { "DebugActivity error ${err.message}" }
+                        setResult(Activity.RESULT_CANCELED)
                         finish()
+                        return@subscribe
                     }
+                    val intent = Intent()
+                    intent.putExtra(RESULT_URL, debug_webview.url)
+                    intent.putExtra(RESULT_SCREENSHOT, screenshot)
+                    if (body != null)
+                        intent.putExtra(RESULT_BODY, body)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

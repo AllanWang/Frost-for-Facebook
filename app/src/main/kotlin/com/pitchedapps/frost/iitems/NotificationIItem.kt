@@ -26,23 +26,24 @@ import com.pitchedapps.frost.utils.launchWebOverlay
 /**
  * Created by Allan Wang on 27/12/17.
  */
-class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauIItem<NotificationIItem, NotificationIItem.ViewHolder>(
+class NotificationIItem(val notification: FrostNotif, val cookie: String) :
+    KauIItem<NotificationIItem, NotificationIItem.ViewHolder>(
         R.layout.iitem_notification, ::ViewHolder
-) {
+    ) {
 
     companion object {
         fun bindEvents(adapter: ItemAdapter<NotificationIItem>) {
             adapter.fastAdapter.withSelectable(false)
-                    .withOnClickListener { v, _, item, position ->
-                        val notif = item.notification
-                        if (notif.unread) {
-                            FrostRunnable.markNotificationRead(v!!.context, notif.id, item.cookie)
-                            adapter.set(position, NotificationIItem(notif.copy(unread = false), item.cookie))
-                        }
-                        // TODO temp fix. If url is dependent, we cannot load it directly
-                        v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
-                        true
+                .withOnClickListener { v, _, item, position ->
+                    val notif = item.notification
+                    if (notif.unread) {
+                        FrostRunnable.markNotificationRead(v!!.context, notif.id, item.cookie)
+                        adapter.set(position, NotificationIItem(notif.copy(unread = false), item.cookie))
                     }
+                    // TODO temp fix. If url is dependent, we cannot load it directly
+                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
+                    true
+                }
         }
 
         //todo see if necessary
@@ -52,12 +53,17 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
     private class Diff : DiffCallback<NotificationIItem> {
 
         override fun areItemsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
-                oldItem.notification.id == newItem.notification.id
+            oldItem.notification.id == newItem.notification.id
 
         override fun areContentsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
-                oldItem.notification == newItem.notification
+            oldItem.notification == newItem.notification
 
-        override fun getChangePayload(oldItem: NotificationIItem, oldItemPosition: Int, newItem: NotificationIItem, newItemPosition: Int): Any? {
+        override fun getChangePayload(
+            oldItem: NotificationIItem,
+            oldItemPosition: Int,
+            newItem: NotificationIItem,
+            newItemPosition: Int
+        ): Any? {
             return newItem
         }
     }
@@ -75,15 +81,17 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) : KauI
 
         override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
             val notif = item.notification
-            frame.background = createSimpleRippleDrawable(Prefs.textColor,
-                    Prefs.nativeBgColor(notif.unread))
+            frame.background = createSimpleRippleDrawable(
+                Prefs.textColor,
+                Prefs.nativeBgColor(notif.unread)
+            )
             content.setTextColor(Prefs.textColor)
             date.setTextColor(Prefs.textColor.withAlpha(150))
 
             val glide = glide
             glide.load(notif.img)
-                    .transform(FrostGlide.roundCorner)
-                    .into(avatar)
+                .transform(FrostGlide.roundCorner)
+                .into(avatar)
             if (notif.thumbnailUrl != null)
                 glide.load(notif.thumbnailUrl).into(thumbnail.visible())
 

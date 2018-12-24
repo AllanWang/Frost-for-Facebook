@@ -49,5 +49,4 @@ interface FrameWrapper {
         setContentView(R.layout.activity_frame_wrapper)
         frameWrapper.inflate(layoutRes, true)
     }
-
 }

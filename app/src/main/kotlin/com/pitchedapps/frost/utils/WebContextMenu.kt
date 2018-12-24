@@ -41,7 +41,9 @@ class WebContext(val unformattedUrl: String, val text: String?) {
 enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebContext) -> Unit) {
     OPEN_LINK(R.string.open_link, { c, wc -> c.launchWebOverlay(wc.unformattedUrl) }),
     COPY_LINK(R.string.copy_link, { c, wc -> c.copyToClipboard(wc.url) }),
-    COPY_TEXT(R.string.copy_text, { c, wc -> if (wc.text != null) c.copyToClipboard(wc.text) else c.toast(R.string.no_text) }),
+    COPY_TEXT(
+        R.string.copy_text,
+        { c, wc -> if (wc.text != null) c.copyToClipboard(wc.text) else c.toast(R.string.no_text) }),
     SHARE_LINK(R.string.share_link, { c, wc -> c.shareText(wc.url) }),
     DEBUG_LINK(R.string.debug_link, { c, wc ->
         c.materialDialogThemed {

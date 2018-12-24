@@ -1,7 +1,13 @@
 package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.facebook.FB_DTSG_MATCHER
+import com.pitchedapps.frost.facebook.FB_JSON_URL_MATCHER
+import com.pitchedapps.frost.facebook.FB_REV_MATCHER
+import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.facebook.FB_USER_MATCHER
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.rx.RxFlyweight
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
@@ -21,10 +27,9 @@ private class RxAuth : RxFlyweight<String, Long, RequestAuth>() {
     override fun call(input: String) = input.getAuth()
 
     override fun validate(input: String, cond: Long) =
-            System.currentTimeMillis() - cond < 3600000 // valid for an hour
+        System.currentTimeMillis() - cond < 3600000 // valid for an hour
 
     override fun cache(input: String) = System.currentTimeMillis()
-
 }
 
 private val auth = RxAuth()
@@ -48,10 +53,12 @@ fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
 /**
  * Underlying container for all fb requests
  */
-data class RequestAuth(val userId: Long = -1,
-                       val cookie: String = "",
-                       val fb_dtsg: String = "",
-                       val rev: String = "") {
+data class RequestAuth(
+    val userId: Long = -1,
+    val cookie: String = "",
+    val fb_dtsg: String = "",
+    val rev: String = ""
+) {
     val isComplete
         get() = userId > 0 && cookie.isNotEmpty() && fb_dtsg.isNotEmpty() && rev.isNotEmpty()
 }
@@ -64,8 +71,8 @@ class FrostRequest<out T : Any?>(val call: Call, private val invoke: (Call) -> T
 }
 
 internal inline fun <T : Any?> RequestAuth.frostRequest(
-        noinline invoke: (Call) -> T,
-        builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
+    noinline invoke: (Call) -> T,
+    builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
 ): FrostRequest<T> {
     val request = cookie.requestBuilder()
     request.builder()
@@ -75,8 +82,10 @@ internal inline fun <T : Any?> RequestAuth.frostRequest(
 val httpClient: OkHttpClient by lazy {
     val builder = OkHttpClient.Builder()
     if (BuildConfig.DEBUG)
-        builder.addInterceptor(HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BASIC))
+        builder.addInterceptor(
+            HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BASIC)
+        )
     builder.build()
 }
 
@@ -97,7 +106,7 @@ internal fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pa
 
 internal fun String?.requestBuilder(): Request.Builder {
     val builder = Request.Builder()
-            .header("User-Agent", USER_AGENT_BASIC)
+        .header("User-Agent", USER_AGENT_BASIC)
     if (this != null)
         builder.header("Cookie", this)
 //        .cacheControl(CacheControl.FORCE_NETWORK)
@@ -112,9 +121,9 @@ fun String.getAuth(): RequestAuth {
     val id = FB_USER_MATCHER.find(this)[1]?.toLong() ?: return auth
     auth = auth.copy(userId = id)
     val call = this.requestBuilder()
-            .url(FB_URL_BASE)
-            .get()
-            .call()
+        .url(FB_URL_BASE)
+        .get()
+        .call()
     call.execute().body()?.charStream()?.useLines { lines ->
         lines.forEach {
             val text = StringEscapeUtils.unescapeEcmaScript(it)
@@ -135,8 +144,10 @@ fun String.getAuth(): RequestAuth {
     return auth
 }
 
-inline fun <T, reified R : Any, O> Array<T>.zip(crossinline mapper: (List<R>) -> O,
-                                                crossinline caller: (T) -> R): Single<O> {
+inline fun <T, reified R : Any, O> Array<T>.zip(
+    crossinline mapper: (List<R>) -> O,
+    crossinline caller: (T) -> R
+): Single<O> {
     if (isEmpty())
         return Single.just(mapper(emptyList()))
     val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }

@@ -24,11 +24,11 @@ class FbParseTest {
     }
 
     private inline fun <reified T : Any> FrostParser<T>.test(action: T.() -> Unit = {}) =
-            parse(COOKIE).test(url, action)
+        parse(COOKIE).test(url, action)
 
     private inline fun <reified T : Any> ParseResponse<T>?.test(url: String, action: T.() -> Unit = {}) {
         val response = this
-                ?: fail("${T::class.simpleName} parser returned null for $url")
+            ?: fail("${T::class.simpleName} parser returned null for $url")
         println(response)
         response.data.action()
     }

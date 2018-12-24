@@ -27,7 +27,7 @@ import com.pitchedapps.frost.utils.Prefs
  * Parent must have layout with both height & width as match_parent
  */
 class FrostVideoView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : VideoView(context, attrs, defStyleAttr) {
 
     /**
@@ -105,7 +105,10 @@ class FrostVideoView @JvmOverloads constructor(
             videoDimensions.set(dimen, dimen)
         }
         val portrait = height > width
-        val scale = Math.min(height / (if (portrait) 4f else 2.3f) / videoDimensions.y, width / (if (portrait) 2.3f else 4f) / videoDimensions.x)
+        val scale = Math.min(
+            height / (if (portrait) 4f else 2.3f) / videoDimensions.y,
+            width / (if (portrait) 2.3f else 4f) / videoDimensions.x
+        )
         val desiredHeight = scale * videoDimensions.y
         val desiredWidth = scale * videoDimensions.x
         val padding = containerContract.lowerVideoPadding
@@ -152,7 +155,7 @@ class FrostVideoView @JvmOverloads constructor(
              * Only remap if not expanded and if dimensions have changed
              */
             val shouldRemap = !isExpanded
-                    && (videoDimensions.x != ratio * intrinsicWidth || videoDimensions.y != ratio * intrinsicHeight)
+                && (videoDimensions.x != ratio * intrinsicWidth || videoDimensions.y != ratio * intrinsicHeight)
             videoDimensions.set(ratio * intrinsicWidth, ratio * intrinsicHeight)
             if (shouldRemap) updateLocation()
         }
@@ -226,7 +229,8 @@ class FrostVideoView @JvmOverloads constructor(
      * -------------------------------------------------------------------
      */
 
-    private inner class FrameTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(), View.OnTouchListener {
+    private inner class FrameTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(),
+        View.OnTouchListener {
 
         private val gestureDetector: GestureDetector = GestureDetector(context, this)
 
@@ -252,7 +256,8 @@ class FrostVideoView @JvmOverloads constructor(
     /**
      * Monitors the view click events to show and hide the video controls if they have been specified.
      */
-    private inner class VideoTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(), View.OnTouchListener {
+    private inner class VideoTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(),
+        View.OnTouchListener {
 
         private val gestureDetector: GestureDetector = GestureDetector(context, this)
         private val downLoc = PointF()

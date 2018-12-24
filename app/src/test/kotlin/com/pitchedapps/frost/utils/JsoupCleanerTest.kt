@@ -47,10 +47,11 @@ class JsoupCleanerTest {
 
     @Test
     fun kau() {
-        val html = """<div class="col s12 m6"> <div id="kau" class="card medium sticky-action"> <div class="card-image waves-effect waves-block waves-light"> <img class="activator" src="images/kau.jpg"> <span class="card-title activator background-gradient">KAU</span> </div><div class="card-content"><p>An extensive collection of Kotlin Android Utils</p></div><div class="card-action"> <a href="https://github.com/AllanWang/KAU" target="_blank" class="inline-block">Github</a> <a href="https://allanwang.github.io/KAU/" target="_blank" class="inline-block">Page</a> </div><div class="card-reveal"> <span class="card-title grey-text text-darken-4">KAU<i class="material-icons right">close</i></span> <ul class="browser-default"> <li>Huge package of one line extension functions</li><li>Custom UI views</li><li>Adapter items and animators</li><li>SearchView</li><li>Custom delegates</li></ul> </div></div></div>"""
-        val expected = """<div class="col s12 m6"><div id="kau" class="card medium sticky-action"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="images/kau.jpg"></div><div class="card-action"><a href="-" target="_blank" class="inline-block"></a><a href="-" target="_blank" class="inline-block"></a></div></div></div>"""
+        val html =
+            """<div class="col s12 m6"> <div id="kau" class="card medium sticky-action"> <div class="card-image waves-effect waves-block waves-light"> <img class="activator" src="images/kau.jpg"> <span class="card-title activator background-gradient">KAU</span> </div><div class="card-content"><p>An extensive collection of Kotlin Android Utils</p></div><div class="card-action"> <a href="https://github.com/AllanWang/KAU" target="_blank" class="inline-block">Github</a> <a href="https://allanwang.github.io/KAU/" target="_blank" class="inline-block">Page</a> </div><div class="card-reveal"> <span class="card-title grey-text text-darken-4">KAU<i class="material-icons right">close</i></span> <ul class="browser-default"> <li>Huge package of one line extension functions</li><li>Custom UI views</li><li>Adapter items and animators</li><li>SearchView</li><li>Custom delegates</li></ul> </div></div></div>"""
+        val expected =
+            """<div class="col s12 m6"><div id="kau" class="card medium sticky-action"><div class="card-image waves-effect waves-block waves-light"><img class="activator" src="images/kau.jpg"></div><div class="card-action"><a href="-" target="_blank" class="inline-block"></a><a href="-" target="_blank" class="inline-block"></a></div></div></div>"""
         html.assertCleanHtml(expected)
     }
-
 }
 

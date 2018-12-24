@@ -12,14 +12,33 @@ import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.finishSlideOut
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.startActivityForResult
+import ca.allanwang.kau.utils.startLink
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.withSceneTransitionAnimation
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
-import com.pitchedapps.frost.settings.*
-import com.pitchedapps.frost.utils.*
-
+import com.pitchedapps.frost.settings.getAppearancePrefs
+import com.pitchedapps.frost.settings.getBehaviourPrefs
+import com.pitchedapps.frost.settings.getDebugPrefs
+import com.pitchedapps.frost.settings.getExperimentalPrefs
+import com.pitchedapps.frost.settings.getFeedPrefs
+import com.pitchedapps.frost.settings.getNotificationPrefs
+import com.pitchedapps.frost.settings.sendDebug
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_RESTART
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.frostChangelog
+import com.pitchedapps.frost.utils.frostNavigationBar
+import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.setFrostTheme
 
 /**
  * Created by Allan Wang on 2017-06-06.
@@ -179,9 +198,11 @@ class SettingsActivity : KPrefActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
-        setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_email to GoogleMaterial.Icon.gmd_email,
-                R.id.action_changelog to GoogleMaterial.Icon.gmd_info)
+        setMenuIcons(
+            menu, Prefs.iconColor,
+            R.id.action_email to GoogleMaterial.Icon.gmd_email,
+            R.id.action_changelog to GoogleMaterial.Icon.gmd_info
+        )
         return true
     }
 

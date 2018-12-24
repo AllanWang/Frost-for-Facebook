@@ -15,7 +15,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.fancy_animations_desc
     }
 
-    checkbox(R.string.overlay_swipe, Prefs::overlayEnabled, { Prefs.overlayEnabled = it; setFrostResult(REQUEST_REFRESH) }) {
+    checkbox(
+        R.string.overlay_swipe,
+        Prefs::overlayEnabled,
+        { Prefs.overlayEnabled = it; setFrostResult(REQUEST_REFRESH) }) {
         descRes = R.string.overlay_swipe_desc
     }
 

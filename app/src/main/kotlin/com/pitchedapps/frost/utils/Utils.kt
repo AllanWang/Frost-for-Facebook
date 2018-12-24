@@ -8,33 +8,59 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import androidx.annotation.StringRes
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.content.FileProvider
-import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.FileProvider
 import ca.allanwang.kau.email.EmailBuilder
 import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.darken
+import ca.allanwang.kau.utils.isColorDark
+import ca.allanwang.kau.utils.lighten
+import ca.allanwang.kau.utils.navigationBarColor
+import ca.allanwang.kau.utils.snackbar
+import ca.allanwang.kau.utils.startActivity
+import ca.allanwang.kau.utils.startActivityForResult
+import ca.allanwang.kau.utils.statusBarColor
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.with
+import ca.allanwang.kau.utils.withAlpha
+import ca.allanwang.kau.utils.withMinAlpha
 import ca.allanwang.kau.xml.showChangelog
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.SnackbarContentLayout
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.*
+import com.pitchedapps.frost.activities.ImageActivity
+import com.pitchedapps.frost.activities.LoginActivity
+import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.activities.SettingsActivity
+import com.pitchedapps.frost.activities.TabCustomizerActivity
+import com.pitchedapps.frost.activities.WebOverlayActivity
+import com.pitchedapps.frost.activities.WebOverlayActivityBase
+import com.pitchedapps.frost.activities.WebOverlayBasicActivity
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.facebook.FACEBOOK_COM
+import com.pitchedapps.frost.facebook.FBCDN_NET
+import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
 import java.io.IOException
-import java.util.*
+import java.util.ArrayList
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -46,7 +72,10 @@ const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
 const val ARG_COOKIE = "arg_cookie"
 
-inline fun <reified T : Activity> Context.launchNewTask(cookieList: ArrayList<CookieModel> = arrayListOf(), clearStack: Boolean = false) {
+inline fun <reified T : Activity> Context.launchNewTask(
+    cookieList: ArrayList<CookieModel> = arrayListOf(),
+    clearStack: Boolean = false
+) {
     startActivity<T>(clearStack, intentBuilder = {
         putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
     })
@@ -81,8 +110,10 @@ fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActiv
 
 fun Context.launchWebOverlayBasic(url: String) = launchWebOverlayImpl<WebOverlayBasicActivity>(url)
 
-private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(this,
-        android.R.anim.fade_in, android.R.anim.fade_out).toBundle()
+private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
+    this,
+    android.R.anim.fade_in, android.R.anim.fade_out
+).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String? = null, cookie: String? = null) {
     startActivity<ImageActivity>(intentBuilder = {
@@ -174,7 +205,6 @@ inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
     themer.theme(this)
 }
 
-
 fun frostEvent(name: String, vararg events: Pair<String, Any>) {
     // todo bind
     L.v { "Event: $name ${events.joinToString(", ")}" }
@@ -189,9 +219,11 @@ fun Throwable?.logFrostEvent(text: String) {
     frostEvent("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
+    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
+    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
 
 @SuppressLint("RestrictedApi")
 private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
@@ -240,7 +272,7 @@ inline val String?.isFacebookUrl
  */
 inline val String.isVideoUrl
     get() = startsWith(VIDEO_REDIRECT) ||
-            (startsWith("https://video-") && contains(FBCDN_NET))
+        (startsWith("https://video-") && contains(FBCDN_NET))
 
 /**
  * [true] if url directly leads to a usable image
@@ -271,22 +303,22 @@ inline val String?.isIndependent: Boolean
     }
 
 val dependentSegments = arrayOf(
-        "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
-        "events/permalink", "events/feed/watch",
-        /*
-         * Add new members to groups
-         */
-        "madminpanel",
-        /**
-         * Editing images
-         */
-        "/confirmation/?",
-        /*
-         * Facebook messages have the following cases for the tid query
-         * mid* or id* for newer threads, which can be launched in new windows
-         * or a hash for old threads, which must be loaded on old threads
-         */
-        "messages/read/?tid=id", "messages/read/?tid=mid"
+    "photoset_token", "direct_action_execute", "messages/?pageNum", "sharer.php",
+    "events/permalink", "events/feed/watch",
+    /*
+     * Add new members to groups
+     */
+    "madminpanel",
+    /**
+     * Editing images
+     */
+    "/confirmation/?",
+    /*
+     * Facebook messages have the following cases for the tid query
+     * mid* or id* for newer threads, which can be launched in new windows
+     * or a hash for old threads, which must be loaded on old threads
+     */
+    "messages/read/?tid=id", "messages/read/?tid=mid"
 )
 
 inline val String?.isExplicitIntent
@@ -297,16 +329,20 @@ fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textCo
 }
 
 fun Context.frostUriFromFile(file: File): Uri =
-        FileProvider.getUriForFile(this,
-                BuildConfig.APPLICATION_ID + ".provider",
-                file)
+    FileProvider.getUriForFile(
+        this,
+        BuildConfig.APPLICATION_ID + ".provider",
+        file
+    )
 
-inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) = sendFrostEmail(string(subjectId), builder)
+inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) =
+    sendFrostEmail(string(subjectId), builder)
 
-inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) = sendEmail(string(R.string.dev_email), subjectId) {
-    builder()
-    addFrostDetails()
-}
+inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =
+    sendEmail(string(R.string.dev_email), subjectId) {
+        builder()
+        addFrostDetails()
+    }
 
 fun EmailBuilder.addFrostDetails() {
     addItem("Prev version", Prefs.prevVersionCode.toString())
@@ -318,7 +354,8 @@ fun EmailBuilder.addFrostDetails() {
 
 fun frostJsoup(url: String) = frostJsoup(FbCookie.webCookie, url)
 
-fun frostJsoup(cookie: String?, url: String) = Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
+fun frostJsoup(cookie: String?, url: String) =
+    Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
 
 fun Element.first(vararg select: String): Element? {
     select.forEach {
@@ -346,6 +383,6 @@ fun File.createFreshDir(): Boolean {
 }
 
 fun String.unescapeHtml(): String =
-        StringEscapeUtils.unescapeXml(this)
-                .replace("\\u003C", "<")
-                .replace("\\\"", "\"")
+    StringEscapeUtils.unescapeXml(this)
+        .replace("\\u003C", "<")
+        .replace("\\\"", "\"")

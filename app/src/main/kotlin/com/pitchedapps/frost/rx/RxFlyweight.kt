@@ -72,9 +72,9 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
      * you likely won't have a need for flyweights
      */
     protected open fun createNewSource(input: T): Single<R> =
-            Single.fromCallable { call(input) }
-                    .timeout(15, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
+        Single.fromCallable { call(input) }
+            .timeout(15, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
 
     fun reset() {
         synchronized(lock) {
@@ -82,5 +82,4 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
             conditionals.clear()
         }
     }
-
 }

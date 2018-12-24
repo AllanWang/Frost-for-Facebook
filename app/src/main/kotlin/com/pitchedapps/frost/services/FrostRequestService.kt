@@ -37,10 +37,10 @@ private enum class FrostRequestCommands : EnumBundle<FrostRequestCommands> {
         }
 
         override fun propagate(bundle: BaseBundle) =
-                FrostRunnable.prepareMarkNotificationRead(
-                        bundle.getLong(ARG_0),
-                        bundle.getCookie())
-
+            FrostRunnable.prepareMarkNotificationRead(
+                bundle.getLong(ARG_0),
+                bundle.getCookie()
+            )
     };
 
     override val bundleContract: EnumBundleCompanion<FrostRequestCommands>
@@ -58,7 +58,6 @@ private enum class FrostRequestCommands : EnumBundle<FrostRequestCommands> {
     abstract fun propagate(bundle: BaseBundle): BaseBundle.() -> Unit
 
     companion object : EnumCompanion<FrostRequestCommands>("frost_arg_commands", values())
-
 }
 
 private const val ARG_COMMAND = "frost_request_command"
@@ -99,8 +98,10 @@ object FrostRunnable {
             L.d { "Invalid notification id $id for marking as read" }
             return false
         }
-        return schedule(context, FrostRequestCommands.NOTIF_READ,
-                prepareMarkNotificationRead(id, cookie))
+        return schedule(
+            context, FrostRequestCommands.NOTIF_READ,
+            prepareMarkNotificationRead(id, cookie)
+        )
     }
 
     fun propagate(context: Context, intent: Intent?) {
@@ -112,9 +113,11 @@ object FrostRunnable {
         schedule(context, command, builder)
     }
 
-    private fun schedule(context: Context,
-                         command: FrostRequestCommands,
-                         bundleBuilder: PersistableBundle.() -> Unit): Boolean {
+    private fun schedule(
+        context: Context,
+        command: FrostRequestCommands,
+        bundleBuilder: PersistableBundle.() -> Unit
+    ): Boolean {
         val scheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val serviceComponent = ComponentName(context, FrostRequestService::class.java)
         val bundle = PersistableBundle()
@@ -127,10 +130,10 @@ object FrostRunnable {
         }
 
         val builder = JobInfo.Builder(JOB_REQUEST_BASE + command.ordinal, serviceComponent)
-                .setMinimumLatency(0L)
-                .setExtras(bundle)
-                .setOverrideDeadline(2000L)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            .setMinimumLatency(0L)
+            .setExtras(bundle)
+            .setOverrideDeadline(2000L)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
         val result = scheduler.schedule(builder.build())
         if (result <= 0) {
             L.eThrow("FrostRequestService scheduler failed for ${command.name}")
@@ -139,7 +142,6 @@ object FrostRunnable {
         L.d { "Scheduled ${command.name}" }
         return true
     }
-
 }
 
 class FrostRequestService : JobService() {

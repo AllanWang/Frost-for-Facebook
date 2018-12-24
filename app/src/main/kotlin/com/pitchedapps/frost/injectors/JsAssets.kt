@@ -5,7 +5,7 @@ import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.utils.L
 import java.io.BufferedReader
 import java.io.FileNotFoundException
-import java.util.*
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -31,5 +31,4 @@ enum class JsAssets : InjectorContract {
     override fun inject(webView: WebView, callback: (() -> Unit)?) {
         injector(webView.context).inject(webView, callback)
     }
-
 }

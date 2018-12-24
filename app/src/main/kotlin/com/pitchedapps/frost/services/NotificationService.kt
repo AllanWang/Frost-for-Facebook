@@ -31,10 +31,12 @@ class NotificationService : JobService() {
     override fun onStopJob(params: JobParameters?): Boolean {
         val time = System.currentTimeMillis() - startTime
         L.d { "Notification service has finished abruptly in $time ms" }
-        frostEvent("NotificationTime",
-                "Type" to "Service force stop",
-                "IM Included" to Prefs.notificationsInstantMessages,
-                "Duration" to time)
+        frostEvent(
+            "NotificationTime",
+            "Type" to "Service force stop",
+            "IM Included" to Prefs.notificationsInstantMessages,
+            "Duration" to time
+        )
         future?.cancel(true)
         future = null
         return false
@@ -43,10 +45,12 @@ class NotificationService : JobService() {
     fun finish(params: JobParameters?) {
         val time = System.currentTimeMillis() - startTime
         L.i { "Notification service has finished in $time ms" }
-        frostEvent("NotificationTime",
-                "Type" to "Service",
-                "IM Included" to Prefs.notificationsInstantMessages,
-                "Duration" to time)
+        frostEvent(
+            "NotificationTime",
+            "Type" to "Service",
+            "IM Included" to Prefs.notificationsInstantMessages,
+            "Duration" to time
+        )
         jobFinished(params, false)
         future?.cancel(true)
         future = null
@@ -62,10 +66,12 @@ class NotificationService : JobService() {
             cookies.forEach {
                 val current = it.id == currentId
                 if (Prefs.notificationsGeneral
-                        && (current || Prefs.notificationAllAccounts))
+                    && (current || Prefs.notificationAllAccounts)
+                )
                     notifCount += fetch(jobId, NotificationType.GENERAL, it)
                 if (Prefs.notificationsInstantMessages
-                        && (current || Prefs.notificationsImAllAccounts))
+                    && (current || Prefs.notificationsImAllAccounts)
+                )
                     notifCount += fetch(jobId, NotificationType.MESSAGE, it)
             }
 
@@ -99,10 +105,9 @@ class NotificationService : JobService() {
 
     private fun generalNotification(id: Int, textRes: Int, withDefaults: Boolean) {
         val notifBuilder = frostNotification(NOTIF_CHANNEL_GENERAL)
-                .setFrostAlert(withDefaults, Prefs.notificationRingtone)
-                .setContentTitle(string(R.string.frost_name))
-                .setContentText(string(textRes))
+            .setFrostAlert(withDefaults, Prefs.notificationRingtone)
+            .setContentTitle(string(R.string.frost_name))
+            .setContentText(string(textRes))
         NotificationManagerCompat.from(this).notify(id, notifBuilder.build())
     }
-
 }

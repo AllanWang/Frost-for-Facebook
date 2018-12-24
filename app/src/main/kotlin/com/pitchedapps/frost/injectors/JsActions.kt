@@ -27,10 +27,9 @@ enum class JsActions(body: String) : InjectorContract {
     val function = "(function(){$body})();"
 
     override fun inject(webView: WebView, callback: (() -> Unit)?) =
-            JsInjector(function).inject(webView, callback)
-
+        JsInjector(function).inject(webView, callback)
 }
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun clickBySelector(selector: String): String =
-        """document.querySelector("$selector").click()"""
+    """document.querySelector("$selector").click()"""

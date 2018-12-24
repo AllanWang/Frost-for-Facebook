@@ -5,21 +5,18 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.kotlin.lazyContext
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
-import com.pitchedapps.frost.R
 import ca.allanwang.kau.utils.withAlpha
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.TAB_COUNT
 import com.pitchedapps.frost.dbflow.loadFbTabs
 import com.pitchedapps.frost.dbflow.save
@@ -28,7 +25,7 @@ import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostColors
 import kotlinx.android.synthetic.main.activity_tab_customizer.*
-import java.util.*
+import java.util.Collections
 
 /**
  * Created by Allan Wang on 26/11/17.
@@ -96,9 +93,8 @@ class TabCustomizerActivity : BaseActivity() {
         override fun itemTouchDropped(oldPosition: Int, newPosition: Int) = Unit
     }
 
-
     private class TabDragCallback(
-            directions: Int, itemTouchCallback: ItemTouchCallback
+        directions: Int, itemTouchCallback: ItemTouchCallback
     ) : SimpleDragCallback(directions, itemTouchCallback) {
 
         private var draggingView: TabIItem.ViewHolder? = null
@@ -122,7 +118,5 @@ class TabCustomizerActivity : BaseActivity() {
                 }
             }
         }
-
     }
-
 }

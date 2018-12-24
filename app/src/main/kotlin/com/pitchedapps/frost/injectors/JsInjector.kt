@@ -8,7 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.SingleSubject
 import org.apache.commons.text.StringEscapeUtils
-import java.util.*
+import java.util.Locale
 
 class JsBuilder {
     private val css = StringBuilder()
@@ -90,10 +90,10 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Uni
     }
     val observables = Array(validInjectors.size) { SingleSubject.create<Unit>() }
     val disposable = Single.zip<Unit, Int>(observables.asList()) { it.size }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { res, _ ->
-                callback(res)
-            }
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { res, _ ->
+            callback(res)
+        }
     (0 until validInjectors.size).forEach { i ->
         validInjectors[i].inject(this) {
             observables[i].onSuccess(Unit)
@@ -102,8 +102,10 @@ fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Uni
     return disposable
 }
 
-fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract,
-                                callback: ((Int) -> Unit)? = null) = web.jsInject(*injectors, callback = callback)
+fun FrostWebViewClient.jsInject(
+    vararg injectors: InjectorContract,
+    callback: ((Int) -> Unit)? = null
+) = web.jsInject(*injectors, callback = callback)
 
 /**
  * Wrapper class to convert a function into an injector

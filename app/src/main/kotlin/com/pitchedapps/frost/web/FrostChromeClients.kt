@@ -1,7 +1,11 @@
 package com.pitchedapps.frost.web
 
 import android.net.Uri
-import android.webkit.*
+import android.webkit.ConsoleMessage
+import android.webkit.GeolocationPermissions
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import ca.allanwang.kau.permissions.PERMISSION_ACCESS_FINE_LOCATION
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import com.pitchedapps.frost.R
@@ -11,7 +15,6 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -45,9 +48,13 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
         progress.onNext(newProgress)
     }
 
-    override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: FileChooserParams): Boolean {
+    override fun onShowFileChooser(
+        webView: WebView,
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: FileChooserParams
+    ): Boolean {
         activity?.openFileChooser(filePathCallback, fileChooserParams)
-                ?: webView.frostSnackbar(R.string.file_chooser_not_found)
+            ?: webView.frostSnackbar(R.string.file_chooser_not_found)
         return activity != null
     }
 
@@ -58,6 +65,4 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             callback(origin, granted, true)
         }
     }
-
-
 }

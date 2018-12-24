@@ -71,8 +71,8 @@ object Prefs : KPref() {
         get() = Prefs.bgColor.withAlpha(30)
 
     fun nativeBgColor(unread: Boolean) = Prefs.bgColor
-            .colorToForeground(if (unread) 0.7f else 0.0f)
-            .withAlpha(30)
+        .colorToForeground(if (unread) 0.7f else 0.0f)
+        .withAlpha(30)
 
     val bgColor: Int
         get() = t.bgColor

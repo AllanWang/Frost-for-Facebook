@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import androidx.annotation.WorkerThread
 import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
+import androidx.annotation.WorkerThread
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.CssHider
@@ -25,7 +25,7 @@ import java.io.File
  * A barebone webview with a refresh listener
  */
 class DebugWebView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
     var onPageFinished: (String?) -> Unit = {}
@@ -71,25 +71,27 @@ class DebugWebView @JvmOverloads constructor(
 
         private fun injectBackgroundColor() {
             setBackgroundColor(
-                    if (url.isFacebookUrl) Prefs.bgColor.withAlpha(255)
-                    else Color.WHITE)
+                if (url.isFacebookUrl) Prefs.bgColor.withAlpha(255)
+                else Color.WHITE
+            )
         }
-
 
         override fun onPageCommitVisible(view: WebView, url: String?) {
             super.onPageCommitVisible(view, url)
             injectBackgroundColor()
             if (url.isFacebookUrl)
                 view.jsInject(
-                        CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
+                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
 //                        CssHider.CORE,
-                        CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                        CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
-                        CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
-                        Prefs.themeInjector,
-                        CssHider.NON_RECENT.maybe((url?.contains("?sk=h_chr") ?: false)
-                                && Prefs.aggressiveRecents))
+                    CssHider.COMPOSER.maybe(!Prefs.showComposer),
+                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
+                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
+                    Prefs.themeInjector,
+                    CssHider.NON_RECENT.maybe(
+                        (url?.contains("?sk=h_chr") ?: false)
+                            && Prefs.aggressiveRecents
+                    )
+                )
         }
     }
-
 }

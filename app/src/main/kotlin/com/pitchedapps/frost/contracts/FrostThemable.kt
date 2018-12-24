@@ -18,12 +18,11 @@ interface FrostThemable {
     fun reloadTheme()
 
     fun setTextColors(color: Int, vararg textViews: TextView?) =
-            themeViews(color, *textViews) { setTextColor(it) }
+        themeViews(color, *textViews) { setTextColor(it) }
 
     fun setBackgrounds(color: Int, vararg views: View?) =
-            themeViews(color, *views) { setBackgroundColor(it) }
+        themeViews(color, *views) { setBackgroundColor(it) }
 
     fun <T : View> themeViews(color: Int, vararg views: T?, action: T.(Int) -> Unit) =
-            views.filterNotNull().forEach { it.action(color) }
-
+        views.filterNotNull().forEach { it.action(color) }
 }

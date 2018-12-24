@@ -39,12 +39,12 @@ interface EnumBundleCompanion<E : Enum<E>> {
     operator fun get(bundle: BaseBundle?) = get(bundle?.getString(argTag))
 
     operator fun get(intent: Intent?) = get(intent?.getStringExtra(argTag))
-
 }
 
 open class EnumCompanion<E : Enum<E>>(
-        final override val argTag: String,
-        final override val values: Array<E>) : EnumBundleCompanion<E> {
+    final override val argTag: String,
+    final override val values: Array<E>
+) : EnumBundleCompanion<E> {
 
     final override val valueMap: Map<String, E> = values.map { it.name to it }.toMap()
 
@@ -53,5 +53,4 @@ open class EnumCompanion<E : Enum<E>>(
     final override fun get(bundle: BaseBundle?) = super.get(bundle)
 
     final override fun get(intent: Intent?) = super.get(intent)
-
 }

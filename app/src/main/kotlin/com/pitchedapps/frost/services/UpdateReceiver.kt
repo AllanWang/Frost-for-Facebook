@@ -18,5 +18,4 @@ class UpdateReceiver : BroadcastReceiver() {
         L.d { "Frost has updated" }
         context.scheduleNotifications(Prefs.notificationFreq) //Update notifications
     }
-
 }

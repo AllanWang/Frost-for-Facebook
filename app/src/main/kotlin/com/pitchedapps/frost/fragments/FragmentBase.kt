@@ -2,14 +2,14 @@ package com.pitchedapps.frost.fragments
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.withArguments
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.contracts.DynamicUiContract
 import com.pitchedapps.frost.contracts.FrostContentParent
@@ -17,7 +17,12 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_URL
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
+import com.pitchedapps.frost.utils.frostEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -33,12 +38,17 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
         private const val ARG_POSITION = "arg_position"
         private const val ARG_VALID = "arg_valid"
 
-        internal operator fun invoke(base: () -> BaseFragment, useFallback: Boolean, data: FbItem, position: Int): BaseFragment {
+        internal operator fun invoke(
+            base: () -> BaseFragment,
+            useFallback: Boolean,
+            data: FbItem,
+            position: Int
+        ): BaseFragment {
             val fragment = if (!useFallback) base() else WebFragment()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
-                    ARG_URL to d.url,
-                    ARG_POSITION to position
+                ARG_URL to d.url,
+                ARG_POSITION to position
             )
             d.put(fragment.arguments!!)
             return fragment
@@ -55,8 +65,10 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
             if (value || this is WebFragment) return
             arguments!!.putBoolean(ARG_VALID, value)
             L.e { "Invalidating position $position" }
-            frostEvent("Native Fallback",
-                    "Item" to baseEnum.name)
+            frostEvent(
+                "Native Fallback",
+                "Item" to baseEnum.name
+            )
             (context as MainActivityContract).reloadFragment(this)
         }
 
@@ -75,10 +87,14 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
             throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
     }
 
-    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    final override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(layoutRes, container, false)
         val content = view  as? FrostContentParent
-                ?: throw IllegalArgumentException("layoutRes for fragment must return view implementing FrostContentParent")
+            ?: throw IllegalArgumentException("layoutRes for fragment must return view implementing FrostContentParent")
         this.content = content
         content.bind(this)
         return view
@@ -113,28 +129,28 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
     }
 
     override fun attachMainObservable(contract: MainActivityContract): Disposable =
-            contract.fragmentSubject.observeOn(AndroidSchedulers.mainThread()).subscribe {
-                when (it) {
-                    REQUEST_REFRESH -> {
-                        core?.apply {
-                            clearHistory()
-                            firstLoad = true
-                            firstLoadRequest()
-                        }
-                    }
-                    position -> {
-                        contract.setTitle(baseEnum.titleId)
-                        updateFab(contract)
-                        core?.active = true
-                    }
-                    -(position + 1) -> {
-                        core?.active = false
-                    }
-                    REQUEST_TEXT_ZOOM -> {
-                        reloadTextSize()
+        contract.fragmentSubject.observeOn(AndroidSchedulers.mainThread()).subscribe {
+            when (it) {
+                REQUEST_REFRESH -> {
+                    core?.apply {
+                        clearHistory()
+                        firstLoad = true
+                        firstLoadRequest()
                     }
                 }
+                position -> {
+                    contract.setTitle(baseEnum.titleId)
+                    updateFab(contract)
+                    core?.active = true
+                }
+                -(position + 1) -> {
+                    core?.active = false
+                }
+                REQUEST_TEXT_ZOOM -> {
+                    reloadTextSize()
+                }
             }
+        }
 
     override fun updateFab(contract: MainFabContract) {
         contract.hideFab() // default

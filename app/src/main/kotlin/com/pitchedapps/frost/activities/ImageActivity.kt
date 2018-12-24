@@ -5,16 +5,25 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.View
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.fadeScaleTransition
+import ca.allanwang.kau.utils.isHidden
+import ca.allanwang.kau.utils.scaleXY
+import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.use
+import ca.allanwang.kau.utils.withAlpha
+import ca.allanwang.kau.utils.withMinAlpha
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
@@ -23,7 +32,19 @@ import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
 import com.pitchedapps.frost.facebook.requests.requestBuilder
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_COOKIE
+import com.pitchedapps.frost.utils.ARG_IMAGE_URL
+import com.pitchedapps.frost.utils.ARG_TEXT
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.createFreshFile
+import com.pitchedapps.frost.utils.frostSnackbar
+import com.pitchedapps.frost.utils.frostUriFromFile
+import com.pitchedapps.frost.utils.isIndirectImageUrl
+import com.pitchedapps.frost.utils.logFrostEvent
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.sendFrostEmail
+import com.pitchedapps.frost.utils.setFrostColors
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_image.*
 import okhttp3.Response
@@ -34,7 +55,8 @@ import java.io.File
 import java.io.FileFilter
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -94,8 +116,10 @@ class ImageActivity : KauBaseActivity() {
 
     // a unique image identifier based on the id (if it exists), and its hash
     private val imageHash: String by lazy {
-        "${Math.abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode()
-                ?: 0)}_${Math.abs(imageUrl.hashCode())}"
+        "${Math.abs(
+            FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode()
+                ?: 0
+        )}_${Math.abs(imageUrl.hashCode())}"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,11 +129,15 @@ class ImageActivity : KauBaseActivity() {
         L.v { "Displaying image $imageUrl" }
         val layout = if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
-        image_container.setBackgroundColor(if (Prefs.blackMediaBg) Color.BLACK
-        else Prefs.bgColor.withMinAlpha(222))
+        image_container.setBackgroundColor(
+            if (Prefs.blackMediaBg) Color.BLACK
+            else Prefs.bgColor.withMinAlpha(222)
+        )
         image_text?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
-        image_text?.setBackgroundColor((if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
-                .colorToForeground(0.2f).withAlpha(255))
+        image_text?.setBackgroundColor(
+            (if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
+                .colorToForeground(0.2f).withAlpha(255)
+        )
         image_text?.text = imageText
         image_progress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
         image_panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
@@ -208,16 +236,15 @@ class ImageActivity : KauBaseActivity() {
     }
 
     private fun getImageResponse(): Response = cookie.requestBuilder()
-            .url(trueImageUrl)
-            .get()
-            .call()
-            .execute()
-
+        .url(trueImageUrl)
+        .get()
+        .call()
+        .execute()
 
     @Throws(IOException::class)
     private fun downloadImageTo(file: File) {
         val body = getImageResponse().body()
-                ?: throw IOException("Failed to retrieve image body")
+            ?: throw IOException("Failed to retrieve image body")
         body.byteStream().use { input ->
             file.outputStream().use { output ->
                 input.copyTo(output)
@@ -272,7 +299,11 @@ class ImageActivity : KauBaseActivity() {
     }
 }
 
-internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconColor, val backgroundTint: Int = Int.MAX_VALUE) {
+internal enum class FabStates(
+    val iicon: IIcon,
+    val iconColor: Int = Prefs.iconColor,
+    val backgroundTint: Int = Int.MAX_VALUE
+) {
     ERROR(GoogleMaterial.Icon.gmd_error, Color.WHITE, Color.RED) {
         override fun onClick(activity: ImageActivity) {
             activity.materialDialogThemed {
@@ -334,5 +365,4 @@ internal enum class FabStates(val iicon: IIcon, val iconColor: Int = Prefs.iconC
     }
 
     abstract fun onClick(activity: ImageActivity)
-
 }

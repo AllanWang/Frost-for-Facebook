@@ -8,25 +8,31 @@ import android.graphics.PointF
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import androidx.annotation.StringRes
-import com.google.android.material.appbar.AppBarLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.fadeScaleTransition
+import ca.allanwang.kau.utils.restart
+import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.showIf
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.withMinAlpha
 import co.zsmb.materialdrawerkt.builders.Builder
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
@@ -35,6 +41,9 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
@@ -57,7 +66,26 @@ import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ACTIVITY_SETTINGS
+import com.pitchedapps.frost.utils.EXTRA_COOKIES
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.MAIN_TIMEOUT_DURATION
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_NAV
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.REQUEST_RESTART
+import com.pitchedapps.frost.utils.REQUEST_RESTART_APPLICATION
+import com.pitchedapps.frost.utils.REQUEST_SEARCH
+import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.frostChangelog
+import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.utils.frostNavigationBar
+import com.pitchedapps.frost.utils.launchLogin
+import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
@@ -68,8 +96,8 @@ import com.pitchedapps.frost.views.FrostViewPager
  * Most of the logic that is unrelated to handling fragments
  */
 abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
-        FileChooserContract by FileChooserDelegate(),
-        VideoViewHolder, SearchViewHolder {
+    FileChooserContract by FileChooserDelegate(),
+    VideoViewHolder, SearchViewHolder {
 
     protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
@@ -111,12 +139,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             Prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 frostChangelog()
-                frostEvent("Version",
-                        "Version code" to BuildConfig.VERSION_CODE,
-                        "Prev version code" to Prefs.prevVersionCode,
-                        "Version name" to BuildConfig.VERSION_NAME,
-                        "Build type" to BuildConfig.BUILD_TYPE,
-                        "Frost id" to Prefs.frostId)
+                frostEvent(
+                    "Version",
+                    "Version code" to BuildConfig.VERSION_CODE,
+                    "Prev version code" to Prefs.prevVersionCode,
+                    "Version name" to BuildConfig.VERSION_NAME,
+                    "Build type" to BuildConfig.BUILD_TYPE,
+                    "Frost id" to Prefs.frostId
+                )
             }
         }
         setupDrawer(savedInstanceState)
@@ -204,7 +234,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     identifier = -2L
                 }
                 profileSetting(nameRes = R.string.kau_add_account) {
-                    iconDrawable = IconicsDrawable(this@BaseMainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5).color(Prefs.textColor)
+                    iconDrawable =
+                        IconicsDrawable(this@BaseMainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5)
+                            .color(Prefs.textColor)
                     textColor = Prefs.textColor.toLong()
                     identifier = -3L
                 }
@@ -225,8 +257,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             } else {
                                 materialDialogThemed {
                                     title(R.string.kau_logout)
-                                    content(String.format(string(R.string.kau_logout_confirm_as_x), currentCookie.name
-                                            ?: Prefs.userId.toString()))
+                                    content(
+                                        String.format(
+                                            string(R.string.kau_logout_confirm_as_x), currentCookie.name
+                                                ?: Prefs.userId.toString()
+                                        )
+                                    )
                                     positiveText(R.string.kau_yes)
                                     negativeText(R.string.kau_no)
                                     onPositive { _, _ -> FbCookie.logout(this@BaseMainActivity) }
@@ -295,9 +331,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         toolbar.tint(Prefs.iconColor)
-        setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
-                R.id.action_search to GoogleMaterial.Icon.gmd_search)
+        setMenuIcons(
+            menu, Prefs.iconColor,
+            R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
+            R.id.action_search to GoogleMaterial.Icon.gmd_search
+        )
         searchViewBindIfNull {
             bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
                 textCallback = { query, searchView ->
@@ -309,7 +347,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         if (data != null) {
                             val items = data.mapTo(mutableListOf(), FrostSearch::toSearchItem)
                             if (items.isNotEmpty())
-                                items.add(SearchItem("${FbItem._SEARCH.url}?q=$query", string(R.string.show_all_results), iicon = null))
+                                items.add(
+                                    SearchItem(
+                                        "${FbItem._SEARCH.url}?q=$query",
+                                        string(R.string.show_all_results),
+                                        iicon = null
+                                    )
+                                )
                             searchViewCache[query] = items
                             searchView.results = items
                         }
@@ -332,7 +376,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
-                val bundle = ActivityOptions.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
+                val bundle =
+                    ActivityOptions.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
                 startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }
             else -> return super.onOptionsItemSelected(item)
@@ -340,7 +385,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         return true
     }
 
-    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
+    override fun openFileChooser(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    ) {
         openMediaPicker(filePathCallback, fileChooserParams)
     }
 
@@ -377,8 +425,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         adapter.forcedFallbacks.clear()
-        adapter.forcedFallbacks.addAll(savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
-                ?: emptyList())
+        adapter.forcedFallbacks.addAll(
+            savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
+                ?: emptyList()
+        )
     }
 
     override fun onResume() {
@@ -444,10 +494,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
         override fun getItem(position: Int): Fragment {
             val item = pages[position]
-            return BaseFragment(item.fragmentCreator,
-                    forcedFallbacks.contains(item.name),
-                    item,
-                    position)
+            return BaseFragment(
+                item.fragmentCreator,
+                forcedFallbacks.contains(item.name),
+                item,
+                position
+            )
         }
 
         override fun getCount() = pages.size
@@ -455,12 +507,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
 
         override fun getItemPosition(fragment: Any) =
-                if (fragment !is BaseFragment)
-                    POSITION_UNCHANGED
-                else if (fragment is WebFragment || fragment.valid)
-                    POSITION_UNCHANGED
-                else
-                    POSITION_NONE
+            if (fragment !is BaseFragment)
+                POSITION_UNCHANGED
+            else if (fragment is WebFragment || fragment.valid)
+                POSITION_UNCHANGED
+            else
+                POSITION_NONE
     }
 
     override val lowerVideoPadding: PointF

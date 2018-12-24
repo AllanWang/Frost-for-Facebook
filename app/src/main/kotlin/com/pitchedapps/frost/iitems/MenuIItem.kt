@@ -21,9 +21,9 @@ import com.pitchedapps.frost.utils.Prefs
 /**
  * Created by Allan Wang on 30/12/17.
  */
-class MenuContentIItem(val data: MenuItem)
-    : KauIItem<MenuContentIItem, MenuContentIItem.ViewHolder>(R.layout.iitem_menu, ::ViewHolder),
-        ClickableIItemContract {
+class MenuContentIItem(val data: MenuItem) :
+    KauIItem<MenuContentIItem, MenuContentIItem.ViewHolder>(R.layout.iitem_menu, ::ViewHolder),
+    ClickableIItemContract {
 
     override val url: String?
         get() = data.url
@@ -42,9 +42,9 @@ class MenuContentIItem(val data: MenuItem)
             val iconUrl = item.data.pic
             if (iconUrl != null)
                 GlideApp.with(itemView)
-                        .load(iconUrl)
-                        .transform(FrostGlide.roundCorner)
-                        .into(icon.visible())
+                    .load(iconUrl)
+                    .transform(FrostGlide.roundCorner)
+                    .into(icon.visible())
             else
                 icon.gone()
             content.text = item.data.name
@@ -59,12 +59,12 @@ class MenuContentIItem(val data: MenuItem)
     }
 }
 
-class MenuHeaderIItem(val data: MenuHeader) : HeaderIItem(data.header,
-        itemId = R.id.item_menu_header)
+class MenuHeaderIItem(val data: MenuHeader) : HeaderIItem(
+    data.header,
+    itemId = R.id.item_menu_header
+)
 
-class MenuFooterIItem(val data: MenuFooterItem)
-    : TextIItem(data.name, data.url, R.id.item_menu_footer)
+class MenuFooterIItem(val data: MenuFooterItem) : TextIItem(data.name, data.url, R.id.item_menu_footer)
 
-class MenuFooterSmallIItem(val data: MenuFooterItem)
-    : TextIItem(data.name, data.url, R.id.item_menu_footer_small)
+class MenuFooterSmallIItem(val data: MenuFooterItem) : TextIItem(data.name, data.url, R.id.item_menu_footer_small)
 

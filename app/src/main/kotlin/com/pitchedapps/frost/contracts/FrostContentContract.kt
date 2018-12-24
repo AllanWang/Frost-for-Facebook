@@ -23,7 +23,6 @@ interface FrostContentContainer {
      * Update toolbar title
      */
     fun setTitle(title: String)
-
 }
 
 /**
@@ -84,7 +83,6 @@ interface FrostContentParent : DynamicUiContract {
      * For those cases, we will return false to stop it
      */
     fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean
-
 }
 
 /**
@@ -147,5 +145,4 @@ interface FrostContentCore : DynamicUiContract {
      * Signal destruction to release some content manually
      */
     fun destroy()
-
 }

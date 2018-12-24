@@ -1,11 +1,11 @@
 package com.pitchedapps.frost.activities
 
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.View
 import ca.allanwang.kau.utils.bindView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter

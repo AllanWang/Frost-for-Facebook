@@ -30,11 +30,11 @@ object FrostGlide {
 }
 
 fun <T> RequestBuilder<T>.transform(vararg transformation: BitmapTransformation): RequestBuilder<T> =
-        when (transformation.size) {
-            0 -> this
-            1 -> apply(RequestOptions.bitmapTransform(transformation[0]))
-            else -> apply(RequestOptions.bitmapTransform(MultiTransformation(*transformation)))
-        }
+    when (transformation.size) {
+        0 -> this
+        1 -> apply(RequestOptions.bitmapTransform(transformation[0]))
+        else -> apply(RequestOptions.bitmapTransform(MultiTransformation(*transformation)))
+    }
 
 @GlideModule
 class FrostGlideModule : AppGlideModule() {
@@ -48,7 +48,7 @@ class FrostGlideModule : AppGlideModule() {
 }
 
 private fun getFrostHttpClient(): OkHttpClient =
-        OkHttpClient.Builder().addInterceptor(FrostCookieInterceptor()).build()
+    OkHttpClient.Builder().addInterceptor(FrostCookieInterceptor()).build()
 
 class FrostCookieInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

@@ -32,25 +32,25 @@ interface ClickableIItemContract {
     companion object {
         fun bindEvents(adapter: IAdapter<IItem<*, *>>) {
             adapter.fastAdapter.withSelectable(false)
-                    .withOnClickListener { v, _, item, _ ->
-                        if (item is ClickableIItemContract) {
-                            item.click(v!!.context)
-                            true
-                        } else
-                            false
-                    }
+                .withOnClickListener { v, _, item, _ ->
+                    if (item is ClickableIItemContract) {
+                        item.click(v!!.context)
+                        true
+                    } else
+                        false
+                }
         }
     }
-
 }
 
 /**
  * Generic header item
  * Not clickable with an accent color
  */
-open class HeaderIItem(val text: String?,
-                       itemId: Int = R.layout.iitem_header)
-    : KauIItem<HeaderIItem, HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
+open class HeaderIItem(
+    val text: String?,
+    itemId: Int = R.layout.iitem_header
+) : KauIItem<HeaderIItem, HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView) {
 
@@ -66,18 +66,18 @@ open class HeaderIItem(val text: String?,
             text.text = null
         }
     }
-
 }
 
 /**
  * Generic text item
  * Clickable with text color
  */
-open class TextIItem(val text: String?,
-                     override val url: String?,
-                     itemId: Int = R.layout.iitem_text)
-    : KauIItem<TextIItem, TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
-        ClickableIItemContract {
+open class TextIItem(
+    val text: String?,
+    override val url: String?,
+    itemId: Int = R.layout.iitem_text
+) : KauIItem<TextIItem, TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
+    ClickableIItemContract {
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView) {
 
@@ -93,5 +93,4 @@ open class TextIItem(val text: String?,
             text.text = null
         }
     }
-
 }

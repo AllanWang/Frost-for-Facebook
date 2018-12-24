@@ -91,13 +91,13 @@ class FbUrlFormatter(url: String) {
          * That shouldn't break anything
          */
         val discardable = arrayOf(
-                "http://lm.facebook.com/l.php?u=",
-                "https://lm.facebook.com/l.php?u=",
-                "http://m.facebook.com/l.php?u=",
-                "https://m.facebook.com/l.php?u=",
-                "http://touch.facebook.com/l.php?u=",
-                "https://touch.facebook.com/l.php?u=",
-                VIDEO_REDIRECT
+            "http://lm.facebook.com/l.php?u=",
+            "https://lm.facebook.com/l.php?u=",
+            "http://m.facebook.com/l.php?u=",
+            "https://m.facebook.com/l.php?u=",
+            "http://touch.facebook.com/l.php?u=",
+            "https://touch.facebook.com/l.php?u=",
+            VIDEO_REDIRECT
         )
 
         /**
@@ -108,13 +108,13 @@ class FbUrlFormatter(url: String) {
         val discardableQueries = arrayOf("ref", "refid", "SharedWith")
 
         val converter = listOf(
-                "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
-                "\\7B " to "%7B", "\\7D " to "%7D", "\\7C " to "%7C", "\\5C " to "%5C",
-                "\\5E " to "%5E", "\\7E " to "%7E", "\\5B " to "%5B", "\\5D " to "%5D",
-                "\\60 " to "%60", "\\3B " to "%3B", "\\2F " to "%2F", "\\3F " to "%3F",
-                "\\3A " to "%3A", "\\40 " to "%40", "\\3D " to "%3D", "\\26 " to "%26",
-                "\\24 " to "%24", "\\2B " to "%2B", "\\22 " to "%22", "\\2C " to "%2C",
-                "\\20 " to "%20"
+            "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",
+            "\\7B " to "%7B", "\\7D " to "%7D", "\\7C " to "%7C", "\\5C " to "%5C",
+            "\\5E " to "%5E", "\\7E " to "%7E", "\\5B " to "%5B", "\\5D " to "%5D",
+            "\\60 " to "%60", "\\3B " to "%3B", "\\2F " to "%2F", "\\3F " to "%3F",
+            "\\3A " to "%3A", "\\40 " to "%40", "\\3D " to "%3D", "\\26 " to "%26",
+            "\\24 " to "%24", "\\2B " to "%2B", "\\22 " to "%22", "\\2C " to "%2C",
+            "\\20 " to "%20"
         )
     }
 }

@@ -1,6 +1,10 @@
 package com.pitchedapps.frost.fragments
 
-import com.pitchedapps.frost.contracts.*
+import com.pitchedapps.frost.contracts.FrostContentContainer
+import com.pitchedapps.frost.contracts.FrostContentCore
+import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.contracts.MainActivityContract
+import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
 
@@ -74,8 +78,6 @@ interface FragmentContract : FrostContentContainer {
     fun onBackPressed(): Boolean
 
     fun onTabClick()
-
-
 }
 
 interface RecyclerContentContract {
@@ -88,5 +90,4 @@ interface RecyclerContentContract {
      * Callback returns [true] for success, [false] otherwise
      */
     fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit)
-
 }

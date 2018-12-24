@@ -8,7 +8,15 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.isImageUrl
+import com.pitchedapps.frost.utils.isIndependent
+import com.pitchedapps.frost.utils.isIndirectImageUrl
+import com.pitchedapps.frost.utils.isVideoUrl
+import com.pitchedapps.frost.utils.launchImageActivity
+import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.launchWebOverlayBasic
 import com.pitchedapps.frost.views.FrostWebView
 import org.jetbrains.anko.runOnUiThread
 
@@ -77,8 +85,8 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
  * If the url contains any one of the whitelist segments, switch to the chat overlay
  */
 val messageWhitelist: Set<String> =
-        setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
-                .mapTo(mutableSetOf(), FbItem::url)
+    setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
+        .mapTo(mutableSetOf(), FbItem::url)
 
 val String.shouldUseBasicAgent: Boolean
     get() {

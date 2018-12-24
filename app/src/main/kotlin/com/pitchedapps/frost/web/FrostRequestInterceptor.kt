@@ -8,14 +8,19 @@ import com.pitchedapps.frost.utils.L
 import okhttp3.HttpUrl
 import java.io.ByteArrayInputStream
 
-
 /**
  * Created by Allan Wang on 2017-07-13.
  *
  * Handler to decide when a request should be done by us
  * This is the crux of Frost's optimizations for the web browser
  */
-private val blankResource: WebResourceResponse by lazy { WebResourceResponse("text/plain", "utf-8", ByteArrayInputStream("".toByteArray())) }
+private val blankResource: WebResourceResponse by lazy {
+    WebResourceResponse(
+        "text/plain",
+        "utf-8",
+        ByteArrayInputStream("".toByteArray())
+    )
+}
 
 fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourceResponse? {
     val requestUrl = request.url?.toString() ?: return null
@@ -46,12 +51,14 @@ val WebResourceRequest.isMedia: Boolean
  * Generic filter passthrough
  * If Resource is already nonnull, pass it, otherwise check if filter is met and override the response accordingly
  */
-fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean) = filter(request.query { filter(it) })
+fun WebResourceResponse?.filter(request: WebResourceRequest, filter: (url: String) -> Boolean) =
+    filter(request.query { filter(it) })
 
 fun WebResourceResponse?.filter(filter: Boolean): WebResourceResponse? = this
-        ?: if (filter) blankResource else null
+    ?: if (filter) blankResource else null
 
-fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse? = filter(request) { it.endsWith(".css") }
+fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse? =
+    filter(request) { it.endsWith(".css") }
 
 fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse? = filter(request.isImage)
 

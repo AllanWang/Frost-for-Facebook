@@ -31,11 +31,11 @@ fun setupNotificationChannels(c: Context) {
     val appName = c.string(R.string.frost_name)
     val msg = c.string(R.string.messages)
     manager.notificationChannels
-            .filter {
-                it.id != NOTIF_CHANNEL_GENERAL
-                        && it.id != NOTIF_CHANNEL_MESSAGES
-            }
-            .forEach { manager.deleteNotificationChannel(it.id) }
+        .filter {
+            it.id != NOTIF_CHANNEL_GENERAL
+                && it.id != NOTIF_CHANNEL_MESSAGES
+        }
+        .forEach { manager.deleteNotificationChannel(it.id) }
     manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
     manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
     L.d { "Created notification channels: ${manager.notificationChannels.size} channels, ${manager.notificationChannelGroups.size} groups" }
@@ -43,8 +43,10 @@ fun setupNotificationChannels(c: Context) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NotificationManager.createNotificationChannel(id: String, name: String): NotificationChannel {
-    val channel = NotificationChannel(id,
-            name, NotificationManager.IMPORTANCE_DEFAULT)
+    val channel = NotificationChannel(
+        id,
+        name, NotificationManager.IMPORTANCE_DEFAULT
+    )
     channel.enableLights(true)
     channel.lightColor = Prefs.accentColor
     channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -53,14 +55,14 @@ private fun NotificationManager.createNotificationChannel(id: String, name: Stri
 }
 
 fun Context.frostNotification(id: String) =
-        NotificationCompat.Builder(this, id)
-                .apply {
-                    setSmallIcon(R.drawable.frost_f_24)
-                    setAutoCancel(true)
-                    setOnlyAlertOnce(true)
-                    setStyle(NotificationCompat.BigTextStyle())
-                    color = color(R.color.frost_notification_accent)
-                }
+    NotificationCompat.Builder(this, id)
+        .apply {
+            setSmallIcon(R.drawable.frost_f_24)
+            setAutoCancel(true)
+            setOnlyAlertOnce(true)
+            setStyle(NotificationCompat.BigTextStyle())
+            color = color(R.color.frost_notification_accent)
+        }
 
 /**
  * Dictates whether a notification should have sound/vibration/lights or not
@@ -70,8 +72,9 @@ fun Context.frostNotification(id: String) =
 fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
-                if (enable) NotificationCompat.GROUP_ALERT_CHILDREN
-                else NotificationCompat.GROUP_ALERT_SUMMARY)
+            if (enable) NotificationCompat.GROUP_ALERT_CHILDREN
+            else NotificationCompat.GROUP_ALERT_SUMMARY
+        )
     } else if (!enable) {
         setDefaults(0)
     } else {
@@ -111,10 +114,10 @@ inline fun <reified T : JobService> Context.scheduleJob(id: Int, minutes: Long):
     if (minutes < 0L) return true
     val serviceComponent = ComponentName(this, T::class.java)
     val builder = JobInfo.Builder(id, serviceComponent)
-            .setPeriodic(minutes * 60000)
-            .setExtras(id)
-            .setPersisted(true)
-            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) //TODO add options
+        .setPeriodic(minutes * 60000)
+        .setExtras(id)
+        .setPersisted(true)
+        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) //TODO add options
     val result = scheduler.schedule(builder.build())
     if (result <= 0) {
         L.eThrow("${T::class.java.simpleName} scheduler failed")
@@ -130,10 +133,10 @@ inline fun <reified T : JobService> Context.fetchJob(id: Int): Boolean {
     val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
     val serviceComponent = ComponentName(this, T::class.java)
     val builder = JobInfo.Builder(id, serviceComponent)
-            .setMinimumLatency(0L)
-            .setExtras(id)
-            .setOverrideDeadline(2000L)
-            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+        .setMinimumLatency(0L)
+        .setExtras(id)
+        .setOverrideDeadline(2000L)
+        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
     val result = scheduler.schedule(builder.build())
     if (result <= 0) {
         L.eThrow("${T::class.java.simpleName} instant scheduler failed")

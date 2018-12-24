@@ -24,7 +24,6 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     // Experimental content starts here ------------------
 
-
     // Experimental content ends here --------------------
 
     checkbox(R.string.verbose_logging, Prefs::verboseLogging, {

@@ -21,8 +21,10 @@ internal fun String.cleanJsoup(): String = Jsoup.clean(this, PrivacyWhitelist())
 class PrivacyWhitelist : Whitelist() {
 
     val blacklistAttrs = arrayOf("style", "aria-label", "rel")
-    val blacklistTags = arrayOf("body", "html", "head", "i", "b", "u", "style", "script",
-            "br", "p", "span", "ul", "ol", "li")
+    val blacklistTags = arrayOf(
+        "body", "html", "head", "i", "b", "u", "style", "script",
+        "br", "p", "span", "ul", "ol", "li"
+    )
 
     override fun isSafeAttribute(tagName: String, el: Element, attr: Attribute): Boolean {
         val key = attr.key

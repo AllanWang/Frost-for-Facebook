@@ -3,10 +3,10 @@ package com.pitchedapps.frost.activities
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
-import android.widget.ImageView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
@@ -24,13 +24,17 @@ import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.glide.transform
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Showcase
+import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.logFrostEvent
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.web.LoginWebView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.SingleSubject
-
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -78,51 +82,62 @@ class LoginActivity : BaseActivity() {
     private fun loadInfo(cookie: CookieModel) {
         refresh = true
         Single.zip<Boolean, String, Pair<Boolean, String>>(
-                profileSubject,
-                usernameSubject,
-                BiFunction(::Pair))
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
-                    refresh = false
-                    if (!foundImage) {
-                        L.e { "Could not get profile photo; Invalid userId?" }
-                        L._i { cookie }
-                    }
-                    textview.text = String.format(getString(R.string.welcome), name)
-                    textview.fadeIn()
-                    frostEvent("Login", "success" to true)
-                    /*
-                     * The user may have logged into an account that is already in the database
-                     * We will let the db handle duplicates and load it now after the new account has been saved
-                     */
-                    loadFbCookiesAsync {
-                        val cookies = ArrayList(it)
-                        Handler().postDelayed({
-                            if (Showcase.intro)
-                                launchNewTask<IntroActivity>(cookies, true)
-                            else
-                                launchNewTask<MainActivity>(cookies, true)
-                        }, 1000)
-                    }
-                }.disposeOnDestroy()
+            profileSubject,
+            usernameSubject,
+            BiFunction(::Pair)
+        )
+            .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
+                refresh = false
+                if (!foundImage) {
+                    L.e { "Could not get profile photo; Invalid userId?" }
+                    L._i { cookie }
+                }
+                textview.text = String.format(getString(R.string.welcome), name)
+                textview.fadeIn()
+                frostEvent("Login", "success" to true)
+                /*
+                 * The user may have logged into an account that is already in the database
+                 * We will let the db handle duplicates and load it now after the new account has been saved
+                 */
+                loadFbCookiesAsync {
+                    val cookies = ArrayList(it)
+                    Handler().postDelayed({
+                        if (Showcase.intro)
+                            launchNewTask<IntroActivity>(cookies, true)
+                        else
+                            launchNewTask<MainActivity>(cookies, true)
+                    }, 1000)
+                }
+            }.disposeOnDestroy()
         loadProfile(cookie.id)
         loadUsername(cookie)
     }
 
-
     private fun loadProfile(id: Long) {
         profileLoader.load(profilePictureUrl(id))
-                .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        profileSubject.onSuccess(true)
-                        return false
-                    }
+            .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    profileSubject.onSuccess(true)
+                    return false
+                }
 
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        e.logFrostEvent("Profile loading exception")
-                        profileSubject.onSuccess(false)
-                        return false
-                    }
-                }).into(profile)
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    e.logFrostEvent("Profile loading exception")
+                    profileSubject.onSuccess(false)
+                    return false
+                }
+            }).into(profile)
     }
 
     private fun loadUsername(cookie: CookieModel) {
@@ -146,5 +161,4 @@ class LoginActivity : BaseActivity() {
         web.pauseTimers()
         super.onPause()
     }
-
 }

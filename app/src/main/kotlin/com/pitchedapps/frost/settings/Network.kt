@@ -10,7 +10,10 @@ import com.pitchedapps.frost.utils.Prefs
  */
 fun SettingsActivity.getNetworkPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
-    checkbox(R.string.network_media_on_metered, { !Prefs.loadMediaOnMeteredNetwork }, { Prefs.loadMediaOnMeteredNetwork = !it }) {
+    checkbox(
+        R.string.network_media_on_metered,
+        { !Prefs.loadMediaOnMeteredNetwork },
+        { Prefs.loadMediaOnMeteredNetwork = !it }) {
         descRes = R.string.network_media_on_metered_desc
     }
 

@@ -83,19 +83,21 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 }
 
 private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
-        sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
-            addItem("Url", parser.url)
-            addItem("Contents", "$content")
-        }
+    sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
+        addItem("Url", parser.url)
+        addItem("Contents", "$content")
+    }
 
 private const val ZIP_NAME = "debug"
 
 fun SettingsActivity.sendDebug(url: String, html: String?) {
 
-    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            baseUrl = FB_URL_BASE,
-            html = html,
-            baseDir = DebugActivity.baseDir(this))
+    val downloader = OfflineWebsite(
+        url, FbCookie.webCookie ?: "",
+        baseUrl = FB_URL_BASE,
+        html = html,
+        baseDir = DebugActivity.baseDir(this)
+    )
 
     val md = materialDialog {
         title(R.string.parsing_data)
@@ -114,7 +116,8 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
                 it.dismiss()
                 if (success) {
                     val zipUri = it.context.frostUriFromFile(
-                            File(downloader.baseDir, "$ZIP_NAME.zip"))
+                        File(downloader.baseDir, "$ZIP_NAME.zip")
+                    )
                     L.i { "Sending debug zip with uri $zipUri" }
                     sendFrostEmail(R.string.debug_report_email_title) {
                         addItem("Url", url)
@@ -130,5 +133,4 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         }
 
     }
-
 }

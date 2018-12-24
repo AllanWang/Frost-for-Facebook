@@ -17,7 +17,11 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
     val themeList
         get() = listOf(intro_theme_light, intro_theme_dark, intro_theme_amoled, intro_theme_glass)
 
-    override fun viewArray(): Array<Array<out View>> = arrayOf(arrayOf(title), arrayOf(intro_theme_light, intro_theme_dark), arrayOf(intro_theme_amoled, intro_theme_glass))
+    override fun viewArray(): Array<Array<out View>> = arrayOf(
+        arrayOf(title),
+        arrayOf(intro_theme_light, intro_theme_dark),
+        arrayOf(intro_theme_amoled, intro_theme_glass)
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,5 +44,4 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
             themeList.forEach { it.animate().scaleXY(if (it == this) 1.6f else 0.8f).start() }
         }
     }
-
 }

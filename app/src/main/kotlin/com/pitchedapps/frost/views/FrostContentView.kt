@@ -2,12 +2,19 @@ package com.pitchedapps.frost.views
 
 import android.content.Context
 import android.os.Build
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import ca.allanwang.kau.utils.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.circularReveal
+import ca.allanwang.kau.utils.fadeIn
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.invisibleIf
+import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
@@ -24,25 +31,23 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 class FrostContentWeb @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
 ) : FrostContentView<FrostWebView>(context, attrs, defStyleAttr, defStyleRes) {
 
     override val layoutRes: Int = R.layout.view_content_base_web
-
 }
 
 class FrostContentRecycler @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
 ) : FrostContentView<FrostRecyclerView>(context, attrs, defStyleAttr, defStyleRes) {
 
     override val layoutRes: Int = R.layout.view_content_base_recycler
-
 }
 
 abstract class FrostContentView<out T> @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-        FrostContentParent where T : View, T : FrostContentCore {
+    FrostContentParent where T : View, T : FrostContentCore {
 
     private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
@@ -88,15 +93,14 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         }.addTo(compositeDisposable)
 
         refreshObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    refresh.isRefreshing = it
-                    refresh.isEnabled = true
-                }.addTo(compositeDisposable)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                refresh.isRefreshing = it
+                refresh.isEnabled = true
+            }.addTo(compositeDisposable)
         refresh.setOnRefreshListener { coreView.reload(true) }
 
         reloadThemeSelf()
-
     }
 
     override fun bind(container: FrostContentContainer) {
@@ -151,23 +155,23 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             var loading = dispose != null
             dispose?.dispose()
             dispose = refreshObservable
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        if (it) {
-                            loading = true
-                            transitionStart = System.currentTimeMillis()
-                            clearAnimation()
-                            if (isVisible)
-                                fadeOut(duration = 200L)
-                        } else if (loading) {
-                            loading = false
-                            if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
-                            else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
-                            L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
-                            dispose?.dispose()
-                            dispose = null
-                        }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (it) {
+                        loading = true
+                        transitionStart = System.currentTimeMillis()
+                        clearAnimation()
+                        if (isVisible)
+                            fadeOut(duration = 200L)
+                    } else if (loading) {
+                        loading = false
+                        if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                        else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
+                        L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
+                        dispose?.dispose()
+                        dispose = null
                     }
+                }
         }
         return true
     }

@@ -8,11 +8,22 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.fadeIn
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.gone
+import ca.allanwang.kau.utils.goneIf
+import ca.allanwang.kau.utils.inflate
+import ca.allanwang.kau.utils.isColorDark
+import ca.allanwang.kau.utils.isGone
+import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.visible
+import ca.allanwang.kau.utils.withMinAlpha
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
 import kotlinx.android.synthetic.main.view_video.view.*
@@ -21,7 +32,7 @@ import kotlinx.android.synthetic.main.view_video.view.*
  * Created by Allan Wang on 2017-10-13.
  */
 class FrostVideoViewer @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
 
     companion object {
@@ -51,16 +62,18 @@ class FrostVideoViewer @JvmOverloads constructor(
         inflate(R.layout.view_video, true)
         alpha = 0f
         video_background.setBackgroundColor(
-                if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
-                    Prefs.bgColor.withMinAlpha(200)
-                else
-                    Color.BLACK)
+            if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
+                Prefs.bgColor.withMinAlpha(200)
+            else
+                Color.BLACK
+        )
         video.setViewerContract(this)
         video.pause()
         video_toolbar.inflateMenu(R.menu.menu_video)
-        context.setMenuIcons(video_toolbar.menu, Prefs.iconColor,
-                R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
-                R.id.action_download to GoogleMaterial.Icon.gmd_file_download
+        context.setMenuIcons(
+            video_toolbar.menu, Prefs.iconColor,
+            R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
+            R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )
         video_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -141,7 +154,6 @@ class FrostVideoViewer @JvmOverloads constructor(
         if (!video_toolbar.isGone)
             video_toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { video_toolbar.gone() }
     }
-
 }
 
 interface FrostVideoViewerContract : VideoControlsVisibilityListener {

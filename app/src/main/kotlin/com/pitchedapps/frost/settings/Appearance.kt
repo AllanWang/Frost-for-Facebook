@@ -10,7 +10,16 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.CssAssets
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_NAV
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
+import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.utils.frostNavigationBar
+import com.pitchedapps.frost.utils.frostSnackbar
+import com.pitchedapps.frost.utils.launchTabCustomizerActivity
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.views.KPrefTextSeekbar
 
 /**
@@ -146,13 +155,16 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.tint_nav_desc
     }
 
-    list.add(KPrefTextSeekbar(
+    list.add(
+        KPrefTextSeekbar(
             KPrefSeekbar.KPrefSeekbarBuilder(
-                    globalOptions,
-                    R.string.web_text_scaling, Prefs::webTextScaling) {
+                globalOptions,
+                R.string.web_text_scaling, Prefs::webTextScaling
+            ) {
                 Prefs.webTextScaling = it
                 setFrostResult(REQUEST_TEXT_ZOOM)
-            }))
+            })
+    )
 
     checkbox(R.string.enforce_black_media_bg, Prefs::blackMediaBg, {
         Prefs.blackMediaBg = it

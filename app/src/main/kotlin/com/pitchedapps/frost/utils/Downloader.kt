@@ -16,26 +16,29 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 
-
 /**
  * Created by Allan Wang on 2017-08-04.
  *
  * With reference to <a href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack Overflow</a>
  */
-fun Context.frostDownload(url: String?,
-                          userAgent: String = USER_AGENT_BASIC,
-                          contentDisposition: String? = null,
-                          mimeType: String? = null,
-                          contentLength: Long = 0L) {
+fun Context.frostDownload(
+    url: String?,
+    userAgent: String = USER_AGENT_BASIC,
+    contentDisposition: String? = null,
+    mimeType: String? = null,
+    contentLength: Long = 0L
+) {
     url ?: return
     frostDownload(Uri.parse(url), userAgent, contentDisposition, mimeType, contentLength)
 }
 
-fun Context.frostDownload(uri: Uri?,
-                          userAgent: String = USER_AGENT_BASIC,
-                          contentDisposition: String? = null,
-                          mimeType: String? = null,
-                          contentLength: Long = 0L) {
+fun Context.frostDownload(
+    uri: Uri?,
+    userAgent: String = USER_AGENT_BASIC,
+    contentDisposition: String? = null,
+    mimeType: String? = null,
+    contentLength: Long = 0L
+) {
     uri ?: return
     L.d { "Received download request" }
     if (uri.scheme != "http" && uri.scheme != "https") {

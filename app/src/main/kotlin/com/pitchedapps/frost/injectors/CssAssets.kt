@@ -3,12 +3,17 @@ package com.pitchedapps.frost.injectors
 import android.graphics.Color
 import android.webkit.WebView
 import ca.allanwang.kau.kotlin.lazyContext
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.colorToBackground
+import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.toRgbaString
+import ca.allanwang.kau.utils.use
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import java.io.BufferedReader
 import java.io.FileNotFoundException
-import java.util.*
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -32,17 +37,17 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
                 val bb = Prefs.bgColor.colorToForeground(0.35f)
 
                 content = content
-                        .replace("\$T\$", Prefs.textColor.toRgbaString())
-                        .replace("\$TT\$", Prefs.textColor.colorToBackground(0.05f).toRgbaString())
-                        .replace("\$A\$", Prefs.accentColor.toRgbaString())
-                        .replace("\$B\$", Prefs.bgColor.toRgbaString())
-                        .replace("\$BT\$", bt)
-                        .replace("\$BBT\$", bb.withAlpha(51).toRgbaString())
-                        .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
-                        .replace("\$OO\$", bb.withAlpha(255).toRgbaString())
-                        .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
-                        .replace("\$TI\$", bb.withAlpha(60).toRgbaString())
-                        .replace("\$C\$", bt)
+                    .replace("\$T\$", Prefs.textColor.toRgbaString())
+                    .replace("\$TT\$", Prefs.textColor.colorToBackground(0.05f).toRgbaString())
+                    .replace("\$A\$", Prefs.accentColor.toRgbaString())
+                    .replace("\$B\$", Prefs.bgColor.toRgbaString())
+                    .replace("\$BT\$", bt)
+                    .replace("\$BBT\$", bb.withAlpha(51).toRgbaString())
+                    .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
+                    .replace("\$OO\$", bb.withAlpha(255).toRgbaString())
+                    .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
+                    .replace("\$TI\$", bb.withAlpha(60).toRgbaString())
+                    .replace("\$C\$", bt)
             }
             JsBuilder().css(content).build()
         } catch (e: FileNotFoundException) {
@@ -58,5 +63,4 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
     fun reset() {
         injector.invalidate()
     }
-
 }

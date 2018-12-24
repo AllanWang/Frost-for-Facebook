@@ -14,7 +14,6 @@ object DbUtils {
     fun db(name: String) = FlowManager.getDatabase(name)
     fun dbName(name: String) = "$name.db"
     fun deleteDatabase(c: Context, name: String) = c.deleteDatabase(dbName(name))
-
 }
 
 inline fun <reified T : Any> List<T>.replace(dbName: String) {

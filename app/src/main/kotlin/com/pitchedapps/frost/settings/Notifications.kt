@@ -22,7 +22,6 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.views.Keywords
 
-
 /**
  * Created by Allan Wang on 2017-06-29.
  */
@@ -66,33 +65,33 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     checkbox(R.string.notification_general, Prefs::notificationsGeneral,
-            {
-                Prefs.notificationsGeneral = it
-                reloadByTitle(R.string.notification_general_all_accounts)
-                if (!Prefs.notificationsInstantMessages)
-                    reloadByTitle(R.string.notification_frequency)
-            }) {
+        {
+            Prefs.notificationsGeneral = it
+            reloadByTitle(R.string.notification_general_all_accounts)
+            if (!Prefs.notificationsInstantMessages)
+                reloadByTitle(R.string.notification_frequency)
+        }) {
         descRes = R.string.notification_general_desc
     }
 
     checkbox(R.string.notification_general_all_accounts, Prefs::notificationAllAccounts,
-            { Prefs.notificationAllAccounts = it }) {
+        { Prefs.notificationAllAccounts = it }) {
         descRes = R.string.notification_general_all_accounts_desc
         enabler = Prefs::notificationsGeneral
     }
 
     checkbox(R.string.notification_messages, Prefs::notificationsInstantMessages,
-            {
-                Prefs.notificationsInstantMessages = it
-                reloadByTitle(R.string.notification_messages_all_accounts)
-                if (!Prefs.notificationsGeneral)
-                    reloadByTitle(R.string.notification_frequency)
-            }) {
+        {
+            Prefs.notificationsInstantMessages = it
+            reloadByTitle(R.string.notification_messages_all_accounts)
+            if (!Prefs.notificationsGeneral)
+                reloadByTitle(R.string.notification_frequency)
+        }) {
         descRes = R.string.notification_messages_desc
     }
 
     checkbox(R.string.notification_messages_all_accounts, Prefs::notificationsImAllAccounts,
-            { Prefs.notificationsImAllAccounts = it }) {
+        { Prefs.notificationsImAllAccounts = it }) {
         descRes = R.string.notification_messages_all_accounts_desc
         enabler = Prefs::notificationsInstantMessages
     }
@@ -102,15 +101,17 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             descRes = R.string.notification_channel_desc
             onClick = {
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                        .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                    .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
                 startActivity(intent)
             }
         }
     } else {
         checkbox(R.string.notification_sound, Prefs::notificationSound, {
             Prefs.notificationSound = it
-            reloadByTitle(R.string.notification_ringtone,
-                    R.string.message_ringtone)
+            reloadByTitle(
+                R.string.notification_ringtone,
+                R.string.message_ringtone
+            )
         })
 
         fun KPrefText.KPrefTextContract<String>.ringtone(code: Int) {
@@ -118,8 +119,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             textGetter = {
                 if (it.isBlank()) string(R.string.kau_default)
                 else RingtoneManager.getRingtone(this@getNotificationPrefs, Uri.parse(it))
-                        ?.getTitle(this@getNotificationPrefs)
-                        ?: "---" //todo figure out why this happens
+                    ?.getTitle(this@getNotificationPrefs)
+                    ?: "---" //todo figure out why this happens
             }
             onClick = {
                 val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
@@ -135,20 +136,20 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         }
 
         text(R.string.notification_ringtone, Prefs::notificationRingtone,
-                { Prefs.notificationRingtone = it }) {
+            { Prefs.notificationRingtone = it }) {
             ringtone(SettingsActivity.REQUEST_NOTIFICATION_RINGTONE)
         }
 
         text(R.string.message_ringtone, Prefs::messageRingtone,
-                { Prefs.messageRingtone = it }) {
+            { Prefs.messageRingtone = it }) {
             ringtone(SettingsActivity.REQUEST_MESSAGE_RINGTONE)
         }
 
         checkbox(R.string.notification_vibrate, Prefs::notificationVibrate,
-                { Prefs.notificationVibrate = it })
+            { Prefs.notificationVibrate = it })
 
         checkbox(R.string.notification_lights, Prefs::notificationLights,
-                { Prefs.notificationLights = it })
+            { Prefs.notificationLights = it })
     }
 
     if (BuildConfig.DEBUG) {
@@ -165,8 +166,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.notification_fetch_now_desc
         onClick = {
             val text =
-                    if (fetchNotifications()) R.string.notification_fetch_success
-                    else R.string.notification_fetch_fail
+                if (fetchNotifications()) R.string.notification_fetch_success
+                else R.string.notification_fetch_fail
             frostSnackbar(text)
         }
     }

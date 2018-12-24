@@ -5,7 +5,6 @@ import ca.allanwang.kau.logging.KauLogger
 import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 
-
 /**
  * Created by Allan Wang on 2017-05-28.
  *
@@ -45,5 +44,4 @@ object L : KauLogger("Frost", {
                 Bugsnag.notify(t)
         }
     }
-
 }

@@ -18,7 +18,8 @@ class FbRegexTest {
     @Test
     fun fbDtsgRegex() {
         val fb_dtsg = "readme"
-        val input = "data-sigil=\"mbasic_inline_feed_composer\">\u003Cinput type=\"hidden\" name=\"fb_dtsg\" value=\"$fb_dtsg\" autocomplete=\"off\" \\/>\u003Cinput type=\"hidden\" name=\"privacyx\" value=\"12345\""
+        val input =
+            "data-sigil=\"mbasic_inline_feed_composer\">\u003Cinput type=\"hidden\" name=\"fb_dtsg\" value=\"$fb_dtsg\" autocomplete=\"off\" \\/>\u003Cinput type=\"hidden\" name=\"privacyx\" value=\"12345\""
         assertEquals(fb_dtsg, FB_DTSG_MATCHER.find(input)[1])
     }
 
@@ -56,5 +57,4 @@ class FbRegexTest {
         val img = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/89056_${id}_98239_o.jpg"
         assertEquals(id, FB_IMAGE_ID_MATCHER.find(img)[1]?.toLongOrNull())
     }
-
 }

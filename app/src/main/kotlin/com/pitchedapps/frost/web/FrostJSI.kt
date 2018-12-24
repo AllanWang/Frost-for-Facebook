@@ -5,10 +5,15 @@ import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.WebContext
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.isIndependent
+import com.pitchedapps.frost.utils.launchImageActivity
+import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
-
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -31,15 +36,15 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun loadVideo(url: String?, isGif: Boolean): Boolean =
-            if (url != null && Prefs.enablePip) {
-                web.post {
-                    (context as? VideoViewHolder)?.showVideo(url, isGif)
-                            ?: L.e { "Could not load video; contract not implemented" }
-                }
-                true
-            } else {
-                false
+        if (url != null && Prefs.enablePip) {
+            web.post {
+                (context as? VideoViewHolder)?.showVideo(url, isGif)
+                    ?: L.e { "Could not load video; contract not implemented" }
             }
+            true
+        } else {
+            false
+        }
 
     @JavascriptInterface
     fun reloadBaseUrl(animate: Boolean) {
@@ -113,5 +118,4 @@ class FrostJSI(val web: FrostWebView) {
         html ?: return
         header?.onNext(html)
     }
-
 }

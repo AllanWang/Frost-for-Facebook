@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.utils
 
 import android.graphics.drawable.AnimatedVectorDrawable
-import androidx.annotation.DrawableRes
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import ca.allanwang.kau.utils.drawable
 
 /**
@@ -23,23 +23,23 @@ interface AnimatedVectorContract {
 }
 
 class AnimatedVectorDelegate(
-        /**
-         * The res for the starting resource; must have parent tag animated-vector
-         */
-        @param:DrawableRes val avdStart: Int,
-        /**
-         * The res for the ending resource; must have parent tag animated-vector
-         */
-        @param:DrawableRes val avdEnd: Int,
-        /**
-         * The delegate will automatically set the start resource when bound
-         * If [emitOnBind] is true, it will also trigger the listener
-         */
-        val emitOnBind: Boolean = true,
-        /**
-         * The optional listener that will be triggered every time the avd is switched by the delegate
-         */
-        override var animatedVectorListener: ((avd: AnimatedVectorDrawable, forwards: Boolean) -> Unit)? = null
+    /**
+     * The res for the starting resource; must have parent tag animated-vector
+     */
+    @param:DrawableRes val avdStart: Int,
+    /**
+     * The res for the ending resource; must have parent tag animated-vector
+     */
+    @param:DrawableRes val avdEnd: Int,
+    /**
+     * The delegate will automatically set the start resource when bound
+     * If [emitOnBind] is true, it will also trigger the listener
+     */
+    val emitOnBind: Boolean = true,
+    /**
+     * The optional listener that will be triggered every time the avd is switched by the delegate
+     */
+    override var animatedVectorListener: ((avd: AnimatedVectorDrawable, forwards: Boolean) -> Unit)? = null
 ) : AnimatedVectorContract {
 
     lateinit var view: ImageView
@@ -55,9 +55,9 @@ class AnimatedVectorDelegate(
     override fun bind(view: ImageView) {
         this.view = view
         view.context.drawable(avdStart) as? AnimatedVectorDrawable
-                ?: throw IllegalArgumentException("AnimatedVectorDelegate has a starting drawable that isn't an avd")
+            ?: throw IllegalArgumentException("AnimatedVectorDelegate has a starting drawable that isn't an avd")
         view.context.drawable(avdEnd) as? AnimatedVectorDrawable
-                ?: throw IllegalArgumentException("AnimatedVectorDelegate has an ending drawable that isn't an avd")
+            ?: throw IllegalArgumentException("AnimatedVectorDelegate has an ending drawable that isn't an avd")
         view.setImageResource(avdStart)
         if (emitOnBind) animatedVectorListener?.invoke(avd!!, false)
     }
@@ -77,7 +77,6 @@ class AnimatedVectorDelegate(
         atStart = toStart
         avd?.start()
     }
-
 }
 
 

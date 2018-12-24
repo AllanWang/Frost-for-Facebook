@@ -10,10 +10,10 @@ fun RequestAuth.sendMessage(group: String, content: String): FrostRequest<Boolea
 
     // todo test more; only tested against tids=cid...
     val body = listOf(
-            "tids" to group,
-            "body" to content,
-            "fb_dtsg" to fb_dtsg,
-            "__user" to userId
+        "tids" to group,
+        "body" to content,
+        "fb_dtsg" to fb_dtsg,
+        "__user" to userId
     ).withEmptyData("m_sess", "__dyn", "__req", "__ajax__")
 
     return frostRequest(::validateMessage) {

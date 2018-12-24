@@ -46,9 +46,9 @@ data class FrostSearch(val href: String, val title: String, val description: Str
 
     companion object {
         fun create(href: String, title: String, description: String?) = FrostSearch(
-                with(href.indexOf("?")) { if (this == -1) href else href.substring(0, this) },
-                title.format(),
-                description?.format()
+            with(href.indexOf("?")) { if (this == -1) href else href.substring(0, this) },
+            title.format(),
+            description?.format()
         )
     }
 }
@@ -61,17 +61,18 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
     override fun parseImpl(doc: Document): FrostSearches? {
         val container: Element = doc.getElementById("BrowseResultsContainer")
-                ?: doc.getElementById("root")
-                ?: return null
+            ?: doc.getElementById("root")
+            ?: return null
         /**
          *
          * Removed [data-store*=result_id]
          */
         return FrostSearches(container.select("a.touchable[href]").filter(Element::hasText).map {
-            FrostSearch.create(it.attr("href").formattedFbUrl,
-                    it.select("._uoi").first()?.text() ?: "",
-                    it.select("._1tcc").first()?.text())
+            FrostSearch.create(
+                it.attr("href").formattedFbUrl,
+                it.select("._uoi").first()?.text() ?: "",
+                it.select("._1tcc").first()?.text()
+            )
         }.filter { it.title.isNotBlank() })
     }
-
 }
