@@ -23,7 +23,7 @@ android {
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     applicationVariants.all { variant ->
@@ -148,14 +148,13 @@ repositories {
 }
 
 dependencies {
-    androidTestImplementation("com.android.support.test:runner:${kau.testRunner}") {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-
-    implementation "com.android.support:exifinterface:${kau.supportLibs}"
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
 
     androidTestImplementation kauDependency.kotlinTest
-    androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
+    androidTestImplementation kauDependency.espresso
+    androidTestImplementation kauDependency.testRules
+    androidTestImplementation kauDependency.testRunner
+
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
     testImplementation kauDependency.junit

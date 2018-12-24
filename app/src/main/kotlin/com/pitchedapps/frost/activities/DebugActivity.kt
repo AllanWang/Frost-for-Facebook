@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.Toolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.widget.Toolbar
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.setIcon

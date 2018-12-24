@@ -5,7 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
-import android.support.design.widget.FloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.View
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension

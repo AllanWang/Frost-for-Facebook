@@ -1,6 +1,6 @@
 package com.pitchedapps.frost.enums
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 

@@ -1,7 +1,7 @@
 package com.pitchedapps.frost.utils
 
 import android.graphics.drawable.AnimatedVectorDrawable
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.widget.ImageView
 import ca.allanwang.kau.utils.drawable
 

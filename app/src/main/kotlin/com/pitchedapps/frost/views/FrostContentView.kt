@@ -2,7 +2,7 @@ package com.pitchedapps.frost.views
 
 import android.content.Context
 import android.os.Build
-import android.support.v4.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout

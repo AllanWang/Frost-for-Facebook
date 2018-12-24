@@ -1,8 +1,8 @@
 package com.pitchedapps.frost.activities
 
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -34,7 +34,7 @@ class AboutActivity : AboutActivityBase(null, {
     accentColor = Prefs.accentColor
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
     cutoutForeground = Prefs.accentColor
-    cutoutDrawableRes = R.drawable.frost_f_256
+    cutoutDrawableRes = R.drawable.frost_f_200
     faqPageTitleRes = R.string.faq_title
     faqXmlRes = R.xml.frost_faq
     faqParseNewLine = false
@@ -137,10 +137,10 @@ class AboutActivity : AboutActivityBase(null, {
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
                         GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
-                        CommunityMaterial.Icon.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                        CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
                         CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
-                        CommunityMaterial.Icon.cmd_slack to { c.startLink(R.string.slack_url) },
-                        CommunityMaterial.Icon.cmd_xda to { c.startLink(R.string.xda_url) }
+                        CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
+                        CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) }
                 ).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
                         layoutParams = ViewGroup.LayoutParams(size, size)

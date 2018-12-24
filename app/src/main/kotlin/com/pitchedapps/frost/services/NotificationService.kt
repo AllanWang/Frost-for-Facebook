@@ -2,7 +2,7 @@ package com.pitchedapps.frost.services
 
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R

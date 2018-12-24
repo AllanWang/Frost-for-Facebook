@@ -92,7 +92,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:lines="1"
                 android:maxLines="1"
-                android:textSize="@dimen/material_drawer_account_header_text" />
+                android:textSize="@dimen/material_drawer_account_header_title" />
 
             <TextView
                 android:id="@+id/material_drawer_account_header_email"
@@ -102,7 +102,7 @@
                 android:fontFamily="sans-serif"
                 android:lines="1"
                 android:maxLines="1"
-                android:textSize="@dimen/material_drawer_account_header_text" />
+                android:textSize="@dimen/material_drawer_account_header_subtext" />
 
         </LinearLayout>
 

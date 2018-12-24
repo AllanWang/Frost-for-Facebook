@@ -100,7 +100,7 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.newsfeed, getFeedPrefs()) {
             descRes = R.string.newsfeed_desc
-            iicon = CommunityMaterial.Icon.cmd_newspaper
+            iicon = CommunityMaterial.Icon2.cmd_newspaper
         }
 
         subItems(R.string.notifications, getNotificationPrefs()) {

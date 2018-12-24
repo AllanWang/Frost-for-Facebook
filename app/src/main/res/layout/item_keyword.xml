@@ -7,7 +7,7 @@
     android:paddingBottom="8dp"
     android:paddingTop="8dp">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/keyword_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

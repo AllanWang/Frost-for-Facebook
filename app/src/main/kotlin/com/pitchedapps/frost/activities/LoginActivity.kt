@@ -3,9 +3,9 @@ package com.pitchedapps.frost.activities
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.Toolbar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.Toolbar
 import android.widget.ImageView
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView

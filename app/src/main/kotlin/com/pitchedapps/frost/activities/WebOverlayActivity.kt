@@ -5,9 +5,8 @@ import android.content.Intent
 import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
@@ -16,6 +15,7 @@ import android.widget.FrameLayout
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
 import ca.allanwang.kau.utils.*
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
@@ -168,7 +168,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             else reloadBase(true)
             if (Showcase.firstWebOverlay) {
                 coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
-                    duration = Snackbar.LENGTH_INDEFINITE
+                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                     setAction(R.string.kau_got_it) { _ -> this.dismiss() }
                 }
             }
@@ -248,7 +248,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         overlayContext?.onMenuCreate(this, menu)
         toolbar.tint(Prefs.iconColor)
         setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_share to CommunityMaterial.Icon.cmd_share,
+                R.id.action_share to CommunityMaterial.Icon2.cmd_share,
                 R.id.action_copy_link to GoogleMaterial.Icon.gmd_content_copy)
         return true
     }

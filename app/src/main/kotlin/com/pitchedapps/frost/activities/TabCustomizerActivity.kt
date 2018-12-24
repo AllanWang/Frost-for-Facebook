@@ -3,10 +3,10 @@ package com.pitchedapps.frost.activities
 import android.app.Activity
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -50,7 +50,7 @@ class TabCustomizerActivity : BaseActivity() {
 
         toolbar.setBackgroundColor(Prefs.headerColor)
 
-        recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, GridLayoutManager.VERTICAL, false)
+        recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, RecyclerView.VERTICAL, false)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
 
