@@ -1,17 +1,30 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.activities
 
 import android.app.Activity
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.kotlin.lazyContext
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.withAlpha
@@ -27,20 +40,15 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostColors
-import java.util.*
+import kotlinx.android.synthetic.main.activity_tab_customizer.*
+import java.util.Collections
 
 /**
  * Created by Allan Wang on 26/11/17.
  */
 class TabCustomizerActivity : BaseActivity() {
 
-    val toolbar: View by bindView(R.id.pseudo_toolbar)
-    val recycler: RecyclerView by bindView(R.id.tab_recycler)
-    val instructions: TextView by bindView(R.id.instructions)
-    val divider: View by bindView(R.id.divider)
-    val adapter = FastItemAdapter<TabIItem>()
-    val fabCancel: FloatingActionButton by bindView(R.id.fab_cancel)
-    val fabSave: FloatingActionButton by bindView(R.id.fab_save)
+    private val adapter = FastItemAdapter<TabIItem>()
 
     private val wobble = lazyContext { AnimationUtils.loadAnimation(it, R.anim.rotate_delta) }
 
@@ -48,11 +56,11 @@ class TabCustomizerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tab_customizer)
 
-        toolbar.setBackgroundColor(Prefs.headerColor)
+        pseudo_toolbar.setBackgroundColor(Prefs.headerColor)
 
-        recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, GridLayoutManager.VERTICAL, false)
-        recycler.adapter = adapter
-        recycler.setHasFixedSize(true)
+        tab_recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, RecyclerView.VERTICAL, false)
+        tab_recycler.adapter = adapter
+        tab_recycler.setHasFixedSize(true)
 
         divider.setBackgroundColor(Prefs.textColor.withAlpha(30))
         instructions.setTextColor(Prefs.textColor)
@@ -63,22 +71,22 @@ class TabCustomizerActivity : BaseActivity() {
         tabs.addAll(remaining)
 
         adapter.add(tabs.map(::TabIItem))
-        bindSwapper(adapter, recycler)
+        bindSwapper(adapter, tab_recycler)
 
         adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
 
         setResult(Activity.RESULT_CANCELED)
 
-        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, Prefs.iconColor)
-        fabSave.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
-        fabSave.setOnClickListener {
+        fab_save.setIcon(GoogleMaterial.Icon.gmd_check, Prefs.iconColor)
+        fab_save.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fab_save.setOnClickListener {
             adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item).save()
             setResult(Activity.RESULT_OK)
             finish()
         }
-        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
-        fabCancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
-        fabCancel.setOnClickListener { finish() }
+        fab_cancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
+        fab_cancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fab_cancel.setOnClickListener { finish() }
         setFrostColors {
             themeWindow = true
         }
@@ -101,9 +109,9 @@ class TabCustomizerActivity : BaseActivity() {
         override fun itemTouchDropped(oldPosition: Int, newPosition: Int) = Unit
     }
 
-
     private class TabDragCallback(
-            directions: Int, itemTouchCallback: ItemTouchCallback
+        directions: Int,
+        itemTouchCallback: ItemTouchCallback
     ) : SimpleDragCallback(directions, itemTouchCallback) {
 
         private var draggingView: TabIItem.ViewHolder? = null
@@ -127,7 +135,5 @@ class TabCustomizerActivity : BaseActivity() {
                 }
             }
         }
-
     }
-
 }

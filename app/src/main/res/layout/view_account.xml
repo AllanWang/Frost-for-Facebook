@@ -10,11 +10,11 @@
         android:layout_width="@dimen/account_image_size"
         android:layout_height="@dimen/account_image_size" />
 
-    <android.support.v4.widget.Space
+    <Space
         android:layout_width="1dp"
         android:layout_height="20dp" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/account_text"
         android:layout_width="@dimen/account_image_size"
         android:layout_height="wrap_content"

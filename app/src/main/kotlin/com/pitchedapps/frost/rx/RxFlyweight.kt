@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.rx
 
 import io.reactivex.Single
@@ -72,9 +88,9 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
      * you likely won't have a need for flyweights
      */
     protected open fun createNewSource(input: T): Single<R> =
-            Single.fromCallable { call(input) }
-                    .timeout(15, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
+        Single.fromCallable { call(input) }
+            .timeout(15, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
 
     fun reset() {
         synchronized(lock) {
@@ -82,5 +98,4 @@ abstract class RxFlyweight<in T : Any, C : Any, R : Any> {
             conditionals.clear()
         }
     }
-
 }

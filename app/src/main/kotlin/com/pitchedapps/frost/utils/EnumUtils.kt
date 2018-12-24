@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.utils
 
 import android.content.Intent
@@ -39,12 +55,12 @@ interface EnumBundleCompanion<E : Enum<E>> {
     operator fun get(bundle: BaseBundle?) = get(bundle?.getString(argTag))
 
     operator fun get(intent: Intent?) = get(intent?.getStringExtra(argTag))
-
 }
 
 open class EnumCompanion<E : Enum<E>>(
-        final override val argTag: String,
-        final override val values: Array<E>) : EnumBundleCompanion<E> {
+    final override val argTag: String,
+    final override val values: Array<E>
+) : EnumBundleCompanion<E> {
 
     final override val valueMap: Map<String, E> = values.map { it.name to it }.toMap()
 
@@ -53,5 +69,4 @@ open class EnumCompanion<E : Enum<E>>(
     final override fun get(bundle: BaseBundle?) = super.get(bundle)
 
     final override fun get(intent: Intent?) = super.get(intent)
-
 }

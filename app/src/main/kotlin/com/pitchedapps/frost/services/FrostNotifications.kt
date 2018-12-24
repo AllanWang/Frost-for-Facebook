@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.services
 
 import android.app.Notification
@@ -8,8 +24,8 @@ import android.net.Uri
 import android.os.BaseBundle
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
@@ -26,8 +42,12 @@ import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseNotification
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.utils.*
-import java.util.*
+import com.pitchedapps.frost.utils.ARG_USER_ID
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.utils.isIndependent
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-07-08.
@@ -40,33 +60,38 @@ private val _40_DP = 40.dpToPx
  * Enum to handle notification creations
  */
 enum class NotificationType(
-        private val channelId: String,
-        private val overlayContext: OverlayContext,
-        private val fbItem: FbItem,
-        private val parser: FrostParser<ParseNotification>,
-        private val getTime: (notif: NotificationModel) -> Long,
-        private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
-        private val ringtone: () -> String) {
+    private val channelId: String,
+    private val overlayContext: OverlayContext,
+    private val fbItem: FbItem,
+    private val parser: FrostParser<ParseNotification>,
+    private val getTime: (notif: NotificationModel) -> Long,
+    private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
+    private val ringtone: () -> String
+) {
 
-    GENERAL(NOTIF_CHANNEL_GENERAL,
-            OverlayContext.NOTIFICATION,
-            FbItem.NOTIFICATIONS,
-            NotifParser,
-            NotificationModel::epoch,
-            { notif, time -> notif.copy(epoch = time) },
-            Prefs::notificationRingtone) {
+    GENERAL(
+        NOTIF_CHANNEL_GENERAL,
+        OverlayContext.NOTIFICATION,
+        FbItem.NOTIFICATIONS,
+        NotifParser,
+        NotificationModel::epoch,
+        { notif, time -> notif.copy(epoch = time) },
+        Prefs::notificationRingtone
+    ) {
 
         override fun bindRequest(content: NotificationContent, cookie: String) =
-                FrostRunnable.prepareMarkNotificationRead(content.id, cookie)
+            FrostRunnable.prepareMarkNotificationRead(content.id, cookie)
     },
 
-    MESSAGE(NOTIF_CHANNEL_MESSAGES,
-            OverlayContext.MESSAGE,
-            FbItem.MESSAGES,
-            MessageParser,
-            NotificationModel::epochIm,
-            { notif, time -> notif.copy(epochIm = time) },
-            Prefs::messageRingtone);
+    MESSAGE(
+        NOTIF_CHANNEL_MESSAGES,
+        OverlayContext.MESSAGE,
+        FbItem.MESSAGES,
+        MessageParser,
+        NotificationModel::epochIm,
+        { notif, time -> notif.copy(epochIm = time) },
+        Prefs::messageRingtone
+    );
 
     private val groupPrefix = "frost_${name.toLowerCase(Locale.CANADA)}"
 
@@ -133,13 +158,15 @@ enum class NotificationType(
     }
 
     fun debugNotification(context: Context, data: CookieModel) {
-        val content = NotificationContent(data,
-                System.currentTimeMillis(),
-                "https://github.com/AllanWang/Frost-for-Facebook",
-                "Debug Notif",
-                "Test 123",
-                System.currentTimeMillis() / 1000,
-                "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png")
+        val content = NotificationContent(
+            data,
+            System.currentTimeMillis(),
+            "https://github.com/AllanWang/Frost-for-Facebook",
+            "Debug Notif",
+            "Test 123",
+            System.currentTimeMillis() / 1000,
+            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png"
+        )
         createNotification(context, content).notify(context)
     }
 
@@ -147,44 +174,43 @@ enum class NotificationType(
      * Create and submit a new notification with the given [content]
      */
     private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
-            with(content) {
-                val intent = Intent(context, FrostWebActivity::class.java)
-                // TODO temp fix; we will show notification page for dependent urls. We can trigger a click next time
-                intent.data = Uri.parse(if (href.isIndependent) href else FbItem.NOTIFICATIONS.url)
-                intent.putExtra(ARG_USER_ID, data.id)
-                overlayContext.put(intent)
-                bindRequest(intent, content, data.cookie)
+        with(content) {
+            val intent = Intent(context, FrostWebActivity::class.java)
+            // TODO temp fix; we will show notification page for dependent urls. We can trigger a click next time
+            intent.data = Uri.parse(if (href.isIndependent) href else FbItem.NOTIFICATIONS.url)
+            intent.putExtra(ARG_USER_ID, data.id)
+            overlayContext.put(intent)
+            bindRequest(intent, content, data.cookie)
 
-                val group = "${groupPrefix}_${data.id}"
-                val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                val notifBuilder = context.frostNotification(channelId)
-                        .setContentTitle(title ?: context.string(R.string.frost_name))
-                        .setContentText(text)
-                        .setContentIntent(pendingIntent)
-                        .setCategory(Notification.CATEGORY_SOCIAL)
-                        .setSubText(data.name)
-                        .setGroup(group)
+            val group = "${groupPrefix}_${data.id}"
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val notifBuilder = context.frostNotification(channelId)
+                .setContentTitle(title ?: context.string(R.string.frost_name))
+                .setContentText(text)
+                .setContentIntent(pendingIntent)
+                .setCategory(Notification.CATEGORY_SOCIAL)
+                .setSubText(data.name)
+                .setGroup(group)
 
-                if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
-                L.v { "Notif load $content" }
+            if (timestamp != -1L) notifBuilder.setWhen(timestamp * 1000)
+            L.v { "Notif load $content" }
 
-                if (profileUrl != null) {
-                    try {
-                        val profileImg = GlideApp.with(context)
-                                .asBitmap()
-                                .load(profileUrl)
-                                .transform(FrostGlide.circleCrop)
-                                .submit(_40_DP, _40_DP)
-                                .get()
-                        notifBuilder.setLargeIcon(profileImg)
-                    } catch (e: Exception) {
-                        L.e { "Failed to get image $profileUrl" }
-                    }
+            if (profileUrl != null) {
+                try {
+                    val profileImg = GlideApp.with(context)
+                        .asBitmap()
+                        .load(profileUrl)
+                        .transform(FrostGlide.circleCrop)
+                        .submit(_40_DP, _40_DP)
+                        .get()
+                    notifBuilder.setLargeIcon(profileImg)
+                } catch (e: Exception) {
+                    L.e { "Failed to get image $profileUrl" }
                 }
-
-                FrostNotification(group, notifId, notifBuilder)
             }
 
+            FrostNotification(group, notifId, notifBuilder)
+        }
 
     /**
      * Create a summary notification to wrap the previous ones
@@ -198,44 +224,46 @@ enum class NotificationType(
         val group = "${groupPrefix}_$userId"
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notifBuilder = context.frostNotification(channelId)
-                .setContentTitle(context.string(R.string.frost_name))
-                .setContentText("$count ${context.string(fbItem.titleId)}")
-                .setGroup(group)
-                .setGroupSummary(true)
-                .setContentIntent(pendingIntent)
-                .setCategory(Notification.CATEGORY_SOCIAL)
+            .setContentTitle(context.string(R.string.frost_name))
+            .setContentText("$count ${context.string(fbItem.titleId)}")
+            .setGroup(group)
+            .setGroupSummary(true)
+            .setContentIntent(pendingIntent)
+            .setCategory(Notification.CATEGORY_SOCIAL)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notifBuilder.setGroupAlertBehavior(Notification.GROUP_ALERT_CHILDREN)
+            notifBuilder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
         }
 
         return FrostNotification(group, 1, notifBuilder)
     }
-
 }
 
 /**
  * Notification data holder
  */
-data class NotificationContent(val data: CookieModel,
-                               val id: Long,
-                               val href: String,
-                               val title: String? = null, // defaults to frost title
-                               val text: String,
-                               val timestamp: Long,
-                               val profileUrl: String?) {
+data class NotificationContent(
+    val data: CookieModel,
+    val id: Long,
+    val href: String,
+    val title: String? = null, // defaults to frost title
+    val text: String,
+    val timestamp: Long,
+    val profileUrl: String?
+) {
 
     val notifId = Math.abs(id.toInt())
-
 }
 
 /**
  * Wrapper for a complete notification builder and identifier
  * which can be immediately notified when given a [Context]
  */
-data class FrostNotification(private val tag: String,
-                             private val id: Int,
-                             val notif: NotificationCompat.Builder) {
+data class FrostNotification(
+    private val tag: String,
+    private val id: Int,
+    val notif: NotificationCompat.Builder
+) {
 
     fun withAlert(enable: Boolean, ringtone: String): FrostNotification {
         notif.setFrostAlert(enable, ringtone)
@@ -243,15 +271,15 @@ data class FrostNotification(private val tag: String,
     }
 
     fun notify(context: Context) =
-            NotificationManagerCompat.from(context).notify(tag, id, notif.build())
+        NotificationManagerCompat.from(context).notify(tag, id, notif.build())
 }
 
 const val NOTIFICATION_PERIODIC_JOB = 7
 
 fun Context.scheduleNotifications(minutes: Long): Boolean =
-        scheduleJob<NotificationService>(NOTIFICATION_PERIODIC_JOB, minutes)
+    scheduleJob<NotificationService>(NOTIFICATION_PERIODIC_JOB, minutes)
 
 const val NOTIFICATION_JOB_NOW = 6
 
 fun Context.fetchNotifications(): Boolean =
-        fetchJob<NotificationService>(NOTIFICATION_JOB_NOW)
+    fetchJob<NotificationService>(NOTIFICATION_JOB_NOW)

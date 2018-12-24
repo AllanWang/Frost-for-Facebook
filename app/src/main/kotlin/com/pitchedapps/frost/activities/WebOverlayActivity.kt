@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.activities
 
 import android.annotation.SuppressLint
@@ -5,32 +21,58 @@ import android.content.Intent
 import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.widget.FrameLayout
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.copyToClipboard
+import ca.allanwang.kau.utils.darken
+import ca.allanwang.kau.utils.dpToPx
+import ca.allanwang.kau.utils.finishSlideOut
+import ca.allanwang.kau.utils.navigationBarColor
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.shareText
+import ca.allanwang.kau.utils.statusBarColor
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.withAlpha
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.*
+import com.pitchedapps.frost.contracts.ActivityContract
+import com.pitchedapps.frost.contracts.FileChooserContract
+import com.pitchedapps.frost.contracts.FileChooserDelegate
+import com.pitchedapps.frost.contracts.FrostContentContainer
+import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.enums.OverlayContext
-import com.pitchedapps.frost.facebook.*
+import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.services.FrostRunnable
-import com.pitchedapps.frost.utils.*
+import com.pitchedapps.frost.utils.ARG_URL
+import com.pitchedapps.frost.utils.ARG_USER_ID
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.Showcase
+import com.pitchedapps.frost.utils.frostSnackbar
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import okhttp3.HttpUrl
-
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -103,8 +145,8 @@ class WebOverlayActivity : WebOverlayActivityBase(false)
 
 @SuppressLint("Registered")
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
-        ActivityContract, FrostContentContainer,
-        VideoViewHolder, FileChooserContract by FileChooserDelegate() {
+    ActivityContract, FrostContentContainer,
+    VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -156,9 +198,9 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         content.bind(this)
 
         content.titleObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { toolbar.title = it }
-                .disposeOnDestroy()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { toolbar.title = it }
+            .disposeOnDestroy()
 
         with(web) {
             if (forceBasicAgent) //todo check; the webview already adds it dynamically
@@ -168,7 +210,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             else reloadBase(true)
             if (Showcase.firstWebOverlay) {
                 coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
-                    duration = Snackbar.LENGTH_INDEFINITE
+                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                     setAction(R.string.kau_got_it) { _ -> this.dismiss() }
                 }
             }
@@ -235,7 +277,10 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         kauSwipeOnDestroy()
     }
 
-    override fun openFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
+    override fun openFileChooser(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    ) {
         openMediaPicker(filePathCallback, fileChooserParams)
     }
 
@@ -247,9 +292,11 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         menuInflater.inflate(R.menu.menu_web, menu)
         overlayContext?.onMenuCreate(this, menu)
         toolbar.tint(Prefs.iconColor)
-        setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_share to CommunityMaterial.Icon.cmd_share,
-                R.id.action_copy_link to GoogleMaterial.Icon.gmd_content_copy)
+        setMenuIcons(
+            menu, Prefs.iconColor,
+            R.id.action_share to CommunityMaterial.Icon2.cmd_share,
+            R.id.action_copy_link to GoogleMaterial.Icon.gmd_content_copy
+        )
         return true
     }
 
@@ -270,5 +317,4 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
      */
     override var videoViewer: FrostVideoViewer? = null
     override val lowerVideoPadding: PointF = PointF(0f, 0f)
-
 }

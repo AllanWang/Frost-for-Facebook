@@ -32,7 +32,7 @@
 
     </com.pitchedapps.frost.views.FrostVideoView>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/video_toolbar"
         android:layout_width="match_parent"
         android:background="@drawable/exomedia_default_controls_interactive_background"

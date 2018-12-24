@@ -1,17 +1,40 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.activities
 
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.about.AboutActivityBase
 import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.dimenPixelSize
+import ca.allanwang.kau.utils.resolveDrawable
+import ca.allanwang.kau.utils.startLink
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.withMinAlpha
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
@@ -25,7 +48,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 
-
 /**
  * Created by Allan Wang on 2017-06-26.
  */
@@ -34,7 +56,7 @@ class AboutActivity : AboutActivityBase(null, {
     accentColor = Prefs.accentColor
     backgroundColor = Prefs.bgColor.withMinAlpha(200)
     cutoutForeground = Prefs.accentColor
-    cutoutDrawableRes = R.drawable.frost_f_256
+    cutoutDrawableRes = R.drawable.frost_f_200
     faqPageTitleRes = R.string.faq_title
     faqXmlRes = R.xml.frost_faq
     faqParseNewLine = false
@@ -42,21 +64,21 @@ class AboutActivity : AboutActivityBase(null, {
 
     override fun getLibraries(libs: Libs): List<Library> {
         val include = arrayOf(
-                "AboutLibraries",
-                "AndroidIconics",
-                "androidin_appbillingv3",
-                "androidslidinguppanel",
-                "Crashlytics",
-                "dbflow",
-                "fastadapter",
-                "glide",
-                "Jsoup",
-                "kau",
-                "kotterknife",
-                "materialdialogs",
-                "materialdrawer",
-                "rxjava",
-                "subsamplingscaleimageview"
+            "AboutLibraries",
+            "AndroidIconics",
+            "androidin_appbillingv3",
+            "androidslidinguppanel",
+            "Crashlytics",
+            "dbflow",
+            "fastadapter",
+            "glide",
+            "Jsoup",
+            "kau",
+            "kotterknife",
+            "materialdialogs",
+            "materialdrawer",
+            "rxjava",
+            "subsamplingscaleimageview"
         )
 
         val l = libs.prepareLibraries(this, include, null, false, true, true)
@@ -136,11 +158,11 @@ class AboutActivity : AboutActivityBase(null, {
                 val c = itemView.context
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
-                        GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
-                        CommunityMaterial.Icon.cmd_reddit to { c.startLink(R.string.reddit_url) },
-                        CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
-                        CommunityMaterial.Icon.cmd_slack to { c.startLink(R.string.slack_url) },
-                        CommunityMaterial.Icon.cmd_xda to { c.startLink(R.string.xda_url) }
+                    GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
+                    CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                    CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
+                    CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
+                    CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) }
                 ).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
                         layoutParams = ViewGroup.LayoutParams(size, size)
@@ -154,8 +176,14 @@ class AboutActivity : AboutActivityBase(null, {
                 }
                 val set = ConstraintSet()
                 set.clone(container)
-                set.createHorizontalChain(ConstraintSet.PARENT_ID, ConstraintSet.LEFT, ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
-                        images.map { it.id }.toIntArray(), null, ConstraintSet.CHAIN_SPREAD_INSIDE)
+                set.createHorizontalChain(ConstraintSet.PARENT_ID,
+                    ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.RIGHT,
+                    images.map { it.id }.toIntArray(),
+                    null,
+                    ConstraintSet.CHAIN_SPREAD_INSIDE
+                )
                 set.applyTo(container)
             }
         }

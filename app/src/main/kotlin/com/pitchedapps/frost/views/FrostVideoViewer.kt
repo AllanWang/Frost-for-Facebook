@@ -1,37 +1,57 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.views
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.net.Uri
-import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import android.widget.ImageView
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.fadeIn
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.gone
+import ca.allanwang.kau.utils.goneIf
+import ca.allanwang.kau.utils.inflate
+import ca.allanwang.kau.utils.isColorDark
+import ca.allanwang.kau.utils.isGone
+import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.setIcon
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.visible
+import ca.allanwang.kau.utils.withMinAlpha
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
+import kotlinx.android.synthetic.main.view_video.view.*
 
 /**
  * Created by Allan Wang on 2017-10-13.
  */
 class FrostVideoViewer @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
-
-    val container: ViewGroup by bindView(R.id.video_container)
-    val toolbar: Toolbar by bindView(R.id.video_toolbar)
-    val background: View by bindView(R.id.video_background)
-    val video: FrostVideoView by bindView(R.id.video)
-    val restarter: ImageView by bindView(R.id.video_restart)
 
     companion object {
         /**
@@ -59,29 +79,31 @@ class FrostVideoViewer @JvmOverloads constructor(
     init {
         inflate(R.layout.view_video, true)
         alpha = 0f
-        background.setBackgroundColor(
-                if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
-                    Prefs.bgColor.withMinAlpha(200)
-                else
-                    Color.BLACK)
+        video_background.setBackgroundColor(
+            if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
+                Prefs.bgColor.withMinAlpha(200)
+            else
+                Color.BLACK
+        )
         video.setViewerContract(this)
         video.pause()
-        toolbar.inflateMenu(R.menu.menu_video)
-        context.setMenuIcons(toolbar.menu, Prefs.iconColor,
-                R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
-                R.id.action_download to GoogleMaterial.Icon.gmd_file_download
+        video_toolbar.inflateMenu(R.menu.menu_video)
+        context.setMenuIcons(
+            video_toolbar.menu, Prefs.iconColor,
+            R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
+            R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )
-        toolbar.setOnMenuItemClickListener {
+        video_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.frostDownload(video.videoUri)
             }
             true
         }
-        restarter.gone().setIcon(GoogleMaterial.Icon.gmd_replay, 64)
-        restarter.setOnClickListener {
+        video_restart.gone().setIcon(GoogleMaterial.Icon.gmd_replay, 64)
+        video_restart.setOnClickListener {
             video.restart()
-            restarter.fadeOut { restarter.gone() }
+            video_restart.fadeOut { video_restart.gone() }
         }
     }
 
@@ -115,13 +137,13 @@ class FrostVideoViewer @JvmOverloads constructor(
      */
 
     override fun onExpand(progress: Float) {
-        toolbar.goneIf(progress == 0f).alpha = progress
-        background.alpha = progress
+        video_toolbar.goneIf(progress == 0f).alpha = progress
+        video_background.alpha = progress
     }
 
     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-        if (restarter.isVisible) {
-            restarter.performClick()
+        if (video_restart.isVisible) {
+            video_restart.performClick()
             return true
         }
         return false
@@ -129,7 +151,7 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     override fun onVideoComplete() {
         video.jumpToStart()
-        restarter.fadeIn()
+        video_restart.fadeIn()
     }
 
     fun updateLocation() {
@@ -143,14 +165,13 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     override fun onControlsShown() {
         if (video.isExpanded)
-            toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { toolbar.visible() })
+            video_toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { video_toolbar.visible() })
     }
 
     override fun onControlsHidden() {
-        if (!toolbar.isGone)
-            toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { toolbar.gone() }
+        if (!video_toolbar.isGone)
+            video_toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { video_toolbar.gone() }
     }
-
 }
 
 interface FrostVideoViewerContract : VideoControlsVisibilityListener {
