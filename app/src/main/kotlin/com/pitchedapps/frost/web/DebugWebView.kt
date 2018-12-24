@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.web
 
 import android.annotation.SuppressLint
@@ -25,7 +41,9 @@ import java.io.File
  * A barebone webview with a refresh listener
  */
 class DebugWebView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
     var onPageFinished: (String?) -> Unit = {}
@@ -88,8 +106,8 @@ class DebugWebView @JvmOverloads constructor(
                     CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
                     Prefs.themeInjector,
                     CssHider.NON_RECENT.maybe(
-                        (url?.contains("?sk=h_chr") ?: false)
-                            && Prefs.aggressiveRecents
+                        (url?.contains("?sk=h_chr") ?: false) &&
+                            Prefs.aggressiveRecents
                     )
                 )
         }
