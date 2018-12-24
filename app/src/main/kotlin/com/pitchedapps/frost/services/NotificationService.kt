@@ -57,6 +57,8 @@ class NotificationService : JobService(), CoroutineScope {
     }
 
     private fun prepareFinish(abrupt: Boolean) {
+        if (job.isCancelled)
+            return
         val time = System.currentTimeMillis() - startTime
         L.i { "Notification service has ${if (abrupt) "finished abruptly" else "finished"} in $time ms" }
         frostEvent(
@@ -75,7 +77,8 @@ class NotificationService : JobService(), CoroutineScope {
             try {
                 async { sendNotifications(params) }.await()
             } finally {
-                prepareFinish(false)
+                if (!job.isCancelled)
+                    prepareFinish(false)
                 jobFinished(params, false)
             }
         }
