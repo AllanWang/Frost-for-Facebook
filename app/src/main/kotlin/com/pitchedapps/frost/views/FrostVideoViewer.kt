@@ -4,21 +4,18 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.net.Uri
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import android.widget.ImageView
 import ca.allanwang.kau.utils.*
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
+import kotlinx.android.synthetic.main.view_video.view.*
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -26,12 +23,6 @@ import com.pitchedapps.frost.utils.frostDownload
 class FrostVideoViewer @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
-
-    val container: ViewGroup by bindView(R.id.video_container)
-    val toolbar: Toolbar by bindView(R.id.video_toolbar)
-    val background: View by bindView(R.id.video_background)
-    val video: FrostVideoView by bindView(R.id.video)
-    val restarter: ImageView by bindView(R.id.video_restart)
 
     companion object {
         /**
@@ -59,29 +50,29 @@ class FrostVideoViewer @JvmOverloads constructor(
     init {
         inflate(R.layout.view_video, true)
         alpha = 0f
-        background.setBackgroundColor(
+        video_background.setBackgroundColor(
                 if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
                     Prefs.bgColor.withMinAlpha(200)
                 else
                     Color.BLACK)
         video.setViewerContract(this)
         video.pause()
-        toolbar.inflateMenu(R.menu.menu_video)
-        context.setMenuIcons(toolbar.menu, Prefs.iconColor,
+        video_toolbar.inflateMenu(R.menu.menu_video)
+        context.setMenuIcons(video_toolbar.menu, Prefs.iconColor,
                 R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
                 R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )
-        toolbar.setOnMenuItemClickListener {
+        video_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.frostDownload(video.videoUri)
             }
             true
         }
-        restarter.gone().setIcon(GoogleMaterial.Icon.gmd_replay, 64)
-        restarter.setOnClickListener {
+        video_restart.gone().setIcon(GoogleMaterial.Icon.gmd_replay, 64)
+        video_restart.setOnClickListener {
             video.restart()
-            restarter.fadeOut { restarter.gone() }
+            video_restart.fadeOut { video_restart.gone() }
         }
     }
 
@@ -115,13 +106,13 @@ class FrostVideoViewer @JvmOverloads constructor(
      */
 
     override fun onExpand(progress: Float) {
-        toolbar.goneIf(progress == 0f).alpha = progress
-        background.alpha = progress
+        video_toolbar.goneIf(progress == 0f).alpha = progress
+        video_background.alpha = progress
     }
 
     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-        if (restarter.isVisible) {
-            restarter.performClick()
+        if (video_restart.isVisible) {
+            video_restart.performClick()
             return true
         }
         return false
@@ -129,7 +120,7 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     override fun onVideoComplete() {
         video.jumpToStart()
-        restarter.fadeIn()
+        video_restart.fadeIn()
     }
 
     fun updateLocation() {
@@ -143,12 +134,12 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     override fun onControlsShown() {
         if (video.isExpanded)
-            toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { toolbar.visible() })
+            video_toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { video_toolbar.visible() })
     }
 
     override fun onControlsHidden() {
-        if (!toolbar.isGone)
-            toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { toolbar.gone() }
+        if (!video_toolbar.isGone)
+            video_toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { video_toolbar.gone() }
     }
 
 }
