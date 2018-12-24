@@ -6,7 +6,6 @@ import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
