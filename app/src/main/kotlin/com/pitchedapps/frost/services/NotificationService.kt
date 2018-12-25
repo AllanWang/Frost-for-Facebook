@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.CoroutineContext
@@ -77,7 +78,7 @@ class NotificationService : JobService(), CoroutineScope {
             try {
                 async { sendNotifications(params) }.await()
             } finally {
-                if (!job.isCancelled)
+                if (!isActive)
                     prepareFinish(false)
                 jobFinished(params, false)
             }
@@ -85,14 +86,14 @@ class NotificationService : JobService(), CoroutineScope {
         return true
     }
 
-    private suspend fun sendNotifications(params: JobParameters?): Unit = suspendCancellableCoroutine { cont ->
+    private suspend fun sendNotifications(params: JobParameters?): Unit = suspendCancellableCoroutine {
         val currentId = Prefs.userId
         val cookies = loadFbCookiesSync()
-        if (cont.isCancelled) return@suspendCancellableCoroutine
+        if (it.isCancelled) return@suspendCancellableCoroutine
         val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
         var notifCount = 0
         for (cookie in cookies) {
-            if (cont.isCancelled) break
+            if (it.isCancelled) break
             val current = cookie.id == currentId
             if (Prefs.notificationsGeneral &&
                 (current || Prefs.notificationAllAccounts)

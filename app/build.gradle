@@ -156,6 +156,7 @@ dependencies {
     androidTestImplementation kauDependency.espresso
     androidTestImplementation kauDependency.testRules
     androidTestImplementation kauDependency.testRunner
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
 
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
@@ -180,7 +181,10 @@ dependencies {
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$COROUTINES"
+    // TODO temp
+    implementation "org.jetbrains.anko:anko-commons:0.10.8"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${COROUTINES}"
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 

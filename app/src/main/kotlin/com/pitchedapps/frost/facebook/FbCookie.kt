@@ -72,14 +72,14 @@ object FbCookie {
 
     private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
         cookie ?: return true
-        L.test { "Orig ${webCookie}" }
+        L.test { "Orig $webCookie" }
         removeAllCookies()
         L.test { "Save $cookie" }
         // Save all cookies regardless of result, then check if all succeeded
         val result = cookie.split(";").map { setSingleWebCookie(it) }.all { it }
-        L.test { "AAAA ${webCookie}" }
+        L.test { "AAAA $webCookie" }
         flush()
-        L.test { "SSSS ${webCookie}" }
+        L.test { "SSSS $webCookie" }
         return result
     }
 

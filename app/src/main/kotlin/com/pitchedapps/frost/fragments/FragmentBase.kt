@@ -41,6 +41,11 @@ import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -48,7 +53,7 @@ import io.reactivex.disposables.Disposable
  * All fragments pertaining to the main view
  * Must be attached to activities implementing [MainActivityContract]
  */
-abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
+abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, DynamicUiContract {
 
     companion object {
         private const val ARG_POSITION = "arg_position"
@@ -70,6 +75,10 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
             return fragment
         }
     }
+
+    open lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
@@ -98,6 +107,7 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        job = SupervisorJob()
         firstLoad = true
         if (context !is MainActivityContract)
             throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
@@ -205,6 +215,11 @@ abstract class BaseFragment : Fragment(), FragmentContract, DynamicUiContract {
         content?.destroy()
         content = null
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
     }
 
     override fun reloadTheme() {
