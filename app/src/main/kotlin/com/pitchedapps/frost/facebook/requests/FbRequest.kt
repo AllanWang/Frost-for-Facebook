@@ -28,12 +28,18 @@ import com.pitchedapps.frost.rx.RxFlyweight
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -65,6 +71,8 @@ fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
         fail()
     }
 }
+
+data class FbRequest(val cookie: String, val request: suspend (RequestAuth) -> Unit)
 
 /**
  * Underlying container for all fb requests
