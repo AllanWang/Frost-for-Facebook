@@ -30,50 +30,83 @@ import com.pitchedapps.frost.utils.launchLogin
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.SingleSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-05-30.
  */
 object FbCookie {
 
+    const val COOKIE_DOMAIN = FACEBOOK_COM
+
     /**
      * Retrieves the facebook cookie if it exists
      * Note that this is a synchronized call
      */
     inline val webCookie: String?
-        get() = CookieManager.getInstance().getCookie(FB_URL_BASE)
+        get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
 
-    private fun setWebCookie(cookie: String?, callback: (() -> Unit)?) {
-        with(CookieManager.getInstance()) {
-            removeAllCookies { _ ->
-                if (cookie == null) {
-                    callback?.invoke()
-                    return@removeAllCookies
-                }
-                L.d { "Setting cookie" }
-                val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
-                cookies.forEach { (cookie, callback) -> setCookie(FB_URL_BASE, cookie) { callback.onSuccess(it) } }
-                Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }) {}
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        callback?.invoke()
-                        L.d { "Cookies set" }
-                        L._d { cookie }
-                        flush()
-                    }
+    private fun CookieManager.setWebCookie(cookie: String?, callback: (() -> Unit)?) {
+        removeAllCookies { _ ->
+            if (cookie == null) {
+                callback?.invoke()
+                return@removeAllCookies
             }
+            L.d { "Setting cookie" }
+            val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
+            cookies.forEach { (cookie, callback) -> setCookie(COOKIE_DOMAIN, cookie) { callback.onSuccess(it) } }
+            Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }) {}
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    callback?.invoke()
+                    L.d { "Cookies set" }
+                    L._d { cookie }
+                    flush()
+                }
+        }
+    }
+
+    private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
+        cookie ?: return true
+        L.test { "Orig $webCookie" }
+        removeAllCookies()
+        L.test { "Save $cookie" }
+        // Save all cookies regardless of result, then check if all succeeded
+        val result = cookie.split(";").map { setSingleWebCookie(it) }.all { it }
+        L.test { "AAAA $webCookie" }
+        flush()
+        L.test { "SSSS $webCookie" }
+        return result
+    }
+
+    private suspend fun CookieManager.removeAllCookies(): Boolean = suspendCoroutine { cont ->
+        removeAllCookies {
+            L.test { "Removed all cookies $webCookie" }
+            cont.resume(it)
+        }
+    }
+
+    private suspend fun CookieManager.setSingleWebCookie(cookie: String): Boolean = suspendCoroutine { cont ->
+        setCookie(COOKIE_DOMAIN, cookie.trim()) {
+            L.test { "Save single $cookie\n\n\t$webCookie" }
+            cont.resume(it)
         }
     }
 
     operator fun invoke() {
         L.d { "FbCookie Invoke User" }
-        with(CookieManager.getInstance()) {
-            setAcceptCookie(true)
-        }
+        val manager = CookieManager.getInstance()
+        manager.setAcceptCookie(true)
         val dbCookie = loadFbCookie(Prefs.userId)?.cookie
         if (dbCookie != null && webCookie == null) {
             L.d { "DbCookie found & WebCookie is null; setting webcookie" }
-            setWebCookie(dbCookie, null)
+            GlobalScope.launch(Dispatchers.Main) {
+                manager.suspendSetWebCookie(dbCookie)
+            }
         }
     }
 
@@ -107,7 +140,7 @@ object FbCookie {
         }
         L.d { "Switching User" }
         Prefs.userId = cookie.id
-        setWebCookie(cookie.cookie, callback)
+        CookieManager.getInstance().setWebCookie(cookie.cookie, callback)
     }
 
     /**

@@ -17,7 +17,6 @@
 package com.pitchedapps.frost.services
 
 import android.app.job.JobParameters
-import android.app.job.JobService
 import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
@@ -27,8 +26,10 @@ import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
-import org.jetbrains.anko.doAsync
-import java.util.concurrent.Future
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -38,66 +39,67 @@ import java.util.concurrent.Future
  *
  * All fetching is done through parsers
  */
-class NotificationService : JobService() {
-
-    private var future: Future<Unit>? = null
-
-    private val startTime = System.currentTimeMillis()
+class NotificationService : BaseJobService() {
 
     override fun onStopJob(params: JobParameters?): Boolean {
-        val time = System.currentTimeMillis() - startTime
-        L.d { "Notification service has finished abruptly in $time ms" }
-        frostEvent(
-            "NotificationTime",
-            "Type" to "Service force stop",
-            "IM Included" to Prefs.notificationsInstantMessages,
-            "Duration" to time
-        )
-        future?.cancel(true)
-        future = null
+        super.onStopJob(params)
+        prepareFinish(true)
         return false
     }
 
-    fun finish(params: JobParameters?) {
+    private var preparedFinish = false
+
+    private fun prepareFinish(abrupt: Boolean) {
+        if (preparedFinish)
+            return
+        preparedFinish = true
         val time = System.currentTimeMillis() - startTime
-        L.i { "Notification service has finished in $time ms" }
+        L.i { "Notification service has ${if (abrupt) "finished abruptly" else "finished"} in $time ms" }
         frostEvent(
             "NotificationTime",
-            "Type" to "Service",
+            "Type" to (if (abrupt) "Service force stop" else "Service"),
             "IM Included" to Prefs.notificationsInstantMessages,
             "Duration" to time
         )
-        jobFinished(params, false)
-        future?.cancel(true)
-        future = null
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        super.onStartJob(params)
         L.i { "Fetching notifications" }
-        future = doAsync {
-            val currentId = Prefs.userId
-            val cookies = loadFbCookiesSync()
-            val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
-            var notifCount = 0
-            cookies.forEach {
-                val current = it.id == currentId
-                if (Prefs.notificationsGeneral &&
-                    (current || Prefs.notificationAllAccounts)
-                )
-                    notifCount += fetch(jobId, NotificationType.GENERAL, it)
-                if (Prefs.notificationsInstantMessages &&
-                    (current || Prefs.notificationsImAllAccounts)
-                )
-                    notifCount += fetch(jobId, NotificationType.MESSAGE, it)
+        launch {
+            try {
+                sendNotifications(params)
+            } finally {
+                if (!isActive)
+                    prepareFinish(false)
+                jobFinished(params, false)
             }
-
-            L.i { "Sent $notifCount notifications" }
-            if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
-                generalNotification(665, R.string.no_new_notifications, BuildConfig.DEBUG)
-
-            finish(params)
         }
         return true
+    }
+
+    private suspend fun sendNotifications(params: JobParameters?): Unit = withContext(Dispatchers.Default) {
+        val currentId = Prefs.userId
+        val cookies = loadFbCookiesSync()
+        if (!isActive) return@withContext
+        val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
+        var notifCount = 0
+        for (cookie in cookies) {
+            if (!isActive) break
+            val current = cookie.id == currentId
+            if (Prefs.notificationsGeneral &&
+                (current || Prefs.notificationAllAccounts)
+            )
+                notifCount += fetch(jobId, NotificationType.GENERAL, cookie)
+            if (Prefs.notificationsInstantMessages &&
+                (current || Prefs.notificationsImAllAccounts)
+            )
+                notifCount += fetch(jobId, NotificationType.MESSAGE, cookie)
+        }
+
+        L.i { "Sent $notifCount notifications" }
+        if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
+            generalNotification(665, R.string.no_new_notifications, BuildConfig.DEBUG)
     }
 
     /**

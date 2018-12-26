@@ -19,8 +19,9 @@ package com.pitchedapps.frost.utils
 import android.content.Context
 import android.text.TextUtils
 import ca.allanwang.kau.utils.use
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
-import org.jetbrains.anko.doAsync
 
 /**
  * Created by Allan Wang on 2017-09-24.
@@ -38,7 +39,7 @@ open class AdBlocker(val assetPath: String) {
     val data: MutableSet<String> = mutableSetOf()
 
     fun init(context: Context) {
-        doAsync {
+        GlobalScope.launch {
             val content = context.assets.open(assetPath).bufferedReader().use { f ->
                 f.readLines().filter { !it.startsWith("#") }
             }
@@ -58,7 +59,7 @@ open class AdBlocker(val assetPath: String) {
             return false
         val index = host.indexOf(".")
         if (index < 0 || index + 1 < host.length) return false
-        if (host.contains(host)) return true
+        if (data.contains(host)) return true
         return isAdHost(host.substring(index + 1))
     }
 }
