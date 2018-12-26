@@ -25,7 +25,7 @@ import android.content.Intent
 import android.os.BaseBundle
 import android.os.PersistableBundle
 import com.pitchedapps.frost.facebook.requests.RequestAuth
-import com.pitchedapps.frost.facebook.requests.fbRequest
+import com.pitchedapps.frost.facebook.requests.fbAuth
 import com.pitchedapps.frost.facebook.requests.markNotificationRead
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
@@ -179,15 +179,13 @@ class FrostRequestService : BaseJobService() {
         }
         launch(Dispatchers.IO) {
             try {
-                var failed = true
-                cookie.fbRequest {
-                    L.d { "Requesting frost service for ${command.name}" }
-                    command.invoke(this, bundle)
-                    failed = false
-                }
+                val auth = fbAuth.fetch(cookie)
+                command.invoke(auth, bundle)
                 L.d {
-                    "${if (failed) "Failed" else "Finished"} frost service for ${command.name} in ${System.currentTimeMillis() - startTime} ms"
+                    "Finished frost service for ${command.name} in ${System.currentTimeMillis() - startTime} ms"
                 }
+            } catch (e: Exception) {
+                L.e(e) { "Failed frost service for ${command.name} in ${System.currentTimeMillis() - startTime} ms" }
             } finally {
                 jobFinished(params, false)
             }

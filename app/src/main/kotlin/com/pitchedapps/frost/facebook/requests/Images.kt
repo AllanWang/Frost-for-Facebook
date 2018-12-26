@@ -33,8 +33,9 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
 import io.reactivex.Maybe
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import okhttp3.Call
-import okhttp3.Request
 import java.io.IOException
 import java.io.InputStream
 
@@ -123,21 +124,22 @@ class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream>
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in InputStream>) {
         if (!model.isValid) return callback.fail("Model is invalid")
-        model.cookie.fbRequest(fail = { callback.fail("Invalid auth") }) {
-            if (cancelled) return@fbRequest callback.fail("Cancelled")
-            val url = getFullSizedImage(model.id).invoke()
-                ?: return@fbRequest callback.fail("Null url")
-            if (cancelled) return@fbRequest callback.fail("Cancelled")
-            if (!url.contains("png") && !url.contains("jpg")) return@fbRequest callback.fail("Invalid format")
-            urlCall = Request.Builder().url(url).get().call()
-
-            inputStream = try {
-                urlCall?.execute()?.body()?.byteStream()
-            } catch (e: IOException) {
-                null
+        val result: Result<InputStream?> = runCatching {
+            runBlocking {
+                withTimeout(20000L) {
+                    val auth = fbAuth.fetch(model.cookie)
+                    if (cancelled) throw RuntimeException("Cancelled")
+                    val url = auth.getFullSizedImage(model.id).invoke() ?: throw RuntimeException("Null url")
+                    if (cancelled) throw RuntimeException("Cancelled")
+                    if (!url.contains("png") && !url.contains("jpg")) throw RuntimeException("Invalid format")
+                    urlCall?.execute()?.body()?.byteStream()
+                }
             }
-            callback.onDataReady(inputStream)
         }
+        if (result.isSuccess)
+            callback.onDataReady(result.getOrNull())
+        else
+            callback.onLoadFailed(result.exceptionOrNull() as? Exception ?: RuntimeException("Failed"))
     }
 
     override fun cleanup() {
