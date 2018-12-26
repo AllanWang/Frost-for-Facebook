@@ -274,12 +274,8 @@ data class FrostNotification(
         NotificationManagerCompat.from(context).notify(tag, id, notif.build())
 }
 
-const val NOTIFICATION_PERIODIC_JOB = 7
-
 fun Context.scheduleNotifications(minutes: Long): Boolean =
     scheduleJob<NotificationService>(NOTIFICATION_PERIODIC_JOB, minutes)
-
-const val NOTIFICATION_JOB_NOW = 6
 
 fun Context.fetchNotifications(): Boolean =
     fetchJob<NotificationService>(NOTIFICATION_JOB_NOW)

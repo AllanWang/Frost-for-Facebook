@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.activities
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -49,6 +50,7 @@ import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
 import com.pitchedapps.frost.facebook.requests.requestBuilder
+import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
@@ -64,12 +66,12 @@ import com.pitchedapps.frost.utils.setFrostColors
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Response
 import java.io.File
-import java.io.FileFilter
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -83,12 +85,10 @@ class ImageActivity : KauBaseActivity() {
     @Volatile
     internal var errorRef: Throwable? = null
 
-    private lateinit var tempDir: File
-
     /**
      * Reference to the temporary file path
      */
-    private lateinit var tempFile: File
+    internal lateinit var tempFile: File
     /**
      * Reference to path for downloaded image
      * Nonnull once the image is downloaded by the user
@@ -96,13 +96,12 @@ class ImageActivity : KauBaseActivity() {
     internal var savedFile: File? = null
     /**
      * Indicator for fab's click result
-     * Can be called from any thread
      */
     internal var fabAction: FabStates = FabStates.NOTHING
         set(value) {
             if (field == value) return
             field = value
-            runOnUiThread { value.update(image_fab) }
+            value.update(image_fab)
         }
 
     companion object {
@@ -114,21 +113,18 @@ class ImageActivity : KauBaseActivity() {
         private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
         private const val IMG_TAG = "Frost"
         private const val IMG_EXTENSION = ".png"
-        private const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
+        const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
+
+        fun cacheDir(context: Context): File =
+            File(context.cacheDir, IMAGE_FOLDER)
     }
 
     private val cookie: String? by lazy { intent.getStringExtra(ARG_COOKIE) }
 
     val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
 
-    private val trueImageUrl: String by lazy {
-        val result = if (!imageUrl.isIndirectImageUrl) imageUrl
-        else cookie?.getFullSizedImageUrl(imageUrl)?.blockingGet() ?: imageUrl
-        if (result != imageUrl)
-            L.v { "Launching with true url $result" }
-        result
-    }
+    private lateinit var trueImageUrl: Deferred<String>
 
     private val imageText: String? by lazy { intent.getStringExtra(ARG_TEXT) }
 
@@ -143,7 +139,6 @@ class ImageActivity : KauBaseActivity() {
     private fun loadError(e: Throwable) {
         errorRef = e
         e.logFrostEvent("Image load error")
-        L.e { "Failed to load image $imageHash" }
         if (image_progress.isVisible)
             image_progress.fadeOut()
         tempFile.delete()
@@ -154,7 +149,14 @@ class ImageActivity : KauBaseActivity() {
         super.onCreate(savedInstanceState)
         intent?.extras ?: return finish()
         L.i { "Displaying image" }
-        L.v { "Displaying image $imageUrl" }
+        trueImageUrl = async(Dispatchers.IO) {
+            val result = if (!imageUrl.isIndirectImageUrl) imageUrl
+            else cookie?.getFullSizedImageUrl(imageUrl)?.blockingGet() ?: imageUrl
+            if (result != imageUrl)
+                L.v { "Launching with true url $result" }
+            result
+        }
+
         val layout = if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
         image_container.setBackgroundColor(
@@ -184,9 +186,8 @@ class ImageActivity : KauBaseActivity() {
         setFrostColors {
             themeWindow = false
         }
-        tempDir = File(cacheDir, IMAGE_FOLDER)
-        tempFile = File(tempDir, imageHash)
-        launch(CoroutineExceptionHandler { _, err -> loadError(err) }) {
+        tempFile = File(cacheDir(this), imageHash)
+        launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
             downloadImageTo(tempFile)
             image_progress.fadeOut()
             image_photo.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
@@ -205,12 +206,6 @@ class ImageActivity : KauBaseActivity() {
         return File.createTempFile(imageFileName, IMG_EXTENSION, frostDir)
     }
 
-    private fun getImageResponse(): Response = cookie.requestBuilder()
-        .url(trueImageUrl)
-        .get()
-        .call()
-        .execute()
-
     /**
      * Saves the image to the specified file, creating it if it doesn't exist.
      * Returns true if a change is made, false otherwise.
@@ -218,30 +213,39 @@ class ImageActivity : KauBaseActivity() {
      */
     @Throws(IOException::class)
     private suspend fun downloadImageTo(file: File): Boolean {
-        val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        val exceptionHandler = CoroutineExceptionHandler { _, err ->
             if (file.isFile && file.length() == 0L) {
                 file.delete()
             }
+            throw err
         }
         return withContext(Dispatchers.IO + exceptionHandler) {
             if (!file.isFile) {
-                file.mkdirs()
+                file.parentFile.mkdirs()
                 file.createNewFile()
+            } else {
+                file.setLastModified(System.currentTimeMillis())
             }
 
-            file.setLastModified(System.currentTimeMillis())
-
             // Forbid overwrites
-            if (file.length() > 1)
+            if (file.length() > 0) {
+                L.i { "Forbid image overwrite" }
                 return@withContext false
-            if (tempFile.isFile && tempFile.length() > 1) {
-                if (tempFile == file)
+            }
+            if (tempFile.isFile && tempFile.length() > 0) {
+                if (tempFile == file) {
                     return@withContext false
+                }
                 tempFile.copyTo(file)
                 return@withContext true
             }
+
             // No temp file, download ourselves
-            val response = getImageResponse()
+            val response = cookie.requestBuilder()
+                .url(trueImageUrl.await())
+                .get()
+                .call()
+                .execute()
 
             if (!response.isSuccessful) {
                 throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
@@ -259,39 +263,25 @@ class ImageActivity : KauBaseActivity() {
         kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
             L.d { "Download image callback granted: $granted" }
             if (granted) {
-                launch {
+                val errorHandler = CoroutineExceptionHandler { _, throwable ->
+                    loadError(throwable)
+                    frostSnackbar(R.string.image_download_fail)
+                }
+                launch(errorHandler) {
                     val destination = createPublicMediaFile()
-                    var success = true
-                    try {
-                        downloadImageTo(destination)
-                    } catch (e: Exception) {
-                        errorRef = e
-                        success = false
-                    } finally {
-                        L.d { "Download image async finished: $success" }
-                        if (success) {
-                            scanMedia(destination)
-                            savedFile = destination
-                        } else {
-                            try {
-                                destination.delete()
-                            } catch (ignore: Exception) {
-                            }
-                        }
-                        val text = if (success) R.string.image_download_success else R.string.image_download_fail
-                        frostSnackbar(text)
-                        if (success) fabAction = FabStates.SHARE
-                    }
+                    downloadImageTo(destination)
+                    L.d { "Download image async finished" }
+                    scanMedia(destination)
+                    savedFile = destination
+                    frostSnackbar(R.string.image_download_success)
+                    fabAction = FabStates.SHARE
                 }
             }
         }
     }
 
     override fun onDestroy() {
-        val purge = System.currentTimeMillis() - PURGE_TIME
-        tempDir.listFiles(FileFilter { it.isFile && it.lastModified() < purge })?.forEach {
-            it.delete()
-        }
+        LocalService.schedule(this, LocalService.Flag.PURGE_IMAGE)
         super.onDestroy()
     }
 }

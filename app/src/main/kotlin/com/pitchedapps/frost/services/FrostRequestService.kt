@@ -82,7 +82,6 @@ private const val ARG_0 = "frost_request_arg_0"
 private const val ARG_1 = "frost_request_arg_1"
 private const val ARG_2 = "frost_request_arg_2"
 private const val ARG_3 = "frost_request_arg_3"
-private const val JOB_REQUEST_BASE = 928
 
 private fun BaseBundle.getCookie() = getString(ARG_COOKIE)
 private fun BaseBundle.putCookie(cookie: String) = putString(ARG_COOKIE, cookie)
@@ -145,7 +144,7 @@ object FrostRunnable {
             return false
         }
 
-        val builder = JobInfo.Builder(JOB_REQUEST_BASE + command.ordinal, serviceComponent)
+        val builder = JobInfo.Builder(REQUEST_SERVICE_BASE + command.ordinal, serviceComponent)
             .setMinimumLatency(0L)
             .setExtras(bundle)
             .setOverrideDeadline(2000L)

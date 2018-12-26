@@ -146,6 +146,11 @@
             android:enabled="true"
             android:label="@string/frost_requests"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.LocalService"
+            android:enabled="true"
+            android:label="@string/local_service_name"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name=".services.UpdateReceiver"

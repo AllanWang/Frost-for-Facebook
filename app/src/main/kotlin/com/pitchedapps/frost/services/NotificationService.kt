@@ -17,7 +17,6 @@
 package com.pitchedapps.frost.services
 
 import android.app.job.JobParameters
-import android.app.job.JobService
 import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
@@ -27,14 +26,10 @@ import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -44,22 +39,20 @@ import kotlin.coroutines.CoroutineContext
  *
  * All fetching is done through parsers
  */
-class NotificationService : JobService(), CoroutineScope {
-
-    private lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
-    private val startTime = System.currentTimeMillis()
+class NotificationService : BaseJobService() {
 
     override fun onStopJob(params: JobParameters?): Boolean {
+        super.onStopJob(params)
         prepareFinish(true)
         return false
     }
 
+    private var preparedFinish = false
+
     private fun prepareFinish(abrupt: Boolean) {
-        if (job.isCancelled)
+        if (preparedFinish)
             return
+        preparedFinish = true
         val time = System.currentTimeMillis() - startTime
         L.i { "Notification service has ${if (abrupt) "finished abruptly" else "finished"} in $time ms" }
         frostEvent(
@@ -68,15 +61,14 @@ class NotificationService : JobService(), CoroutineScope {
             "IM Included" to Prefs.notificationsInstantMessages,
             "Duration" to time
         )
-        job.cancel()
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        super.onStartJob(params)
         L.i { "Fetching notifications" }
-        job = Job()
         launch {
             try {
-                async { sendNotifications(params) }.await()
+                sendNotifications(params)
             } finally {
                 if (!isActive)
                     prepareFinish(false)
@@ -86,14 +78,14 @@ class NotificationService : JobService(), CoroutineScope {
         return true
     }
 
-    private suspend fun sendNotifications(params: JobParameters?): Unit = suspendCancellableCoroutine {
+    private suspend fun sendNotifications(params: JobParameters?): Unit = withContext(Dispatchers.Default) {
         val currentId = Prefs.userId
         val cookies = loadFbCookiesSync()
-        if (it.isCancelled) return@suspendCancellableCoroutine
+        if (!isActive) return@withContext
         val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
         var notifCount = 0
         for (cookie in cookies) {
-            if (it.isCancelled) break
+            if (!isActive) break
             val current = cookie.id == currentId
             if (Prefs.notificationsGeneral &&
                 (current || Prefs.notificationAllAccounts)
