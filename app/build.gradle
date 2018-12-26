@@ -184,6 +184,8 @@ dependencies {
     // TODO temp
     implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
+    implementation "androidx.core:core-ktx:${KTX}"
+
 //    implementation "org.koin:koin-android:${KOIN}"
 //    testImplementation "org.koin:koin-test:${KOIN}"
 //    androidTestImplementation "org.koin:koin-test:${KOIN}"
