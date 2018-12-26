@@ -29,6 +29,7 @@ import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -39,7 +40,7 @@ import org.apache.commons.text.StringEscapeUtils
 /**
  * Created by Allan Wang on 21/12/17.
  */
- val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 100,3600000 /* an hour */) {
+val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 100, 3600000 /* an hour */) {
     it.getAuth()
 }
 
@@ -51,7 +52,7 @@ import org.apache.commons.text.StringEscapeUtils
 fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     if (this == null) return fail()
     try {
-        val auth = fbAuth(this).blockingGet()
+        val auth = runBlocking { fbAuth.fetch(this@fbRequest) }
         auth.action()
     } catch (e: Exception) {
         L.e { "Failed auth for ${hashCode()}: ${e.message}" }
