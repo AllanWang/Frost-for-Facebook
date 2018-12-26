@@ -19,7 +19,6 @@ package com.pitchedapps.frost.services
 import android.app.job.JobInfo
 import android.app.job.JobParameters
 import android.app.job.JobScheduler
-import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -32,8 +31,8 @@ import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion
 import com.pitchedapps.frost.utils.L
-import org.jetbrains.anko.doAsync
-import java.util.concurrent.Future
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 28/12/17.
@@ -159,17 +158,10 @@ object FrostRunnable {
     }
 }
 
-class FrostRequestService : JobService() {
-
-    var future: Future<Unit>? = null
-
-    override fun onStopJob(params: JobParameters?): Boolean {
-        future?.cancel(true)
-        future = null
-        return false
-    }
+class FrostRequestService : BaseJobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        super.onStartJob(params)
         val bundle = params?.extras
         if (bundle == null) {
             L.eThrow("Launched ${this::class.java.simpleName} without param data")
@@ -185,18 +177,20 @@ class FrostRequestService : JobService() {
             L.eThrow("Launched ${this::class.java.simpleName} without command")
             return false
         }
-        future = doAsync {
-            val now = System.currentTimeMillis()
-            var failed = true
-            cookie.fbRequest {
-                L.d { "Requesting frost service for ${command.name}" }
-                command.invoke(this, bundle)
-                failed = false
+        launch(Dispatchers.IO) {
+            try {
+                var failed = true
+                cookie.fbRequest {
+                    L.d { "Requesting frost service for ${command.name}" }
+                    command.invoke(this, bundle)
+                    failed = false
+                }
+                L.d {
+                    "${if (failed) "Failed" else "Finished"} frost service for ${command.name} in ${System.currentTimeMillis() - startTime} ms"
+                }
+            } finally {
+                jobFinished(params, false)
             }
-            L.d {
-                "${if (failed) "Failed" else "Finished"} frost service for ${command.name} in ${System.currentTimeMillis() - now} ms"
-            }
-            jobFinished(params, false)
         }
         return true
     }
