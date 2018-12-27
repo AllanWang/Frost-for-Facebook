@@ -30,6 +30,7 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
+import kotlinx.coroutines.channels.SendChannel
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -39,7 +40,7 @@ class FrostJSI(val web: FrostWebView) {
     private val context = web.context
     private val activity = context as? MainActivity
     private val header: Subject<String>? = activity?.headerBadgeObservable
-    private val refresh: Subject<Boolean> = web.parent.refreshObservable
+    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val cookies = activity?.cookies() ?: arrayListOf()
 
     /**
@@ -120,7 +121,7 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun isReady() {
-        refresh.onNext(false)
+        refresh.offer(false)
     }
 
     @JavascriptInterface

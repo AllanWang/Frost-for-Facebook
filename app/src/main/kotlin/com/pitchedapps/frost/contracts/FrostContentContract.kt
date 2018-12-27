@@ -59,22 +59,17 @@ interface FrostContentParent : DynamicUiContract {
     /**
      * Observable to get data on whether view is refreshing or not
      */
-    val refreshObservable: PublishSubject<Boolean>
-
     val refreshChannel: BroadcastChannel<Boolean>
 
     /**
      * Observable to get data on refresh progress, with range [0, 100]
      */
-    val progressObservable: PublishSubject<Int>
-
     val progressChannel: BroadcastChannel<Int>
 
     /**
      * Observable to get new title data (unique values only)
      */
-    val titleObservable: BehaviorSubject<String>
-
+    // todo note that this should be like a behavior subject vs publish subject
     val titleChannel: BroadcastChannel<String>
 
     var baseUrl: String

@@ -73,10 +73,10 @@ class FrostRecyclerView @JvmOverloads constructor(
     override fun reloadBase(animate: Boolean) {
         if (Prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
-            parent.refreshChannel.send(true)
+            parent.refreshChannel.offer(true)
             val loaded = recyclerContract.reload { parent.progressChannel.offer(it) }
-            parent.progressChannel.send(100)
-            parent.refreshChannel.send(false)
+            parent.progressChannel.offer(100)
+            parent.refreshChannel.offer(false)
             if (Prefs.animate) circularReveal()
         }
     }

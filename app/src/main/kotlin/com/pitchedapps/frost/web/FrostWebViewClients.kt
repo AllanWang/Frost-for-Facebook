@@ -41,6 +41,7 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.Subject
+import kotlinx.coroutines.channels.SendChannel
 import org.jetbrains.anko.withAlpha
 
 /**
@@ -64,7 +65,7 @@ open class BaseWebViewClient : WebViewClient() {
  */
 open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
-    private val refresh: Subject<Boolean> = web.parent.refreshObservable
+    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val isMain = web.parent.baseEnum != null
 
     protected inline fun v(crossinline message: () -> Any?) = L.v { "web client: ${message()}" }
@@ -73,7 +74,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
         v { "loading $url" }
-        refresh.onNext(true)
+        refresh.offer(true)
     }
 
     private fun injectBackgroundColor() {
@@ -110,14 +111,14 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                 JsAssets.MEDIA
             )
         else
-            refresh.onNext(false)
+            refresh.offer(false)
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
         v { "finished $url" }
         if (!url.isFacebookUrl) {
-            refresh.onNext(false)
+            refresh.offer(false)
             return
         }
         onPageFinishedActions(url)
@@ -131,7 +132,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     internal fun injectAndFinish() {
         v { "page finished reveal" }
-        refresh.onNext(false)
+        refresh.offer(false)
         injectBackgroundColor()
         web.jsInject(
             JsActions.LOGIN_CHECK,

@@ -39,17 +39,14 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -89,13 +86,9 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     override val core: FrostContentCore
         get() = coreView
 
-    override val progressObservable: PublishSubject<Int> = PublishSubject.create()
-    override val refreshObservable: PublishSubject<Boolean> = PublishSubject.create()
-    override val titleObservable: BehaviorSubject<String> = BehaviorSubject.create()
-
-    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(Channel.UNLIMITED)
-    override val progressChannel: BroadcastChannel<Int> = BroadcastChannel(Channel.UNLIMITED)
-    override val titleChannel: BroadcastChannel<String> = BroadcastChannel(Channel.UNLIMITED)
+    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(100)
+    override val progressChannel: BroadcastChannel<Int> = BroadcastChannel(100)
+    override val titleChannel: BroadcastChannel<String> = BroadcastChannel(100)
 
     override lateinit var scope: CoroutineScope
 
@@ -133,9 +126,13 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
                 reload(true)
             }
         }
+        // Begin subscription in the main thread
+        val refreshReceiver = refreshChannel.openSubscription()
+        val progressReceiver = progressChannel.openSubscription()
+
         scope.launch(Dispatchers.Default) {
             launch {
-                for (r in refreshChannel.openSubscription()) {
+                for (r in refreshReceiver) {
                     withContext(Dispatchers.Main) {
                         refresh.isRefreshing = r
                         refresh.isEnabled = true
@@ -143,7 +140,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
                 }
             }
             launch {
-                for (p in progressChannel.openSubscription()) {
+                for (p in progressReceiver) {
                     withContext(Dispatchers.Main) {
                         progress.invisibleIf(p == 100)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -184,6 +181,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     private var dispose: Disposable? = null
     private var transitionStart: Long = -1
+    private var refreshReceiver: ReceiveChannel<Boolean>? = null
 
     /**
      * Hook onto the refresh observable for one cycle
@@ -191,32 +189,32 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
      * The cycle only starts on the first load since there may have been another process when this is registered
      */
     override fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean {
-        if (!urlChanged && dispose != null) {
+        if (!urlChanged && refreshReceiver != null) {
             L.v { "Consuming url load" }
             return false // still in progress; do not bother with load
         }
         L.v { "Registered transition" }
         with(coreView) {
-            var loading = dispose != null
-            dispose?.dispose()
-            dispose = refreshObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (it) {
-                        loading = true
-                        transitionStart = System.currentTimeMillis()
-                        clearAnimation()
-                        if (isVisible)
-                            fadeOut(duration = 200L)
-                    } else if (loading) {
-                        loading = false
-                        if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
-                        else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
-                        L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
-                        dispose?.dispose()
-                        dispose = null
+            refreshReceiver = refreshChannel.openSubscription().also { receiver ->
+                scope.launch(Dispatchers.Main) {
+                    var loading = false
+                    for (r in receiver) {
+                        if (r) {
+                            loading = true
+                            transitionStart = System.currentTimeMillis()
+                            clearAnimation()
+                            if (isVisible)
+                                fadeOut(duration = 200L)
+                        } else if (loading) {
+                            if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                            else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
+                            L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
+                            receiver.cancel()
+                            refreshReceiver = null
+                        }
                     }
                 }
+            }
         }
         return true
     }

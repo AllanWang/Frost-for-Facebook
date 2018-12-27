@@ -73,6 +73,9 @@ import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 
 /**
@@ -99,12 +102,15 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
              * We will subscribe to the load cycle once,
              * and pop a dialog giving the user the option to copy the shared text
              */
-            var disposable: Disposable? = null
-            disposable = content.refreshObservable.subscribe {
-                disposable?.dispose()
-                materialDialogThemed {
-                    title(R.string.invalid_share_url)
-                    content(R.string.invalid_share_url_desc)
+            val refreshReceiver = content.refreshChannel.openSubscription()
+            content.scope.launch(Dispatchers.IO) {
+                refreshReceiver.receive()
+                refreshReceiver.cancel()
+                withContext(Dispatchers.Main) {
+                    materialDialogThemed {
+                        title(R.string.invalid_share_url)
+                        content(R.string.invalid_share_url_desc)
+                    }
                 }
             }
         }
@@ -197,10 +203,13 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
         content.bind(this)
 
-        content.titleObservable
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { toolbar.title = it }
-            .disposeOnDestroy()
+        val titleReceiver = content.titleChannel.openSubscription()
+
+        launch {
+            for (t in titleReceiver) {
+                toolbar.title = t
+            }
+        }
 
         with(web) {
             if (forceBasicAgent) //todo check; the webview already adds it dynamically

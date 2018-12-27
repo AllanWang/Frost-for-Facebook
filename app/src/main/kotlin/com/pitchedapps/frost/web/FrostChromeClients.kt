@@ -31,6 +31,8 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -43,8 +45,8 @@ import io.reactivex.subjects.Subject
  */
 class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
-    private val progress = web.parent.progressChannel
-    private val title = web.parent.titleChannel
+    private val progress: SendChannel<Int> = web.parent.progressChannel
+    private val title: SendChannel<String> = web.parent.titleChannel
     private var prevTitle: String? = null
     private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
