@@ -23,6 +23,8 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -102,8 +104,9 @@ interface RecyclerContentContract {
 
     /**
      * Completely handle data reloading
-     * Optional progress emission update
-     * Callback returns [true] for success, [false] otherwise
+     * The progress function allows optional emission of progress values (between 0 and 100).
+     * This can be called from any thread.
+     * Returns [true] for success, [false] otherwise
      */
-    fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit)
+    suspend fun reload(progress: (Int) -> Unit): Boolean
 }

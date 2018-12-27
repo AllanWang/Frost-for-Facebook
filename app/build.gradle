@@ -100,6 +100,8 @@ android {
             resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableBugsnag = false
+
+            kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
         }
         releaseTest {
             minifyEnabled true
@@ -141,6 +143,7 @@ android {
             includeAndroidResources = true
         }
     }
+
 }
 
 repositories {

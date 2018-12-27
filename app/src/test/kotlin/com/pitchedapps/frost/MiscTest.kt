@@ -16,10 +16,16 @@
  */
 package com.pitchedapps.frost
 
-import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.zip
-import okhttp3.Request
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import java.util.concurrent.Executors
 import kotlin.test.assertTrue
 
 /**
@@ -48,14 +54,30 @@ class MiscTest {
         )
     }
 
-    @Test
-    fun a() {
-        val s = Request.Builder()
-            .url("https://www.allanwang.ca/ecse429/magenta.png")
-            .get()
-            .call().execute().body()!!.string()
-        "�PNG\n\u001A\nIDA�c����?\u0000\u0006�\u0002��p�\u0000\u0000\u0000\u0000IEND�B`�"
-        println("Hello")
-        println(s)
+@Test
+@UseExperimental(ExperimentalCoroutinesApi::class)
+fun channel() {
+    val c = BroadcastChannel<Int>(100)
+    runBlocking {
+        launch(Dispatchers.IO) {
+            println("1 start ${Thread.currentThread()}")
+            for (i in c.openSubscription()) {
+                println("1 $i")
+            }
+            println("1 end ${Thread.currentThread()}")
+        }
+        launch(Dispatchers.IO) {
+            println("2 start ${Thread.currentThread()}")
+            for (i in c.openSubscription()) {
+                println("2 $i")
+            }
+            println("2 end ${Thread.currentThread()}")
+        }
+        c.send(1)
+        c.send(2)
+        c.send(3)
+        delay(1000)
+        c.close()
     }
+}
 }

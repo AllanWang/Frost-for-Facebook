@@ -29,15 +29,17 @@ import com.pitchedapps.frost.facebook.parsers.ParseResponse
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 27/12/17.
  */
-abstract class RecyclerFragment : BaseFragment(), RecyclerContentContract {
+abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), RecyclerContentContract {
 
     override val layoutRes: Int = R.layout.view_content_recycler
+
+    abstract val adapter: ModelAdapter<T, Item>
 
     override fun firstLoadRequest() {
         val core = core ?: return
@@ -47,23 +49,30 @@ abstract class RecyclerFragment : BaseFragment(), RecyclerContentContract {
         }
     }
 
-    final override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-        reloadImpl(progress) {
-            if (it)
-                callback(it)
-            else
-                valid = false
+    final override suspend fun reload(progress: (Int) -> Unit): Boolean {
+        val data = try {
+            reloadImpl(progress)
+        } catch (e: Exception) {
+            null
         }
+        if (data == null) {
+            valid = false
+            return false
+        }
+        withContext(Dispatchers.Main) {
+            adapter.setNewList(data)
+        }
+        return true
     }
 
-    protected abstract fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit)
+    protected abstract suspend fun reloadImpl(progress: (Int) -> Unit): List<T>?
 }
 
-abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment() {
+abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment<T, Item>() {
 
     abstract fun mapper(data: T): Item
 
-    val adapter: ModelAdapter<T, Item> = ModelAdapter { this.mapper(it) }
+    override val adapter: ModelAdapter<T, Item> = ModelAdapter { this.mapper(it) }
 
     final override fun bind(recyclerView: FrostRecyclerView) {
         recyclerView.adapter = getAdapter()
@@ -83,7 +92,7 @@ abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 }
 
-abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment() {
+abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment<Item, Item>() {
 
     /**
      * The parser to make this all happen
@@ -94,7 +103,7 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
 
     abstract fun toItems(response: ParseResponse<T>): List<Item>
 
-    val adapter: ItemAdapter<Item> = ItemAdapter()
+    override val adapter: ItemAdapter<Item> = ItemAdapter()
 
     final override fun bind(recyclerView: FrostRecyclerView) {
         recyclerView.adapter = getAdapter()
@@ -113,23 +122,20 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
      */
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 
-    override fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-        doAsync {
-            progress(10)
-            val cookie = FbCookie.webCookie
-            val doc = getDoc(cookie)
-            progress(60)
-            val response = parser.parse(cookie, doc)
-            if (response == null) {
-                L.i { "RecyclerFragment failed for ${baseEnum.name}" }
-                return@doAsync callback(false)
-            }
-            progress(80)
-            val items = toItems(response)
-            progress(97)
-            uiThread { adapter.setNewList(items) }
-            callback(true)
+    override suspend fun reloadImpl(progress: (Int) -> Unit): List<Item>? = withContext(Dispatchers.IO) {
+        progress(10)
+        val cookie = FbCookie.webCookie
+        val doc = getDoc(cookie)
+        progress(60)
+        val response = parser.parse(cookie, doc)
+        if (response == null) {
+            L.i { "RecyclerFragment failed for ${baseEnum.name}" }
+            return@withContext null
         }
+        progress(80)
+        val items = toItems(response)
+        progress(97)
+        return@withContext items
     }
 }
 

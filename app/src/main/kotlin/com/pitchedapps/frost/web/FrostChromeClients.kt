@@ -43,8 +43,9 @@ import io.reactivex.subjects.Subject
  */
 class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
-    private val progress: Subject<Int> = web.parent.progressObservable
-    private val title: BehaviorSubject<String> = web.parent.titleObservable
+    private val progress = web.parent.progressChannel
+    private val title = web.parent.titleChannel
+    private var prevTitle: String? = null
     private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
 
@@ -55,13 +56,14 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
-        if (title.startsWith("http") || this.title.value == title) return
-        this.title.onNext(title)
+        if (title.startsWith("http") || prevTitle == title) return
+        prevTitle = title
+        this.title.offer(title)
     }
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {
         super.onProgressChanged(view, newProgress)
-        progress.onNext(newProgress)
+        progress.offer(newProgress)
     }
 
     override fun onShowFileChooser(

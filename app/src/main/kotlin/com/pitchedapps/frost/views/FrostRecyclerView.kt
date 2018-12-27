@@ -23,11 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeOut
+import com.pitchedapps.frost.R.string.reload
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.utils.Prefs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -69,11 +72,12 @@ class FrostRecyclerView @JvmOverloads constructor(
 
     override fun reloadBase(animate: Boolean) {
         if (Prefs.animate) fadeOut(onFinish = onReloadClear)
-        parent.refreshObservable.onNext(true)
-        recyclerContract.reload({ parent.progressObservable.onNext(it) }) {
-            parent.progressObservable.onNext(100)
-            parent.refreshObservable.onNext(false)
-            if (Prefs.animate) post { circularReveal() }
+        scope.launch {
+            parent.refreshChannel.send(true)
+            val loaded = recyclerContract.reload { parent.progressChannel.offer(it) }
+            parent.progressChannel.send(100)
+            parent.refreshChannel.send(false)
+            if (Prefs.animate) circularReveal()
         }
     }
 

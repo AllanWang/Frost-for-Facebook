@@ -72,6 +72,7 @@ import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.CoroutineScope
 import okhttp3.HttpUrl
 
 /**
@@ -181,7 +182,6 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             finish()
             return
         }
-
         setFrameContentView(R.layout.activity_web_overlay)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)

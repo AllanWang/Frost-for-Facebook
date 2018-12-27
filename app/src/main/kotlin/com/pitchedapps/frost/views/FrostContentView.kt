@@ -45,6 +45,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
@@ -66,6 +73,7 @@ class FrostContentRecycler @JvmOverloads constructor(
     override val layoutRes: Int = R.layout.view_content_base_recycler
 }
 
+@UseExperimental(ExperimentalCoroutinesApi::class)
 abstract class FrostContentView<out T> @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -85,7 +93,11 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     override val refreshObservable: PublishSubject<Boolean> = PublishSubject.create()
     override val titleObservable: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val compositeDisposable = CompositeDisposable()
+    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(Channel.UNLIMITED)
+    override val progressChannel: BroadcastChannel<Int> = BroadcastChannel(Channel.UNLIMITED)
+    override val titleChannel: BroadcastChannel<String> = BroadcastChannel(Channel.UNLIMITED)
+
+    override lateinit var scope: CoroutineScope
 
     override lateinit var baseUrl: String
     override var baseEnum: FbItem? = null
@@ -107,24 +119,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     protected fun init() {
         inflate(context, layoutRes, this)
         coreView.parent = this
-
-        // bind observables
-        progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            progress.invisibleIf(it == 100)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                progress.setProgress(it, true)
-            else
-                progress.progress = it
-        }.addTo(compositeDisposable)
-
-        refreshObservable
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                refresh.isRefreshing = it
-                refresh.isEnabled = true
-            }.addTo(compositeDisposable)
-        refresh.setOnRefreshListener { coreView.reload(true) }
-
         reloadThemeSelf()
     }
 
@@ -132,7 +126,34 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         baseUrl = container.baseUrl
         baseEnum = container.baseEnum
         init()
+        scope = container
         core.bind(container)
+        refresh.setOnRefreshListener {
+            with(coreView) {
+                reload(true)
+            }
+        }
+        scope.launch(Dispatchers.Default) {
+            launch {
+                for (r in refreshChannel.openSubscription()) {
+                    withContext(Dispatchers.Main) {
+                        refresh.isRefreshing = r
+                        refresh.isEnabled = true
+                    }
+                }
+            }
+            launch {
+                for (p in progressChannel.openSubscription()) {
+                    withContext(Dispatchers.Main) {
+                        progress.invisibleIf(p == 100)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            progress.setProgress(p, true)
+                        else
+                            progress.progress = p
+                    }
+                }
+            }
+        }
     }
 
     override fun reloadTheme() {
@@ -155,11 +176,10 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun destroy() {
-        titleObservable.onComplete()
-        progressObservable.onComplete()
-        refreshObservable.onComplete()
+        titleChannel.close()
+        progressChannel.close()
+        refreshChannel.close()
         core.destroy()
-        compositeDisposable.dispose()
     }
 
     private var dispose: Disposable? = null
