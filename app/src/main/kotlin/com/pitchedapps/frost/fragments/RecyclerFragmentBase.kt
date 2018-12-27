@@ -30,6 +30,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
 /**
@@ -55,14 +56,17 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
         } catch (e: Exception) {
             null
         }
-        if (data == null) {
-            valid = false
+        if (!isActive)
             return false
+        return withContext(Dispatchers.Main) {
+            if (data == null) {
+                valid = false
+                return@withContext false
+            } else {
+                adapter.setNewList(data)
+                return@withContext true
+            }
         }
-        withContext(Dispatchers.Main) {
-            adapter.setNewList(data)
-        }
-        return true
     }
 
     protected abstract suspend fun reloadImpl(progress: (Int) -> Unit): List<T>?

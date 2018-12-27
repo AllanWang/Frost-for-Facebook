@@ -23,8 +23,6 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.views.FrostRecyclerView
 import io.reactivex.disposables.Disposable
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.SendChannel
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -103,9 +101,9 @@ interface RecyclerContentContract {
     fun bind(recyclerView: FrostRecyclerView)
 
     /**
-     * Completely handle data reloading
-     * The progress function allows optional emission of progress values (between 0 and 100).
-     * This can be called from any thread.
+     * Completely handle data reloading, within a non-ui thread
+     * The progress function allows optional emission of progress values (between 0 and 100)
+     * and can be called from any thread.
      * Returns [true] for success, [false] otherwise
      */
     suspend fun reload(progress: (Int) -> Unit): Boolean
