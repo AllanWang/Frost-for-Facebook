@@ -1,43 +1,28 @@
 package com.pitchedapps.frost.views
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.count
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * Collection of tests around the view thread logic
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class FrostContentViewAsyncTest {
-
-    /**
-     * Single threaded dispatcher with thread name "main"
-     * Mimics the usage of Android's main dispatcher
-     */
-    private lateinit var mainDispatcher: ExecutorCoroutineDispatcher
-
-    @BeforeTest
-    fun before() {
-        mainDispatcher = Executors.newSingleThreadExecutor { r ->
-            Thread(r, "main")
-        }.asCoroutineDispatcher()
-    }
-
-    @AfterTest
-    fun after() {
-        mainDispatcher.close()
-    }
 
     /**
      * Hooks onto the refresh channel for one true -> false cycle.
@@ -105,6 +90,41 @@ class FrostContentViewAsyncTest {
                 partialStream,
                 "Partial stream should include up until first true false pair"
             )
+        }
+    }
+
+    /**
+     * Sanity check to ensure that contexts are being honoured
+     */
+    @Test
+    fun contextSwitching() {
+        val mainTag = "main-test"
+        val mainDispatcher = Executors.newSingleThreadExecutor { r ->
+            Thread(r, mainTag)
+        }.asCoroutineDispatcher()
+
+        val channel = BroadcastChannel<String>(100)
+
+        runBlocking(Dispatchers.IO) {
+            val receiver1 = channel.openSubscription()
+            val receiver2 = channel.openSubscription()
+            launch(mainDispatcher) {
+                for (thread in receiver1) {
+                    assertTrue(
+                        Thread.currentThread().name.startsWith(mainTag),
+                        "Channel should be received in main thread"
+                    )
+                    assertFalse(
+                        thread.startsWith(mainTag),
+                        "Channel execution should not be in main thread"
+                    )
+                }
+            }
+            listOf(EmptyCoroutineContext, Dispatchers.IO, Dispatchers.Default, Dispatchers.IO).map {
+                async(it) { channel.send(Thread.currentThread().name) }
+            }.joinAll()
+            channel.close()
+            assertEquals(4, receiver2.count(), "Not all events received")
         }
     }
 }
