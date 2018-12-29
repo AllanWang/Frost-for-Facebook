@@ -28,7 +28,9 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FB_HOME_URL
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_FULL
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostDownload
@@ -63,8 +65,9 @@ class FrostWebView @JvmOverloads constructor(
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun bind(container: FrostContentContainer): View {
-        if (parent.baseEnum != null || parent.baseUrl.shouldUseBasicAgent)
-            userAgentString = USER_AGENT_BASIC // go through our own agent ref
+        userAgentString =
+            if (parent.baseEnum == FbItem.MESSAGES || parent.baseUrl.shouldUseBasicAgent) USER_AGENT_BASIC
+            else USER_AGENT_FULL
         with(settings) {
             javaScriptEnabled = true
             allowFileAccess = true

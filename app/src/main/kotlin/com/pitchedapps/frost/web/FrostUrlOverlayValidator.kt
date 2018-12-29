@@ -84,7 +84,7 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
             context.launchWebOverlayBasic(url)
             return true
         }
-        if (context is WebOverlayBasicActivity && !shouldUseBasic) {
+        if (userAgentString == USER_AGENT_BASIC && !shouldUseBasic) {
             L.i { "Switch from basic agent" }
             context.launchWebOverlay(url)
             return true
@@ -105,10 +105,9 @@ val messageWhitelist: Set<String> =
         .mapTo(mutableSetOf(), FbItem::url)
 
 val String.shouldUseBasicAgent: Boolean
-    get() {
-        if (contains("story.php")) // do not use basic for comment section
-            return false
-        if (contains("/events/")) // do not use for events (namely the map)
-            return false
-        return true // use for everything else
+    get() = when {
+        contains("story.php") -> false // do not use basic for comment section
+        contains("/events/") -> false // do not use for events (namely the map)
+        contains("/messages") -> true // must use for messages
+        else -> false // default to normal user agent
     }

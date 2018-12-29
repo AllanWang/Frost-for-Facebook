@@ -72,7 +72,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
-        v { "loading $url" }
+        v { "loading $url ${web.settings.userAgentString}" }
         refresh.offer(true)
     }
 
