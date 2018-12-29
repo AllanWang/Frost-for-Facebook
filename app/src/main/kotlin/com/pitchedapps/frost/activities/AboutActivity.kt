@@ -176,7 +176,8 @@ class AboutActivity : AboutActivityBase(null, {
                 }
                 val set = ConstraintSet()
                 set.clone(container)
-                set.createHorizontalChain(ConstraintSet.PARENT_ID,
+                set.createHorizontalChain(
+                    ConstraintSet.PARENT_ID,
                     ConstraintSet.LEFT,
                     ConstraintSet.PARENT_ID,
                     ConstraintSet.RIGHT,

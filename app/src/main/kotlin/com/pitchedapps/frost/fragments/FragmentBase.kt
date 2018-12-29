@@ -39,12 +39,13 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -87,7 +88,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
     override var valid: Boolean
         get() = arguments!!.getBoolean(ARG_VALID, true)
         set(value) {
-            if (value || this is WebFragment) return
+            if (!isActive || value || this is WebFragment) return
             arguments!!.putBoolean(ARG_VALID, value)
             L.e { "Invalidating position $position" }
             frostEvent(
@@ -98,7 +99,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
         }
 
     override var firstLoad: Boolean = true
-    private var activityDisposable: Disposable? = null
+    private var activityReceiver: ReceiveChannel<Int>? = null
     private var onCreateRunnable: ((FragmentContract) -> Unit)? = null
 
     override var content: FrostContentParent? = null
@@ -154,29 +155,34 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
         (context as? MainActivityContract)?.setTitle(title)
     }
 
-    override fun attachMainObservable(contract: MainActivityContract): Disposable =
-        contract.fragmentSubject.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            when (it) {
-                REQUEST_REFRESH -> {
-                    core?.apply {
-                        clearHistory()
-                        firstLoad = true
-                        firstLoadRequest()
+    override fun attachMainObservable(contract: MainActivityContract): ReceiveChannel<Int> {
+        val receiver = contract.fragmentChannel.openSubscription()
+        launch {
+            for (flag in receiver) {
+                when (flag) {
+                    REQUEST_REFRESH -> {
+                        core?.apply {
+                            clearHistory()
+                            firstLoad = true
+                            firstLoadRequest()
+                        }
                     }
-                }
-                position -> {
-                    contract.setTitle(baseEnum.titleId)
-                    updateFab(contract)
-                    core?.active = true
-                }
-                -(position + 1) -> {
-                    core?.active = false
-                }
-                REQUEST_TEXT_ZOOM -> {
-                    reloadTextSize()
+                    position -> {
+                        contract.setTitle(baseEnum.titleId)
+                        updateFab(contract)
+                        core?.active = true
+                    }
+                    -(position + 1) -> {
+                        core?.active = false
+                    }
+                    REQUEST_TEXT_ZOOM -> {
+                        reloadTextSize()
+                    }
                 }
             }
         }
+        return receiver
+    }
 
     override fun updateFab(contract: MainFabContract) {
         contract.hideFab() // default
@@ -195,14 +201,14 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
     }
 
     override fun detachMainObservable() {
-        activityDisposable?.dispose()
+        activityReceiver?.cancel()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         detachMainObservable()
         if (context is MainActivityContract)
-            activityDisposable = attachMainObservable(context)
+            activityReceiver = attachMainObservable(context)
     }
 
     override fun onDetach() {

@@ -40,8 +40,6 @@ import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

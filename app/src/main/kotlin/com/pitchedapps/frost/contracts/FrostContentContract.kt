@@ -18,12 +18,9 @@ package com.pitchedapps.frost.contracts
 
 import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 
 /**
  * Created by Allan Wang on 20/12/17.

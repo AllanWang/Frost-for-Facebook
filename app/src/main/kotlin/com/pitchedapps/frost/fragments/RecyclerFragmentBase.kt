@@ -21,7 +21,6 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
-import com.mikepenz.fastadapter_extensions.items.ProgressItem
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.parsers.FrostParser
@@ -142,31 +141,3 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
         return@withContext items
     }
 }
-
-//abstract class PagedRecyclerFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment<T, Item>() {
-//
-//    var allowPagedLoading = true
-//
-//    val footerAdapter = ItemAdapter<FrostProgress>()
-//
-//    val footerScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
-//        override fun onLoadMore(currentPage: Int) {
-//            TODO("not implemented")
-//
-//        }
-//
-//    }
-//
-//    override fun getAdapter() = fastAdapter(adapter, footerAdapter)
-//
-//    override fun bindImpl(recyclerView: FrostRecyclerView) {
-//        recyclerView.addOnScrollListener(footerScrollListener)
-//    }
-//
-//    override fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-//        footerScrollListener.
-//        super.reload(progress, callback)
-//    }
-//}
-
-class FrostProgress : ProgressItem()

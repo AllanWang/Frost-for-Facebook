@@ -23,13 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeOut
-import com.pitchedapps.frost.R.string.reload
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.utils.Prefs
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**

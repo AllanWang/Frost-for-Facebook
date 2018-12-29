@@ -40,7 +40,6 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
-import io.reactivex.subjects.Subject
 import kotlinx.coroutines.channels.SendChannel
 import org.jetbrains.anko.withAlpha
 

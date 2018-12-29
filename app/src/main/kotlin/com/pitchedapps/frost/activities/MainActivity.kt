@@ -24,12 +24,15 @@ import com.pitchedapps.frost.views.BadgedIcon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
+@UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
 
-    override val fragmentSubject = PublishSubject.create<Int>()
+    override val fragmentChannel = BroadcastChannel<Int>(10)
     var lastPosition = -1
     val headerBadgeObservable = PublishSubject.create<String>()
 
@@ -43,8 +46,8 @@ class MainActivity : BaseMainActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if (lastPosition == position) return
-                if (lastPosition != -1) fragmentSubject.onNext(-(lastPosition + 1))
-                fragmentSubject.onNext(position)
+                if (lastPosition != -1) fragmentChannel.offer(-(lastPosition + 1))
+                fragmentChannel.offer(position)
                 lastPosition = position
             }
 
@@ -62,7 +65,7 @@ class MainActivity : BaseMainActivity() {
                 }
             }
         })
-        viewPager.post { fragmentSubject.onNext(0); lastPosition = 0 } //trigger hook so title is set
+        viewPager.post { fragmentChannel.offer(0); lastPosition = 0 } //trigger hook so title is set
     }
 
     private fun setupTabs() {
@@ -101,8 +104,9 @@ class MainActivity : BaseMainActivity() {
                 }
             }.disposeOnDestroy()
         adapter.pages.forEach {
-            tabs.addTab(tabs.newTab()
-                .setCustomView(BadgedIcon(this).apply { iicon = it.icon })
+            tabs.addTab(
+                tabs.newTab()
+                    .setCustomView(BadgedIcon(this).apply { iicon = it.icon })
             )
         }
     }

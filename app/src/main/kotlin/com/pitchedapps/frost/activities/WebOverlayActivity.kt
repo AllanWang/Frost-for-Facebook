@@ -67,13 +67,12 @@ import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
@@ -91,6 +90,7 @@ import okhttp3.HttpUrl
  * Used by notifications. Unlike the other overlays, this runs as a singleInstance
  * Going back will bring you back to the previous app
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 class FrostWebActivity : WebOverlayActivityBase(false) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,6 +151,7 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
 @SuppressLint("Registered")
+@UseExperimental(ExperimentalCoroutinesApi::class)
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
     ActivityContract, FrostContentContainer,
     VideoViewHolder, FileChooserContract by FileChooserDelegate() {
@@ -203,7 +204,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
         content.bind(this)
 
-        val titleReceiver = content.titleChannel.openSubscription()
+        val titleReceiver = content.titleChannel.openSubscription().uniqueOnly(this)
 
         launch {
             for (t in titleReceiver) {

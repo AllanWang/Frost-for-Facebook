@@ -341,7 +341,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     private fun refreshAll() {
         L.d { "Refresh all" }
-        fragmentSubject.onNext(REQUEST_REFRESH)
+        fragmentChannel.offer(REQUEST_REFRESH)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -424,9 +424,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             /*
              * These results can be stacked
              */
-            if (resultCode and REQUEST_REFRESH > 0) fragmentSubject.onNext(REQUEST_REFRESH)
+            if (resultCode and REQUEST_REFRESH > 0) fragmentChannel.offer(REQUEST_REFRESH)
             if (resultCode and REQUEST_NAV > 0) frostNavigationBar()
-            if (resultCode and REQUEST_TEXT_ZOOM > 0) fragmentSubject.onNext(REQUEST_TEXT_ZOOM)
+            if (resultCode and REQUEST_TEXT_ZOOM > 0) fragmentChannel.offer(REQUEST_TEXT_ZOOM)
             if (resultCode and REQUEST_SEARCH > 0) invalidateOptionsMenu()
         }
     }
