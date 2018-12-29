@@ -22,7 +22,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.views.FrostRecyclerView
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.channels.ReceiveChannel
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -34,8 +34,9 @@ interface FragmentContract : FrostContentContainer {
 
     /**
      * Defines whether the fragment is valid in the viewpager
-     * Or if it needs to be recreated
-     * May be called from any thread to toggle status
+     * or if it needs to be recreated
+     * May be called from any thread to toggle status.
+     * Note that calls beyond the fragment lifecycle will be ignored
      */
     var valid: Boolean
 
@@ -75,9 +76,10 @@ interface FragmentContract : FrostContentContainer {
 
     /**
      * Call whenever a fragment is attached so that it may listen
-     * to activity emissions
+     * to activity emissions.
+     * Returns a means of closing the listener, which can be called from [detachMainObservable]
      */
-    fun attachMainObservable(contract: MainActivityContract): Disposable
+    fun attachMainObservable(contract: MainActivityContract): ReceiveChannel<Int>
 
     /**
      * Call when fragment is detached so that any existing
@@ -101,9 +103,10 @@ interface RecyclerContentContract {
     fun bind(recyclerView: FrostRecyclerView)
 
     /**
-     * Completely handle data reloading
-     * Optional progress emission update
-     * Callback returns [true] for success, [false] otherwise
+     * Completely handle data reloading, within a non-ui thread
+     * The progress function allows optional emission of progress values (between 0 and 100)
+     * and can be called from any thread.
+     * Returns [true] for success, [false] otherwise
      */
-    fun reload(progress: (Int) -> Unit, callback: (Boolean) -> Unit)
+    suspend fun reload(progress: (Int) -> Unit): Boolean
 }

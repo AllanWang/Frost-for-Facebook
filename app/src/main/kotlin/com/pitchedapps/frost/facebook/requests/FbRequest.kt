@@ -24,10 +24,12 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.rx.RxFlyweight
+import com.pitchedapps.frost.rx.Flyweight
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -38,17 +40,9 @@ import org.apache.commons.text.StringEscapeUtils
 /**
  * Created by Allan Wang on 21/12/17.
  */
-private class RxAuth : RxFlyweight<String, Long, RequestAuth>() {
-
-    override fun call(input: String) = input.getAuth()
-
-    override fun validate(input: String, cond: Long) =
-        System.currentTimeMillis() - cond < 3600000 // valid for an hour
-
-    override fun cache(input: String) = System.currentTimeMillis()
+val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 100, 3600000 /* an hour */) {
+    it.getAuth()
 }
-
-private val auth = RxAuth()
 
 /**
  * Synchronously fetch [RequestAuth] from cookie
@@ -58,7 +52,7 @@ private val auth = RxAuth()
 fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
     if (this == null) return fail()
     try {
-        val auth = auth(this).blockingGet()
+        val auth = runBlocking { fbAuth.fetch(this@fbRequest) }
         auth.action()
     } catch (e: Exception) {
         L.e { "Failed auth for ${hashCode()}: ${e.message}" }

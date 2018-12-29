@@ -18,8 +18,9 @@ package com.pitchedapps.frost.contracts
 
 import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -29,7 +30,7 @@ import io.reactivex.subjects.PublishSubject
  * Contract for the underlying parent,
  * binds to activities & fragments
  */
-interface FrostContentContainer {
+interface FrostContentContainer : CoroutineScope {
 
     val baseUrl: String
 
@@ -45,24 +46,28 @@ interface FrostContentContainer {
  * Contract for components shared among
  * all content providers
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 interface FrostContentParent : DynamicUiContract {
+
+    val scope: CoroutineScope
 
     val core: FrostContentCore
 
     /**
      * Observable to get data on whether view is refreshing or not
      */
-    val refreshObservable: PublishSubject<Boolean>
+    val refreshChannel: BroadcastChannel<Boolean>
 
     /**
      * Observable to get data on refresh progress, with range [0, 100]
      */
-    val progressObservable: PublishSubject<Int>
+    val progressChannel: BroadcastChannel<Int>
 
     /**
      * Observable to get new title data (unique values only)
      */
-    val titleObservable: BehaviorSubject<String>
+    // todo note that this should be like a behavior subject vs publish subject
+    val titleChannel: BroadcastChannel<String>
 
     var baseUrl: String
 
@@ -105,6 +110,9 @@ interface FrostContentParent : DynamicUiContract {
  * Underlying contract for the content itself
  */
 interface FrostContentCore : DynamicUiContract {
+
+    val scope: CoroutineScope
+        get() = parent.scope
 
     /**
      * Reference to parent
