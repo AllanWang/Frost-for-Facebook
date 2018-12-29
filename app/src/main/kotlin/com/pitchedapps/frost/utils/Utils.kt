@@ -324,8 +324,10 @@ val dependentSegments = arrayOf(
     "events/permalink", "events/feed/watch",
     /*
      * Add new members to groups
+     *
+     * No longer dependent again as of 12/20/2018
      */
-    "madminpanel",
+    // "madminpanel",
     /**
      * Editing images
      */
