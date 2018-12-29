@@ -90,9 +90,8 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     attempt = launch(Dispatchers.IO) {
                         try {
                             val data = parser.parse(FbCookie.webCookie)
+                            yield()
                             withContext(Dispatchers.Main) {
-                                if (!isActive)
-                                    return@withContext
                                 loading.dismiss()
                                 createEmail(parser, data?.data)
                             }

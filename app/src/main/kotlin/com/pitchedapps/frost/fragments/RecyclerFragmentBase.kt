@@ -31,6 +31,7 @@ import com.pitchedapps.frost.views.FrostRecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -56,8 +57,7 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
             L.e(e) { "Recycler reload fail" }
             null
         }
-        if (!isActive)
-            return false
+        yield()
         return withContext(Dispatchers.Main) {
             if (data == null) {
                 valid = false
