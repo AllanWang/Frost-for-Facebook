@@ -31,7 +31,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
@@ -58,7 +57,6 @@ import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
@@ -105,24 +103,33 @@ import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
+import kotlinx.android.synthetic.main.activity_frame_wrapper.*
+import kotlinx.android.synthetic.main.view_main_fab.*
+import kotlinx.android.synthetic.main.view_main_toolbar.*
+import kotlinx.android.synthetic.main.view_main_viewpager.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * Created by Allan Wang on 20/12/17.
  *
  * Most of the logic that is unrelated to handling fragments
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     FileChooserContract by FileChooserDelegate(),
     VideoViewHolder, SearchViewHolder {
 
     protected lateinit var adapter: SectionsPagerAdapter
-    override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
-    val toolbar: Toolbar by bindView(R.id.toolbar)
-    val viewPager: FrostViewPager by bindView(R.id.container)
-    val fab: FloatingActionButton by bindView(R.id.fab)
+    override val frameWrapper: FrameLayout get() = frame_wrapper
+    val viewPager: FrostViewPager get() = container
+
+    /*
+     * Components with the same id in multiple layout files
+     */
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+
     override var videoViewer: FrostVideoViewer? = null
     private lateinit var drawer: Drawer
     private lateinit var drawerHeader: AccountHeader
@@ -465,6 +472,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun onDestroy() {
+        fragmentChannel.close()
         controlWebview?.destroy()
         super.onDestroy()
     }

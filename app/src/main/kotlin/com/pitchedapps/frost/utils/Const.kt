@@ -22,13 +22,14 @@ package com.pitchedapps.frost.utils
 const val ACTIVITY_SETTINGS = 97
 /*
  * Possible responses from the SettingsActivity
- * after the configurations have changed
+ * after the configurations have changed.
+ * Note that the first few bits are restricted to position related requests
  */
-const val REQUEST_RESTART_APPLICATION = 1 shl 11
-const val REQUEST_RESTART = 1 shl 12
-const val REQUEST_REFRESH = 1 shl 13
-const val REQUEST_TEXT_ZOOM = 1 shl 14
-const val REQUEST_NAV = 1 shl 15
-const val REQUEST_SEARCH = 1 shl 16
+const val REQUEST_RESTART_APPLICATION = 1 shl 5
+const val REQUEST_RESTART = 1 shl 6
+const val REQUEST_REFRESH = 1 shl 7
+const val REQUEST_TEXT_ZOOM = 1 shl 8
+const val REQUEST_NAV = 1 shl 9
+const val REQUEST_SEARCH = 1 shl 10
 
 const val MAIN_TIMEOUT_DURATION = 30 * 60 * 1000 // 30 min
