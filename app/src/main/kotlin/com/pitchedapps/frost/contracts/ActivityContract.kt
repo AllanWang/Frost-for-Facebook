@@ -19,6 +19,7 @@ package com.pitchedapps.frost.contracts
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.fragments.BaseFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 
@@ -27,6 +28,7 @@ import kotlinx.coroutines.channels.Channel
  */
 interface ActivityContract : FileChooserActivityContract
 
+@UseExperimental(ExperimentalCoroutinesApi::class)
 interface MainActivityContract : ActivityContract, MainFabContract {
     val fragmentChannel: BroadcastChannel<Int>
     val headerBadgeChannel: Channel<String>

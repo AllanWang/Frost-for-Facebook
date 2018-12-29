@@ -39,6 +39,11 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -60,13 +65,16 @@ class LoginWebView @JvmOverloads constructor(
         webChromeClient = LoginChromeClient()
     }
 
-    fun loadLogin(progressCallback: (Int) -> Unit, loginCallback: (CookieModel) -> Unit) {
-        this.progressCallback = progressCallback
-        this.loginCallback = loginCallback
-        L.d { "Begin loading login" }
-        FbCookie.reset {
-            setupWebview()
-            loadUrl(FB_LOGIN_URL)
+    suspend fun loadLogin(progressCallback: (Int) -> Unit): CookieModel = coroutineScope {
+        suspendCancellableCoroutine<CookieModel> { cont ->
+            this@LoginWebView.progressCallback = progressCallback
+            this@LoginWebView.loginCallback = { cont.resume(it) }
+            L.d { "Begin loading login" }
+            launch(Dispatchers.Main) {
+                FbCookie.reset()
+                setupWebview()
+                loadUrl(FB_LOGIN_URL)
+            }
         }
     }
 

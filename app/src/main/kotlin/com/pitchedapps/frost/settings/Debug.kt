@@ -42,7 +42,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -136,26 +139,32 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
             md.setProgress(p)
         }
     }
+
+    suspend fun loadAndZip(): Boolean = suspendCoroutine { cont ->
+        downloader.loadAndZip(ZIP_NAME, { progressChannel.offer(it) }) {
+            cont.resume(it)
+        }
+    }
+
     launch(Dispatchers.IO) {
-        downloader.loadAndZip(ZIP_NAME, { progressChannel.offer(it) }) { success ->
-            launch(Dispatchers.Main) {
-                if (!isActive) return@launch
-                md.dismiss()
-                if (success) {
-                    val zipUri = frostUriFromFile(
-                        File(downloader.baseDir, "$ZIP_NAME.zip")
-                    )
-                    L.i { "Sending debug zip with uri $zipUri" }
-                    sendFrostEmail(R.string.debug_report_email_title) {
-                        addItem("Url", url)
-                        addAttachment(zipUri)
-                        extras = {
-                            type = "application/zip"
-                        }
+        val success = loadAndZip()
+        yield()
+        withContext(Dispatchers.Main) {
+            md.dismiss()
+            if (success) {
+                val zipUri = frostUriFromFile(
+                    File(downloader.baseDir, "$ZIP_NAME.zip")
+                )
+                L.i { "Sending debug zip with uri $zipUri" }
+                sendFrostEmail(R.string.debug_report_email_title) {
+                    addItem("Url", url)
+                    addAttachment(zipUri)
+                    extras = {
+                        type = "application/zip"
                     }
-                } else {
-                    toast(R.string.error_generic)
                 }
+            } else {
+                toast(R.string.error_generic)
             }
         }
     }

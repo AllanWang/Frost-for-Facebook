@@ -216,14 +216,18 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             if (forceBasicAgent) //todo check; the webview already adds it dynamically
                 userAgentString = USER_AGENT_BASIC
             Prefs.prevId = Prefs.userId
-            if (userId != Prefs.userId) FbCookie.switchUser(userId) { reloadBase(true) }
-            else reloadBase(true)
-            if (Showcase.firstWebOverlay) {
-                coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
-                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
-                    setAction(R.string.kau_got_it) { _ -> this.dismiss() }
+            launch {
+                if (userId != Prefs.userId)
+                    FbCookie.switchUser(userId)
+                reloadBase(true)
+                if (Showcase.firstWebOverlay) {
+                    coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                        duration = BaseTransientBottomBar.LENGTH_INDEFINITE
+                        setAction(R.string.kau_got_it) { dismiss() }
+                    }
                 }
             }
+
         }
 
         FrostRunnable.propagate(this, intent)

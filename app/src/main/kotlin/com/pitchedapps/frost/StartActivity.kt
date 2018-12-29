@@ -31,12 +31,15 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
-import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
+import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.ArrayList
 import java.util.IllegalFormatException
 
@@ -52,28 +55,28 @@ class StartActivity : KauBaseActivity() {
             showInvalidSdkView()
             return
         }
-
-        try {
-            FbCookie.switchBackUser {
-                loadFbCookiesAsync {
-                    val cookies = ArrayList(it)
-                    L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
-                    L._d { "Cookies: ${cookies.joinToString("\t")}" }
-                    if (cookies.isNotEmpty()) {
-                        if (Prefs.userId != -1L)
-                            startActivity<MainActivity>(intentBuilder = {
-                                putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                    Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            })
-                        else
-                            launchNewTask<SelectorActivity>(cookies)
-                    } else
-                        launchNewTask<LoginActivity>()
-                }
+        launch {
+            try {
+                FbCookie.switchBackUser()
+                val cookies = ArrayList(withContext(Dispatchers.IO) {
+                    loadFbCookiesSync()
+                })
+                L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
+                L._d { "Cookies: ${cookies.joinToString("\t")}" }
+                if (cookies.isNotEmpty()) {
+                    if (Prefs.userId != -1L)
+                        startActivity<MainActivity>(intentBuilder = {
+                            putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        })
+                    else
+                        launchNewTask<SelectorActivity>(cookies)
+                } else
+                    launchNewTask<LoginActivity>()
+            } catch (e: Exception) {
+                showInvalidWebView()
             }
-        } catch (e: Exception) {
-            showInvalidWebView()
         }
     }
 

@@ -32,6 +32,7 @@ import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.AccountItem
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-06-04.
@@ -55,7 +56,10 @@ class SelectorActivity : BaseActivity() {
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<AccountItem>, item: AccountItem) {
                 if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
-                else FbCookie.switchUser(item.cookie) { launchNewTask<MainActivity>(cookies()) }
+                else launch {
+                    FbCookie.switchUser(item.cookie)
+                    launchNewTask<MainActivity>(cookies())
+                }
             }
         })
         setFrostColors {

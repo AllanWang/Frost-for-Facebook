@@ -51,6 +51,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.SingleSubject
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -84,7 +85,9 @@ class LoginActivity : BaseActivity() {
         setFrostColors {
             toolbar(toolbar)
         }
-        web.loadLogin({ refresh = it != 100 }) { cookie ->
+        profileLoader = GlideApp.with(profile)
+        launch {
+            val cookie = web.loadLogin { refresh = it != 100 }
             L.d { "Login found" }
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
@@ -92,7 +95,6 @@ class LoginActivity : BaseActivity() {
                 loadInfo(cookie)
             })
         }
-        profileLoader = GlideApp.with(profile)
     }
 
     private fun loadInfo(cookie: CookieModel) {

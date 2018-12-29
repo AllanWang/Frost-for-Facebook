@@ -16,31 +16,37 @@
  */
 package com.pitchedapps.frost.web
 
+import android.content.Context
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.WebContext
 import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
 class FrostJSI(val web: FrostWebView) {
 
-    private val context = web.context
-    private val activity = context as? MainActivity
+    private val context: Context = web.context
+    private val activity: MainActivity? = context as? MainActivity
     private val header: SendChannel<String>? = activity?.headerBadgeChannel
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val cookies = activity?.cookies() ?: arrayListOf()
+    private val cookies: List<CookieModel> = activity?.cookies() ?: arrayListOf()
 
     /**
      * Attempts to load the url in an overlay
@@ -103,7 +109,9 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun loadLogin() {
         L.d { "Sign up button found; load login" }
-        FbCookie.logout(context)
+        context.ctxCoroutine.launch {
+            FbCookie.logout(context)
+        }
     }
 
     /**
