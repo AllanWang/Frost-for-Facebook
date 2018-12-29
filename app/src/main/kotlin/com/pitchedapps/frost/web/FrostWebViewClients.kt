@@ -22,6 +22,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -41,7 +42,6 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
-import org.jetbrains.anko.withAlpha
 
 /**
  * Created by Allan Wang on 2017-05-31.

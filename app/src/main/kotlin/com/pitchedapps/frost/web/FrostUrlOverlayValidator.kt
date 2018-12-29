@@ -16,9 +16,9 @@
  */
 package com.pitchedapps.frost.web
 
+import ca.allanwang.kau.utils.runOnUiThread
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
-import com.pitchedapps.frost.activities.WebOverlayBasicActivity
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -34,7 +34,6 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchWebOverlay
 import com.pitchedapps.frost.utils.launchWebOverlayBasic
 import com.pitchedapps.frost.views.FrostWebView
-import org.jetbrains.anko.runOnUiThread
 
 /**
  * Created by Allan Wang on 2017-08-15.

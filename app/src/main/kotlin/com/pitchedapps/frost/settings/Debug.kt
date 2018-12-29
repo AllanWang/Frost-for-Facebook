@@ -21,6 +21,7 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
@@ -35,11 +36,13 @@ import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -69,26 +72,29 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 itemsCallback { dialog, _, position, _ ->
                     dialog.dismiss()
                     val parser = parsers[position]
-                    var attempt: Future<Unit>? = null
+                    var attempt: Job? = null
                     val loading = materialDialog {
                         content(parser.nameRes)
                         progress(true, 100)
                         negativeText(R.string.kau_cancel)
                         onNegative { dialog, _ ->
-                            attempt?.cancel(true)
+                            attempt?.cancel()
                             dialog.dismiss()
                         }
                         canceledOnTouchOutside(false)
                     }
 
-                    attempt = loading.doAsync({
-                        createEmail(parser, "Error: ${it.message}")
-                    }) {
-                        val data = parser.parse(FbCookie.webCookie)
-                        uiThread {
-                            if (it.isCancelled) return@uiThread
-                            it.dismiss()
-                            createEmail(parser, data?.data)
+                    attempt = launch(Dispatchers.IO) {
+                        try {
+                            val data = parser.parse(FbCookie.webCookie)
+                            withContext(Dispatchers.Main) {
+                                if (!isActive)
+                                    return@withContext
+                                loading.dismiss()
+                                createEmail(parser, data?.data)
+                            }
+                        } catch (e: Exception) {
+                            createEmail(parser, "Error: ${e.message}")
                         }
                     }
                 }
@@ -123,14 +129,20 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         dismissListener { downloader.cancel() }
     }
 
-    md.doAsync {
-        downloader.loadAndZip(ZIP_NAME, { progress ->
-            uiThread { it.setProgress(progress) }
-        }) { success ->
-            uiThread {
-                it.dismiss()
+    val progressChannel = Channel<Int>(10)
+
+    launch(Dispatchers.Main) {
+        for (p in progressChannel) {
+            md.setProgress(p)
+        }
+    }
+    launch(Dispatchers.IO) {
+        downloader.loadAndZip(ZIP_NAME, { progressChannel.offer(it) }) { success ->
+            launch(Dispatchers.Main) {
+                if (!isActive) return@launch
+                md.dismiss()
                 if (success) {
-                    val zipUri = it.context.frostUriFromFile(
+                    val zipUri = frostUriFromFile(
                         File(downloader.baseDir, "$ZIP_NAME.zip")
                     )
                     L.i { "Sending debug zip with uri $zipUri" }

@@ -24,6 +24,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
 import androidx.annotation.WorkerThread
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.CssHider
@@ -32,7 +33,6 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.isFacebookUrl
-import org.jetbrains.anko.withAlpha
 import java.io.File
 
 /**

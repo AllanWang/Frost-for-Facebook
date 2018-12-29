@@ -53,7 +53,6 @@ import com.pitchedapps.frost.intro.IntroTabTouchFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
-import org.jetbrains.anko.find
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -137,13 +136,13 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         val lastView: View? = fragments.last().view
         arrayOf<View?>(
             skip, indicator, next,
-            lastView?.find(R.id.intro_title),
-            lastView?.find(R.id.intro_desc)
+            lastView?.findViewById(R.id.intro_title),
+            lastView?.findViewById(R.id.intro_desc)
         ).forEach {
             it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
         if (Prefs.textColor != Color.WHITE) {
-            val f = lastView?.find<ImageView>(R.id.intro_image)?.drawable
+            val f = lastView?.findViewById<ImageView>(R.id.intro_image)?.drawable
             if (f != null)
                 ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
