@@ -117,8 +117,7 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
         L.d { "Logout php found" }
         FbCookie.logout(this)
-    }
-    else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
+    } else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
         startActivity<T>(false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })

@@ -29,7 +29,7 @@ interface ActivityContract : FileChooserActivityContract
 
 interface MainActivityContract : ActivityContract, MainFabContract {
     val fragmentChannel: BroadcastChannel<Int>
-    val headerBadgeChannel : Channel<String>
+    val headerBadgeChannel: Channel<String>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
     /**

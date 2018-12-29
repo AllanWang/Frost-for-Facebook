@@ -22,7 +22,6 @@ import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
-import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
