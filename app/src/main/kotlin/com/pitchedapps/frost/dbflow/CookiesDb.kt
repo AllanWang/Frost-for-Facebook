@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.dbflow
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.pitchedapps.frost.facebook.FbItem
@@ -37,7 +36,7 @@ import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.structure.BaseModel
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import paperparcel.PaperParcel
+import kotlinx.android.parcel.Parcelize
 import java.net.UnknownHostException
 
 /**
@@ -50,18 +49,10 @@ object CookiesDb {
     const val VERSION = 2
 }
 
-@PaperParcel
+@Parcelize
 @Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
 data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null, var cookie: String? = null) :
-    BaseModel(), Parcelable {
-    companion object {
-        @JvmField
-        val CREATOR = PaperParcelCookieModel.CREATOR
-    }
-
-    override fun describeContents() = 0
-    override fun writeToParcel(dest: Parcel, flags: Int) = PaperParcelCookieModel.writeToParcel(this, dest, flags)
-}
+    BaseModel(), Parcelable
 
 fun loadFbCookie(id: Long): CookieModel? =
     (select from CookieModel::class where (CookieModel_Table.id eq id)).querySingle()

@@ -144,6 +144,10 @@ android {
         }
     }
 
+    androidExtensions {
+        experimental = true
+    }
+
 }
 
 repositories {
@@ -232,10 +236,6 @@ dependencies {
 
 
     implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
-
-    implementation "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
-    implementation "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
-    kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     implementation "com.bugsnag:bugsnag-android:${BUGSNAG}"
 
