@@ -297,8 +297,8 @@ button ._v89 ._54k8._1fl1 {
 
 /*
  * 2018/12/29
- * Previously ._15km ._15ko::before; however, reaction changes no longer affect this element
- * The robust measure seems to be a[data-sigil~="like-reaction-flyout"] along with [data-sigil~="like"] for an unliked post
+ * Previously ._15km ._15ko::before and ._15km ._15ko._77la::before; however, reaction changes no longer affect this element
+ * The robust measure seems to be the parent of a[data-sigil~="like-reaction-flyout"] along with [data-sigil~="like"] for an unliked post
  * and [data-sigil~="unlike"] for a liked post
  */
 ._15km ._15ko::before {

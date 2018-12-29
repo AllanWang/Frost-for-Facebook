@@ -23,6 +23,7 @@ import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.dbflow.removeCookie
 import com.pitchedapps.frost.dbflow.saveFbCookie
+import com.pitchedapps.frost.facebook.FbCookie.webCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
@@ -30,14 +31,18 @@ import com.pitchedapps.frost.utils.launchLogin
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.SingleSubject
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-05-30.
+ *
+ * The following component manages all cookie transfers.
  */
 object FbCookie {
 
@@ -94,19 +99,6 @@ object FbCookie {
         setCookie(COOKIE_DOMAIN, cookie.trim()) {
             L.test { "Save single $cookie\n\n\t$webCookie" }
             cont.resume(it)
-        }
-    }
-
-    operator fun invoke() {
-        L.d { "FbCookie Invoke User" }
-        val manager = CookieManager.getInstance()
-        manager.setAcceptCookie(true)
-        val dbCookie = loadFbCookie(Prefs.userId)?.cookie
-        if (dbCookie != null && webCookie == null) {
-            L.d { "DbCookie found & WebCookie is null; setting webcookie" }
-//            GlobalScope.launch(Dispatchers.Main) {
-//                manager.suspendSetWebCookie(dbCookie)
-//            }
         }
     }
 
