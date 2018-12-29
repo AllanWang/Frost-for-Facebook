@@ -227,7 +227,6 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
                     }
                 }
             }
-
         }
 
         FrostRunnable.propagate(this, intent)
