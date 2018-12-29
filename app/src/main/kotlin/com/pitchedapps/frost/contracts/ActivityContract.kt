@@ -19,7 +19,8 @@ package com.pitchedapps.frost.contracts
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.fragments.BaseFragment
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 
 /**
  * All the contracts for [MainActivity]
@@ -27,7 +28,8 @@ import io.reactivex.subjects.PublishSubject
 interface ActivityContract : FileChooserActivityContract
 
 interface MainActivityContract : ActivityContract, MainFabContract {
-    val fragmentSubject: PublishSubject<Int>
+    val fragmentChannel: BroadcastChannel<Int>
+    val headerBadgeChannel : Channel<String>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
     /**

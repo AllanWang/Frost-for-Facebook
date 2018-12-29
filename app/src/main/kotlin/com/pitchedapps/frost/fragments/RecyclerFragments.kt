@@ -26,7 +26,7 @@ import com.pitchedapps.frost.facebook.requests.MenuFooterItem
 import com.pitchedapps.frost.facebook.requests.MenuHeader
 import com.pitchedapps.frost.facebook.requests.MenuItem
 import com.pitchedapps.frost.facebook.requests.MenuItemData
-import com.pitchedapps.frost.facebook.requests.fbRequest
+import com.pitchedapps.frost.facebook.requests.fbAuth
 import com.pitchedapps.frost.facebook.requests.getMenuData
 import com.pitchedapps.frost.iitems.ClickableIItemContract
 import com.pitchedapps.frost.iitems.MenuContentIItem
@@ -36,8 +36,8 @@ import com.pitchedapps.frost.iitems.MenuHeaderIItem
 import com.pitchedapps.frost.iitems.NotificationIItem
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -71,20 +71,16 @@ class MenuFragment : GenericRecyclerFragment<MenuItemData, IItem<*, *>>() {
         ClickableIItemContract.bindEvents(adapter)
     }
 
-    override fun reloadImpl(progress: (Int) -> Unit, callback: (Boolean) -> Unit) {
-        doAsync {
-            val cookie = FbCookie.webCookie
-            progress(10)
-            cookie.fbRequest({ callback(false) }) {
-                progress(30)
-                val data = getMenuData().invoke() ?: return@fbRequest callback(false)
-                if (data.data.isEmpty()) return@fbRequest callback(false)
-                progress(70)
-                val items = data.flatMapValid()
-                progress(90)
-                uiThread { adapter.add(items) }
-                callback(true)
-            }
-        }
+    override suspend fun reloadImpl(progress: (Int) -> Unit): List<MenuItemData>? = withContext(Dispatchers.IO) {
+        val cookie = FbCookie.webCookie ?: return@withContext null
+        progress(10)
+        val auth = fbAuth.fetch(cookie)
+        progress(30)
+        val data = auth.getMenuData().invoke() ?: return@withContext null
+        if (data.data.isEmpty()) return@withContext null
+        progress(70)
+        val items = data.flatMapValid()
+        progress(90)
+        return@withContext items
     }
 }

@@ -16,9 +16,7 @@
  */
 package com.pitchedapps.frost
 
-import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.zip
-import okhttp3.Request
 import org.junit.Test
 import kotlin.test.assertTrue
 
@@ -46,16 +44,5 @@ class MiscTest {
             data.all { it >= base * 1000 && it < base * 1000 * 5 },
             "zip did not seem to work on different threads"
         )
-    }
-
-    @Test
-    fun a() {
-        val s = Request.Builder()
-            .url("https://www.allanwang.ca/ecse429/magenta.png")
-            .get()
-            .call().execute().body()!!.string()
-        "�PNG\n\u001A\nIDA�c����?\u0000\u0006�\u0002��p�\u0000\u0000\u0000\u0000IEND�B`�"
-        println("Hello")
-        println(s)
     }
 }

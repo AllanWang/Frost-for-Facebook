@@ -67,11 +67,14 @@ import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 
 /**
@@ -87,6 +90,7 @@ import okhttp3.HttpUrl
  * Used by notifications. Unlike the other overlays, this runs as a singleInstance
  * Going back will bring you back to the previous app
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 class FrostWebActivity : WebOverlayActivityBase(false) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,12 +102,15 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
              * We will subscribe to the load cycle once,
              * and pop a dialog giving the user the option to copy the shared text
              */
-            var disposable: Disposable? = null
-            disposable = content.refreshObservable.subscribe {
-                disposable?.dispose()
-                materialDialogThemed {
-                    title(R.string.invalid_share_url)
-                    content(R.string.invalid_share_url_desc)
+            val refreshReceiver = content.refreshChannel.openSubscription()
+            content.scope.launch(Dispatchers.IO) {
+                refreshReceiver.receive()
+                refreshReceiver.cancel()
+                withContext(Dispatchers.Main) {
+                    materialDialogThemed {
+                        title(R.string.invalid_share_url)
+                        content(R.string.invalid_share_url_desc)
+                    }
                 }
             }
         }
@@ -144,6 +151,7 @@ class WebOverlayBasicActivity : WebOverlayActivityBase(true)
 class WebOverlayActivity : WebOverlayActivityBase(false)
 
 @SuppressLint("Registered")
+@UseExperimental(ExperimentalCoroutinesApi::class)
 open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
     ActivityContract, FrostContentContainer,
     VideoViewHolder, FileChooserContract by FileChooserDelegate() {
@@ -181,7 +189,6 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             finish()
             return
         }
-
         setFrameContentView(R.layout.activity_web_overlay)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -197,10 +204,13 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
         content.bind(this)
 
-        content.titleObservable
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { toolbar.title = it }
-            .disposeOnDestroy()
+        val titleReceiver = content.titleChannel.openSubscription().uniqueOnly(this)
+
+        launch {
+            for (t in titleReceiver) {
+                toolbar.title = t
+            }
+        }
 
         with(web) {
             if (forceBasicAgent) //todo check; the webview already adds it dynamically

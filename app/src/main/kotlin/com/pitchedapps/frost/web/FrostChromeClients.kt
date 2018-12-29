@@ -29,8 +29,7 @@ import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostWebView
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
+import kotlinx.coroutines.channels.SendChannel
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -43,8 +42,8 @@ import io.reactivex.subjects.Subject
  */
 class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
-    private val progress: Subject<Int> = web.parent.progressObservable
-    private val title: BehaviorSubject<String> = web.parent.titleObservable
+    private val progress: SendChannel<Int> = web.parent.progressChannel
+    private val title: SendChannel<String> = web.parent.titleChannel
     private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
 
@@ -55,13 +54,13 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
-        if (title.startsWith("http") || this.title.value == title) return
-        this.title.onNext(title)
+        if (title.startsWith("http")) return
+        this.title.offer(title)
     }
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {
         super.onProgressChanged(view, newProgress)
-        progress.onNext(newProgress)
+        progress.offer(newProgress)
     }
 
     override fun onShowFileChooser(
