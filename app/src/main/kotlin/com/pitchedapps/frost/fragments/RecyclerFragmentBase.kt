@@ -53,6 +53,7 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
         val data = try {
             reloadImpl(progress)
         } catch (e: Exception) {
+            L.e(e) { "Recycler reload fail" }
             null
         }
         if (!isActive)

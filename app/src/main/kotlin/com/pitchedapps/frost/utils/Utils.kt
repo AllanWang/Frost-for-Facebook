@@ -114,8 +114,10 @@ fun Activity.cookies(): ArrayList<CookieModel> {
 private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String) {
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
-    if (argUrl.isFacebookUrl && argUrl.contains("/logout.php"))
+    if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
+        L.d { "Logout php found" }
         FbCookie.logout(this)
+    }
     else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
         startActivity<T>(false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
@@ -371,7 +373,12 @@ fun EmailBuilder.addFrostDetails() {
 fun frostJsoup(url: String) = frostJsoup(FbCookie.webCookie, url)
 
 fun frostJsoup(cookie: String?, url: String) =
-    Jsoup.connect(url).cookie(FACEBOOK_COM, cookie).userAgent(USER_AGENT_BASIC).get()!!
+    Jsoup.connect(url).run {
+        if (cookie != null) cookie(
+            FACEBOOK_COM,
+            cookie
+        ) else this
+    }.userAgent(USER_AGENT_BASIC).get()!!
 
 fun Element.first(vararg select: String): Element? {
     select.forEach {

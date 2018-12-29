@@ -102,6 +102,7 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun loadLogin() {
+        L.d { "Sign up button found; load login" }
         FbCookie.logout(context)
     }
 
