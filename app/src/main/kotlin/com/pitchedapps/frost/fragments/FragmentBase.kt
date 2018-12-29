@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +40,7 @@ import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -54,6 +54,7 @@ import kotlin.coroutines.CoroutineContext
  * All fragments pertaining to the main view
  * Must be attached to activities implementing [MainActivityContract]
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, DynamicUiContract {
 
     companion object {
@@ -90,7 +91,6 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
         set(value) {
             if (!isActive || value || this is WebFragment) return
             arguments!!.putBoolean(ARG_VALID, value)
-            L.e { "Invalidating position $position" }
             frostEvent(
                 "Native Fallback",
                 "Item" to baseEnum.name
@@ -132,6 +132,10 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
         onCreateRunnable?.invoke(this)
         onCreateRunnable = null
         firstLoadRequest()
+        detachMainObservable()
+        (context as? MainActivityContract)?.let {
+            activityReceiver = attachMainObservable(it)
+        }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -204,22 +208,11 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
         activityReceiver?.cancel()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        detachMainObservable()
-        if (context is MainActivityContract)
-            activityReceiver = attachMainObservable(context)
-    }
-
-    override fun onDetach() {
-        detachMainObservable()
-        super.onDetach()
-    }
-
     override fun onDestroyView() {
         L.i { "Fragment on destroy $position ${hashCode()}" }
         content?.destroy()
         content = null
+        detachMainObservable()
         super.onDestroyView()
     }
 

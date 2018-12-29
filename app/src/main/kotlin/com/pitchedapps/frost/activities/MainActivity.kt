@@ -20,21 +20,23 @@ import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
-import java.util.concurrent.TimeUnit
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
 
     override val fragmentChannel = BroadcastChannel<Int>(10)
+    override val headerBadgeChannel = Channel<String>(Channel.RENDEZVOUS)
     var lastPosition = -1
-    val headerBadgeObservable = PublishSubject.create<String>()
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
         setupTabs()
@@ -81,28 +83,37 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        headerBadgeObservable.throttleFirst(15, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.newThread())
-            .map { Jsoup.parse(it) }
-            .filter { it.select("[data-sigil=count]").size >= 0 } //ensure headers exist
-            .map {
-                val feed = it.select("[data-sigil*=feed] [data-sigil=count]")
-                val requests = it.select("[data-sigil*=requests] [data-sigil=count]")
-                val messages = it.select("[data-sigil*=messages] [data-sigil=count]")
-                val notifications = it.select("[data-sigil*=notifications] [data-sigil=count]")
-                return@map arrayOf(feed, requests, messages, notifications).map { e -> e?.getOrNull(0)?.ownText() }
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { (feed, requests, messages, notifications) ->
-                tabsForEachView { _, view ->
-                    when (view.iicon) {
-                        FbItem.FEED.icon -> view.badgeText = feed
-                        FbItem.FRIENDS.icon -> view.badgeText = requests
-                        FbItem.MESSAGES.icon -> view.badgeText = messages
-                        FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
+        launch(Dispatchers.IO) {
+            for (html in headerBadgeChannel) {
+                try {
+                    val doc = Jsoup.parse(html)
+                    if (doc.select("[data-sigil=count]").isEmpty())
+                        continue // Header doesn't exist
+                    val (feed, requests, messages, notifications) = listOf(
+                        "feed",
+                        "requests",
+                        "messages",
+                        "notifications"
+                    )
+                        .map { "[data-sigil*=$it] [data-sigil=count]" }
+                        .map { doc.select(it) }
+                        .map { e -> e?.getOrNull(0)?.ownText() }
+                    L._d { "Badges $feed $requests $messages $notifications" }
+                    withContext(Dispatchers.Main) {
+                        tabsForEachView { _, view ->
+                            when (view.iicon) {
+                                FbItem.FEED.icon -> view.badgeText = feed
+                                FbItem.FRIENDS.icon -> view.badgeText = requests
+                                FbItem.MESSAGES.icon -> view.badgeText = messages
+                                FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
+                            }
+                        }
                     }
+                } catch (e: Exception) {
+                    L.e(e) { "Header badge error" }
                 }
-            }.disposeOnDestroy()
+            }
+        }
         adapter.pages.forEach {
             tabs.addTab(
                 tabs.newTab()

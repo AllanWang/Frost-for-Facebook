@@ -29,7 +29,6 @@ import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
-import io.reactivex.subjects.Subject
 import kotlinx.coroutines.channels.SendChannel
 
 /**
@@ -39,7 +38,7 @@ class FrostJSI(val web: FrostWebView) {
 
     private val context = web.context
     private val activity = context as? MainActivity
-    private val header: Subject<String>? = activity?.headerBadgeObservable
+    private val header: SendChannel<String>? = activity?.headerBadgeChannel
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val cookies = activity?.cookies() ?: arrayListOf()
 
@@ -133,6 +132,6 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun handleHeader(html: String?) {
         html ?: return
-        header?.onNext(html)
+        header?.offer(html)
     }
 }

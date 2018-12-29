@@ -473,6 +473,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onDestroy() {
         fragmentChannel.close()
+        headerBadgeChannel.close()
         controlWebview?.destroy()
         super.onDestroy()
     }
