@@ -104,9 +104,9 @@ object FbCookie {
         val dbCookie = loadFbCookie(Prefs.userId)?.cookie
         if (dbCookie != null && webCookie == null) {
             L.d { "DbCookie found & WebCookie is null; setting webcookie" }
-            GlobalScope.launch(Dispatchers.Main) {
-                manager.suspendSetWebCookie(dbCookie)
-            }
+//            GlobalScope.launch(Dispatchers.Main) {
+//                manager.suspendSetWebCookie(dbCookie)
+//            }
         }
     }
 

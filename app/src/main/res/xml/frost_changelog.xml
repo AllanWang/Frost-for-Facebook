@@ -9,7 +9,7 @@
     <version title="v2.2.0" />
     <item text="Rewrite a lot of internal logic to optimize loading" />
     <item text="Change default user agent to new android version, previously a desktop user agent" />
-    <item text="" />
+    <item text="Add back group management page when clicking the respective notification" />
     <item text="" />
     <item text="" />
     <item text="" />

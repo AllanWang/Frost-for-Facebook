@@ -295,12 +295,18 @@ button ._v89 ._54k8._1fl1 {
   background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23fff" viewBox="0 0 50 50"%3E%3Cpath fill="none" d="M13 26h24v24H13z"/%3E%3Cpath d="M30 31.5V28c0-.55-.45-1-1-1H17c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/%3E%3C/svg%3E') no-repeat !important;
 }
 
+/*
+ * 2018/12/29
+ * Previously ._15km ._15ko::before; however, reaction changes no longer affect this element
+ * The robust measure seems to be a[data-sigil~="like-reaction-flyout"] along with [data-sigil~="like"] for an unliked post
+ * and [data-sigil~="unlike"] for a liked post
+ */
 ._15km ._15ko::before {
   background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23fff" viewBox="0 0 24 24"%3E%3Cpath fill="none" d="M0 0h24v24H0z"/%3E%3Cpath d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/%3E%3C/svg%3E') no-repeat !important;
   background-position: center !important;
 }
 
-._15km ._15ko._2q8z::before {
+._15km ._15ko._77la::before {
   background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%235d86dd" viewBox="0 0 24 24"%3E%3Cpath fill="none" d="M0 0h24v24H0z"/%3E%3Cpath d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/%3E%3C/svg%3E') no-repeat !important;
   background-position: center !important;
 }
