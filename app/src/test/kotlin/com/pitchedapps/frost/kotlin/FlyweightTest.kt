@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.rx
+package com.pitchedapps.frost.kotlin
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -118,7 +118,6 @@ class FlyweightTest {
                     "Incorrect error found on fetch cancelled by destruction"
                 )
             }
-            println("Done")
         }
     }
 }

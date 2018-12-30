@@ -24,7 +24,7 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.rx.Flyweight
+import com.pitchedapps.frost.kotlin.Flyweight
 import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
