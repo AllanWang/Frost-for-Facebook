@@ -30,7 +30,6 @@ import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -56,7 +55,6 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
             L.e(e) { "Recycler reload fail" }
             null
         }
-        yield()
         return withContext(Dispatchers.Main) {
             if (data == null) {
                 valid = false

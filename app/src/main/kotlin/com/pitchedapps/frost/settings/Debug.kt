@@ -41,7 +41,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -89,7 +88,6 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     attempt = launch(Dispatchers.IO) {
                         try {
                             val data = parser.parse(FbCookie.webCookie)
-                            yield()
                             withContext(Dispatchers.Main) {
                                 loading.dismiss()
                                 createEmail(parser, data?.data)
@@ -146,7 +144,6 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     launch(Dispatchers.IO) {
         val success = loadAndZip()
-        yield()
         withContext(Dispatchers.Main) {
             md.dismiss()
             if (success) {
