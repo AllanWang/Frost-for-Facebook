@@ -18,6 +18,7 @@ package com.pitchedapps.frost.settings
 
 import android.content.Context
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.string
@@ -88,7 +89,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     attempt = launch(Dispatchers.IO) {
                         try {
                             val data = parser.parse(FbCookie.webCookie)
-                            withContext(Dispatchers.Main) {
+                            withContext(ContextHelper.dispatcher) {
                                 loading.dismiss()
                                 createEmail(parser, data?.data)
                             }
@@ -130,7 +131,7 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     val progressChannel = Channel<Int>(10)
 
-    launch(Dispatchers.Main) {
+    launch(ContextHelper.dispatcher) {
         for (p in progressChannel) {
             md.setProgress(p)
         }
@@ -144,7 +145,7 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     launch(Dispatchers.IO) {
         val success = loadAndZip()
-        withContext(Dispatchers.Main) {
+        withContext(ContextHelper.dispatcher) {
             md.dismiss()
             if (success) {
                 val zipUri = frostUriFromFile(

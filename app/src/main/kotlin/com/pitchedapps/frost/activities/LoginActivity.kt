@@ -52,6 +52,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.SingleSubject
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -69,13 +70,15 @@ class LoginActivity : BaseActivity() {
     private lateinit var profileLoader: RequestManager
 
     // Helper to set and enable swipeRefresh
-    private var refresh: Boolean
+    private var refreshing: Boolean
         get() = swipeRefresh.isRefreshing
         set(value) {
             if (value) swipeRefresh.isEnabled = true
             swipeRefresh.isRefreshing = value
             if (!value) swipeRefresh.isEnabled = false
         }
+
+//    suspend fun refresh(refreshing: Boolean) =
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +90,7 @@ class LoginActivity : BaseActivity() {
         }
         profileLoader = GlideApp.with(profile)
         launch {
-            val cookie = web.loadLogin { refresh = it != 100 }
+            val cookie = web.loadLogin { refreshing = it != 100 }
             L.d { "Login found" }
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
@@ -98,14 +101,15 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun loadInfo(cookie: CookieModel) {
-        refresh = true
+        refreshing = true
+
         Single.zip<Boolean, String, Pair<Boolean, String>>(
             profileSubject,
             usernameSubject,
             BiFunction(::Pair)
         )
             .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
-                refresh = false
+                refreshing = false
                 if (!foundImage) {
                     L.e { "Could not get profile photo; Invalid userId?" }
                     L._i { cookie }

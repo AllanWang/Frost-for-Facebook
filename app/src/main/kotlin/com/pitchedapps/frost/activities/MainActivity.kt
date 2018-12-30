@@ -18,6 +18,7 @@ package com.pitchedapps.frost.activities
 
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
+import ca.allanwang.kau.utils.ContextHelper
 import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
@@ -98,7 +99,7 @@ class MainActivity : BaseMainActivity() {
                         .map { doc.select(it) }
                         .map { e -> e?.getOrNull(0)?.ownText() }
                     L.v { "Badges $feed $requests $messages $notifications" }
-                    withContext(Dispatchers.Main) {
+                    withContext(ContextHelper.dispatcher) {
                         tabsForEachView { _, view ->
                             when (view.iicon) {
                                 FbItem.FEED.icon -> view.badgeText = feed

@@ -26,6 +26,7 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.dbflow.CookieModel
@@ -39,7 +40,6 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -70,7 +70,7 @@ class LoginWebView @JvmOverloads constructor(
             this@LoginWebView.progressCallback = progressCallback
             this@LoginWebView.loginCallback = { cont.resume(it) }
             L.d { "Begin loading login" }
-            launch(Dispatchers.Main) {
+            launch(ContextHelper.dispatcher) {
                 FbCookie.reset()
                 setupWebview()
                 loadUrl(FB_LOGIN_URL)

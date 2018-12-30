@@ -19,6 +19,7 @@ package com.pitchedapps.frost.services
 import android.app.job.JobParameters
 import android.app.job.JobService
 import androidx.annotation.CallSuper
+import ca.allanwang.kau.utils.ContextHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,7 +29,7 @@ abstract class BaseJobService : JobService(), CoroutineScope {
 
     private lateinit var job: Job
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+        get() = ContextHelper.dispatcher + job
 
     protected val startTime = System.currentTimeMillis()
 

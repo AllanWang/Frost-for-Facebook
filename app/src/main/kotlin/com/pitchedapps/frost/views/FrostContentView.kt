@@ -23,6 +23,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeIn
@@ -130,7 +131,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         scope.launch(Dispatchers.Default) {
             launch {
                 for (r in refreshReceiver) {
-                    withContext(Dispatchers.Main) {
+                    withContext(ContextHelper.dispatcher) {
                         refresh.isRefreshing = r
                         refresh.isEnabled = true
                     }
@@ -138,7 +139,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             }
             launch {
                 for (p in progressReceiver) {
-                    withContext(Dispatchers.Main) {
+                    withContext(ContextHelper.dispatcher) {
                         progress.invisibleIf(p == 100)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                             progress.setProgress(p, true)
@@ -192,7 +193,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         L.v { "Registered transition" }
         with(coreView) {
             refreshReceiver = refreshChannel.openSubscription().also { receiver ->
-                scope.launch(Dispatchers.Main) {
+                scope.launch(ContextHelper.dispatcher) {
                     var loading = false
                     for (r in receiver) {
                         if (r) {

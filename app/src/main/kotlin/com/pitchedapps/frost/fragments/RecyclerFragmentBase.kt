@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.fragments
 
 import ca.allanwang.kau.adapters.fastAdapter
+import ca.allanwang.kau.utils.ContextHelper
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -55,7 +56,7 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
             L.e(e) { "Recycler reload fail" }
             null
         }
-        return withContext(Dispatchers.Main) {
+        return withContext(ContextHelper.dispatcher) {
             if (data == null) {
                 valid = false
                 return@withContext false

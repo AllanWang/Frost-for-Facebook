@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.withArguments
@@ -80,7 +81,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
 
     open lateinit var job: Job
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+        get() = ContextHelper.dispatcher + job
 
     override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }

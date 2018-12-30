@@ -30,6 +30,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.darken
@@ -106,7 +107,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
             content.scope.launch(Dispatchers.IO) {
                 refreshReceiver.receive()
                 refreshReceiver.cancel()
-                withContext(Dispatchers.Main) {
+                withContext(ContextHelper.dispatcher) {
                     materialDialogThemed {
                         title(R.string.invalid_share_url)
                         content(R.string.invalid_share_url_desc)
