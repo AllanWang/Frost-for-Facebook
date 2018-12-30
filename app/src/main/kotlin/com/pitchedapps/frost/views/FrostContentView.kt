@@ -39,7 +39,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -177,7 +176,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         core.destroy()
     }
 
-    private var dispose: Disposable? = null
     private var transitionStart: Long = -1
     private var refreshReceiver: ReceiveChannel<Boolean>? = null
 

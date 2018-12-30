@@ -36,8 +36,3 @@ fun RequestAuth.markNotificationRead(notifId: Long): FrostRequest<Boolean> {
         post(body.toForm())
     }
 }
-
-fun RequestAuth.markNotificationsRead(vararg notifId: Long) =
-    notifId.toTypedArray().zip<Long, Boolean, Boolean>(
-        { it.all { self -> self } },
-        { markNotificationRead(it).invoke() })
