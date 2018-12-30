@@ -44,7 +44,7 @@ import kotlin.coroutines.suspendCoroutine
  */
 object FbCookie {
 
-    const val COOKIE_DOMAIN = FACEBOOK_COM
+    const val COOKIE_DOMAIN = FB_URL_BASE
 
     /**
      * Retrieves the facebook cookie if it exists
@@ -52,26 +52,6 @@ object FbCookie {
      */
     inline val webCookie: String?
         get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
-
-    private fun CookieManager.setWebCookie(cookie: String?, callback: (() -> Unit)?) {
-        removeAllCookies { _ ->
-            if (cookie == null) {
-                callback?.invoke()
-                return@removeAllCookies
-            }
-            L.d { "Setting cookie" }
-            val cookies = cookie.split(";").map { Pair(it, SingleSubject.create<Boolean>()) }
-            cookies.forEach { (cookie, callback) -> setCookie(COOKIE_DOMAIN, cookie) { callback.onSuccess(it) } }
-            Observable.zip<Boolean, Unit>(cookies.map { (_, callback) -> callback.toObservable() }) {}
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    callback?.invoke()
-                    L.d { "Cookies set" }
-                    L._d { cookie }
-                    flush()
-                }
-        }
-    }
 
     private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
         cookie ?: return true
@@ -83,21 +63,19 @@ object FbCookie {
                 .awaitAll().all { it }
             flush()
             L.d { "Cookies set" }
-            L._d { "Set $cookie\nResult $webCookie" }
+            L._d { "Set $cookie\n\tResult $webCookie" }
             result
         }
     }
 
     private suspend fun CookieManager.removeAllCookies(): Boolean = suspendCoroutine { cont ->
         removeAllCookies {
-            L.test { "Removed all cookies $webCookie" }
             cont.resume(it)
         }
     }
 
     private suspend fun CookieManager.setSingleWebCookie(cookie: String): Boolean = suspendCoroutine { cont ->
         setCookie(COOKIE_DOMAIN, cookie.trim()) {
-            L.test { "Save single $cookie\n\n\t$webCookie" }
             cont.resume(it)
         }
     }

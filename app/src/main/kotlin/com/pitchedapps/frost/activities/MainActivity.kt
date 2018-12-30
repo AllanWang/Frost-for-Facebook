@@ -97,7 +97,7 @@ class MainActivity : BaseMainActivity() {
                         .map { "[data-sigil*=$it] [data-sigil=count]" }
                         .map { doc.select(it) }
                         .map { e -> e?.getOrNull(0)?.ownText() }
-                    L._d { "Badges $feed $requests $messages $notifications" }
+                    L.v { "Badges $feed $requests $messages $notifications" }
                     withContext(Dispatchers.Main) {
                         tabsForEachView { _, view ->
                             when (view.iicon) {
