@@ -18,11 +18,11 @@ package com.pitchedapps.frost.activities
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
@@ -34,7 +34,7 @@ import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.fetchUsername
-import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
+import com.pitchedapps.frost.dbflow.loadFbCookiesSuspend
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
@@ -46,13 +46,16 @@ import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.web.LoginWebView
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
-import io.reactivex.subjects.SingleSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -65,20 +68,8 @@ class LoginActivity : BaseActivity() {
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
 
-    private val profileSubject = SingleSubject.create<Boolean>()
-    private val usernameSubject = SingleSubject.create<String>()
     private lateinit var profileLoader: RequestManager
-
-    // Helper to set and enable swipeRefresh
-    private var refreshing: Boolean
-        get() = swipeRefresh.isRefreshing
-        set(value) {
-            if (value) swipeRefresh.isEnabled = true
-            swipeRefresh.isRefreshing = value
-            if (!value) swipeRefresh.isEnabled = false
-        }
-
-//    suspend fun refresh(refreshing: Boolean) =
+    private val refreshChannel = Channel<Boolean>(10)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,80 +81,98 @@ class LoginActivity : BaseActivity() {
         }
         profileLoader = GlideApp.with(profile)
         launch {
-            val cookie = web.loadLogin { refreshing = it != 100 }
+            for (refreshing in refreshChannel.uniqueOnly(this)) {
+                if (refreshing) swipeRefresh.isEnabled = true
+                swipeRefresh.isRefreshing = refreshing
+                if (!refreshing) swipeRefresh.isEnabled = false
+            }
+        }
+        launch {
+            val cookie = web.loadLogin { refresh(it != 100) }
             L.d { "Login found" }
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
                 profile.fadeIn()
-                loadInfo(cookie)
+                launch { loadInfo(cookie) }
             })
         }
     }
 
-    private fun loadInfo(cookie: CookieModel) {
-        refreshing = true
-
-        Single.zip<Boolean, String, Pair<Boolean, String>>(
-            profileSubject,
-            usernameSubject,
-            BiFunction(::Pair)
-        )
-            .observeOn(AndroidSchedulers.mainThread()).subscribe { (foundImage, name) ->
-                refreshing = false
-                if (!foundImage) {
-                    L.e { "Could not get profile photo; Invalid userId?" }
-                    L._i { cookie }
-                }
-                textview.text = String.format(getString(R.string.welcome), name)
-                textview.fadeIn()
-                frostEvent("Login", "success" to true)
-                /*
-                 * The user may have logged into an account that is already in the database
-                 * We will let the db handle duplicates and load it now after the new account has been saved
-                 */
-                loadFbCookiesAsync {
-                    val cookies = ArrayList(it)
-                    Handler().postDelayed({
-                        if (Showcase.intro)
-                            launchNewTask<IntroActivity>(cookies, true)
-                        else
-                            launchNewTask<MainActivity>(cookies, true)
-                    }, 1000)
-                }
-            }.disposeOnDestroy()
-        loadProfile(cookie.id)
-        loadUsername(cookie)
+    private fun refresh(refreshing: Boolean) {
+        refreshChannel.offer(refreshing)
     }
 
-    private fun loadProfile(id: Long) {
-        profileLoader.load(profilePictureUrl(id))
-            .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    profileSubject.onSuccess(true)
-                    return false
-                }
+    private suspend fun loadInfo(cookie: CookieModel) {
+        refresh(true)
 
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    e.logFrostEvent("Profile loading exception")
-                    profileSubject.onSuccess(false)
-                    return false
-                }
-            }).into(profile)
+        val imageDeferred = async { loadProfile(cookie.id) }
+        val nameDeferred = async { loadUsername(cookie) }
+
+        val foundImage = imageDeferred.await()
+        val name = nameDeferred.await()
+
+        refresh(false)
+
+        if (!foundImage) {
+            L.e { "Could not get profile photo; Invalid userId?" }
+            L._i { cookie }
+        }
+
+        withContext(ContextHelper.dispatcher) {
+            textview.text = String.format(getString(R.string.welcome), name)
+            textview.fadeIn()
+        }
+        frostEvent("Login", "success" to true)
+
+        /*
+         * The user may have logged into an account that is already in the database
+         * We will let the db handle duplicates and load it now after the new account has been saved
+         */
+        val cookies = ArrayList(loadFbCookiesSuspend())
+        delay(1000)
+        withContext(ContextHelper.dispatcher) {
+            if (Showcase.intro)
+                launchNewTask<IntroActivity>(cookies, true)
+            else
+                launchNewTask<MainActivity>(cookies, true)
+        }
     }
 
-    private fun loadUsername(cookie: CookieModel) {
-        cookie.fetchUsername(usernameSubject::onSuccess).disposeOnDestroy()
+    private suspend fun loadProfile(id: Long): Boolean = withContext(ContextHelper.dispatcher) {
+        suspendCancellableCoroutine<Boolean> { cont ->
+            profileLoader.load(profilePictureUrl(id))
+                .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        cont.resume(true)
+                        return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        e.logFrostEvent("Profile loading exception")
+                        cont.resume(false)
+                        return false
+                    }
+                }).into(profile)
+        }
+    }
+
+    private suspend fun loadUsername(cookie: CookieModel): String = withContext(Dispatchers.IO) {
+        suspendCancellableCoroutine<String> { cont ->
+            cookie.fetchUsername {
+                cont.resume(it)
+            }
+        }
     }
 
     override fun backConsumer(): Boolean {

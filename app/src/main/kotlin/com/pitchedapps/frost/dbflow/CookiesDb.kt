@@ -37,6 +37,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 
 /**
@@ -70,6 +72,11 @@ fun loadFbCookiesAsync(callback: (cookies: List<CookieModel>) -> Unit) {
 
 fun loadFbCookiesSync(): List<CookieModel> =
     (select from CookieModel::class).orderBy(CookieModel_Table.name, true).queryList()
+
+// TODO temp method until dbflow supports coroutines
+suspend fun loadFbCookiesSuspend(): List<CookieModel> = withContext(Dispatchers.IO) {
+    loadFbCookiesSync()
+}
 
 inline fun saveFbCookie(cookie: CookieModel, crossinline callback: (() -> Unit) = {}) {
     cookie.async save {
