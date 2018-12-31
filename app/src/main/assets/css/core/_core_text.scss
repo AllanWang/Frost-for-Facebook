@@ -5,7 +5,7 @@
 ._5xu2, ._3ml8, ._3mla, ._50vk, ._1m2u, ._31y7, ._4kcb, ._1lf6, ._1lf5,
 ._1lf4, ._1hiz, ._xod, ._5ag5, ._zmk, ._3t_h, ._5lm6, ._3clv, ._3zlc, ._36rd,
 ._31zk, ._31zl, ._3xsa, ._3xs9, ._2-4s, ._2fzz ul,
-._43mh, .touch .btn, p, span, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35,
+._43mh, .touch .btn, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35,
 ._rnk, ._24u0, ._1g06, ._14ye, .fcb, ._56cz._56c_, ._1gk_, ._55fj, ._45fu,
 ._18qg, ._1_ac, ._529p, ._4dwt ._1vh3, ._4a5f, ._23_t, ._2rzc, ._23_s, ._2rzd,
 ._5aga, ._5ag9, ._537a, .acy, ._5ro_, ._6-l ._2us7, ._4mp, ._2b08, ._36e0, ._4-dy,
@@ -17,7 +17,7 @@ textarea, ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782,
 ._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g,
 ._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6, ._6ber, ._mxb, ._3oyd,
 div.sharerSelector, .footer, ._4pv_, ._1dbp, ._3kad, ._20zc, ._2i5v, ._2i5w,
-[data-sigil="ufi-inline-actions"] a,
+a, ._5fpq, ._4gux, ._3bg5 ._52x1, ._3bg5 ._52x2, ._6dsj ._3gin, ._hdn._hdn,
 .mentions-input, .mentions-placeholder, .largeStatusBox .placeHolder, .fcw,
 ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4,
 ._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs,
@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
   color: $text !important;
 }
 
-strong > a, a, ._15ks ._2q8z._2q8z, ._1e3e {
+strong > a, ._15ks ._2q8z._2q8z, ._1e3e, .blueName {
   color: $accent !important;
 }
 
@@ -33,8 +33,7 @@ strong > a, a, ._15ks ._2q8z._2q8z, ._1e3e {
   color: transparent !important;
 }
 
-//these are links
-a,
-._5fpq {
+// most links do not have a special color. We will highlight those in posts and messages
+p > a, .msg span > a {
   color: $link !important;
 }
