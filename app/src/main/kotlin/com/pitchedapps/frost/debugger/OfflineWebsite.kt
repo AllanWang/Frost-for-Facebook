@@ -222,12 +222,14 @@ class OfflineWebsite(
         }
     }
 
-    suspend fun loadAndZip(name: String, progress: (Int) -> Unit = {}): Boolean = coroutineScope {
-        val success = load { progress((it * 0.85f).toInt()) }
-        if (!success) return@coroutineScope false
-        val result = zip(name)
-        progress(100)
-        return@coroutineScope result
+    suspend fun loadAndZip(name: String, progress: (Int) -> Unit = {}): Boolean = withContext(Dispatchers.IO) {
+        coroutineScope {
+            val success = load { progress((it * 0.85f).toInt()) }
+            if (!success) return@coroutineScope false
+            val result = zip(name)
+            progress(100)
+            return@coroutineScope result
+        }
     }
 
     private fun downloadFile(url: String): Boolean {
