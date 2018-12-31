@@ -18,7 +18,6 @@ package com.pitchedapps.frost.settings
 
 import android.content.Context
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
@@ -43,10 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -122,13 +118,15 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         baseDir = DebugActivity.baseDir(this)
     )
 
+    val job = Job()
+
     val md = materialDialog {
         title(R.string.parsing_data)
         progress(false, 100)
         negativeText(R.string.kau_cancel)
         onNegative { dialog, _ -> dialog.dismiss() }
         canceledOnTouchOutside(false)
-        dismissListener { downloader.cancel() }
+        dismissListener { job.cancel() }
     }
 
     val progressChannel = Channel<Int>(10)
@@ -139,31 +137,25 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         }
     }
 
-    suspend fun loadAndZip(): Boolean = suspendCoroutine { cont ->
-        downloader.loadAndZip(ZIP_NAME, { progressChannel.offer(it) }) {
-            cont.resume(it)
+    launchMain {
+        val success = downloader.loadAndZip(ZIP_NAME) {
+            progressChannel.offer(it)
         }
-    }
-
-    launch(Dispatchers.IO) {
-        val success = loadAndZip()
-        withContext(ContextHelper.dispatcher) {
-            md.dismiss()
-            if (success) {
-                val zipUri = frostUriFromFile(
-                    File(downloader.baseDir, "$ZIP_NAME.zip")
-                )
-                L.i { "Sending debug zip with uri $zipUri" }
-                sendFrostEmail(R.string.debug_report_email_title) {
-                    addItem("Url", url)
-                    addAttachment(zipUri)
-                    extras = {
-                        type = "application/zip"
-                    }
+        md.dismiss()
+        if (success) {
+            val zipUri = frostUriFromFile(
+                File(downloader.baseDir, "$ZIP_NAME.zip")
+            )
+            L.i { "Sending debug zip with uri $zipUri" }
+            sendFrostEmail(R.string.debug_report_email_title) {
+                addItem("Url", url)
+                addAttachment(zipUri)
+                extras = {
+                    type = "application/zip"
                 }
-            } else {
-                toast(R.string.error_generic)
             }
+        } else {
+            toast(R.string.error_generic)
         }
     }
 }

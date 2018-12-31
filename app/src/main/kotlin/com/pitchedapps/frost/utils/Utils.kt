@@ -388,10 +388,8 @@ fun frostJsoup(url: String) = frostJsoup(FbCookie.webCookie, url)
 
 fun frostJsoup(cookie: String?, url: String) =
     Jsoup.connect(url).run {
-        if (cookie != null) cookie(
-            FACEBOOK_COM,
-            cookie
-        ) else this
+        if (cookie.isNullOrBlank()) this
+        else cookie(FACEBOOK_COM, cookie)
     }.userAgent(USER_AGENT_BASIC).get()!!
 
 fun Element.first(vararg select: String): Element? {
