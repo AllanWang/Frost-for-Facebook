@@ -26,11 +26,11 @@ import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.unescapeHtml
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
+import okhttp3.HttpUrl
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -65,8 +65,10 @@ class OfflineWebsite(
     /**
      * Supplied url without the queries
      */
-    private val baseUrl = (baseUrl ?: url.substringBefore("?")
-        .substringBefore(".com")).trim('/')
+    private val baseUrl: String = baseUrl ?: run {
+        val url: HttpUrl = HttpUrl.parse(url) ?: throw IllegalArgumentException("Malformed url")
+        return@run "${url.scheme()}://${url.host()}"
+    }
 
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
@@ -210,6 +212,8 @@ class OfflineWebsite(
                     .forEach { it.zip() }
                 assetDir.listFiles()
                     .forEach { it.zip("assets/${it.name}") }
+
+                assetDir.delete()
             }
             return true
         } catch (e: Exception) {

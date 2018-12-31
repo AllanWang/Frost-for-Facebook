@@ -163,7 +163,6 @@ dependencies {
     androidTestImplementation kauDependency.espresso
     androidTestImplementation kauDependency.testRules
     androidTestImplementation kauDependency.testRunner
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
 
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
@@ -232,8 +231,8 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
-
 
     implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 

@@ -19,8 +19,18 @@ package com.pitchedapps.frost.debugger
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.internal.COOKIE
 import kotlinx.coroutines.runBlocking
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.Test
 import java.io.File
+import java.net.URL
+import java.util.zip.ZipFile
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
@@ -28,13 +38,210 @@ import kotlin.test.assertTrue
  */
 class OfflineWebsiteTest {
 
-    @Test
-    fun fbOffline() {
+    lateinit var server: MockWebServer
+    lateinit var baseDir: File
+
+    @BeforeTest
+    fun before() {
         val buildPath = if (File("").absoluteFile.name == "app") "build/offline_test" else "app/build/offline_test"
+        baseDir = File(buildPath)
+        assertTrue(baseDir.deleteRecursively(), "Failed to clean base dir")
+        server = MockWebServer()
+        server.start()
+    }
+
+    @AfterTest
+    fun after() {
+        server.shutdown()
+    }
+
+    private fun zipAndFetch(url: String = server.url("/").toString(), cookie: String = ""): ZipFile {
         runBlocking {
-            val success = OfflineWebsite(FB_URL_BASE, COOKIE, baseDir = File(buildPath))
-                .loadAndZip("test") {println(it)}
+            val success = OfflineWebsite(url, cookie, baseDir = baseDir)
+                .loadAndZip("test")
             assertTrue(success, "An error occurred")
         }
+
+        return ZipFile(File(baseDir, "test.zip"))
+    }
+
+    private val tagWhitespaceRegex = Regex(">\\s+<", setOf(RegexOption.MULTILINE))
+
+    private fun ZipFile.assertContentEquals(path: String, content: String) {
+        val entry = getEntry(path)
+        assertNotNull(entry, "Entry $path not found")
+        val actualContent = getInputStream(entry).bufferedReader().use { it.readText() }
+        assertEquals(
+            content.replace(tagWhitespaceRegex, "><").toLowerCase(),
+            actualContent.replace(tagWhitespaceRegex, "><").toLowerCase(), "Content mismatch for $path"
+        )
+    }
+
+    @Test
+    fun fbOffline() {
+        // Not really a test. Skip in CI
+        if (COOKIE.isEmpty()) return
+        zipAndFetch(FB_URL_BASE)
+    }
+
+    @Test
+    fun basicSingleFile() {
+        val content = """
+            <!DOCTYPE html>
+            <html>
+                <head></head>
+                <body>
+                    <h1>Single File Test</h1>
+                </body>
+            </html>
+        """.trimIndent()
+
+        server.enqueue(MockResponse().setBody(content))
+
+        val zip = zipAndFetch()
+
+        assertEquals(1, zip.size(), "1 file expected")
+        zip.assertContentEquals("index.html", content)
+    }
+
+    @Test
+    fun withCssAsset() {
+        val cssUrl = server.url("1.css")
+
+        val content = """
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <link rel="stylesheet" href="$cssUrl">
+                </head>
+                <body>
+                    <h1>Css File Test</h1>
+                </body>
+            </html>
+        """.trimIndent()
+
+        val css1 = """
+            .hello {
+                display: none;
+            }
+        """.trimIndent()
+
+        server.setDispatcher(object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse =
+                when {
+                    request.path.contains(cssUrl.encodedPath()) -> MockResponse().setBody(css1)
+                    else -> MockResponse().setBody(content)
+                }
+        })
+
+        val zip = zipAndFetch()
+
+        assertEquals(2, zip.size(), "2 files expected")
+        zip.assertContentEquals("index.html", content.replace(cssUrl.toString(), "assets/a0_1.css"))
+        zip.assertContentEquals("assets/a0_1.css", css1)
+    }
+
+    @Test
+    fun withJsAsset() {
+        val jsUrl = server.url("1.js")
+
+        val content = """
+            <!DOCTYPE html>
+            <html>
+                <head></head>
+                <body>
+                    <h1>Js File Test</h1>
+                    <script type="text/javascript" src="$jsUrl"></script>
+                </body>
+            </html>
+        """.trimIndent()
+
+        val js1 = """
+            console.log('hello');
+        """.trimIndent()
+
+        server.setDispatcher(object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse =
+                when {
+                    request.path.contains(jsUrl.encodedPath()) -> MockResponse().setBody(js1)
+                    else -> MockResponse().setBody(content)
+                }
+        })
+
+        val zip = zipAndFetch()
+
+        assertEquals(2, zip.size(), "2 files expected")
+        zip.assertContentEquals("index.html", content.replace(jsUrl.toString(), "assets/a0_1.js.txt"))
+        zip.assertContentEquals("assets/a0_1.js.txt", js1)
+    }
+
+    @Test
+    fun fullTest() {
+        val css1Url = server.url("1.css")
+        val css2Url = server.url("2.css")
+        val js1Url = server.url("1.js")
+        val js2Url = server.url("2.js")
+
+        val content = """
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <link rel="stylesheet" href="$css1Url">
+                    <link rel="stylesheet" href="$css2Url">
+                </head>
+                <body>
+                    <h1>Multi File Test</h1>
+                    <script type="text/javascript" src="$js1Url"></script>
+                    <script type="text/javascript" src="$js2Url"></script>
+                </body>
+            </html>
+        """.trimIndent()
+
+        val css1 = """
+            .hello {
+                display: none;
+            }
+        """.trimIndent()
+
+        val css2 = """
+            .world {
+                display: none;
+            }
+        """.trimIndent()
+
+        val js1 = """
+            console.log('hello');
+        """.trimIndent()
+
+        val js2 = """
+            console.log('world');
+        """.trimIndent()
+
+        server.setDispatcher(object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse =
+                when {
+                    request.path.contains(css1Url.encodedPath()) -> MockResponse().setBody(css1)
+                    request.path.contains(css2Url.encodedPath()) -> MockResponse().setBody(css2)
+                    request.path.contains(js1Url.encodedPath()) -> MockResponse().setBody(js1)
+                    request.path.contains(js2Url.encodedPath()) -> MockResponse().setBody(js2)
+                    else -> MockResponse().setBody(content)
+                }
+        })
+
+        val zip = zipAndFetch()
+
+        assertEquals(5, zip.size(), "2 files expected")
+        zip.assertContentEquals(
+            "index.html", content
+                .replace(css1Url.toString(), "assets/a0_1.css")
+                .replace(css2Url.toString(), "assets/a1_2.css")
+                .replace(js1Url.toString(), "assets/a2_1.js.txt")
+                .replace(js2Url.toString(), "assets/a3_2.js.txt")
+        )
+
+        zip.assertContentEquals("assets/a0_1.css", css1)
+        zip.assertContentEquals("assets/a1_2.css", css2)
+        zip.assertContentEquals("assets/a2_1.js.txt", js1)
+        zip.assertContentEquals("assets/a3_2.js.txt", js2)
     }
 }

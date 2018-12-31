@@ -62,14 +62,14 @@ class ImageActivityTest {
     }
 
     private val mockServer: MockWebServer by lazy {
-        val magentaImg = Buffer()
-        magentaImg.writeAll(Okio.source(getResource("bayer-pattern.jpg")))
+        val img = Buffer()
+        img.writeAll(Okio.source(getResource("bayer-pattern.jpg")))
         MockWebServer().apply {
             setDispatcher(object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =
                     when {
                         request.path.contains("text") -> MockResponse().setResponseCode(200).setBody("Valid mock text response")
-                        request.path.contains("image") -> MockResponse().setResponseCode(200).setBody(magentaImg)
+                        request.path.contains("image") -> MockResponse().setResponseCode(200).setBody(img)
                         else -> MockResponse().setResponseCode(404).setBody("Error mock response")
                     }
             })
