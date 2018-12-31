@@ -23,9 +23,9 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 import java.io.File
-import java.net.URL
 import java.util.zip.ZipFile
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -81,7 +81,7 @@ class OfflineWebsiteTest {
     @Test
     fun fbOffline() {
         // Not really a test. Skip in CI
-        if (COOKIE.isEmpty()) return
+        assumeTrue(COOKIE.isNotEmpty())
         zipAndFetch(FB_URL_BASE)
     }
 
