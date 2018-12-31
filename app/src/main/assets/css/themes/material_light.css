@@ -85,7 +85,7 @@ body, :root, #root, #header, #MComposer, [style*=background-color], ._1upc, inpu
 }
 
 ._403n, ._14v5 ._14v8, ._1-kc {
-  background: #e5e5e5 !important;
+  background: #e6e6e6 !important;
 }
 
 button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
@@ -100,7 +100,7 @@ button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, 
 ._4qax, ._4756, ._w34, ._56bv::before, ._5769, ._34iv, ._z-w, ._t21, .mToken,
 #addMembersTypeahead .mToken.mTokenWeakReference,
 .acbk {
-  background: #e5e5e5 !important;
+  background: rgba(230, 230, 230, 0.35) !important;
 }
 
 .mQuestionsPollResultsBar .shaded {
@@ -241,7 +241,7 @@ button ._v89 ._54k8._1fl1 {
 
 @-webkit-keyframes highlightFade {
   0%, 50% {
-    background: #e5e5e5;
+    background: rgba(230, 230, 230, 0.35);
   }
   100% {
     background: #fafafa;
@@ -249,7 +249,7 @@ button ._v89 ._54k8._1fl1 {
 }
 @-moz-keyframes highlightFade {
   0%, 50% {
-    background: #e5e5e5;
+    background: rgba(230, 230, 230, 0.35);
   }
   100% {
     background: #fafafa;
@@ -257,7 +257,7 @@ button ._v89 ._54k8._1fl1 {
 }
 @keyframes highlightFade {
   0%, 50% {
-    background: #e5e5e5;
+    background: rgba(230, 230, 230, 0.35);
   }
   100% {
     background: #fafafa;
@@ -268,7 +268,7 @@ button ._v89 ._54k8._1fl1 {
     background: #fafafa;
   }
   50% {
-    background: #e5e5e5;
+    background: rgba(230, 230, 230, 0.35);
   }
 }
 @-moz-keyframes chatHighlightAnimation {
@@ -276,7 +276,7 @@ button ._v89 ._54k8._1fl1 {
     background: #fafafa;
   }
   50% {
-    background: #e5e5e5;
+    background: rgba(230, 230, 230, 0.35);
   }
 }
 @keyframes chatHighlightAnimation {
@@ -284,7 +284,7 @@ button ._v89 ._54k8._1fl1 {
     background: #fafafa;
   }
   50% {
-    background: #e5e5e5;
+    background: rgba(230, 230, 230, 0.35);
   }
 }
 ._50uu {
