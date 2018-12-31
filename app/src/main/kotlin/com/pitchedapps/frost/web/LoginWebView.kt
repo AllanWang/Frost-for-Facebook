@@ -26,9 +26,9 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.withMainContext
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
@@ -65,15 +65,17 @@ class LoginWebView @JvmOverloads constructor(
         webChromeClient = LoginChromeClient()
     }
 
-    suspend fun loadLogin(progressCallback: (Int) -> Unit): CookieModel = coroutineScope {
-        suspendCancellableCoroutine<CookieModel> { cont ->
-            this@LoginWebView.progressCallback = progressCallback
-            this@LoginWebView.loginCallback = { cont.resume(it) }
-            L.d { "Begin loading login" }
-            launch(ContextHelper.dispatcher) {
-                FbCookie.reset()
-                setupWebview()
-                loadUrl(FB_LOGIN_URL)
+    suspend fun loadLogin(progressCallback: (Int) -> Unit): CookieModel = withMainContext {
+        coroutineScope {
+            suspendCancellableCoroutine<CookieModel> { cont ->
+                this@LoginWebView.progressCallback = progressCallback
+                this@LoginWebView.loginCallback = { cont.resume(it) }
+                L.d { "Begin loading login" }
+                launch {
+                    FbCookie.reset()
+                    setupWebview()
+                    loadUrl(FB_LOGIN_URL)
+                }
             }
         }
     }

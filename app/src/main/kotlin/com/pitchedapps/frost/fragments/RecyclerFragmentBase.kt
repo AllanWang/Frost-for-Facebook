@@ -17,7 +17,7 @@
 package com.pitchedapps.frost.fragments
 
 import ca.allanwang.kau.adapters.fastAdapter
-import ca.allanwang.kau.utils.ContextHelper
+import ca.allanwang.kau.utils.withMainContext
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -49,20 +49,20 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
         }
     }
 
-    final override suspend fun reload(progress: (Int) -> Unit): Boolean {
+    final override suspend fun reload(progress: (Int) -> Unit): Boolean = withContext(Dispatchers.IO) {
         val data = try {
             reloadImpl(progress)
         } catch (e: Exception) {
             L.e(e) { "Recycler reload fail" }
             null
         }
-        return withContext(ContextHelper.dispatcher) {
+        withMainContext {
             if (data == null) {
                 valid = false
-                return@withContext false
+                false
             } else {
                 adapter.setNewList(data)
-                return@withContext true
+                true
             }
         }
     }

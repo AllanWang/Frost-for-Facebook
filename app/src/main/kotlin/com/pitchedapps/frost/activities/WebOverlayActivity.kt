@@ -30,7 +30,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.darken
@@ -44,6 +43,7 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
+import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -75,7 +75,6 @@ import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 
 /**
@@ -107,7 +106,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
             content.scope.launch(Dispatchers.IO) {
                 refreshReceiver.receive()
                 refreshReceiver.cancel()
-                withContext(ContextHelper.dispatcher) {
+                withMainContext {
                     materialDialogThemed {
                         title(R.string.invalid_share_url)
                         content(R.string.invalid_share_url_desc)

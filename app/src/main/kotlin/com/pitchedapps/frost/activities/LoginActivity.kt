@@ -22,10 +22,10 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.withMainContext
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -102,7 +102,7 @@ class LoginActivity : BaseActivity() {
         refreshChannel.offer(refreshing)
     }
 
-    private suspend fun loadInfo(cookie: CookieModel) {
+    private suspend fun loadInfo(cookie: CookieModel): Unit = withMainContext {
         refresh(true)
 
         val imageDeferred = async { loadProfile(cookie.id) }
@@ -118,10 +118,8 @@ class LoginActivity : BaseActivity() {
             L._i { cookie }
         }
 
-        withContext(ContextHelper.dispatcher) {
-            textview.text = String.format(getString(R.string.welcome), name)
-            textview.fadeIn()
-        }
+        textview.text = String.format(getString(R.string.welcome), name)
+        textview.fadeIn()
         frostEvent("Login", "success" to true)
 
         /*
@@ -130,15 +128,13 @@ class LoginActivity : BaseActivity() {
          */
         val cookies = ArrayList(loadFbCookiesSuspend())
         delay(1000)
-        withContext(ContextHelper.dispatcher) {
-            if (Showcase.intro)
-                launchNewTask<IntroActivity>(cookies, true)
-            else
-                launchNewTask<MainActivity>(cookies, true)
-        }
+        if (Showcase.intro)
+            launchNewTask<IntroActivity>(cookies, true)
+        else
+            launchNewTask<MainActivity>(cookies, true)
     }
 
-    private suspend fun loadProfile(id: Long): Boolean = withContext(ContextHelper.dispatcher) {
+    private suspend fun loadProfile(id: Long): Boolean = withMainContext {
         suspendCancellableCoroutine<Boolean> { cont ->
             profileLoader.load(profilePictureUrl(id))
                 .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
