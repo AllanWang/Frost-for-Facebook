@@ -56,13 +56,14 @@ class OfflineWebsiteTest {
     }
 
     private fun zipAndFetch(url: String = server.url("/").toString(), cookie: String = ""): ZipFile {
+        val name = "test${System.currentTimeMillis()}"
         runBlocking {
             val success = OfflineWebsite(url, cookie, baseDir = baseDir)
-                .loadAndZip("test")
+                .loadAndZip(name)
             assertTrue(success, "An error occurred")
         }
 
-        return ZipFile(File(baseDir, "test.zip"))
+        return ZipFile(File(baseDir, "$name.zip"))
     }
 
     private val tagWhitespaceRegex = Regex(">\\s+<", setOf(RegexOption.MULTILINE))

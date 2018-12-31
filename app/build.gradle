@@ -90,6 +90,8 @@ android {
 
     }
 
+    def compilerArgs = ["-Xuse-experimental=kotlin.Experimental" /*, "-XXLanguage:+InlineClasses"*/]
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -101,7 +103,7 @@ android {
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableBugsnag = false
 
-            kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental", "-XXLanguage:+InlineClasses"]
+            kotlinOptions.freeCompilerArgs += compilerArgs
         }
         releaseTest {
             minifyEnabled true
