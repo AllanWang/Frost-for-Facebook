@@ -70,6 +70,9 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -87,6 +90,14 @@ const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
 const val ARG_COOKIE = "arg_cookie"
+
+/**
+ * Most context items implement [CoroutineScope] by default.
+ * We will add a fallback just in case.
+ * It is expected that the scope returned always has the Android main dispatcher as part of the context.
+ */
+internal inline val Context.ctxCoroutine: CoroutineScope
+    get() = this as? CoroutineScope ?: GlobalScope
 
 inline fun <reified T : Activity> Context.launchNewTask(
     cookieList: ArrayList<CookieModel> = arrayListOf(),
@@ -116,7 +127,9 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
         L.d { "Logout php found" }
-        FbCookie.logout(this)
+        ctxCoroutine.launch {
+            FbCookie.logout(this@launchWebOverlayImpl)
+        }
     } else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
         startActivity<T>(false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
@@ -375,10 +388,8 @@ fun frostJsoup(url: String) = frostJsoup(FbCookie.webCookie, url)
 
 fun frostJsoup(cookie: String?, url: String) =
     Jsoup.connect(url).run {
-        if (cookie != null) cookie(
-            FACEBOOK_COM,
-            cookie
-        ) else this
+        if (cookie.isNullOrBlank()) this
+        else cookie(FACEBOOK_COM, cookie)
     }.userAgent(USER_AGENT_BASIC).get()!!
 
 fun Element.first(vararg select: String): Element? {

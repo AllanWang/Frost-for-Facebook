@@ -18,10 +18,12 @@ package com.pitchedapps.frost.settings
 
 import android.content.Context
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.withMainContext
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
@@ -39,9 +41,7 @@ import com.pitchedapps.frost.utils.sendFrostEmail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -87,9 +87,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     attempt = launch(Dispatchers.IO) {
                         try {
                             val data = parser.parse(FbCookie.webCookie)
-                            withContext(Dispatchers.Main) {
-                                if (!isActive)
-                                    return@withContext
+                            withMainContext {
                                 loading.dismiss()
                                 createEmail(parser, data?.data)
                             }
@@ -120,43 +118,44 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         baseDir = DebugActivity.baseDir(this)
     )
 
+    val job = Job()
+
     val md = materialDialog {
         title(R.string.parsing_data)
         progress(false, 100)
         negativeText(R.string.kau_cancel)
         onNegative { dialog, _ -> dialog.dismiss() }
         canceledOnTouchOutside(false)
-        dismissListener { downloader.cancel() }
+        dismissListener { job.cancel() }
     }
 
     val progressChannel = Channel<Int>(10)
 
-    launch(Dispatchers.Main) {
+    launchMain {
         for (p in progressChannel) {
             md.setProgress(p)
         }
     }
-    launch(Dispatchers.IO) {
-        downloader.loadAndZip(ZIP_NAME, { progressChannel.offer(it) }) { success ->
-            launch(Dispatchers.Main) {
-                if (!isActive) return@launch
-                md.dismiss()
-                if (success) {
-                    val zipUri = frostUriFromFile(
-                        File(downloader.baseDir, "$ZIP_NAME.zip")
-                    )
-                    L.i { "Sending debug zip with uri $zipUri" }
-                    sendFrostEmail(R.string.debug_report_email_title) {
-                        addItem("Url", url)
-                        addAttachment(zipUri)
-                        extras = {
-                            type = "application/zip"
-                        }
-                    }
-                } else {
-                    toast(R.string.error_generic)
+
+    launchMain {
+        val success = downloader.loadAndZip(ZIP_NAME) {
+            progressChannel.offer(it)
+        }
+        md.dismiss()
+        if (success) {
+            val zipUri = frostUriFromFile(
+                File(downloader.baseDir, "$ZIP_NAME.zip")
+            )
+            L.i { "Sending debug zip with uri $zipUri" }
+            sendFrostEmail(R.string.debug_report_email_title) {
+                addItem("Url", url)
+                addAttachment(zipUri)
+                extras = {
+                    type = "application/zip"
                 }
             }
+        } else {
+            toast(R.string.error_generic)
         }
     }
 }

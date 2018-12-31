@@ -108,6 +108,7 @@ import kotlinx.android.synthetic.main.view_main_fab.*
 import kotlinx.android.synthetic.main.view_main_toolbar.*
 import kotlinx.android.synthetic.main.view_main_viewpager.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -276,7 +277,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             val currentCookie = loadFbCookie(Prefs.userId)
                             if (currentCookie == null) {
                                 toast(R.string.account_not_found)
-                                FbCookie.reset { launchLogin(cookies(), true) }
+                                launch {
+                                    FbCookie.reset()
+                                    launchLogin(cookies(), true)
+                                }
                             } else {
                                 materialDialogThemed {
                                     title(R.string.kau_logout)
@@ -288,15 +292,22 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                     )
                                     positiveText(R.string.kau_yes)
                                     negativeText(R.string.kau_no)
-                                    onPositive { _, _ -> FbCookie.logout(this@BaseMainActivity) }
+                                    onPositive { _, _ ->
+                                        launch {
+                                            FbCookie.logout(this@BaseMainActivity)
+                                        }
+                                    }
                                 }
                             }
                         }
                         -3L -> launchNewTask<LoginActivity>(clearStack = false)
                         -4L -> launchNewTask<SelectorActivity>(cookies(), false)
                         else -> {
-                            FbCookie.switchUser(profile.identifier, this@BaseMainActivity::refreshAll)
-                            tabsForEachView { _, view -> view.badgeText = null }
+                            launch {
+                                FbCookie.switchUser(profile.identifier)
+                                tabsForEachView { _, view -> view.badgeText = null }
+                                refreshAll()
+                            }
                         }
                     }
                     false
@@ -456,12 +467,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onResume() {
         super.onResume()
-        FbCookie.switchBackUser {}
-        controlWebview?.resumeTimers()
-        if (System.currentTimeMillis() - lastAccessTime > MAIN_TIMEOUT_DURATION) {
-            refreshAll()
-        }
+        val shouldReload = System.currentTimeMillis() - lastAccessTime > MAIN_TIMEOUT_DURATION
         lastAccessTime = System.currentTimeMillis() // precaution to avoid loops
+        controlWebview?.resumeTimers()
+        launch {
+            FbCookie.switchBackUser()
+            if (shouldReload)
+                refreshAll()
+        }
     }
 
     override fun onPause() {

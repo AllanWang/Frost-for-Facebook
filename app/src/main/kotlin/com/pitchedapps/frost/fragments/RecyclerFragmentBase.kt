@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.fragments
 
 import ca.allanwang.kau.adapters.fastAdapter
+import ca.allanwang.kau.utils.withMainContext
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -29,7 +30,6 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
 /**
@@ -49,22 +49,20 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
         }
     }
 
-    final override suspend fun reload(progress: (Int) -> Unit): Boolean {
+    final override suspend fun reload(progress: (Int) -> Unit): Boolean = withContext(Dispatchers.IO) {
         val data = try {
             reloadImpl(progress)
         } catch (e: Exception) {
             L.e(e) { "Recycler reload fail" }
             null
         }
-        if (!isActive)
-            return false
-        return withContext(Dispatchers.Main) {
+        withMainContext {
             if (data == null) {
                 valid = false
-                return@withContext false
+                false
             } else {
                 adapter.setNewList(data)
-                return@withContext true
+                true
             }
         }
     }
@@ -134,6 +132,7 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
         val response = parser.parse(cookie, doc)
         if (response == null) {
             L.i { "RecyclerFragment failed for ${baseEnum.name}" }
+            L._d { "Cookie used: $cookie" }
             return@withContext null
         }
         progress(80)

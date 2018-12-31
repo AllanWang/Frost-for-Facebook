@@ -28,12 +28,14 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.utils.Prefs
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-05-29.
  *
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 class FrostRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

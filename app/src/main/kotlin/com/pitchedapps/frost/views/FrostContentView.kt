@@ -29,6 +29,7 @@ import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.invisibleIf
 import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
@@ -39,14 +40,11 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
@@ -128,24 +126,20 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         val refreshReceiver = refreshChannel.openSubscription()
         val progressReceiver = progressChannel.openSubscription()
 
-        scope.launch(Dispatchers.Default) {
+        scope.launchMain {
             launch {
                 for (r in refreshReceiver) {
-                    withContext(Dispatchers.Main) {
-                        refresh.isRefreshing = r
-                        refresh.isEnabled = true
-                    }
+                    refresh.isRefreshing = r
+                    refresh.isEnabled = true
                 }
             }
             launch {
                 for (p in progressReceiver) {
-                    withContext(Dispatchers.Main) {
-                        progress.invisibleIf(p == 100)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                            progress.setProgress(p, true)
-                        else
-                            progress.progress = p
-                    }
+                    progress.invisibleIf(p == 100)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        progress.setProgress(p, true)
+                    else
+                        progress.progress = p
                 }
             }
         }
@@ -177,7 +171,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         core.destroy()
     }
 
-    private var dispose: Disposable? = null
     private var transitionStart: Long = -1
     private var refreshReceiver: ReceiveChannel<Boolean>? = null
 
@@ -194,7 +187,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         L.v { "Registered transition" }
         with(coreView) {
             refreshReceiver = refreshChannel.openSubscription().also { receiver ->
-                scope.launch(Dispatchers.Main) {
+                scope.launchMain {
                     var loading = false
                     for (r in receiver) {
                         if (r) {

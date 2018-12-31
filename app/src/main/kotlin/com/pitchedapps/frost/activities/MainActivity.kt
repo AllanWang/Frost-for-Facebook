@@ -18,6 +18,7 @@ package com.pitchedapps.frost.activities
 
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
+import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
@@ -27,7 +28,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
@@ -97,8 +97,8 @@ class MainActivity : BaseMainActivity() {
                         .map { "[data-sigil*=$it] [data-sigil=count]" }
                         .map { doc.select(it) }
                         .map { e -> e?.getOrNull(0)?.ownText() }
-                    L._d { "Badges $feed $requests $messages $notifications" }
-                    withContext(Dispatchers.Main) {
+                    L.v { "Badges $feed $requests $messages $notifications" }
+                    withMainContext {
                         tabsForEachView { _, view ->
                             when (view.iicon) {
                                 FbItem.FEED.icon -> view.badgeText = feed

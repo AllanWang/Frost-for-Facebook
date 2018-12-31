@@ -43,6 +43,7 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
+import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -74,7 +75,6 @@ import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl
 
 /**
@@ -106,7 +106,7 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
             content.scope.launch(Dispatchers.IO) {
                 refreshReceiver.receive()
                 refreshReceiver.cancel()
-                withContext(Dispatchers.Main) {
+                withMainContext {
                     materialDialogThemed {
                         title(R.string.invalid_share_url)
                         content(R.string.invalid_share_url_desc)
@@ -216,12 +216,15 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
             if (forceBasicAgent) //todo check; the webview already adds it dynamically
                 userAgentString = USER_AGENT_BASIC
             Prefs.prevId = Prefs.userId
-            if (userId != Prefs.userId) FbCookie.switchUser(userId) { reloadBase(true) }
-            else reloadBase(true)
-            if (Showcase.firstWebOverlay) {
-                coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
-                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
-                    setAction(R.string.kau_got_it) { _ -> this.dismiss() }
+            launch {
+                if (userId != Prefs.userId)
+                    FbCookie.switchUser(userId)
+                reloadBase(true)
+                if (Showcase.firstWebOverlay) {
+                    coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                        duration = BaseTransientBottomBar.LENGTH_INDEFINITE
+                        setAction(R.string.kau_got_it) { dismiss() }
+                    }
                 }
             }
         }

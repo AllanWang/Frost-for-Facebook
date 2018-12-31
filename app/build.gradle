@@ -90,6 +90,8 @@ android {
 
     }
 
+    def compilerArgs = ["-Xuse-experimental=kotlin.Experimental" /*, "-XXLanguage:+InlineClasses"*/]
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -101,7 +103,7 @@ android {
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableBugsnag = false
 
-            kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental", "-XXLanguage:+InlineClasses"]
+            kotlinOptions.freeCompilerArgs += compilerArgs
         }
         releaseTest {
             minifyEnabled true
@@ -138,9 +140,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
+    testOptions.unitTests {
+        includeAndroidResources = true
+        // Don't throw runtime exceptions for android calls that are not mocked
+        returnDefaultValues = true
+
+        // Always show the result of every unit test, even if it passes.
+        all {
+            testLogging {
+                events 'passed', 'skipped', 'failed', 'standardError'
+            }
         }
     }
 
@@ -163,7 +172,6 @@ dependencies {
     androidTestImplementation kauDependency.espresso
     androidTestImplementation kauDependency.testRules
     androidTestImplementation kauDependency.testRunner
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
 
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
@@ -232,8 +240,8 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
-
 
     implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
 

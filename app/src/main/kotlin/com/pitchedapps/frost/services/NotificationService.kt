@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -81,11 +82,11 @@ class NotificationService : BaseJobService() {
     private suspend fun sendNotifications(params: JobParameters?): Unit = withContext(Dispatchers.Default) {
         val currentId = Prefs.userId
         val cookies = loadFbCookiesSync()
-        if (!isActive) return@withContext
+        yield()
         val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
         var notifCount = 0
         for (cookie in cookies) {
-            if (!isActive) break
+            yield()
             val current = cookie.id == currentId
             if (Prefs.notificationsGeneral &&
                 (current || Prefs.notificationAllAccounts)
