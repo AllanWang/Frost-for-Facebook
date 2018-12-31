@@ -17,19 +17,21 @@
 package com.pitchedapps.frost.debugger
 
 import ca.allanwang.kau.logging.KauLoggerExtension
+import ca.allanwang.kau.utils.copyFromInputStream
 import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
-import com.pitchedapps.frost.facebook.requests.zip
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.unescapeHtml
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import okhttp3.Request
-import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -69,7 +71,6 @@ class OfflineWebsite(
     private val mainFile = File(baseDir, "index.html")
     private val assetDir = File(baseDir, "assets")
 
-    private var cancelled = false
     private val urlMapper = ConcurrentHashMap<String, String>()
     private val atomicInt = AtomicInteger()
 
@@ -91,35 +92,33 @@ class OfflineWebsite(
         .get()
         .call()
 
-    private val compositeDisposable = CompositeDisposable()
-
     /**
      * Caller to bind callbacks and start the load
      * Callback is guaranteed to be called unless the load is cancelled
      */
-    fun load(progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
+    suspend fun load(progress: (Int) -> Unit = {}): Boolean = withContext(Dispatchers.IO) {
         reset()
 
         L.v { "Saving $url to ${baseDir.absolutePath}" }
 
-        if (!baseDir.exists() && !baseDir.mkdirs()) {
+        if (!baseDir.isDirectory && !baseDir.mkdirs()) {
             L.e { "Could not make directory" }
-            return callback(false)
+            return@withContext false
         }
 
         if (!mainFile.createNewFile()) {
             L.e { "Could not create ${mainFile.absolutePath}" }
-            return callback(false)
+            return@withContext false
         }
 
         if (!assetDir.createFreshDir()) {
             L.e { "Could not create ${assetDir.absolutePath}" }
-            return callback(false)
+            return@withContext false
         }
 
         progress(10)
 
-        if (cancelled) return
+        yield()
 
         val doc: Document
         if (html == null || html.length < 100) {
@@ -132,10 +131,10 @@ class OfflineWebsite(
         doc.outputSettings().escapeMode(Entities.EscapeMode.extended)
         if (doc.childNodeSize() == 0) {
             L.e { "No content found" }
-            return callback(false)
+            return@withContext false
         }
 
-        if (cancelled) return
+        yield()
 
         progress(35)
 
@@ -151,32 +150,41 @@ class OfflineWebsite(
             it.attr("href", absLink)
         }
 
-        if (cancelled) return
+        yield()
 
         mainFile.writeText(doc.html())
 
         progress(50)
 
-        downloadCss().subscribe { cssLinks, cssThrowable ->
+        fun partialProgress(from: Int, to: Int, steps: Int): (Int) -> Unit {
+            if (steps == 0) return { progress(to) }
+            val section = (to - from) / steps
+            return { progress(from + it * section) }
+        }
 
-            if (cssThrowable != null) {
-                L.e { "CSS parsing failed: ${cssThrowable.message} $cssThrowable" }
-                callback(false)
-                return@subscribe
-            }
+        val cssProgress = partialProgress(50, 70, cssQueue.size)
 
-            progress(70)
+        cssQueue.clean().forEachIndexed { index, url ->
+            yield()
+            cssProgress(index)
+            val newUrls = downloadCss(url)
+            fileQueue.addAll(newUrls)
+        }
 
-            fileQueue.addAll(cssLinks)
+        progress(70)
 
-            if (cancelled) return@subscribe
+        val fileProgress = partialProgress(70, 100, fileQueue.size)
 
-            downloadFiles().subscribe { success, throwable ->
-                L.v { "All files downloaded: $success with throwable $throwable" }
-                progress(100)
-                callback(true)
-            }
-        }.addTo(compositeDisposable)
+        fileQueue.clean().forEachIndexed { index, url ->
+            yield()
+            fileProgress(index)
+            if (!downloadFile(url))
+                return@withContext false
+        }
+
+        yield()
+        progress(100)
+        return@withContext true
     }
 
     fun zip(name: String): Boolean {
@@ -198,11 +206,10 @@ class OfflineWebsite(
                     out.closeEntry()
                     delete()
                 }
-
-                baseDir.listFiles { _, n -> n != "$name.zip" }.forEach { it.zip() }
-                assetDir.listFiles().forEach {
-                    it.zip("assets/${it.name}")
-                }
+                baseDir.listFiles { file -> file != zip }
+                    .forEach { it.zip() }
+                assetDir.listFiles()
+                    .forEach { it.zip("assets/${it.name}") }
             }
             return true
         } catch (e: Exception) {
@@ -211,76 +218,53 @@ class OfflineWebsite(
         }
     }
 
-    fun loadAndZip(name: String, progress: (Int) -> Unit = {}, callback: (Boolean) -> Unit) {
+    suspend fun loadAndZip(name: String, progress: (Int) -> Unit = {}): Boolean = coroutineScope {
+        val success = load { progress((it * 0.85f).toInt()) }
+        if (!success) return@coroutineScope false
+        val result = zip(name)
+        progress(100)
+        return@coroutineScope result
+    }
 
-        load({ progress((it * 0.85f).toInt()) }) {
-            if (cancelled) return@load
-            if (!it) callback(false)
-            else {
-                val result = zip(name)
-                progress(100)
-                callback(result)
-            }
+    private fun downloadFile(url: String): Boolean {
+        return try {
+            val file = File(assetDir, fileName(url))
+            file.createNewFile()
+            val stream = request(url).execute().body()?.byteStream()
+                ?: throw IllegalArgumentException("Response body not found for $url")
+            file.copyFromInputStream(stream)
+            true
+        } catch (e: Exception) {
+            L.e(e) { "Download file failed" }
+            false
         }
     }
 
-    private fun downloadFiles() = fileQueue.clean().toTypedArray().zip<String, Boolean, Boolean>({
-        it.all { self -> self }
-    }, {
-        it.downloadUrl({ false }) { file, body ->
-            body.byteStream().use { input ->
-                file.outputStream().use { output ->
-                    input.copyTo(output)
-                    return@downloadUrl true
-                }
-            }
-        }
-    })
+    private fun downloadCss(url: String): Set<String> {
+        return try {
+            val file = File(assetDir, fileName(url))
+            file.createNewFile()
 
-    private fun downloadCss() = cssQueue.clean().toTypedArray().zip<String, Set<String>, Set<String>>({
-        it.flatMap { l -> l }.toSet()
-    }, { cssUrl ->
-        cssUrl.downloadUrl({ emptySet() }) { file, body ->
-            var content = body.string()
+            var content = request(url).execute().body()?.string()
+                ?: throw IllegalArgumentException("Response body not found for $url")
             val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
             val absLinks = links.mapNotNull {
-                val url = when {
+                val newUrl = when {
                     it.startsWith("http") -> it
                     it.startsWith("/") -> "$baseUrl$it"
                     else -> return@mapNotNull null
                 }
                 // css files are already in the asset folder,
                 // so the url does not point to another subfolder
-                content = content.replace(it, url.fileName())
-                url
+                content = content.replace(it, fileName(newUrl))
+                newUrl
             }.toSet()
 
-            L.v { "Abs links $absLinks" }
-
             file.writeText(content)
-            return@downloadUrl absLinks
-        }
-    })
-
-    private inline fun <T> String.downloadUrl(
-        fallback: () -> T,
-        action: (file: File, body: ResponseBody) -> T
-    ): T {
-
-        val file = File(assetDir, fileName())
-        if (!file.createNewFile()) {
-            L.e { "Could not create path for ${file.absolutePath}" }
-            return fallback()
-        }
-
-        val body = request(this).execute().body() ?: return fallback()
-
-        try {
-            body.use {
-                return action(file, it)
-            }
+            absLinks
         } catch (e: Exception) {
-            return fallback()
+            L.e(e) { "Download css failed" }
+            emptySet()
         }
     }
 
@@ -291,7 +275,7 @@ class OfflineWebsite(
             val absLink = it.attr("abs:$key")
             if (!absLink.isValid) return@forEach
             collector.add(absLink)
-            it.attr(key, "assets/${absLink.fileName()}")
+            it.attr(key, "assets/${fileName(absLink)}")
         }
     }
 
@@ -303,11 +287,11 @@ class OfflineWebsite(
      * or create a new one
      * This is thread-safe
      */
-    private fun String.fileName(): String {
-        val mapped = urlMapper[this]
+    private fun fileName(url: String): String {
+        val mapped = urlMapper[url]
         if (mapped != null) return mapped
 
-        val candidate = substringBefore("?").trim('/')
+        val candidate = url.substringBefore("?").trim('/')
             .substringAfterLast("/").shorten()
 
         val index = atomicInt.getAndIncrement()
@@ -321,7 +305,7 @@ class OfflineWebsite(
         if (newUrl.endsWith(".js"))
             newUrl = "$newUrl.txt"
 
-        urlMapper[this] = newUrl
+        urlMapper[url] = newUrl
         return newUrl
     }
 
@@ -332,16 +316,9 @@ class OfflineWebsite(
         filter(String::isNotBlank).filter { it.startsWith("http") }
 
     private fun reset() {
-        cancelled = false
         urlMapper.clear()
         atomicInt.set(0)
         fileQueue.clear()
         cssQueue.clear()
-    }
-
-    fun cancel() {
-        cancelled = true
-        compositeDisposable.dispose()
-        L.v { "Request cancelled" }
     }
 }

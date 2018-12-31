@@ -122,13 +122,15 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         baseDir = DebugActivity.baseDir(this)
     )
 
+    val job = Job()
+
     val md = materialDialog {
         title(R.string.parsing_data)
         progress(false, 100)
         negativeText(R.string.kau_cancel)
         onNegative { dialog, _ -> dialog.dismiss() }
         canceledOnTouchOutside(false)
-        dismissListener { downloader.cancel() }
+        dismissListener { job.cancel() }
     }
 
     val progressChannel = Channel<Int>(10)
@@ -139,15 +141,11 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         }
     }
 
-    suspend fun loadAndZip(): Boolean = suspendCoroutine { cont ->
-        downloader.loadAndZip(ZIP_NAME, { progressChannel.offer(it) }) {
-            cont.resume(it)
-        }
-    }
-
     launch(Dispatchers.IO) {
-        val success = loadAndZip()
-        withContext(ContextHelper.dispatcher) {
+        val success = downloader.loadAndZip(ZIP_NAME) {
+            progressChannel.offer(it)
+        }
+        withMainContext {
             md.dismiss()
             if (success) {
                 val zipUri = frostUriFromFile(
