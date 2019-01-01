@@ -91,11 +91,14 @@ class LoginActivity : BaseActivity() {
             val cookie = web.loadLogin { refresh(it != 100) }
             L.d { "Login found" }
             FbCookie.save(cookie.id)
-            web.fadeOut(onFinish = {
-                profile.fadeIn()
-                this@LoginActivity.launch { loadInfo(cookie) }
-            })
+            webFadeOut()
+            profile.fadeIn()
+            loadInfo(cookie)
         }
+    }
+
+    private suspend fun webFadeOut(): Unit = suspendCancellableCoroutine { cont ->
+        web.fadeOut { cont.resume(Unit) }
     }
 
     private fun refresh(refreshing: Boolean) {
