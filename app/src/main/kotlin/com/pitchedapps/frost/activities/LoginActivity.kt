@@ -93,7 +93,7 @@ class LoginActivity : BaseActivity() {
             FbCookie.save(cookie.id)
             web.fadeOut(onFinish = {
                 profile.fadeIn()
-                launch { loadInfo(cookie) }
+                this@LoginActivity.launch { loadInfo(cookie) }
             })
         }
     }
@@ -108,9 +108,10 @@ class LoginActivity : BaseActivity() {
         val imageDeferred = async { loadProfile(cookie.id) }
         val nameDeferred = async { loadUsername(cookie) }
 
-        val foundImage = imageDeferred.await()
-        val name = nameDeferred.await()
+        val name: String = nameDeferred.await()
+        val foundImage: Boolean = imageDeferred.await()
 
+        L._d { "Logged in and received data" }
         refresh(false)
 
         if (!foundImage) {
