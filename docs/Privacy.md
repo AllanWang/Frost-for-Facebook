@@ -4,5 +4,5 @@ Each user is assigned a random id when they install the app, which is used when 
 If you wish, you may disable automatic bug reports in the app settings.
 Note that Frost still depends on Facebook's mobile site, so you may want to review Facebook's privacy policy before continuing.
 
-Locally, Frost will store your cookie in an app specific folder, which allows for features like multi user accounts.
-This is never shared beyond the app itself,
+Locally, Frost will store your cookie in an app specific folder, as well as your Facebook user id, which allows for features like multi user accounts.
+This is never shared beyond the app itself.

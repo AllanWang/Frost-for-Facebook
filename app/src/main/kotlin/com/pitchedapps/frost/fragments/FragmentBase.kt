@@ -209,11 +209,11 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
     }
 
     override fun onDestroyView() {
+        super.onDestroyView()
         L.i { "Fragment on destroy $position ${hashCode()}" }
         content?.destroy()
         content = null
         detachMainObservable()
-        super.onDestroyView()
     }
 
     override fun onDestroy() {

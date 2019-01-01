@@ -485,10 +485,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun onDestroy() {
-        fragmentChannel.close()
-        headerBadgeChannel.close()
         controlWebview?.destroy()
         super.onDestroy()
+        fragmentChannel.close()
+        headerBadgeChannel.close()
     }
 
     override fun collapseAppBar() {

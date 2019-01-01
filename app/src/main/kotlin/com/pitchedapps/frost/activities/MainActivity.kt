@@ -66,7 +66,11 @@ class MainActivity : BaseMainActivity() {
                 }
             }
         })
-        viewPager.post { fragmentChannel.offer(0); lastPosition = 0 } //trigger hook so title is set
+        viewPager.post {
+            if (!fragmentChannel.isClosedForSend)
+                fragmentChannel.offer(0)
+            lastPosition = 0
+        } //trigger hook so title is set
     }
 
     private fun setupTabs() {

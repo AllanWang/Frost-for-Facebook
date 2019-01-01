@@ -11,7 +11,7 @@
 [Join the Slack Workspace](https://frost-slack.allanwang.ca)
 
 **Note** Some keystores are public for the sake of automatic builds and consistent signing across devices.
-This means that others can build apps with the same signature. The only valid download sources are through my github releases.
+This means that others can build apps with the same signature. The only valid download sources are through my github releases and F-Droid.
 
 Frost is a third party Facebook wrapper geared towards design and functionality.
 It contains many features, including:
