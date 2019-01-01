@@ -4,6 +4,9 @@
 * Rewrite a lot of internal logic to optimize loading
 * Change default user agent to new android version, previously a desktop user agent
 * Add back group management page when clicking the respective notification
+* Update theme, including like button, menu icon, and material light bugs
+* Fix login problem when one account is signed in.
+* Fix some problems when exiting the image viewer
 
 ## v2.1.2
 * Fix message notifications with just one other user

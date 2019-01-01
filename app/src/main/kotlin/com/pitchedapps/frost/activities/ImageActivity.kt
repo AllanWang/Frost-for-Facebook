@@ -228,7 +228,7 @@ class ImageActivity : KauBaseActivity() {
             }
 
             // Forbid overwrites
-            if (file.length() > 0) {
+            if (file.isFile && file.length() > 0) {
                 L.i { "Forbid image overwrite" }
                 return@withContext false
             }

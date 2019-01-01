@@ -10,9 +10,9 @@
     <item text="Rewrite a lot of internal logic to optimize loading" />
     <item text="Change default user agent to new android version, previously a desktop user agent" />
     <item text="Add back group management page when clicking the respective notification" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Update theme, including like button, menu icon, and material light bugs" />
+    <item text="Fix login problem when one account is signed in." />
+    <item text="Fix some problems when exiting the image viewer" />
     <item text="" />
     <item text="" />
     <item text="" />
