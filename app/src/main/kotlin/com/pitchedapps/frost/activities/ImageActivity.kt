@@ -31,7 +31,6 @@ import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.fadeOut
-import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.isHidden
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.scaleXY
@@ -221,7 +220,7 @@ class ImageActivity : KauBaseActivity() {
         }
         return withContext(Dispatchers.IO + exceptionHandler) {
             if (!file.isFile) {
-                file.parentFile.mkdirs()
+                file.parentFile?.mkdirs()
                 file.createNewFile()
             } else {
                 file.setLastModified(System.currentTimeMillis())
@@ -232,11 +231,13 @@ class ImageActivity : KauBaseActivity() {
                 L.i { "Forbid image overwrite" }
                 return@withContext false
             }
+
+            // Fast route, image is already downloaded
             if (tempFile.isFile && tempFile.length() > 0) {
                 if (tempFile == file) {
                     return@withContext false
                 }
-                tempFile.copyTo(file)
+                tempFile.copyTo(file, true)
                 return@withContext true
             }
 
@@ -336,6 +337,11 @@ internal enum class FabStates(
     /**
      * Change the fab look
      * If it's in view, give it some animations
+     *
+     * TODO investigate what is wrong with fadeScaleTransition
+     *
+     * https://github.com/AllanWang/KAU/issues/184
+     *
      */
     fun update(fab: FloatingActionButton) {
         val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else Prefs.accentColor
@@ -344,10 +350,17 @@ internal enum class FabStates(
             fab.backgroundTintList = ColorStateList.valueOf(tint)
             fab.show()
         } else {
-            fab.fadeScaleTransition {
-                setIcon(iicon, color = iconColor)
-                backgroundTintList = ColorStateList.valueOf(tint)
-            }
+            fab.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
+                override fun onHidden(fab: FloatingActionButton) {
+                    fab.setIcon(iicon, color = iconColor)
+                    fab.show()
+                }
+            })
+
+//            fab.fadeScaleTransition {
+//                setIcon(iicon, color = iconColor)
+////                backgroundTintList = ColorStateList.valueOf(tint)
+//            }
         }
     }
 
