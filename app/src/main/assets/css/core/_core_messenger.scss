@@ -1,0 +1,12 @@
+// Other person
+._34ee {
+  background: $background2 !important;
+  color: $text !important;
+
+}
+
+// Yourself; order matters
+._34em ._34ee {
+  background: $accent !important;
+  color: $accent_text !important;
+}
