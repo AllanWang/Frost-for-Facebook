@@ -17,12 +17,10 @@ $video: '<svg xmlns="http://www.w3.org/2000/svg" fill="#{$text}" viewBox="0 0 50
 $like: '<svg xmlns="http://www.w3.org/2000/svg" fill="#{$text}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>';
 $like_selected: '<svg xmlns="http://www.w3.org/2000/svg" fill="#{$accent}" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>';
 
-/*
- * 2018/12/29
- * Previously ._15km ._15ko::before and ._15km ._15ko._77la::before; however, reaction changes no longer affect this element
- * The robust measure seems to be the parent of a[data-sigil~="like-reaction-flyout"] along with [data-sigil~="like"] for an unliked post
- * and [data-sigil~="unlike"] for a liked post
- */
+// 2018/12/29
+// Previously ._15km ._15ko::before and ._15km ._15ko._77la::before; however, reaction changes no longer affect this element
+// The robust measure seems to be the parent of a[data-sigil~="like-reaction-flyout"] along with [data-sigil~="like"] for an unliked post
+// and [data-sigil~="unlike"] for a liked post
 ._15km ._15ko::before {
   @include background-svg($like);
   background-position: center !important;
