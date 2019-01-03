@@ -124,14 +124,14 @@ button ._v89 ._54k8._1fl1 {
   border-left: 1px solid rgba(215, 176, 215, 0.3) !important;
 }
 
-._4_d1 {
+._4_d1, ._5cni {
   border-right: 1px solid rgba(215, 176, 215, 0.3) !important;
 }
 
 ._1mx0, ._1rbr, ._5yt8, ._idb, ._cld, ._1e8h, ._z-w, ._1ha, ._1n8h ._1oby, ._5f99, ._2t39,
 ._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after,
 ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9,
-._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils,
+._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils, ._5as0, ._5as2,
 ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._56d8, .al {
   border-top: 1px solid rgba(215, 176, 215, 0.3) !important;
 }
@@ -216,6 +216,10 @@ button ._v89 ._54k8._1fl1 {
 ._34em ._34ee {
   background: #3b5998 !important;
   color: #76d7c2 !important;
+}
+
+._5as0, ._5cni, ._5as2 {
+  background: #451515 !important;
 }
 
 *, *::after, *::before {

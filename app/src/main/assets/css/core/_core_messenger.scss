@@ -1,12 +1,17 @@
-// Other person
+// Other person's message bubble
 ._34ee {
   background: $background2 !important;
   color: $text !important;
 
 }
 
-// Yourself; order matters
+// Your message bubble; order matters
 ._34em ._34ee {
   background: $accent !important;
   color: $accent_text !important;
+}
+
+// Sticker page
+._5as0, ._5cni, ._5as2 {
+  background: $bg_opaque !important;
 }
