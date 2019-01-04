@@ -20,6 +20,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.webkit.CookieManager
 import android.widget.ImageView
 import android.widget.TextView
 import ca.allanwang.kau.internal.KauBaseActivity
@@ -31,6 +32,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
@@ -55,6 +57,14 @@ class StartActivity : KauBaseActivity() {
             showInvalidSdkView()
             return
         }
+
+        try {
+            // TODO add better descriptions
+            CookieManager.getInstance()
+        } catch (e: Exception) {
+            showInvalidWebView()
+        }
+
         launch {
             try {
                 FbCookie.switchBackUser()
@@ -63,17 +73,16 @@ class StartActivity : KauBaseActivity() {
                 })
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d { "Cookies: ${cookies.joinToString("\t")}" }
-                if (cookies.isNotEmpty()) {
-                    if (Prefs.userId != -1L)
-                        startActivity<MainActivity>(intentBuilder = {
-                            putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        })
-                    else
-                        launchNewTask<SelectorActivity>(cookies)
-                } else
-                    launchNewTask<LoginActivity>()
+                when {
+                    cookies.isEmpty() -> launchNewTask<LoginActivity>()
+                    // Has cookies but no selected account
+                    Prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
+                    else -> startActivity<MainActivity>(intentBuilder = {
+                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    })
+                }
             } catch (e: Exception) {
                 showInvalidWebView()
             }
@@ -85,7 +94,7 @@ class StartActivity : KauBaseActivity() {
 
     private fun showInvalidSdkView() {
         val text = try {
-            String.format(getString(R.string.error_sdk), Build.VERSION.SDK_INT)
+            String.format(string(R.string.error_sdk), Build.VERSION.SDK_INT)
         } catch (e: IllegalFormatException) {
             string(R.string.error_sdk)
         }
