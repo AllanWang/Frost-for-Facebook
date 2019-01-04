@@ -45,7 +45,6 @@ enum class CssHider(vararg val items: String) : InjectorContract {
             .single(name).build()
     }
 
-    override fun inject(webView: WebView, callback: (() -> Unit)?) {
-        injector.inject(webView, callback)
-    }
+    override fun inject(webView: WebView) =
+        injector.inject(webView)
 }

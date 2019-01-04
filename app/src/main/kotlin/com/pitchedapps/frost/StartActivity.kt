@@ -37,6 +37,7 @@ import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.loadAssets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,6 +64,7 @@ class StartActivity : KauBaseActivity() {
                 })
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d { "Cookies: ${cookies.joinToString("\t")}" }
+                loadAssets()
                 if (cookies.isNotEmpty()) {
                     if (Prefs.userId != -1L)
                         startActivity<MainActivity>(intentBuilder = {

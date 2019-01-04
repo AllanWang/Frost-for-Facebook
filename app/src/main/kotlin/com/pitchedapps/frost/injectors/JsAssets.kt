@@ -16,9 +16,12 @@
  */
 package com.pitchedapps.frost.injectors
 
+import android.content.Context
 import android.webkit.WebView
 import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.utils.L
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
@@ -33,8 +36,8 @@ enum class JsAssets : InjectorContract {
     DOCUMENT_WATCHER
     ;
 
-    var file = "${name.toLowerCase(Locale.CANADA)}.js"
-    var injector = lazyContext {
+    private val file = "${name.toLowerCase(Locale.CANADA)}.js"
+    private val injector = lazyContext {
         try {
             val content = it.assets.open("js/$file").bufferedReader().use(BufferedReader::readText)
             JsBuilder().js(content).single(name).build()
@@ -44,7 +47,15 @@ enum class JsAssets : InjectorContract {
         }
     }
 
-    override fun inject(webView: WebView, callback: (() -> Unit)?) {
-        injector(webView.context).inject(webView, callback)
+    override fun inject(webView: WebView) =
+        injector(webView.context).inject(webView)
+
+    companion object {
+        // Ensures that all non themes and the selected theme are loaded
+        suspend fun load(context: Context) {
+            withContext(Dispatchers.IO) {
+                JsAssets.values().forEach { it.injector.invoke(context) }
+            }
+        }
     }
 }

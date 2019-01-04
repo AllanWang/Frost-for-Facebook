@@ -53,8 +53,11 @@ import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.loadAssets
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostTheme
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-06-06.
@@ -206,7 +209,10 @@ class SettingsActivity : KPrefActivity() {
     override fun onBackPressed() {
         if (!super.backPress()) {
             setResult(resultFlag)
-            finishSlideOut()
+            launch(NonCancellable) {
+                loadAssets()
+                finishSlideOut()
+            }
         }
     }
 
