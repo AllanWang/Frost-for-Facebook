@@ -32,7 +32,6 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
-import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
@@ -74,7 +73,7 @@ class StartActivity : KauBaseActivity() {
                 })
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d { "Cookies: ${cookies.joinToString("\t")}" }
-                loadAssets()              
+                loadAssets()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account

@@ -29,7 +29,6 @@ import com.pitchedapps.frost.utils.L
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
