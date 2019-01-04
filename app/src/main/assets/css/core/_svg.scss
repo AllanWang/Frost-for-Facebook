@@ -47,21 +47,28 @@ $share: '<svg xmlns="http://www.w3.org/2000/svg" fill="#{$text}" viewBox="0 0 24
 
 $more_horiz: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path fill="#{$text}" d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>';
 
-$menus: ".sp_89zNula0Qh5",
-".sp_MP2OtCXORz9",
-".sp_NIWBacTn8LF",
-// 2018/12/31
-".sp_9ZFVhnFyWsw";
+//$menus: ".sp_89zNula0Qh5",
+//".sp_MP2OtCXORz9",
+//".sp_NIWBacTn8LF",
+//// 2018/12/31
+//".sp_9ZFVhnFyWsw",
+//// 2019/01/03
+//".sp_SJIJjSlGEIO";
+//
+//$menu_collector: ();
+//
+//@each $menu in $menus {
+//  $menu_collector: append($menu_collector, unquote('#{$menu}'), 'comma');
+//  $menu_collector: append($menu_collector, unquote('#{$menu}_2x'), 'comma');
+//  $menu_collector: append($menu_collector, unquote('#{$menu}_3x'), 'comma');
+//}
+//
+//#{$menu_collector} {
+//  @include background-svg($more_horiz);
+//  background-position: center !important;
+//}
 
-$menu_collector: ();
-
-@each $menu in $menus {
-  $menu_collector: append($menu_collector, unquote('#{$menu}'), 'comma');
-  $menu_collector: append($menu_collector, unquote('#{$menu}_2x'), 'comma');
-  $menu_collector: append($menu_collector, unquote('#{$menu}_3x'), 'comma');
-}
-
-#{$menu_collector} {
+.story_body_container i.img[data-sigil*="story-popup-context"] {
   @include background-svg($more_horiz);
   background-position: center !important;
 }
