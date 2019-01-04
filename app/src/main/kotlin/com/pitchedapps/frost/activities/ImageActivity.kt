@@ -150,7 +150,7 @@ class ImageActivity : KauBaseActivity() {
         L.i { "Displaying image" }
         trueImageUrl = async(Dispatchers.IO) {
             val result = if (!imageUrl.isIndirectImageUrl) imageUrl
-            else cookie?.getFullSizedImageUrl(imageUrl)?.blockingGet() ?: imageUrl
+            else cookie?.getFullSizedImageUrl(imageUrl) ?: imageUrl
             if (result != imageUrl)
                 L.v { "Launching with true url $result" }
             result
