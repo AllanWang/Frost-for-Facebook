@@ -18,6 +18,7 @@ package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.authDependent
+import kotlinx.coroutines.runBlocking
 import org.junit.BeforeClass
 import org.junit.Test
 import kotlin.test.assertNotNull
@@ -38,7 +39,9 @@ class FbFullImageTest {
     @Test
     fun getFullImage() {
         val url = "https://touch.facebook.com/photo/view_full_size/?fbid=107368839645039"
-        val result = COOKIE.getFullSizedImageUrl(url).blockingGet()
+        val result = runBlocking {
+            COOKIE.getFullSizedImageUrl(url)
+        }
         assertNotNull(result)
         println(result)
     }

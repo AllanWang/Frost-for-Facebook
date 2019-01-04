@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.injectors
 
+import android.content.Context
 import android.graphics.Color
 import android.webkit.WebView
 import ca.allanwang.kau.kotlin.lazyContext
@@ -27,6 +28,8 @@ import ca.allanwang.kau.utils.use
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
@@ -36,12 +39,16 @@ import java.util.Locale
  * Mapping of the available assets
  * The enum name must match the css file name
  */
-enum class CssAssets(val folder: String = "themes") : InjectorContract {
+enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
     MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components")
     ;
 
-    var file = "${name.toLowerCase(Locale.CANADA)}.css"
-    var injector = lazyContext {
+    private val file = "${name.toLowerCase(Locale.CANADA)}.css"
+
+    /**
+     * Note that while this can be loaded from any thread, it is typically done through [load]
+     */
+    private val injector = lazyContext {
         try {
             var content = it.assets.open("css/$folder/$file").bufferedReader().use(BufferedReader::readText)
             if (this == CUSTOM) {
@@ -73,11 +80,25 @@ enum class CssAssets(val folder: String = "themes") : InjectorContract {
         }
     }
 
-    override fun inject(webView: WebView, callback: (() -> Unit)?) {
-        injector(webView.context).inject(webView, callback)
-    }
+    override fun inject(webView: WebView) =
+        injector(webView.context).inject(webView)
 
     fun reset() {
         injector.invalidate()
     }
+
+    companion object {
+        // Ensures that all non themes and the selected theme are loaded
+        suspend fun load(context: Context) {
+            withContext(Dispatchers.IO) {
+                val currentTheme = Prefs.t.injector as? CssAssets
+                val (themes, others) = CssAssets.values().partition { it.folder == THEME_FOLDER }
+                themes.filter { it != currentTheme }.forEach { it.reset() }
+                currentTheme?.injector?.invoke(context)
+                others.forEach { it.injector.invoke(context) }
+            }
+        }
+    }
 }
+
+private const val THEME_FOLDER = "themes"

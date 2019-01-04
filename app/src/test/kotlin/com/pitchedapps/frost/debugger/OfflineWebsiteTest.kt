@@ -24,11 +24,12 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.Assume.assumeTrue
-import org.junit.Test
 import java.io.File
 import java.util.zip.ZipFile
 import kotlin.test.AfterTest
+import kotlin.test.Test
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -78,6 +79,7 @@ class OfflineWebsiteTest {
         )
     }
 
+    @Ignore
     @Test
     fun fbOffline() {
         // Not really a test. Skip in CI

@@ -32,8 +32,10 @@ import com.pitchedapps.frost.facebook.FB_REDIRECT_URL_MATCHER
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
-import io.reactivex.Maybe
+import com.pitchedapps.frost.utils.L
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import okhttp3.Call
 import java.io.IOException
@@ -47,17 +49,21 @@ fun RequestAuth.getFullSizedImage(fbid: Long) = frostRequest(::getJsonUrl) {
     get()
 }
 
-val test: () -> InputStream? = { null }
-
 /**
  * Attempts to get the fbcdn url of the supplied image redirect url
  */
-fun String.getFullSizedImageUrl(url: String): Maybe<String?> = Maybe.fromCallable {
-    val redirect = requestBuilder().url(url).get().call()
-        .execute().body()?.string() ?: return@fromCallable null
-    return@fromCallable FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
-        ?: return@fromCallable null
-}.onErrorComplete()
+suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): String? = withContext(Dispatchers.IO) {
+    try {
+        withTimeout(timeout) {
+            val redirect = requestBuilder().url(url).get().call()
+                .execute().body()?.string() ?: return@withTimeout null
+            FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
+        }
+    } catch (e: Exception) {
+        L.e(e) { "Failed to load full size image url" }
+        null
+    }
+}
 
 /**
  * Request loader for a potentially hd version of a url
