@@ -28,7 +28,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
-import ca.allanwang.kau.utils.withMainContext
+import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
@@ -40,10 +40,8 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -54,7 +52,7 @@ class LoginWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
-    private lateinit var loginCallback: (CookieModel) -> Unit
+    private val completable: CompletableDeferred<CookieModel> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -65,19 +63,15 @@ class LoginWebView @JvmOverloads constructor(
         webChromeClient = LoginChromeClient()
     }
 
-    suspend fun loadLogin(progressCallback: (Int) -> Unit): CookieModel = withMainContext {
-        coroutineScope {
-            suspendCancellableCoroutine<CookieModel> { cont ->
-                this@LoginWebView.progressCallback = progressCallback
-                this@LoginWebView.loginCallback = { cont.resume(it) }
-                L.d { "Begin loading login" }
-                launch {
-                    FbCookie.reset()
-                    setupWebview()
-                    loadUrl(FB_LOGIN_URL)
-                }
-            }
+    suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieModel> = coroutineScope {
+        this@LoginWebView.progressCallback = progressCallback
+        L.d { "Begin loading login" }
+        launchMain {
+            FbCookie.reset()
+            setupWebview()
+            loadUrl(FB_LOGIN_URL)
         }
+        completable
     }
 
     private inner class LoginClient : BaseWebViewClient() {
@@ -86,7 +80,7 @@ class LoginWebView @JvmOverloads constructor(
             super.onPageFinished(view, url)
             val cookieModel = checkForLogin(url)
             if (cookieModel != null)
-                loginCallback(cookieModel)
+                completable.complete(cookieModel)
             if (!view.isVisible) view.fadeIn()
         }
 

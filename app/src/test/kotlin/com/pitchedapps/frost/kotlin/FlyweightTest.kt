@@ -54,7 +54,7 @@ class FlyweightTest {
 
     @Test
     fun basic() {
-        assertEquals(2, runBlocking { flyweight.fetch(1) }, "Invalid result")
+        assertEquals(2, runBlocking { flyweight.fetch(1).await() }, "Invalid result")
         assertEquals(1, callCount.get(), "1 call expected")
     }
 
@@ -62,9 +62,7 @@ class FlyweightTest {
     fun multipleWithOneKey() {
         val results: List<Int> = runBlocking {
             (0..1000).map {
-                flyweight.scope.async {
-                    flyweight.fetch(1)
-                }
+                flyweight.fetch(1)
             }.map { it.await() }
         }
         assertEquals(1, callCount.get(), "1 call expected")
@@ -75,12 +73,12 @@ class FlyweightTest {
     @Test
     fun consecutiveReuse() {
         runBlocking {
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(1, callCount.get(), "1 call expected")
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(1, callCount.get(), "Reuse expected")
             Thread.sleep(300)
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(2, callCount.get(), "Refetch expected")
         }
     }
@@ -88,10 +86,10 @@ class FlyweightTest {
     @Test
     fun invalidate() {
         runBlocking {
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(1, callCount.get(), "1 call expected")
             flyweight.invalidate(1)
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(2, callCount.get(), "New call expected")
         }
     }
@@ -100,10 +98,10 @@ class FlyweightTest {
     fun destroy() {
         runBlocking {
             val longRunningResult = async { flyweight.fetch(LONG_RUNNING_KEY) }
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             flyweight.cancel()
             try {
-                flyweight.fetch(1)
+                flyweight.fetch(1).await()
                 fail("Flyweight should not be fulfilled after it is destroyed")
             } catch (e: Exception) {
                 assertEquals("Flyweight is not active", e.message, "Incorrect error found on fetch after destruction")

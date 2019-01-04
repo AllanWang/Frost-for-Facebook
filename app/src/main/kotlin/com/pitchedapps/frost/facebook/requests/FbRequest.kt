@@ -45,22 +45,6 @@ val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 100, 3600000 /* an hour
 }
 
 /**
- * Synchronously fetch [RequestAuth] from cookie
- * [action] will only be called if a valid auth is found.
- * Otherwise, [fail] will be called
- */
-fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
-    if (this == null) return fail()
-    try {
-        val auth = runBlocking { fbAuth.fetch(this@fbRequest) }
-        auth.action()
-    } catch (e: Exception) {
-        L.e { "Failed auth for ${hashCode()}: ${e.message}" }
-        fail()
-    }
-}
-
-/**
  * Underlying container for all fb requests
  */
 data class RequestAuth(

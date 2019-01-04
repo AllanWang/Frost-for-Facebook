@@ -179,7 +179,7 @@ class FrostRequestService : BaseJobService() {
         }
         launch(Dispatchers.IO) {
             try {
-                val auth = fbAuth.fetch(cookie)
+                val auth = fbAuth.fetch(cookie).await()
                 command.invoke(auth, bundle)
                 L.d {
                     "Finished frost service for ${command.name} in ${System.currentTimeMillis() - startTime} ms"
