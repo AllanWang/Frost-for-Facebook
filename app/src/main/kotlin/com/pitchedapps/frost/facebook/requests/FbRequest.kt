@@ -40,7 +40,7 @@ import java.lang.Exception
 /**
  * Created by Allan Wang on 21/12/17.
  */
-val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 100, 3600000 /* an hour */) {
+val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 3600000 /* an hour */) {
     it.getAuth()
 }
 

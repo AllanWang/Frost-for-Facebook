@@ -36,19 +36,16 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class Flyweight<K, V>(
     val scope: CoroutineScope,
-    capacity: Int,
     val maxAge: Long,
     private val fetcher: suspend (K) -> V
 ) {
 
     // Receives a key and a pending request
-    private val actionChannel = Channel<Pair<K, CompletableDeferred<V>>>(capacity)
+    private val actionChannel = Channel<Pair<K, CompletableDeferred<V>>>(Channel.UNLIMITED)
     // Receives a key to invalidate the associated value
-    private val invalidatorChannel = Channel<K>(capacity)
-    // Receives a key to fetch the value
-    private val requesterChannel = Channel<K>(capacity)
+    private val invalidatorChannel = Channel<K>(Channel.UNLIMITED)
     // Receives a key and the resulting value
-    private val receiverChannel = Channel<Pair<K, Result<V>>>(capacity)
+    private val receiverChannel = Channel<Pair<K, Result<V>>>(Channel.UNLIMITED)
 
     // Keeps track of keys and associated update times
     private val conditionMap: MutableMap<K, Long> = mutableMapOf()
@@ -85,7 +82,7 @@ class Flyweight<K, V>(
                                 val valueRequestPending = key in pendingMap
                                 pendingMap.getOrPut(key) { mutableListOf() }.add(completable)
                                 if (!valueRequestPending)
-                                    requesterChannel.send(key)
+                                    fulfill(key)
                             }
                         }
                         /*
@@ -102,7 +99,7 @@ class Flyweight<K, V>(
                             resultMap.remove(key)
                             if (pendingMap[key]?.isNotEmpty() == true)
                             // Refetch value for pending requests
-                                requesterChannel.send(key)
+                                fulfill(key)
                         }
                         /*
                          * Value request fulfilled. Should now fulfill pending requests
@@ -117,28 +114,32 @@ class Flyweight<K, V>(
                     }
                 }
             }
-            launch {
-                /*
-                 * Value request received. Should fetch new value using supplied fetcher
-                 */
-                for (key in requesterChannel) {
-                    val result = runCatching {
-                        fetcher(key)
-                    }
-                    receiverChannel.send(key to result)
-                }
+        }
+    }
+
+    /*
+     * Value request received. Should fetch new value using supplied fetcher
+     */
+    private fun fulfill(key: K) {
+        scope.launch {
+            val result = runCatching {
+                fetcher(key)
             }
+            receiverChannel.send(key to result)
         }
     }
 
     /**
      * Queues the request, and returns a completable once it is sent to a channel.
-     * The fetcher will only be suspended if the channels are full
+     * The fetcher will only be suspended if the channels are full.
+     *
+     * Note that if the job is already inactive, a cancellation exception will be thrown.
+     * The message may default to the message for all completables under a cancelled job
      */
-    suspend fun fetch(key: K): CompletableDeferred<V> {
+    fun fetch(key: K): CompletableDeferred<V> {
         val completable = CompletableDeferred<V>(job)
-        if (!job.isActive) completable.completeExceptionally(IllegalStateException("Flyweight is not active"))
-        else actionChannel.send(key to completable)
+        if (!job.isActive) completable.completeExceptionally(CancellationException("Flyweight is not active"))
+        else actionChannel.offer(key to completable)
         return completable
     }
 
@@ -155,7 +156,6 @@ class Flyweight<K, V>(
         }
         actionChannel.close()
         invalidatorChannel.close()
-        requesterChannel.close()
         receiverChannel.close()
         conditionMap.clear()
         resultMap.clear()
