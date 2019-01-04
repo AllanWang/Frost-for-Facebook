@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.utils
 
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -217,7 +216,6 @@ class CoroutineTest {
     @Ignore("Not yet working as unique only buffered removes the capacity limitation of the channel")
     @Test
     fun uniqueOnlyBuffer() {
-        val completable = CompletableDeferred<Int>()
         val channel = Channel<Int>(3)
         runBlocking {
 

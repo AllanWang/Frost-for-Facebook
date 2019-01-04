@@ -204,7 +204,7 @@ dependencies {
 
 //    androidTestImplementation "io.mockk:mockk:${MOCKK}"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${COROUTINES}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kau.coroutines}"
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
