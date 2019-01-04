@@ -35,6 +35,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
+import java.lang.Exception
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -119,7 +120,11 @@ fun String.getAuth(): RequestAuth {
         .call()
     call.execute().body()?.charStream()?.useLines { lines ->
         lines.forEach {
-            val text = StringEscapeUtils.unescapeEcmaScript(it)
+            val text = try {
+                StringEscapeUtils.unescapeEcmaScript(it)
+            } catch (ignore: Exception) {
+                return@forEach
+            }
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
                 auth = auth.copy(fb_dtsg = fb_dtsg)
