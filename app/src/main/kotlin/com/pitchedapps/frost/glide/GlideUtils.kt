@@ -70,7 +70,6 @@ class FrostCookieInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val origRequest = chain.request()
         val cookie = FbCookie.webCookie ?: return chain.proceed(origRequest)
-        L.v { "Add cookie to req $cookie" }
         val request = origRequest.newBuilder().addHeader("Cookie", cookie).build()
         return chain.proceed(request)
     }
