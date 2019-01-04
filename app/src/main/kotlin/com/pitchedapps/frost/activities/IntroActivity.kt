@@ -53,6 +53,9 @@ import com.pitchedapps.frost.intro.IntroTabTouchFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.loadAssets
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -166,8 +169,11 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     }
 
     override fun finish() {
-        launchNewTask<MainActivity>(cookies(), false)
-        super.finish()
+        launch(NonCancellable) {
+            loadAssets()
+            launchNewTask<MainActivity>(cookies(), false)
+            super.finish()
+        }
     }
 
     override fun onBackPressed() {

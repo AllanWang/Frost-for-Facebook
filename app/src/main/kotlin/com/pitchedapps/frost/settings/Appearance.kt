@@ -76,7 +76,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     fun invalidateCustomTheme() {
-        CssAssets.CUSTOM.injector.invalidate()
+        CssAssets.CUSTOM.reset()
     }
 
     colorPicker(R.string.text_color, Prefs::customTextColor, {

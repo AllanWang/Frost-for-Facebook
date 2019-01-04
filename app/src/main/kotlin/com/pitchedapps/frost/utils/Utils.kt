@@ -70,8 +70,11 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.JsAssets
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -421,3 +424,8 @@ fun String.unescapeHtml(): String =
     StringEscapeUtils.unescapeXml(this)
         .replace("\\u003C", "<")
         .replace("\\\"", "\"")
+
+suspend fun Context.loadAssets(): Unit = coroutineScope {
+    CssAssets.load(this@loadAssets)
+    JsAssets.load(this@loadAssets)
+}

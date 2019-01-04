@@ -68,7 +68,7 @@ object Prefs : KPref() {
 
     private val loader = lazyResettable { Theme.values[Prefs.theme] }
 
-    private val t: Theme by loader
+    val t: Theme by loader
 
     val textColor: Int
         get() = t.textColor
