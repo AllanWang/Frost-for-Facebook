@@ -47,8 +47,6 @@ fun RequestAuth.getFullSizedImage(fbid: Long) = frostRequest(::getJsonUrl) {
     get()
 }
 
-val test: () -> InputStream? = { null }
-
 /**
  * Attempts to get the fbcdn url of the supplied image redirect url
  */

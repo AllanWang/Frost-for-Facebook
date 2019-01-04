@@ -259,6 +259,15 @@ dependencies {
 
 }
 
+// Validates code and generates apk
+task createGithubReleaseApk(type: GradleBuild) {
+    tasks = ['spotlessCheck',
+             'lintRelease',
+             'testReleaseUnitTest',
+             'connectedAndroidTest',
+             'assembleRelease']
+}
+
 def kotlinResolutions = ['kotlin-reflect',
                          'kotlin-stdlib',
                          'kotlin-stdlib-jdk7',
