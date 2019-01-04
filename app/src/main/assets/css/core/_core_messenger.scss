@@ -1,0 +1,20 @@
+// Not all messenger related components are here; only the main ones.
+// Borders for instance are merged into core_border
+
+// Other person's message bubble
+._34ee {
+  background: $background2 !important;
+  color: $text !important;
+
+}
+
+// Your message bubble; order matters
+._34em ._34ee {
+  background: $accent !important;
+  color: $accent_text !important;
+}
+
+// Sticker page
+._5as0, ._5cni, ._5as2 {
+  background: $bg_opaque !important;
+}

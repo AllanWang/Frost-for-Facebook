@@ -4,7 +4,7 @@
 ._z-z, ._z-v, ._1e8d, ._36nl, ._36nm, ._2_11, ._2_rf, ._2ip_, ._403p, .cq, ._usr,
 ._5xu2, ._3ml8, ._3mla, ._50vk, ._1m2u, ._31y7, ._4kcb, ._1lf6, ._1lf5,
 ._1lf4, ._1hiz, ._xod, ._5ag5, ._zmk, ._3t_h, ._5lm6, ._3clv, ._3zlc, ._36rd,
-._31zk, ._31zl, ._3xsa, ._3xs9, ._2-4s, ._2fzz ul,
+._31zk, ._31zl, ._3xsa, ._3xs9, ._2-4s, ._2fzz ul, ._3z10,
 ._43mh, .touch .btn, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35,
 ._rnk, ._24u0, ._1g06, ._14ye, .fcb, ._56cz._56c_, ._1gk_, ._55fj, ._45fu,
 ._18qg, ._1_ac, ._529p, ._4dwt ._1vh3, ._4a5f, ._23_t, ._2rzc, ._23_s, ._2rzd,
@@ -124,14 +124,14 @@ button ._v89 ._54k8._1fl1 {
   border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
-._4_d1 {
+._4_d1, ._5cni {
   border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
 ._1mx0, ._1rbr, ._5yt8, ._idb, ._cld, ._1e8h, ._z-w, ._1ha, ._1n8h ._1oby, ._5f99, ._2t39,
 ._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after,
 ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9,
-._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils,
+._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils, ._5as0, ._5as2,
 ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._56d8, .al {
   border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
@@ -206,6 +206,20 @@ button ._v89 ._54k8._1fl1 {
 
 ._484w.selected > ._6zf, ._5kqs::after, ._3lvo ._5xum._5xuk, ._x0b {
   border-bottom: 1px solid #fff !important;
+}
+
+._34ee {
+  background: rgba(137, 137, 137, 0.35) !important;
+  color: #fff !important;
+}
+
+._34em ._34ee {
+  background: #5d86dd !important;
+  color: #fff !important;
+}
+
+._5as0, ._5cni, ._5as2 {
+  background: #303030 !important;
 }
 
 *, *::after, *::before {
@@ -298,12 +312,6 @@ button ._v89 ._54k8._1fl1 {
   background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23fff" viewBox="0 0 50 50"%3E%3Cpath fill="none" d="M13 26h24v24H13z"/%3E%3Cpath d="M30 31.5V28c0-.55-.45-1-1-1H17c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/%3E%3C/svg%3E') no-repeat !important;
 }
 
-/*
- * 2018/12/29
- * Previously ._15km ._15ko::before and ._15km ._15ko._77la::before; however, reaction changes no longer affect this element
- * The robust measure seems to be the parent of a[data-sigil~="like-reaction-flyout"] along with [data-sigil~="like"] for an unliked post
- * and [data-sigil~="unlike"] for a liked post
- */
 ._15km ._15ko::before {
   background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23fff" viewBox="0 0 24 24"%3E%3Cpath fill="none" d="M0 0h24v24H0z"/%3E%3Cpath d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/%3E%3C/svg%3E') no-repeat !important;
   background-position: center !important;
@@ -324,7 +332,7 @@ button ._v89 ._54k8._1fl1 {
   background-position: center !important;
 }
 
-.sp_89zNula0Qh5, .sp_89zNula0Qh5_2x, .sp_89zNula0Qh5_3x, .sp_MP2OtCXORz9, .sp_MP2OtCXORz9_2x, .sp_MP2OtCXORz9_3x, .sp_NIWBacTn8LF, .sp_NIWBacTn8LF_2x, .sp_NIWBacTn8LF_3x, .sp_9ZFVhnFyWsw, .sp_9ZFVhnFyWsw_2x, .sp_9ZFVhnFyWsw_3x {
+.story_body_container i.img[data-sigil*=story-popup-context] {
   background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath fill="none" d="M0 0h24v24H0z"/%3E%3Cpath fill="%23fff" d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/%3E%3C/svg%3E') no-repeat !important;
   background-position: center !important;
 }
