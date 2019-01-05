@@ -23,7 +23,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
-import androidx.annotation.WorkerThread
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.injectors.CssAssets
@@ -33,6 +32,8 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.isFacebookUrl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -61,14 +62,16 @@ class DebugWebView @JvmOverloads constructor(
         isDrawingCacheEnabled = true
     }
 
-    @WorkerThread
-    fun getScreenshot(output: File): Boolean {
+    /**
+     * Fetches a screenshot of the current webview, returning true if successful, false otherwise.
+     */
+    suspend fun getScreenshot(output: File): Boolean = withContext(Dispatchers.IO) {
 
         if (!output.createFreshFile()) {
             L.e { "Failed to create ${output.absolutePath} for debug screenshot" }
-            return false
+            return@withContext false
         }
-        return try {
+        try {
             output.outputStream().use {
                 drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
             }

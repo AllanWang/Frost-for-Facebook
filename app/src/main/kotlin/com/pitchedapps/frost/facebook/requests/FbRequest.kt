@@ -26,8 +26,6 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.kotlin.Flyweight
 import com.pitchedapps.frost.utils.L
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import okhttp3.Call
 import okhttp3.FormBody
@@ -35,7 +33,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
-import java.lang.Exception
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -140,19 +137,6 @@ fun String.getAuth(): RequestAuth {
     }
 
     return auth
-}
-
-inline fun <T, reified R : Any, O> Array<T>.zip(
-    crossinline mapper: (List<R>) -> O,
-    crossinline caller: (T) -> R
-): Single<O> {
-    if (isEmpty())
-        return Single.just(mapper(emptyList()))
-    val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
-    return Single.zip(singles) {
-        val results = it.mapNotNull { it as? R }
-        mapper(results)
-    }
 }
 
 /**

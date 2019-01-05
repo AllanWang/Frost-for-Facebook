@@ -17,11 +17,7 @@
 package com.pitchedapps.frost.dbflow
 
 import android.os.Parcelable
-import com.pitchedapps.frost.dbflow.CookieModel_Table.cookie
-import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostJsoup
-import com.pitchedapps.frost.utils.logFrostEvent
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -37,8 +33,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
-import java.net.UnknownHostException
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -94,23 +88,5 @@ fun removeCookie(id: Long) {
     loadFbCookie(id)?.async?.delete {
         L.d { "Fb cookie deleted" }
         L._d { id }
-    }
-}
-
-suspend fun CookieModel.fetchUsername(): String? = withContext(Dispatchers.IO) {
-    withTimeoutOrNull(5000) {
-        var result: String? = null
-        try {
-            result = frostJsoup(cookie, FbItem.PROFILE.url).title()
-            L.d { "Fetch username found" }
-        } catch (e: Exception) {
-            if (e !is UnknownHostException)
-                e.logFrostEvent("Fetch username failed")
-        }
-        if (name?.isNotBlank() == false && result != null && result != name) {
-            name = result
-            saveFbCookie(this@fetchUsername)
-        }
-        result
     }
 }
