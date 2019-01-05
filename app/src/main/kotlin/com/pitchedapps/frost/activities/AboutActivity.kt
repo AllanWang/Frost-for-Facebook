@@ -66,9 +66,7 @@ class AboutActivity : AboutActivityBase(null, {
         val include = arrayOf(
             "AboutLibraries",
             "AndroidIconics",
-            "androidin_appbillingv3",
             "androidslidinguppanel",
-            "Crashlytics",
             "dbflow",
             "fastadapter",
             "glide",
@@ -77,7 +75,6 @@ class AboutActivity : AboutActivityBase(null, {
             "kotterknife",
             "materialdialogs",
             "materialdrawer",
-            "rxjava",
             "subsamplingscaleimageview"
         )
 
