@@ -44,9 +44,6 @@ import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
-import io.reactivex.exceptions.UndeliverableException
-import io.reactivex.plugins.RxJavaPlugins
-import java.net.SocketTimeoutException
 import java.util.Random
 import kotlin.reflect.KClass
 
@@ -135,15 +132,6 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} created" }
                 }
             })
-
-        RxJavaPlugins.setErrorHandler {
-            when (it) {
-                is SocketTimeoutException, is UndeliverableException ->
-                    L.e { "RxJava common error ${it.message}" }
-                else ->
-                    L.e(it) { "RxJava error" }
-            }
-        }
     }
 
     private fun initBugsnag() {

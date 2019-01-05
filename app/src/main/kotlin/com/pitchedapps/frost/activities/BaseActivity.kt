@@ -45,44 +45,6 @@ abstract class BaseActivity : KauBaseActivity() {
         if (this !is WebOverlayActivityBase) setFrostTheme()
     }
 
-    //
-//    private var networkDisposable: Disposable? = null
-//    private var networkConsumer: ((Connectivity) -> Unit)? = null
-//
-//    fun setNetworkObserver(consumer: (connectivity: Connectivity) -> Unit) {
-//        this.networkConsumer = consumer
-//    }
-//
-//    private fun observeNetworkConnectivity() {
-//        val consumer = networkConsumer ?: return
-//        networkDisposable = ReactiveNetwork.observeNetworkConnectivity(applicationContext)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe { connectivity: Connectivity ->
-//                    connectivity.apply {
-//                        L.d{"Network connectivity changed: isAvailable: $isAvailable isRoaming: $isRoaming"}
-//                        consumer(connectivity)
-//                    }
-//                }
-//    }
-//
-//    private fun disposeNetworkConnectivity() {
-//        if (networkDisposable?.isDisposed == false)
-//            networkDisposable?.dispose()
-//        networkDisposable = null
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-////        disposeNetworkConnectivity()
-////        observeNetworkConnectivity()
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-////        disposeNetworkConnectivity()
-//    }
-
     override fun onStop() {
         if (this is VideoViewHolder) videoOnStop()
         super.onStop()
