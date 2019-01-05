@@ -43,6 +43,7 @@ import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 
@@ -82,9 +83,13 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     override val core: FrostContentCore
         get() = coreView
 
-    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(100)
-    override val progressChannel: BroadcastChannel<Int> = BroadcastChannel(100)
-    override val titleChannel: BroadcastChannel<String> = BroadcastChannel(100)
+    /**
+     * While this can be conflated, there exist situations where we wish to watch refresh cycles.
+     * Here, we'd need to make sure we don't skip events
+     */
+    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(10)
+    override val progressChannel: BroadcastChannel<Int> = ConflatedBroadcastChannel()
+    override val titleChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
 
     override lateinit var scope: CoroutineScope
 

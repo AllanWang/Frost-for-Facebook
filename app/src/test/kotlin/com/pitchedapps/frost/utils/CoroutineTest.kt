@@ -150,12 +150,12 @@ class CoroutineTest {
 
     /**
      * Not a true throttle, but for things like fetching header badges, we want to avoid simultaneous fetches.
-     * As a result, I want to test that the usage of offer along with a rendezvous channel will work as I expect.
+     * As a result, I want to test that the usage of offer along with a conflated channel will work as I expect.
      * Events should be consumed when there is no pending consumer on previous elements.
      */
     @Test
     fun throttledChannel() {
-        val channel = Channel<Int>(Channel.RENDEZVOUS)
+        val channel = Channel<Int>(Channel.CONFLATED)
         runBlocking {
             val deferred = async {
                 listen(channel) {

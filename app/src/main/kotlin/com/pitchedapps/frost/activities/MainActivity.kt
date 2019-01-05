@@ -34,7 +34,7 @@ import org.jsoup.Jsoup
 class MainActivity : BaseMainActivity() {
 
     override val fragmentChannel = BroadcastChannel<Int>(10)
-    override val headerBadgeChannel = Channel<String>(Channel.RENDEZVOUS)
+    override val headerBadgeChannel = Channel<String>(Channel.CONFLATED)
     var lastPosition = -1
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
