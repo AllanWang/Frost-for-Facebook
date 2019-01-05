@@ -17,7 +17,7 @@
 package com.pitchedapps.frost.dbflow
 
 import android.os.Parcelable
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.pitchedapps.frost.dbflow.CookieModel_Table.cookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
@@ -34,11 +34,10 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.kotlinextensions.select
 import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.structure.BaseModel
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.net.UnknownHostException
 
 /**
@@ -98,25 +97,20 @@ fun removeCookie(id: Long) {
     }
 }
 
-inline fun CookieModel.fetchUsername(crossinline callback: (String) -> Unit): Disposable =
-    ReactiveNetwork.checkInternetConnectivity().subscribeOn(Schedulers.io()).subscribe { yes, _ ->
-        if (!yes) return@subscribe callback("")
-        var result = ""
+suspend fun CookieModel.fetchUsername(): String? = withContext(Dispatchers.IO) {
+    withTimeoutOrNull(5000) {
+        var result: String? = null
         try {
             result = frostJsoup(cookie, FbItem.PROFILE.url).title()
             L.d { "Fetch username found" }
         } catch (e: Exception) {
             if (e !is UnknownHostException)
                 e.logFrostEvent("Fetch username failed")
-        } finally {
-            if (result.isBlank() && (name?.isNotBlank() == true)) {
-                callback(name!!)
-                return@subscribe
-            }
-            if (name != result) {
-                name = result
-                saveFbCookie(this@fetchUsername)
-            }
-            callback(result)
         }
+        if (name?.isNotBlank() == false && result != null && result != name) {
+            name = result
+            saveFbCookie(this@fetchUsername)
+        }
+        result
     }
+}

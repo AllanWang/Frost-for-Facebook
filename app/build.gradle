@@ -253,8 +253,8 @@ dependencies {
 
     //Reactive Libs
     implementation "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
-    implementation "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
-    implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
+//    implementation "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
+//    implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
     implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
 
 }
