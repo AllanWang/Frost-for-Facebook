@@ -18,6 +18,7 @@ package com.pitchedapps.frost.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -31,6 +32,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -202,6 +204,41 @@ class CoroutineTest {
             assertEquals(
                 listOf(0, 1, 2, 3, 4, 3, 5, 1),
                 uniqueData,
+                "Unique receiver should not have two consecutive events that are equal"
+            )
+        }
+    }
+
+    /**
+     * When using [uniqueOnly] for channels with limited capacity,
+     * the duplicates should not count towards the actual capacity
+     */
+    @Ignore("Not yet working as unique only buffered removes the capacity limitation of the channel")
+    @Test
+    fun uniqueOnlyBuffer() {
+        val channel = Channel<Int>(3)
+        runBlocking {
+
+            val deferred = async {
+                listen(channel.uniqueOnly(GlobalScope)) {
+                    // Throttle consumer
+                    delay(50)
+                    return@listen false
+                }
+            }
+
+            listOf(0, 1, 1, 1, 1, 1, 2, 2, 2).forEach {
+                delay(10)
+                channel.offer(it)
+            }
+
+            channel.close()
+
+            val data = deferred.await()
+
+            assertEquals(
+                listOf(0, 1, 2),
+                data,
                 "Unique receiver should not have two consecutive events that are equal"
             )
         }

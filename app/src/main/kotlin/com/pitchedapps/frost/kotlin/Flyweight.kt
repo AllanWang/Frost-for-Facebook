@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.kotlin
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -25,9 +26,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * Flyweight to keep track of values so long as they are valid.
@@ -38,19 +36,16 @@ import kotlin.coroutines.suspendCoroutine
  */
 class Flyweight<K, V>(
     val scope: CoroutineScope,
-    capacity: Int,
     val maxAge: Long,
     private val fetcher: suspend (K) -> V
 ) {
 
     // Receives a key and a pending request
-    private val actionChannel = Channel<Pair<K, Continuation<V>>>(capacity)
+    private val actionChannel = Channel<Pair<K, CompletableDeferred<V>>>(Channel.UNLIMITED)
     // Receives a key to invalidate the associated value
-    private val invalidatorChannel = Channel<K>(capacity)
-    // Receives a key to fetch the value
-    private val requesterChannel = Channel<K>(capacity)
+    private val invalidatorChannel = Channel<K>(Channel.UNLIMITED)
     // Receives a key and the resulting value
-    private val receiverChannel = Channel<Pair<K, Result<V>>>(capacity)
+    private val receiverChannel = Channel<Pair<K, Result<V>>>(Channel.UNLIMITED)
 
     // Keeps track of keys and associated update times
     private val conditionMap: MutableMap<K, Long> = mutableMapOf()
@@ -58,9 +53,16 @@ class Flyweight<K, V>(
     private val resultMap: MutableMap<K, Result<V>> = mutableMapOf()
     // Keeps track of unfulfilled actions
     // Note that the explicit type is very important here. See https://youtrack.jetbrains.net/issue/KT-18053
-    private val pendingMap: MutableMap<K, MutableList<Continuation<V>>> = ConcurrentHashMap()
+    private val pendingMap: MutableMap<K, MutableList<CompletableDeferred<V>>> = ConcurrentHashMap()
 
     private val job: Job
+
+    private fun CompletableDeferred<V>.completeWith(result: Result<V>) {
+        if (result.isSuccess)
+            complete(result.getOrNull()!!)
+        else
+            completeExceptionally(result.exceptionOrNull()!!)
+    }
 
     init {
         job = scope.launch(Dispatchers.IO) {
@@ -70,17 +72,17 @@ class Flyweight<K, V>(
                         /*
                          * New request received. Continuation should be fulfilled eventually
                          */
-                        actionChannel.onReceive { (key, continuation) ->
+                        actionChannel.onReceive { (key, completable) ->
                             val lastUpdate = conditionMap[key]
                             val lastResult = resultMap[key]
                             // Valid value, retrieved within acceptable time
                             if (lastResult != null && lastUpdate != null && System.currentTimeMillis() - lastUpdate < maxAge) {
-                                continuation.resumeWith(lastResult)
+                                completable.completeWith(lastResult)
                             } else {
                                 val valueRequestPending = key in pendingMap
-                                pendingMap.getOrPut(key) { mutableListOf() }.add(continuation)
+                                pendingMap.getOrPut(key) { mutableListOf() }.add(completable)
                                 if (!valueRequestPending)
-                                    requesterChannel.send(key)
+                                    fulfill(key)
                             }
                         }
                         /*
@@ -97,7 +99,7 @@ class Flyweight<K, V>(
                             resultMap.remove(key)
                             if (pendingMap[key]?.isNotEmpty() == true)
                             // Refetch value for pending requests
-                                requesterChannel.send(key)
+                                fulfill(key)
                         }
                         /*
                          * Value request fulfilled. Should now fulfill pending requests
@@ -106,31 +108,39 @@ class Flyweight<K, V>(
                             conditionMap[key] = System.currentTimeMillis()
                             resultMap[key] = result
                             pendingMap.remove(key)?.forEach {
-                                it.resumeWith(result)
+                                it.completeWith(result)
                             }
                         }
                     }
                 }
             }
-            launch {
-                /*
-                 * Value request received. Should fetch new value using supplied fetcher
-                 */
-                for (key in requesterChannel) {
-                    val result = runCatching {
-                        fetcher(key)
-                    }
-                    receiverChannel.send(key to result)
-                }
-            }
         }
     }
 
-    suspend fun fetch(key: K): V = suspendCoroutine {
-        if (!job.isActive) it.resumeWithException(IllegalStateException("Flyweight is not active"))
-        else scope.launch {
-            actionChannel.send(key to it)
+    /*
+     * Value request received. Should fetch new value using supplied fetcher
+     */
+    private fun fulfill(key: K) {
+        scope.launch {
+            val result = runCatching {
+                fetcher(key)
+            }
+            receiverChannel.send(key to result)
         }
+    }
+
+    /**
+     * Queues the request, and returns a completable once it is sent to a channel.
+     * The fetcher will only be suspended if the channels are full.
+     *
+     * Note that if the job is already inactive, a cancellation exception will be thrown.
+     * The message may default to the message for all completables under a cancelled job
+     */
+    fun fetch(key: K): CompletableDeferred<V> {
+        val completable = CompletableDeferred<V>(job)
+        if (!job.isActive) completable.completeExceptionally(CancellationException("Flyweight is not active"))
+        else actionChannel.offer(key to completable)
+        return completable
     }
 
     suspend fun invalidate(key: K) {
@@ -141,12 +151,11 @@ class Flyweight<K, V>(
         job.cancel()
         if (pendingMap.isNotEmpty()) {
             val error = CancellationException("Flyweight cancelled")
-            pendingMap.values.flatten().forEach { it.resumeWithException(error) }
+            pendingMap.values.flatten().forEach { it.completeExceptionally(error) }
             pendingMap.clear()
         }
         actionChannel.close()
         invalidatorChannel.close()
-        requesterChannel.close()
         receiverChannel.close()
         conditionMap.clear()
         resultMap.clear()

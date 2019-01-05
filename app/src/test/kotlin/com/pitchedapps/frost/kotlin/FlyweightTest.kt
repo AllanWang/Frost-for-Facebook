@@ -16,8 +16,8 @@
  */
 package com.pitchedapps.frost.kotlin
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.rules.Timeout
@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -42,7 +43,7 @@ class FlyweightTest {
     @BeforeTest
     fun before() {
         callCount = AtomicInteger(0)
-        flyweight = Flyweight(GlobalScope, 100, 200L) {
+        flyweight = Flyweight(GlobalScope, 200L) {
             callCount.incrementAndGet()
             when (it) {
                 LONG_RUNNING_KEY -> Thread.sleep(100000)
@@ -54,7 +55,7 @@ class FlyweightTest {
 
     @Test
     fun basic() {
-        assertEquals(2, runBlocking { flyweight.fetch(1) }, "Invalid result")
+        assertEquals(2, runBlocking { flyweight.fetch(1).await() }, "Invalid result")
         assertEquals(1, callCount.get(), "1 call expected")
     }
 
@@ -62,9 +63,7 @@ class FlyweightTest {
     fun multipleWithOneKey() {
         val results: List<Int> = runBlocking {
             (0..1000).map {
-                flyweight.scope.async {
-                    flyweight.fetch(1)
-                }
+                flyweight.fetch(1)
             }.map { it.await() }
         }
         assertEquals(1, callCount.get(), "1 call expected")
@@ -75,12 +74,12 @@ class FlyweightTest {
     @Test
     fun consecutiveReuse() {
         runBlocking {
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(1, callCount.get(), "1 call expected")
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(1, callCount.get(), "Reuse expected")
             Thread.sleep(300)
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(2, callCount.get(), "Refetch expected")
         }
     }
@@ -88,10 +87,10 @@ class FlyweightTest {
     @Test
     fun invalidate() {
         runBlocking {
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(1, callCount.get(), "1 call expected")
             flyweight.invalidate(1)
-            flyweight.fetch(1)
+            flyweight.fetch(1).await()
             assertEquals(2, callCount.get(), "New call expected")
         }
     }
@@ -99,24 +98,19 @@ class FlyweightTest {
     @Test
     fun destroy() {
         runBlocking {
-            val longRunningResult = async { flyweight.fetch(LONG_RUNNING_KEY) }
-            flyweight.fetch(1)
+            val longRunningResult = flyweight.fetch(LONG_RUNNING_KEY)
+            flyweight.fetch(1).await()
             flyweight.cancel()
             try {
-                flyweight.fetch(1)
+                flyweight.fetch(1).await()
                 fail("Flyweight should not be fulfilled after it is destroyed")
-            } catch (e: Exception) {
-                assertEquals("Flyweight is not active", e.message, "Incorrect error found on fetch after destruction")
+            } catch (ignore: CancellationException) {
             }
             try {
+                assertFalse(longRunningResult.isActive, "Long running result should no longer be active")
                 longRunningResult.await()
                 fail("Flyweight should have cancelled previously running requests")
-            } catch (e: Exception) {
-                assertEquals(
-                    "Flyweight cancelled",
-                    e.message,
-                    "Incorrect error found on fetch cancelled by destruction"
-                )
+            } catch (ignore: CancellationException) {
             }
         }
     }

@@ -33,9 +33,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.fetchUsername
 import com.pitchedapps.frost.dbflow.loadFbCookiesSuspend
+import com.pitchedapps.frost.dbflow.saveFbCookie
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
@@ -43,6 +44,7 @@ import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.setFrostColors
@@ -55,6 +57,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import java.net.UnknownHostException
 import kotlin.coroutines.resume
 
 /**
@@ -88,7 +92,7 @@ class LoginActivity : BaseActivity() {
             }
         }
         launch {
-            val cookie = web.loadLogin { refresh(it != 100) }
+            val cookie = web.loadLogin { refresh(it != 100) }.await()
             L.d { "Login found" }
             FbCookie.save(cookie.id)
             webFadeOut()
@@ -168,11 +172,22 @@ class LoginActivity : BaseActivity() {
     }
 
     private suspend fun loadUsername(cookie: CookieModel): String = withContext(Dispatchers.IO) {
-        suspendCancellableCoroutine<String> { cont ->
-            cookie.fetchUsername {
-                cont.resume(it)
+        val result: String = try {
+            withTimeout(5000) {
+                frostJsoup(cookie.cookie, FbItem.PROFILE.url).title()
             }
+        } catch (e: Exception) {
+            if (e !is UnknownHostException)
+                e.logFrostEvent("Fetch username failed")
+            ""
         }
+
+        if (cookie.name?.isNotBlank() == false && result != cookie.name) {
+            cookie.name = result
+            saveFbCookie(cookie)
+        }
+
+        cookie.name ?: ""
     }
 
     override fun backConsumer(): Boolean {

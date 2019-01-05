@@ -74,7 +74,7 @@ class MenuFragment : GenericRecyclerFragment<MenuItemData, IItem<*, *>>() {
     override suspend fun reloadImpl(progress: (Int) -> Unit): List<MenuItemData>? = withContext(Dispatchers.IO) {
         val cookie = FbCookie.webCookie ?: return@withContext null
         progress(10)
-        val auth = fbAuth.fetch(cookie)
+        val auth = fbAuth.fetch(cookie).await()
         progress(30)
         val data = auth.getMenuData().invoke() ?: return@withContext null
         if (data.data.isEmpty()) return@withContext null

@@ -27,7 +27,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.L
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -70,7 +69,6 @@ class FrostCookieInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val origRequest = chain.request()
         val cookie = FbCookie.webCookie ?: return chain.proceed(origRequest)
-        L.v { "Add cookie to req $cookie" }
         val request = origRequest.newBuilder().addHeader("Cookie", cookie).build()
         return chain.proceed(request)
     }

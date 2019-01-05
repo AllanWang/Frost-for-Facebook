@@ -26,10 +26,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.kotlin.Flyweight
 import com.pitchedapps.frost.utils.L
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -40,24 +37,8 @@ import org.apache.commons.text.StringEscapeUtils
 /**
  * Created by Allan Wang on 21/12/17.
  */
-val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 100, 3600000 /* an hour */) {
+val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 3600000 /* an hour */) {
     it.getAuth()
-}
-
-/**
- * Synchronously fetch [RequestAuth] from cookie
- * [action] will only be called if a valid auth is found.
- * Otherwise, [fail] will be called
- */
-fun String?.fbRequest(fail: () -> Unit = {}, action: RequestAuth.() -> Unit) {
-    if (this == null) return fail()
-    try {
-        val auth = runBlocking { fbAuth.fetch(this@fbRequest) }
-        auth.action()
-    } catch (e: Exception) {
-        L.e { "Failed auth for ${hashCode()}: ${e.message}" }
-        fail()
-    }
 }
 
 /**
@@ -136,7 +117,11 @@ fun String.getAuth(): RequestAuth {
         .call()
     call.execute().body()?.charStream()?.useLines { lines ->
         lines.forEach {
-            val text = StringEscapeUtils.unescapeEcmaScript(it)
+            val text = try {
+                StringEscapeUtils.unescapeEcmaScript(it)
+            } catch (ignore: Exception) {
+                return@forEach
+            }
             val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
             if (fb_dtsg != null) {
                 auth = auth.copy(fb_dtsg = fb_dtsg)
@@ -152,19 +137,6 @@ fun String.getAuth(): RequestAuth {
     }
 
     return auth
-}
-
-inline fun <T, reified R : Any, O> Array<T>.zip(
-    crossinline mapper: (List<R>) -> O,
-    crossinline caller: (T) -> R
-): Single<O> {
-    if (isEmpty())
-        return Single.just(mapper(emptyList()))
-    val singles = map { Single.fromCallable { caller(it) }.subscribeOn(Schedulers.io()) }
-    return Single.zip(singles) {
-        val results = it.mapNotNull { it as? R }
-        mapper(results)
-    }
 }
 
 /**

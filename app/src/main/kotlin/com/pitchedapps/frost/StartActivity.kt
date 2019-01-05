@@ -73,8 +73,8 @@ class StartActivity : KauBaseActivity() {
                     loadFbCookiesSync()
                 })
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
-                L._d { "Cookies: ${cookies.joinToString("\t")}" }
-                loadAssets()              
+                L._d { "Cookies: ${cookies.joinToString("\t", transform = CookieModel::toSensitiveString)}" }
+                loadAssets()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account

@@ -17,11 +17,7 @@
 package com.pitchedapps.frost.dbflow
 
 import android.os.Parcelable
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostJsoup
-import com.pitchedapps.frost.utils.logFrostEvent
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -34,12 +30,9 @@ import com.raizlabs.android.dbflow.kotlinextensions.save
 import com.raizlabs.android.dbflow.kotlinextensions.select
 import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.structure.BaseModel
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.net.UnknownHostException
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -54,7 +47,12 @@ object CookiesDb {
 @Parcelize
 @Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
 data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null, var cookie: String? = null) :
-    BaseModel(), Parcelable
+    BaseModel(), Parcelable {
+
+    override fun toString(): String = "CookieModel(${hashCode()})"
+
+    fun toSensitiveString(): String = "CookieModel(id=$id, name=$name, cookie=$cookie)"
+}
 
 fun loadFbCookie(id: Long): CookieModel? =
     (select from CookieModel::class where (CookieModel_Table.id eq id)).querySingle()
@@ -92,26 +90,3 @@ fun removeCookie(id: Long) {
         L._d { id }
     }
 }
-
-inline fun CookieModel.fetchUsername(crossinline callback: (String) -> Unit): Disposable =
-    ReactiveNetwork.checkInternetConnectivity().subscribeOn(Schedulers.io()).subscribe { yes, _ ->
-        if (!yes) return@subscribe callback("")
-        var result = ""
-        try {
-            result = frostJsoup(cookie, FbItem.PROFILE.url).title()
-            L.d { "Fetch username found" }
-        } catch (e: Exception) {
-            if (e !is UnknownHostException)
-                e.logFrostEvent("Fetch username failed")
-        } finally {
-            if (result.isBlank() && (name?.isNotBlank() == true)) {
-                callback(name!!)
-                return@subscribe
-            }
-            if (name != result) {
-                name = result
-                saveFbCookie(this@fetchUsername)
-            }
-            callback(result)
-        }
-    }

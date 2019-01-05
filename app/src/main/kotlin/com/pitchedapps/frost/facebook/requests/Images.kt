@@ -133,7 +133,7 @@ class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream>
         val result: Result<InputStream?> = runCatching {
             runBlocking {
                 withTimeout(20000L) {
-                    val auth = fbAuth.fetch(model.cookie)
+                    val auth = fbAuth.fetch(model.cookie).await()
                     if (cancelled) throw RuntimeException("Cancelled")
                     val url = auth.getFullSizedImage(model.id).invoke() ?: throw RuntimeException("Null url")
                     if (cancelled) throw RuntimeException("Cancelled")

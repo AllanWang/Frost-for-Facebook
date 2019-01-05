@@ -84,7 +84,7 @@ class FbRequestTest {
         val data = AUTH.getMenuData().invoke()
         assertNotNull(data)
         println(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(data))
-        assertTrue(data!!.data.isNotEmpty())
+        assertTrue(data.data.isNotEmpty())
         assertTrue(data.footer.hasContent, "Footer may be badly parsed")
         val items = data.flatMapValid()
         assertTrue(items.size > 15, "Something may be badly parsed")

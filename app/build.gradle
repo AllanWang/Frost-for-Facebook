@@ -204,7 +204,7 @@ dependencies {
 
 //    androidTestImplementation "io.mockk:mockk:${MOCKK}"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${COROUTINES}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kau.coroutines}"
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
@@ -250,12 +250,6 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
-
-    //Reactive Libs
-    implementation "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
-    implementation "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
-    implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
-    implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
 
 }
 
