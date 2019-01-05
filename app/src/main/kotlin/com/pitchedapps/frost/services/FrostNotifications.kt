@@ -117,7 +117,11 @@ enum class NotificationType(
      * or -1 if an error occurred
      */
     fun fetch(context: Context, data: CookieModel): Int {
-        val response = parser.parse(data.cookie)
+        val response = try {
+            parser.parse(data.cookie)
+        } catch (ignored: Exception) {
+            null
+        }
         if (response == null) {
             L.v { "$name notification data not found" }
             return -1

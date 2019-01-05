@@ -129,7 +129,11 @@ abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragme
         val cookie = FbCookie.webCookie
         val doc = getDoc(cookie)
         progress(60)
-        val response = parser.parse(cookie, doc)
+        val response = try {
+            parser.parse(cookie, doc)
+        } catch (ignored: Exception) {
+            null
+        }
         if (response == null) {
             L.i { "RecyclerFragment failed for ${baseEnum.name}" }
             L._d { "Cookie used: $cookie" }
