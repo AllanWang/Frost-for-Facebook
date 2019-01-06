@@ -22,7 +22,7 @@
     <string name="notification_fetch_fail">無法獲取通知</string>
     <string name="notification_sound">通知音效</string>
     <string name="notification_channel">客製化通知頻道</string>
-    <string name="notification_channel_desc">修改音量, 震動, 優先權等等...</string>
+    <string name="notification_channel_desc">修改音量, 震動, 優先權等等…</string>
     <string name="notification_ringtone">通知鈴聲</string>
     <string name="message_ringtone">留言鈴聲</string>
     <string name="select_ringtone">選擇鈴聲</string>
