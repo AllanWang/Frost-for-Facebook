@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.iitems
 
 import android.view.View
@@ -21,9 +37,9 @@ import com.pitchedapps.frost.utils.Prefs
 /**
  * Created by Allan Wang on 30/12/17.
  */
-class MenuContentIItem(val data: MenuItem)
-    : KauIItem<MenuContentIItem, MenuContentIItem.ViewHolder>(R.layout.iitem_menu, ::ViewHolder),
-        ClickableIItemContract {
+class MenuContentIItem(val data: MenuItem) :
+    KauIItem<MenuContentIItem, MenuContentIItem.ViewHolder>(R.layout.iitem_menu, ::ViewHolder),
+    ClickableIItemContract {
 
     override val url: String?
         get() = data.url
@@ -42,9 +58,9 @@ class MenuContentIItem(val data: MenuItem)
             val iconUrl = item.data.pic
             if (iconUrl != null)
                 GlideApp.with(itemView)
-                        .load(iconUrl)
-                        .transform(FrostGlide.roundCorner)
-                        .into(icon.visible())
+                    .load(iconUrl)
+                    .transform(FrostGlide.roundCorner)
+                    .into(icon.visible())
             else
                 icon.gone()
             content.text = item.data.name
@@ -59,12 +75,11 @@ class MenuContentIItem(val data: MenuItem)
     }
 }
 
-class MenuHeaderIItem(val data: MenuHeader) : HeaderIItem(data.header,
-        itemId = R.id.item_menu_header)
+class MenuHeaderIItem(val data: MenuHeader) : HeaderIItem(
+    data.header,
+    itemId = R.id.item_menu_header
+)
 
-class MenuFooterIItem(val data: MenuFooterItem)
-    : TextIItem(data.name, data.url, R.id.item_menu_footer)
+class MenuFooterIItem(val data: MenuFooterItem) : TextIItem(data.name, data.url, R.id.item_menu_footer)
 
-class MenuFooterSmallIItem(val data: MenuFooterItem)
-    : TextIItem(data.name, data.url, R.id.item_menu_footer_small)
-
+class MenuFooterSmallIItem(val data: MenuFooterItem) : TextIItem(data.name, data.url, R.id.item_menu_footer_small)

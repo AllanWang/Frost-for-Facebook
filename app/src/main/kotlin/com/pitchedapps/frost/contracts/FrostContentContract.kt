@@ -1,9 +1,26 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.contracts
 
 import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -13,7 +30,7 @@ import io.reactivex.subjects.PublishSubject
  * Contract for the underlying parent,
  * binds to activities & fragments
  */
-interface FrostContentContainer {
+interface FrostContentContainer : CoroutineScope {
 
     val baseUrl: String
 
@@ -23,31 +40,34 @@ interface FrostContentContainer {
      * Update toolbar title
      */
     fun setTitle(title: String)
-
 }
 
 /**
  * Contract for components shared among
  * all content providers
  */
+@UseExperimental(ExperimentalCoroutinesApi::class)
 interface FrostContentParent : DynamicUiContract {
+
+    val scope: CoroutineScope
 
     val core: FrostContentCore
 
     /**
      * Observable to get data on whether view is refreshing or not
      */
-    val refreshObservable: PublishSubject<Boolean>
+    val refreshChannel: BroadcastChannel<Boolean>
 
     /**
      * Observable to get data on refresh progress, with range [0, 100]
      */
-    val progressObservable: PublishSubject<Int>
+    val progressChannel: BroadcastChannel<Int>
 
     /**
      * Observable to get new title data (unique values only)
      */
-    val titleObservable: BehaviorSubject<String>
+    // todo note that this should be like a behavior subject vs publish subject
+    val titleChannel: BroadcastChannel<String>
 
     var baseUrl: String
 
@@ -84,13 +104,15 @@ interface FrostContentParent : DynamicUiContract {
      * For those cases, we will return false to stop it
      */
     fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean
-
 }
 
 /**
  * Underlying contract for the content itself
  */
 interface FrostContentCore : DynamicUiContract {
+
+    val scope: CoroutineScope
+        get() = parent.scope
 
     /**
      * Reference to parent
@@ -147,5 +169,4 @@ interface FrostContentCore : DynamicUiContract {
      * Signal destruction to release some content manually
      */
     fun destroy()
-
 }

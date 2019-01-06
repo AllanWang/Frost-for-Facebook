@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook.parsers
 
 import ca.allanwang.kau.searchview.SearchItem
@@ -46,9 +62,9 @@ data class FrostSearch(val href: String, val title: String, val description: Str
 
     companion object {
         fun create(href: String, title: String, description: String?) = FrostSearch(
-                with(href.indexOf("?")) { if (this == -1) href else href.substring(0, this) },
-                title.format(),
-                description?.format()
+            with(href.indexOf("?")) { if (this == -1) href else href.substring(0, this) },
+            title.format(),
+            description?.format()
         )
     }
 }
@@ -61,17 +77,18 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
     override fun parseImpl(doc: Document): FrostSearches? {
         val container: Element = doc.getElementById("BrowseResultsContainer")
-                ?: doc.getElementById("root")
-                ?: return null
+            ?: doc.getElementById("root")
+            ?: return null
         /**
          *
          * Removed [data-store*=result_id]
          */
         return FrostSearches(container.select("a.touchable[href]").filter(Element::hasText).map {
-            FrostSearch.create(it.attr("href").formattedFbUrl,
-                    it.select("._uoi").first()?.text() ?: "",
-                    it.select("._1tcc").first()?.text())
+            FrostSearch.create(
+                it.attr("href").formattedFbUrl,
+                it.select("._uoi").first()?.text() ?: "",
+                it.select("._1tcc").first()?.text()
+            )
         }.filter { it.title.isNotBlank() })
     }
-
 }

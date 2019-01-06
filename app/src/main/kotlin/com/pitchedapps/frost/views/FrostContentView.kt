@@ -1,13 +1,37 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.views
 
 import android.content.Context
 import android.os.Build
-import android.support.v4.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import ca.allanwang.kau.utils.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import ca.allanwang.kau.utils.bindView
+import ca.allanwang.kau.utils.circularReveal
+import ca.allanwang.kau.utils.fadeIn
+import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.invisibleIf
+import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.launchMain
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
@@ -16,33 +40,41 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.launch
 
 class FrostContentWeb @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrostContentView<FrostWebView>(context, attrs, defStyleAttr, defStyleRes) {
 
     override val layoutRes: Int = R.layout.view_content_base_web
-
 }
 
 class FrostContentRecycler @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrostContentView<FrostRecyclerView>(context, attrs, defStyleAttr, defStyleRes) {
 
     override val layoutRes: Int = R.layout.view_content_base_recycler
-
 }
 
+@UseExperimental(ExperimentalCoroutinesApi::class)
 abstract class FrostContentView<out T> @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-        FrostContentParent where T : View, T : FrostContentCore {
+    FrostContentParent where T : View, T : FrostContentCore {
 
     private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
@@ -51,11 +83,15 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     override val core: FrostContentCore
         get() = coreView
 
-    override val progressObservable: PublishSubject<Int> = PublishSubject.create()
-    override val refreshObservable: PublishSubject<Boolean> = PublishSubject.create()
-    override val titleObservable: BehaviorSubject<String> = BehaviorSubject.create()
+    /**
+     * While this can be conflated, there exist situations where we wish to watch refresh cycles.
+     * Here, we'd need to make sure we don't skip events
+     */
+    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(10)
+    override val progressChannel: BroadcastChannel<Int> = ConflatedBroadcastChannel()
+    override val titleChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
 
-    private val compositeDisposable = CompositeDisposable()
+    override lateinit var scope: CoroutineScope
 
     override lateinit var baseUrl: String
     override var baseEnum: FbItem? = null
@@ -77,33 +113,41 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     protected fun init() {
         inflate(context, layoutRes, this)
         coreView.parent = this
-
-        // bind observables
-        progressObservable.observeOn(AndroidSchedulers.mainThread()).subscribe {
-            progress.invisibleIf(it == 100)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                progress.setProgress(it, true)
-            else
-                progress.progress = it
-        }.addTo(compositeDisposable)
-
-        refreshObservable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    refresh.isRefreshing = it
-                    refresh.isEnabled = true
-                }.addTo(compositeDisposable)
-        refresh.setOnRefreshListener { coreView.reload(true) }
-
         reloadThemeSelf()
-
     }
 
     override fun bind(container: FrostContentContainer) {
         baseUrl = container.baseUrl
         baseEnum = container.baseEnum
         init()
+        scope = container
         core.bind(container)
+        refresh.setOnRefreshListener {
+            with(coreView) {
+                reload(true)
+            }
+        }
+        // Begin subscription in the main thread
+        val refreshReceiver = refreshChannel.openSubscription()
+        val progressReceiver = progressChannel.openSubscription()
+
+        scope.launchMain {
+            launch {
+                for (r in refreshReceiver) {
+                    refresh.isRefreshing = r
+                    refresh.isEnabled = true
+                }
+            }
+            launch {
+                for (p in progressReceiver) {
+                    progress.invisibleIf(p == 100)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        progress.setProgress(p, true)
+                    else
+                        progress.progress = p
+                }
+            }
+        }
     }
 
     override fun reloadTheme() {
@@ -126,15 +170,14 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun destroy() {
-        titleObservable.onComplete()
-        progressObservable.onComplete()
-        refreshObservable.onComplete()
+        titleChannel.close()
+        progressChannel.close()
+        refreshChannel.close()
         core.destroy()
-        compositeDisposable.dispose()
     }
 
-    private var dispose: Disposable? = null
     private var transitionStart: Long = -1
+    private var refreshReceiver: ReceiveChannel<Boolean>? = null
 
     /**
      * Hook onto the refresh observable for one cycle
@@ -142,32 +185,32 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
      * The cycle only starts on the first load since there may have been another process when this is registered
      */
     override fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean {
-        if (!urlChanged && dispose != null) {
+        if (!urlChanged && refreshReceiver != null) {
             L.v { "Consuming url load" }
             return false // still in progress; do not bother with load
         }
         L.v { "Registered transition" }
         with(coreView) {
-            var loading = dispose != null
-            dispose?.dispose()
-            dispose = refreshObservable
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        if (it) {
+            refreshReceiver = refreshChannel.openSubscription().also { receiver ->
+                scope.launchMain {
+                    var loading = false
+                    for (r in receiver) {
+                        if (r) {
                             loading = true
                             transitionStart = System.currentTimeMillis()
                             clearAnimation()
                             if (isVisible)
                                 fadeOut(duration = 200L)
                         } else if (loading) {
-                            loading = false
                             if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
                             else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
                             L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
-                            dispose?.dispose()
-                            dispose = null
+                            receiver.cancel()
+                            refreshReceiver = null
                         }
                     }
+                }
+            }
         }
         return true
     }

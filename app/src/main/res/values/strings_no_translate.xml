@@ -5,10 +5,10 @@
     <string name="paypal" translatable="false">PayPal</string>
     <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
     <string name="github_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook</string>
+    <string name="github_downloads_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook/releases</string>
     <string name="reddit_url" translatable="false">https://www.reddit.com/r/FrostForFacebook</string>
     <string name="slack_url" translatable="false">https://frost-slack.allanwang.ca</string>
     <string name="xda_url" translatable="false">https://forum.xda-developers.com/android/apps-games/app-frost-facebook-t3685896</string>
-    <string name="xda_labs_url" translatable="false">https://labs.xda-developers.com/store/app/com.pitchedapps.frost</string>
     <string name="frost_prefix" translatable="false">Frost for Facebook:</string>
     <string name="feedback" translatable="false">Feedback</string>
     <string name="bug_report" translatable="false">Bug Report</string>

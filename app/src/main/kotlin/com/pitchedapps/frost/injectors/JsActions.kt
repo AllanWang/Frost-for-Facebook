@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
@@ -26,11 +42,10 @@ enum class JsActions(body: String) : InjectorContract {
 
     val function = "(function(){$body})();"
 
-    override fun inject(webView: WebView, callback: (() -> Unit)?) =
-            JsInjector(function).inject(webView, callback)
-
+    override fun inject(webView: WebView) =
+        JsInjector(function).inject(webView)
 }
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun clickBySelector(selector: String): String =
-        """document.querySelector("$selector").click()"""
+    """document.querySelector("$selector").click()"""

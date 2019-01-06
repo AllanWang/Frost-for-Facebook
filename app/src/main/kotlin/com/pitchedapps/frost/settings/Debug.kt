@@ -1,10 +1,29 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.settings
 
 import android.content.Context
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.withMainContext
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
@@ -19,11 +38,11 @@ import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import java.io.File
-import java.util.concurrent.Future
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -53,49 +72,53 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 itemsCallback { dialog, _, position, _ ->
                     dialog.dismiss()
                     val parser = parsers[position]
-                    var attempt: Future<Unit>? = null
+                    var attempt: Job? = null
                     val loading = materialDialog {
                         content(parser.nameRes)
                         progress(true, 100)
                         negativeText(R.string.kau_cancel)
                         onNegative { dialog, _ ->
-                            attempt?.cancel(true)
+                            attempt?.cancel()
                             dialog.dismiss()
                         }
                         canceledOnTouchOutside(false)
                     }
 
-                    attempt = loading.doAsync({
-                        createEmail(parser, "Error: ${it.message}")
-                    }) {
-                        val data = parser.parse(FbCookie.webCookie)
-                        uiThread {
-                            if (it.isCancelled) return@uiThread
-                            it.dismiss()
-                            createEmail(parser, data?.data)
+                    attempt = launch(Dispatchers.IO) {
+                        try {
+                            val data = parser.parse(FbCookie.webCookie)
+                            withMainContext {
+                                loading.dismiss()
+                                createEmail(parser, data?.data)
+                            }
+                        } catch (e: Exception) {
+                            createEmail(parser, "Error: ${e.message}")
                         }
                     }
                 }
             }
-
         }
     }
 }
 
 private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
-        sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
-            addItem("Url", parser.url)
-            addItem("Contents", "$content")
-        }
+    sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
+        addItem("Url", parser.url)
+        addItem("Contents", "$content")
+    }
 
 private const val ZIP_NAME = "debug"
 
 fun SettingsActivity.sendDebug(url: String, html: String?) {
 
-    val downloader = OfflineWebsite(url, FbCookie.webCookie ?: "",
-            baseUrl = FB_URL_BASE,
-            html = html,
-            baseDir = DebugActivity.baseDir(this))
+    val downloader = OfflineWebsite(
+        url, FbCookie.webCookie ?: "",
+        baseUrl = FB_URL_BASE,
+        html = html,
+        baseDir = DebugActivity.baseDir(this)
+    )
+
+    val job = Job()
 
     val md = materialDialog {
         title(R.string.parsing_data)
@@ -103,32 +126,36 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         negativeText(R.string.kau_cancel)
         onNegative { dialog, _ -> dialog.dismiss() }
         canceledOnTouchOutside(false)
-        dismissListener { downloader.cancel() }
+        dismissListener { job.cancel() }
     }
 
-    md.doAsync {
-        downloader.loadAndZip(ZIP_NAME, { progress ->
-            uiThread { it.setProgress(progress) }
-        }) { success ->
-            uiThread {
-                it.dismiss()
-                if (success) {
-                    val zipUri = it.context.frostUriFromFile(
-                            File(downloader.baseDir, "$ZIP_NAME.zip"))
-                    L.i { "Sending debug zip with uri $zipUri" }
-                    sendFrostEmail(R.string.debug_report_email_title) {
-                        addItem("Url", url)
-                        addAttachment(zipUri)
-                        extras = {
-                            type = "application/zip"
-                        }
-                    }
-                } else {
-                    toast(R.string.error_generic)
+    val progressChannel = Channel<Int>(10)
+
+    launchMain {
+        for (p in progressChannel) {
+            md.setProgress(p)
+        }
+    }
+
+    launchMain {
+        val success = downloader.loadAndZip(ZIP_NAME) {
+            progressChannel.offer(it)
+        }
+        md.dismiss()
+        if (success) {
+            val zipUri = frostUriFromFile(
+                File(downloader.baseDir, "$ZIP_NAME.zip")
+            )
+            L.i { "Sending debug zip with uri $zipUri" }
+            sendFrostEmail(R.string.debug_report_email_title) {
+                addItem("Url", url)
+                addAttachment(zipUri)
+                extras = {
+                    type = "application/zip"
                 }
             }
+        } else {
+            toast(R.string.error_generic)
         }
-
     }
-
 }

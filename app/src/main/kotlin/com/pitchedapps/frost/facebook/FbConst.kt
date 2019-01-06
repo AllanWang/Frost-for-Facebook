@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.facebook
 
 /**
@@ -10,11 +26,14 @@ const val HTTPS_FACEBOOK_COM = "https://$FACEBOOK_COM"
 const val FB_URL_BASE = "https://m.$FACEBOOK_COM/"
 fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
+const val FB_HOME_URL = "${FB_URL_BASE}home.php"
 
-const val USER_AGENT_FULL = "Mozilla/5.0 (Linux; Android 4.4.2; en-us; SAMSUNG SM-G900T Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.6 Chrome/28.0.1500.94 Mobile Safari/537.36"
-const val USER_AGENT_BASIC_OLD = "Mozilla/5.0 (Linux; Android 6.0) AppleWebKit/537.10+ (KHTML, like Gecko) Version/10.1.0.4633 Mobile Safari/537.10+"
-const val USER_AGENT_MESSENGER = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
-const val USER_AGENT_BASIC = USER_AGENT_MESSENGER
+// Default user agent
+const val USER_AGENT_FULL =
+    "Mozilla/5.0 (Linux; Android 7.1; Mi A1 Build/N2G47H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.83 Mobile Safari/537.36"
+// Basic user agent; non mobile version
+const val USER_AGENT_BASIC =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36"
 
 /**
  * Animation transition delay, just to ensure that the styles

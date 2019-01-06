@@ -1,9 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
+
+apply from: '../spotless.gradle'
 
 android {
     compileSdkVersion kau.targetSdk
@@ -22,7 +25,7 @@ android {
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     applicationVariants.all { variant ->
@@ -87,6 +90,8 @@ android {
 
     }
 
+    def compilerArgs = ["-Xuse-experimental=kotlin.Experimental" /*, "-XXLanguage:+InlineClasses"*/]
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -97,6 +102,8 @@ android {
             resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
             ext.enableBugsnag = false
+
+            kotlinOptions.freeCompilerArgs += compilerArgs
         }
         releaseTest {
             minifyEnabled true
@@ -127,6 +134,29 @@ android {
     packagingOptions {
         pickFirst 'META-INF/library_release.kotlin_module'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions.unitTests {
+        includeAndroidResources = true
+        // Don't throw runtime exceptions for android calls that are not mocked
+        returnDefaultValues = true
+
+        // Always show the result of every unit test, even if it passes.
+        all {
+            testLogging {
+                events 'passed', 'skipped', 'failed', 'standardError'
+            }
+        }
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
 }
 
 repositories {
@@ -136,14 +166,13 @@ repositories {
 }
 
 dependencies {
-    androidTestImplementation("com.android.support.test:runner:${kau.testRunner}") {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-
-    implementation "com.android.support:exifinterface:${kau.supportLibs}"
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
 
     androidTestImplementation kauDependency.kotlinTest
-    androidTestImplementation "com.android.support.test:rules:${TEST_RULE}"
+    androidTestImplementation kauDependency.espresso
+    androidTestImplementation kauDependency.testRules
+    androidTestImplementation kauDependency.testRunner
+
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
     testImplementation kauDependency.junit
@@ -166,6 +195,16 @@ dependencies {
     implementation "ca.allanwang.kau:core:$KAU"
     //noinspection GradleDependency
     implementation "ca.allanwang.kau:core-ui:$KAU"
+
+    implementation "androidx.core:core-ktx:${KTX}"
+
+//    implementation "org.koin:koin-android:${KOIN}"
+//    testImplementation "org.koin:koin-test:${KOIN}"
+//    androidTestImplementation "org.koin:koin-test:${KOIN}"
+
+//    androidTestImplementation "io.mockk:mockk:${MOCKK}"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kau.coroutines}"
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
@@ -201,12 +240,10 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
     implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
 
     implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
-
-    implementation "nz.bradcampbell:paperparcel:${PAPER_PARCEL}"
-    implementation "nz.bradcampbell:paperparcel-kotlin:${PAPER_PARCEL}"
-    kapt "nz.bradcampbell:paperparcel-compiler:${PAPER_PARCEL}"
 
     implementation "com.bugsnag:bugsnag-android:${BUGSNAG}"
 
@@ -214,12 +251,32 @@ dependencies {
 
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 
-    //Reactive Libs
-    implementation "io.reactivex.rxjava2:rxjava:${RX_JAVA}"
-    implementation "io.reactivex.rxjava2:rxkotlin:${RX_KOTLIN}"
-    implementation "io.reactivex.rxjava2:rxandroid:${RX_ANDROID}"
-    implementation "com.github.pwittchen:reactivenetwork-rx2:${RX_NETWORK}"
+}
 
+// Validates code and generates apk
+task createGithubReleaseApk(type: GradleBuild) {
+    tasks = ['spotlessCheck',
+             'lintRelease',
+             'testReleaseUnitTest',
+             'connectedAndroidTest',
+             'assembleRelease']
+}
+
+def kotlinResolutions = ['kotlin-reflect',
+                         'kotlin-stdlib',
+                         'kotlin-stdlib-jdk7',
+                         'kotlin-stdlib-jdk8',
+                         'kotlin-test',
+                         'kotlin-test-junit4',
+                         'kotlin-test-junit5']
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
+            details.useVersion KOTLIN
+        }
+    }
 }
 
 apply plugin: 'com.bugsnag.android.gradle'

@@ -1,14 +1,25 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.SingleSubject
 import org.apache.commons.text.StringEscapeUtils
-import java.util.*
+import java.util.Locale
 
 class JsBuilder {
     private val css = StringBuilder()
@@ -65,8 +76,7 @@ class JsBuilder {
  * Contract for all injectors to allow it to interact properly with a webview
  */
 interface InjectorContract {
-    fun inject(webView: WebView) = inject(webView, null)
-    fun inject(webView: WebView, callback: (() -> Unit)?)
+    fun inject(webView: WebView)
     /**
      * Toggle the injector (usually through Prefs
      * If false, will fallback to an empty action
@@ -77,39 +87,18 @@ interface InjectorContract {
 /**
  * Helper method to inject multiple functions simultaneously with a single callback
  */
-fun WebView.jsInject(vararg injectors: InjectorContract, callback: ((Int) -> Unit)? = null): Disposable? {
-    val validInjectors = injectors.filter { it != JsActions.EMPTY }
-    if (validInjectors.isEmpty()) {
-        callback?.invoke(0)
-        return null
+fun WebView.jsInject(vararg injectors: InjectorContract) {
+    injectors.filter { it != JsActions.EMPTY }.forEach {
+        it.inject(this)
     }
-    L.d { "Injecting ${validInjectors.size} items" }
-    if (callback == null) {
-        validInjectors.forEach { it.inject(this) }
-        return null
-    }
-    val observables = Array(validInjectors.size) { SingleSubject.create<Unit>() }
-    val disposable = Single.zip<Unit, Int>(observables.asList()) { it.size }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { res, _ ->
-                callback(res)
-            }
-    (0 until validInjectors.size).forEach { i ->
-        validInjectors[i].inject(this) {
-            observables[i].onSuccess(Unit)
-        }
-    }
-    return disposable
 }
 
-fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract,
-                                callback: ((Int) -> Unit)? = null) = web.jsInject(*injectors, callback = callback)
+fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract) = web.jsInject(*injectors)
 
 /**
  * Wrapper class to convert a function into an injector
  */
 class JsInjector(val function: String) : InjectorContract {
-    override fun inject(webView: WebView, callback: (() -> Unit)?) {
-        webView.evaluateJavascript(function) { callback?.invoke() }
-    }
+    override fun inject(webView: WebView) =
+        webView.evaluateJavascript(function, null)
 }

@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.2.0
+* Rewrite a lot of internal logic to optimize loading
+* Change default user agent to new android version, previously a desktop user agent
+* Add back group management page when clicking the respective notification
+* Update theme, including like button, menu icon, and material light bugs
+* Fix login problem when one account is signed in.
+* Fix some problems when exiting the image viewer
+
+## v2.1.2
+* Fix message notifications with just one other user
+
+## v2.1.1
+* Fix link loading for some notifications. Some will redirect to the main notification page
+* Fix double back click problem
+
+## v2.1.0
+* Changed signing key; requires clean install
+* Update lots of theme components
+* Fix create post button
+* Add translations for Danish, Ukranian, and Swedish
+
 ## v2.0.1
 * Update theme
 * Catch crashes if device has no webview

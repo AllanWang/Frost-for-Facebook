@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.activities
 
 import android.annotation.SuppressLint
@@ -12,14 +28,36 @@ import ca.allanwang.kau.kpref.activity.CoreAttributeContract
 import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.utils.*
+import ca.allanwang.kau.utils.finishSlideOut
+import ca.allanwang.kau.utils.setMenuIcons
+import ca.allanwang.kau.utils.startActivityForResult
+import ca.allanwang.kau.utils.startLink
+import ca.allanwang.kau.utils.string
+import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.withSceneTransitionAnimation
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
-import com.pitchedapps.frost.settings.*
-import com.pitchedapps.frost.utils.*
-
+import com.pitchedapps.frost.settings.getAppearancePrefs
+import com.pitchedapps.frost.settings.getBehaviourPrefs
+import com.pitchedapps.frost.settings.getDebugPrefs
+import com.pitchedapps.frost.settings.getExperimentalPrefs
+import com.pitchedapps.frost.settings.getFeedPrefs
+import com.pitchedapps.frost.settings.getNotificationPrefs
+import com.pitchedapps.frost.settings.sendDebug
+import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_RESTART
+import com.pitchedapps.frost.utils.cookies
+import com.pitchedapps.frost.utils.frostChangelog
+import com.pitchedapps.frost.utils.frostNavigationBar
+import com.pitchedapps.frost.utils.launchNewTask
+import com.pitchedapps.frost.utils.loadAssets
+import com.pitchedapps.frost.utils.materialDialogThemed
+import com.pitchedapps.frost.utils.setFrostTheme
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-06-06.
@@ -100,7 +138,7 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.newsfeed, getFeedPrefs()) {
             descRes = R.string.newsfeed_desc
-            iicon = CommunityMaterial.Icon.cmd_newspaper
+            iicon = CommunityMaterial.Icon2.cmd_newspaper
         }
 
         subItems(R.string.notifications, getNotificationPrefs()) {
@@ -146,7 +184,6 @@ class SettingsActivity : KPrefActivity() {
             iicon = CommunityMaterial.Icon.cmd_android_debug_bridge
             visible = { Prefs.debugSettings }
         }
-
     }
 
     fun shouldRestartMain() {
@@ -172,16 +209,21 @@ class SettingsActivity : KPrefActivity() {
     override fun onBackPressed() {
         if (!super.backPress()) {
             setResult(resultFlag)
-            finishSlideOut()
+            launch(NonCancellable) {
+                loadAssets()
+                finishSlideOut()
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
         toolbar.tint(Prefs.iconColor)
-        setMenuIcons(menu, Prefs.iconColor,
-                R.id.action_email to GoogleMaterial.Icon.gmd_email,
-                R.id.action_changelog to GoogleMaterial.Icon.gmd_info)
+        setMenuIcons(
+            menu, Prefs.iconColor,
+            R.id.action_email to GoogleMaterial.Icon.gmd_email,
+            R.id.action_changelog to GoogleMaterial.Icon.gmd_info
+        )
         return true
     }
 

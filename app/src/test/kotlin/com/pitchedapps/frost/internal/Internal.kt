@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.internal
 
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
@@ -6,13 +22,10 @@ import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.RequestAuth
 import com.pitchedapps.frost.facebook.requests.getAuth
 import com.pitchedapps.frost.utils.frostJsoup
-import io.reactivex.Completable
 import org.junit.Assume
-import org.junit.Test
 import java.io.File
 import java.io.FileInputStream
-import java.util.*
-import java.util.concurrent.TimeUnit
+import java.util.Properties
 import kotlin.reflect.full.starProjectedType
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -80,35 +93,4 @@ fun Any.assertComponentsNotEmpty() {
 
 fun <T : Comparable<T>> List<T>.assertDescending(tag: String) {
     assertEquals(sortedDescending(), this, "$tag not sorted in descending order")
-}
-
-interface CompletableCallback {
-    fun onComplete()
-    fun onError(message: String)
-}
-
-inline fun concurrentTest(crossinline caller: (callback: CompletableCallback) -> Unit) {
-    val result = Completable.create { emitter ->
-        caller(object : CompletableCallback {
-            override fun onComplete() = emitter.onComplete()
-            override fun onError(message: String) = emitter.onError(Throwable(message))
-        })
-    }.blockingGet(5, TimeUnit.SECONDS)
-    if (result != null)
-        throw RuntimeException("Concurrent fail: ${result.message}")
-}
-
-class InternalTest {
-    @Test
-    fun concurrentTest() = try {
-        concurrentTest { result ->
-            Thread().run {
-                Thread.sleep(100)
-                result.onError("Intentional fail")
-            }
-        }
-        fail("Did not throw exception")
-    } catch (e: Exception) {
-        // pass
-    }
 }

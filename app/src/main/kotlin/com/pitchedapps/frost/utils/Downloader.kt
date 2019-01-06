@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.pitchedapps.frost.utils
 
 import android.app.DownloadManager
@@ -16,26 +32,29 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.loadFbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 
-
 /**
  * Created by Allan Wang on 2017-08-04.
  *
  * With reference to <a href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack Overflow</a>
  */
-fun Context.frostDownload(url: String?,
-                          userAgent: String = USER_AGENT_BASIC,
-                          contentDisposition: String? = null,
-                          mimeType: String? = null,
-                          contentLength: Long = 0L) {
+fun Context.frostDownload(
+    url: String?,
+    userAgent: String = USER_AGENT_BASIC,
+    contentDisposition: String? = null,
+    mimeType: String? = null,
+    contentLength: Long = 0L
+) {
     url ?: return
     frostDownload(Uri.parse(url), userAgent, contentDisposition, mimeType, contentLength)
 }
 
-fun Context.frostDownload(uri: Uri?,
-                          userAgent: String = USER_AGENT_BASIC,
-                          contentDisposition: String? = null,
-                          mimeType: String? = null,
-                          contentLength: Long = 0L) {
+fun Context.frostDownload(
+    uri: Uri?,
+    userAgent: String = USER_AGENT_BASIC,
+    contentDisposition: String? = null,
+    mimeType: String? = null,
+    contentLength: Long = 0L
+) {
     uri ?: return
     L.d { "Received download request" }
     if (uri.scheme != "http" && uri.scheme != "https") {
