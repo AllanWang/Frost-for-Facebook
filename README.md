@@ -57,6 +57,7 @@ Special thanks to the following awesome people for translating significant porti
 | Language | Contributors |
 |----------|--------------|
 | Chinese (Simplified) | [Zhengang](https://crowdin.com/profile/Zhengang) |
+| Chinese (Traditional) | [StanAttack](https://crowdin.com/profile/StanAttack) &bull; [yipinghuang](https://crowdin.com/profile/yipinghuang) &bull; [jpss](https://crowdin.com/profile/jpss) &bull; [BrLi](https://crowdin.com/profile/brli) |
 | Danish | [mhtorp](https://crowdin.com/profile/mhtorp) |
 | French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
 | Galician | [Xesús M. Mosquera](https://twitter.com/xesusmmc?lang=en) |
@@ -67,9 +68,14 @@ Special thanks to the following awesome people for translating significant porti
 | Korean | [잇스테이크](https://crowdin.com/profile/bexco2010) |
 | Norwegian | [Julian Madsen](https://crowdin.com/profile/julianmadsen1) |
 | Polish | [Mroczny](https://crowdin.com/profile/Mroczny) &bull; [pantinPL](https://crowdin.com/profile/pantinPL) |
-| Portuguese, Brazilian | [TheusKhan](https://crowdin.com/profile/TheusKhan) |
+| Portuguese | [Ekzos](https://crowdin.com/profile/Ekzos) &bull; [Sérgio Marques](https://crowdin.com/profile/smarquespt) &bull; [Francisco Fernandes](https://crowdin.com/profile/alex2fernandes) |
+| Portuguese (Brazilian) | [TheusKhan](https://crowdin.com/profile/TheusKhan) |
+| Romanian | [Drăgan Florin Ovidiu](https://crowdin.com/profile/ovidiudragan2012) &bull; [Marian Bailescu](https://crowdin.com/profile/marianbailescu) |
+| Russian | [Eugene Tareyev](https://crowdin.com/profile/haired) &bull; [Vitali Bl](https://crowdin.com/profile/vital0000000) &bull; [Felix Fester](https://crowdin.com/profile/slendy00880) |
+| Serbian | [vuklozo](https://crowdin.com/profile/vuklozo) &bull; [Nikola Radmanović](https://crowdin.com/profile/nikoladradmanovic) &bull; [M23](https://crowdin.com/profile/M23) |
 | Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) |
 | Swedish | [Artswitcher](https://crowdin.com/profile/Artswitcher) &bull; [Henrik Mattsson-Mårn](https://crowdin.com/profile/rchk) |
+| Tagalog | [Cryptoffer Translator](https://crowdin.com/profile/toffer0219) |
 | Thai | [Thanawat Hanthong](https://crowdin.com/profile/peet6015) |
 | Turkish | [upvotelife](https://crowdin.com/profile/upvotelife) &bull; [Kardelen Sepetçi](https://crowdin.com/profile/kardeland) |
 | Ukrainian | [Таня Делікатна](https://crowdin.com/profile/delikatna_i) &bull; [Вадим Жушман](https://crowdin.com/profile/android54544) |
