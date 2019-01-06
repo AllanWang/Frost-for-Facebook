@@ -5,7 +5,7 @@
     <string name="no_notifications">Bildirim yok</string>
     <string name="notification_keywords">Anahtar Kelimeler</string>
     <string name="notification_keywords_desc">Bildirimde bu tuşlardan herhangi biri varsa bildirimde bulunmaz.</string>
-    <string name="add_keyword">Anahtar sözcük</string>
+    <string name="add_keyword">Anahtar sözcük ekle</string>
     <string name="hint_keyword">Anahtar kelimeyi yazın ve + ya basın</string>
     <string name="empty_keyword">Boş anahtar kelime</string>
     <string name="notification_general">Genel bildirimleri aktifleştir</string>
