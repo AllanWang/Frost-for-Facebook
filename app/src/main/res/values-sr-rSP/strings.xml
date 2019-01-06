@@ -20,7 +20,7 @@
     <string name="notes">Белешке</string>
     <string name="on_this_day">На данашњи дан</string>
     <string name="loading_account">Спремам…</string>
-    <string name="welcome">Добродошли</string>
+    <string name="welcome">Добродошли %s</string>
     <string name="select_facebook_account">Одаберите Фејсбук налог</string>
     <string name="account_not_found">Одабрани налог не постоји у бази</string>
     <string name="frost_requests">Фрост Захтеви</string>
