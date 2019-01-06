@@ -44,7 +44,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
-import java.util.IllegalFormatException
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -95,11 +94,7 @@ class StartActivity : KauBaseActivity() {
         showInvalidView(R.string.error_webview)
 
     private fun showInvalidSdkView() {
-        val text = try {
-            String.format(string(R.string.error_sdk), Build.VERSION.SDK_INT)
-        } catch (e: IllegalFormatException) {
-            string(R.string.error_sdk)
-        }
+        val text = String.format(string(R.string.error_sdk), Build.VERSION.SDK_INT)
         showInvalidView(text)
     }
 

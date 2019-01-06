@@ -6,6 +6,12 @@
     <item text="" />
     -->
 
+    <version title="v2.2.1" />
+    <item text="Update theme" />
+    <item text="Update translations" />
+    <item text="Fix misc bugs" />
+    <item text="Improve startup speed" />
+
     <version title="v2.2.0" />
     <item text="Rewrite a lot of internal logic to optimize loading" />
     <item text="Change default user agent to new android version, previously a desktop user agent" />
@@ -13,9 +19,6 @@
     <item text="Update theme, including like button, menu icon, and material light bugs" />
     <item text="Fix login problem when one account is signed in." />
     <item text="Fix some problems when exiting the image viewer" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.1.2" />
     <item text="Fix message notifications with just one other user" />

@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.1
+* Update theme
+* Update translations
+* Fix misc bugs
+* Improve startup speed
+
 ## v2.2.0
 * Rewrite a lot of internal logic to optimize loading
 * Change default user agent to new android version, previously a desktop user agent
