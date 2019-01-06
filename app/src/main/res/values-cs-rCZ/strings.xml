@@ -19,7 +19,7 @@
     <string name="photos">Fotky</string>
     <string name="notes">Poznámky</string>
     <string name="on_this_day">V tento den</string>
-    <string name="loading_account">Vše připravuji...</string>
+    <string name="loading_account">Vše připravuji…</string>
     <string name="welcome">Vítej %s!</string>
     <string name="select_facebook_account">Zvolte Facebookový profil</string>
     <string name="account_not_found">Tento účet není v databázi</string>
