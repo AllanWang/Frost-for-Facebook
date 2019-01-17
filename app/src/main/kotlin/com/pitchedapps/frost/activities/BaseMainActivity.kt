@@ -330,6 +330,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             divider()
             primaryFrostItem(FbItem.NOTES)
             primaryFrostItem(FbItem.SAVED)
+            primaryFrostItem(FbItem.MARKETPLACE)
         }
     }
 
