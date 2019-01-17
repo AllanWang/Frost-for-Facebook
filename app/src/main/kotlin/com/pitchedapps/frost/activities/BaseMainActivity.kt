@@ -516,7 +516,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
 
     override fun reloadFragment(fragment: BaseFragment) {
-        runOnUiThread { adapter.reloadFragment(fragment) }
+        adapter.reloadFragment(fragment)
     }
 
     inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
