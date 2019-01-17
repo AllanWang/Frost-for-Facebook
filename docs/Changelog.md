@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.2.2
+* New marketplace shortcut
+
 ## v2.2.1
 * Update theme
 * Update translations

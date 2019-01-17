@@ -79,7 +79,7 @@ suspend fun loadFbCookiesSuspend(): List<CookieModel> = withContext(Dispatchers.
 inline fun saveFbCookie(cookie: CookieModel, crossinline callback: (() -> Unit) = {}) {
     cookie.async save {
         L.d { "Fb cookie saved" }
-        L._d { cookie }
+        L._d { cookie.toSensitiveString() }
         callback()
     }
 }

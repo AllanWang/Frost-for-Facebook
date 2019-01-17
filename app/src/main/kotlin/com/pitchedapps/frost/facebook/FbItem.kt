@@ -46,6 +46,7 @@ enum class FbItem(
     FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "home.php?sk=h_nor"),
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
     GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
+    MARKETPLACE(R.string.marketplace, CommunityMaterial.Icon2.cmd_home_currency_usd, "marketplace"),
     MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", ::MenuFragment),
     MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
     NOTES(R.string.notes, CommunityMaterial.Icon2.cmd_note, "notes"),
