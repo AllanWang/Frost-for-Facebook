@@ -22,7 +22,9 @@
         android:label="@string/frost_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/FrostTheme">
+        android:theme="@style/FrostTheme"
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute">
         <activity
             android:name=".StartActivity"
             android:label="@string/frost_name"
