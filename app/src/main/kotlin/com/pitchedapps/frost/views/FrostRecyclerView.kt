@@ -27,10 +27,8 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
@@ -83,7 +81,6 @@ class FrostRecyclerView @JvmOverloads constructor(
                     recyclerContract.reload { parent.progressChannel.offer(it) }
                 }
             } catch (e: Exception) {
-
             }
             parent.progressChannel.offer(100)
             parent.refreshChannel.offer(false)
