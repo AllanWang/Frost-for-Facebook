@@ -27,9 +27,12 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -74,7 +77,14 @@ class FrostRecyclerView @JvmOverloads constructor(
         if (Prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
             parent.refreshChannel.offer(true)
-            val loaded = recyclerContract.reload { parent.progressChannel.offer(it) }
+            // TODO figure out how to avoid cancelling parent
+            try {
+                supervisorScope {
+                    recyclerContract.reload { parent.progressChannel.offer(it) }
+                }
+            } catch (e: Exception) {
+
+            }
             parent.progressChannel.offer(100)
             parent.refreshChannel.offer(false)
             if (Prefs.animate) circularReveal()
