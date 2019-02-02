@@ -1,7 +1,7 @@
 # click menu and move contents to main view
-viewport = document.querySelector("#viewport")
-root = document.querySelector("#root")
-menuA = document.querySelector("#bookmarks_jewel").querySelector("a")
+viewport = window.document.querySelector("#viewport")
+root = window.document.querySelector("#root")
+menuA = window.document.querySelector("#bookmarks_jewel").querySelector("a")
 if !viewport
   console.log "Menu.js: viewport is null"
   Frost?.emit 0
