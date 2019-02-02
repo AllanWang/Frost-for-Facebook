@@ -30,6 +30,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
 /**
@@ -53,7 +54,7 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
         val data = try {
             reloadImpl(progress)
         } catch (e: Exception) {
-            L.e(e) { "Recycler reload fail" }
+            L.e(e) { "Recycler reload fail $baseUrl" }
             null
         }
         withMainContext {
