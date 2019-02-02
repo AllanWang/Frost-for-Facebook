@@ -1,6 +1,5 @@
 # we will handle media events
 _frostMediaClick = (e) ->
-
   element = e.target or e.srcElement
   if !element?.dataset.sigil?.toLowerCase().includes("inlinevideo")
     return
