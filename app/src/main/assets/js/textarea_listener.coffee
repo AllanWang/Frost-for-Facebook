@@ -7,14 +7,14 @@
 
 _frostFocus = (e) ->
     element = e.target or e.srcElement
-    console.log "Frost focus", element.tagName
+    console.log "FrostJSI focus", element.tagName
     if element.tagName == "TEXTAREA"
         Frost?.disableSwipeRefresh true
     return
 
 _frostBlur = (e) ->
     element = e.target or e.srcElement
-    console.log "Frost blur", element.tagName
+    console.log "FrostJSI blur", element.tagName
     Frost?.disableSwipeRefresh false
     return
 

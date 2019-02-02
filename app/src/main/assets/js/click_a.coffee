@@ -31,7 +31,7 @@ _frostAClick = (e) ->
 ###
 
 _frostPreventClick = ->
-  console.log "Click prevented"
+  console.log "Click _frostPrevented"
   prevented = true
   return
 

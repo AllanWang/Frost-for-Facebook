@@ -12,7 +12,7 @@
   _frostFocus = function _frostFocus(e) {
     var element;
     element = e.target || e.srcElement;
-    console.log("Frost focus", element.tagName);
+    console.log("FrostJSI focus", element.tagName);
     if (element.tagName === "TEXTAREA") {
       if (typeof Frost !== "undefined" && Frost !== null) {
         Frost.disableSwipeRefresh(true);
@@ -23,7 +23,7 @@
   _frostBlur = function _frostBlur(e) {
     var element;
     element = e.target || e.srcElement;
-    console.log("Frost blur", element.tagName);
+    console.log("FrostJSI blur", element.tagName);
     if (typeof Frost !== "undefined" && Frost !== null) {
       Frost.disableSwipeRefresh(false);
     }

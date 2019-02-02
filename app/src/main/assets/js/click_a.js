@@ -41,7 +41,7 @@
   };
 
   _frostPreventClick = function _frostPreventClick() {
-    console.log("Click prevented");
+    console.log("Click _frostPrevented");
     prevented = true;
   };
 
