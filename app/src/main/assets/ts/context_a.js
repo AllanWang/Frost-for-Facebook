@@ -11,19 +11,16 @@
         /*
          * Commonality; check for valid target
          */
-        var element = e.target || e.currentTarget || e.srcElement;
-        if (!(element instanceof Element)) {
+        var target = e.target || e.currentTarget || e.srcElement;
+        if (!(target instanceof Element)) {
             console.log("No element found");
             return;
         }
+        var element = target;
         // Notifications are two layers under
         for (var i = 0; i < 2; i++) {
             if (element.tagName != 'A') {
-                element = element.parentNode;
-                if (!(element instanceof Element)) {
-                    console.log("No element found");
-                    return;
-                }
+                element = element.parentElement;
             }
         }
         if (element.tagName == 'A') {
@@ -31,11 +28,11 @@
             if (!url || url == '#') {
                 return;
             }
-            var text = element.parentNode.innerText;
+            var text = element.parentElement.innerText;
             // Check if image item exists, first in children and then in parent
             var image = element.querySelector("[style*=\"background-image: url(\"]");
             if (!image) {
-                image = element.parentNode.querySelector("[style*=\"background-image: url(\"]");
+                image = element.parentElement.querySelector("[style*=\"background-image: url(\"]");
             }
             if (image) {
                 var imageUrl = window.getComputedStyle(image, null).backgroundImage.trim().slice(4, -1);

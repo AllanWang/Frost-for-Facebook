@@ -2,10 +2,11 @@
 // Handles media events
 (function () {
     var _frostMediaClick = function (e) {
-        var element = e.target || e.srcElement;
-        if (!(element instanceof HTMLElement)) {
+        var target = e.target || e.srcElement;
+        if (!(target instanceof HTMLElement)) {
             return;
         }
+        var element = target;
         var dataset = element.dataset;
         if (!dataset || !dataset.sigil || dataset.sigil.toLowerCase().indexOf('inlinevideo') == -1) {
             return;
@@ -16,9 +17,6 @@
                 return;
             }
             element = element.parentNode;
-            if (!(element instanceof HTMLElement)) {
-                return;
-            }
         }
         var store = element.dataset.store;
         if (!store) {

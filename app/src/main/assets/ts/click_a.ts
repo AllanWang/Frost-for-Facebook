@@ -3,19 +3,16 @@
 
     const _frostAClick = (e: Event) => {
         // check for valid target
-        let element = e.target || e.currentTarget || e.srcElement;
-        if (!(element instanceof Element)) {
+        const target = e.target || e.currentTarget || e.srcElement;
+        if (!(target instanceof Element)) {
             console.log("No element found");
             return
         }
+        let element: Element = target;
         // Notifications are two layers under
         for (let i = 0; i < 2; i++) {
             if (element.tagName != 'A') {
-                element = element.parentNode;
-                if (!(element instanceof Element)) {
-                    console.log("No element found");
-                    return
-                }
+                element = <Element>element.parentElement;
             }
         }
         if (element.tagName == 'A') {

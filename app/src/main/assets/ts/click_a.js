@@ -3,19 +3,16 @@
     var prevented = false;
     var _frostAClick = function (e) {
         // check for valid target
-        var element = e.target || e.currentTarget || e.srcElement;
-        if (!(element instanceof Element)) {
+        var target = e.target || e.currentTarget || e.srcElement;
+        if (!(target instanceof Element)) {
             console.log("No element found");
             return;
         }
+        var element = target;
         // Notifications are two layers under
         for (var i = 0; i < 2; i++) {
             if (element.tagName != 'A') {
-                element = element.parentNode;
-                if (!(element instanceof Element)) {
-                    console.log("No element found");
-                    return;
-                }
+                element = element.parentElement;
             }
         }
         if (element.tagName == 'A') {

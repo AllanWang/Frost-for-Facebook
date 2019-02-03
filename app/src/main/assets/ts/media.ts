@@ -1,10 +1,11 @@
 // Handles media events
 (function () {
     const _frostMediaClick = (e: Event) => {
-        let element = e.target || e.srcElement;
-        if (!(element instanceof HTMLElement)) {
+        const target = e.target || e.srcElement;
+        if (!(target instanceof HTMLElement)) {
             return
         }
+        let element: HTMLElement = target;
         const dataset = element.dataset;
         if (!dataset || !dataset.sigil || dataset.sigil.toLowerCase().indexOf('inlinevideo') == -1) {
             return
@@ -14,10 +15,7 @@
             if (++i > 2) {
                 return
             }
-            element = element.parentNode;
-            if (!(element instanceof HTMLElement)) {
-                return
-            }
+            element = <HTMLElement>element.parentNode;
         }
         const store = element.dataset.store;
         if (!store) {

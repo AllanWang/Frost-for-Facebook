@@ -11,19 +11,16 @@
         /*
          * Commonality; check for valid target
          */
-        let element = e.target || e.currentTarget || e.srcElement;
-        if (!(element instanceof Element)) {
+        const target = e.target || e.currentTarget || e.srcElement;
+        if (!(target instanceof Element)) {
             console.log("No element found");
             return
         }
+        let element: Element = target;
         // Notifications are two layers under
         for (let i = 0; i < 2; i++) {
             if (element.tagName != 'A') {
-                element = element.parentNode;
-                if (!(element instanceof Element)) {
-                    console.log("No element found");
-                    return
-                }
+                element = <Element>element.parentElement;
             }
         }
         if (element.tagName == 'A') {
@@ -31,11 +28,11 @@
             if (!url || url == '#') {
                 return
             }
-            const text = (<HTMLElement>element.parentNode).innerText;
+            const text = (<HTMLElement>element.parentElement).innerText;
             // Check if image item exists, first in children and then in parent
             let image = element.querySelector("[style*=\"background-image: url(\"]");
             if (!image) {
-                image = (<Element>element.parentNode).querySelector("[style*=\"background-image: url(\"]")
+                image = (<Element>element.parentElement).querySelector("[style*=\"background-image: url(\"]")
             }
             if (image) {
                 const imageUrl = (<String>window.getComputedStyle(image, null).backgroundImage).trim().slice(4, -1);
