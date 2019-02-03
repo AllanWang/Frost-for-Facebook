@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="046cedf3-2ac5-4adb-add3-6c5f539938c0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../web/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.babelrc" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.babelrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/.idea/watcherTasks.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adblock.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/adblock.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/components/round_icons.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/components/round_icons.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/components/round_icons.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/components/round_icons.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_base.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_base.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_colors.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_colors.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_core_bg.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_core_bg.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_core_border.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_core_border.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_core_messenger.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_core_messenger.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_core_text.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_core_text.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_main.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/_svg.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/_svg.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/core.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/core.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/core/core.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/core/core.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/custom.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/custom.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/custom.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_amoled.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_amoled.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_amoled.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_amoled.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_dark.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_dark.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_dark.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_dark.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_glass.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_glass.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_glass.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_glass.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_light.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_light.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/themes/material_light.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/css/themes/material_light.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/click_a.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/click_a.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/click_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/click_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/click_debugger.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/click_debugger.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/click_debugger.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/click_debugger.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/context_a.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/context_a.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/context_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/context_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/document_watcher.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/document_watcher.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/document_watcher.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/document_watcher.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/header_badges.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/header_badges.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/header_badges.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/header_badges.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/header_hider.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/header_hider.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/header_hider.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/header_hider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/media.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/media.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/media.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/media.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/menu.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/menu.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/menu_debug.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/menu_debug.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/menu_debug.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/menu_debug.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/notif_msg.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/notif_msg.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/notif_msg.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/notif_msg.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/textarea_listener.coffee" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/textarea_listener.coffee" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/textarea_listener.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/js/textarea_listener.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pgl.yoyo.org.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/pgl.yoyo.org.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/click_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/click_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/click_a.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/click_a.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/click_debugger.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/click_debugger.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/click_debugger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/click_debugger.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/context_a.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/context_a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/context_a.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/context_a.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/document_watcher.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/document_watcher.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/document_watcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/document_watcher.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/header_badges.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/header_badges.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/header_badges.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/header_badges.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/media.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/media.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/media.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/media.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/menu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/menu.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/notif_msg.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/notif_msg.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/notif_msg.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/notif_msg.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/textarea_listener.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/textarea_listener.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ts/textarea_listener.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/ts/textarea_listener.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/typings/frost.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/assets/typings/frost.d.ts" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ElmWorkspace">
+    <elmProjects />
+    <settings binDirPath="" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>mxb</find>
+      <find>data-sigil</find>
+      <find>like</find>
+      <find>:has</find>
+      <find>:not</find>
+      <find>unli</find>
+      <find>77li</find>
+      <find>unlike</find>
+      <find>77l</find>
+      <find>main</find>
+      <find>switchba</find>
+      <find>emit</find>
+      <find>settimeout</find>
+      <find>inte</find>
+      <find>instanceof</find>
+      <find>htmlelement</find>
+      <find>instanceo</find>
+      <find>instan</find>
+      <find>inst</find>
+      <find>==</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/css/core/core.scss" />
+        <option value="$PROJECT_DIR$/css/core/_core_bg.scss" />
+        <option value="$PROJECT_DIR$/css/core/_svg.scss" />
+        <option value="$PROJECT_DIR$/js/media.coffee" />
+        <option value="$PROJECT_DIR$/js/.babelrc" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/.babelrc" />
+        <option value="$PROJECT_DIR$/js/menu.coffee" />
+        <option value="$PROJECT_DIR$/js/test.ts" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/ts/test.ts" />
+        <option value="$PROJECT_DIR$/ts/click_debugger.ts" />
+        <option value="$PROJECT_DIR$/typings/frost.d.ts" />
+        <option value="$PROJECT_DIR$/ts/document_watcher.ts" />
+        <option value="$PROJECT_DIR$/ts/header_badges.ts" />
+        <option value="$PROJECT_DIR$/ts/menu.ts" />
+        <option value="$PROJECT_DIR$/ts/menu_debug.ts" />
+        <option value="$PROJECT_DIR$/ts/notif_msg.ts" />
+        <option value="$PROJECT_DIR$/ts/textarea_listener.ts" />
+        <option value="$PROJECT_DIR$/js/click_a.coffee" />
+        <option value="$PROJECT_DIR$/ts/context_a.ts" />
+        <option value="$PROJECT_DIR$/ts/media.ts" />
+        <option value="$PROJECT_DIR$/ts/click_a.ts" />
+        <option value="$PROJECT_DIR$/tsconfig.json" />
+        <option value="$PROJECT_DIR$/README.md" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="width" value="1680" />
+    <option name="height" value="1050" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="NewWatcherDialog.advanced.open" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="settings.typescriptcompiler" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/android" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/js2" />
+      <recent name="$PROJECT_DIR$/js" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="046cedf3-2ac5-4adb-add3-6c5f539938c0" name="Default Changelist" comment="" />
+      <created>1545613694695</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1545613694695</updated>
+      <workItem from="1545613696967" duration="466000" />
+      <workItem from="1546114667884" duration="2687000" />
+      <workItem from="1546553563411" duration="8000" />
+      <workItem from="1549084237087" duration="5953000" />
+      <workItem from="1549092810319" duration="76000" />
+      <workItem from="1549092904833" duration="19000" />
+      <workItem from="1549092934173" duration="1786000" />
+      <workItem from="1549130740050" duration="10385000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="21380000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1680" height="1050" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27106228" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3291536" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3291536" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3291536" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Bucklescript" order="11" />
+      <window_info anchor="bottom" id="TypeScript" order="12" weight="0.3291536" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Elm" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/android/js/header_hider.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/media.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/.babelrc" />
+    <entry file="file://$PROJECT_DIR$/package-lock.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js2/click_a.js" />
+    <entry file="file://$PROJECT_DIR$/js/test.ts" />
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/jsonSchemas/tsconfig-schema.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="166" column="12" selection-start-line="166" selection-start-column="12" selection-end-line="166" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/css/themes/material_amoled.scss">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/watcherTasks.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="11" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/encodings.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/compiler.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/context_a.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/click_debugger.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/header_badges.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/document_watcher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="34" lean-forward="true" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es2015.core.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="410" column="12" selection-start-line="410" selection-start-column="4" selection-end-line="410" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="4813" column="12" selection-start-line="4813" selection-start-column="12" selection-end-line="4813" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/document_watcher.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="23" lean-forward="true" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es5.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="427" column="4" selection-start-line="427" selection-start-column="4" selection-end-line="427" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/typings/frost.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ts/menu_debug.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/menu_debug.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-152" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/notif_msg.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/click_debugger.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/textarea_listener.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/context_a.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/document_watcher.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="8" lean-forward="true" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="3750" column="10" selection-start-line="3750" selection-start-column="10" selection-end-line="3750" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/media.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/context_a.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="51" column="21" lean-forward="true" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/document_watcher.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="5" lean-forward="true" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/header_badges.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="45" selection-start-line="4" selection-start-column="45" selection-end-line="4" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/media.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="19" column="33" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/notif_msg.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/menu.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-110">
+          <caret line="18" column="12" lean-forward="true" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/click_a.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="17" lean-forward="true" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/menu.coffee">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/textarea_listener.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/click_a.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="30" column="50" selection-start-line="30" selection-start-column="50" selection-end-line="30" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/click_a.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="38" column="31" selection-start-line="38" selection-start-column="31" selection-end-line="38" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/click_a.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="38" column="7" selection-start-line="38" selection-start-column="7" selection-end-line="38" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/click_debugger.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/click_debugger.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/js/header_badges.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.babelrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="1" lean-forward="true" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ts/header_badges.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tsconfig.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="45">
+            <caret line="3" column="72" selection-start-line="3" selection-start-column="72" selection-end-line="3" selection-end-column="72" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
