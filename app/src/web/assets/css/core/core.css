@@ -4,7 +4,7 @@
 ._z-z, ._z-v, ._1e8d, ._36nl, ._36nm, ._2_11, ._2_rf, ._2ip_, ._403p, .cq, ._usr,
 ._5xu2, ._3ml8, ._3mla, ._50vk, ._1m2u, ._31y7, ._4kcb, ._1lf6, ._1lf5,
 ._1lf4, ._1hiz, ._xod, ._5ag5, ._zmk, ._3t_h, ._5lm6, ._3clv, ._3zlc, ._36rd,
-._31zk, ._31zl, ._3xsa, ._3xs9, ._2-4s, ._2fzz ul, ._3z10,
+._31zk, ._31zl, ._3xsa, ._3xs9, ._2-4s, ._2fzz ul, ._3z10, ._4mo, ._2om6,
 ._43mh, .touch .btn, .fcg, button, ._52j9, ._52jb, ._52ja, ._5j35,
 ._rnk, ._24u0, ._1g06, ._14ye, .fcb, ._56cz._56c_, ._1gk_, ._55fj, ._45fu,
 ._18qg, ._1_ac, ._529p, ._4dwt ._1vh3, ._4a5f, ._23_t, ._2rzc, ._23_s, ._2rzd,
@@ -25,8 +25,8 @@ h1, h2, h3, h4, h5, h6 {
   color: #d7b0d7 !important;
 }
 
-strong > a, ._15ks ._2q8z._2q8z, ._1e3e, .blueName {
-  color: #3b5998 !important;
+strong > a, ._15ks ._2q8z._2q8z, ._1e3e, .blueName, ._5kqs ._55sr {
+  color: #980008 !important;
 }
 
 ._42nf ._42ng {
@@ -65,7 +65,7 @@ body, :root, #root, #header, #MComposer, [style*=background-color], ._1upc, inpu
   background: rgba(255, 0, 255, 0.02) !important;
 }
 
-._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._55wo, ._6150, ._50mi, ._4-dw, ._4_2z {
+._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._55wo, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s {
   background: #239645 !important;
 }
 
@@ -106,7 +106,7 @@ button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, 
 }
 
 .mQuestionsPollResultsBar .shaded {
-  background: #3b5998 !important;
+  background: #980008 !important;
 }
 
 ._220g, ._1_y8:after, ._6pk6,
@@ -116,7 +116,7 @@ button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, 
 }
 
 button ._v89 ._54k8._1fl1 {
-  background: #3b5998 !important;
+  background: #980008 !important;
 }
 
 ._15kl::before, ._37fd .inlineComposerButton, ._1hb:before,
@@ -214,7 +214,7 @@ button ._v89 ._54k8._1fl1 {
 }
 
 ._34em ._34ee {
-  background: #3b5998 !important;
+  background: #980008 !important;
   color: #76d7c2 !important;
 }
 
