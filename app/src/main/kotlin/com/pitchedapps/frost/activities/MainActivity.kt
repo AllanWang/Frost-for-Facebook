@@ -28,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
@@ -88,7 +87,7 @@ class MainActivity : BaseMainActivity() {
             }
         })
         headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) {
-            html->
+            html ->
             try {
                 val doc = Jsoup.parse(html)
                 if (doc.select("[data-sigil=count]").isEmpty())
