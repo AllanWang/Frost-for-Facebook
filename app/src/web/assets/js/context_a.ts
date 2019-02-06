@@ -9,7 +9,17 @@
     /**
      * Given event and target, return true if handled and false otherwise.
      */
-    type EventHandler = (e: Event, target: Element) => Boolean
+    type EventHandler = (e: Event, target: HTMLElement) => Boolean
+
+    const _frostCopyComment: EventHandler = (e, target) => {
+        if (!target.hasAttribute('data-commentid')) {
+            return false;
+        }
+        const text = target.innerText;
+        console.log(`Copy comment ${text}`);
+        Frost.contextMenu(null, text);
+        return true;
+    };
 
     /**
      * Posts should click a tag, with two parents up being div.story_body_container
@@ -26,7 +36,7 @@
         if (!parent2 || !parent2.classList.contains('story_body_container')) {
             return false;
         }
-        const url = target.getAttribute('href')!;
+        const url = target.getAttribute('href');
         const text = parent1.innerText;
         console.log(`Copy post ${url} ${text}`);
         Frost.contextMenu(url, text);
@@ -42,11 +52,11 @@
             }
         }
         if (element.tagName !== 'A') {
-            return false
+            return false;
         }
         const url = element.getAttribute('href');
         if (!url || url === '#') {
-            return false
+            return false;
         }
         const text = (<HTMLElement>element.parentElement).innerText;
         // Check if image item exists, first in children and then in parent
@@ -58,7 +68,7 @@
             const imageUrl = (<String>window.getComputedStyle(image, null).backgroundImage).trim().slice(4, -1);
             console.log(`Context image: ${imageUrl}`);
             Frost.loadImage(imageUrl, text);
-            return true
+            return true;
         }
         // Check if true img exists
         const img = element.querySelector("img[src*=scontent]");
@@ -66,14 +76,14 @@
             const imgUrl = img.src;
             console.log(`Context img: ${imgUrl}`);
             Frost.loadImage(imgUrl, text);
-            return true
+            return true;
         }
         console.log(`Context content ${url} ${text}`);
         Frost.contextMenu(url, text);
-        return true
+        return true;
     };
 
-    const handlers = [_frostCopyPost, _frostImage];
+    const handlers = [_frostCopyComment, _frostCopyPost, _frostImage];
 
     const _frostAContext = (e: Event) => {
         Frost.longClick(true);
@@ -83,7 +93,7 @@
          * Commonality; check for valid target
          */
         const target = e.target || e.currentTarget || e.srcElement;
-        if (!(target instanceof Element)) {
+        if (!(target instanceof HTMLElement)) {
             console.log("No element found");
             return
         }

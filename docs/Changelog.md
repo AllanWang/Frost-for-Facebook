@@ -2,6 +2,8 @@
 
 ## v2.2.2
 * New marketplace shortcut
+* Fix crash when internet disconnects (may still need app restart)
+* Improve JS code
 
 ## v2.2.1
 * Update theme

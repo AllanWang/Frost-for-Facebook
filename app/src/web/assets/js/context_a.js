@@ -1,6 +1,15 @@
 "use strict";
 (function () {
     var longClick = false;
+    var _frostCopyComment = function (e, target) {
+        if (!target.hasAttribute('data-commentid')) {
+            return false;
+        }
+        var text = target.innerText;
+        console.log("Copy comment " + text);
+        Frost.contextMenu(null, text);
+        return true;
+    };
     var _frostCopyPost = function (e, target) {
         if (target.tagName !== 'A') {
             return false;
@@ -55,12 +64,12 @@
         Frost.contextMenu(url, text);
         return true;
     };
-    var handlers = [_frostCopyPost, _frostImage];
+    var handlers = [_frostCopyComment, _frostCopyPost, _frostImage];
     var _frostAContext = function (e) {
         Frost.longClick(true);
         longClick = true;
         var target = e.target || e.currentTarget || e.srcElement;
-        if (!(target instanceof Element)) {
+        if (!(target instanceof HTMLElement)) {
             console.log("No element found");
             return;
         }

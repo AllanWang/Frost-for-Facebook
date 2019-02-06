@@ -5,7 +5,7 @@ declare interface FrostJSI {
 
     reloadBaseUrl(animate: boolean)
 
-    contextMenu(url: string, text: string | null)
+    contextMenu(url: string | null, text: string | null)
 
     longClick(start: boolean)
 
