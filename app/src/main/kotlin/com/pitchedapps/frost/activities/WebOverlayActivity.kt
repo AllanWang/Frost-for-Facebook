@@ -30,6 +30,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.darken
@@ -59,6 +60,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
@@ -204,12 +206,8 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
         content.bind(this)
 
-        val titleReceiver = content.titleChannel.openSubscription().uniqueOnly(this)
-
-        launch {
-            for (t in titleReceiver) {
-                toolbar.title = t
-            }
+        content.titleChannel.subscribeDuringJob(this, ContextHelper.coroutineContext) {
+            toolbar.title = it
         }
 
         with(web) {

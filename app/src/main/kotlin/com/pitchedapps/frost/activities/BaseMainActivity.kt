@@ -489,7 +489,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview?.destroy()
         super.onDestroy()
         fragmentChannel.close()
-        headerBadgeChannel.close()
     }
 
     override fun collapseAppBar() {
