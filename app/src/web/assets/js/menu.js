@@ -1,5 +1,4 @@
 "use strict";
-// Click menu and move contents to main view
 (function () {
     var viewport = document.querySelector("#viewport");
     var root = document.querySelector("#root");
@@ -35,7 +34,6 @@
         if (menu) {
             x.disconnect();
             console.log("Found side menu");
-            // Transfer elements
             while (root.firstChild) {
                 root.removeChild(root.firstChild);
             }

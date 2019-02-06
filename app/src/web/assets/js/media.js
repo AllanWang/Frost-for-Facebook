@@ -1,5 +1,4 @@
 "use strict";
-// Handles media events
 (function () {
     var _frostMediaClick = function (e) {
         var target = e.target || e.srcElement;
@@ -30,7 +29,6 @@
             return;
         }
         var url = dataStore.src;
-        // !startsWith; see https://stackoverflow.com/a/36876507/4407321
         if (!url || url.lastIndexOf('http', 0) !== 0) {
             return;
         }

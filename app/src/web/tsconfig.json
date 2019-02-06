@@ -16,7 +16,8 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
     "allowUnreachableCode": true,
-    "allowUnusedLabels": true
+    "allowUnusedLabels": true,
+    "removeComments": true
   },
   "include": [
     "assets/js", "assets/typings"

@@ -1,5 +1,4 @@
 "use strict";
-// Emit key once half the viewport is covered
 (function () {
     var isReady = function () {
         return document.body.scrollHeight > innerHeight + 100;

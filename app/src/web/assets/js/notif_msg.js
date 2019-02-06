@@ -1,5 +1,4 @@
 "use strict";
-// Binds callback to an invisible webview to take in the search events
 (function () {
     var finished = false;
     var x = new MutationObserver(function () {
