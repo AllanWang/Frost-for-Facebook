@@ -4,6 +4,8 @@
 * New marketplace shortcut
 * Fix crash when internet disconnects (may still need app restart)
 * Improve JS code
+* Add ability to copy text from comments
+* Various theme fixes
 
 ## v2.2.1
 * Update theme
