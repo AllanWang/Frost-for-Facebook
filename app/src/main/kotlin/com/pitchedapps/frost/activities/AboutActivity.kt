@@ -27,6 +27,7 @@ import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
+import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.dimenPixelSize
 import ca.allanwang.kau.utils.resolveDrawable
@@ -79,7 +80,8 @@ class AboutActivity : AboutActivityBase(null, {
         )
 
         val l = libs.prepareLibraries(this, include, null, false, true, true)
-//        l.forEach { KL.d{"Lib ${it.definedName}"} }
+        if (BuildConfig.DEBUG)
+            l.forEach { KL.d { "Lib ${it.definedName}" } }
         return l
     }
 
@@ -155,7 +157,7 @@ class AboutActivity : AboutActivityBase(null, {
                 val c = itemView.context
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
                 images = arrayOf<Pair<IIcon, () -> Unit>>(
-                    GoogleMaterial.Icon.gmd_arrow_downward to { c.startLink(R.string.github_downloads_url) },
+                    GoogleMaterial.Icon.gmd_file_download to { c.startLink(R.string.github_downloads_url) },
                     CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
                     CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
                     CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },

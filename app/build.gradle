@@ -129,6 +129,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.assets.srcDirs += ['src/web/assets']
     }
 
     packagingOptions {
