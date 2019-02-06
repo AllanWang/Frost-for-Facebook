@@ -142,6 +142,7 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
             progressChannel.offer(it)
         }
         md.dismiss()
+        progressChannel.close()
         if (success) {
             val zipUri = frostUriFromFile(
                 File(downloader.baseDir, "$ZIP_NAME.zip")
