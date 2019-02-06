@@ -16,9 +16,11 @@
  */
 package com.pitchedapps.frost.utils
 
+import com.pitchedapps.frost.kotlin.Flyweight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -241,6 +243,49 @@ class CoroutineTest {
                 data,
                 "Unique receiver should not have two consecutive events that are equal"
             )
+        }
+    }
+
+    @Test
+    fun exceptionChecks() {
+        val mainTag = "main-test"
+        val mainDispatcher = Executors.newSingleThreadExecutor { r ->
+            Thread(r, mainTag)
+        }.asCoroutineDispatcher()
+        val channel = Channel<Int>()
+
+        val job = SupervisorJob()
+
+        val flyweight = Flyweight<Int, Int>(GlobalScope, 200L) {
+            throw java.lang.RuntimeException("Flyweight exception")
+        }
+
+        suspend fun crash(): Boolean = withContext(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.Default) {
+                    flyweight.fetch(0).await()
+                }
+                true
+            } catch (e: java.lang.Exception) {
+                false
+            }
+        }
+
+        runBlocking(mainDispatcher + job) {
+            launch {
+                val i = channel.receive()
+                println("Received $i")
+            }
+            launch {
+                println("A")
+                println(crash())
+                println("B")
+                channel.offer(1)
+            }
+//            launch {
+//                delay(2000)
+//                job.cancel()
+//            }
         }
     }
 }

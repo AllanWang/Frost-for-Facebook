@@ -19,6 +19,7 @@ package com.pitchedapps.frost.injectors
 import android.content.Context
 import android.graphics.Color
 import android.webkit.WebView
+import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.kotlin.lazyContext
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToBackground
@@ -43,7 +44,8 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
     MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components")
     ;
 
-    private val file = "${name.toLowerCase(Locale.CANADA)}.css"
+    @VisibleForTesting
+    internal val file = "${name.toLowerCase(Locale.CANADA)}.css"
 
     /**
      * Note that while this can be loaded from any thread, it is typically done through [load]

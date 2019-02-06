@@ -8,8 +8,8 @@
 
     <version title="v2.2.2" />
     <item text="New marketplace shortcut" />
-    <item text="" />
-    <item text="" />
+    <item text="Fix crash when internet disconnects (may still need app restart)" />
+    <item text="Improve JS code" />
     <item text="" />
     <item text="" />
 

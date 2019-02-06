@@ -20,7 +20,6 @@ import android.content.Context
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
-import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -29,19 +28,19 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
  * Created by Allan Wang on 2017-07-07.
  */
 fun Context.showWebContextMenu(wc: WebContext) {
-
-    var title = wc.url
+    if (wc.isEmpty) return
+    var title = wc.url ?: string(R.string.menu)
     title = title.substring(title.indexOf("m/") + 1) //just so if defaults to 0 in case it's not .com/
     if (title.length > 100) title = title.substring(0, 100) + '\u2026'
 
+    val menuItems = WebContextType.values
+        .filter { it.constraint(wc) }
+
     materialDialogThemed {
         title(title)
-        items(WebContextType.values.map {
-            if (it == WebContextType.COPY_TEXT && wc.text == null) return@map null
-            this@showWebContextMenu.string(it.textId)
-        }.filterNotNull())
+        items(menuItems.map { string(it.textId) })
         itemsCallback { _, _, position, _ ->
-            WebContextType[position].onClick(this@showWebContextMenu, wc)
+            menuItems[position].onClick(this@showWebContextMenu, wc)
         }
         dismissListener {
             //showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
@@ -50,18 +49,23 @@ fun Context.showWebContextMenu(wc: WebContext) {
     }
 }
 
-class WebContext(val unformattedUrl: String, val text: String?) {
-    val url = unformattedUrl.formattedFbUrl
+class WebContext(val unformattedUrl: String?, val text: String?) {
+    val url: String? = unformattedUrl?.formattedFbUrl
+    inline val hasUrl get() = unformattedUrl != null
+    inline val hasText get() = text != null
+    inline val isEmpty get() = !hasUrl && !hasText
 }
 
-enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebContext) -> Unit) {
-    OPEN_LINK(R.string.open_link, { c, wc -> c.launchWebOverlay(wc.unformattedUrl) }),
-    COPY_LINK(R.string.copy_link, { c, wc -> c.copyToClipboard(wc.url) }),
-    COPY_TEXT(
-        R.string.copy_text,
-        { c, wc -> if (wc.text != null) c.copyToClipboard(wc.text) else c.toast(R.string.no_text) }),
-    SHARE_LINK(R.string.share_link, { c, wc -> c.shareText(wc.url) }),
-    DEBUG_LINK(R.string.debug_link, { c, wc ->
+enum class WebContextType(
+    val textId: Int,
+    val constraint: (wc: WebContext) -> Boolean,
+    val onClick: (c: Context, wc: WebContext) -> Unit
+) {
+    OPEN_LINK(R.string.open_link, { it.hasUrl }, { c, wc -> c.launchWebOverlay(wc.unformattedUrl!!) }),
+    COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc -> c.copyToClipboard(wc.url) }),
+    COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc -> c.copyToClipboard(wc.text) }),
+    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc -> c.shareText(wc.url) }),
+    DEBUG_LINK(R.string.debug_link, { it.hasUrl }, { c, wc ->
         c.materialDialogThemed {
             title(R.string.debug_link)
             content(R.string.debug_link_desc)
@@ -69,8 +73,8 @@ enum class WebContextType(val textId: Int, val onClick: (c: Context, wc: WebCont
             onPositive { _, _ ->
                 c.sendFrostEmail(R.string.debug_link_subject) {
                     message = c.string(R.string.debug_link_content)
-                    addItem("Unformatted url", wc.unformattedUrl)
-                    addItem("Formatted url", wc.url)
+                    addItem("Unformatted url", wc.unformattedUrl!!)
+                    addItem("Formatted url", wc.url!!)
                 }
             }
         }
