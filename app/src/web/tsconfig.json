@@ -19,6 +19,6 @@
     "allowUnusedLabels": true
   },
   "include": [
-    "android/ts", "android/typings"
+    "assets/js", "assets/typings"
   ]
 }
