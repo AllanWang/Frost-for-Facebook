@@ -1,9 +1,0 @@
-{
-  "presets": [
-    ["@babel/preset-env",{
-      "targets": {
-        "browsers": ["android >= 36", "chrome >= 51"]
-      }
-    }]
-  ]
-}
