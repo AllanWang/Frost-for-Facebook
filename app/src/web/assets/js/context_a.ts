@@ -15,11 +15,11 @@
      * Posts should click a tag, with two parents up being div.story_body_container
      */
     const _frostCopyPost: EventHandler = (e, target) => {
-        if (target.tagName != 'A') {
+        if (target.tagName !== 'A') {
             return false;
         }
         const parent1 = target.parentElement;
-        if (!parent1 || parent1.tagName != 'DIV') {
+        if (!parent1 || parent1.tagName !== 'DIV') {
             return false;
         }
         const parent2 = parent1.parentElement;
@@ -28,6 +28,7 @@
         }
         const url = target.getAttribute('href')!;
         const text = parent1.innerText;
+        console.log(`Copy post ${url} ${text}`);
         Frost.contextMenu(url, text);
         return true;
     };
@@ -36,15 +37,15 @@
         let element: Element = target;
         // Notifications are two layers under
         for (let i = 0; i < 2; i++) {
-            if (element.tagName != 'A') {
+            if (element.tagName !== 'A') {
                 element = <Element>element.parentElement;
             }
         }
-        if (element.tagName != 'A') {
+        if (element.tagName !== 'A') {
             return false
         }
         const url = element.getAttribute('href');
-        if (!url || url == '#') {
+        if (!url || url === '#') {
             return false
         }
         const text = (<HTMLElement>element.parentElement).innerText;

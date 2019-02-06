@@ -6,7 +6,7 @@
             return;
         }
         console.log("FrostJSI focus, " + element.tagName);
-        if (element.tagName == 'TEXTAREA') {
+        if (element.tagName === 'TEXTAREA') {
             Frost.disableSwipeRefresh(true);
         }
     };

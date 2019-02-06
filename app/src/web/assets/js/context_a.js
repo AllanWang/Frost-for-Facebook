@@ -2,11 +2,11 @@
 (function () {
     var longClick = false;
     var _frostCopyPost = function (e, target) {
-        if (target.tagName != 'A') {
+        if (target.tagName !== 'A') {
             return false;
         }
         var parent1 = target.parentElement;
-        if (!parent1 || parent1.tagName != 'DIV') {
+        if (!parent1 || parent1.tagName !== 'DIV') {
             return false;
         }
         var parent2 = parent1.parentElement;
@@ -15,21 +15,22 @@
         }
         var url = target.getAttribute('href');
         var text = parent1.innerText;
+        console.log("Copy post " + url + " " + text);
         Frost.contextMenu(url, text);
         return true;
     };
     var _frostImage = function (e, target) {
         var element = target;
         for (var i = 0; i < 2; i++) {
-            if (element.tagName != 'A') {
+            if (element.tagName !== 'A') {
                 element = element.parentElement;
             }
         }
-        if (element.tagName != 'A') {
+        if (element.tagName !== 'A') {
             return false;
         }
         var url = element.getAttribute('href');
-        if (!url || url == '#') {
+        if (!url || url === '#') {
             return false;
         }
         var text = element.parentElement.innerText;
