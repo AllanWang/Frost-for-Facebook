@@ -18,6 +18,7 @@ package com.pitchedapps.frost.injectors
 
 import android.content.Context
 import android.webkit.WebView
+import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.utils.L
 import kotlinx.coroutines.Dispatchers
@@ -32,11 +33,12 @@ import java.util.Locale
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, MENU_DEBUG, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, HEADER_HIDER, TEXTAREA_LISTENER, NOTIF_MSG,
+    MENU, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, HEADER_HIDER, TEXTAREA_LISTENER, NOTIF_MSG,
     DOCUMENT_WATCHER
     ;
 
-    private val file = "${name.toLowerCase(Locale.CANADA)}.js"
+    @VisibleForTesting
+    internal val file = "${name.toLowerCase(Locale.CANADA)}.js"
     private val injector = lazyContext {
         try {
             val content = it.assets.open("js/$file").bufferedReader().use(BufferedReader::readText)

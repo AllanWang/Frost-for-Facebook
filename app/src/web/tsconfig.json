@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es3",
+    "allowJs": true,
+    "skipLibCheck": true,
+//    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+//    "resolveJsonModule": true,
+    "isolatedModules": false,
+//    "noEmit": true,
+    // Extras
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true
+  },
+  "include": [
+    "assets/js", "assets/typings"
+  ]
+}
