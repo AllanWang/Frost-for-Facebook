@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="share_link">Link delen</string>
+    <string name="debug_link">Link debuggen</string>
+    <string name="local_service_name" translatable="false">Local Frost Service</string>
+    <string name="debug_link_subject" translatable="false">Frost for Facebook: Link Debug</string>
+    <string name="debug_link_content" translatable="false">Write here. Note that your link may contain private information, but I won\'t be able to see it as the post isn\'t public. The url will still help with debugging though.</string>
+    <string name="debug_link_desc">Als een link niet volledig laadt, stuur me dan een e-mail zodat ik verder kan helpen. Klik op OK zal een e-mail opstellen.</string>
+    <string name="open_link">Link openen</string>
+    <string name="copy_link">Link kopiëren</string>
+    <string name="copy_text">Tekst kopiëren</string>
+    <string name="debug_image_link_subject" translatable="false">Frost for Facebook: Image Link Debug</string>
+</resources>

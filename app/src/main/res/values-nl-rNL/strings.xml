@@ -1,0 +1,64 @@
+<resources>
+    <string name="feed">Nieuwsfeed</string>
+    <string name="most_recent">Meest recent</string>
+    <string name="top_stories">Populair</string>
+    <string name="profile">Profiel</string>
+    <string name="bookmarks">Favorieten</string>
+    <string name="events">Evenementen</string>
+    <string name="friends">Vrienden</string>
+    <string name="messages">Berichten</string>
+    <string name="notifications">Notificaties</string>
+    <string name="activity_log">Activiteiten</string>
+    <string name="pages">Pagina\'s</string>
+    <string name="groups">Groepen</string>
+    <string name="saved">Bewaard</string>
+    <string name="birthdays">Verjaardagen</string>
+    <string name="chat">Chat</string>
+    <string name="photos">Foto\'s</string>
+    <string name="marketplace">Marktplaats</string>
+    <string name="menu" translatable="false">@string/kau_menu</string>
+    <string name="settings" translatable="false">@string/kau_settings</string>
+    <string name="notes">Notities</string>
+    <string name="on_this_day">Vandaag</string>
+
+    <string name="loading_account">Voorbereiden account…</string>
+    <string name="welcome">Welkom %s</string>
+    <string name="select_facebook_account">Selecteer een Facebook-account</string>
+    <string name="account_not_found">Het huidige account is niet opgeslagen in de database</string>
+
+    <string name="frost_requests">Frost Verzoeken</string>
+    <string name="frost_notifications">Frost Notificaties</string>
+    <string name="requires_custom_theme">Aangepast thema vereist</string>
+
+    <string name="subject">Onderwerp</string>
+    <string name="share">Delen</string>
+
+    <string name="web_overlay_swipe_hint">Veeg naar rechts om terug te gaan.</string>
+    <string name="profile_picture">Profielfoto</string>
+
+    <string name="new_message">Nieuw bericht</string>
+    <string name="no_text">Geen tekst</string>
+
+    <string name="show_all_results">All resultaten</string>
+
+
+    <string name="frost_description">Frost is een open-source en volledig functioneel alternatief voor de officiële Facebook-app met aan te passen thema\'s.</string>
+
+    <string name="faq_title">Frost Veelgestelde Vragen</string>
+
+    <string name="html_extraction_error">Fout opgetreden bij het verwerken van de HTML-code.</string>
+    <string name="html_extraction_cancelled">Het verzoek is afgebroken.</string>
+    <string name="html_extraction_timeout">Het verzoek is verlopen.</string>
+    <string name="file_chooser_not_found">Geen bestandskiezer gevonden</string>
+
+    <string name="top_bar">Werkbalk bovenaan</string>
+    <string name="bottom_bar">Werkbalk onderaan</string>
+
+    <string name="pip" translatable="false">PIP</string>
+    <string name="preview">Voorbeeld</string>
+    <string name="options">Opties</string>
+    <string name="tab_customizer_instructions">Klik en houd vast om de iconen in de gewenste volgorde te slepen.</string>
+
+    <string name="no_new_notifications">Geen nieuwe notificaties</string>
+
+</resources>
