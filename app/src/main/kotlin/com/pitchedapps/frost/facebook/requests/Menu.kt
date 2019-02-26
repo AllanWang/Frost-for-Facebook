@@ -96,11 +96,6 @@ data class MenuData(
     val footer: MenuFooter = MenuFooter()
 ) {
 
-    @JsonCreator
-    constructor(
-        @JsonProperty("data") data: List<MenuHeader>?
-    ) : this(data ?: emptyList(), MenuFooter())
-
     fun flatMapValid(): List<MenuItemData> {
         val items = mutableListOf<MenuItemData>()
         data.forEach {
@@ -126,16 +121,6 @@ data class MenuHeader(
     val visible: List<MenuItem> = emptyList(),
     val all: List<MenuItem> = emptyList()
 ) : MenuItemData {
-
-    @JsonCreator
-    constructor(
-        @JsonProperty("id") id: String?,
-        @JsonProperty("header") header: String?,
-        @JsonProperty("visible") visible: List<MenuItem>?,
-        @JsonProperty("all") all: List<MenuItem>?,
-        @JsonProperty("fake") fake: Boolean?
-    ) : this(id, header, visible ?: emptyList(), all ?: emptyList())
-
     override val isValid: Boolean
         get() = !header.isNullOrBlank()
 }
