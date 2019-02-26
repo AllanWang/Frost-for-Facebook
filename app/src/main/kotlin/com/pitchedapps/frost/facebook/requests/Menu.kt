@@ -19,11 +19,11 @@ package com.pitchedapps.frost.facebook.requests
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.objectMapper
 import okhttp3.Call
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
@@ -54,11 +54,8 @@ fun parseMenu(call: Call): MenuData? {
 
     jsonString = "{ \"data\" : [${StringEscapeUtils.unescapeEcmaScript(jsonString)}"
 
-    val mapper = ObjectMapper()
-        .disable(MapperFeature.AUTO_DETECT_SETTERS)
-
     return try {
-        val data = mapper.readValue(jsonString, MenuData::class.java)
+        val data = objectMapper.readValue<MenuData>(jsonString)
 
         // parse footer content
 

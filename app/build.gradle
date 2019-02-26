@@ -219,6 +219,7 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:${kau.glide}"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON}"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${JACKSON}"
 
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
