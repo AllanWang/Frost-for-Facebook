@@ -95,6 +95,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 //                    CssHider.CORE,
                 CssHider.HEADER,
                 CssHider.COMPOSER.maybe(!Prefs.showComposer),
+                CssHider.STORIES.maybe(!Prefs.showStories),
                 CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
                 CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
                 Prefs.themeInjector,

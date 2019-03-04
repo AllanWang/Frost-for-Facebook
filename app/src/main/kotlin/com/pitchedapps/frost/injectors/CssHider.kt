@@ -37,7 +37,8 @@ enum class CssHider(vararg val items: String) : InjectorContract {
     SUGGESTED_GROUPS("article[data-ft*=\"ei\":]"),
     COMPOSER("#MComposer"),
     MESSENGER("._s15", "[data-testid=info_panel]", "js_i"),
-    NON_RECENT("article:not([data-store*=actor_name])")
+    NON_RECENT("article:not([data-store*=actor_name])"),
+    STORIES("#MStoriesTray")
     ;
 
     val injector: JsInjector by lazy {
