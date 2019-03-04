@@ -82,7 +82,13 @@ class FbUrlFormatter(url: String) {
         builder.append(cleaned)
         if (queries.isNotEmpty()) {
             builder.append("?")
-            queries.forEach { (k, v) -> builder.append("$k=$v&") }
+            queries.forEach { (k, v) ->
+                if (v.isEmpty()) {
+                    builder.append("$k&")
+                } else {
+                    builder.append("$k=$v&")
+                }
+            }
         }
         return builder.removeSuffix("&").toString()
     }
@@ -121,7 +127,7 @@ class FbUrlFormatter(url: String) {
          *
          * acontext is not required for "friends interested in" notifications
          */
-        val discardableQueries = arrayOf("ref", "refid", "SharedWith")
+        val discardableQueries = arrayOf("ref", "refid", "SharedWith", "fbclid")
 
         val converter = listOf(
             "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",

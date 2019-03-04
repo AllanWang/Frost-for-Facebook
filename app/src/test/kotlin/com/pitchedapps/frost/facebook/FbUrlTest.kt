@@ -71,6 +71,19 @@ class FbUrlTest {
     }
 
     @Test
+    fun valuelessQuery() {
+        val url = "$FB_URL_BASE?foo"
+        assertFbFormat(url, url)
+    }
+
+    @Test
+    fun fbclid() {
+        val url = "$FB_URL_BASE?foo&fbclid=abc&bar=bbb"
+        val formattedUrl = "$FB_URL_BASE?foo&bar=bbb"
+        assertFbFormat(formattedUrl, url)
+    }
+
+    @Test
     fun doubleDash() {
         assertFbFormat("${FB_URL_BASE}relative", "$FB_URL_BASE/relative")
     }
