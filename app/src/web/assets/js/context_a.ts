@@ -43,12 +43,25 @@
         return true;
     };
 
+    const _getImageStyleUrl = (el: Element): string | null => {
+        const img = el.querySelector("[style*=\"background-image: url(\"]");
+        if (!img) {
+            return null
+        }
+        return (<String>window.getComputedStyle(img, null).backgroundImage).trim().slice(4, -1);
+    };
+
+    /**
+     * Opens image activity for posts with just one image
+     */
     const _frostImage: EventHandler = (e, target) => {
         let element: Element = target;
         // Notifications are two layers under
         for (let i = 0; i < 2; i++) {
             if (element.tagName !== 'A') {
                 element = <Element>element.parentElement;
+            } else {
+                break
             }
         }
         if (element.tagName !== 'A') {
@@ -60,12 +73,8 @@
         }
         const text = (<HTMLElement>element.parentElement).innerText;
         // Check if image item exists, first in children and then in parent
-        let image = element.querySelector("[style*=\"background-image: url(\"]");
-        if (!image) {
-            image = (<Element>element.parentElement).querySelector("[style*=\"background-image: url(\"]")
-        }
-        if (image) {
-            const imageUrl = (<String>window.getComputedStyle(image, null).backgroundImage).trim().slice(4, -1);
+        const imageUrl = _getImageStyleUrl(element) || _getImageStyleUrl(<Element>element.parentElement);
+        if (imageUrl) {
             console.log(`Context image: ${imageUrl}`);
             Frost.loadImage(imageUrl, text);
             return true;
@@ -83,7 +92,7 @@
         return true;
     };
 
-    const handlers = [_frostCopyComment, _frostCopyPost, _frostImage];
+    const handlers = [_frostImage, _frostCopyComment, _frostCopyPost];
 
     const _frostAContext = (e: Event) => {
         Frost.longClick(true);

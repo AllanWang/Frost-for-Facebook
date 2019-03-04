@@ -28,11 +28,21 @@
         Frost.contextMenu(url, text);
         return true;
     };
+    var _getImageStyleUrl = function (el) {
+        var img = el.querySelector("[style*=\"background-image: url(\"]");
+        if (!img) {
+            return null;
+        }
+        return window.getComputedStyle(img, null).backgroundImage.trim().slice(4, -1);
+    };
     var _frostImage = function (e, target) {
         var element = target;
         for (var i = 0; i < 2; i++) {
             if (element.tagName !== 'A') {
                 element = element.parentElement;
+            }
+            else {
+                break;
             }
         }
         if (element.tagName !== 'A') {
@@ -43,12 +53,8 @@
             return false;
         }
         var text = element.parentElement.innerText;
-        var image = element.querySelector("[style*=\"background-image: url(\"]");
-        if (!image) {
-            image = element.parentElement.querySelector("[style*=\"background-image: url(\"]");
-        }
-        if (image) {
-            var imageUrl = window.getComputedStyle(image, null).backgroundImage.trim().slice(4, -1);
+        var imageUrl = _getImageStyleUrl(element) || _getImageStyleUrl(element.parentElement);
+        if (imageUrl) {
             console.log("Context image: " + imageUrl);
             Frost.loadImage(imageUrl, text);
             return true;
@@ -64,7 +70,7 @@
         Frost.contextMenu(url, text);
         return true;
     };
-    var handlers = [_frostCopyComment, _frostCopyPost, _frostImage];
+    var handlers = [_frostImage, _frostCopyComment, _frostCopyPost];
     var _frostAContext = function (e) {
         Frost.longClick(true);
         longClick = true;
