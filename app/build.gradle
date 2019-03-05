@@ -258,8 +258,8 @@ dependencies {
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
 
     implementation "androidx.room:room-coroutines:${ROOM}"
-    implementation "android.arch.persistence.room:runtime:${ROOM}"
-    kapt "android.arch.persistence.room:compiler:${ROOM}"
+    implementation "androidx.room:room-runtime:${ROOM}"
+    kapt "androidx.room:room-compiler:${ROOM}"
     testImplementation "androidx.room:room-testing:${ROOM}"
 
 }
