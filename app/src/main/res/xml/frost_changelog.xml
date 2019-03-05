@@ -6,14 +6,19 @@
     <item text="" />
     -->
 
+    <version title="v2.2.3" />
+    <item text="Add ability to hide stories" />
+    <item text="Remove fbclid from urls" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.2.2" />
     <item text="New marketplace shortcut" />
     <item text="Fix crash when internet disconnects (may still need app restart)" />
     <item text="Improve JS code" />
     <item text="Add ability to copy text from comments" />
     <item text="Various theme fixes" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.2.1" />
     <item text="Update theme" />
