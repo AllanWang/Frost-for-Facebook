@@ -16,7 +16,7 @@
  */
 package com.pitchedapps.frost.facebook.parsers
 
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get

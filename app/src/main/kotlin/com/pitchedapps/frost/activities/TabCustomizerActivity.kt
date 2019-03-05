@@ -33,9 +33,9 @@ import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.TAB_COUNT
-import com.pitchedapps.frost.dbflow.loadFbTabs
-import com.pitchedapps.frost.dbflow.save
+import com.pitchedapps.frost.db.TAB_COUNT
+import com.pitchedapps.frost.db.loadFbTabs
+import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.Prefs

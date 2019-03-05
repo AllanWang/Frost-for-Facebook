@@ -21,8 +21,8 @@ import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.loadFbCookiesSync
+import com.pitchedapps.frost.db.CookieModel
+import com.pitchedapps.frost.db.loadFbCookiesSync
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent

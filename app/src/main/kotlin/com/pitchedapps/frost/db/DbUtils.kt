@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.dbflow
+package com.pitchedapps.frost.db
 
 import android.content.Context
 import com.pitchedapps.frost.utils.L
@@ -26,7 +26,6 @@ import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModel
  */
 
 object DbUtils {
-
     fun db(name: String) = FlowManager.getDatabase(name)
     fun dbName(name: String) = "$name.db"
     fun deleteDatabase(c: Context, name: String) = c.deleteDatabase(dbName(name))

@@ -29,8 +29,8 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.dbflow.NotificationModel
-import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
+import com.pitchedapps.frost.db.NotificationModel
+import com.pitchedapps.frost.db.loadFbCookiesAsync
 import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs

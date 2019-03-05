@@ -14,8 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.dbflow
+package com.pitchedapps.frost.db
 
+import androidx.room.Dao
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.defaultTabs
 import com.pitchedapps.frost.utils.L
@@ -31,6 +37,50 @@ import com.raizlabs.android.dbflow.structure.BaseModel
 /**
  * Created by Allan Wang on 2017-05-30.
  */
+
+@Entity(tableName = "tabs")
+data class FbTabEntity(@androidx.room.PrimaryKey var position: Int, var tab: FbItem)
+
+@Dao
+interface FbTabDao {
+
+    @Query("SELECT * FROM tabs ORDER BY position ASC")
+    suspend fun _selectAll(): List<FbTabEntity>
+
+    @Query("DELETE FROM tabs")
+    suspend fun _deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun _insertAll(items: List<FbTabEntity>)
+
+    @Transaction
+    suspend fun _save(items: List<FbTabEntity>) {
+        _deleteAll()
+        _insertAll(items)
+    }
+
+//    suspend fun save(items: List<FbItem>) {
+//        _save((items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
+//            FbTabEntity(
+//                index,
+//                fbItem
+//            )
+//        })
+//    }
+//
+//    suspend fun selectAll(): List<FbItem> = _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
+}
+
+object FbItemConverter {
+    @androidx.room.TypeConverter
+    @JvmStatic
+    fun fromItem(item: FbItem): String = item.name
+
+    @androidx.room.TypeConverter
+    @JvmStatic
+    fun toItem(value: String): FbItem = FbItem.valueOf(value)
+}
+
 const val TAB_COUNT = 4
 
 @Database(version = FbTabsDb.VERSION)

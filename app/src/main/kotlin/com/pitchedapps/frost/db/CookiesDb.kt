@@ -14,9 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.dbflow
+package com.pitchedapps.frost.db
 
 import android.os.Parcelable
+import androidx.room.Dao
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
@@ -37,6 +42,35 @@ import kotlinx.coroutines.withContext
 /**
  * Created by Allan Wang on 2017-05-30.
  */
+
+@Entity(tableName = "cookies")
+@Parcelize
+data class CookieEntity(
+    @androidx.room.PrimaryKey
+    var id: Long,
+    var name: String,
+    var cookie: String
+) : Parcelable {
+    override fun toString(): String = "CookieModel(${hashCode()})"
+
+    fun toSensitiveString(): String = "CookieModel(id=$id, name=$name, cookie=$cookie)"
+}
+
+@Dao
+interface CookieDao {
+
+    @Query("SELECT * FROM cookies")
+    suspend fun selectAll(): List<CookieEntity>
+
+    @Query("SELECT * FROM cookies WHERE id = :id")
+    suspend fun selectById(id: Long): CookieEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCookie(cookie: CookieEntity)
+
+    @Query("DELETE FROM cookies WHERE id = :id")
+    suspend fun deleteById(id: Long)
+}
 
 @Database(version = CookiesDb.VERSION)
 object CookiesDb {

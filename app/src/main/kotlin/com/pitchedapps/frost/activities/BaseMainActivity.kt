@@ -69,9 +69,9 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.dbflow.TAB_COUNT
-import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.db.TAB_COUNT
+import com.pitchedapps.frost.db.loadFbCookie
+import com.pitchedapps.frost.db.loadFbTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem

@@ -21,7 +21,7 @@ import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs

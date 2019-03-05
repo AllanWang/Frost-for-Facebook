@@ -31,9 +31,9 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.NotificationModel
-import com.pitchedapps.frost.dbflow.lastNotificationTime
+import com.pitchedapps.frost.db.CookieModel
+import com.pitchedapps.frost.db.NotificationModel
+import com.pitchedapps.frost.db.lastNotificationTime
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostParser

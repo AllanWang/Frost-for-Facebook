@@ -29,9 +29,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
-import com.pitchedapps.frost.dbflow.CookiesDb
-import com.pitchedapps.frost.dbflow.FbTabsDb
-import com.pitchedapps.frost.dbflow.NotificationDb
+import com.pitchedapps.frost.db.CookiesDb
+import com.pitchedapps.frost.db.FbTabsDb
+import com.pitchedapps.frost.db.NotificationDb
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.services.setupNotificationChannels
@@ -44,6 +44,7 @@ import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
+import com.squareup.sqldelight.android.AndroidSqliteDriver
 import java.util.Random
 import kotlin.reflect.KClass
 
@@ -114,6 +115,13 @@ class FrostApp : Application() {
                     .thumbnail(old).into(imageView)
             }
         })
+        val driver = AndroidSqliteDriver(Database.Schema, this, "test.db")
+        val db = Database(driver)
+        db.transaction {
+            db.frostQueries.selectAll().executeAsList().forEach {
+                it.id
+            }
+        }
         if (BuildConfig.DEBUG)
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
                 override fun onActivityPaused(activity: Activity) {}

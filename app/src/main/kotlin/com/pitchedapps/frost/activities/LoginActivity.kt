@@ -32,9 +32,9 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.loadFbCookiesSuspend
-import com.pitchedapps.frost.dbflow.saveFbCookie
+import com.pitchedapps.frost.db.CookieModel
+import com.pitchedapps.frost.db.loadFbCookiesSuspend
+import com.pitchedapps.frost.db.saveFbCookie
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl

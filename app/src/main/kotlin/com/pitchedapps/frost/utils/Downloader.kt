@@ -29,7 +29,7 @@ import ca.allanwang.kau.utils.showAppInfo
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.loadFbCookie
+import com.pitchedapps.frost.db.loadFbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
 
 /**

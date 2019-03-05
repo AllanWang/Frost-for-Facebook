@@ -62,7 +62,7 @@ import com.pitchedapps.frost.activities.TabCustomizerActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayBasicActivity
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie

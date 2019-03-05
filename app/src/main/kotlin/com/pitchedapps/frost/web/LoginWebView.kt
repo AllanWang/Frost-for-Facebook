@@ -29,7 +29,7 @@ import android.webkit.WebView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.launchMain
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie

@@ -26,6 +26,11 @@ android {
         versionName androidGitVersion.name()
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/src/schemas".toString()]
+            }
+        }
     }
 
     applicationVariants.all { variant ->
@@ -251,6 +256,11 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+
+    implementation "androidx.room:room-coroutines:${ROOM}"
+    implementation "android.arch.persistence.room:runtime:${ROOM}"
+    kapt "android.arch.persistence.room:compiler:${ROOM}"
+    testImplementation "androidx.room:room-testing:${ROOM}"
 
 }
 

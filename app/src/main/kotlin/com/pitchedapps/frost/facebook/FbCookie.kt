@@ -19,10 +19,10 @@ package com.pitchedapps.frost.facebook
 import android.app.Activity
 import android.content.Context
 import android.webkit.CookieManager
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.dbflow.removeCookie
-import com.pitchedapps.frost.dbflow.saveFbCookie
+import com.pitchedapps.frost.db.CookieModel
+import com.pitchedapps.frost.db.loadFbCookie
+import com.pitchedapps.frost.db.removeCookie
+import com.pitchedapps.frost.db.saveFbCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
