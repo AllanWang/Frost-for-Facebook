@@ -58,18 +58,18 @@ interface FbTabDao {
         _deleteAll()
         _insertAll(items)
     }
-
-//    suspend fun save(items: List<FbItem>) {
-//        _save((items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
-//            FbTabEntity(
-//                index,
-//                fbItem
-//            )
-//        })
-//    }
-//
-//    suspend fun selectAll(): List<FbItem> = _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
 }
+
+suspend fun FbTabDao.save(items: List<FbItem>) {
+    _save((items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
+        FbTabEntity(
+            index,
+            fbItem
+        )
+    })
+}
+
+suspend fun FbTabDao.selectAll(): List<FbItem> = _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
 
 object FbItemConverter {
     @androidx.room.TypeConverter
