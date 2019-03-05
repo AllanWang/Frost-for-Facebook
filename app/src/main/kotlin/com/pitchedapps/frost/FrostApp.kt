@@ -44,7 +44,6 @@ import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
-import com.squareup.sqldelight.android.AndroidSqliteDriver
 import java.util.Random
 import kotlin.reflect.KClass
 
@@ -115,13 +114,6 @@ class FrostApp : Application() {
                     .thumbnail(old).into(imageView)
             }
         })
-        val driver = AndroidSqliteDriver(Database.Schema, this, "test.db")
-        val db = Database(driver)
-        db.transaction {
-            db.frostQueries.selectAll().executeAsList().forEach {
-                it.id
-            }
-        }
         if (BuildConfig.DEBUG)
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
                 override fun onActivityPaused(activity: Activity) {}

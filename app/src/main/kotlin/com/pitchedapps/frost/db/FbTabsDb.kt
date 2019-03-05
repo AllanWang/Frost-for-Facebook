@@ -45,16 +45,16 @@ data class FbTabEntity(@androidx.room.PrimaryKey var position: Int, var tab: FbI
 interface FbTabDao {
 
     @Query("SELECT * FROM tabs ORDER BY position ASC")
-    suspend fun _selectAll(): List<FbTabEntity>
+    fun _selectAll(): List<FbTabEntity>
 
     @Query("DELETE FROM tabs")
-    suspend fun _deleteAll()
+    fun _deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun _insertAll(items: List<FbTabEntity>)
+    fun _insertAll(items: List<FbTabEntity>)
 
     @Transaction
-    suspend fun _save(items: List<FbTabEntity>) {
+    fun _save(items: List<FbTabEntity>) {
         _deleteAll()
         _insertAll(items)
     }

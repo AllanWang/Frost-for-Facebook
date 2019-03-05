@@ -60,16 +60,16 @@ data class CookieEntity(
 interface CookieDao {
 
     @Query("SELECT * FROM cookies")
-    suspend fun selectAll(): List<CookieEntity>
+    fun selectAll(): List<CookieEntity>
 
     @Query("SELECT * FROM cookies WHERE id = :id")
-    suspend fun selectById(id: Long): CookieEntity?
+    fun selectById(id: Long): CookieEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCookie(cookie: CookieEntity)
+    fun insertCookie(cookie: CookieEntity)
 
     @Query("DELETE FROM cookies WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    fun deleteById(id: Long)
 }
 
 @Database(version = CookiesDb.VERSION)

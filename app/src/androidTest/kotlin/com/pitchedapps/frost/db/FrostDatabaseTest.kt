@@ -5,10 +5,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import org.junit.Rule
 import org.junit.runner.RunWith
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @RunWith(AndroidJUnit4::class)
@@ -16,9 +17,8 @@ class FrostDatabaseTest {
 
     private lateinit var db: FrostDatabase
 
-    @Before
+    @BeforeTest
     fun before() {
-
         val context = ApplicationProvider.getApplicationContext<Context>()
         val privateDb = Room.inMemoryDatabaseBuilder(
             context, FrostPrivateDatabase::class.java
@@ -29,7 +29,7 @@ class FrostDatabaseTest {
         db = FrostDatabase(privateDb, publicDb)
     }
 
-    @After
+    @AfterTest
     fun after() {
         db.close()
     }
