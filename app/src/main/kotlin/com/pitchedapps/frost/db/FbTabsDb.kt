@@ -33,6 +33,8 @@ import com.raizlabs.android.dbflow.kotlinextensions.fastSave
 import com.raizlabs.android.dbflow.kotlinextensions.from
 import com.raizlabs.android.dbflow.kotlinextensions.select
 import com.raizlabs.android.dbflow.structure.BaseModel
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -52,21 +54,26 @@ interface FbTabDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun _insertAll(items: List<FbTabEntity>)
-
-    @Transaction
-    suspend fun _save(items: List<FbTabEntity>) {
-        _deleteAll()
-        _insertAll(items)
-    }
 }
 
+/**
+ * Saving tabs operates by deleting all db items and saving the new list.
+ * Transactions can't be done with suspensions in room as switching threads during the process
+ * may result in a deadlock.
+ * In this case, there may be a chance that the 'transaction' completes partially,
+ * but we'll just fallback to the default anyways.
+ */
 suspend fun FbTabDao.save(items: List<FbItem>) {
-    _save((items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
-        FbTabEntity(
-            index,
-            fbItem
-        )
-    })
+    withContext(NonCancellable) {
+        _deleteAll()
+        val entities = (items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
+            FbTabEntity(
+                index,
+                fbItem
+            )
+        }
+        _insertAll(entities)
+    }
 }
 
 suspend fun FbTabDao.selectAll(): List<FbItem> = _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
