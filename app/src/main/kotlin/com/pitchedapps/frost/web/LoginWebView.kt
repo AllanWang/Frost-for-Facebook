@@ -29,6 +29,7 @@ import android.webkit.WebView
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.launchMain
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
@@ -52,7 +53,7 @@ class LoginWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
-    private val completable: CompletableDeferred<CookieModel> = CompletableDeferred()
+    private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -63,7 +64,7 @@ class LoginWebView @JvmOverloads constructor(
         webChromeClient = LoginChromeClient()
     }
 
-    suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieModel> = coroutineScope {
+    suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieEntity> = coroutineScope {
         this@LoginWebView.progressCallback = progressCallback
         L.d { "Begin loading login" }
         launchMain {
@@ -78,18 +79,19 @@ class LoginWebView @JvmOverloads constructor(
 
         override fun onPageFinished(view: WebView, url: String?) {
             super.onPageFinished(view, url)
-            val cookieModel = checkForLogin(url)
-            if (cookieModel != null)
-                completable.complete(cookieModel)
+            val cookie = checkForLogin(url)
+            if (cookie != null)
+                completable.complete(cookie)
             if (!view.isVisible) view.fadeIn()
         }
 
-        fun checkForLogin(url: String?): CookieModel? {
+        fun checkForLogin(url: String?): CookieEntity? {
             if (!url.isFacebookUrl) return null
             val cookie = CookieManager.getInstance().getCookie(url) ?: return null
             L.d { "Checking cookie for login" }
             val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return null
-            return CookieModel(id, "", cookie)
+            // TODO set name to null?
+            return CookieEntity(id, "", cookie)
         }
 
         override fun onPageCommitVisible(view: WebView, url: String?) {

@@ -69,9 +69,11 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.FbTabDao
 import com.pitchedapps.frost.db.TAB_COUNT
-import com.pitchedapps.frost.db.loadFbCookie
-import com.pitchedapps.frost.db.loadFbTabs
+import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -109,6 +111,7 @@ import kotlinx.android.synthetic.main.view_main_toolbar.*
 import kotlinx.android.synthetic.main.view_main_viewpager.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -123,6 +126,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     protected lateinit var adapter: SectionsPagerAdapter
     override val frameWrapper: FrameLayout get() = frame_wrapper
     val viewPager: FrostViewPager get() = container
+    val cookieDao: CookieDao by inject()
+    val tabDao: FbTabDao by inject()
 
     /*
      * Components with the same id in multiple layout files
@@ -151,9 +156,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             background(viewPager)
         }
         setSupportActionBar(toolbar)
-        adapter = SectionsPagerAdapter(loadFbTabs())
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = TAB_COUNT
+        launch {
+            adapter = SectionsPagerAdapter(tabDao.selectAll())
+            viewPager.adapter = adapter
+            viewPager.offscreenPageLimit = TAB_COUNT
+        }
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
@@ -274,27 +281,28 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     if (current) launchWebOverlay(FbItem.PROFILE.url)
                     else when (profile.identifier) {
                         -2L -> {
-                            val currentCookie = loadFbCookie(Prefs.userId)
-                            if (currentCookie == null) {
-                                toast(R.string.account_not_found)
-                                launch {
+                            // TODO no backpressure support
+                            launch {
+                                val currentCookie = cookieDao.currentCookie()
+                                if (currentCookie == null) {
+                                    toast(R.string.account_not_found)
                                     FbCookie.reset()
                                     launchLogin(cookies(), true)
-                                }
-                            } else {
-                                materialDialogThemed {
-                                    title(R.string.kau_logout)
-                                    content(
-                                        String.format(
-                                            string(R.string.kau_logout_confirm_as_x), currentCookie.name
-                                                ?: Prefs.userId.toString()
+                                } else {
+                                    materialDialogThemed {
+                                        title(R.string.kau_logout)
+                                        content(
+                                            String.format(
+                                                string(R.string.kau_logout_confirm_as_x),
+                                                currentCookie.name ?: Prefs.userId.toString()
+                                            )
                                         )
-                                    )
-                                    positiveText(R.string.kau_yes)
-                                    negativeText(R.string.kau_no)
-                                    onPositive { _, _ ->
-                                        launch {
-                                            FbCookie.logout(this@BaseMainActivity)
+                                        positiveText(R.string.kau_yes)
+                                        negativeText(R.string.kau_no)
+                                        onPositive { _, _ ->
+                                            this@BaseMainActivity.launch {
+                                                FbCookie.logout(this@BaseMainActivity)
+                                            }
                                         }
                                     }
                                 }

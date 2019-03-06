@@ -31,6 +31,7 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.db.NotificationModel
 import com.pitchedapps.frost.db.lastNotificationTime
@@ -116,7 +117,7 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    fun fetch(context: Context, data: CookieModel): Int {
+    fun fetch(context: Context, data: CookieEntity): Int {
         val response = try {
             parser.parse(data.cookie)
         } catch (ignored: Exception) {
@@ -161,7 +162,7 @@ enum class NotificationType(
         return notifs.size
     }
 
-    fun debugNotification(context: Context, data: CookieModel) {
+    fun debugNotification(context: Context, data: CookieEntity) {
         val content = NotificationContent(
             data,
             System.currentTimeMillis(),
@@ -247,7 +248,7 @@ enum class NotificationType(
  * Notification data holder
  */
 data class NotificationContent(
-    val data: CookieModel,
+    val data: CookieEntity,
     val id: Long,
     val href: String,
     val title: String? = null, // defaults to frost title

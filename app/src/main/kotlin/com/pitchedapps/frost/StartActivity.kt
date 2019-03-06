@@ -32,6 +32,8 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.db.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FbCookie
@@ -43,12 +45,15 @@ import com.pitchedapps.frost.utils.loadAssets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import java.util.ArrayList
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
 class StartActivity : KauBaseActivity() {
+
+    private val cookieDao: CookieDao by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,12 +72,11 @@ class StartActivity : KauBaseActivity() {
 
         launch {
             try {
+                migrate()
                 FbCookie.switchBackUser()
-                val cookies = ArrayList(withContext(Dispatchers.IO) {
-                    loadFbCookiesSync()
-                })
+                val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
-                L._d { "Cookies: ${cookies.joinToString("\t", transform = CookieModel::toSensitiveString)}" }
+                L._d { "Cookies: ${cookies.joinToString("\t", transform = CookieEntity::toSensitiveString)}" }
                 loadAssets()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
@@ -88,6 +92,13 @@ class StartActivity : KauBaseActivity() {
                 showInvalidWebView()
             }
         }
+    }
+
+    /**
+     * Migrate from dbflow to room
+     */
+    private  suspend fun migrate() {
+
     }
 
     private fun showInvalidWebView() =

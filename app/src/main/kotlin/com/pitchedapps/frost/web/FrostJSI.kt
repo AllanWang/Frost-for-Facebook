@@ -21,6 +21,7 @@ import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L
@@ -44,7 +45,7 @@ class FrostJSI(val web: FrostWebView) {
     private val activity: MainActivity? = context as? MainActivity
     private val header: SendChannel<String>? = activity?.headerBadgeChannel
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val cookies: List<CookieModel> = activity?.cookies() ?: arrayListOf()
+    private val cookies: List<CookieEntity> = activity?.cookies() ?: arrayListOf()
 
     /**
      * Attempts to load the url in an overlay

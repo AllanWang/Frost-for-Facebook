@@ -21,8 +21,8 @@ import androidx.core.app.NotificationManagerCompat
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.db.CookieModel
-import com.pitchedapps.frost.db.loadFbCookiesSync
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
@@ -31,6 +31,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -41,6 +42,8 @@ import kotlinx.coroutines.yield
  * All fetching is done through parsers
  */
 class NotificationService : BaseJobService() {
+
+    val cookieDao: CookieDao by inject()
 
     override fun onStopJob(params: JobParameters?): Boolean {
         super.onStopJob(params)
@@ -81,7 +84,7 @@ class NotificationService : BaseJobService() {
 
     private suspend fun sendNotifications(params: JobParameters?): Unit = withContext(Dispatchers.Default) {
         val currentId = Prefs.userId
-        val cookies = loadFbCookiesSync()
+        val cookies = cookieDao.selectAll()
         yield()
         val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
         var notifCount = 0
@@ -107,7 +110,7 @@ class NotificationService : BaseJobService() {
      * Implemented fetch to also notify when an error occurs
      * Also normalized the output to return the number of notifications received
      */
-    private fun fetch(jobId: Int, type: NotificationType, cookie: CookieModel): Int {
+    private fun fetch(jobId: Int, type: NotificationType, cookie: CookieEntity): Int {
         val count = type.fetch(this, cookie)
         if (count < 0) {
             if (jobId == NOTIFICATION_JOB_NOW)

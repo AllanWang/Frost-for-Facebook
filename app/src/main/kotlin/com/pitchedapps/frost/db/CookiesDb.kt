@@ -23,6 +23,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -48,12 +49,12 @@ import kotlinx.coroutines.withContext
 data class CookieEntity(
     @androidx.room.PrimaryKey
     var id: Long,
-    var name: String,
-    var cookie: String
+    var name: String?,
+    var cookie: String?
 ) : Parcelable {
-    override fun toString(): String = "CookieModel(${hashCode()})"
+    override fun toString(): String = "CookieEntity(${hashCode()})"
 
-    fun toSensitiveString(): String = "CookieModel(id=$id, name=$name, cookie=$cookie)"
+    fun toSensitiveString(): String = "CookieEntity(id=$id, name=$name, cookie=$cookie)"
 }
 
 @Dao
@@ -72,6 +73,8 @@ interface CookieDao {
     suspend fun deleteById(id: Long)
 }
 
+suspend fun CookieDao.currentCookie() = selectById(Prefs.userId)
+
 @Database(version = CookiesDb.VERSION)
 object CookiesDb {
     const val NAME = "Cookies"
@@ -86,41 +89,4 @@ data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null,
     override fun toString(): String = "CookieModel(${hashCode()})"
 
     fun toSensitiveString(): String = "CookieModel(id=$id, name=$name, cookie=$cookie)"
-}
-
-fun loadFbCookie(id: Long): CookieModel? =
-    (select from CookieModel::class where (CookieModel_Table.id eq id)).querySingle()
-
-fun loadFbCookie(name: String): CookieModel? =
-    (select from CookieModel::class where (CookieModel_Table.name eq name)).querySingle()
-
-/**
- * Loads cookies sorted by name
- */
-fun loadFbCookiesAsync(callback: (cookies: List<CookieModel>) -> Unit) {
-    (select from CookieModel::class).orderBy(CookieModel_Table.name, true).async()
-        .queryListResultCallback { _, tResult -> callback(tResult) }.execute()
-}
-
-fun loadFbCookiesSync(): List<CookieModel> =
-    (select from CookieModel::class).orderBy(CookieModel_Table.name, true).queryList()
-
-// TODO temp method until dbflow supports coroutines
-suspend fun loadFbCookiesSuspend(): List<CookieModel> = withContext(Dispatchers.IO) {
-    loadFbCookiesSync()
-}
-
-inline fun saveFbCookie(cookie: CookieModel, crossinline callback: (() -> Unit) = {}) {
-    cookie.async save {
-        L.d { "Fb cookie saved" }
-        L._d { cookie.toSensitiveString() }
-        callback()
-    }
-}
-
-fun removeCookie(id: Long) {
-    loadFbCookie(id)?.async?.delete {
-        L.d { "Fb cookie deleted" }
-        L._d { id }
-    }
 }

@@ -204,9 +204,9 @@ dependencies {
 
     implementation "androidx.core:core-ktx:${KTX}"
 
-//    implementation "org.koin:koin-android:${KOIN}"
-//    testImplementation "org.koin:koin-test:${KOIN}"
-//    androidTestImplementation "org.koin:koin-test:${KOIN}"
+    implementation "org.koin:koin-android:${KOIN}"
+    testImplementation "org.koin:koin-test:${KOIN}"
+    androidTestImplementation "org.koin:koin-test:${KOIN}"
 
 //    androidTestImplementation "io.mockk:mockk:${MOCKK}"
 

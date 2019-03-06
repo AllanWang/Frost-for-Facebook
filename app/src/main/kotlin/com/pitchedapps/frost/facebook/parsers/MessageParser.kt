@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.facebook.parsers
 
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.facebook.FB_EPOCH_MATCHER
 import com.pitchedapps.frost.facebook.FB_MESSAGE_NOTIF_ID_MATCHER
@@ -54,7 +55,7 @@ data class FrostMessages(
         append("}")
     }.toString()
 
-    override fun getUnreadNotifications(data: CookieModel) =
+    override fun getUnreadNotifications(data: CookieEntity) =
         threads.asSequence().filter(FrostThread::unread).map {
             with(it) {
                 NotificationContent(
