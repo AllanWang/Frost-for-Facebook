@@ -22,23 +22,13 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.kotlinextensions.async
-import com.raizlabs.android.dbflow.kotlinextensions.delete
-import com.raizlabs.android.dbflow.kotlinextensions.eq
-import com.raizlabs.android.dbflow.kotlinextensions.from
-import com.raizlabs.android.dbflow.kotlinextensions.save
-import com.raizlabs.android.dbflow.kotlinextensions.select
-import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.structure.BaseModel
 import kotlinx.android.parcel.Parcelize
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -68,6 +58,9 @@ interface CookieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCookie(cookie: CookieEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCookies(cookies: List<CookieEntity>)
 
     @Query("DELETE FROM cookies WHERE id = :id")
     suspend fun deleteById(id: Long)

@@ -35,13 +35,15 @@ import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
-import com.pitchedapps.frost.db.loadFbCookiesSync
+import com.pitchedapps.frost.db.FbTabModel
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
+import com.raizlabs.android.dbflow.kotlinextensions.from
+import com.raizlabs.android.dbflow.kotlinextensions.select
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -97,8 +99,12 @@ class StartActivity : KauBaseActivity() {
     /**
      * Migrate from dbflow to room
      */
-    private  suspend fun migrate() {
-
+    private suspend fun migrate() = withContext(Dispatchers.IO) {
+        if (cookieDao.selectAll().isNotEmpty()) return@withContext
+        val cookies = (select from CookieModel::class).queryList()
+        cookieDao.insertCookies(cookies.map { CookieEntity(it.id, it.name, it.cookie) })
+        // TODO
+        val tabs = (select from FbTabModel::class).queryList()
     }
 
     private fun showInvalidWebView() =

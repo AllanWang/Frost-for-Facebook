@@ -17,6 +17,7 @@
     <application
         android:name=".FrostApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/frost_backup_rules"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/frost_name"
         android:roundIcon="@mipmap/ic_launcher_round"
