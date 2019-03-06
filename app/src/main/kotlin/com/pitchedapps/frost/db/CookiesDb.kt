@@ -38,9 +38,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CookieEntity(
     @androidx.room.PrimaryKey
-    var id: Long,
-    var name: String?,
-    var cookie: String?
+    val id: Long,
+    val name: String?,
+    val cookie: String?
 ) : Parcelable {
     override fun toString(): String = "CookieEntity(${hashCode()})"
 

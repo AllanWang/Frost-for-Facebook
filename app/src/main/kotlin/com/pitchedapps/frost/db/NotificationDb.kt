@@ -16,6 +16,16 @@
  */
 package com.pitchedapps.frost.db
 
+import androidx.room.Dao
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Ignore
+import androidx.room.Index
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Relation
+import androidx.room.Transaction
 import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
@@ -31,6 +41,60 @@ import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.sql.SQLiteType
 import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration
 import com.raizlabs.android.dbflow.structure.BaseModel
+
+@Entity(
+    tableName = "notification_info",
+    foreignKeys = [ForeignKey(
+        entity = CookieEntity::class,
+        parentColumns = ["id"], childColumns = ["id"], onDelete = ForeignKey.CASCADE
+    )]
+)
+data class NotificationInfoEntity(
+    @androidx.room.PrimaryKey val id: Long,
+    val epoch: Long,
+    val epochIm: Long
+)
+
+@Entity(
+    tableName = "notifications",
+    foreignKeys = [ForeignKey(
+        entity = NotificationInfoEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["userId"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("userId")]
+)
+data class NotificationEntity(
+    @androidx.room.PrimaryKey var id: Long,
+    val userId: Long,
+    val href: String,
+    val title: String?,
+    val text: String,
+    val timestamp: Long,
+    val profileUrl: String?
+) {
+    @Ignore
+    val notifId = Math.abs(id.toInt())
+}
+
+data class NotificationInfo(
+    @Embedded
+    val info: NotificationInfoEntity,
+    @Relation(parentColumn = "id", entityColumn = "userId")
+    val notifications: List<NotificationEntity> = emptyList()
+)
+
+@Dao
+interface NotificationDao {
+
+    @Query("SELECT * FROM notification_info WHERE id = :id")
+    fun selectById(id: Long): NotificationInfo?
+
+    @Transaction
+    @Insert
+    fun insertInfo(info: NotificationInfoEntity)
+}
 
 /**
  * Created by Allan Wang on 2017-05-30.

@@ -33,7 +33,7 @@ import com.raizlabs.android.dbflow.kotlinextensions.fastSave
 import com.raizlabs.android.dbflow.kotlinextensions.from
 import com.raizlabs.android.dbflow.kotlinextensions.select
 import com.raizlabs.android.dbflow.structure.BaseModel
-import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
@@ -41,42 +41,48 @@ import kotlinx.coroutines.withContext
  */
 
 @Entity(tableName = "tabs")
-data class FbTabEntity(@androidx.room.PrimaryKey var position: Int, var tab: FbItem)
+data class FbTabEntity(@androidx.room.PrimaryKey val position: Int, val tab: FbItem)
 
 @Dao
 interface FbTabDao {
 
     @Query("SELECT * FROM tabs ORDER BY position ASC")
-    suspend fun _selectAll(): List<FbTabEntity>
+    fun _selectAll(): List<FbTabEntity>
 
     @Query("DELETE FROM tabs")
-    suspend fun _deleteAll()
+    fun _deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun _insertAll(items: List<FbTabEntity>)
+    fun _insertAll(items: List<FbTabEntity>)
+
+    @Transaction
+    fun _save(items: List<FbTabEntity>) {
+        _deleteAll()
+        _insertAll(items)
+    }
 }
 
 /**
  * Saving tabs operates by deleting all db items and saving the new list.
  * Transactions can't be done with suspensions in room as switching threads during the process
  * may result in a deadlock.
- * In this case, there may be a chance that the 'transaction' completes partially,
- * but we'll just fallback to the default anyways.
+ * That's why we disallow thread switching within the transaction, but wrap the entire thing in a coroutine
  */
 suspend fun FbTabDao.save(items: List<FbItem>) {
-    withContext(NonCancellable) {
-        _deleteAll()
+    withContext(Dispatchers.IO) {
         val entities = (items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
             FbTabEntity(
                 index,
                 fbItem
             )
         }
-        _insertAll(entities)
+        _save(entities)
     }
 }
 
-suspend fun FbTabDao.selectAll(): List<FbItem> = _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
+suspend fun FbTabDao.selectAll(): List<FbItem> = withContext(Dispatchers.IO) {
+    _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
+}
 
 object FbItemConverter {
     @androidx.room.TypeConverter

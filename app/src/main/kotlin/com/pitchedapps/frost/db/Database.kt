@@ -10,9 +10,14 @@ import org.koin.standalone.StandAloneContext
 
 interface FrostPrivateDao {
     fun cookieDao(): CookieDao
+    fun notifDao(): NotificationDao
 }
 
-@Database(entities = [CookieEntity::class], version = 1, exportSchema = true)
+@Database(
+    entities = [CookieEntity::class, NotificationInfoEntity::class, NotificationEntity::class],
+    version = 1,
+    exportSchema = true
+)
 abstract class FrostPrivateDatabase : RoomDatabase(), FrostPrivateDao {
     companion object {
         const val DATABASE_NAME = "frost-priv-db"

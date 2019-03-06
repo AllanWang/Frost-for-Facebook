@@ -7,6 +7,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FbTabsDbTest : BaseDbTest() {
+    
+    private val dao get() = db.tabDao()
 
     /**
      * Note that order is also preserved here
@@ -15,18 +17,18 @@ class FbTabsDbTest : BaseDbTest() {
     fun save() {
         val tabs = listOf(FbItem.ACTIVITY_LOG, FbItem.BIRTHDAYS, FbItem.EVENTS, FbItem.MARKETPLACE, FbItem.ACTIVITY_LOG)
         runBlocking {
-            db.tabDao().save(tabs)
-            assertEquals(tabs, db.tabDao().selectAll(), "Tab saving failed")
+            dao.save(tabs)
+            assertEquals(tabs, dao.selectAll(), "Tab saving failed")
             val newTabs = listOf(FbItem.PAGES, FbItem.MENU)
-            db.tabDao().save(newTabs)
-            assertEquals(newTabs, db.tabDao().selectAll(), "Tab saving does not delete preexisting items")
+            dao.save(newTabs)
+            assertEquals(newTabs, dao.selectAll(), "Tab saving does not delete preexisting items")
         }
     }
 
     @Test
     fun defaultRetrieve() {
         runBlocking {
-            assertEquals(defaultTabs(), db.tabDao().selectAll(), "Default retrieval failed")
+            assertEquals(defaultTabs(), dao.selectAll(), "Default retrieval failed")
         }
     }
 }
