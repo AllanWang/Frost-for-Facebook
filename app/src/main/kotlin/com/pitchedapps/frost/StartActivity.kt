@@ -35,7 +35,9 @@ import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
+import com.pitchedapps.frost.db.FbTabDao
 import com.pitchedapps.frost.db.FbTabModel
+import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
@@ -56,6 +58,7 @@ import java.util.ArrayList
 class StartActivity : KauBaseActivity() {
 
     private val cookieDao: CookieDao by inject()
+    private val tabDao: FbTabDao by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,13 +101,14 @@ class StartActivity : KauBaseActivity() {
 
     /**
      * Migrate from dbflow to room
+     * TODO delete dbflow data
      */
     private suspend fun migrate() = withContext(Dispatchers.IO) {
         if (cookieDao.selectAll().isNotEmpty()) return@withContext
-        val cookies = (select from CookieModel::class).queryList()
-        cookieDao.insertCookies(cookies.map { CookieEntity(it.id, it.name, it.cookie) })
-        // TODO
-        val tabs = (select from FbTabModel::class).queryList()
+        val cookies = (select from CookieModel::class).queryList().map { CookieEntity(it.id, it.name, it.cookie) }
+        cookieDao.insertCookies(cookies)
+        val tabs = (select from FbTabModel::class).queryList().map(FbTabModel::tab)
+        tabDao.save(tabs)
     }
 
     private fun showInvalidWebView() =

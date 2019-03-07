@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.kotlin.lazyContext
+import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.withAlpha
@@ -33,20 +34,26 @@ import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.db.FbTabDao
 import com.pitchedapps.frost.db.TAB_COUNT
-import com.pitchedapps.frost.db.loadFbTabs
 import com.pitchedapps.frost.db.save
+import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostColors
 import kotlinx.android.synthetic.main.activity_tab_customizer.*
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import java.util.Collections
 
 /**
  * Created by Allan Wang on 26/11/17.
  */
 class TabCustomizerActivity : BaseActivity() {
+
+    private val tabDao: FbTabDao by inject()
 
     private val adapter = FastItemAdapter<TabIItem>()
 
@@ -65,12 +72,14 @@ class TabCustomizerActivity : BaseActivity() {
         divider.setBackgroundColor(Prefs.textColor.withAlpha(30))
         instructions.setTextColor(Prefs.textColor)
 
-        val tabs = loadFbTabs().toMutableList()
-        val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
-        remaining.removeAll(tabs)
-        tabs.addAll(remaining)
+        launch {
+            val tabs = tabDao.selectAll().toMutableList()
+            val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
+            remaining.removeAll(tabs)
+            tabs.addAll(remaining)
+            adapter.add(tabs.map(::TabIItem))
+        }
 
-        adapter.add(tabs.map(::TabIItem))
         bindSwapper(adapter, tab_recycler)
 
         adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
@@ -80,9 +89,12 @@ class TabCustomizerActivity : BaseActivity() {
         fab_save.setIcon(GoogleMaterial.Icon.gmd_check, Prefs.iconColor)
         fab_save.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
         fab_save.setOnClickListener {
-            adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item).save()
-            setResult(Activity.RESULT_OK)
-            finish()
+            launchMain(NonCancellable) {
+                val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
+                tabDao.save(tabs)
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         }
         fab_cancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
         fab_cancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
