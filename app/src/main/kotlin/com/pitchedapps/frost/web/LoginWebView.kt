@@ -89,8 +89,7 @@ class LoginWebView @JvmOverloads constructor(
             val cookie = CookieManager.getInstance().getCookie(url) ?: return null
             L.d { "Checking cookie for login" }
             val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return null
-            // TODO set name to null?
-            return CookieEntity(id, "", cookie)
+            return CookieEntity(id, null, cookie)
         }
 
         override fun onPageCommitVisible(view: WebView, url: String?) {

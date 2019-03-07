@@ -116,7 +116,7 @@ class LoginActivity : BaseActivity() {
         val imageDeferred = async { loadProfile(cookie.id) }
         val nameDeferred = async { loadUsername(cookie) }
 
-        val name: String = nameDeferred.await()
+        val name: String? = nameDeferred.await()
         val foundImage: Boolean = imageDeferred.await()
 
         L._d { "Logged in and received data" }
@@ -127,7 +127,7 @@ class LoginActivity : BaseActivity() {
             L._i { cookie }
         }
 
-        textview.text = String.format(getString(R.string.welcome), name)
+        textview.text = String.format(getString(R.string.welcome), name ?: "")
         textview.fadeIn()
         frostEvent("Login", "success" to true)
 
@@ -172,22 +172,23 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private suspend fun loadUsername(cookie: CookieEntity): String = withContext(Dispatchers.IO) {
-        val result: String = try {
+    private suspend fun loadUsername(cookie: CookieEntity): String? = withContext(Dispatchers.IO) {
+        val result: String? = try {
             withTimeout(5000) {
                 frostJsoup(cookie.cookie, FbItem.PROFILE.url).title()
             }
         } catch (e: Exception) {
             if (e !is UnknownHostException)
                 e.logFrostEvent("Fetch username failed")
-            ""
+            null
         }
 
-        if (cookie.name?.isNotBlank() == false && result != cookie.name) {
+        if (result != null) {
             cookieDao.save(cookie.copy(name = result))
+            return@withContext result
         }
 
-        cookie.name ?: ""
+        return@withContext cookie.name
     }
 
     override fun backConsumer(): Boolean {
