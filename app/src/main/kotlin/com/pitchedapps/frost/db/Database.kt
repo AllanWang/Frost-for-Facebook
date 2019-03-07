@@ -11,10 +11,11 @@ import org.koin.standalone.StandAloneContext
 interface FrostPrivateDao {
     fun cookieDao(): CookieDao
     fun notifDao(): NotificationDao
+    fun cacheDao(): CacheDao
 }
 
 @Database(
-    entities = [CookieEntity::class, NotificationEntity::class],
+    entities = [CookieEntity::class, NotificationEntity::class, CacheEntity::class],
     version = 1,
     exportSchema = true
 )
