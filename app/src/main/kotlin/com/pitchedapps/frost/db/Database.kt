@@ -60,11 +60,11 @@ class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val pub
             val privateDb = Room.databaseBuilder(
                 context, FrostPrivateDatabase::class.java,
                 FrostPrivateDatabase.DATABASE_NAME
-            ).fallbackToDestructiveMigration().build()
+            ).build()
             val publicDb = Room.databaseBuilder(
                 context, FrostPublicDatabase::class.java,
                 FrostPublicDatabase.DATABASE_NAME
-            ).fallbackToDestructiveMigration().build()
+            ).build()
             return FrostDatabase(privateDb, publicDb)
         }
 
