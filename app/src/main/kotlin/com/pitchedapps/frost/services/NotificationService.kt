@@ -45,7 +45,6 @@ import org.koin.android.ext.android.inject
 class NotificationService : BaseJobService() {
 
     val cookieDao: CookieDao by inject()
-    val notifDao: NotificationDao by inject()
 
     override fun onStopJob(params: JobParameters?): Boolean {
         super.onStopJob(params)

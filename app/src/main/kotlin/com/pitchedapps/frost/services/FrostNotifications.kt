@@ -155,11 +155,14 @@ enum class NotificationType(
             return 0
         }
 
-        L.d { "Notif $name new epoch ${newNotifContents.map { it.timestamp }.max()}" }
+        L.d { "${newNotifContents.size} new notifs found for $name" }
+
+        if (!notifDao.saveNotifications(channelId, newNotifContents)) {
+            L.d { "Skip notifs for $name as saving failed" }
+            return 0
+        }
 
         val notifs = newNotifContents.map { createNotification(context, it) }
-
-        notifDao.saveNotifications(channelId, newNotifContents)
 
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
