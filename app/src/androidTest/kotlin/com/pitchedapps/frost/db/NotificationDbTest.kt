@@ -31,7 +31,7 @@ class NotificationDbTest : BaseDbTest() {
         // Unique unsorted ids
         val notifs = listOf(0L, 4L, 2L, 6L, 99L, 3L).map { notifContent(it, cookie) }
         runBlocking {
-            db.cookieDao().insertCookie(cookie)
+            db.cookieDao().save(cookie)
             dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs)
             val dbNotifs = dao.selectNotifications(cookie.id, NOTIF_CHANNEL_GENERAL)
             assertEquals(notifs.sortedByDescending { it.timestamp }, dbNotifs, "Incorrect notification list received")
@@ -45,8 +45,8 @@ class NotificationDbTest : BaseDbTest() {
             val cookie2 = cookie(12L)
             val notifs1 = (0L..2L).map { notifContent(it, cookie1) }
             val notifs2 = (5L..10L).map { notifContent(it, cookie2) }
-            db.cookieDao().insertCookie(cookie1)
-            db.cookieDao().insertCookie(cookie2)
+            db.cookieDao().save(cookie1)
+            db.cookieDao().save(cookie2)
             dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs1)
             dao.saveNotifications(NOTIF_CHANNEL_MESSAGES, notifs2)
             assertEquals(
@@ -82,8 +82,8 @@ class NotificationDbTest : BaseDbTest() {
             val cookie2 = cookie(12L)
             val notifs1 = (0L..2L).map { notifContent(it, cookie1) }
             val notifs2 = notifs1.map { it.copy(data = cookie2) }
-            db.cookieDao().insertCookie(cookie1)
-            db.cookieDao().insertCookie(cookie2)
+            db.cookieDao().save(cookie1)
+            db.cookieDao().save(cookie2)
             assertTrue(dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs1), "Notif1 save failed")
             assertTrue(dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs2), "Notif2 save failed")
         }
@@ -95,7 +95,7 @@ class NotificationDbTest : BaseDbTest() {
         // Unique unsorted ids
         val notifs = listOf(0L, 4L, 2L, 6L, 99L, 3L).map { notifContent(it, cookie) }
         runBlocking {
-            db.cookieDao().insertCookie(cookie)
+            db.cookieDao().save(cookie)
             dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs)
             db.cookieDao().deleteById(cookie.id)
             val dbNotifs = dao.selectNotifications(cookie.id, NOTIF_CHANNEL_GENERAL)
@@ -110,7 +110,7 @@ class NotificationDbTest : BaseDbTest() {
         val notifs = listOf(0L, 4L, 2L, 6L, 99L, 3L).map { notifContent(it, cookie) }
         runBlocking {
             assertEquals(-1L, dao.latestEpoch(cookie.id, NOTIF_CHANNEL_GENERAL), "Default epoch failed")
-            db.cookieDao().insertCookie(cookie)
+            db.cookieDao().save(cookie)
             dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs)
             assertEquals(99L, dao.latestEpoch(cookie.id, NOTIF_CHANNEL_GENERAL), "Latest epoch failed")
         }

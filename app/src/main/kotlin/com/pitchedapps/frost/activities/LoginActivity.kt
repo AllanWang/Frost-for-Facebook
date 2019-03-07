@@ -184,7 +184,7 @@ class LoginActivity : BaseActivity() {
         }
 
         if (cookie.name?.isNotBlank() == false && result != cookie.name) {
-            cookieDao.insertCookie(cookie.copy(name = result))
+            cookieDao.save(cookie.copy(name = result))
         }
 
         cookie.name ?: ""

@@ -19,7 +19,7 @@ class CacheDbTest : BaseDbTest() {
         val type = "test"
         val content = "long test".repeat(10000)
         runBlocking {
-            cookieDao.insertCookie(cookie)
+            cookieDao.save(cookie)
             dao.save(cookie.id, type, content)
             val cache = dao.select(cookie.id, type) ?: fail("Cache not found")
             assertEquals(content, cache.contents, "Content mismatch")

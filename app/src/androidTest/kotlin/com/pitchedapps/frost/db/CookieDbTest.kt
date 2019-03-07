@@ -13,7 +13,7 @@ class CookieDbTest : BaseDbTest() {
     fun basicCookie() {
         val cookie = CookieEntity(id = 1234L, name = "testName", cookie = "testCookie")
         runBlocking {
-            dao.insertCookie(cookie)
+            dao.save(cookie)
             val cookies = dao.selectAll()
             assertEquals(listOf(cookie), cookies, "Cookie mismatch")
         }
@@ -24,7 +24,7 @@ class CookieDbTest : BaseDbTest() {
         val cookie = CookieEntity(id = 1234L, name = "testName", cookie = "testCookie")
 
         runBlocking {
-            dao.insertCookie(cookie)
+            dao.save(cookie)
             dao.deleteById(cookie.id + 1)
             assertEquals(
                 listOf(cookie),
@@ -40,15 +40,15 @@ class CookieDbTest : BaseDbTest() {
     fun insertReplaceCookie() {
         val cookie = CookieEntity(id = 1234L, name = "testName", cookie = "testCookie")
         runBlocking {
-            dao.insertCookie(cookie)
+            dao.save(cookie)
             assertEquals(listOf(cookie), dao.selectAll(), "Cookie insertion failed")
-            dao.insertCookie(cookie.copy(name = "testName2"))
+            dao.save(cookie.copy(name = "testName2"))
             assertEquals(
                 listOf(cookie.copy(name = "testName2")),
                 dao.selectAll(),
                 "Cookie replacement failed"
             )
-            dao.insertCookie(cookie.copy(id = 123L))
+            dao.save(cookie.copy(id = 123L))
             assertEquals(
                 setOf(cookie.copy(id = 123L), cookie.copy(name = "testName2")),
                 dao.selectAll().toSet(),
@@ -61,7 +61,7 @@ class CookieDbTest : BaseDbTest() {
     fun selectCookie() {
         val cookie = CookieEntity(id = 1234L, name = "testName", cookie = "testCookie")
         runBlocking {
-            dao.insertCookie(cookie)
+            dao.save(cookie)
             assertEquals(cookie, dao.selectById(cookie.id), "Cookie selection failed")
             assertNull(dao.selectById(cookie.id + 1), "Inexistent cookie selection failed")
         }

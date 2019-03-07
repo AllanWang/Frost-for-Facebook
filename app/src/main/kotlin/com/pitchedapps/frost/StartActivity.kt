@@ -38,6 +38,7 @@ import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.db.FbTabDao
 import com.pitchedapps.frost.db.FbTabModel
 import com.pitchedapps.frost.db.save
+import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
@@ -94,6 +95,7 @@ class StartActivity : KauBaseActivity() {
                     })
                 }
             } catch (e: Exception) {
+                L._e(e) { "Load start failed" }
                 showInvalidWebView()
             }
         }
@@ -106,9 +108,11 @@ class StartActivity : KauBaseActivity() {
     private suspend fun migrate() = withContext(Dispatchers.IO) {
         if (cookieDao.selectAll().isNotEmpty()) return@withContext
         val cookies = (select from CookieModel::class).queryList().map { CookieEntity(it.id, it.name, it.cookie) }
-        cookieDao.insertCookies(cookies)
+        cookieDao.save(cookies)
         val tabs = (select from FbTabModel::class).queryList().map(FbTabModel::tab)
         tabDao.save(tabs)
+        L._d { "Migrated cookies ${cookieDao.selectAll()}" }
+        L._d { "Migrated tabs ${tabDao.selectAll()}" }
     }
 
     private fun showInvalidWebView() =

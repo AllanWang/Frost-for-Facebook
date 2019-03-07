@@ -85,7 +85,7 @@ object FbCookie {
         Prefs.userId = id
         CookieManager.getInstance().flush()
         val cookie = CookieEntity(Prefs.userId, null, webCookie)
-        cookieDao.insertCookie(cookie)
+        cookieDao.save(cookie)
     }
 
     suspend fun reset() {

@@ -20,6 +20,7 @@ import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
 import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
+import java.lang.Exception
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -48,6 +49,11 @@ object L : KauLogger("Frost", {
     inline fun _d(message: () -> Any?) {
         if (BuildConfig.DEBUG)
             d(message)
+    }
+
+    inline fun _e(e: Throwable?, message: () -> Any?) {
+        if (BuildConfig.DEBUG)
+            e(e, message)
     }
 
     override fun logImpl(priority: Int, message: String?, t: Throwable?) {

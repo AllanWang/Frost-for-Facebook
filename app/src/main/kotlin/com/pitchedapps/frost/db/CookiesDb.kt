@@ -59,10 +59,10 @@ interface CookieDao {
     suspend fun selectById(id: Long): CookieEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCookie(cookie: CookieEntity)
+    suspend fun save(cookie: CookieEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCookies(cookies: List<CookieEntity>)
+    suspend fun save(cookies: List<CookieEntity>)
 
     @Query("DELETE FROM cookies WHERE cookie_id = :id")
     suspend fun deleteById(id: Long)
