@@ -1,12 +1,12 @@
 package com.pitchedapps.frost.db
 
-import android.database.sqlite.SQLiteConstraintException
 import com.pitchedapps.frost.services.NOTIF_CHANNEL_GENERAL
+import com.pitchedapps.frost.services.NOTIF_CHANNEL_MESSAGES
 import com.pitchedapps.frost.services.NotificationContent
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class NotificationDbTest : BaseDbTest() {
@@ -38,6 +38,40 @@ class NotificationDbTest : BaseDbTest() {
         }
     }
 
+    @Test
+    fun selectConditions() {
+        runBlocking {
+            val cookie1 = cookie(12345L)
+            val cookie2 = cookie(12L)
+            val notifs1 = (0L..2L).map { notifContent(it, cookie1) }
+            val notifs2 = (5L..10L).map { notifContent(it, cookie2) }
+            db.cookieDao().insertCookie(cookie1)
+            db.cookieDao().insertCookie(cookie2)
+            dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs1)
+            dao.saveNotifications(NOTIF_CHANNEL_MESSAGES, notifs2)
+            assertEquals(
+                emptyList(),
+                dao.selectNotifications(cookie1.id, NOTIF_CHANNEL_MESSAGES),
+                "Filtering by type did not work for cookie1"
+            )
+            assertEquals(
+                notifs1.sortedByDescending { it.timestamp },
+                dao.selectNotifications(cookie1.id, NOTIF_CHANNEL_GENERAL),
+                "Selection for cookie1 failed"
+            )
+            assertEquals(
+                emptyList(),
+                dao.selectNotifications(cookie2.id, NOTIF_CHANNEL_GENERAL),
+                "Filtering by type did not work for cookie2"
+            )
+            assertEquals(
+                notifs2.sortedByDescending { it.timestamp },
+                dao.selectNotifications(cookie2.id, NOTIF_CHANNEL_MESSAGES),
+                "Selection for cookie2 failed"
+            )
+        }
+    }
+
     /**
      * Primary key is both id and userId, in the event that the same notification to multiple users has the same id
      */
@@ -50,8 +84,8 @@ class NotificationDbTest : BaseDbTest() {
             val notifs2 = notifs1.map { it.copy(data = cookie2) }
             db.cookieDao().insertCookie(cookie1)
             db.cookieDao().insertCookie(cookie2)
-            dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs1)
-            dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs2)
+            assertTrue(dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs1), "Notif1 save failed")
+            assertTrue(dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs2), "Notif2 save failed")
         }
     }
 
@@ -84,10 +118,11 @@ class NotificationDbTest : BaseDbTest() {
 
     @Test
     fun insertionWithInvalidCookies() {
-        assertFailsWith(SQLiteConstraintException::class) {
-            runBlocking {
-                dao.saveNotifications(NOTIF_CHANNEL_GENERAL, listOf(notifContent(1L, cookie(2L))))
-            }
+        runBlocking {
+            assertFalse(
+                dao.saveNotifications(NOTIF_CHANNEL_GENERAL, listOf(notifContent(1L, cookie(2L)))),
+                "Notif save should not have passed without relevant cookie entries"
+            )
         }
     }
 }

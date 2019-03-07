@@ -23,6 +23,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
@@ -44,6 +45,7 @@ import org.koin.android.ext.android.inject
 class NotificationService : BaseJobService() {
 
     val cookieDao: CookieDao by inject()
+    val notifDao: NotificationDao by inject()
 
     override fun onStopJob(params: JobParameters?): Boolean {
         super.onStopJob(params)
@@ -110,7 +112,7 @@ class NotificationService : BaseJobService() {
      * Implemented fetch to also notify when an error occurs
      * Also normalized the output to return the number of notifications received
      */
-    private fun fetch(jobId: Int, type: NotificationType, cookie: CookieEntity): Int {
+    private suspend fun fetch(jobId: Int, type: NotificationType, cookie: CookieEntity): Int {
         val count = type.fetch(this, cookie)
         if (count < 0) {
             if (jobId == NOTIFICATION_JOB_NOW)

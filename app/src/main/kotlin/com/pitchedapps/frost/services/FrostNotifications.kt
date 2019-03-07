@@ -32,9 +32,11 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.CookieModel
+import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.NotificationModel
 import com.pitchedapps.frost.db.lastNotificationTime
+import com.pitchedapps.frost.db.latestEpoch
+import com.pitchedapps.frost.db.saveNotifications
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostParser
@@ -65,8 +67,8 @@ enum class NotificationType(
     private val overlayContext: OverlayContext,
     private val fbItem: FbItem,
     private val parser: FrostParser<ParseNotification>,
+    // Legacy; remove with dbflow
     private val getTime: (notif: NotificationModel) -> Long,
-    private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
     private val ringtone: () -> String
 ) {
 
@@ -76,7 +78,6 @@ enum class NotificationType(
         FbItem.NOTIFICATIONS,
         NotifParser,
         NotificationModel::epoch,
-        { notif, time -> notif.copy(epoch = time) },
         Prefs::notificationRingtone
     ) {
 
@@ -90,7 +91,6 @@ enum class NotificationType(
         FbItem.MESSAGES,
         MessageParser,
         NotificationModel::epochIm,
-        { notif, time -> notif.copy(epochIm = time) },
         Prefs::messageRingtone
     );
 
@@ -117,7 +117,8 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    fun fetch(context: Context, data: CookieEntity): Int {
+    suspend fun fetch(context: Context, data: CookieEntity): Int {
+        val notifDao = FrostDatabase.get().notifDao()
         val response = try {
             parser.parse(data.cookie)
         } catch (ignored: Exception) {
@@ -128,35 +129,44 @@ enum class NotificationType(
             return -1
         }
         val notifContents = response.data.getUnreadNotifications(data).filter { notif ->
-            val text = notif.text
-            Prefs.notificationKeywords.none { text.contains(it, true) }
+            val inText = notif.text.let { text ->
+                Prefs.notificationKeywords.none { text.contains(it, true) }
+            }
+            val inTitle = notif.title?.let { title ->
+                Prefs.notificationKeywords.none { title.contains(it, true) }
+            } ?: false
+            inText || inTitle
         }
         if (notifContents.isEmpty()) return 0
         val userId = data.id
-        val prevNotifTime = lastNotificationTime(userId)
-        val prevLatestEpoch = getTime(prevNotifTime)
+        // Legacy, remove with dbflow
+        val prevLatestEpoch =
+            notifDao.latestEpoch(userId, channelId).takeIf { it != -1L } ?: getTime(lastNotificationTime(userId))
         L.v { "Notif $name prev epoch $prevLatestEpoch" }
-        var newLatestEpoch = prevLatestEpoch
-        val notifs = mutableListOf<FrostNotification>()
-        notifContents.forEach { notif ->
-            L.v { "Notif timestamp ${notif.timestamp}" }
-            if (notif.timestamp <= prevLatestEpoch) return@forEach
-            notifs.add(createNotification(context, notif))
-            if (notif.timestamp > newLatestEpoch)
-                newLatestEpoch = notif.timestamp
-        }
-        if (newLatestEpoch > prevLatestEpoch)
-            putTime(prevNotifTime, newLatestEpoch).save()
-        L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
         if (prevLatestEpoch == -1L && !BuildConfig.DEBUG) {
             L.d { "Skipping first notification fetch" }
             return 0 // do not notify the first time
         }
+
+        val newNotifContents = notifContents.filter { it.timestamp > prevLatestEpoch }
+
+        if (newNotifContents.isEmpty()) {
+            L.d { "No new notifs found for $name" }
+            return 0
+        }
+
+        L.d { "Notif $name new epoch ${newNotifContents.map { it.timestamp }.max()}" }
+
+        val notifs = newNotifContents.map { createNotification(context, it) }
+
+        notifDao.saveNotifications(channelId, newNotifContents)
+
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
         val ringtone = ringtone()
         notifs.forEachIndexed { i, notif ->
+            // Ring at most twice
             notif.withAlert(i < 2, ringtone).notify(context)
         }
         return notifs.size

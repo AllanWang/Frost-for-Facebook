@@ -136,9 +136,19 @@ suspend fun NotificationDao.selectNotifications(userId: Long, type: String): Lis
         _selectNotifications(userId, type).map { it.toNotifContent() }
     }
 
-suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>) {
-    withContext(Dispatchers.IO) {
-        _saveNotifications(type, notifs)
+/**
+ * Returns true if successful, given that there are constraints to the insertion
+ */
+suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>): Boolean {
+    if (notifs.isEmpty()) return true
+    return withContext(Dispatchers.IO) {
+        try {
+            _saveNotifications(type, notifs)
+            true
+        } catch (e: Exception) {
+            L.e(e) { "Notif save failed" }
+            false
+        }
     }
 }
 
@@ -176,11 +186,3 @@ data class NotificationModel(
 fun lastNotificationTime(id: Long): NotificationModel =
     (select from NotificationModel::class where (NotificationModel_Table.id eq id)).querySingle()
         ?: NotificationModel(id = id)
-
-fun saveNotificationTime(notificationModel: NotificationModel, callback: (() -> Unit)? = null) {
-    notificationModel.async save {
-        L.d { "Fb notification model saved" }
-        L._d { notificationModel }
-        callback?.invoke()
-    }
-}
