@@ -123,7 +123,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     FileChooserContract by FileChooserDelegate(),
     VideoViewHolder, SearchViewHolder {
 
-    protected lateinit var adapter: SectionsPagerAdapter
+    /**
+     * Note that tabs themselves are initialized through a coroutine during onCreate
+     */
+    protected val adapter: SectionsPagerAdapter = SectionsPagerAdapter()
     override val frameWrapper: FrameLayout get() = frame_wrapper
     val viewPager: FrostViewPager get() = container
     val cookieDao: CookieDao by inject()
@@ -135,6 +138,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+
+    protected var lastPosition = -1
 
     override var videoViewer: FrostVideoViewer? = null
     private lateinit var drawer: Drawer
@@ -156,14 +161,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             background(viewPager)
         }
         setSupportActionBar(toolbar)
-        launch {
-            adapter = SectionsPagerAdapter(tabDao.selectAll())
-            viewPager.adapter = adapter
-            viewPager.offscreenPageLimit = TAB_COUNT
-        }
+        viewPager.adapter = adapter
+        viewPager.offscreenPageLimit = TAB_COUNT
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
+        launch {
+            adapter.setPages(tabDao.selectAll())
+        }
         controlWebview = WebView(this)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.prevVersionCode = Prefs.versionCode
@@ -462,16 +467,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(adapter.forcedFallbacks))
+        adapter.saveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        adapter.forcedFallbacks.clear()
-        adapter.forcedFallbacks.addAll(
-            savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
-                ?: emptyList()
-        )
+        adapter.restoreInstanceState(savedInstanceState)
     }
 
     override fun onResume() {
@@ -526,9 +527,47 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         runOnUiThread { adapter.reloadFragment(fragment) }
     }
 
-    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
+    inner class SectionsPagerAdapter : FragmentPagerAdapter(supportFragmentManager) {
 
-        val forcedFallbacks = mutableSetOf<String>()
+        private val pages: MutableList<FbItem> = mutableListOf()
+
+        private val forcedFallbacks = mutableSetOf<String>()
+
+        /**
+         * Update page list and prompt reload
+         */
+        fun setPages(pages: List<FbItem>) {
+            this.pages.clear()
+            this.pages.addAll(pages)
+            notifyDataSetChanged()
+            tabs.removeAllTabs()
+            this.pages.forEachIndexed { index, fbItem ->
+                tabs.addTab(
+                    tabs.newTab()
+                        .setCustomView(BadgedIcon(this@BaseMainActivity).apply { iicon = fbItem.icon }.also {
+                            it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
+                        })
+                )
+            }
+            lastPosition = 0
+            viewPager.setCurrentItem(0, false)
+            viewPager.post {
+                if (!fragmentChannel.isClosedForSend)
+                    fragmentChannel.offer(0)
+            } //trigger hook so title is set
+        }
+
+        fun saveInstanceState(outState: Bundle) {
+            outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(forcedFallbacks))
+        }
+
+        fun restoreInstanceState(savedInstanceState: Bundle) {
+            forcedFallbacks.clear()
+            forcedFallbacks.addAll(
+                savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
+                    ?: emptyList()
+            )
+        }
 
         fun reloadFragment(fragment: BaseFragment) {
             if (fragment is WebFragment) return
@@ -567,4 +606,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 PointF(0f, toolbar.height.toFloat())
             else
                 PointF(0f, 0f)
+
+    companion object {
+        const val SELECTED_TAB_ALPHA = 255f
+        const val UNSELECTED_TAB_ALPHA = 128f
+    }
 }
