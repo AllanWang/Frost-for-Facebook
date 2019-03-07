@@ -71,7 +71,6 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.FbTabDao
-import com.pitchedapps.frost.db.TAB_COUNT
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -162,12 +161,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         setSupportActionBar(toolbar)
         viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = TAB_COUNT
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
         launch {
-            adapter.setPages(tabDao.selectAll())
+            val tabs = tabDao.selectAll()
+            adapter.setPages(tabs)
+            viewPager.offscreenPageLimit = tabs.size
         }
         controlWebview = WebView(this)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
