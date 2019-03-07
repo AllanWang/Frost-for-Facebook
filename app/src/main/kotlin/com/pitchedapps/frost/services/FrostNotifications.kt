@@ -248,6 +248,7 @@ enum class NotificationType(
  * Notification data holder
  */
 data class NotificationContent(
+    // TODO replace data with userId?
     val data: CookieEntity,
     val id: Long,
     val href: String,

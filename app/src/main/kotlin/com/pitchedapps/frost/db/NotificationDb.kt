@@ -16,16 +16,17 @@
  */
 package com.pitchedapps.frost.db
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Relation
 import androidx.room.Transaction
+import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.annotation.ConflictAction
 import com.raizlabs.android.dbflow.annotation.Database
@@ -41,59 +42,108 @@ import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.sql.SQLiteType
 import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration
 import com.raizlabs.android.dbflow.structure.BaseModel
-
-@Entity(
-    tableName = "notification_info",
-    foreignKeys = [ForeignKey(
-        entity = CookieEntity::class,
-        parentColumns = ["id"], childColumns = ["id"], onDelete = ForeignKey.CASCADE
-    )]
-)
-data class NotificationInfoEntity(
-    @androidx.room.PrimaryKey val id: Long,
-    val epoch: Long,
-    val epochIm: Long
-)
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Entity(
     tableName = "notifications",
+    primaryKeys = ["notif_id", "userId"],
     foreignKeys = [ForeignKey(
-        entity = NotificationInfoEntity::class,
-        parentColumns = ["id"],
+        entity = CookieEntity::class,
+        parentColumns = ["cookie_id"],
         childColumns = ["userId"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index("userId")]
+    indices = [Index("notif_id"), Index("userId")]
 )
 data class NotificationEntity(
-    @androidx.room.PrimaryKey var id: Long,
+    @ColumnInfo(name = "notif_id")
+    val id: Long,
     val userId: Long,
     val href: String,
     val title: String?,
     val text: String,
     val timestamp: Long,
-    val profileUrl: String?
+    val profileUrl: String?,
+    // Type essentially refers to channel
+    val type: String
 ) {
-    @Ignore
-    val notifId = Math.abs(id.toInt())
+    constructor(
+        type: String,
+        content: NotificationContent
+    ) : this(
+        content.id,
+        content.data.id,
+        content.href,
+        content.title,
+        content.text,
+        content.timestamp,
+        content.profileUrl,
+        type
+    )
 }
 
-data class NotificationInfo(
+data class NotificationContentEntity(
     @Embedded
-    val info: NotificationInfoEntity,
-    @Relation(parentColumn = "id", entityColumn = "userId")
-    val notifications: List<NotificationEntity> = emptyList()
-)
+    val cookie: CookieEntity,
+    @Embedded
+    val notif: NotificationEntity
+) {
+    fun toNotifContent() = NotificationContent(
+        data = cookie,
+        id = notif.id,
+        href = notif.href,
+        title = notif.title,
+        text = notif.text,
+        timestamp = notif.timestamp,
+        profileUrl = notif.profileUrl
+    )
+}
 
 @Dao
 interface NotificationDao {
 
-    @Query("SELECT * FROM notification_info WHERE id = :id")
-    fun selectById(id: Long): NotificationInfo?
-
+    /**
+     * Note that notifications are guaranteed to be ordered by descending timestamp
+     */
     @Transaction
-    @Insert
-    fun insertInfo(info: NotificationInfoEntity)
+    @Query("SELECT * FROM cookies INNER JOIN notifications ON cookie_id = userId WHERE userId = :userId  AND type = :type ORDER BY timestamp DESC")
+    fun _selectNotifications(userId: Long, type: String): List<NotificationContentEntity>
+
+    @Query("SELECT timestamp FROM notifications WHERE userId = :userId AND type = :type ORDER BY timestamp DESC LIMIT 1")
+    fun _selectEpoch(userId: Long, type: String): Long?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun _insertNotifications(notifs: List<NotificationEntity>)
+
+    @Query("DELETE FROM notifications WHERE userId = :userId AND type = :type")
+    fun _deleteNotifications(userId: Long, type: String)
+
+    /**
+     * It is assumed that the notification batch comes from the same user
+     */
+    @Transaction
+    fun _saveNotifications(type: String, notifs: List<NotificationContent>) {
+        val userId = notifs.firstOrNull()?.data?.id ?: return
+        val entities = notifs.map { NotificationEntity(type, it) }
+        _deleteNotifications(userId, type)
+        _insertNotifications(entities)
+    }
+}
+
+suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> =
+    withContext(Dispatchers.IO) {
+        _selectNotifications(userId, type).map { it.toNotifContent() }
+    }
+
+suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>) {
+    withContext(Dispatchers.IO) {
+        _saveNotifications(type, notifs)
+    }
+}
+
+suspend fun NotificationDao.latestEpoch(userId: Long, type: String): Long = withContext(Dispatchers.IO) {
+    _selectEpoch(userId, type) ?: -1
 }
 
 /**

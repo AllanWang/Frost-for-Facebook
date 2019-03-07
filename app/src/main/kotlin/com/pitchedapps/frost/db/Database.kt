@@ -14,7 +14,7 @@ interface FrostPrivateDao {
 }
 
 @Database(
-    entities = [CookieEntity::class, NotificationInfoEntity::class, NotificationEntity::class],
+    entities = [CookieEntity::class, NotificationEntity::class],
     version = 1,
     exportSchema = true
 )

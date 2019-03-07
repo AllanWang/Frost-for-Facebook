@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.db
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -38,6 +39,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CookieEntity(
     @androidx.room.PrimaryKey
+    @ColumnInfo(name = "cookie_id")
     val id: Long,
     val name: String?,
     val cookie: String?
@@ -53,7 +55,7 @@ interface CookieDao {
     @Query("SELECT * FROM cookies")
     suspend fun selectAll(): List<CookieEntity>
 
-    @Query("SELECT * FROM cookies WHERE id = :id")
+    @Query("SELECT * FROM cookies WHERE cookie_id = :id")
     suspend fun selectById(id: Long): CookieEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -62,7 +64,7 @@ interface CookieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCookies(cookies: List<CookieEntity>)
 
-    @Query("DELETE FROM cookies WHERE id = :id")
+    @Query("DELETE FROM cookies WHERE cookie_id = :id")
     suspend fun deleteById(id: Long)
 }
 
