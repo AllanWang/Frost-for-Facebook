@@ -33,8 +33,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.FrostDatabase
-import com.pitchedapps.frost.db.NotificationModel
-import com.pitchedapps.frost.db.lastNotificationTime
 import com.pitchedapps.frost.db.latestEpoch
 import com.pitchedapps.frost.db.saveNotifications
 import com.pitchedapps.frost.enums.OverlayContext
@@ -67,8 +65,6 @@ enum class NotificationType(
     private val overlayContext: OverlayContext,
     private val fbItem: FbItem,
     private val parser: FrostParser<ParseNotification>,
-    // Legacy; remove with dbflow
-    private val getTime: (notif: NotificationModel) -> Long,
     private val ringtone: () -> String
 ) {
 
@@ -77,7 +73,6 @@ enum class NotificationType(
         OverlayContext.NOTIFICATION,
         FbItem.NOTIFICATIONS,
         NotifParser,
-        NotificationModel::epoch,
         Prefs::notificationRingtone
     ) {
 
@@ -90,7 +85,6 @@ enum class NotificationType(
         OverlayContext.MESSAGE,
         FbItem.MESSAGES,
         MessageParser,
-        NotificationModel::epochIm,
         Prefs::messageRingtone
     );
 
@@ -140,8 +134,7 @@ enum class NotificationType(
         if (notifContents.isEmpty()) return 0
         val userId = data.id
         // Legacy, remove with dbflow
-        val prevLatestEpoch =
-            notifDao.latestEpoch(userId, channelId).takeIf { it != -1L } ?: getTime(lastNotificationTime(userId))
+        val prevLatestEpoch = notifDao.latestEpoch(userId, channelId)
         L.v { "Notif $name prev epoch $prevLatestEpoch" }
         if (prevLatestEpoch == -1L && !BuildConfig.DEBUG) {
             L.d { "Skipping first notification fetch" }
