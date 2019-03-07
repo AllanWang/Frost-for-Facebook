@@ -83,7 +83,7 @@ class FrostApp : Application() {
         )
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
-        //        if (LeakCanary.isInAnalyzerProcess(this)) return
+//        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         initBugsnag()
         KL.shouldLog = { BuildConfig.DEBUG }
