@@ -40,6 +40,7 @@ import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostColors
 import kotlinx.android.synthetic.main.activity_tab_customizer.*
@@ -74,15 +75,17 @@ class TabCustomizerActivity : BaseActivity() {
 
         launch {
             val tabs = tabDao.selectAll().toMutableList()
+            L.d { "Tabs $tabs" }
             val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
             remaining.removeAll(tabs)
             tabs.addAll(remaining)
-            adapter.add(tabs.map(::TabIItem))
+            adapter.set(tabs.map(::TabIItem))
+
+            bindSwapper(adapter, tab_recycler)
+
+            adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
+
         }
-
-        bindSwapper(adapter, tab_recycler)
-
-        adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
 
         setResult(Activity.RESULT_CANCELED)
 
