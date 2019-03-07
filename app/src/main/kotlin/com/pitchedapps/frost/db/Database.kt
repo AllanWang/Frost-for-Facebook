@@ -71,6 +71,8 @@ class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val pub
             single { create(context) }
             single { get<FrostDatabase>().cookieDao() }
             single { get<FrostDatabase>().tabDao() }
+            single { get<FrostDatabase>().cacheDao() }
+            single { get<FrostDatabase>().notifDao() }
         }
 
         /**

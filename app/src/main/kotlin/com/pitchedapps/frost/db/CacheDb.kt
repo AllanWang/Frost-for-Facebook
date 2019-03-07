@@ -53,4 +53,5 @@ interface CacheDao {
     suspend fun deleteById(id: Long)
 }
 
-suspend fun CacheDao.save(id: String, contents: String) = insertCache(CacheEntity(id, System.currentTimeMillis(), contents))
+suspend fun CacheDao.save(id: String, contents: String) =
+    insertCache(CacheEntity(id, System.currentTimeMillis(), contents))

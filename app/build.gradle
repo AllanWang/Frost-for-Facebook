@@ -178,6 +178,7 @@ dependencies {
     androidTestImplementation kauDependency.espresso
     androidTestImplementation kauDependency.testRules
     androidTestImplementation kauDependency.testRunner
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
 
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"

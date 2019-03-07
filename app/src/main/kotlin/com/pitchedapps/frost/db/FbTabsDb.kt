@@ -24,14 +24,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.defaultTabs
-import com.pitchedapps.frost.utils.L
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.kotlinextensions.database
-import com.raizlabs.android.dbflow.kotlinextensions.fastSave
-import com.raizlabs.android.dbflow.kotlinextensions.from
-import com.raizlabs.android.dbflow.kotlinextensions.select
 import com.raizlabs.android.dbflow.structure.BaseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
