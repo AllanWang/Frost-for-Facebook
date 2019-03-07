@@ -19,9 +19,11 @@ package com.pitchedapps.frost.db
 import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.pitchedapps.frost.utils.L
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -31,11 +33,20 @@ import kotlinx.android.parcel.Parcelize
 /**
  * Generic cache to store serialized content
  */
-@Entity(tableName = "frost_cache")
+@Entity(
+    tableName = "frost_cache",
+    primaryKeys = ["id", "type"],
+    foreignKeys = [ForeignKey(
+        entity = CookieEntity::class,
+        parentColumns = ["cookie_id"],
+        childColumns = ["id"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 @Parcelize
 data class CacheEntity(
-    @androidx.room.PrimaryKey
-    val id: String,
+    val id: Long,
+    val type: String,
     val lastUpdated: Long,
     val contents: String
 ) : Parcelable
@@ -43,15 +54,24 @@ data class CacheEntity(
 @Dao
 interface CacheDao {
 
-    @Query("SELECT * FROM frost_cache WHERE id = :id")
-    suspend fun selectById(id: Long): CacheEntity?
+    @Query("SELECT * FROM frost_cache WHERE id = :id AND type = :type")
+    suspend fun select(id: Long, type: String): CacheEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCache(cache: CacheEntity)
 
-    @Query("DELETE FROM frost_cache WHERE id = :id")
-    suspend fun deleteById(id: Long)
+    @Query("DELETE FROM frost_cache WHERE id = :id AND type = :type")
+    suspend fun delete(id: Long, type: String)
 }
 
-suspend fun CacheDao.save(id: String, contents: String) =
-    insertCache(CacheEntity(id, System.currentTimeMillis(), contents))
+/**
+ * Returns true if successful, given that there are constraints to the insertion
+ */
+suspend fun CacheDao.save(id: Long, type: String, contents: String): Boolean =
+    try {
+        insertCache(CacheEntity(id, type, System.currentTimeMillis(), contents))
+        true
+    } catch (e: Exception) {
+        L.e(e) { "Cache save failed for $type" }
+        false
+    }

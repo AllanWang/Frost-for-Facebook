@@ -146,7 +146,7 @@ suspend fun NotificationDao.saveNotifications(type: String, notifs: List<Notific
             _saveNotifications(type, notifs)
             true
         } catch (e: Exception) {
-            L.e(e) { "Notif save failed" }
+            L.e(e) { "Notif save failed for $type" }
             false
         }
     }
