@@ -40,7 +40,6 @@ import ca.allanwang.kau.utils.withMinAlpha
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.db.CookieModel_Table.cookie
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.utils.L

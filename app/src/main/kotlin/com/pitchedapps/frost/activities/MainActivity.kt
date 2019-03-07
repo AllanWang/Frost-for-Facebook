@@ -86,8 +86,7 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) {
-            html ->
+        headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) { html ->
             try {
                 val doc = Jsoup.parse(html)
                 if (doc.select("[data-sigil=count]").isEmpty())

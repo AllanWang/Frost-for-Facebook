@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FbTabsDbTest : BaseDbTest() {
-    
+
     private val dao get() = db.tabDao()
 
     /**

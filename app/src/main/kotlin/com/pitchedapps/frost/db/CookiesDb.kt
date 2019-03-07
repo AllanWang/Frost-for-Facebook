@@ -82,6 +82,4 @@ data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null,
     BaseModel(), Parcelable {
 
     override fun toString(): String = "CookieModel(${hashCode()})"
-
-    fun toSensitiveString(): String = "CookieModel(id=$id, name=$name, cookie=$cookie)"
 }

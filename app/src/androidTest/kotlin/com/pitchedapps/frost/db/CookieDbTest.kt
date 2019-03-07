@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class CookieDbTest : BaseDbTest() {
-    
+
     private val dao get() = db.cookieDao()
 
     @Test

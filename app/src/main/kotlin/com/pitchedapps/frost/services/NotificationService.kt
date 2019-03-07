@@ -23,7 +23,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
