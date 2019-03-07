@@ -108,11 +108,17 @@ class StartActivity : KauBaseActivity() {
     private suspend fun migrate() = withContext(Dispatchers.IO) {
         if (cookieDao.selectAll().isNotEmpty()) return@withContext
         val cookies = (select from CookieModel::class).queryList().map { CookieEntity(it.id, it.name, it.cookie) }
-        cookieDao.save(cookies)
+        if (cookies.isNotEmpty()) {
+            cookieDao.save(cookies)
+            L._d { "Migrated cookies ${cookieDao.selectAll()}" }
+        }
         val tabs = (select from FbTabModel::class).queryList().map(FbTabModel::tab)
-        tabDao.save(tabs)
-        L._d { "Migrated cookies ${cookieDao.selectAll()}" }
-        L._d { "Migrated tabs ${tabDao.selectAll()}" }
+        if (tabs.isNotEmpty()) {
+            tabDao.save(tabs)
+            L._d { "Migrated tabs ${tabDao.selectAll()}" }
+        }
+        deleteDatabase("Cookies.db")
+        deleteDatabase("FrostTabs.db")
     }
 
     private fun showInvalidWebView() =
