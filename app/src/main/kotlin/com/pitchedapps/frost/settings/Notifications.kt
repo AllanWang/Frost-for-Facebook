@@ -30,7 +30,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.db.FrostDatabase
-import com.pitchedapps.frost.db.NotificationModel
 import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
@@ -173,11 +172,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         plainText(R.string.reset_notif_epoch) {
             onClick = {
                 launch {
-                    FrostDatabase.get()
-                        .cookieDao()
-                        .selectAll()
-                        .map { NotificationModel(it.id) }
-                        .forEach { it.save() }
+                    FrostDatabase.get().notifDao().deleteAll()
                 }
             }
         }

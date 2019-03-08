@@ -119,6 +119,9 @@ interface NotificationDao {
     @Query("DELETE FROM notifications WHERE userId = :userId AND type = :type")
     fun _deleteNotifications(userId: Long, type: String)
 
+    @Query("DELETE FROM notifications")
+    suspend fun deleteAll()
+
     /**
      * It is assumed that the notification batch comes from the same user
      */
