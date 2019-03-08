@@ -32,7 +32,6 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import ca.allanwang.kau.searchview.SearchItem
@@ -286,7 +285,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     else when (profile.identifier) {
                         -2L -> {
                             // TODO no backpressure support
-                            launch {
+                            this@BaseMainActivity.launch {
                                 val currentCookie = cookieDao.currentCookie()
                                 if (currentCookie == null) {
                                     toast(R.string.account_not_found)
@@ -315,7 +314,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         -3L -> launchNewTask<LoginActivity>(clearStack = false)
                         -4L -> launchNewTask<SelectorActivity>(cookies(), false)
                         else -> {
-                            launch {
+                            this@BaseMainActivity.launch {
                                 FbCookie.switchUser(profile.identifier)
                                 tabsForEachView { _, view -> view.badgeText = null }
                                 refreshAll()
