@@ -104,7 +104,6 @@ class FrostVideoViewer @JvmOverloads constructor(
                     val cookie = FrostDatabase.get().cookieDao().currentCookie() ?: return@launchMain
                     context.frostDownload(cookie, video.videoUri)
                 }
-
             }
             true
         }

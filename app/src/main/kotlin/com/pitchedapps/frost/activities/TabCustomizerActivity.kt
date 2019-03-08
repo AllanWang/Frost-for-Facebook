@@ -84,7 +84,6 @@ class TabCustomizerActivity : BaseActivity() {
             bindSwapper(adapter, tab_recycler)
 
             adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
-
         }
 
         setResult(Activity.RESULT_CANCELED)

@@ -20,7 +20,6 @@ import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
 import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
-import java.lang.Exception
 
 /**
  * Created by Allan Wang on 2017-05-28.
