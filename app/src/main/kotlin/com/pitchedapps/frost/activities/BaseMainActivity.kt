@@ -32,6 +32,7 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import ca.allanwang.kau.searchview.SearchItem
@@ -165,9 +166,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
         launch {
-            val tabs = tabDao.selectAll()
-            adapter.setPages(tabs)
-            viewPager.offscreenPageLimit = tabs.size
+            adapter.setPages(tabDao.selectAll())
         }
         controlWebview = WebView(this)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
@@ -551,6 +550,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             lastPosition = 0
             viewPager.setCurrentItem(0, false)
+            viewPager.offscreenPageLimit = pages.size
             viewPager.post {
                 if (!fragmentChannel.isClosedForSend)
                     fragmentChannel.offer(0)
