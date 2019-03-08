@@ -27,11 +27,10 @@ abstract class FrostPrivateDatabase : RoomDatabase(), FrostPrivateDao {
 }
 
 interface FrostPublicDao {
-    fun tabDao(): FbTabDao
+    fun genericDao(): GenericDao
 }
 
-@Database(entities = [FbTabEntity::class], version = 1, exportSchema = true)
-@TypeConverters(FbItemConverter::class)
+@Database(entities = [GenericEntity::class], version = 1, exportSchema = true)
 abstract class FrostPublicDatabase : RoomDatabase(), FrostPublicDao {
     companion object {
         const val DATABASE_NAME = "frost-db"
@@ -71,9 +70,9 @@ class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val pub
         fun module(context: Context) = module {
             single { create(context) }
             single { get<FrostDatabase>().cookieDao() }
-            single { get<FrostDatabase>().tabDao() }
             single { get<FrostDatabase>().cacheDao() }
             single { get<FrostDatabase>().notifDao() }
+            single { get<FrostDatabase>().genericDao() }
         }
 
         /**

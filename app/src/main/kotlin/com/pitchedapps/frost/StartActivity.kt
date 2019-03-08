@@ -35,10 +35,10 @@ import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.CookieModel
-import com.pitchedapps.frost.db.FbTabDao
 import com.pitchedapps.frost.db.FbTabModel
-import com.pitchedapps.frost.db.save
-import com.pitchedapps.frost.db.selectAll
+import com.pitchedapps.frost.db.GenericDao
+import com.pitchedapps.frost.db.getTabs
+import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
@@ -59,7 +59,7 @@ import java.util.ArrayList
 class StartActivity : KauBaseActivity() {
 
     private val cookieDao: CookieDao by inject()
-    private val tabDao: FbTabDao by inject()
+    private val genericDao: GenericDao by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,8 +114,8 @@ class StartActivity : KauBaseActivity() {
         }
         val tabs = (select from FbTabModel::class).queryList().map(FbTabModel::tab)
         if (tabs.isNotEmpty()) {
-            tabDao.save(tabs)
-            L._d { "Migrated tabs ${tabDao.selectAll()}" }
+            genericDao.saveTabs(tabs)
+            L._d { "Migrated tabs ${genericDao.getTabs()}" }
         }
         deleteDatabase("Cookies.db")
         deleteDatabase("FrostTabs.db")

@@ -70,9 +70,9 @@ import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.db.CookieDao
-import com.pitchedapps.frost.db.FbTabDao
+import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.currentCookie
-import com.pitchedapps.frost.db.selectAll
+import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -129,7 +129,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override val frameWrapper: FrameLayout get() = frame_wrapper
     val viewPager: FrostViewPager get() = container
     val cookieDao: CookieDao by inject()
-    val tabDao: FbTabDao by inject()
+    val genericDao: GenericDao by inject()
 
     /*
      * Components with the same id in multiple layout files
@@ -165,7 +165,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
         launch {
-            adapter.setPages(tabDao.selectAll())
+            adapter.setPages(genericDao.getTabs())
         }
         controlWebview = WebView(this)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {

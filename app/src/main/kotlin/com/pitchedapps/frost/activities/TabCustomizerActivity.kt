@@ -34,10 +34,10 @@ import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.db.FbTabDao
+import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.TAB_COUNT
-import com.pitchedapps.frost.db.save
-import com.pitchedapps.frost.db.selectAll
+import com.pitchedapps.frost.db.getTabs
+import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.L
@@ -54,7 +54,7 @@ import java.util.Collections
  */
 class TabCustomizerActivity : BaseActivity() {
 
-    private val tabDao: FbTabDao by inject()
+    private val genericDao: GenericDao by inject()
 
     private val adapter = FastItemAdapter<TabIItem>()
 
@@ -74,7 +74,7 @@ class TabCustomizerActivity : BaseActivity() {
         instructions.setTextColor(Prefs.textColor)
 
         launch {
-            val tabs = tabDao.selectAll().toMutableList()
+            val tabs = genericDao.getTabs().toMutableList()
             L.d { "Tabs $tabs" }
             val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
             remaining.removeAll(tabs)
@@ -94,7 +94,7 @@ class TabCustomizerActivity : BaseActivity() {
         fab_save.setOnClickListener {
             launchMain(NonCancellable) {
                 val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
-                tabDao.save(tabs)
+                genericDao.saveTabs(tabs)
                 setResult(Activity.RESULT_OK)
                 finish()
             }

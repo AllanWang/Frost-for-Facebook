@@ -16,78 +16,15 @@
  */
 package com.pitchedapps.frost.db
 
-import androidx.room.Dao
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Transaction
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.defaultTabs
 import com.raizlabs.android.dbflow.annotation.Database
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.structure.BaseModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-30.
  */
-
-@Entity(tableName = "tabs")
-data class FbTabEntity(@androidx.room.PrimaryKey val position: Int, val tab: FbItem)
-
-@Dao
-interface FbTabDao {
-
-    @Query("SELECT * FROM tabs ORDER BY position ASC")
-    fun _selectAll(): List<FbTabEntity>
-
-    @Query("DELETE FROM tabs")
-    fun _deleteAll()
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun _insertAll(items: List<FbTabEntity>)
-
-    @Transaction
-    fun _save(items: List<FbTabEntity>) {
-        _deleteAll()
-        _insertAll(items)
-    }
-}
-
-/**
- * Saving tabs operates by deleting all db items and saving the new list.
- * Transactions can't be done with suspensions in room as switching threads during the process
- * may result in a deadlock.
- * That's why we disallow thread switching within the transaction, but wrap the entire thing in a coroutine
- */
-suspend fun FbTabDao.save(items: List<FbItem>) {
-    withContext(Dispatchers.IO) {
-        val entities = (items.takeIf { it.isNotEmpty() } ?: defaultTabs()).mapIndexed { index, fbItem ->
-            FbTabEntity(
-                index,
-                fbItem
-            )
-        }
-        _save(entities)
-    }
-}
-
-suspend fun FbTabDao.selectAll(): List<FbItem> = withContext(Dispatchers.IO) {
-    _selectAll().map { it.tab }.takeIf { it.isNotEmpty() } ?: defaultTabs()
-}
-
-object FbItemConverter {
-    @androidx.room.TypeConverter
-    @JvmStatic
-    fun fromItem(item: FbItem): String = item.name
-
-    @androidx.room.TypeConverter
-    @JvmStatic
-    fun toItem(value: String): FbItem = FbItem.valueOf(value)
-}
 
 const val TAB_COUNT = 4
 

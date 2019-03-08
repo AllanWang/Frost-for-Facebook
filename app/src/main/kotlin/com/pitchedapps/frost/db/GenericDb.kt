@@ -24,7 +24,6 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.defaultTabs
-import com.pitchedapps.frost.utils.L
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -52,21 +51,21 @@ interface GenericDao {
     @Query("DELETE FROM frost_generic WHERE type = :type")
     suspend fun delete(type: String)
 
-    suspend fun saveTabs(tabs: List<FbItem>) {
-        val content = tabs.joinToString(",") { it.name }
-        save(GenericEntity(TYPE_TABS, content))
-    }
-
-    suspend fun getTabs(): List<FbItem> {
-        val allTabs = FbItem.values.map { it.name to it }.toMap()
-        return select(TYPE_TABS)
-            ?.split(",")
-            ?.mapNotNull { allTabs[it] }
-            ?.takeIf { it.isNotEmpty() }
-            ?: defaultTabs()
-    }
-
     companion object {
         const val TYPE_TABS = "generic_tabs"
     }
+}
+
+suspend fun GenericDao.saveTabs(tabs: List<FbItem>) {
+    val content = tabs.joinToString(",") { it.name }
+    save(GenericEntity(GenericDao.TYPE_TABS, content))
+}
+
+suspend fun GenericDao.getTabs(): List<FbItem> {
+    val allTabs = FbItem.values.map { it.name to it }.toMap()
+    return select(GenericDao.TYPE_TABS)
+        ?.split(",")
+        ?.mapNotNull { allTabs[it] }
+        ?.takeIf { it.isNotEmpty() }
+        ?: defaultTabs()
 }
