@@ -192,6 +192,6 @@ data class NotificationModel(
     var epochIm: Long = -1L
 ) : BaseModel()
 
-private fun lastNotificationTime(id: Long): NotificationModel =
+internal fun lastNotificationTime(id: Long): NotificationModel =
     (select from NotificationModel::class where (NotificationModel_Table.id eq id)).querySingle()
         ?: NotificationModel(id = id)
