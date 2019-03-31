@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.3
+* Add ability to hide stories
+* Remove fbclid from urls
+
 ## v2.2.2
 * New marketplace shortcut
 * Fix crash when internet disconnects (may still need app restart)
