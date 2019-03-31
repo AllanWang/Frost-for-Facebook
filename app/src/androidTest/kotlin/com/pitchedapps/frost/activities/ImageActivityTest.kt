@@ -83,7 +83,7 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(fabAction, FabStates.DOWNLOAD, "Image should be successful, image should be downloaded")
+            assertEquals(FabStates.DOWNLOAD, fabAction, "Image should be successful, image should be downloaded")
             assertTrue(tempFile.exists(), "Image should be located at temp file")
             assertTrue(
                 System.currentTimeMillis() - tempFile.lastModified() < 2000L,
@@ -100,7 +100,7 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(fabAction, FabStates.ERROR, "Text should not be a valid image format, error state expected")
+            assertEquals(FabStates.ERROR, fabAction, "Text should not be a valid image format, error state expected")
             assertEquals("Image format not supported", errorRef?.message, "Error message mismatch")
             assertFalse(tempFile.exists(), "Temp file should have been removed")
         }
@@ -112,7 +112,7 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(fabAction, FabStates.ERROR, "Error response code, error state expected")
+            assertEquals(FabStates.ERROR, fabAction, "Error response code, error state expected")
             assertEquals(
                 "Unsuccessful response for image: Error mock response",
                 errorRef?.message,

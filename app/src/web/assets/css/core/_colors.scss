@@ -1,0 +1,18 @@
+$bg_transparent: rgba(#f0f, 0.02) !default;
+
+//Keep above as first line so partials aren't compiled
+//Our default colors are test colors; production files should always import the actual colors
+
+$text: #d7b0d7 !default;
+// must be visible with accent as the background
+$accent_text: #76d7c2 !default;
+$link: #9266d5 !default;
+$accent: #980008 !default;
+$background: #451515 !default;
+// background2 must be transparent
+$background2: rgba(lighten($background, 35%), 0.35) !default; //Also change ratio in material_light
+$bg_opaque: rgba($background, 1.0) !default;
+$bg_opaque2: rgba($background2, 1.0) !default;
+$card: #239645 !default;
+$tint: #ff4682 !default; // must be different from $background
+$divider: rgba($text, 0.3) !default;

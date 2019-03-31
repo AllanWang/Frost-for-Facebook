@@ -21,20 +21,20 @@ import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
 
     override val fragmentChannel = BroadcastChannel<Int>(10)
-    override val headerBadgeChannel = Channel<String>(Channel.CONFLATED)
+    override val headerBadgeChannel = BroadcastChannel<String>(Channel.CONFLATED)
     var lastPosition = -1
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
@@ -86,35 +86,34 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        launch(Dispatchers.IO) {
-            for (html in headerBadgeChannel) {
-                try {
-                    val doc = Jsoup.parse(html)
-                    if (doc.select("[data-sigil=count]").isEmpty())
-                        continue // Header doesn't exist
-                    val (feed, requests, messages, notifications) = listOf(
-                        "feed",
-                        "requests",
-                        "messages",
-                        "notifications"
-                    )
-                        .map { "[data-sigil*=$it] [data-sigil=count]" }
-                        .map { doc.select(it) }
-                        .map { e -> e?.getOrNull(0)?.ownText() }
-                    L.v { "Badges $feed $requests $messages $notifications" }
-                    withMainContext {
-                        tabsForEachView { _, view ->
-                            when (view.iicon) {
-                                FbItem.FEED.icon -> view.badgeText = feed
-                                FbItem.FRIENDS.icon -> view.badgeText = requests
-                                FbItem.MESSAGES.icon -> view.badgeText = messages
-                                FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
-                            }
+        headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) {
+            html ->
+            try {
+                val doc = Jsoup.parse(html)
+                if (doc.select("[data-sigil=count]").isEmpty())
+                    return@subscribeDuringJob // Header doesn't exist
+                val (feed, requests, messages, notifications) = listOf(
+                    "feed",
+                    "requests",
+                    "messages",
+                    "notifications"
+                )
+                    .map { "[data-sigil*=$it] [data-sigil=count]" }
+                    .map { doc.select(it) }
+                    .map { e -> e?.getOrNull(0)?.ownText() }
+                L.v { "Badges $feed $requests $messages $notifications" }
+                withMainContext {
+                    tabsForEachView { _, view ->
+                        when (view.iicon) {
+                            FbItem.FEED.icon -> view.badgeText = feed
+                            FbItem.FRIENDS.icon -> view.badgeText = requests
+                            FbItem.MESSAGES.icon -> view.badgeText = messages
+                            FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
                         }
                     }
-                } catch (e: Exception) {
-                    L.e(e) { "Header badge error" }
                 }
+            } catch (e: Exception) {
+                L.e(e) { "Header badge error" }
             }
         }
         adapter.pages.forEach {

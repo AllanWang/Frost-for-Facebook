@@ -23,6 +23,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeIn
@@ -38,6 +39,7 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
+import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +47,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.launch
 
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
@@ -127,26 +128,18 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
                 reload(true)
             }
         }
-        // Begin subscription in the main thread
-        val refreshReceiver = refreshChannel.openSubscription()
-        val progressReceiver = progressChannel.openSubscription()
 
-        scope.launchMain {
-            launch {
-                for (r in refreshReceiver) {
-                    refresh.isRefreshing = r
-                    refresh.isEnabled = true
-                }
-            }
-            launch {
-                for (p in progressReceiver) {
-                    progress.invisibleIf(p == 100)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        progress.setProgress(p, true)
-                    else
-                        progress.progress = p
-                }
-            }
+        refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
+            refresh.isRefreshing = r
+            refresh.isEnabled = true
+        }
+
+        progressChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { p ->
+            progress.invisibleIf(p == 100)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                progress.setProgress(p, true)
+            else
+                progress.progress = p
         }
     }
 
@@ -170,9 +163,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun destroy() {
-        titleChannel.close()
-        progressChannel.close()
-        refreshChannel.close()
         core.destroy()
     }
 

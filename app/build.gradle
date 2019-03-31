@@ -7,6 +7,7 @@ apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
 
 apply from: '../spotless.gradle'
+group = APP_GROUP
 
 android {
     compileSdkVersion kau.targetSdk
@@ -129,6 +130,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.assets.srcDirs += ['src/web/assets']
     }
 
     packagingOptions {

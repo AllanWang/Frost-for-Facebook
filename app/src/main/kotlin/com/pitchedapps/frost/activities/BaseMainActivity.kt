@@ -330,6 +330,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             divider()
             primaryFrostItem(FbItem.NOTES)
             primaryFrostItem(FbItem.SAVED)
+            primaryFrostItem(FbItem.MARKETPLACE)
         }
     }
 
@@ -488,7 +489,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview?.destroy()
         super.onDestroy()
         fragmentChannel.close()
-        headerBadgeChannel.close()
     }
 
     override fun collapseAppBar() {

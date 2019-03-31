@@ -126,6 +126,8 @@ object Prefs : KPref() {
 
     var showFacebookAds: Boolean by kpref("facebook_ads", false)
 
+    var showStories: Boolean by kpref("show_stories", true)
+
     var animate: Boolean by kpref("fancy_animations", true)
 
     var notificationKeywords: Set<String> by kpref("notification_keywords", mutableSetOf())

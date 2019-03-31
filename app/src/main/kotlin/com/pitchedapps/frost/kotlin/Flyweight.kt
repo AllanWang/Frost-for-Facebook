@@ -16,11 +16,14 @@
  */
 package com.pitchedapps.frost.kotlin
 
+import com.pitchedapps.frost.utils.L
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -64,57 +67,60 @@ class Flyweight<K, V>(
             completeExceptionally(result.exceptionOrNull()!!)
     }
 
+    private val errHandler = CoroutineExceptionHandler { _, throwable -> L.d { "FbAuth failed ${throwable.message}" } }
+
     init {
-        job = scope.launch(Dispatchers.IO) {
-            launch {
-                while (isActive) {
-                    select<Unit> {
-                        /*
-                         * New request received. Continuation should be fulfilled eventually
-                         */
-                        actionChannel.onReceive { (key, completable) ->
-                            val lastUpdate = conditionMap[key]
-                            val lastResult = resultMap[key]
-                            // Valid value, retrieved within acceptable time
-                            if (lastResult != null && lastUpdate != null && System.currentTimeMillis() - lastUpdate < maxAge) {
-                                completable.completeWith(lastResult)
-                            } else {
-                                val valueRequestPending = key in pendingMap
-                                pendingMap.getOrPut(key) { mutableListOf() }.add(completable)
-                                if (!valueRequestPending)
+        job =
+            scope.launch(Dispatchers.IO + SupervisorJob() + errHandler) {
+                launch {
+                    while (isActive) {
+                        select<Unit> {
+                            /*
+                             * New request received. Continuation should be fulfilled eventually
+                             */
+                            actionChannel.onReceive { (key, completable) ->
+                                val lastUpdate = conditionMap[key]
+                                val lastResult = resultMap[key]
+                                // Valid value, retrieved within acceptable time
+                                if (lastResult != null && lastUpdate != null && System.currentTimeMillis() - lastUpdate < maxAge) {
+                                    completable.completeWith(lastResult)
+                                } else {
+                                    val valueRequestPending = key in pendingMap
+                                    pendingMap.getOrPut(key) { mutableListOf() }.add(completable)
+                                    if (!valueRequestPending)
+                                        fulfill(key)
+                                }
+                            }
+                            /*
+                             * Invalidator received. Existing result associated with key should not be used.
+                             * Note that any unfulfilled request and future requests should still operate, but with a new value.
+                             */
+                            invalidatorChannel.onReceive { key ->
+                                if (key !in resultMap) {
+                                    // Nothing to invalidate.
+                                    // If pending requests exist, they are already in the process of being updated.
+                                    return@onReceive
+                                }
+                                conditionMap.remove(key)
+                                resultMap.remove(key)
+                                if (pendingMap[key]?.isNotEmpty() == true)
+                                // Refetch value for pending requests
                                     fulfill(key)
                             }
-                        }
-                        /*
-                         * Invalidator received. Existing result associated with key should not be used.
-                         * Note that any unfulfilled request and future requests should still operate, but with a new value.
-                         */
-                        invalidatorChannel.onReceive { key ->
-                            if (key !in resultMap) {
-                                // Nothing to invalidate.
-                                // If pending requests exist, they are already in the process of being updated.
-                                return@onReceive
-                            }
-                            conditionMap.remove(key)
-                            resultMap.remove(key)
-                            if (pendingMap[key]?.isNotEmpty() == true)
-                            // Refetch value for pending requests
-                                fulfill(key)
-                        }
-                        /*
-                         * Value request fulfilled. Should now fulfill pending requests
-                         */
-                        receiverChannel.onReceive { (key, result) ->
-                            conditionMap[key] = System.currentTimeMillis()
-                            resultMap[key] = result
-                            pendingMap.remove(key)?.forEach {
-                                it.completeWith(result)
+                            /*
+                             * Value request fulfilled. Should now fulfill pending requests
+                             */
+                            receiverChannel.onReceive { (key, result) ->
+                                conditionMap[key] = System.currentTimeMillis()
+                                resultMap[key] = result
+                                pendingMap.remove(key)?.forEach {
+                                    it.completeWith(result)
+                                }
                             }
                         }
                     }
                 }
             }
-        }
     }
 
     /*

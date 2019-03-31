@@ -76,6 +76,13 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.suggested_groups_desc
     }
 
+    checkbox(R.string.show_stories, Prefs::showStories, {
+        Prefs.showStories = it
+        setFrostResult(REQUEST_REFRESH)
+    }) {
+        descRes = R.string.show_stories_desc
+    }
+
     checkbox(R.string.facebook_ads, Prefs::showFacebookAds, {
         Prefs.showFacebookAds = it
         setFrostResult(REQUEST_REFRESH)
