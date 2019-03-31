@@ -21,6 +21,8 @@
     <string name="notification_fetch_success">Đang lấy thông báo…</string>
     <string name="notification_fetch_fail">Không thể lấy thông báo</string>
     <string name="notification_sound">Âm báo</string>
+    <string name="notification_channel">Tuỳ chỉnh kênh thông báo</string>
+    <string name="notification_channel_desc">Thay đổi âm báo, độ rung, ưu tiên, vv</string>
     <string name="notification_ringtone">Chuông báo</string>
     <string name="message_ringtone">Nhạc chuông tin nhắn</string>
     <string name="select_ringtone">Chọn nhạc chuông</string>
