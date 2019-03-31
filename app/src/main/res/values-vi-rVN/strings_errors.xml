@@ -9,4 +9,7 @@
     <string name="no_download_manager_desc">Trình quản lý tải xuống đang tắt. Bạn có muốn bật để cho phép tải xuống?</string>
     <string name="error_generic">Đã xảy ra lỗi.</string>
     <string name="video_load_failed">Không thể tải video</string>
+    <string name="error_notification">Lỗi xảy ra khi lấy thông báo</string>
+    <string name="error_sdk">Phiên bản SDK (%d) trên thiết bị của bạn không tương thích. Frost chỉ hỗ trợ Lollipop (SDK 21) trở lên</string>
+    <string name="error_webview">Thiết bị của bạn dường như không có webview. Vui lòng cài hoặc kích hoạt.</string>
 </resources>

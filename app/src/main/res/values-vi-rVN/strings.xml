@@ -17,6 +17,7 @@
     <string name="birthdays">Sinh nhật</string>
     <string name="chat">Trò chuyện</string>
     <string name="photos">Ảnh</string>
+    <string name="marketplace">Chợ</string>
     <string name="notes">Ghi chú</string>
     <string name="on_this_day">Vào ngày này</string>
     <string name="loading_account">Đang chuẩn bị…</string>
@@ -44,4 +45,5 @@
     <string name="preview">Xem trước</string>
     <string name="options">Tuỳ chọn</string>
     <string name="tab_customizer_instructions">Bấm giữ và kéo để sắp xếp biểu tượng trên cùng.</string>
+    <string name="no_new_notifications">Không có thông báo mới</string>
 </resources>

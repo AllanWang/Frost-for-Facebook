@@ -19,4 +19,6 @@
     <string name="tint_nav_desc">Thanh điều hướng sẽ có màu như thanh tiêu đề</string>
     <string name="web_text_scaling">Cỡ chữ web</string>
     <string name="web_text_scaling_desc">Ví dụ cỡ chữ: Bấm giữ số phần trăm để đặt lại.</string>
+    <string name="enforce_black_media_bg">Luôn dùng nền đen cho ảnh và video</string>
+    <string name="enforce_black_media_bg_desc">Làm đen nền ảnh và video; mặc định là màu nền trên</string>
 </resources>
