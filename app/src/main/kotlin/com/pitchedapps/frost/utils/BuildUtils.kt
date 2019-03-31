@@ -30,7 +30,7 @@ object BuildUtils {
     fun match(version: String): Data? {
         val regex = Regex("([0-9]+\\.[0-9]+\\.[0-9]+)-?(.*?)")
         val result = regex.matchEntire(version)?.groupValues ?: return null
-        return Data(result[1], result[2])
+        return Data("v${result[1]}", result[2])
     }
 
     fun getAllStages(): Array<String> =
