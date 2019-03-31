@@ -3,6 +3,7 @@
 ## v2.2.3
 * Add ability to hide stories
 * Remove fbclid from urls
+* Apply notification keyword filter to title as well
 
 ## v2.2.2
 * New marketplace shortcut
