@@ -36,6 +36,10 @@ data class FrostNotifs(
     val notifs: List<FrostNotif>,
     val seeMore: FrostLink?
 ) : ParseNotification {
+
+    override val isEmpty: Boolean
+        get() = notifs.isEmpty()
+
     override fun toString() = StringBuilder().apply {
         append("FrostNotifs {\n")
         append(notifs.toJsonString("notifs", 1))
