@@ -53,7 +53,7 @@ class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.
             if (cookie != null) {
                 text.text = cookie.name
                 GlideApp.with(itemView).load(profilePictureUrl(cookie.id))
-                    .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
+                    .transform(FrostGlide.circleCrop).listener(object : RequestListener<Drawable> {
                         override fun onResourceReady(
                             resource: Drawable?,
                             model: Any?,

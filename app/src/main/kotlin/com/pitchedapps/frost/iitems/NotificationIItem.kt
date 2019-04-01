@@ -106,7 +106,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
 
             val glide = glide
             glide.load(notif.img)
-                .transform(FrostGlide.roundCorner)
+                .transform(FrostGlide.circleCrop)
                 .into(avatar)
             if (notif.thumbnailUrl != null)
                 glide.load(notif.thumbnailUrl).into(thumbnail.visible())
