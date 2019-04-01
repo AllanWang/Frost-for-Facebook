@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Đặt giao diện màn hình chính</string>
     <string name="main_tabs">Giao diện màn hình chính</string>
     <string name="main_tabs_desc">Tuỳ chỉnh thẻ xuất hiện trên màn hình chính</string>
-    <string name="rounded_icons">Làm tròn biểu tượng</string>
-    <string name="rounded_icons_desc">Ảnh đại diện và biểu tượng hội thoại nhóm sẽ được làm tròn</string>
     <string name="tint_nav">Đổi màu thanh điều hướng</string>
     <string name="tint_nav_desc">Thanh điều hướng sẽ có màu như thanh tiêu đề</string>
     <string name="web_text_scaling">Cỡ chữ web</string>

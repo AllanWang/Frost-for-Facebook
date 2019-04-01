@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Встановити основну схему діяльності</string>
     <string name="main_tabs">Вкладки основної діяльності</string>
     <string name="main_tabs_desc">Налаштуйте, які вкладки ви побачите у своїй основній діяльності</string>
-    <string name="rounded_icons">Закруглені іконки</string>
-    <string name="rounded_icons_desc">Фотографії профілю та значки групової бесіди будуть округлені</string>
     <string name="tint_nav">Відтінок верхньої панелі</string>
     <string name="tint_nav_desc">На навігаційній панелі буде мати той самий колір, що й заголовок</string>
     <string name="web_text_scaling">Масштабування веб-тексту</string>
