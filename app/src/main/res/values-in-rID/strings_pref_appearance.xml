@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Atur Aktifitas Tataletak Utama</string>
     <string name="main_tabs">Tab Tataletak Utama</string>
     <string name="main_tabs_desc">Sesuaikan tab yang akan Anda lihat di aktifitas utama Anda</string>
-    <string name="rounded_icons">Membulatkan Ikon</string>
-    <string name="rounded_icons_desc">Foto profil dan ikon percakapan grup akan dibulatkan</string>
     <string name="tint_nav">Warna Bilah Navigasi</string>
     <string name="tint_nav_desc">Bilah navigasi akan sama warna dengan header</string>
     <string name="web_text_scaling">Penskalaan Teks Web</string>

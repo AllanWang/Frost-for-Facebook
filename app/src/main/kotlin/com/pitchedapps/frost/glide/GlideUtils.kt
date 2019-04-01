@@ -38,8 +38,6 @@ import okhttp3.Response
  * Each caller will generate a new one upon request
  */
 object FrostGlide {
-    val roundCorner
-        get() = RoundCornerTransformation()
     val circleCrop
         get() = CircleCrop()
 }

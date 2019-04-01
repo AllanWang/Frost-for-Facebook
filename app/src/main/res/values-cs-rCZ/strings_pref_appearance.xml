@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Nastavit rozložení hlavního zobrazení aktivit</string>
     <string name="main_tabs">Hlavní záložky aktivit</string>
     <string name="main_tabs_desc">Nastavte záložky viditelné v hlavním pohledu</string>
-    <string name="rounded_icons">Kulaté ikony</string>
-    <string name="rounded_icons_desc">Ikony profilových fotek a skupinových konverzacích budou kulaté</string>
     <string name="tint_nav">Odstín navigační lišty</string>
     <string name="tint_nav_desc">Navigační lišta bude mít stejnou barvu jako je základní barva</string>
     <string name="web_text_scaling">Zvětšující se text na webu</string>

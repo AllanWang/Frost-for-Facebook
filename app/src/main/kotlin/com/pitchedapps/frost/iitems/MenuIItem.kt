@@ -59,7 +59,7 @@ class MenuContentIItem(val data: MenuItem) :
             if (iconUrl != null)
                 GlideApp.with(itemView)
                     .load(iconUrl)
-                    .transform(FrostGlide.roundCorner)
+                    .transform(FrostGlide.circleCrop)
                     .into(icon.visible())
             else
                 icon.gone()

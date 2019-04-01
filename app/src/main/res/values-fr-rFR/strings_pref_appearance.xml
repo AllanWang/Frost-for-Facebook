@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Régler la disposition de l\'activité principale</string>
     <string name="main_tabs">Onglets de l\'activité principale</string>
     <string name="main_tabs_desc">Personnalisez les onglets que vous verrez dans votre activité principale</string>
-    <string name="rounded_icons">Icônes rondes</string>
-    <string name="rounded_icons_desc">Les photos de profil et les icônes de conversation de groupe seront arrondis</string>
     <string name="tint_nav">Teinter la barre de navigation</string>
     <string name="tint_nav_desc">La barre de navigation sera de la même couleur que l\'en-tête</string>
     <string name="web_text_scaling">Échelle de texte Web</string>

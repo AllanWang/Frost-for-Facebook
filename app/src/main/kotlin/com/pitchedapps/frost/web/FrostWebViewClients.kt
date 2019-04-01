@@ -91,7 +91,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         injectBackgroundColor()
         if (url.isFacebookUrl)
             view.jsInject(
-                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
 //                    CssHider.CORE,
                 CssHider.HEADER,
                 CssHider.COMPOSER.maybe(!Prefs.showComposer),
