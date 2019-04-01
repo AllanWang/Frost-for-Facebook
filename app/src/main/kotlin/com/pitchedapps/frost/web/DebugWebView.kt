@@ -102,7 +102,6 @@ class DebugWebView @JvmOverloads constructor(
             injectBackgroundColor()
             if (url.isFacebookUrl)
                 view.jsInject(
-                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
 //                        CssHider.CORE,
                     CssHider.COMPOSER.maybe(!Prefs.showComposer),
                     CssHider.STORIES.maybe(!Prefs.showStories),

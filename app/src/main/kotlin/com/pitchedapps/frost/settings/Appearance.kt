@@ -155,13 +155,6 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         onClick = { launchTabCustomizerActivity() }
     }
 
-    checkbox(R.string.rounded_icons, Prefs::showRoundedIcons, {
-        Prefs.showRoundedIcons = it
-        setFrostResult(REQUEST_REFRESH)
-    }) {
-        descRes = R.string.rounded_icons_desc
-    }
-
     checkbox(R.string.tint_nav, Prefs::tintNavBar, {
         Prefs.tintNavBar = it
         frostNavigationBar()

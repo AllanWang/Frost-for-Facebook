@@ -33,7 +33,7 @@ import java.security.MessageDigest
 class RoundCornerTransformation : BitmapTransformation() {
 
     override fun updateDiskCacheKey(messageDigest: MessageDigest) {
-        messageDigest.update("FrostRoundCornerTransform-${Prefs.showRoundedIcons}".toByteArray())
+        messageDigest.update("FrostRoundCornerTransform".toByteArray())
     }
 
     override fun transform(pool: BitmapPool, toTransform: Bitmap, outWidth: Int, outHeight: Int): Bitmap {
@@ -44,8 +44,7 @@ class RoundCornerTransformation : BitmapTransformation() {
         val bitmap = pool.get(width, height, Bitmap.Config.ARGB_8888)
         bitmap.setHasAlpha(true)
 
-        val radius = Math.min(width, height).toFloat() /
-            (if (Prefs.showRoundedIcons) 2f else 10f)
+        val radius = Math.min(width, height) * 0.5f
 
         val canvas = Canvas(bitmap)
         val paint = Paint()
