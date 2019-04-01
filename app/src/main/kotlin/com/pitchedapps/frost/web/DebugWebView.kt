@@ -25,7 +25,6 @@ import android.view.View
 import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
