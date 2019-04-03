@@ -105,7 +105,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                 JsAssets.CLICK_A,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds),
                 JsAssets.CONTEXT_A,
-//                    JsAssets.HEADER_HIDER,
                 JsAssets.MEDIA
             )
         else

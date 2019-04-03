@@ -26,7 +26,7 @@ import android.webkit.WebView
 enum class CssHider(vararg val items: String) : InjectorContract {
     CORE("[data-sigil=m_login_upsell]", "[role=progressbar]"),
     HEADER(
-        "#header", "#mJewelNav", "[data-sigil=MTopBlueBarHeader]",
+        "#header:not(.mFuturePageHeader):not(.titled)", "#mJewelNav", "[data-sigil=MTopBlueBarHeader]",
         "#header-notices", "[data-sigil*=m-promo-jewel-header]"
     ),
     ADS(
