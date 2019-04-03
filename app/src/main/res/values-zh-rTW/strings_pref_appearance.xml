@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">設定主要活動版型</string>
     <string name="main_tabs">主要活動標籤</string>
     <string name="main_tabs_desc">自訂您想在主要活動中看到哪些標籤</string>
-    <string name="rounded_icons">圓型圖示</string>
-    <string name="rounded_icons_desc">個人檔案照以及群組會話的圖示將被截成圓形</string>
     <string name="tint_nav">同調導航欄</string>
     <string name="tint_nav_desc">導航欄將與標題同色</string>
     <string name="web_text_scaling">Web 文字縮放</string>

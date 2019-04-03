@@ -28,7 +28,6 @@ import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_NAV
-import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostNavigationBar
@@ -153,13 +152,6 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     plainText(R.string.main_tabs) {
         descRes = R.string.main_tabs_desc
         onClick = { launchTabCustomizerActivity() }
-    }
-
-    checkbox(R.string.rounded_icons, Prefs::showRoundedIcons, {
-        Prefs.showRoundedIcons = it
-        setFrostResult(REQUEST_REFRESH)
-    }) {
-        descRes = R.string.rounded_icons_desc
     }
 
     checkbox(R.string.tint_nav, Prefs::tintNavBar, {

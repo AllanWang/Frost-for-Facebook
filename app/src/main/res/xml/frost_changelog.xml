@@ -6,12 +6,17 @@
     <item text="" />
     -->
 
+    <version title="v2.2.4" />
+    <item text="Show top bar to allow sharing posts" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.2.3" />
     <item text="Add ability to hide stories" />
     <item text="Remove fbclid from urls" />
     <item text="Apply notification keyword filter to title as well" />
-    <item text="" />
-    <item text="" />
+    <item text="Remove round icon settings as they are the default in Facebook" />
+    <item text="Update theme" />
 
     <version title="v2.2.2" />
     <item text="New marketplace shortcut" />

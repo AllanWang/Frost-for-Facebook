@@ -98,7 +98,6 @@ class LoginWebView @JvmOverloads constructor(
             view.setBackgroundColor(Color.TRANSPARENT)
             if (url.isFacebookUrl)
                 view.jsInject(
-                    JsAssets.HEADER_HIDER,
                     CssHider.CORE,
                     Prefs.themeInjector
                 )

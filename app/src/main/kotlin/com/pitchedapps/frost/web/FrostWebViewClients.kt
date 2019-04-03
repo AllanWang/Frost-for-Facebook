@@ -27,7 +27,6 @@ import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
@@ -91,7 +90,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         injectBackgroundColor()
         if (url.isFacebookUrl)
             view.jsInject(
-                CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
 //                    CssHider.CORE,
                 CssHider.HEADER,
                 CssHider.COMPOSER.maybe(!Prefs.showComposer),
@@ -107,7 +105,6 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                 JsAssets.CLICK_A,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds),
                 JsAssets.CONTEXT_A,
-//                    JsAssets.HEADER_HIDER,
                 JsAssets.MEDIA
             )
         else

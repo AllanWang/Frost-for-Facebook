@@ -25,7 +25,6 @@ import android.view.View
 import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
@@ -102,7 +101,6 @@ class DebugWebView @JvmOverloads constructor(
             injectBackgroundColor()
             if (url.isFacebookUrl)
                 view.jsInject(
-                    CssAssets.ROUND_ICONS.maybe(Prefs.showRoundedIcons),
 //                        CssHider.CORE,
                     CssHider.COMPOSER.maybe(!Prefs.showComposer),
                     CssHider.STORIES.maybe(!Prefs.showStories),
