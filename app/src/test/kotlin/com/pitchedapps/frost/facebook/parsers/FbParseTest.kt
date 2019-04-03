@@ -22,6 +22,7 @@ import com.pitchedapps.frost.internal.assertDescending
 import com.pitchedapps.frost.internal.authDependent
 import org.junit.BeforeClass
 import org.junit.Test
+import kotlin.test.Ignore
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
