@@ -53,7 +53,7 @@ class DebugWebView @JvmOverloads constructor(
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview() {
+    private fun setupWebview() {
         settings.javaScriptEnabled = true
         settings.userAgentString = USER_AGENT_FULL
         setLayerType(View.LAYER_TYPE_HARDWARE, null)

@@ -32,6 +32,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
+import com.pitchedapps.frost.activities.TestActivity
 import com.pitchedapps.frost.dbflow.CookieModel
 import com.pitchedapps.frost.dbflow.loadFbCookiesSync
 import com.pitchedapps.frost.facebook.FbCookie
@@ -52,6 +53,9 @@ class StartActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        startActivity<TestActivity>()
+//        return
 
         if (!buildIsLollipopAndUp) { // not supported
             showInvalidSdkView()
