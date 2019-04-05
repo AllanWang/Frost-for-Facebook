@@ -19,8 +19,10 @@ package com.pitchedapps.frost.settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
+import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -56,6 +58,13 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.enable_pip, Prefs::enablePip, { Prefs.enablePip = it }) {
         descRes = R.string.enable_pip_desc
+    }
+
+    plainText(R.string.autoplay_settings) {
+        descRes = R.string.autoplay_settings_desc
+        onClick = {
+            launchWebOverlay("${FB_URL_BASE}settings/videos/")
+        }
     }
 
     checkbox(R.string.exit_confirmation, Prefs::exitConfirmation, { Prefs.exitConfirmation = it }) {
