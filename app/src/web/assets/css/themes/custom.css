@@ -19,7 +19,7 @@ textarea:not([style*="color: rgb"]), ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._57
 div.sharerSelector, .footer, ._4pv_, ._1dbp, ._3kad, ._20zc, ._2i5v, ._2i5w,
 a, ._5fpq, ._4gux, ._3bg5 ._52x1, ._3bg5 ._52x2, ._6dsj ._3gin, ._hdn._hdn,
 .mentions-input:not([style*="color: rgb"]), .mentions-placeholder:not([style*="color: rgb"]),
-.largeStatusBox .placeHolder, .fcw,
+.largeStatusBox .placeHolder, .fcw, ._2rgt,
 ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4,
 ._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs,
 h1, h2, h3, h4, h5, h6 {
@@ -57,7 +57,7 @@ body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, 
 ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5,
 ._55wm, ._2om3, ._2ol-, ._1f9d, ._vee, ._31a-, ._3r8b, ._3r9d, ._5vq5, ._3tl8, ._65wz, ._4edl,
 .acw, ._4_xl, ._1p70, ._1p70, ._1ih_, ._51v6, ._u2c, ._484w, ._3ils, ._rm7, ._32qk, ._d01, ._1glm,
-._ue6, ._hdn._hdn, ._6vzw, ._77xj,
+._ue6, ._hdn._hdn, ._6vzw, ._77xj, ._38nq, ._9_7,
 ._2y60, ._5fu3, ._2foa, ._2y5_, ._38o9, ._1kb, .mAppCenterFatLabel, ._3bmj, ._5zmb, ._2x2s, ._3kac, ._3kad,
 ._3f50, .mentions-placeholder, .mentions, .mentions-measurer, .acg, ._59tu,
 ._4l9b, ._4gj3, .groupChromeView, ._i3g, ._3jcf, .error, ._1dbp, ._5zma, ._6beq, ._vi6,
@@ -66,7 +66,7 @@ body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, 
   background: $BT$ !important;
 }
 
-._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._55wo, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s, ._13fn {
+._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s, ._13fn {
   background: $C$ !important;
 }
 
@@ -94,7 +94,7 @@ body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, 
 button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
 ._590n, ._4g8h, ._2cpp, ._58a0.touched:after,
 .timeline .timelinePublisher, .touched, .sharerAttachment,
-.item a.primary.touched .primarywrap, ._38nq, ._537a, ._7cui,
+.item a.primary.touched .primarywrap, ._537a, ._7cui,
 ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj,
 .excessItem, .acr, ._5-lx, ._3g9-, ._55ws, ._6dsj ._3gin, ._69aj,
 ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._2k51,
@@ -125,12 +125,12 @@ button ._v89 ._54k8._1fl1 {
   border-left: 1px solid $D$ !important;
 }
 
-._4_d1, ._5cni {
+._4_d1, ._5cni, ._3jcq {
   border-right: 1px solid $D$ !important;
 }
 
 ._1mx0, ._1rbr, ._5yt8, ._idb, ._cld, ._1e8h, ._z-w, ._1ha, ._1n8h ._1oby, ._5f99, ._2t39,
-._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after,
+._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after, ._46dd::before,
 ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9,
 ._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils, ._5as0, ._5as2, ._5-lw,
 ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._56d8, .al {
