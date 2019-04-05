@@ -70,6 +70,7 @@ class FrostWebView @JvmOverloads constructor(
             else USER_AGENT_FULL
         with(settings) {
             javaScriptEnabled = true
+            mediaPlaybackRequiresUserGesture = false // TODO check if we need this
             allowFileAccess = true
             textZoom = Prefs.webTextScaling
         }

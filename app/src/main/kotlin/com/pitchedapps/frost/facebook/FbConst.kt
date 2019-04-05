@@ -22,7 +22,7 @@ package com.pitchedapps.frost.facebook
 
 const val FACEBOOK_COM = "facebook.com"
 const val FBCDN_NET = "fbcdn.net"
-const val HTTPS_FACEBOOK_COM = "https://$FACEBOOK_COM"
+const val HTTPS_FACEBOOK_COM = "https://$FACEBOOK_COM/"
 const val FB_URL_BASE = "https://m.$FACEBOOK_COM/"
 fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
@@ -30,7 +30,7 @@ const val FB_HOME_URL = "${FB_URL_BASE}home.php"
 
 // Default user agent
 const val USER_AGENT_FULL =
-    "Mozilla/5.0 (Linux; Android 7.1; Mi A1 Build/N2G47H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.83 Mobile Safari/537.36"
+    "Mozilla/5.0 (Linux; Android 8.0.0; ONEPLUS A3000) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36"
 // Basic user agent; non mobile version
 const val USER_AGENT_BASIC =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36"
