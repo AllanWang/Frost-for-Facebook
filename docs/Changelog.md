@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.2.4
+* Show top bar to allow sharing posts
+
 ## v2.2.3
 * Add ability to hide stories
 * Remove fbclid from urls
