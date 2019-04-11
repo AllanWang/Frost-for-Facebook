@@ -1,7 +1,7 @@
 ---
 name: Theme report
 about: Problem with Frost's Theme
-title: "[CSS]"
+title: ''
 labels: CSS
 assignees: AllanWang
 
