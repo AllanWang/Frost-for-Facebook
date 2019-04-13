@@ -22,7 +22,7 @@ import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -78,12 +78,12 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         L.v { "Check web request from overlay" }
         val shouldUseBasic = url.formattedFbUrl.shouldUseBasicAgent
         //already overlay; manage user agent
-        if (userAgentString != USER_AGENT_BASIC && shouldUseBasic) {
+        if (userAgentString != USER_AGENT_DESKTOP && shouldUseBasic) {
             L.i { "Switch to basic agent overlay" }
             context.launchWebOverlayBasic(url)
             return true
         }
-        if (userAgentString == USER_AGENT_BASIC && !shouldUseBasic) {
+        if (userAgentString == USER_AGENT_DESKTOP && !shouldUseBasic) {
             L.i { "Switch from basic agent" }
             context.launchWebOverlay(url)
             return true

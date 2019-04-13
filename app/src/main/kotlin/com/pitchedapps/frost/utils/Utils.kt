@@ -68,7 +68,7 @@ import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
@@ -393,7 +393,7 @@ fun frostJsoup(cookie: String?, url: String) =
     Jsoup.connect(url).run {
         if (cookie.isNullOrBlank()) this
         else cookie(FACEBOOK_COM, cookie)
-    }.userAgent(USER_AGENT_BASIC).get()!!
+    }.userAgent(USER_AGENT_DESKTOP).get()!!
 
 fun Element.first(vararg select: String): Element? {
     select.forEach {

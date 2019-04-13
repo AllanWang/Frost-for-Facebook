@@ -29,11 +29,11 @@ const val FB_LOGIN_URL = "${FB_URL_BASE}login"
 const val FB_HOME_URL = "${FB_URL_BASE}home.php"
 
 // Default user agent
-const val USER_AGENT_FULL =
+const val USER_AGENT_MOBILE =
     "Mozilla/5.0 (Linux; Android 8.0.0; ONEPLUS A3000) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36"
-// Basic user agent; non mobile version
-const val USER_AGENT_BASIC =
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36"
+// Desktop agent, for pages like messages
+const val USER_AGENT_DESKTOP =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Safari/537.36"
 
 /**
  * Animation transition delay, just to ensure that the styles

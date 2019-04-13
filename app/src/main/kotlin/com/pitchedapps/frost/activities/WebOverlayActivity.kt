@@ -58,7 +58,7 @@ import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.services.FrostRunnable
@@ -211,7 +211,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
 
         with(web) {
             if (forceBasicAgent) //todo check; the webview already adds it dynamically
-                userAgentString = USER_AGENT_BASIC
+                userAgentString = USER_AGENT_DESKTOP
             Prefs.prevId = Prefs.userId
             launch {
                 if (userId != Prefs.userId)
