@@ -30,7 +30,7 @@ import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 
 /**
  * Created by Allan Wang on 2017-08-04.
@@ -39,7 +39,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
  */
 fun Context.frostDownload(
     url: String?,
-    userAgent: String = USER_AGENT_BASIC,
+    userAgent: String = USER_AGENT_DESKTOP,
     contentDisposition: String? = null,
     mimeType: String? = null,
     contentLength: Long = 0L
@@ -50,7 +50,7 @@ fun Context.frostDownload(
 
 fun Context.frostDownload(
     uri: Uri?,
-    userAgent: String = USER_AGENT_BASIC,
+    userAgent: String = USER_AGENT_DESKTOP,
     contentDisposition: String? = null,
     mimeType: String? = null,
     contentLength: Long = 0L

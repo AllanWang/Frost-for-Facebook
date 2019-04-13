@@ -19,7 +19,7 @@ package com.pitchedapps.frost.debugger
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.utils.copyFromInputStream
 import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.utils.createFreshDir
@@ -59,7 +59,7 @@ class OfflineWebsite(
      * Directory that holds all the files
      */
     val baseDir: File,
-    private val userAgent: String = USER_AGENT_BASIC
+    private val userAgent: String = USER_AGENT_DESKTOP
 ) {
 
     /**

@@ -48,7 +48,7 @@
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
-            android:name=".activities.WebOverlayBasicActivity"
+            android:name=".activities.WebOverlayDesktopActivity"
             android:configChanges="orientation|screenSize|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"

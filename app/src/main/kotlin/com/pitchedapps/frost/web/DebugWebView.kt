@@ -24,7 +24,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
-import com.pitchedapps.frost.facebook.USER_AGENT_FULL
+import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
@@ -55,7 +55,7 @@ class DebugWebView @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebview() {
         settings.javaScriptEnabled = true
-        settings.userAgentString = USER_AGENT_FULL
+        settings.userAgentString = USER_AGENT_MOBILE
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = DebugClient()
         isDrawingCacheEnabled = true
