@@ -141,10 +141,10 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
 }
 
 /**
- * Variant that forces a basic user agent. This is largely internal,
+ * Variant that forces a desktop user agent. This is largely internal,
  * and is only necessary when we are launching from an existing [WebOverlayActivityBase]
  */
-class WebOverlayBasicActivity : WebOverlayActivityBase(true)
+class WebOverlayDesktopActivity : WebOverlayActivityBase(true)
 
 /**
  * Internal overlay for the app; this is tied with the main task and is singleTop as opposed to singleInstance
@@ -153,7 +153,7 @@ class WebOverlayActivity : WebOverlayActivityBase(false)
 
 @SuppressLint("Registered")
 @UseExperimental(ExperimentalCoroutinesApi::class)
-open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseActivity(),
+open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : BaseActivity(),
     ActivityContract, FrostContentContainer,
     VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
@@ -210,7 +210,7 @@ open class WebOverlayActivityBase(private val forceBasicAgent: Boolean) : BaseAc
         }
 
         with(web) {
-            if (forceBasicAgent) //todo check; the webview already adds it dynamically
+            if (forceDesktopAgent) //todo check; the webview already adds it dynamically
                 userAgentString = USER_AGENT_DESKTOP
             Prefs.prevId = Prefs.userId
             launch {

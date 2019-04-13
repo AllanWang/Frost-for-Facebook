@@ -38,7 +38,7 @@ import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
-import com.pitchedapps.frost.web.shouldUseBasicAgent
+import com.pitchedapps.frost.web.shouldUseDesktopAgent
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -66,7 +66,7 @@ class FrostWebView @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     override fun bind(container: FrostContentContainer): View {
         userAgentString =
-            if (parent.baseEnum == FbItem.MESSAGES || parent.baseUrl.shouldUseBasicAgent) USER_AGENT_DESKTOP
+            if (parent.baseEnum == FbItem.MESSAGES || parent.baseUrl.shouldUseDesktopAgent) USER_AGENT_DESKTOP
             else USER_AGENT_MOBILE
         with(settings) {
             javaScriptEnabled = true

@@ -32,7 +32,7 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.isVideoUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchWebOverlay
-import com.pitchedapps.frost.utils.launchWebOverlayBasic
+import com.pitchedapps.frost.utils.launchWebOverlayDesktop
 import com.pitchedapps.frost.views.FrostWebView
 
 /**
@@ -76,15 +76,15 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     if (!Prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
         L.v { "Check web request from overlay" }
-        val shouldUseBasic = url.formattedFbUrl.shouldUseBasicAgent
+        val shouldUseDesktop = url.formattedFbUrl.shouldUseDesktopAgent
         //already overlay; manage user agent
-        if (userAgentString != USER_AGENT_DESKTOP && shouldUseBasic) {
-            L.i { "Switch to basic agent overlay" }
-            context.launchWebOverlayBasic(url)
+        if (userAgentString != USER_AGENT_DESKTOP && shouldUseDesktop) {
+            L.i { "Switch to desktop agent overlay" }
+            context.launchWebOverlayDesktop(url)
             return true
         }
-        if (userAgentString == USER_AGENT_DESKTOP && !shouldUseBasic) {
-            L.i { "Switch from basic agent" }
+        if (userAgentString == USER_AGENT_DESKTOP && !shouldUseDesktop) {
+            L.i { "Switch from desktop agent" }
             context.launchWebOverlay(url)
             return true
         }
@@ -103,9 +103,9 @@ val messageWhitelist: Set<String> =
     setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
         .mapTo(mutableSetOf(), FbItem::url)
 
-val String.shouldUseBasicAgent: Boolean
+val String.shouldUseDesktopAgent: Boolean
     get() = when {
-        contains("story.php") -> false // do not use basic for comment section
+        contains("story.php") -> false // do not use desktop for comment section
         contains("/events/") -> false // do not use for events (namely the map)
         contains("/messages") -> true // must use for messages
         else -> false // default to normal user agent
