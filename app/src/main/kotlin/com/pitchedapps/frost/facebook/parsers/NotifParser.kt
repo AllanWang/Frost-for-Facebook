@@ -53,7 +53,8 @@ data class FrostNotifs(
                     title = null,
                     text = content,
                     timestamp = time,
-                    profileUrl = img
+                    profileUrl = img,
+                    unread = unread
                 )
             }
         }.toList()

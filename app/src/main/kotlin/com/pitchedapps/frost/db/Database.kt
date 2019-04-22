@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.pitchedapps.frost.BuildConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext
 
@@ -69,15 +70,22 @@ class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val pub
     }
 
     companion object {
+
+        private fun <T : RoomDatabase> RoomDatabase.Builder<T>.frostBuild() = if (BuildConfig.DEBUG) {
+            fallbackToDestructiveMigration().build()
+        } else {
+            build()
+        }
+
         fun create(context: Context): FrostDatabase {
             val privateDb = Room.databaseBuilder(
                 context, FrostPrivateDatabase::class.java,
                 FrostPrivateDatabase.DATABASE_NAME
-            ).build()
+            ).frostBuild()
             val publicDb = Room.databaseBuilder(
                 context, FrostPublicDatabase::class.java,
                 FrostPublicDatabase.DATABASE_NAME
-            ).build()
+            ).frostBuild()
             return FrostDatabase(privateDb, publicDb)
         }
 

@@ -181,7 +181,8 @@ enum class NotificationType(
             "Debug Notif",
             "Test 123",
             System.currentTimeMillis() / 1000,
-            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png"
+            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png",
+            false
         )
         createNotification(context, content).notify(context)
     }
@@ -266,7 +267,8 @@ data class NotificationContent(
     val title: String? = null, // defaults to frost title
     val text: String,
     val timestamp: Long,
-    val profileUrl: String?
+    val profileUrl: String?,
+    val unread: Boolean
 ) {
 
     val notifId = Math.abs(id.toInt())

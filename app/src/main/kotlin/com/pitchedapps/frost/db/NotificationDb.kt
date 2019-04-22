@@ -64,7 +64,8 @@ data class NotificationEntity(
     val timestamp: Long,
     val profileUrl: String?,
     // Type essentially refers to channel
-    val type: String
+    val type: String,
+    val unread: Boolean
 ) {
     constructor(
         type: String,
@@ -77,7 +78,8 @@ data class NotificationEntity(
         content.text,
         content.timestamp,
         content.profileUrl,
-        type
+        type,
+        content.unread
     )
 }
 
@@ -94,7 +96,8 @@ data class NotificationContentEntity(
         title = notif.title,
         text = notif.text,
         timestamp = notif.timestamp,
-        profileUrl = notif.profileUrl
+        profileUrl = notif.profileUrl,
+        unread = notif.unread
     )
 }
 

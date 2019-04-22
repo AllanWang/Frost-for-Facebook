@@ -64,7 +64,8 @@ data class FrostMessages(
                     title = title,
                     text = content ?: "",
                     timestamp = time,
-                    profileUrl = img
+                    profileUrl = img,
+                    unread = unread
                 )
             }
         }.toList()
