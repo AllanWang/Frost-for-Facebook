@@ -42,8 +42,6 @@ import com.raizlabs.android.dbflow.kotlinextensions.where
 import com.raizlabs.android.dbflow.sql.SQLiteType
 import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration
 import com.raizlabs.android.dbflow.structure.BaseModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Entity(
     tableName = "notifications",
@@ -120,7 +118,7 @@ interface NotificationDao {
     fun _deleteNotifications(userId: Long, type: String)
 
     @Query("DELETE FROM notifications")
-    suspend fun deleteAll()
+    fun _deleteAll()
 
     /**
      * It is assumed that the notification batch comes from the same user
@@ -134,17 +132,18 @@ interface NotificationDao {
     }
 }
 
-suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> =
-    withContext(Dispatchers.IO) {
-        _selectNotifications(userId, type).map { it.toNotifContent() }
-    }
+suspend fun NotificationDao.deleteAll() = dao { _deleteAll() }
+
+suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> = dao {
+    _selectNotifications(userId, type).map { it.toNotifContent() }
+}
 
 /**
  * Returns true if successful, given that there are constraints to the insertion
  */
 suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>): Boolean {
     if (notifs.isEmpty()) return true
-    return withContext(Dispatchers.IO) {
+    return dao {
         try {
             _saveNotifications(type, notifs)
             true
@@ -155,7 +154,7 @@ suspend fun NotificationDao.saveNotifications(type: String, notifs: List<Notific
     }
 }
 
-suspend fun NotificationDao.latestEpoch(userId: Long, type: String): Long = withContext(Dispatchers.IO) {
+suspend fun NotificationDao.latestEpoch(userId: Long, type: String): Long = dao {
     _selectEpoch(userId, type) ?: lastNotificationTime(userId).let {
         when (type) {
             NOTIF_CHANNEL_GENERAL -> it.epoch

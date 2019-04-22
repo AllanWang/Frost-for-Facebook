@@ -43,27 +43,27 @@ data class GenericEntity(
 interface GenericDao {
 
     @Query("SELECT contents FROM frost_generic WHERE type = :type")
-    suspend fun select(type: String): String?
+    fun _select(type: String): String?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(entity: GenericEntity)
+    fun _save(entity: GenericEntity)
 
     @Query("DELETE FROM frost_generic WHERE type = :type")
-    suspend fun delete(type: String)
+    fun _delete(type: String)
 
     companion object {
         const val TYPE_TABS = "generic_tabs"
     }
 }
 
-suspend fun GenericDao.saveTabs(tabs: List<FbItem>) {
+suspend fun GenericDao.saveTabs(tabs: List<FbItem>) = dao {
     val content = tabs.joinToString(",") { it.name }
-    save(GenericEntity(GenericDao.TYPE_TABS, content))
+    _save(GenericEntity(GenericDao.TYPE_TABS, content))
 }
 
-suspend fun GenericDao.getTabs(): List<FbItem> {
+suspend fun GenericDao.getTabs(): List<FbItem> = dao {
     val allTabs = FbItem.values.map { it.name to it }.toMap()
-    return select(GenericDao.TYPE_TABS)
+    _select(GenericDao.TYPE_TABS)
         ?.split(",")
         ?.mapNotNull { allTabs[it] }
         ?.takeIf { it.isNotEmpty() }

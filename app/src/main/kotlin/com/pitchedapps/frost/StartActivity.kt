@@ -38,7 +38,9 @@ import com.pitchedapps.frost.db.CookieModel
 import com.pitchedapps.frost.db.FbTabModel
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.getTabs
+import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.saveTabs
+import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L

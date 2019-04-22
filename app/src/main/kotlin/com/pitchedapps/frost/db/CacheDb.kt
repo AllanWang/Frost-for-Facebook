@@ -55,23 +55,32 @@ data class CacheEntity(
 interface CacheDao {
 
     @Query("SELECT * FROM frost_cache WHERE id = :id AND type = :type")
-    suspend fun select(id: Long, type: String): CacheEntity?
+    fun _select(id: Long, type: String): CacheEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCache(cache: CacheEntity)
+    fun _insertCache(cache: CacheEntity)
 
     @Query("DELETE FROM frost_cache WHERE id = :id AND type = :type")
-    suspend fun delete(id: Long, type: String)
+    fun _delete(id: Long, type: String)
+}
+
+suspend fun CacheDao.select(id: Long, type: String) = dao {
+    _select(id, type)
+}
+
+suspend fun CacheDao.delete(id: Long, type: String) = dao {
+    _delete(id, type)
 }
 
 /**
  * Returns true if successful, given that there are constraints to the insertion
  */
-suspend fun CacheDao.save(id: Long, type: String, contents: String): Boolean =
+suspend fun CacheDao.save(id: Long, type: String, contents: String): Boolean = dao {
     try {
-        insertCache(CacheEntity(id, type, System.currentTimeMillis(), contents))
+        _insertCache(CacheEntity(id, type, System.currentTimeMillis(), contents))
         true
     } catch (e: Exception) {
         L.e(e) { "Cache save failed for $type" }
         false
     }
+}

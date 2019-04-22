@@ -34,6 +34,8 @@ import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.save
+import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl

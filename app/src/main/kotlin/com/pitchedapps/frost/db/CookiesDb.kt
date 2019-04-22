@@ -53,21 +53,26 @@ data class CookieEntity(
 interface CookieDao {
 
     @Query("SELECT * FROM cookies")
-    suspend fun selectAll(): List<CookieEntity>
+    fun _selectAll(): List<CookieEntity>
 
     @Query("SELECT * FROM cookies WHERE cookie_id = :id")
-    suspend fun selectById(id: Long): CookieEntity?
+    fun _selectById(id: Long): CookieEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(cookie: CookieEntity)
+    fun _save(cookie: CookieEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun save(cookies: List<CookieEntity>)
+    fun _save(cookies: List<CookieEntity>)
 
     @Query("DELETE FROM cookies WHERE cookie_id = :id")
-    suspend fun deleteById(id: Long)
+    fun _deleteById(id: Long)
 }
 
+suspend fun CookieDao.selectAll() = dao { _selectAll() }
+suspend fun CookieDao.selectById(id: Long) = dao { _selectById(id) }
+suspend fun CookieDao.save(cookie: CookieEntity) = dao { _save(cookie) }
+suspend fun CookieDao.save(cookies: List<CookieEntity>) = dao { _save(cookies) }
+suspend fun CookieDao.deleteById(id: Long) = dao { _deleteById(id) }
 suspend fun CookieDao.currentCookie() = selectById(Prefs.userId)
 
 @Database(version = CookiesDb.VERSION)
