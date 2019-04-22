@@ -34,15 +34,13 @@ import com.pitchedapps.frost.services.NOTIF_CHANNEL_GENERAL
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.widgets.NotificationWidget.Companion.NOTIF_WIDGET_IDS
-import com.pitchedapps.frost.widgets.NotificationWidget.Companion.NOTIF_WIDGET_TYPE
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class NotificationWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        val intent = NotificationWidgetService.createIntent(context, NOTIF_CHANNEL_GENERAL, appWidgetIds)
+        val intent = NotificationWidgetService.createIntent(context, NOTIF_CHANNEL_GENERAL)
         for (id in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.widget_notifications)
             views.setBackgroundColor(R.id.widget_layout_container, Prefs.bgColor)
@@ -51,12 +49,9 @@ class NotificationWidget : AppWidgetProvider() {
         }
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_notification_list)
     }
-
-    companion object {
-        const val NOTIF_WIDGET_TYPE = "notif_widget_type"
-        const val NOTIF_WIDGET_IDS = "notif_widget_ids"
-    }
 }
+
+private const val NOTIF_WIDGET_TYPE = "notif_widget_type"
 
 private fun RemoteViews.setBackgroundColor(viewId: Int, @ColorInt color: Int) {
     setInt(viewId, "setBackgroundColor", color)
@@ -66,10 +61,9 @@ class NotificationWidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory = NotificationWidgetDataProvider(this, intent)
 
     companion object {
-        fun createIntent(context: Context, type: String, appWidgetIds: IntArray): Intent =
+        fun createIntent(context: Context, type: String): Intent =
             Intent(context, NotificationWidgetService::class.java)
                 .putExtra(NOTIF_WIDGET_TYPE, type)
-                .putExtra(NOTIF_WIDGET_IDS, appWidgetIds)
     }
 }
 
@@ -81,8 +75,6 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
     private var content: List<NotificationContent> = emptyList()
 
     private val type = intent.getStringExtra(NOTIF_WIDGET_TYPE)
-
-    private val widgetIds = intent.getIntArrayExtra(NOTIF_WIDGET_IDS)
 
     private val avatarSize = context.dimenPixelSize(R.dimen.avatar_image_size)
 
