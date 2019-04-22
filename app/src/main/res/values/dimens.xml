@@ -10,5 +10,5 @@
     <dimen name="intro_bar_height">64dp</dimen>
     <dimen name="badge_icon_size">20dp</dimen>
 
-    <dimen name="toolbar_icon_size">18dp</dimen>
+    <dimen name="toolbar_icon_size">24dp</dimen>
 </resources>

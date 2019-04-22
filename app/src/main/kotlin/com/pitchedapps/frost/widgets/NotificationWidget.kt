@@ -22,43 +22,44 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.annotation.ColorRes
-import ca.allanwang.kau.utils.ContextHelper
+import androidx.annotation.ColorInt
+import ca.allanwang.kau.utils.dimenPixelSize
 import ca.allanwang.kau.utils.withAlpha
-import com.bumptech.glide.request.target.AppWidgetTarget
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.NotificationDao
-import com.pitchedapps.frost.db.selectNotifications
+import com.pitchedapps.frost.db.selectNotificationsSync
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.NOTIF_CHANNEL_GENERAL
 import com.pitchedapps.frost.services.NotificationContent
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.widgets.NotificationWidget.Companion.NOTIF_WIDGET_IDS
 import com.pitchedapps.frost.widgets.NotificationWidget.Companion.NOTIF_WIDGET_TYPE
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.runBlocking
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import kotlin.coroutines.CoroutineContext
 
 class NotificationWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        val views = RemoteViews(context.packageName, com.pitchedapps.frost.R.layout.widget_notifications)
         val intent = NotificationWidgetService.createIntent(context, NOTIF_CHANNEL_GENERAL, appWidgetIds)
         for (id in appWidgetIds) {
+            val views = RemoteViews(context.packageName, R.layout.widget_notifications)
+            views.setBackgroundColor(R.id.widget_layout_container, Prefs.bgColor)
             views.setRemoteAdapter(R.id.widget_notification_list, intent)
             appWidgetManager.updateAppWidget(id, views)
         }
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_notification_list)
     }
 
     companion object {
         const val NOTIF_WIDGET_TYPE = "notif_widget_type"
         const val NOTIF_WIDGET_IDS = "notif_widget_ids"
     }
+}
+
+private fun RemoteViews.setBackgroundColor(viewId: Int, @ColorInt color: Int) {
+    setInt(viewId, "setBackgroundColor", color)
 }
 
 class NotificationWidgetService : RemoteViewsService() {
@@ -73,7 +74,7 @@ class NotificationWidgetService : RemoteViewsService() {
 }
 
 class NotificationWidgetDataProvider(val context: Context, val intent: Intent) : RemoteViewsService.RemoteViewsFactory,
-    CoroutineScope, KoinComponent {
+    KoinComponent {
 
     private val notifDao: NotificationDao by inject()
     @Volatile
@@ -83,25 +84,20 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
 
     private val widgetIds = intent.getIntArrayExtra(NOTIF_WIDGET_IDS)
 
-    private lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = ContextHelper.dispatcher + job
+    private val avatarSize = context.dimenPixelSize(R.dimen.avatar_image_size)
 
-    private suspend fun loadNotifications() {
-        content = notifDao.selectNotifications(Prefs.userId, type)
+    private val glide = GlideApp.with(context).asBitmap()
+
+    private fun loadNotifications() {
+        content = notifDao.selectNotificationsSync(Prefs.userId, type)
+        L._d { "Updated notif widget with ${content.size} items" }
     }
 
     override fun onCreate() {
-        job = SupervisorJob()
-        runBlocking {
-            loadNotifications()
-        }
     }
 
     override fun onDataSetChanged() {
-        runBlocking {
-            loadNotifications()
-        }
+        loadNotifications()
     }
 
     override fun getLoadingView(): RemoteViews? = null
@@ -112,29 +108,23 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
 
     override fun getViewAt(position: Int): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_notification_item)
-        val glide = GlideApp.with(context).asBitmap()
         val notif = content[position]
+        L._d { "View $position $notif" }
         views.setBackgroundColor(R.id.item_frame, Prefs.nativeBgColor(notif.unread))
         views.setTextColor(R.id.item_content, Prefs.textColor)
         views.setTextViewText(R.id.item_content, notif.text)
         views.setTextColor(R.id.item_date, Prefs.textColor.withAlpha(150))
         views.setTextViewText(R.id.item_date, notif.timestamp.toString()) // TODO
-        glide.load(notif.profileUrl).transform(FrostGlide.circleCrop)
-            .into(AppWidgetTarget(context, R.id.item_avatar, views))
+//        views.setOnClickPendingIntent()
+        val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop).submit(avatarSize, avatarSize).get()
+        views.setImageViewBitmap(R.id.item_avatar, avatar)
         return views
-    }
-
-    private fun RemoteViews.setBackgroundColor(viewId: Int, @ColorRes color: Int) {
-        setInt(viewId, "setBackgroundColor", color)
     }
 
     override fun getCount(): Int = content.size
 
-    override fun getViewTypeCount(): Int {
-        TODO("not implemented")
-    }
+    override fun getViewTypeCount(): Int = 1
 
     override fun onDestroy() {
-        job.cancel()
     }
 }

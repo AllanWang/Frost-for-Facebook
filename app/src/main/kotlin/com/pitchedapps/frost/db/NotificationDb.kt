@@ -137,8 +137,11 @@ interface NotificationDao {
 
 suspend fun NotificationDao.deleteAll() = dao { _deleteAll() }
 
-suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> = dao {
+fun NotificationDao.selectNotificationsSync(userId: Long, type: String): List<NotificationContent> =
     _selectNotifications(userId, type).map { it.toNotifContent() }
+
+suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> = dao {
+    selectNotificationsSync(userId, type)
 }
 
 /**
