@@ -1,10 +1,5 @@
 # Changelog
 
-<<<<<<< HEAD
-## v2.2.3
-* Add ability to hide stories
-* Remove fbclid from urls
-=======
 ## v2.2.4
 * Show top bar to allow sharing posts
 * Fix unmuting videos when autoplay is enabled
@@ -18,7 +13,6 @@
 * Remove round icon settings as they are the default in Facebook
 * Update theme
 * Update translations
->>>>>>> dev
 
 ## v2.2.2
 * New marketplace shortcut
