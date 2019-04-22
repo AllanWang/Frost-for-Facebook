@@ -21,6 +21,8 @@
     <string name="autoplay_settings_desc">Open Facebook\'s auto play settings. Note that it must be disabled for PIP to work.</string>
     <string name="exit_confirmation">Exit Confirmation</string>
     <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
+    <string name="enable_biometrics">Enable biometrics</string>
+    <string name="enable_biometrics_desc">Require biometric authentication after inactivity</string>
     <string name="analytics">Analytics</string>
     <string name="analytics_desc">Enable anonymous analytics and bug reports to help improve the app. No personal information is ever exposed.</string>
 

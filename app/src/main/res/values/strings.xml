@@ -62,4 +62,6 @@
 
     <string name="no_new_notifications">No new notifications found</string>
 
+    <!--Biometrics-->
+    <string name="biometrics_prompt_title">Authenticate Frost</string>
 </resources>

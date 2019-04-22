@@ -64,6 +64,7 @@ import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
+import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
@@ -214,8 +215,10 @@ open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : Base
                 userAgentString = USER_AGENT_DESKTOP
             Prefs.prevId = Prefs.userId
             launch {
+                val authDefer = BiometricUtils.authenticate(this@WebOverlayActivityBase)
                 if (userId != Prefs.userId)
                     FbCookie.switchUser(userId)
+                authDefer.await()
                 reloadBase(true)
                 if (Showcase.firstWebOverlay) {
                     coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
