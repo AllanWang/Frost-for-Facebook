@@ -84,6 +84,13 @@ class FbUrlTest {
     }
 
     @Test
+    fun fbclidNonFacebook() {
+        val url = "https://www.google.ca?foo&fbclid=abc&bar=bbb"
+        val formattedUrl = "https://www.google.ca?foo&bar=bbb"
+        assertFbFormat(formattedUrl, url)
+    }
+
+    @Test
     fun doubleDash() {
         assertFbFormat("${FB_URL_BASE}relative", "$FB_URL_BASE/relative")
     }

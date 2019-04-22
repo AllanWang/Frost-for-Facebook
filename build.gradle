@@ -14,7 +14,7 @@ buildscript {
         classpath "com.bugsnag:bugsnag-android-gradle-plugin:${BUGSNAG_PLUGIN}"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:${SPOTLESS}"
         classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${DEX_PLUGIN}"
-        classpath "gradle.plugin.com.gladed.gradle.androidgitversion:gradle-android-git-version:${GIT_PLUGIN}"
+        classpath "com.gladed.androidgitversion:gradle-android-git-version:${GIT_PLUGIN}"
     }
 
     wrapper.setDistributionType(Wrapper.DistributionType.ALL)

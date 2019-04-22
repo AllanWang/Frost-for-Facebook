@@ -35,7 +35,6 @@ import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.injectors.CssHider
-import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -98,7 +97,6 @@ class LoginWebView @JvmOverloads constructor(
             view.setBackgroundColor(Color.TRANSPARENT)
             if (url.isFacebookUrl)
                 view.jsInject(
-                    JsAssets.HEADER_HIDER,
                     CssHider.CORE,
                     Prefs.themeInjector
                 )

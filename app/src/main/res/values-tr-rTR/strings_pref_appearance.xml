@@ -13,9 +13,6 @@
     <string name="main_activity_layout_desc">Ana Etkinlik Yerleşimini Ayarla</string>
     <string name="main_tabs">Ana Etkinlik Sekmeleri</string>
     <string name="main_tabs_desc">Ana etkinliğinizde hangi sekmeleri göreceğinizi özelleştirin</string>
-    <string name="rounded_icons">Yuvarlak Simgeler</string>
-    <string name="rounded_icons_desc">Profil fotoğrafları ve grup konuşması simgeleri yuvarlaklaştırılacak
- </string>
     <string name="tint_nav">Renk tonu ayar göstergesi</string>
     <string name="tint_nav_desc">Gezinme çubuğu üstbilgi ile aynı renkte olacak</string>
     <string name="web_text_scaling">Web metin ölçekleme</string>

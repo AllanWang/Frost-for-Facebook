@@ -146,7 +146,7 @@ class LoginActivity : BaseActivity() {
     private suspend fun loadProfile(id: Long): Boolean = withMainContext {
         suspendCancellableCoroutine<Boolean> { cont ->
             profileLoader.load(profilePictureUrl(id))
-                .transform(FrostGlide.roundCorner).listener(object : RequestListener<Drawable> {
+                .transform(FrostGlide.circleCrop).listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,

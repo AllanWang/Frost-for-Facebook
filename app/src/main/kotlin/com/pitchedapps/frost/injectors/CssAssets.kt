@@ -41,7 +41,7 @@ import java.util.Locale
  * The enum name must match the css file name
  */
 enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
-    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM, ROUND_ICONS("components")
+    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM
     ;
 
     @VisibleForTesting

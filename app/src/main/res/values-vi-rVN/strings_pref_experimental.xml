@@ -8,4 +8,5 @@
     <string name="verbose_logging">Nhật ký chi tiết</string>
     <string name="verbose_logging_desc">Bật nhật ký chi tiết để giúp báo cáo lỗi. Các ghi chép sẽ chỉ được gửi khi phát sinh lỗi, nên hãy lặc lại lỗi để báo cho tác giả. Tính năng này sẽ tự động tắt khi khởi động lại ứng dụng.</string>
     <string name="restart_frost">Khởi động lại Frost</string>
+    <string name="restart_frost_desc">Khởi động ứng dụng lại từ đầu.</string>
 </resources>

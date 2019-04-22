@@ -32,8 +32,8 @@ import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
-import com.pitchedapps.frost.facebook.USER_AGENT_FULL
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
+import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.ctxCoroutine
@@ -42,7 +42,7 @@ import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
-import com.pitchedapps.frost.web.shouldUseBasicAgent
+import com.pitchedapps.frost.web.shouldUseDesktopAgent
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -70,10 +70,11 @@ class FrostWebView @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     override fun bind(container: FrostContentContainer): View {
         userAgentString =
-            if (parent.baseEnum == FbItem.MESSAGES || parent.baseUrl.shouldUseBasicAgent) USER_AGENT_BASIC
-            else USER_AGENT_FULL
+            if (parent.baseEnum == FbItem.MESSAGES || parent.baseUrl.shouldUseDesktopAgent) USER_AGENT_DESKTOP
+            else USER_AGENT_MOBILE
         with(settings) {
             javaScriptEnabled = true
+            mediaPlaybackRequiresUserGesture = false // TODO check if we need this
             allowFileAccess = true
             textZoom = Prefs.webTextScaling
         }

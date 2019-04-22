@@ -22,7 +22,7 @@ import com.pitchedapps.frost.facebook.FB_JSON_URL_MATCHER
 import com.pitchedapps.frost.facebook.FB_REV_MATCHER
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.kotlin.Flyweight
 import com.pitchedapps.frost.utils.L
@@ -97,7 +97,7 @@ internal fun List<Pair<String, Any?>>.withEmptyData(vararg key: String): List<Pa
 
 internal fun String?.requestBuilder(): Request.Builder {
     val builder = Request.Builder()
-        .header("User-Agent", USER_AGENT_BASIC)
+        .header("User-Agent", USER_AGENT_DESKTOP)
     if (this != null)
         builder.header("Cookie", this)
 //        .cacheControl(CacheControl.FORCE_NETWORK)

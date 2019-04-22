@@ -33,7 +33,7 @@ import java.util.Locale
  * The enum name must match the css file name
  */
 enum class JsAssets : InjectorContract {
-    MENU, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, HEADER_HIDER, TEXTAREA_LISTENER, NOTIF_MSG,
+    MENU, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
     DOCUMENT_WATCHER
     ;
 

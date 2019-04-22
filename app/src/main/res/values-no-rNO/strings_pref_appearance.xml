@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Angi aktivitets oppsett</string>
     <string name="main_tabs">Aktivitetsfaner</string>
     <string name="main_tabs_desc">Tilpass hvilke faner som vises i din aktivitet</string>
-    <string name="rounded_icons">Avrundet ikoner</string>
-    <string name="rounded_icons_desc">Profilbilder og gruppe samtale-ikoner avrundes</string>
     <string name="tint_nav">Fargetone navigasjonslinje</string>
     <string name="tint_nav_desc">Navigasjonslinjen vil være samme farge som overskrifslinjen</string>
     <string name="web_text_scaling">Web tekst skalering</string>

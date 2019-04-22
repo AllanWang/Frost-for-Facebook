@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="null_url_overlay">Empty url given to overlay; exiting</string>
-    <string name="bad_image_overlay">The url could not be loaded properly. Would you like to send it for debugging?</string>
-    <string name="invalid_share_url">Invalid Share Url</string>
-    <string name="invalid_share_url_desc">You have shared a block of text that is not a url. The text has been copied to your clipboard, so you may share it manually  yourself.</string>
+    <string name="null_url_overlay">Empty URL given to overlay; exiting</string>
+    <string name="bad_image_overlay">The URL could not be loaded properly. Would you like to send it for debugging?</string>
+    <string name="invalid_share_url">Invalid Share URL</string>
+    <string name="invalid_share_url_desc">You have shared a block of text that is not a URL. The text has been copied to your clipboard, so you may share it manually  yourself.</string>
     <string name="no_download_manager">No Download Manager</string>
     <string name="no_download_manager_desc">The download manager is not enabled. Would you like to enable it to allow downloads?</string>
     <string name="error_generic">An error occurred.</string>

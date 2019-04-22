@@ -122,14 +122,19 @@ enum class NotificationType(
             L.v { "$name notification data not found" }
             return -1
         }
-        val notifContents = response.data.getUnreadNotifications(data).filter { notif ->
-            val inText = notif.text.let { text ->
-                Prefs.notificationKeywords.none { text.contains(it, true) }
+
+        /**
+         * Checks that the text doesn't contain any blacklisted keywords
+         */
+        fun validText(text: String?): Boolean {
+            val t = text ?: return true
+            return Prefs.notificationKeywords.none {
+                t.contains(it, true)
             }
-            val inTitle = notif.title?.let { title ->
-                Prefs.notificationKeywords.none { title.contains(it, true) }
-            } ?: false
-            inText || inTitle
+        }
+
+        val notifContents = response.data.getUnreadNotifications(data).filter { notif ->
+            validText(notif.title) && validText(notif.text)
         }
         if (notifContents.isEmpty()) return 0
         val userId = data.id

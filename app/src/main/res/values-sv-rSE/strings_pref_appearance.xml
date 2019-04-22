@@ -13,8 +13,6 @@
     <string name="main_activity_layout_desc">Välj Aktivitetsupplägg</string>
     <string name="main_tabs">Aktivitetsflikar</string>
     <string name="main_tabs_desc">Anpassa vilka flikar som du ser i din aktivitetsrad</string>
-    <string name="rounded_icons">Rundade ikoner</string>
-    <string name="rounded_icons_desc">Profilbilder och gruppkonversationsikoner avrundas</string>
     <string name="tint_nav">Färglägg navigationsraden</string>
     <string name="tint_nav_desc">Navigeringsfältet kommer att vara samma färg som header</string>
     <string name="web_text_scaling">Skalning av web-text</string>

@@ -17,4 +17,15 @@
     <string name="notification_messages_all_accounts">Уведомлять со всех аккаунтов</string>
     <string name="notification_messages_all_accounts_desc">Получите общие уведомления для всех аккаунтов.</string>
     <string name="notification_fetch_now">Усилиные уведомления</string>
+    <string name="notification_fetch_now_desc">Запустить сборщик уведомлений один раз.</string>
+    <string name="notification_fetch_success">Извлечение уведомлений…</string>
+    <string name="notification_fetch_fail">Не удалось получить уведомления</string>
+    <string name="notification_sound">Звук уведомления</string>
+    <string name="notification_channel">Настроить каналы уведомлений</string>
+    <string name="notification_channel_desc">Изменить звук, вибрацию, приоритет и т. д</string>
+    <string name="notification_ringtone">Мелодия уведомления</string>
+    <string name="message_ringtone">Рингтон сообщения</string>
+    <string name="select_ringtone">Выбрать рингтон</string>
+    <string name="notification_vibrate">Уведомление вибрацией</string>
+    <string name="notification_lights">Уведомление светом</string>
 </resources>

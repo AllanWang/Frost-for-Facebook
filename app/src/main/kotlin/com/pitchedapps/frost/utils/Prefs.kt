@@ -116,8 +116,6 @@ object Prefs : KPref() {
 
     var aggressiveRecents: Boolean by kpref("aggressive_recents", false)
 
-    var showRoundedIcons: Boolean by kpref("rounded_icons", true)
-
     var showComposer: Boolean by kpref("status_composer_feed", true)
 
     var showSuggestedFriends: Boolean by kpref("suggested_friends_feed", true)
