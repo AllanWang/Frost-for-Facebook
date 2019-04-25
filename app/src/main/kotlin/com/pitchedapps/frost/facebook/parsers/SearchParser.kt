@@ -40,7 +40,10 @@ enum class SearchKeys(val key: String) {
     EVENTS("keywords_events")
 }
 
-data class FrostSearches(val results: List<FrostSearch>) {
+data class FrostSearches(val results: List<FrostSearch>) : ParseData {
+
+    override val isEmpty: Boolean
+        get() = results.isEmpty()
 
     override fun toString() = StringBuilder().apply {
         append("FrostSearches {\n")

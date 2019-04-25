@@ -383,6 +383,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
             R.id.action_search to GoogleMaterial.Icon.gmd_search
         )
+        bindSearchView(menu)
+        return true
+    }
+
+    private fun bindSearchView(menu: Menu) {
         searchViewBindIfNull {
             bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
                 textCallback = { query, searchView ->
@@ -414,7 +419,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
         }
-        return true
     }
 
     @SuppressLint("RestrictedApi")

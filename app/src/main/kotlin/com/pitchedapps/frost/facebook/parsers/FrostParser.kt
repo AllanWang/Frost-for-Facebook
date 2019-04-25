@@ -38,7 +38,7 @@ import org.jsoup.select.Elements
  * The return type must be nonnull if no parsing errors occurred, as null signifies a parse error
  * If null really must be allowed, use Optionals
  */
-interface FrostParser<out T : Any> {
+interface FrostParser<out T : ParseData> {
 
     /**
      * Name associated to parser
@@ -76,11 +76,15 @@ const val FALLBACK_TIME_MOD = 1000000
 
 data class FrostLink(val text: String, val href: String)
 
-data class ParseResponse<out T>(val cookie: String, val data: T) {
+data class ParseResponse<out T: ParseData>(val cookie: String, val data: T) {
     override fun toString() = "ParseResponse\ncookie: $cookie\ndata:\n$data"
 }
 
-interface ParseNotification {
+interface ParseData {
+    val isEmpty: Boolean
+}
+
+interface ParseNotification : ParseData {
     fun getUnreadNotifications(data: CookieEntity): List<NotificationContent>
 }
 
@@ -95,7 +99,7 @@ internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder(
  * T should have a readable toString() function
  * [redirectToText] dictates whether all data should be converted to text then back to document before parsing
  */
-internal abstract class FrostParserBase<out T : Any>(private val redirectToText: Boolean) : FrostParser<T> {
+internal abstract class FrostParserBase<out T : ParseData>(private val redirectToText: Boolean) : FrostParser<T> {
 
     final override fun parse(cookie: String?) = parseFromUrl(cookie, url)
 

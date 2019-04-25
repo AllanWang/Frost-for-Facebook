@@ -21,7 +21,9 @@ import com.pitchedapps.frost.internal.assertComponentsNotEmpty
 import com.pitchedapps.frost.internal.assertDescending
 import com.pitchedapps.frost.internal.authDependent
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
@@ -39,13 +41,14 @@ class FbParseTest {
         }
     }
 
-    private inline fun <reified T : Any> FrostParser<T>.test(action: T.() -> Unit = {}) =
+    private inline fun <reified T : ParseData> FrostParser<T>.test(action: T.() -> Unit = {}) =
         parse(COOKIE).test(url, action)
 
-    private inline fun <reified T : Any> ParseResponse<T>?.test(url: String, action: T.() -> Unit = {}) {
+    private inline fun <reified T : ParseData> ParseResponse<T>?.test(url: String, action: T.() -> Unit = {}) {
         val response = this
             ?: fail("${T::class.simpleName} parser returned null for $url")
         println(response)
+        assertFalse(response.data.isEmpty, "${T::class.simpleName} parser returned empty data for $url")
         response.data.action()
     }
 
@@ -62,6 +65,7 @@ class FbParseTest {
     @Test
     fun messageUser() = MessageParser.queryUser(COOKIE, "allan").test("allan query")
 
+    @Ignore("No longer works as search results don't appear in html")
     @Test
     fun search() = SearchParser.test()
 

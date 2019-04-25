@@ -46,6 +46,10 @@ data class FrostMessages(
     val seeMore: FrostLink?,
     val extraLinks: List<FrostLink>
 ) : ParseNotification {
+
+    override val isEmpty: Boolean
+        get() = threads.isEmpty()
+
     override fun toString() = StringBuilder().apply {
         append("FrostMessages {\n")
         append(threads.toJsonString("threads", 1))
