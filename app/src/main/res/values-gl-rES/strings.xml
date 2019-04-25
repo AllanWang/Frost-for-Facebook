@@ -48,4 +48,12 @@
     <string name="options">Opcións</string>
     <string name="tab_customizer_instructions">Toque longo e arrastra para reorganizar as iconas superiores.</string>
     <string name="no_new_notifications">Non se atopou ningunha nova notificación</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>
