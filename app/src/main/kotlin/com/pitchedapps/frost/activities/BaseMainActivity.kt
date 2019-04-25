@@ -508,6 +508,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun backConsumer(): Boolean {
+        if (drawer.isDrawerOpen) {
+            drawer.closeDrawer()
+            return true
+        }
         if (currentFragment.onBackPressed()) return true
         if (Prefs.exitConfirmation) {
             materialDialogThemed {
