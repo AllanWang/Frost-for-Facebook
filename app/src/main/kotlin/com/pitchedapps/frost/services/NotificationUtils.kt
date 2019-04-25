@@ -46,14 +46,14 @@ fun setupNotificationChannels(c: Context) {
     val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val appName = c.string(R.string.frost_name)
     val msg = c.string(R.string.messages)
+    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
+    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
     manager.notificationChannels
         .filter {
             it.id != NOTIF_CHANNEL_GENERAL &&
                 it.id != NOTIF_CHANNEL_MESSAGES
         }
         .forEach { manager.deleteNotificationChannel(it.id) }
-    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
-    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
     L.d { "Created notification channels: ${manager.notificationChannels.size} channels, ${manager.notificationChannelGroups.size} groups" }
 }
 

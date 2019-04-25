@@ -35,7 +35,6 @@ class MainActivity : BaseMainActivity() {
 
     override val fragmentChannel = BroadcastChannel<Int>(10)
     override val headerBadgeChannel = BroadcastChannel<String>(Channel.CONFLATED)
-    var lastPosition = -1
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
         setupTabs()
@@ -54,23 +53,18 @@ class MainActivity : BaseMainActivity() {
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                val delta = positionOffset * (255 - 128).toFloat()
+                val delta = positionOffset * (SELECTED_TAB_ALPHA - UNSELECTED_TAB_ALPHA)
                 tabsForEachView { tabPosition, view ->
                     view.setAllAlpha(
                         when (tabPosition) {
-                            position -> 255.0f - delta
-                            position + 1 -> 128.0f + delta
-                            else -> 128f
+                            position -> SELECTED_TAB_ALPHA - delta
+                            position + 1 -> UNSELECTED_TAB_ALPHA + delta
+                            else -> UNSELECTED_TAB_ALPHA
                         }
                     )
                 }
             }
         })
-        viewPager.post {
-            if (!fragmentChannel.isClosedForSend)
-                fragmentChannel.offer(0)
-            lastPosition = 0
-        } //trigger hook so title is set
     }
 
     private fun setupTabs() {
@@ -86,8 +80,7 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) {
-            html ->
+        headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) { html ->
             try {
                 val doc = Jsoup.parse(html)
                 if (doc.select("[data-sigil=count]").isEmpty())
@@ -115,12 +108,6 @@ class MainActivity : BaseMainActivity() {
             } catch (e: Exception) {
                 L.e(e) { "Header badge error" }
             }
-        }
-        adapter.pages.forEach {
-            tabs.addTab(
-                tabs.newTab()
-                    .setCustomView(BadgedIcon(this).apply { iicon = it.icon })
-            )
         }
     }
 }

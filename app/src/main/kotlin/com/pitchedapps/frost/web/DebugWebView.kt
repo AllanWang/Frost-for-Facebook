@@ -24,7 +24,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
@@ -53,11 +53,12 @@ class DebugWebView @JvmOverloads constructor(
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun setupWebview() {
+    private fun setupWebview() {
         settings.javaScriptEnabled = true
-        settings.userAgentString = USER_AGENT_BASIC
+        settings.userAgentString = USER_AGENT_MOBILE
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = DebugClient()
+        @Suppress("DEPRECATION")
         isDrawingCacheEnabled = true
     }
 
@@ -72,6 +73,7 @@ class DebugWebView @JvmOverloads constructor(
         }
         try {
             output.outputStream().use {
+                @Suppress("DEPRECATION")
                 drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
             L.d { "Created screenshot at ${output.absolutePath}" }

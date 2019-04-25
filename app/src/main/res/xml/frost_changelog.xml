@@ -6,10 +6,22 @@
     <item text="" />
     -->
 
+    <version title="v2.3.0" />
+    <item text="Converted internals of Facebook data storage; auto migration will only work from 2.2.x to 2.3.x" />
+    <item text="Added notification widget" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.2.4" />
     <item text="Show top bar to allow sharing posts" />
-    <item text="" />
-    <item text="" />
+    <item text="Fix unmuting videos when autoplay is enabled" />
+    <item text="Add shortcut to toggle autoplay in settings > behaviour" />
+    <item text="Update theme" />
 
     <version title="v2.2.3" />
     <item text="Add ability to hide stories" />
@@ -17,6 +29,7 @@
     <item text="Apply notification keyword filter to title as well" />
     <item text="Remove round icon settings as they are the default in Facebook" />
     <item text="Update theme" />
+    <item text="Update translations" />
 
     <version title="v2.2.2" />
     <item text="New marketplace shortcut" />

@@ -14,26 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.dbflow
+package com.pitchedapps.frost.db
 
-import android.content.Context
-import com.pitchedapps.frost.utils.L
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction
+import com.pitchedapps.frost.facebook.FbItem
+import com.raizlabs.android.dbflow.annotation.Database
+import com.raizlabs.android.dbflow.annotation.PrimaryKey
+import com.raizlabs.android.dbflow.annotation.Table
+import com.raizlabs.android.dbflow.structure.BaseModel
 
 /**
  * Created by Allan Wang on 2017-05-30.
  */
 
-object DbUtils {
+const val TAB_COUNT = 4
 
-    fun db(name: String) = FlowManager.getDatabase(name)
-    fun dbName(name: String) = "$name.db"
-    fun deleteDatabase(c: Context, name: String) = c.deleteDatabase(dbName(name))
+@Database(version = FbTabsDb.VERSION)
+object FbTabsDb {
+    const val NAME = "FrostTabs"
+    const val VERSION = 1
 }
 
-inline fun <reified T : Any> List<T>.replace(dbName: String) {
-    L.d { "Replacing $dbName.db" }
-    DbUtils.db(dbName).reset()
-    FastStoreModelTransaction.saveBuilder(FlowManager.getModelAdapter(T::class.java)).addAll(this).build()
-}
+@Table(database = FbTabsDb::class, allFields = true)
+data class FbTabModel(@PrimaryKey var position: Int = -1, var tab: FbItem = FbItem.FEED) : BaseModel()

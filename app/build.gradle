@@ -27,6 +27,11 @@ android {
         versionName androidGitVersion.name()
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/src/schemas".toString()]
+            }
+        }
     }
 
     applicationVariants.all { variant ->
@@ -174,6 +179,7 @@ dependencies {
     androidTestImplementation kauDependency.espresso
     androidTestImplementation kauDependency.testRules
     androidTestImplementation kauDependency.testRunner
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
 
     testImplementation kauDependency.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
@@ -200,9 +206,9 @@ dependencies {
 
     implementation "androidx.core:core-ktx:${KTX}"
 
-//    implementation "org.koin:koin-android:${KOIN}"
-//    testImplementation "org.koin:koin-test:${KOIN}"
-//    androidTestImplementation "org.koin:koin-test:${KOIN}"
+    implementation "org.koin:koin-android:${KOIN}"
+    testImplementation "org.koin:koin-test:${KOIN}"
+    androidTestImplementation "org.koin:koin-test:${KOIN}"
 
 //    androidTestImplementation "io.mockk:mockk:${MOCKK}"
 
@@ -252,6 +258,11 @@ dependencies {
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
 
     implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+
+    implementation "androidx.room:room-coroutines:${ROOM}"
+    implementation "androidx.room:room-runtime:${ROOM}"
+    kapt "androidx.room:room-compiler:${ROOM}"
+    testImplementation "androidx.room:room-testing:${ROOM}"
 
 }
 

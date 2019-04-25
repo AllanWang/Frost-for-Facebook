@@ -29,8 +29,8 @@ import ca.allanwang.kau.utils.showAppInfo
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
+import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 
 /**
  * Created by Allan Wang on 2017-08-04.
@@ -38,19 +38,21 @@ import com.pitchedapps.frost.facebook.USER_AGENT_BASIC
  * With reference to <a href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack Overflow</a>
  */
 fun Context.frostDownload(
+    cookie: CookieEntity,
     url: String?,
-    userAgent: String = USER_AGENT_BASIC,
+    userAgent: String = USER_AGENT_DESKTOP,
     contentDisposition: String? = null,
     mimeType: String? = null,
     contentLength: Long = 0L
 ) {
     url ?: return
-    frostDownload(Uri.parse(url), userAgent, contentDisposition, mimeType, contentLength)
+    frostDownload(cookie, Uri.parse(url), userAgent, contentDisposition, mimeType, contentLength)
 }
 
 fun Context.frostDownload(
+    cookie: CookieEntity,
     uri: Uri?,
-    userAgent: String = USER_AGENT_BASIC,
+    userAgent: String = USER_AGENT_DESKTOP,
     contentDisposition: String? = null,
     mimeType: String? = null,
     contentLength: Long = 0L
@@ -75,7 +77,6 @@ fun Context.frostDownload(
         if (!granted) return@kauRequestPermissions
         val request = DownloadManager.Request(uri)
         request.setMimeType(mimeType)
-        val cookie = loadFbCookie(Prefs.userId) ?: return@kauRequestPermissions
         val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
         request.addRequestHeader("Cookie", cookie.cookie)
         request.addRequestHeader("User-Agent", userAgent)

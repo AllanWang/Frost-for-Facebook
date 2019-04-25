@@ -30,6 +30,7 @@ import ca.allanwang.kau.adapters.ThemableIItemDelegate
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.dimenPixelSize
+import ca.allanwang.kau.utils.drawable
 import ca.allanwang.kau.utils.resolveDrawable
 import ca.allanwang.kau.utils.startLink
 import ca.allanwang.kau.utils.string
@@ -156,17 +157,26 @@ class AboutActivity : AboutActivityBase(null, {
             init {
                 val c = itemView.context
                 val size = c.dimenPixelSize(R.dimen.kau_avatar_bounds)
-                images = arrayOf<Pair<IIcon, () -> Unit>>(
+
+                val icons: Array<Pair<Int, () -> Unit>> =
+                    arrayOf(R.drawable.ic_fdroid_24 to { c.startLink(R.string.fdroid_url) })
+                val iicons: Array<Pair<IIcon, () -> Unit>> = arrayOf(
                     GoogleMaterial.Icon.gmd_file_download to { c.startLink(R.string.github_downloads_url) },
                     CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
                     CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
                     CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
-                    CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) }
-                ).mapIndexed { i, (icon, onClick) ->
+                    CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) })
+
+                images = (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
+                    icon.toDrawable(
+                        c,
+                        32
+                    ) to onClick
+                }).mapIndexed { i, (icon, onClick) ->
                     ImageView(c).apply {
                         layoutParams = ViewGroup.LayoutParams(size, size)
                         id = 109389 + i
-                        setImageDrawable(icon.toDrawable(context, 32))
+                        setImageDrawable(icon)
                         scaleType = ImageView.ScaleType.CENTER
                         background = context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
                         setOnClickListener { onClick() }

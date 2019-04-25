@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+For sizing see:
+https://developer.android.com/guide/practices/ui_guidelines/widget_design.html#anatomy_determining_size
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/widget_notifications"
+    android:initialLayout="@layout/widget_notifications"
+    android:minWidth="180dp"
+    android:minHeight="250dp"
+    android:previewImage="@drawable/notification_widget_preview" />

@@ -1,4 +1,4 @@
-[style*=color], body, input, ._42rv, ._4qau, ._dwm .descArea, ._eu5,
+body, input, ._42rv, ._4qau, ._dwm .descArea, ._eu5,
 ._1tcc, ._3g9-, ._29z_, ._3xz7, ._ib-, ._3bg5 ._56dq, ._477i, ._2vxk,
 .touched *, ._1_yj, ._1_yl, ._4pj9, ._2bdc, ._3qdh ._3qdn ._3qdk, ._3qdk ._48_q,
 ._z-z, ._z-v, ._1e8d, ._36nl, ._36nm, ._2_11, ._2_rf, ._2ip_, ._403p, .cq, ._usr,
@@ -10,15 +10,16 @@
 ._18qg, ._1_ac, ._529p, ._4dwt ._1vh3, ._4a5f, ._23_t, ._2rzc, ._23_s, ._2rzd,
 ._5aga, ._5ag9, ._537a, .acy, ._5ro_, ._6-l ._2us7, ._4mp, ._2b08, ._36e0, ._4-dy,
 ._14v5 ._14v8, ._1440, ._1442, ._1448, ._4ks_, .mCount, ._27vc, ._24e1, ._2rbw, ._3iyw ._3mzw,
-textarea, ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782,
+textarea:not([style*="color: rgb"]), ._24pi, ._4en9, ._1kb, ._5p7j, ._2klz, ._5780, ._5781, ._5782,
 ._3u9u, ._3u9_, ._3u9s, ._1hcx, ._2066, ._1_-1, ._cv_, ._1nbx, ._2cuh, ._6--d, ._77p7, ._7h_g,
-._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._38d-, ._3n8y, ._38dt, ._3oyg,
+._4ms9, ._4ms5, ._4ms6, ._31b4, ._31b5, ._5q_r, ._idb, ._38d-, ._3n8y, ._38dt, ._3oyg, ._21dc,
 ._27vp, ._4nwe, ._4nw9, ._27vi, .appCenterAppInfo, .appCenterPermissions, ._6xqt, ._7cui,
-._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g,
-._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6, ._6ber, ._mxb, ._3oyd,
+._3c9l, ._3c9m, ._4jn_, ._32qt, ._3mom, ._3moo, ._-7o, ._d00, ._d01, ._559g, ._7cdj,
+._2new, .appCenterCategorySelectorButton, ._1ksq, ._1kt6, ._6ber, ._mxb, ._3oyd, ._3gir, ._3gis,
 div.sharerSelector, .footer, ._4pv_, ._1dbp, ._3kad, ._20zc, ._2i5v, ._2i5w,
 a, ._5fpq, ._4gux, ._3bg5 ._52x1, ._3bg5 ._52x2, ._6dsj ._3gin, ._hdn._hdn,
-.mentions-input, .mentions-placeholder, .largeStatusBox .placeHolder, .fcw,
+.mentions-input:not([style*="color: rgb"]), .mentions-placeholder:not([style*="color: rgb"]),
+.largeStatusBox .placeHolder, .fcw, ._2rgt, ._67i4 ._5hu6 ._59tt,
 ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4,
 ._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs,
 h1, h2, h3, h4, h5, h6 {
@@ -41,9 +42,9 @@ p > a, .msg span > a {
   background: rgba(0, 0, 0, 0.1) !important;
 }
 
-body, :root, #root, #header, #MComposer, [style*=background-color], ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4,
+body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4,
 ._5lp5, .container, .subpage, ._5n_f, #static_templates, ._22_8, ._1t4h, ._uoq, ._3qdh, ._8ca, ._3h8i,
-._6-l ._2us7, ._6-l ._6-p, ._333v, div.sharerSelector, ._529j, ._305j, ._1pph, ._3t_l, ._4pvz,
+._6-l ._2us7, ._6-l ._6-p:not([style*="background-image:"]), ._333v, div.sharerSelector, ._529j, ._305j, ._1pph, ._3t_l, ._4pvz,
 ._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._24e1, ._-j7,
 ._3bg5 ._56do, ._5hfh, ._52e-, .mQuestionsPollResultsBar, ._5hoc, ._5oxw, ._32_4, ._1hiz,
 ._38do, .bo, .cq, ._234-, ._a-5, ._2zh4, ._15ks, ._3oyc, ._36dc, ._3iyw ._3iyx, ._6bes, ._55wo, ._4-dy,
@@ -56,7 +57,7 @@ body, :root, #root, #header, #MComposer, [style*=background-color], ._1upc, inpu
 ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5,
 ._55wm, ._2om3, ._2ol-, ._1f9d, ._vee, ._31a-, ._3r8b, ._3r9d, ._5vq5, ._3tl8, ._65wz, ._4edl,
 .acw, ._4_xl, ._1p70, ._1p70, ._1ih_, ._51v6, ._u2c, ._484w, ._3ils, ._rm7, ._32qk, ._d01, ._1glm,
-._ue6, ._hdn._hdn, ._6vzw, ._77xj,
+._ue6, ._hdn._hdn, ._6vzw, ._77xj, ._38nq, ._9_7, ._51li,
 ._2y60, ._5fu3, ._2foa, ._2y5_, ._38o9, ._1kb, .mAppCenterFatLabel, ._3bmj, ._5zmb, ._2x2s, ._3kac, ._3kad,
 ._3f50, .mentions-placeholder, .mentions, .mentions-measurer, .acg, ._59tu,
 ._4l9b, ._4gj3, .groupChromeView, ._i3g, ._3jcf, .error, ._1dbp, ._5zma, ._6beq, ._vi6,
@@ -65,7 +66,7 @@ body, :root, #root, #header, #MComposer, [style*=background-color], ._1upc, inpu
   background: transparent !important;
 }
 
-._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._55wo, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s {
+._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s, ._13fn {
   background: rgba(0, 0, 0, 0.25) !important;
 }
 
@@ -93,7 +94,7 @@ body, :root, #root, #header, #MComposer, [style*=background-color], ._1upc, inpu
 button:not([style*=image]):not(.privacyButtons), button::before, .touch ._56bt, ._56be::before, .btnS, .touch::before,
 ._590n, ._4g8h, ._2cpp, ._58a0.touched:after,
 .timeline .timelinePublisher, .touched, .sharerAttachment,
-.item a.primary.touched .primarywrap, ._38nq, ._537a, ._7cui,
+.item a.primary.touched .primarywrap, ._537a, ._7cui,
 ._5xo2, ._5u5a::before, ._4u3j, ._15ks, ._5hua, ._59tt, ._41ft, .jx-tokenizer, ._55fj,
 .excessItem, .acr, ._5-lx, ._3g9-, ._55ws, ._6dsj ._3gin, ._69aj,
 ._4e8n, ._5pxa._3uj9, ._5n_5, ._u2d, ._56bu::before, ._5h8f, ._d00, ._2066, ._2k51,
@@ -124,14 +125,14 @@ button ._v89 ._54k8._1fl1 {
   border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
-._4_d1, ._5cni {
+._4_d1, ._5cni, ._3jcq {
   border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
 ._1mx0, ._1rbr, ._5yt8, ._idb, ._cld, ._1e8h, ._z-w, ._1ha, ._1n8h ._1oby, ._5f99, ._2t39,
-._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after,
+._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after, ._46dd::before,
 ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9,
-._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils, ._5as0, ._5as2,
+._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils, ._5as0, ._5as2, ._5-lw,
 ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._56d8, .al {
   border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
@@ -143,7 +144,7 @@ button ._v89 ._54k8._1fl1 {
 .mAppCenterFatLabel, .appCenterCategorySelectorButton, ._1q6v, ._5q_r, ._5yt8, ._38do, ._38dt,
 ._ap1, ._52x1, ._59tu, ._usq, ._13e_, ._59f6._55so::before, ._4gj3, .error, ._35--, ._1wev,
 .jx-result, ._1f9d, ._vef, ._55x2 > *, .al, ._44qk, ._5rgs, ._5xuj, ._1sv1, ._idb,
-._5lp5, ._3-2-, ._3to6, ._ir5, ._4nw6, ._4nwh, ._27ve, div._51v6::before,
+._5lp5, ._3-2-, ._3to6, ._ir5, ._4nw6, ._4nwh, ._27ve, div._51v6::before, ._5hu6,
 ._3c9h::before, ._2s20, ._gui, ._5jku, ._2foa, ._2y60, ._5fu3, ._4en9, ._1kb:not(:last-child) ._1kc,
 ._5pz4, ._5lp4, ._5lp5, ._5h6z, ._5h6x, ._2om4, ._5fjw > div, ._5fjv > :first-child,
 ._5fjw > :first-child {

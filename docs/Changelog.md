@@ -1,11 +1,22 @@
 # Changelog
 
+## v2.3.0
+* Converted internals of Facebook data storage; auto migration will only work from 2.2.x to 2.3.x
+* Added notification widget
+
+## v2.2.4
+* Show top bar to allow sharing posts
+* Fix unmuting videos when autoplay is enabled
+* Add shortcut to toggle autoplay in settings > behaviour
+* Update theme
+
 ## v2.2.3
 * Add ability to hide stories
 * Remove fbclid from urls
 * Apply notification keyword filter to title as well
 * Remove round icon settings as they are the default in Facebook
 * Update theme
+* Update translations
 
 ## v2.2.2
 * New marketplace shortcut
