@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/widget_layout_container"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,12 +14,13 @@
         android:paddingEnd="@dimen/kau_padding_small">
 
         <ImageView
-            android:id="@+id/img_refresh"
+            android:id="@+id/img_frost"
             android:layout_width="@dimen/toolbar_icon_size"
-            android:layout_margin="@dimen/kau_padding_small"
             android:layout_height="@dimen/toolbar_icon_size"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_refresh_24dp" />
+            android:layout_margin="@dimen/kau_padding_small"
+            android:background="?android:selectableItemBackgroundBorderless" />
+
     </LinearLayout>
 
     <ListView

@@ -62,4 +62,14 @@
 
     <string name="no_new_notifications">No new notifications found</string>
 
+    <string name="today">Today</string>
+    <string name="yesterday">Today</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+    -->
+    <string name="time_template">%s at %s</string>
+
 </resources>
