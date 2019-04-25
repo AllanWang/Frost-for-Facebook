@@ -69,7 +69,9 @@
     For instance:
     Today at 1:23 PM
     Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
     -->
-    <string name="time_template">%s at %s</string>
+    <string name="time_template">%1s at %2s</string>
 
 </resources>

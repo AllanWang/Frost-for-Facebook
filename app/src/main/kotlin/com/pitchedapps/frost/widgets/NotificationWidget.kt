@@ -35,7 +35,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import ca.allanwang.kau.utils.dimenPixelSize
-import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
@@ -47,9 +46,9 @@ import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.toReadableTime
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.text.DateFormat
 
 class NotificationWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -168,7 +167,7 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
         views.setTextColor(R.id.item_content, Prefs.textColor)
         views.setTextViewText(R.id.item_content, notif.text)
         views.setTextColor(R.id.item_date, Prefs.textColor.withAlpha(150))
-        views.setTextViewText(R.id.item_date, notif.timestamp.toString()) // TODO
+        views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
 
         val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop).submit(avatarSize, avatarSize).get()
         views.setImageViewBitmap(R.id.item_avatar, avatar)
