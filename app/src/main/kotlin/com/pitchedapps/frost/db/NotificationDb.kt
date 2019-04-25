@@ -64,7 +64,8 @@ data class NotificationEntity(
     val timestamp: Long,
     val profileUrl: String?,
     // Type essentially refers to channel
-    val type: String
+    val type: String,
+    val unread: Boolean
 ) {
     constructor(
         type: String,
@@ -77,7 +78,8 @@ data class NotificationEntity(
         content.text,
         content.timestamp,
         content.profileUrl,
-        type
+        type,
+        content.unread
     )
 }
 
@@ -94,7 +96,8 @@ data class NotificationContentEntity(
         title = notif.title,
         text = notif.text,
         timestamp = notif.timestamp,
-        profileUrl = notif.profileUrl
+        profileUrl = notif.profileUrl,
+        unread = notif.unread
     )
 }
 
@@ -134,8 +137,11 @@ interface NotificationDao {
 
 suspend fun NotificationDao.deleteAll() = dao { _deleteAll() }
 
-suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> = dao {
+fun NotificationDao.selectNotificationsSync(userId: Long, type: String): List<NotificationContent> =
     _selectNotifications(userId, type).map { it.toNotifContent() }
+
+suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> = dao {
+    selectNotificationsSync(userId, type)
 }
 
 /**

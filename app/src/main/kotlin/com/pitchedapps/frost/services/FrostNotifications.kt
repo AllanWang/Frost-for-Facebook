@@ -61,7 +61,7 @@ private val _40_DP = 40.dpToPx
  * Enum to handle notification creations
  */
 enum class NotificationType(
-    private val channelId: String,
+    val channelId: String,
     private val overlayContext: OverlayContext,
     private val fbItem: FbItem,
     private val parser: FrostParser<ParseNotification>,
@@ -95,8 +95,8 @@ enum class NotificationType(
      */
     internal open fun bindRequest(content: NotificationContent, cookie: String): (BaseBundle.() -> Unit)? = null
 
-    private fun bindRequest(intent: Intent, content: NotificationContent, cookie: String?) {
-        cookie ?: return
+    private fun bindRequest(intent: Intent, content: NotificationContent) {
+        val cookie = content.data.cookie ?: return
         val binder = bindRequest(content, cookie) ?: return
         val bundle = Bundle()
         bundle.binder()
@@ -181,9 +181,31 @@ enum class NotificationType(
             "Debug Notif",
             "Test 123",
             System.currentTimeMillis() / 1000,
-            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png"
+            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png",
+            false
         )
         createNotification(context, content).notify(context)
+    }
+
+    /**
+     * Attach content related data to an intent
+     */
+    fun putContentExtra(intent: Intent, content: NotificationContent): Intent {
+        // We will show the notification page for dependent urls. We can trigger a click next time
+        intent.data = Uri.parse(if (content.href.isIndependent) content.href else FbItem.NOTIFICATIONS.url)
+        bindRequest(intent, content)
+        return intent
+    }
+
+    /**
+     * Create a generic content for the provided type and user id.
+     * No content related data is added
+     */
+    fun createCommonIntent(context: Context, userId: Long): Intent {
+        val intent = Intent(context, FrostWebActivity::class.java)
+        intent.putExtra(ARG_USER_ID, userId)
+        overlayContext.put(intent)
+        return intent
     }
 
     /**
@@ -191,13 +213,8 @@ enum class NotificationType(
      */
     private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
         with(content) {
-            val intent = Intent(context, FrostWebActivity::class.java)
-            // TODO temp fix; we will show notification page for dependent urls. We can trigger a click next time
-            intent.data = Uri.parse(if (href.isIndependent) href else FbItem.NOTIFICATIONS.url)
-            intent.putExtra(ARG_USER_ID, data.id)
-            overlayContext.put(intent)
-            bindRequest(intent, content, data.cookie)
-
+            val intent = createCommonIntent(context, content.data.id)
+            putContentExtra(intent, content)
             val group = "${groupPrefix}_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val notifBuilder = context.frostNotification(channelId)
@@ -266,7 +283,8 @@ data class NotificationContent(
     val title: String? = null, // defaults to frost title
     val text: String,
     val timestamp: Long,
-    val profileUrl: String?
+    val profileUrl: String?,
+    val unread: Boolean
 ) {
 
     val notifId = Math.abs(id.toInt())

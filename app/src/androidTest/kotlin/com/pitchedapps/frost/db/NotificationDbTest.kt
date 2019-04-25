@@ -38,7 +38,8 @@ class NotificationDbTest : BaseDbTest() {
         title = null,
         text = "",
         timestamp = time,
-        profileUrl = null
+        profileUrl = null,
+        unread = true
     )
 
     @Test

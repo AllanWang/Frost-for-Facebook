@@ -27,6 +27,7 @@ import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
+import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -105,6 +106,9 @@ class NotificationService : BaseJobService() {
         L.i { "Sent $notifCount notifications" }
         if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
             generalNotification(665, R.string.no_new_notifications, BuildConfig.DEBUG)
+        if (notifCount > 0) {
+            NotificationWidget.forceUpdate(this@NotificationService)
+        }
     }
 
     /**

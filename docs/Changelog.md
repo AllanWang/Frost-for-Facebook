@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.0
+* Converted internals of Facebook data storage; auto migration will only work from 2.2.x to 2.3.x
+* Added notification widget
+
 ## v2.2.4
 * Show top bar to allow sharing posts
 * Fix unmuting videos when autoplay is enabled
