@@ -104,6 +104,7 @@ import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
+import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.android.synthetic.main.activity_frame_wrapper.*
 import kotlinx.android.synthetic.main.view_main_fab.*
 import kotlinx.android.synthetic.main.view_main_toolbar.*
@@ -450,7 +451,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 Runtime.getRuntime().exit(0)
                 return
             }
-            if (resultCode and REQUEST_RESTART > 0) return restart()
+            if (resultCode and REQUEST_RESTART > 0) {
+                NotificationWidget.forceUpdate(this)
+                restart()
+                return
+            }
             /*
              * These results can be stacked
              */

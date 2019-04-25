@@ -19,6 +19,7 @@ package com.pitchedapps.frost.widgets
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -51,6 +52,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class NotificationWidget : AppWidgetProvider() {
+
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         val type = NotificationType.GENERAL
@@ -81,6 +83,18 @@ class NotificationWidget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(id, views)
         }
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_notification_list)
+    }
+
+    companion object {
+        fun forceUpdate(context: Context) {
+            val manager = AppWidgetManager.getInstance(context)
+            val ids = manager.getAppWidgetIds(ComponentName(context, NotificationWidget::class.java))
+            val intent = Intent().apply {
+                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            }
+            context.sendBroadcast(intent)
+        }
     }
 }
 
