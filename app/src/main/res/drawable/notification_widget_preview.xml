@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@id/intro_phone"
+        android:drawable="@drawable/intro_phone_case" />
+    <item
+        android:id="@id/intro_phone_screen"
+        android:drawable="@drawable/intro_phone_screen" />
+    <item
+        android:id="@+id/intro_phone_nav"
+        android:bottom="10dp"
+        android:left="3dp"
+        android:right="23dp"
+        android:top="50dp">
+        <shape>
+            <solid android:color="#f0f" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_header"
+        android:bottom="110dp"
+        android:left="3dp"
+        android:right="23dp"
+        android:top="10dp">
+        <shape>
+            <solid android:color="#f00" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_avatar_1"
+        android:bottom="130dp"
+        android:left="8dp"
+        android:right="67dp"
+        android:top="15dp">
+        <shape android:shape="oval">
+            <solid android:color="#f0f" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/intro_phone_avatar_2"
+        android:bottom="135dp"
+        android:left="53dp"
+        android:right="27dp"
+        android:top="15dp">
+        <shape android:shape="oval">
+            <solid android:color="#f0f" />
+        </shape>
+    </item>
+</layer-list>

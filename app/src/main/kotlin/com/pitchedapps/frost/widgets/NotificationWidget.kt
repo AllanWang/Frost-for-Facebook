@@ -45,7 +45,6 @@ import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.toReadableTime
 import org.koin.standalone.KoinComponent
@@ -100,7 +99,6 @@ class NotificationWidget : AppWidgetProvider() {
 
 private const val NOTIF_WIDGET_TYPE = "notif_widget_type"
 private const val NOTIF_WIDGET_USER_ID = "notif_widget_user_id"
-private const val NOTIF_WIDGET_USER_COOKIE = "notif_widget_user_id"
 
 private fun RemoteViews.setBackgroundColor(@IdRes viewId: Int, @ColorInt color: Int) {
     setInt(viewId, "setBackgroundColor", color)
@@ -157,7 +155,6 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
 
     private fun loadNotifications() {
         content = notifDao.selectNotificationsSync(userId, type.channelId)
-        L._d { "Updated notif widget with ${content.size} items" }
     }
 
     override fun onCreate() {
@@ -176,7 +173,6 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
     override fun getViewAt(position: Int): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_notification_item)
         val notif = content[position]
-        L._d { "View $position $notif" }
         views.setBackgroundColor(R.id.item_frame, Prefs.nativeBgColor(notif.unread))
         views.setTextColor(R.id.item_content, Prefs.textColor)
         views.setTextViewText(R.id.item_content, notif.text)
