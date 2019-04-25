@@ -312,8 +312,8 @@ open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : Base
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_copy_link -> copyToClipboard(web.currentUrl)
-            R.id.action_share -> shareText(web.currentUrl)
+            R.id.action_copy_link -> copyToClipboard(web.currentUrl.formattedFbUrl)
+            R.id.action_share -> shareText(web.currentUrl.formattedFbUrl)
             else -> if (!OverlayContext.onOptionsItemSelected(web, item.itemId))
                 return super.onOptionsItemSelected(item)
         }
