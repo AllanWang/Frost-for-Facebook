@@ -69,9 +69,10 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.dbflow.TAB_COUNT
-import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.dbflow.loadFbTabs
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.GenericDao
+import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
@@ -103,12 +104,14 @@ import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
+import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.android.synthetic.main.activity_frame_wrapper.*
 import kotlinx.android.synthetic.main.view_main_fab.*
 import kotlinx.android.synthetic.main.view_main_toolbar.*
 import kotlinx.android.synthetic.main.view_main_viewpager.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -120,9 +123,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     FileChooserContract by FileChooserDelegate(),
     VideoViewHolder, SearchViewHolder {
 
-    protected lateinit var adapter: SectionsPagerAdapter
+    /**
+     * Note that tabs themselves are initialized through a coroutine during onCreate
+     */
+    protected val adapter: SectionsPagerAdapter = SectionsPagerAdapter()
     override val frameWrapper: FrameLayout get() = frame_wrapper
     val viewPager: FrostViewPager get() = container
+    val cookieDao: CookieDao by inject()
+    val genericDao: GenericDao by inject()
 
     /*
      * Components with the same id in multiple layout files
@@ -130,6 +138,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     val tabs: TabLayout by bindView(R.id.tabs)
     val appBar: AppBarLayout by bindView(R.id.appbar)
     val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+
+    protected var lastPosition = -1
 
     override var videoViewer: FrostVideoViewer? = null
     private lateinit var drawer: Drawer
@@ -151,12 +161,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             background(viewPager)
         }
         setSupportActionBar(toolbar)
-        adapter = SectionsPagerAdapter(loadFbTabs())
         viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = TAB_COUNT
         tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
+        launch {
+            adapter.setPages(genericDao.getTabs())
+        }
         controlWebview = WebView(this)
         if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
             Prefs.prevVersionCode = Prefs.versionCode
@@ -274,27 +285,28 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     if (current) launchWebOverlay(FbItem.PROFILE.url)
                     else when (profile.identifier) {
                         -2L -> {
-                            val currentCookie = loadFbCookie(Prefs.userId)
-                            if (currentCookie == null) {
-                                toast(R.string.account_not_found)
-                                launch {
+                            // TODO no backpressure support
+                            this@BaseMainActivity.launch {
+                                val currentCookie = cookieDao.currentCookie()
+                                if (currentCookie == null) {
+                                    toast(R.string.account_not_found)
                                     FbCookie.reset()
                                     launchLogin(cookies(), true)
-                                }
-                            } else {
-                                materialDialogThemed {
-                                    title(R.string.kau_logout)
-                                    content(
-                                        String.format(
-                                            string(R.string.kau_logout_confirm_as_x), currentCookie.name
-                                                ?: Prefs.userId.toString()
+                                } else {
+                                    materialDialogThemed {
+                                        title(R.string.kau_logout)
+                                        content(
+                                            String.format(
+                                                string(R.string.kau_logout_confirm_as_x),
+                                                currentCookie.name ?: Prefs.userId.toString()
+                                            )
                                         )
-                                    )
-                                    positiveText(R.string.kau_yes)
-                                    negativeText(R.string.kau_no)
-                                    onPositive { _, _ ->
-                                        launch {
-                                            FbCookie.logout(this@BaseMainActivity)
+                                        positiveText(R.string.kau_yes)
+                                        negativeText(R.string.kau_no)
+                                        onPositive { _, _ ->
+                                            this@BaseMainActivity.launch {
+                                                FbCookie.logout(this@BaseMainActivity)
+                                            }
                                         }
                                     }
                                 }
@@ -303,7 +315,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         -3L -> launchNewTask<LoginActivity>(clearStack = false)
                         -4L -> launchNewTask<SelectorActivity>(cookies(), false)
                         else -> {
-                            launch {
+                            this@BaseMainActivity.launch {
                                 FbCookie.switchUser(profile.identifier)
                                 tabsForEachView { _, view -> view.badgeText = null }
                                 refreshAll()
@@ -439,7 +451,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 Runtime.getRuntime().exit(0)
                 return
             }
-            if (resultCode and REQUEST_RESTART > 0) return restart()
+            if (resultCode and REQUEST_RESTART > 0) {
+                NotificationWidget.forceUpdate(this)
+                restart()
+                return
+            }
             /*
              * These results can be stacked
              */
@@ -454,16 +470,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(adapter.forcedFallbacks))
+        adapter.saveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        adapter.forcedFallbacks.clear()
-        adapter.forcedFallbacks.addAll(
-            savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
-                ?: emptyList()
-        )
+        adapter.restoreInstanceState(savedInstanceState)
     }
 
     override fun onResume() {
@@ -518,9 +530,48 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         runOnUiThread { adapter.reloadFragment(fragment) }
     }
 
-    inner class SectionsPagerAdapter(val pages: List<FbItem>) : FragmentPagerAdapter(supportFragmentManager) {
+    inner class SectionsPagerAdapter : FragmentPagerAdapter(supportFragmentManager) {
 
-        val forcedFallbacks = mutableSetOf<String>()
+        private val pages: MutableList<FbItem> = mutableListOf()
+
+        private val forcedFallbacks = mutableSetOf<String>()
+
+        /**
+         * Update page list and prompt reload
+         */
+        fun setPages(pages: List<FbItem>) {
+            this.pages.clear()
+            this.pages.addAll(pages)
+            notifyDataSetChanged()
+            tabs.removeAllTabs()
+            this.pages.forEachIndexed { index, fbItem ->
+                tabs.addTab(
+                    tabs.newTab()
+                        .setCustomView(BadgedIcon(this@BaseMainActivity).apply { iicon = fbItem.icon }.also {
+                            it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
+                        })
+                )
+            }
+            lastPosition = 0
+            viewPager.setCurrentItem(0, false)
+            viewPager.offscreenPageLimit = pages.size
+            viewPager.post {
+                if (!fragmentChannel.isClosedForSend)
+                    fragmentChannel.offer(0)
+            } //trigger hook so title is set
+        }
+
+        fun saveInstanceState(outState: Bundle) {
+            outState.putStringArrayList(STATE_FORCE_FALLBACK, ArrayList(forcedFallbacks))
+        }
+
+        fun restoreInstanceState(savedInstanceState: Bundle) {
+            forcedFallbacks.clear()
+            forcedFallbacks.addAll(
+                savedInstanceState.getStringArrayList(STATE_FORCE_FALLBACK)
+                    ?: emptyList()
+            )
+        }
 
         fun reloadFragment(fragment: BaseFragment) {
             if (fragment is WebFragment) return
@@ -559,4 +610,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 PointF(0f, toolbar.height.toFloat())
             else
                 PointF(0f, 0f)
+
+    companion object {
+        const val SELECTED_TAB_ALPHA = 255f
+        const val UNSELECTED_TAB_ALPHA = 128f
+    }
 }

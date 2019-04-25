@@ -32,9 +32,10 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.loadFbCookiesSuspend
-import com.pitchedapps.frost.dbflow.saveFbCookie
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.save
+import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import org.koin.android.ext.android.inject
 import java.net.UnknownHostException
 import kotlin.coroutines.resume
 
@@ -71,6 +73,7 @@ class LoginActivity : BaseActivity() {
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
+    private val cookieDao: CookieDao by inject()
 
     private lateinit var profileLoader: RequestManager
     private val refreshChannel = Channel<Boolean>(10)
@@ -109,13 +112,13 @@ class LoginActivity : BaseActivity() {
         refreshChannel.offer(refreshing)
     }
 
-    private suspend fun loadInfo(cookie: CookieModel): Unit = withMainContext {
+    private suspend fun loadInfo(cookie: CookieEntity): Unit = withMainContext {
         refresh(true)
 
         val imageDeferred = async { loadProfile(cookie.id) }
         val nameDeferred = async { loadUsername(cookie) }
 
-        val name: String = nameDeferred.await()
+        val name: String? = nameDeferred.await()
         val foundImage: Boolean = imageDeferred.await()
 
         L._d { "Logged in and received data" }
@@ -126,7 +129,7 @@ class LoginActivity : BaseActivity() {
             L._i { cookie }
         }
 
-        textview.text = String.format(getString(R.string.welcome), name)
+        textview.text = String.format(getString(R.string.welcome), name ?: "")
         textview.fadeIn()
         frostEvent("Login", "success" to true)
 
@@ -134,7 +137,7 @@ class LoginActivity : BaseActivity() {
          * The user may have logged into an account that is already in the database
          * We will let the db handle duplicates and load it now after the new account has been saved
          */
-        val cookies = ArrayList(loadFbCookiesSuspend())
+        val cookies = ArrayList(cookieDao.selectAll())
         delay(1000)
         if (Showcase.intro)
             launchNewTask<IntroActivity>(cookies, true)
@@ -171,23 +174,23 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private suspend fun loadUsername(cookie: CookieModel): String = withContext(Dispatchers.IO) {
-        val result: String = try {
+    private suspend fun loadUsername(cookie: CookieEntity): String? = withContext(Dispatchers.IO) {
+        val result: String? = try {
             withTimeout(5000) {
                 frostJsoup(cookie.cookie, FbItem.PROFILE.url).title()
             }
         } catch (e: Exception) {
             if (e !is UnknownHostException)
                 e.logFrostEvent("Fetch username failed")
-            ""
+            null
         }
 
-        if (cookie.name?.isNotBlank() == false && result != cookie.name) {
-            cookie.name = result
-            saveFbCookie(cookie)
+        if (result != null) {
+            cookieDao.save(cookie.copy(name = result))
+            return@withContext result
         }
 
-        cookie.name ?: ""
+        return@withContext cookie.name
     }
 
     override fun backConsumer(): Boolean {

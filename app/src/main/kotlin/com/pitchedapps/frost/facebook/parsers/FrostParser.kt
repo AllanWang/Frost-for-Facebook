@@ -16,7 +16,7 @@
  */
 package com.pitchedapps.frost.facebook.parsers
 
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FB_CSS_URL_MATCHER
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
@@ -81,7 +81,7 @@ data class ParseResponse<out T>(val cookie: String, val data: T) {
 }
 
 interface ParseNotification {
-    fun getUnreadNotifications(data: CookieModel): List<NotificationContent>
+    fun getUnreadNotifications(data: CookieEntity): List<NotificationContent>
 }
 
 internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder().apply {

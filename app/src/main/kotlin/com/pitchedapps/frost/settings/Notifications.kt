@@ -29,14 +29,15 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.dbflow.NotificationModel
-import com.pitchedapps.frost.dbflow.loadFbCookiesAsync
+import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.deleteAll
 import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.views.Keywords
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-06-29.
@@ -171,8 +172,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
     if (BuildConfig.DEBUG) {
         plainText(R.string.reset_notif_epoch) {
             onClick = {
-                loadFbCookiesAsync { cookies ->
-                    cookies.map { NotificationModel(it.id) }.forEach { it.save() }
+                launch {
+                    FrostDatabase.get().notifDao().deleteAll()
                 }
             }
         }

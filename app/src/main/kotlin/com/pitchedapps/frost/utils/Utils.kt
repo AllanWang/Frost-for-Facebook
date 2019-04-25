@@ -62,7 +62,7 @@ import com.pitchedapps.frost.activities.TabCustomizerActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.activities.WebOverlayDesktopActivity
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie
@@ -103,7 +103,7 @@ internal inline val Context.ctxCoroutine: CoroutineScope
     get() = this as? CoroutineScope ?: GlobalScope
 
 inline fun <reified T : Activity> Context.launchNewTask(
-    cookieList: ArrayList<CookieModel> = arrayListOf(),
+    cookieList: ArrayList<CookieEntity> = arrayListOf(),
     clearStack: Boolean = false
 ) {
     startActivity<T>(clearStack, intentBuilder = {
@@ -111,13 +111,13 @@ inline fun <reified T : Activity> Context.launchNewTask(
     })
 }
 
-fun Context.launchLogin(cookieList: ArrayList<CookieModel>, clearStack: Boolean = true) {
+fun Context.launchLogin(cookieList: ArrayList<CookieEntity>, clearStack: Boolean = true) {
     if (cookieList.isNotEmpty()) launchNewTask<SelectorActivity>(cookieList, clearStack)
     else launchNewTask<LoginActivity>(clearStack = clearStack)
 }
 
-fun Activity.cookies(): ArrayList<CookieModel> {
-    return intent?.getParcelableArrayListExtra<CookieModel>(EXTRA_COOKIES) ?: arrayListOf()
+fun Activity.cookies(): ArrayList<CookieEntity> {
+    return intent?.getParcelableArrayListExtra<CookieEntity>(EXTRA_COOKIES) ?: arrayListOf()
 }
 
 /**
@@ -186,7 +186,7 @@ fun MaterialDialog.Builder.theme(): MaterialDialog.Builder {
 }
 
 fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
-    val isTransparent = (Color.alpha(Prefs.bgColor) != 255) || forceTransparent
+    val isTransparent = (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255) || forceTransparent
     if (Prefs.bgColor.isColorDark)
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     else

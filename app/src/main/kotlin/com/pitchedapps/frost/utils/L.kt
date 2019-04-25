@@ -50,6 +50,11 @@ object L : KauLogger("Frost", {
             d(message)
     }
 
+    inline fun _e(e: Throwable?, message: () -> Any?) {
+        if (BuildConfig.DEBUG)
+            e(e, message)
+    }
+
     override fun logImpl(priority: Int, message: String?, t: Throwable?) {
         if (BuildConfig.DEBUG)
             super.logImpl(priority, message, t)

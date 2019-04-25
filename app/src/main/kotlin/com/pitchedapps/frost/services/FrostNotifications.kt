@@ -31,9 +31,10 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.NotificationModel
-import com.pitchedapps.frost.dbflow.lastNotificationTime
+import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.latestEpoch
+import com.pitchedapps.frost.db.saveNotifications
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostParser
@@ -60,12 +61,10 @@ private val _40_DP = 40.dpToPx
  * Enum to handle notification creations
  */
 enum class NotificationType(
-    private val channelId: String,
+    val channelId: String,
     private val overlayContext: OverlayContext,
     private val fbItem: FbItem,
     private val parser: FrostParser<ParseNotification>,
-    private val getTime: (notif: NotificationModel) -> Long,
-    private val putTime: (notif: NotificationModel, time: Long) -> NotificationModel,
     private val ringtone: () -> String
 ) {
 
@@ -74,8 +73,6 @@ enum class NotificationType(
         OverlayContext.NOTIFICATION,
         FbItem.NOTIFICATIONS,
         NotifParser,
-        NotificationModel::epoch,
-        { notif, time -> notif.copy(epoch = time) },
         Prefs::notificationRingtone
     ) {
 
@@ -88,8 +85,6 @@ enum class NotificationType(
         OverlayContext.MESSAGE,
         FbItem.MESSAGES,
         MessageParser,
-        NotificationModel::epochIm,
-        { notif, time -> notif.copy(epochIm = time) },
         Prefs::messageRingtone
     );
 
@@ -100,8 +95,8 @@ enum class NotificationType(
      */
     internal open fun bindRequest(content: NotificationContent, cookie: String): (BaseBundle.() -> Unit)? = null
 
-    private fun bindRequest(intent: Intent, content: NotificationContent, cookie: String?) {
-        cookie ?: return
+    private fun bindRequest(intent: Intent, content: NotificationContent) {
+        val cookie = content.data.cookie ?: return
         val binder = bindRequest(content, cookie) ?: return
         val bundle = Bundle()
         bundle.binder()
@@ -116,7 +111,8 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    fun fetch(context: Context, data: CookieModel): Int {
+    suspend fun fetch(context: Context, data: CookieEntity): Int {
+        val notifDao = FrostDatabase.get().notifDao()
         val response = try {
             parser.parse(data.cookie)
         } catch (ignored: Exception) {
@@ -142,36 +138,42 @@ enum class NotificationType(
         }
         if (notifContents.isEmpty()) return 0
         val userId = data.id
-        val prevNotifTime = lastNotificationTime(userId)
-        val prevLatestEpoch = getTime(prevNotifTime)
+        // Legacy, remove with dbflow
+        val prevLatestEpoch = notifDao.latestEpoch(userId, channelId)
         L.v { "Notif $name prev epoch $prevLatestEpoch" }
-        var newLatestEpoch = prevLatestEpoch
-        val notifs = mutableListOf<FrostNotification>()
-        notifContents.forEach { notif ->
-            L.v { "Notif timestamp ${notif.timestamp}" }
-            if (notif.timestamp <= prevLatestEpoch) return@forEach
-            notifs.add(createNotification(context, notif))
-            if (notif.timestamp > newLatestEpoch)
-                newLatestEpoch = notif.timestamp
-        }
-        if (newLatestEpoch > prevLatestEpoch)
-            putTime(prevNotifTime, newLatestEpoch).save()
-        L.d { "Notif $name new epoch ${getTime(lastNotificationTime(userId))}" }
         if (prevLatestEpoch == -1L && !BuildConfig.DEBUG) {
             L.d { "Skipping first notification fetch" }
             return 0 // do not notify the first time
         }
+
+        val newNotifContents = notifContents.filter { it.timestamp > prevLatestEpoch }
+
+        if (newNotifContents.isEmpty()) {
+            L.d { "No new notifs found for $name" }
+            return 0
+        }
+
+        L.d { "${newNotifContents.size} new notifs found for $name" }
+
+        if (!notifDao.saveNotifications(channelId, newNotifContents)) {
+            L.d { "Skip notifs for $name as saving failed" }
+            return 0
+        }
+
+        val notifs = newNotifContents.map { createNotification(context, it) }
+
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
         val ringtone = ringtone()
         notifs.forEachIndexed { i, notif ->
+            // Ring at most twice
             notif.withAlert(i < 2, ringtone).notify(context)
         }
         return notifs.size
     }
 
-    fun debugNotification(context: Context, data: CookieModel) {
+    fun debugNotification(context: Context, data: CookieEntity) {
         val content = NotificationContent(
             data,
             System.currentTimeMillis(),
@@ -179,9 +181,31 @@ enum class NotificationType(
             "Debug Notif",
             "Test 123",
             System.currentTimeMillis() / 1000,
-            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png"
+            "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/dog.png",
+            false
         )
         createNotification(context, content).notify(context)
+    }
+
+    /**
+     * Attach content related data to an intent
+     */
+    fun putContentExtra(intent: Intent, content: NotificationContent): Intent {
+        // We will show the notification page for dependent urls. We can trigger a click next time
+        intent.data = Uri.parse(if (content.href.isIndependent) content.href else FbItem.NOTIFICATIONS.url)
+        bindRequest(intent, content)
+        return intent
+    }
+
+    /**
+     * Create a generic content for the provided type and user id.
+     * No content related data is added
+     */
+    fun createCommonIntent(context: Context, userId: Long): Intent {
+        val intent = Intent(context, FrostWebActivity::class.java)
+        intent.putExtra(ARG_USER_ID, userId)
+        overlayContext.put(intent)
+        return intent
     }
 
     /**
@@ -189,13 +213,8 @@ enum class NotificationType(
      */
     private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
         with(content) {
-            val intent = Intent(context, FrostWebActivity::class.java)
-            // TODO temp fix; we will show notification page for dependent urls. We can trigger a click next time
-            intent.data = Uri.parse(if (href.isIndependent) href else FbItem.NOTIFICATIONS.url)
-            intent.putExtra(ARG_USER_ID, data.id)
-            overlayContext.put(intent)
-            bindRequest(intent, content, data.cookie)
-
+            val intent = createCommonIntent(context, content.data.id)
+            putContentExtra(intent, content)
             val group = "${groupPrefix}_${data.id}"
             val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val notifBuilder = context.frostNotification(channelId)
@@ -257,13 +276,15 @@ enum class NotificationType(
  * Notification data holder
  */
 data class NotificationContent(
-    val data: CookieModel,
+    // TODO replace data with userId?
+    val data: CookieEntity,
     val id: Long,
     val href: String,
     val title: String? = null, // defaults to frost title
     val text: String,
     val timestamp: Long,
-    val profileUrl: String?
+    val profileUrl: String?,
+    val unread: Boolean
 ) {
 
     val notifId = Math.abs(id.toInt())
