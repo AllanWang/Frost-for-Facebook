@@ -16,17 +16,14 @@ RUN mkdir -p ${ANDROID_HOME} && \
 
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
 
-# Accept Android SDK licenses
-
-RUN yes | sdkmanager --licenses
-
-# Install expected sdk
-
-RUN sdkmanager 'platform-tools'
-RUN sdkmanager 'platforms;android-28'
-RUN sdkmanager 'build-tools;28.0.3'
-RUN sdkmanager 'extras;google;m2repository'
-RUN sdkmanager 'extras;android;m2repository'
+# Accept Android SDK licenses && install other elements
+# For full list; see sdkmanager --list --verbose
+RUN yes | sdkmanager --licenses && \
+    sdkmanager 'platform-tools' && \
+    sdkmanager 'platforms;android-28' && \
+    sdkmanager 'build-tools;28.0.3' && \
+    sdkmanager 'extras;google;m2repository' && \
+    sdkmanager 'extras;android;m2repository'
 
 # Install Node.js
 
