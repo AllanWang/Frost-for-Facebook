@@ -40,4 +40,10 @@ RUN apt-get update && apt-get install -y curl git ca-certificates --no-install-r
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
+RUN mkdir -p /frost/
+
+WORKDIR /frost/
+
+COPY . /frost/
+
 CMD ["./docker_build.sh"]

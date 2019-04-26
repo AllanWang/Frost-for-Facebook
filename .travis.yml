@@ -1,4 +1,6 @@
-language: generic
+language: java
+jdk:
+- oraclejdk8
 services:
 - docker
 git:
@@ -8,6 +10,7 @@ before_install:
   -in files/frost.tar.enc -out files/frost.tar -d
 - tar xvf files/frost.tar
 - docker build -q -t frost .
+install: true
 after_success:
 - chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
 script:
