@@ -9,6 +9,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_0454d0cf846c_key -iv $encrypted_0454d0cf846c_iv
   -in files/frost.tar.enc -out files/frost.tar -d
 - tar xvf files/frost.tar
+- if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
 - docker build -q -t frost .
 install: true
 after_success:
@@ -39,7 +40,13 @@ branches:
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+before_cache:
+  # Save tagged docker images
+  - >
+    mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
 cache:
+  bundler: true
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
