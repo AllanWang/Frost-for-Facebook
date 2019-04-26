@@ -12,10 +12,9 @@ before_install:
 - docker build -q -t frost .
 install: true
 after_success:
-- chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
+- ./generate-apk-release.sh
 script:
 - cd $TRAVIS_BUILD_DIR
-- chmod +x ./docker_build.sh
 - docker run -e ANDROID_HOME=/opt/android-sdk-linux frost
 notifications:
   email: false

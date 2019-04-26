@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 printf "Starting script\n"
-chmod +x gradlew
 
 npm -v
 echo $ANDROID_HOME
