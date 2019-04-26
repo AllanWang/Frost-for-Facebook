@@ -15,7 +15,9 @@ after_success:
 - ./generate-apk-release.sh
 script:
 - cd $TRAVIS_BUILD_DIR
-- docker run -e ANDROID_HOME=/opt/android-sdk-linux frost
+- docker run frost
+- mkdir ./Frost
+- docker cp frost:/app/build/outputs/apk/releaseTest ./Frost
 notifications:
   email: false
   slack:

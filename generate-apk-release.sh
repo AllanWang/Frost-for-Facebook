@@ -12,11 +12,12 @@ MODULE_NAME=app
 VERSION_KEY=Frost
 # Make version key different from module name
 
+# APK is directly moved by docker
 # create a new directory that will contain our generated apk
-mkdir $HOME/$VERSION_KEY/
+# mkdir $HOME/$VERSION_KEY/
 # copy generated apk from build folder to the folder just created
-cp -a $MODULE_NAME/build/outputs/apk/releaseTest/. $HOME/$VERSION_KEY/
-printf "Moved apks\n"
+# cp -a $MODULE_NAME/build/outputs/apk/releaseTest/. $HOME/$VERSION_KEY/
+# printf "Moved apks\n"
 ls -a $HOME/${VERSION_KEY}
 
 # go to home and setup git

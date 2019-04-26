@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update assets/css:assets/css",
-    "abc": "sass --no-source-map --style compressed --update assets/css:assets/css"
+    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update assets/css:assets/css"
   },
   "dependencies": {
     "typescript": "^3.3.1",
