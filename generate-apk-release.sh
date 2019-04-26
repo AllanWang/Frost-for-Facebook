@@ -19,6 +19,10 @@ VERSION_KEY=Frost
 # cp -a $MODULE_NAME/build/outputs/apk/releaseTest/. $HOME/$VERSION_KEY/
 # printf "Moved apks\n"
 ls -a $HOME/${VERSION_KEY}
+if [ -z "$(find $HOME/${VERSION_KEY} -name '*.apk')" ]; then
+  echo "No apks found"
+  exit 1
+fi
 
 # go to home and setup git
 echo "Clone Git"
