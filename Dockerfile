@@ -6,6 +6,7 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 
 # Download Android SDK into $ANDROID_HOME
 # You can find URL to the current version at: https://developer.android.com/studio/index.html
+# Or https://github.com/Homebrew/homebrew-cask/blob/master/Casks/android-sdk.rb
 
 RUN mkdir -p ${ANDROID_HOME} && \
     cd ${ANDROID_HOME} && \
