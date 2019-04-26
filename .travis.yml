@@ -17,8 +17,8 @@ after_success:
 script:
 - cd $TRAVIS_BUILD_DIR
 - docker run --name frost_container frost
-- mkdir ./Frost
-- docker cp frost_container:/frost/app/build/outputs/apk/releaseTest/ ./Frost
+- mkdir $HOME/Frost
+- docker cp frost_container:/frost/app/build/outputs/apk/releaseTest/ $HOME/Frost
 notifications:
   email: false
   slack:
