@@ -20,10 +20,13 @@ ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}
 # For full list; see sdkmanager --list --verbose
 RUN yes | sdkmanager --licenses && \
     sdkmanager 'platform-tools' && \
-    sdkmanager 'platforms;android-28' && \
-    sdkmanager 'build-tools;28.0.3' && \
     sdkmanager 'extras;google;m2repository' && \
     sdkmanager 'extras;android;m2repository'
+
+# SDK Specific
+
+RUN sdkmanager 'platforms;android-28' && \
+    sdkmanager 'build-tools;28.0.3'
 
 # Install Node.js
 

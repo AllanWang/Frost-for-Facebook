@@ -3,9 +3,9 @@
 printf "Starting script\n"
 chmod +x gradlew
 
-nodejs -v
+npm -v
 echo $ANDROID_HOME
-echo "Hello"
+echo "Hello world"
 ./gradlew -v
 
 #./gradlew --quiet androidGitVersion
