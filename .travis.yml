@@ -12,6 +12,8 @@ android:
   - extra-google-m2repository
   licenses:
   - ".+"
+services:
+- docker
 git:
   depth: 500
 before_install:
@@ -19,10 +21,11 @@ before_install:
   -in files/frost.tar.enc -out files/frost.tar -d
 - tar xvf files/frost.tar
 - yes | sdkmanager "platforms;android-28"
+- docker build -t frost .
 after_success:
 - chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
 script:
-- cd $TRAVIS_BUILD_DIR/
+- cd $TRAVIS_BUILD_DIR
 - printf "Starting script\n"
 - chmod +x gradlew
 - "./gradlew --quiet androidGitVersion"
