@@ -14,10 +14,7 @@ after_success:
 - chmod +x ./generate-apk-release.sh; ./generate-apk-release.sh
 script:
 - cd $TRAVIS_BUILD_DIR
-- printf "Starting script\n"
-- chmod +x gradlew
-- "./gradlew --quiet androidGitVersion"
-- "./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest"
+- docker run -v frost
 notifications:
   email: false
   slack:
@@ -38,7 +35,7 @@ branches:
   - l10n_dev
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
   - "$HOME/.gradle/caches/"

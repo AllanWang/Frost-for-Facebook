@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-echo "HI"
+printf "Starting script\n"
+chmod +x gradlew
+./gradlew --quiet androidGitVersion
+./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest
