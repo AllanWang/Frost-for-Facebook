@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-printf "Starting script\n"
+printf "Starting docker build\n"
 
 npm -v
 ./gradlew -v
