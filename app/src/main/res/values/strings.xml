@@ -63,7 +63,7 @@
     <string name="no_new_notifications">No new notifications found</string>
 
     <string name="today">Today</string>
-    <string name="yesterday">Today</string>
+    <string name="yesterday">Yesterday</string>
     <!--
     Template used to display human readable string;
     For instance:
