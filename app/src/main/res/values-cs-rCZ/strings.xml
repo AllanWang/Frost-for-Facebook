@@ -46,4 +46,12 @@ plně funkční náhrada za oficiální aplikaci Facebooku, vytvořena od nuly a
     <string name="options">Nastavení</string>
     <string name="tab_customizer_instructions">Dlouhým stiskem přeuspořádejte horní ikony.</string>
     <string name="no_new_notifications">Žádné nové oznámení</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>
