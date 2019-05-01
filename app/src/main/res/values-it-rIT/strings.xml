@@ -46,4 +46,12 @@
     <string name="options">Opzioni</string>
     <string name="tab_customizer_instructions">Per riordinare un\'icona tienila premuta e trascinala.</string>
     <string name="no_new_notifications">Nessuna nuova notifica trovata</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>
