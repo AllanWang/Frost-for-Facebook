@@ -246,6 +246,8 @@ class CoroutineTest {
         }
     }
 
+    class TestException(msg: String) : RuntimeException(msg)
+
     @Test
     fun exceptionChecks() {
         val mainTag = "main-test"
@@ -257,7 +259,7 @@ class CoroutineTest {
         val job = SupervisorJob()
 
         val flyweight = Flyweight<Int, Int>(GlobalScope, 200L) {
-            throw java.lang.RuntimeException("Flyweight exception")
+            throw TestException("Flyweight exception")
         }
 
         suspend fun crash(): Boolean = withContext(Dispatchers.IO) {
@@ -266,7 +268,7 @@ class CoroutineTest {
                     flyweight.fetch(0).await()
                 }
                 true
-            } catch (e: java.lang.Exception) {
+            } catch (e: TestException) {
                 false
             }
         }
@@ -282,10 +284,6 @@ class CoroutineTest {
                 println("B")
                 channel.offer(1)
             }
-//            launch {
-//                delay(2000)
-//                job.cancel()
-//            }
         }
     }
 }
