@@ -32,6 +32,7 @@ import ca.allanwang.kau.utils.inflate
 import ca.allanwang.kau.utils.isColorDark
 import ca.allanwang.kau.utils.isGone
 import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.visible
@@ -39,8 +40,11 @@ import ca.allanwang.kau.utils.withMinAlpha
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import kotlinx.android.synthetic.main.view_video.view.*
 
@@ -96,7 +100,10 @@ class FrostVideoViewer @JvmOverloads constructor(
         video_toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
-                R.id.action_download -> context.frostDownload(video.videoUri)
+                R.id.action_download -> context.ctxCoroutine.launchMain {
+                    val cookie = FrostDatabase.get().cookieDao().currentCookie() ?: return@launchMain
+                    context.frostDownload(cookie, video.videoUri)
+                }
             }
             true
         }

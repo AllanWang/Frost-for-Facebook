@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/kau_activity_horizontal_margin"
+    android:paddingTop="@dimen/kau_activity_vertical_margin"
+    android:paddingEnd="@dimen/kau_activity_horizontal_margin"
+    android:paddingBottom="@dimen/kau_activity_vertical_margin">
+
+    <ImageView
+        android:id="@+id/item_avatar"
+        android:layout_width="@dimen/avatar_image_size"
+        android:layout_height="@dimen/avatar_image_size" />
+
+    <!--
+    Unlike the actual notification panel,
+    we do not show thumbnails, and we limit the title length
+    -->
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/kau_padding_normal"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="2" />
+
+        <TextView
+            android:id="@+id/item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -59,7 +59,7 @@ val AUTH: RequestAuth by lazy {
     }
 }
 
-val VALID_COOKIE: Boolean by lazy {
+private val VALID_COOKIE: Boolean by lazy {
     val data = testJsoup(FbItem.SETTINGS.url)
     data.title() == "Settings"
 }
@@ -68,7 +68,8 @@ fun testJsoup(url: String) = frostJsoup(COOKIE, url)
 
 fun authDependent() {
     println("Auth Dependent")
-    Assume.assumeTrue(COOKIE.isNotEmpty() && VALID_COOKIE)
+    Assume.assumeTrue("Cookie cannot be empty", COOKIE.isNotEmpty())
+    Assume.assumeTrue("Cookie is not valid", VALID_COOKIE)
 }
 
 /**

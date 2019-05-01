@@ -46,4 +46,12 @@
     <string name="options">Opties</string>
     <string name="tab_customizer_instructions">Klik en houd vast om de iconen in de gewenste volgorde te slepen.</string>
     <string name="no_new_notifications">Geen nieuwe notificaties</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>

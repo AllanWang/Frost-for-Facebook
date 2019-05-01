@@ -25,6 +25,7 @@ import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.parsers.FrostParser
+import com.pitchedapps.frost.facebook.parsers.ParseData
 import com.pitchedapps.frost.facebook.parsers.ParseResponse
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostJsoup
@@ -94,7 +95,7 @@ abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 }
 
-abstract class FrostParserFragment<T : Any, Item : IItem<*, *>> : RecyclerFragment<Item, Item>() {
+abstract class FrostParserFragment<T : ParseData, Item : IItem<*, *>> : RecyclerFragment<Item, Item>() {
 
     /**
      * The parser to make this all happen

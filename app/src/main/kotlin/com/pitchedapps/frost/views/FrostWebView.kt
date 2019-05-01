@@ -24,15 +24,19 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.AnimHolder
+import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
@@ -81,7 +85,13 @@ class FrostWebView @JvmOverloads constructor(
         webChromeClient = FrostChromeClient(this)
         addJavascriptInterface(FrostJSI(this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
-        setDownloadListener(context::frostDownload)
+        val db = FrostDatabase.get()
+        setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            context.ctxCoroutine.launchMain {
+                val cookie = db.cookieDao().currentCookie() ?: return@launchMain
+                context.frostDownload(cookie, url, userAgent, contentDisposition, mimetype, contentLength)
+            }
+        }
         return this
     }
 

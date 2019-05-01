@@ -46,4 +46,12 @@
     <string name="options">Opțiuni</string>
     <string name="tab_customizer_instructions">Apasă lung și trage să rearanjezi.</string>
     <string name="no_new_notifications">Nu s-au găsit notificări</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>

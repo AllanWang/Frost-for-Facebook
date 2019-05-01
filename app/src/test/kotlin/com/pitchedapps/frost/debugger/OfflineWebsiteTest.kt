@@ -27,9 +27,9 @@ import org.junit.Assume.assumeTrue
 import java.io.File
 import java.util.zip.ZipFile
 import kotlin.test.AfterTest
-import kotlin.test.Test
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue

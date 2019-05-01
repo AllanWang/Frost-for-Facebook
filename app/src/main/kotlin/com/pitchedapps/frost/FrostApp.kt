@@ -29,9 +29,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
-import com.pitchedapps.frost.dbflow.CookiesDb
-import com.pitchedapps.frost.dbflow.FbTabsDb
-import com.pitchedapps.frost.dbflow.NotificationDb
+import com.pitchedapps.frost.db.CookiesDb
+import com.pitchedapps.frost.db.FbTabsDb
+import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.NotificationDb
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.services.setupNotificationChannels
@@ -44,6 +45,7 @@ import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
+import org.koin.android.ext.android.startKoin
 import java.util.Random
 import kotlin.reflect.KClass
 
@@ -81,7 +83,7 @@ class FrostApp : Application() {
         )
         Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
-        //        if (LeakCanary.isInAnalyzerProcess(this)) return
+//        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         initBugsnag()
         KL.shouldLog = { BuildConfig.DEBUG }
@@ -132,6 +134,7 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} created" }
                 }
             })
+        startKoin(this, listOf(FrostDatabase.module(this)))
     }
 
     private fun initBugsnag() {

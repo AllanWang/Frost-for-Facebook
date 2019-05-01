@@ -17,6 +17,7 @@
     <string name="birthdays">Doğum Günleri</string>
     <string name="chat">Sohbet</string>
     <string name="photos">Fotoğraflar</string>
+    <string name="marketplace">Pazar yeri</string>
     <string name="notes">Notlar</string>
     <string name="on_this_day">Bu günde</string>
     <string name="loading_account">Her şey hazır alınıyor…</string>
@@ -45,4 +46,14 @@
     <string name="options">Seçenekler</string>
     <string name="tab_customizer_instructions">Üstteki simgeleri yeniden düzenlemek için uzun basın ve sonra sürükleyin.</string>
     <string name="no_new_notifications">Yeni bildirim bulunmadı</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>

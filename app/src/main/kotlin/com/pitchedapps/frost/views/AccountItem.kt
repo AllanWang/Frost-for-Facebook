@@ -33,7 +33,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
@@ -42,7 +42,7 @@ import com.pitchedapps.frost.utils.Prefs
 /**
  * Created by Allan Wang on 2017-06-05.
  */
-class AccountItem(val cookie: CookieModel?) : KauIItem<AccountItem, AccountItem.ViewHolder>
+class AccountItem(val cookie: CookieEntity?) : KauIItem<AccountItem, AccountItem.ViewHolder>
     (R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
 
     override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any>) {

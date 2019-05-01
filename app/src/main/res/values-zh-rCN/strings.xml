@@ -40,4 +40,12 @@
     <string name="file_chooser_not_found">未找到文件选择程序</string>
     <string name="top_bar">顶栏</string>
     <string name="bottom_bar">底栏</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>

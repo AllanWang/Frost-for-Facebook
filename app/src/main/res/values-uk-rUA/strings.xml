@@ -17,6 +17,7 @@
     <string name="birthdays">Дні народження</string>
     <string name="chat">Чат</string>
     <string name="photos">Фотографії</string>
+    <string name="marketplace">Магазин</string>
     <string name="notes">Замітки</string>
     <string name="on_this_day">Цього дня</string>
     <string name="loading_account">Отримання всього готове…</string>
@@ -45,4 +46,12 @@
     <string name="options">Опції</string>
     <string name="tab_customizer_instructions">Довге натискання та перетягніть, щоб переставити верхній значок.</string>
     <string name="no_new_notifications">Нових повідомлень не знайдено</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>

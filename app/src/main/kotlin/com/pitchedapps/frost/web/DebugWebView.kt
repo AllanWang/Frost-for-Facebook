@@ -58,6 +58,7 @@ class DebugWebView @JvmOverloads constructor(
         settings.userAgentString = USER_AGENT_MOBILE
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = DebugClient()
+        @Suppress("DEPRECATION")
         isDrawingCacheEnabled = true
     }
 
@@ -72,6 +73,7 @@ class DebugWebView @JvmOverloads constructor(
         }
         try {
             output.outputStream().use {
+                @Suppress("DEPRECATION")
                 drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
             L.d { "Created screenshot at ${output.absolutePath}" }

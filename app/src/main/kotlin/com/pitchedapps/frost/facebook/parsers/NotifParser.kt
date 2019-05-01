@@ -16,7 +16,7 @@
  */
 package com.pitchedapps.frost.facebook.parsers
 
-import com.pitchedapps.frost.dbflow.CookieModel
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FB_EPOCH_MATCHER
 import com.pitchedapps.frost.facebook.FB_NOTIF_ID_MATCHER
 import com.pitchedapps.frost.facebook.FbItem
@@ -36,6 +36,10 @@ data class FrostNotifs(
     val notifs: List<FrostNotif>,
     val seeMore: FrostLink?
 ) : ParseNotification {
+
+    override val isEmpty: Boolean
+        get() = notifs.isEmpty()
+
     override fun toString() = StringBuilder().apply {
         append("FrostNotifs {\n")
         append(notifs.toJsonString("notifs", 1))
@@ -43,7 +47,7 @@ data class FrostNotifs(
         append("}")
     }.toString()
 
-    override fun getUnreadNotifications(data: CookieModel) =
+    override fun getUnreadNotifications(data: CookieEntity) =
         notifs.asSequence().filter(FrostNotif::unread).map {
             with(it) {
                 NotificationContent(
@@ -53,7 +57,8 @@ data class FrostNotifs(
                     title = null,
                     text = content,
                     timestamp = time,
-                    profileUrl = img
+                    profileUrl = img,
+                    unread = unread
                 )
             }
         }.toList()

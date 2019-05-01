@@ -19,10 +19,12 @@ package com.pitchedapps.frost.facebook
 import android.app.Activity
 import android.content.Context
 import android.webkit.CookieManager
-import com.pitchedapps.frost.dbflow.CookieModel
-import com.pitchedapps.frost.dbflow.loadFbCookie
-import com.pitchedapps.frost.dbflow.removeCookie
-import com.pitchedapps.frost.dbflow.saveFbCookie
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.deleteById
+import com.pitchedapps.frost.db.save
+import com.pitchedapps.frost.db.selectById
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
@@ -49,6 +51,10 @@ object FbCookie {
      */
     inline val webCookie: String?
         get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
+
+    private val cookieDao: CookieDao by lazy {
+        FrostDatabase.get().cookieDao()
+    }
 
     private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
         cookie ?: return true
@@ -77,12 +83,12 @@ object FbCookie {
         }
     }
 
-    fun save(id: Long) {
+    suspend fun save(id: Long) {
         L.d { "New cookie found" }
         Prefs.userId = id
         CookieManager.getInstance().flush()
-        val cookie = CookieModel(Prefs.userId, "", webCookie)
-        saveFbCookie(cookie)
+        val cookie = CookieEntity(Prefs.userId, null, webCookie)
+        cookieDao.save(cookie)
     }
 
     suspend fun reset() {
@@ -93,11 +99,12 @@ object FbCookie {
         }
     }
 
-    suspend fun switchUser(id: Long) = switchUser(loadFbCookie(id))
+    suspend fun switchUser(id: Long) {
+        val cookie = cookieDao.selectById(id) ?: return L.e { "No cookie for id" }
+        switchUser(cookie)
+    }
 
-    suspend fun switchUser(name: String) = switchUser(loadFbCookie(name))
-
-    suspend fun switchUser(cookie: CookieModel?) {
+    suspend fun switchUser(cookie: CookieEntity?) {
         if (cookie == null) {
             L.d { "Switching User; null cookie" }
             return
@@ -114,7 +121,7 @@ object FbCookie {
      * and launch the proper login page
      */
     suspend fun logout(context: Context) {
-        val cookies = arrayListOf<CookieModel>()
+        val cookies = arrayListOf<CookieEntity>()
         if (context is Activity)
             cookies.addAll(context.cookies().filter { it.id != Prefs.userId })
         logout(Prefs.userId)
@@ -126,7 +133,9 @@ object FbCookie {
      */
     suspend fun logout(id: Long) {
         L.d { "Logging out user" }
-        removeCookie(id)
+        cookieDao.deleteById(id)
+        L.d { "Fb cookie deleted" }
+        L._d { id }
         reset()
     }
 
