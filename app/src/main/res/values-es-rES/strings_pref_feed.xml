@@ -11,6 +11,8 @@
     <string name="suggested_friends_desc">Mostrar \"Gente que quizá conozcas\" en el feed</string>
     <string name="suggested_groups">Grupos sugeridos</string>
     <string name="suggested_groups_desc">Mostrar \"grupos sugeridos\" en el feed</string>
+    <string name="show_stories">Historias destacadas</string>
+    <string name="show_stories_desc">Mostrar historias en el feed</string>
     <string name="facebook_ads">Anuncios de Facebook</string>
     <string name="facebook_ads_desc">Mostrar anuncios nativos de Facebook</string>
 </resources>
