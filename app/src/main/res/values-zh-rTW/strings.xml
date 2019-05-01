@@ -45,4 +45,12 @@
     <string name="options">選項</string>
     <string name="tab_customizer_instructions">長按及拖曳頂部圖標可重新排列位置</string>
     <string name="no_new_notifications">沒有新通知。</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>
