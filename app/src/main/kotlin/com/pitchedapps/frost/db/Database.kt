@@ -21,8 +21,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.pitchedapps.frost.BuildConfig
-import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext
+import org.koin.core.context.GlobalContext
+import org.koin.dsl.module
 
 interface FrostPrivateDao {
     fun cookieDao(): CookieDao
@@ -101,6 +101,6 @@ class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val pub
          * Get from koin
          * For the most part, you can retrieve directly from other koin components
          */
-        fun get(): FrostDatabase = StandAloneContext.getKoin().koinContext.get()
+        fun get(): FrostDatabase = GlobalContext.get().koin.get()
     }
 }

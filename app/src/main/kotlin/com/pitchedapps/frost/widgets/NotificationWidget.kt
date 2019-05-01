@@ -47,8 +47,8 @@ import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.toReadableTime
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class NotificationWidget : AppWidgetProvider() {
 
