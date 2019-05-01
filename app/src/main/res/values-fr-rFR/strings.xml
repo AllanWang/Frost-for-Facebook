@@ -17,6 +17,7 @@
     <string name="birthdays">Anniversaires</string>
     <string name="chat">Conversations</string>
     <string name="photos">Photos</string>
+    <string name="marketplace">Marketplace</string>
     <string name="notes">Notes</string>
     <string name="on_this_day">Aujourd\'hui</string>
     <string name="loading_account">Tout se prépare…</string>
@@ -45,4 +46,15 @@
     <string name="options">Options</string>
     <string name="tab_customizer_instructions">Appuyez longuement et faites glisser pour réorganiser les icônes du haut.</string>
     <string name="no_new_notifications">Pas de nouvelles notifications trouvées</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="yesterday">Hier</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
+    <string name="time_template">%1s à %2s</string>
 </resources>

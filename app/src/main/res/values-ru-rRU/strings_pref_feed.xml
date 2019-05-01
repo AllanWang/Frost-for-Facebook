@@ -11,6 +11,8 @@
     <string name="suggested_friends_desc">Смотреть «Люди которых вы можете знать» в канале</string>
     <string name="suggested_groups">Предлагаемые группы</string>
     <string name="suggested_groups_desc">Смотреть «Предложения групп» в канале</string>
+    <string name="show_stories">Показывать Истории</string>
+    <string name="show_stories_desc">Показывать Истории в ленте</string>
     <string name="facebook_ads">- Реклама в Facebook</string>
     <string name="facebook_ads_desc">Показать родной Facebook объявления</string>
 </resources>
