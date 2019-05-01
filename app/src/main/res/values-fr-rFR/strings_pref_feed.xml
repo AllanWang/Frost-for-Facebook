@@ -4,7 +4,7 @@
     <string name="newsfeed_sort">Ordre du fil d\'actualité</string>
     <string name="newsfeed_sort_desc">Définit l’ordre dans lequel les messages sont affichés</string>
     <string name="aggressive_recents">Récents agressifs</string>
-    <string name="aggressive_recents_desc">Filtrer les vieilles publications additionnelles du fil d\'actualité les plus récentes de Facebook. Désactivez cette option si votre fil d\'actualités est vide.</string>
+    <string name="aggressive_recents_desc">Éliminer les anciennes publications additionnelles du fil d\'actualité récentes de Facebook. Désactivez cette option si votre fil d\'actualités est vide.</string>
     <string name="composer">Compositeur de statut</string>
     <string name="composer_desc">Montrer le compositeur de statut dans le fil d\'actualité</string>
     <string name="suggested_friends">Amis suggérés</string>
