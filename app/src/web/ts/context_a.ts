@@ -7,6 +7,25 @@
     let longClick = false;
 
     /**
+     * Go up at most [depth] times, to retrieve a parent matching the provided predicate
+     * If one is found, it is returned immediately.
+     * Otherwise, null is returned.
+     */
+    function _parentEl(el: HTMLElement, depth: number, predicate: (el: HTMLElement) => boolean): HTMLElement | null {
+        for (let i = 0; i < depth + 1; i++) {
+            if (predicate(el)) {
+                return el
+            }
+            const parent = el.parentElement;
+            if (!parent) {
+                return null
+            }
+            el = parent
+        }
+        return null
+    }
+
+    /**
      * Given event and target, return true if handled and false otherwise.
      */
     type EventHandler = (e: Event, target: HTMLElement) => Boolean
@@ -55,16 +74,8 @@
      * Opens image activity for posts with just one image
      */
     const _frostImage: EventHandler = (e, target) => {
-        let element: Element = target;
-        // Notifications are two layers under
-        for (let i = 0; i < 2; i++) {
-            if (element.tagName !== 'A') {
-                element = <Element>element.parentElement;
-            } else {
-                break
-            }
-        }
-        if (element.tagName !== 'A') {
+        const element = _parentEl(target, 2, (el) => el.tagName === 'A');
+        if (!element) {
             return false;
         }
         const url = element.getAttribute('href');
@@ -92,7 +103,7 @@
         return true;
     };
 
-    const handlers = [_frostImage, _frostCopyComment, _frostCopyPost];
+    const handlers: EventHandler[] = [_frostImage, _frostCopyComment, _frostCopyPost];
 
     const _frostAContext = (e: Event) => {
         Frost.longClick(true);
