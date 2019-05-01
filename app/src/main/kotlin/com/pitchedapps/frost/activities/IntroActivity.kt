@@ -54,6 +54,7 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
+import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 
@@ -171,6 +172,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     override fun finish() {
         launch(NonCancellable) {
             loadAssets()
+            NotificationWidget.forceUpdate(this@IntroActivity)
             launchNewTask<MainActivity>(cookies(), false)
             super.finish()
         }
