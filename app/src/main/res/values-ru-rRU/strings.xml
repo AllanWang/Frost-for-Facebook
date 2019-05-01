@@ -17,6 +17,7 @@
     <string name="birthdays">Дни рождения</string>
     <string name="chat">Написать</string>
     <string name="photos">Фотографии</string>
+    <string name="marketplace">Marketplace</string>
     <string name="notes">Заметки</string>
     <string name="on_this_day">В этот день</string>
     <string name="loading_account">Почти готово…</string>
@@ -45,6 +46,8 @@
     <string name="options">Опции</string>
     <string name="tab_customizer_instructions">Долго нажмите и перетащите чтобы переставить иконки</string>
     <string name="no_new_notifications">Новые уведомления отсутствуют</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
     <!--
     Template used to display human readable string;
     For instance:
