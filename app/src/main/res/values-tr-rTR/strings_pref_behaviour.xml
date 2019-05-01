@@ -21,6 +21,7 @@
     <string name="force_message_bottom_desc">Birileti dizisi yüklerken, sayfayı olduğu gibi yüklemek yerine, sayfanın altına kaydırma yapın.</string>
     <string name="enable_pip">PIP\'i etkinleştir</string>
     <string name="enable_pip_desc">PIP (Picture in Picture) videolarını etkinleştir</string>
+    <string name="autoplay_settings">Otomatik oynatma ayarları</string>
     <string name="exit_confirmation">Çıkış Onayı</string>
     <string name="exit_confirmation_desc">Uygulamadan çıkmadanönce onay iletişim kutusunu göster</string>
     <string name="analytics">Analiz</string>
