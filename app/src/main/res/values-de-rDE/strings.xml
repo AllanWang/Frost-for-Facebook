@@ -45,4 +45,12 @@
     <string name="options">Optionen</string>
     <string name="tab_customizer_instructions">Durch langes Drücken und Ziehen können Sie die oberen Symbole neu anordnen.</string>
     <string name="no_new_notifications">Keine neue Benachrichtigungen gefunden</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
 </resources>
