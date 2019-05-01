@@ -45,6 +45,7 @@ import com.pitchedapps.frost.settings.getDebugPrefs
 import com.pitchedapps.frost.settings.getExperimentalPrefs
 import com.pitchedapps.frost.settings.getFeedPrefs
 import com.pitchedapps.frost.settings.getNotificationPrefs
+import com.pitchedapps.frost.settings.getSecurityPrefs
 import com.pitchedapps.frost.settings.sendDebug
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -144,6 +145,11 @@ class SettingsActivity : KPrefActivity() {
         subItems(R.string.notifications, getNotificationPrefs()) {
             descRes = R.string.notifications_desc
             iicon = GoogleMaterial.Icon.gmd_notifications
+        }
+
+        subItems(R.string.security, getSecurityPrefs()) {
+            descRes = R.string.security_desc
+            iicon = GoogleMaterial.Icon.gmd_lock
         }
 
 //        subItems(R.string.network, getNetworkPrefs()) {

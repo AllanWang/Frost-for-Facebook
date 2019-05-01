@@ -26,6 +26,10 @@ object BiometricUtils {
     @Volatile
     private var pool: ExecutorService? = null
 
+    private var lastUnlockTime = -1L
+
+    private const val UNLOCK_TIME_INTERVAL = 15 * 60 * 1000
+
     /**
      * Checks if biometric authentication is possible
      * Currently, this means checking for enrolled fingerprints
@@ -41,12 +45,12 @@ object BiometricUtils {
         pool ?: Executors.newSingleThreadExecutor().also { pool = it }
 
     private fun shouldPrompt(context: Context): Boolean {
-        return true
+        return Prefs.biometricsEnabled && System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
     }
 
-    fun authenticate(activity: FragmentActivity): BiometricDeferred {
+    fun authenticate(activity: FragmentActivity, force: Boolean = false): BiometricDeferred {
         val deferred: BiometricDeferred = CompletableDeferred()
-        if (!shouldPrompt(activity)) {
+        if (!force && !shouldPrompt(activity)) {
             deferred.complete(null)
             return deferred
         }
@@ -66,6 +70,7 @@ object BiometricUtils {
         }
 
         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+            lastUnlockTime = System.currentTimeMillis()
             deferred.complete(result.cryptoObject)
         }
 

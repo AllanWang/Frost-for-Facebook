@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="security_disclaimer_info">Security preferences help protect access to Frost from the UI. However, note that local data is not encrypted, and can still be accessed by rooted users.</string>
+    <string name="enable_biometrics">Enable biometrics</string>
+    <string name="enable_biometrics_desc">Require biometric authentication after inactivity</string>
+</resources>

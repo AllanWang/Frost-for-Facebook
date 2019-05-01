@@ -52,7 +52,7 @@ import java.io.File
  */
 fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
-    plainText(R.string.experimental_disclaimer) {
+    plainText(R.string.disclaimer) {
         descRes = R.string.debug_disclaimer_info
     }
 
