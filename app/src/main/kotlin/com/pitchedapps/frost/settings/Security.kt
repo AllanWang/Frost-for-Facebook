@@ -34,6 +34,11 @@ fun SettingsActivity.getSecurityPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.enable_biometrics, Prefs::biometricsEnabled, {
         launch {
+            /*
+             * For security, we should request authentication when:
+             * - enabling to ensure that it is supported
+             * - disabling to ensure that it is permitted
+             */
             BiometricUtils.authenticate(this@getSecurityPrefs, force = true).await()
             Prefs.biometricsEnabled = it
             reloadByTitle(R.string.enable_biometrics)

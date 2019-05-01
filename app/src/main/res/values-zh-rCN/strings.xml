@@ -48,4 +48,7 @@
 
     The first element is the day, and the second element is the time
     -->
+
+    <string name="disclaimer">免责声明</string>
+
 </resources>
