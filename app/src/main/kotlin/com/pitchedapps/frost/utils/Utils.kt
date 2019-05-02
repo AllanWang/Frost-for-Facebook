@@ -186,7 +186,8 @@ fun MaterialDialog.Builder.theme(): MaterialDialog.Builder {
 }
 
 fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
-    val isTransparent = (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255) || forceTransparent
+    val isTransparent =
+        (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255) || forceTransparent
     if (Prefs.bgColor.isColorDark)
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     else
@@ -357,7 +358,7 @@ val dependentSegments = arrayOf(
 )
 
 inline val String?.isExplicitIntent
-    get() = this != null && startsWith("intent://")
+    get() = this != null && (startsWith("intent://") || startsWith("market://"))
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
     theme()

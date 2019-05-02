@@ -76,7 +76,7 @@ const val FALLBACK_TIME_MOD = 1000000
 
 data class FrostLink(val text: String, val href: String)
 
-data class ParseResponse<out T: ParseData>(val cookie: String, val data: T) {
+data class ParseResponse<out T : ParseData>(val cookie: String, val data: T) {
     override fun toString() = "ParseResponse\ncookie: $cookie\ndata:\n$data"
 }
 

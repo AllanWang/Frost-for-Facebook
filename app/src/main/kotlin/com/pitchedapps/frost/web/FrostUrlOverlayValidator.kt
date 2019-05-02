@@ -75,7 +75,6 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     }
     if (!Prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
-        L.v { "Check web request from overlay" }
         val shouldUseDesktop = url.formattedFbUrl.shouldUseDesktopAgent
         //already overlay; manage user agent
         if (userAgentString != USER_AGENT_DESKTOP && shouldUseDesktop) {
