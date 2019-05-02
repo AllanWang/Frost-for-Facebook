@@ -11,6 +11,8 @@
     <string name="suggested_friends_desc">在希望中顯示 \"您可能認識的人\"</string>
     <string name="suggested_groups">建議的組</string>
     <string name="suggested_groups_desc">在新聞中顯示 \"建議的組\"</string>
+    <string name="show_stories">顯示動態</string>
+    <string name="show_stories_desc">在Feed中顯示動態</string>
     <string name="facebook_ads">臉書廣告</string>
     <string name="facebook_ads_desc">顯示本地臉書廣告</string>
 </resources>
