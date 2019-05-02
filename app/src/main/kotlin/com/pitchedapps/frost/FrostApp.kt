@@ -45,7 +45,9 @@ import com.raizlabs.android.dbflow.config.DatabaseConfig
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import java.util.Random
 import kotlin.reflect.KClass
 
@@ -134,7 +136,12 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} created" }
                 }
             })
-        startKoin(this, listOf(FrostDatabase.module(this)))
+        startKoin {
+            if (BuildConfig.DEBUG)
+                androidLogger()
+            androidContext(this@FrostApp)
+            modules(FrostDatabase.module(this@FrostApp))
+        }
     }
 
     private fun initBugsnag() {
