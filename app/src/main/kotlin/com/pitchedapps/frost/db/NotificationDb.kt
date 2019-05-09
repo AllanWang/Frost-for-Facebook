@@ -147,16 +147,13 @@ suspend fun NotificationDao.selectNotifications(userId: Long, type: String): Lis
 /**
  * Returns true if successful, given that there are constraints to the insertion
  */
-suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>): Boolean {
-    if (notifs.isEmpty()) return true
-    return dao {
-        try {
-            _saveNotifications(type, notifs)
-            true
-        } catch (e: Exception) {
-            L.e(e) { "Notif save failed for $type" }
-            false
-        }
+suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>): Boolean = dao {
+    try {
+        _saveNotifications(type, notifs)
+        true
+    } catch (e: Exception) {
+        L.e(e) { "Notif save failed for $type" }
+        false
     }
 }
 

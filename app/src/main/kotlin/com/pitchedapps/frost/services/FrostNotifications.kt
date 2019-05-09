@@ -137,10 +137,17 @@ enum class NotificationType(
             validText(notif.title) && validText(notif.text)
         }
         if (notifContents.isEmpty()) return 0
+
         val userId = data.id
         // Legacy, remove with dbflow
         val prevLatestEpoch = notifDao.latestEpoch(userId, channelId)
         L.v { "Notif $name prev epoch $prevLatestEpoch" }
+
+        if (!notifDao.saveNotifications(channelId, notifContents)) {
+            L.d { "Skip notifs for $name as saving failed" }
+            return -1
+        }
+
         if (prevLatestEpoch == -1L && !BuildConfig.DEBUG) {
             L.d { "Skipping first notification fetch" }
             return 0 // do not notify the first time
@@ -154,11 +161,6 @@ enum class NotificationType(
         }
 
         L.d { "${newNotifContents.size} new notifs found for $name" }
-
-        if (!notifDao.saveNotifications(channelId, newNotifContents)) {
-            L.d { "Skip notifs for $name as saving failed" }
-            return 0
-        }
 
         val notifs = newNotifContents.map { createNotification(context, it) }
 
