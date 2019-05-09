@@ -47,6 +47,7 @@
     <string name="options">Opções</string>
     <string name="tab_customizer_instructions">Mantenha pressionado e arraste para reorganizar os ícones superiores.</string>
     <string name="no_new_notifications">Nenhuma nova notificação encontrada</string>
+    <!--Biometrics-->
     <string name="today">Hoje</string>
     <string name="yesterday">Ontem</string>
     <!--
@@ -58,4 +59,5 @@
     The first element is the day, and the second element is the time
     -->
     <string name="time_template">%1s às %2s</string>
+    <string name="disclaimer">Aviso Legal</string>
 </resources>
