@@ -45,6 +45,7 @@
     <string name="options">Valgmuligheder</string>
     <string name="tab_customizer_instructions">Hold nede og træk for at flytte de øverste ikoner.</string>
     <string name="no_new_notifications">Ingen nye notifikationer</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -53,4 +54,5 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="disclaimer">Ansvarsfraskrivelse</string>
 </resources>
