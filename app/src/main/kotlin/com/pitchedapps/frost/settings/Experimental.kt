@@ -30,7 +30,7 @@ import com.pitchedapps.frost.utils.Showcase
  */
 fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
-    plainText(R.string.experimental_disclaimer) {
+    plainText(R.string.disclaimer) {
         descRes = R.string.experimental_disclaimer_info
     }
 

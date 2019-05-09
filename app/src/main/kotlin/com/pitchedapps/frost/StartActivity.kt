@@ -42,6 +42,7 @@ import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -79,6 +80,7 @@ class StartActivity : KauBaseActivity() {
         }
 
         launch {
+            val authDefer = BiometricUtils.authenticate(this@StartActivity)
             try {
                 migrate()
                 FbCookie.switchBackUser()
@@ -86,6 +88,7 @@ class StartActivity : KauBaseActivity() {
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d { "Cookies: ${cookies.joinToString("\t", transform = CookieEntity::toSensitiveString)}" }
                 loadAssets()
+                authDefer.await()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account

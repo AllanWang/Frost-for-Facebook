@@ -156,6 +156,8 @@ object Prefs : KPref() {
 
     var analytics: Boolean by kpref("analytics", true)
 
+    var biometricsEnabled: Boolean by kpref("biometrics_enabled", false)
+
     var overlayEnabled: Boolean by kpref("overlay_enabled", true)
 
     var overlayFullScreenSwipe: Boolean by kpref("overlay_full_screen_swipe", true)

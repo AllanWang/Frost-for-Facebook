@@ -10,6 +10,9 @@
     <string name="behaviour">Behaviour</string>
     <string name="behaviour_desc">Define how the app interacts in certain settings</string>
 
+    <string name="security">Security</string>
+    <string name="security_desc">Lock screen, biometrics, etc</string>
+
     <string name="network">Network</string>
     <string name="network_desc">Define options that affect metered networks</string>
 

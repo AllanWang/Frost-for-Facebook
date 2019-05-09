@@ -62,6 +62,8 @@
 
     <string name="no_new_notifications">No new notifications found</string>
 
+    <!--Biometrics-->
+    <string name="biometrics_prompt_title">Authenticate Frost</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <!--
@@ -73,5 +75,7 @@
     The first element is the day, and the second element is the time
     -->
     <string name="time_template">%1s at %2s</string>
+
+    <string name="disclaimer">Disclaimer</string>
 
 </resources>
