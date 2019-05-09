@@ -45,6 +45,7 @@
     <string name="preview">Pratinjau</string>
     <string name="options">Pilihan</string>
     <string name="tab_customizer_instructions">Tekan lama dan tarik untuk mengatur ulang ikon atas.</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -53,4 +54,5 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="disclaimer">Penolakan</string>
 </resources>
