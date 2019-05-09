@@ -44,6 +44,7 @@
     <string name="preview">แสดงตัวอย่าง</string>
     <string name="options">ตัวเลือก</string>
     <string name="tab_customizer_instructions">กดค้างและลากเพื่อจัดเรียงไอคอนด้านบน</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -52,4 +53,5 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="disclaimer">ข้อสงวนสิทธิ์</string>
 </resources>
