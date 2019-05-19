@@ -53,7 +53,6 @@ import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile
@@ -71,6 +70,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -294,16 +294,18 @@ internal enum class FabStates(
 ) {
     ERROR(GoogleMaterial.Icon.gmd_error, Color.WHITE, Color.RED) {
         override fun onClick(activity: ImageActivity) {
+            val err =
+                activity.errorRef?.takeIf { it !is FileNotFoundException && it.message != "Image failed to decode using JPEG decoder" }
+                    ?: return
             activity.materialDialogThemed {
                 title(R.string.kau_error)
                 content(R.string.bad_image_overlay)
                 positiveText(R.string.kau_yes)
                 onPositive { _, _ ->
-                    if (activity.errorRef != null)
-                        L.e(activity.errorRef) { "ImageActivity error report" }
                     activity.sendFrostEmail(R.string.debug_image_link_subject) {
                         addItem("Url", activity.imageUrl)
-                        addItem("Message", activity.errorRef?.message ?: "Null")
+                        addItem("Type", err.javaClass.name)
+                        addItem("Message", err.message ?: "Null")
                     }
                 }
                 negativeText(R.string.kau_no)
@@ -356,11 +358,6 @@ internal enum class FabStates(
                     fab.show()
                 }
             })
-
-//            fab.fadeScaleTransition {
-//                setIcon(iicon, color = iconColor)
-////                backgroundTintList = ColorStateList.valueOf(tint)
-//            }
         }
     }
 
