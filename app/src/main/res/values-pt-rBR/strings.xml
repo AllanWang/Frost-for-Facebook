@@ -34,8 +34,8 @@
     <string name="new_message">Nova mensagem</string>
     <string name="no_text">Nenhum texto</string>
     <string name="show_all_results">Mostrar todos os resultados</string>
-    <string name="frost_description">Frost é uma alternativa completamente tematizável e
-        totalmente funcional para o aplicativo oficial do Facebook, feito a partir do zero e orgulhosamente de código aberto.</string>
+    <string name="frost_description">"Frost é uma alternativa completamente tematizável e
+        totalmente funcional para o aplicativo oficial do Facebook, feito a partir do zero e orgulhosamente de código aberto."</string>
     <string name="faq_title">FAQ Frost</string>
     <string name="html_extraction_error">Ocorreu um erro na extração html.</string>
     <string name="html_extraction_cancelled">O pedido foi cancelado.</string>
