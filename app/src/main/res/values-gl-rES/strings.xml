@@ -49,6 +49,9 @@
     <string name="tab_customizer_instructions">Toque longo e arrastra para reorganizar as iconas superiores.</string>
     <string name="no_new_notifications">Non se atopou ningunha nova notificación</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">Autenticar Frost</string>
+    <string name="today">Hoxe</string>
+    <string name="yesterday">Onte</string>
     <!--
     Template used to display human readable string;
     For instance:
@@ -57,5 +60,6 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="time_template">%1s á(s) %2s</string>
     <string name="disclaimer">Aviso legal</string>
 </resources>
