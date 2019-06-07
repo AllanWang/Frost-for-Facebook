@@ -20,14 +20,28 @@ buildscript {
     wrapper.setDistributionType(Wrapper.DistributionType.ALL)
 }
 
-apply plugin: 'ca.allanwang.kau'
+apply plugin: "ca.allanwang.kau"
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
 task generateChangelogMd() {
-    kauChangelog.generate("$project.rootDir/app/src/main/res/xml/frost_changelog.xml")
+    def changelog = kauChangelog.generate("${project.rootDir}/app/src/main/res/xml/frost_changelog.xml")
+    // If we have no changelog, something is wrong
+    def entry = changelog[0]
+    def whatsNewFile = new File("${project.rootDir}/app/src/main/play/en-US/whatsnew")
+    if (!whatsNewFile.exists()) {
+        // Throw exceptions so that moving this file will require us to update the script
+        throw new RuntimeException("Whatsnew file not found")
+    }
+    whatsNewFile.withWriter { writer ->
+        writer.write(entry.version)
+        writer.write("\n")
+        entry.items.each {
+            writer.write("\n* ${it}")
+        }
+    }
 }
 
 task fullRelease(type: GradleBuild) {
