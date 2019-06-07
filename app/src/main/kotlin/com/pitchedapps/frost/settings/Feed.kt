@@ -17,13 +17,14 @@
 package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.string
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
-import com.pitchedapps.frost.utils.materialDialogThemed
 
 /**
  * Created by Allan Wang on 2017-06-29.
@@ -33,15 +34,17 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     text(R.string.newsfeed_sort, Prefs::feedSort, { Prefs.feedSort = it }) {
         descRes = R.string.newsfeed_sort_desc
         onClick = {
-            materialDialogThemed {
+            materialDialog {
                 title(R.string.newsfeed_sort)
-                items(FeedSort.values().map { string(it.textRes) })
-                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
-                    if (item.pref != which) {
-                        item.pref = which
+                listItemsSingleChoice(
+                    items = FeedSort.values().map { string(it.textRes) },
+                    initialSelection = item.pref
+                ) { _, index, _ ->
+                    if (item.pref != index) {
+                        item.pref = index
                         shouldRestartMain()
                     }
-                    true
+
                 }
             }
         }

@@ -36,6 +36,7 @@ import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.darken
 import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.finishSlideOut
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.navigationBarColor
 import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.shareText
@@ -69,7 +70,6 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostSnackbar
-import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -109,9 +109,9 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
                 refreshReceiver.receive()
                 refreshReceiver.cancel()
                 withMainContext {
-                    materialDialogThemed {
+                    materialDialog {
                         title(R.string.invalid_share_url)
-                        content(R.string.invalid_share_url_desc)
+                        message(R.string.invalid_share_url_desc)
                     }
                 }
             }

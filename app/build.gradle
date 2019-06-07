@@ -188,21 +188,21 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
 
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:adapter:$KAU"
+    implementation "ca.allanwang.kau:adapter:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:about:$KAU"
+    implementation "ca.allanwang.kau:about:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:colorpicker:$KAU"
+    implementation "ca.allanwang.kau:colorpicker:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:mediapicker:$KAU"
+    implementation "ca.allanwang.kau:mediapicker:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:kpref-activity:$KAU"
+    implementation "ca.allanwang.kau:kpref-activity:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:searchview:$KAU"
+    implementation "ca.allanwang.kau:searchview:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:core:$KAU"
+    implementation "ca.allanwang.kau:core:${Versions.kau}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:core-ui:$KAU"
+    implementation "ca.allanwang.kau:core-ui:${Versions.kau}"
 
     implementation "androidx.core:core-ktx:${KTX}"
 

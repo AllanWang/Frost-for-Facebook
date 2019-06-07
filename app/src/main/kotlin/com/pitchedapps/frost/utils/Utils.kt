@@ -342,9 +342,7 @@ val dependentSegments = arrayOf(
 inline val String?.isExplicitIntent
     get() = this != null && (startsWith("intent://") || startsWith("market://"))
 
-fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
-    theme()
-}
+fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog)
 
 fun Context.frostUriFromFile(file: File): Uri =
     FileProvider.getUriForFile(
