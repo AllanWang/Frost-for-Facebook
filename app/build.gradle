@@ -10,8 +10,8 @@ apply from: '../spotless.gradle'
 group = APP_GROUP
 
 android {
-    compileSdkVersion kau.targetSdk
-    buildToolsVersion kau.buildTools
+    compileSdkVersion kau.Versions.targetSdk
+    buildToolsVersion kau.Versions.buildTools
 
     androidGitVersion {
         codeFormat = 'MMNNPPXX'
@@ -21,8 +21,8 @@ android {
 
     defaultConfig {
         applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase(Locale.CANADA)
-        minSdkVersion kau.minSdk
-        targetSdkVersion kau.targetSdk
+        minSdkVersion kau.Versions.minSdk
+        targetSdkVersion kau.Versions.targetSdk
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
@@ -175,15 +175,15 @@ repositories {
 dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
 
-    androidTestImplementation kauDependency.kotlinTest
-    androidTestImplementation kauDependency.espresso
-    androidTestImplementation kauDependency.testRules
-    androidTestImplementation kauDependency.testRunner
+    androidTestImplementation kau.Dependencies.kotlinTest
+    androidTestImplementation kau.Dependencies.espresso
+    androidTestImplementation kau.Dependencies.testRules
+    androidTestImplementation kau.Dependencies.testRunner
     androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
 
-    testImplementation kauDependency.kotlinTest
+    testImplementation kau.Dependencies.kotlinTest
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
-    testImplementation kauDependency.junit
+    testImplementation kau.Dependencies.junit
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
 
@@ -214,18 +214,18 @@ dependencies {
 
 //    androidTestImplementation "io.mockk:mockk:${MOCKK}"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kau.coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kau.Versions.coroutines}"
 
     implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
 
     implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
 
-    implementation "com.mikepenz:fastadapter-extensions:${kau.fastAdapter}@aar"
+    implementation "com.mikepenz:fastadapter-extensions:${kau.Versions.fastAdapter}@aar"
 
     //noinspection GradleDependency
-    implementation "com.github.bumptech.glide:okhttp3-integration:${kau.glide}"
+    implementation "com.github.bumptech.glide:okhttp3-integration:${kau.Versions.glide}"
     //noinspection GradleDependency
-    kapt "com.github.bumptech.glide:compiler:${kau.glide}"
+    kapt "com.github.bumptech.glide:compiler:${kau.Versions.glide}"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON}"
 
@@ -243,8 +243,8 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
 
     //Icons
-    implementation "com.mikepenz:material-design-iconic-typeface:${kau.iconicsMaterial}@aar"
-    implementation "com.mikepenz:community-material-typeface:${kau.iconicsCommunity}@aar"
+    implementation "com.mikepenz:material-design-iconic-typeface:${kau.Versions.iconicsMaterial}@aar"
+    implementation "com.mikepenz:community-material-typeface:${kau.Versions.iconicsCommunity}@aar"
 
     implementation "org.jsoup:jsoup:${JSOUP}"
 
