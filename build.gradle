@@ -7,8 +7,9 @@ buildscript {
     }
 
     dependencies {
+        classpath kau.Plugins.android
 //        classpath 'com.android.tools.build.jetifier:jetifier-processor:1.0.0-beta02'
-        classpath "com.android.tools.build:gradle:${ANDROID_GRADLE}"
+//        classpath "com.android.tools.build:gradle:${ANDROID_GRADLE}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
         classpath "com.bugsnag:bugsnag-android-gradle-plugin:${BUGSNAG_PLUGIN}"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:${SPOTLESS}"

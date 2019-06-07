@@ -18,8 +18,11 @@ package com.pitchedapps.frost.utils
 
 import android.content.Context
 import ca.allanwang.kau.utils.copyToClipboard
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.shareText
 import ca.allanwang.kau.utils.string
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.list.listItems
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -36,13 +39,12 @@ fun Context.showWebContextMenu(wc: WebContext) {
     val menuItems = WebContextType.values
         .filter { it.constraint(wc) }
 
-    materialDialogThemed {
-        title(title)
-        items(menuItems.map { string(it.textId) })
-        itemsCallback { _, _, position, _ ->
+    materialDialog {
+        title(text = title)
+        listItems(items = menuItems.map { string(it.textId) }) { _, position, _ ->
             menuItems[position].onClick(this@showWebContextMenu, wc)
         }
-        dismissListener {
+        onDismiss {
             //showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
             (this@showWebContextMenu as? MainActivity)?.viewPager?.enableSwipe = true
         }
@@ -66,11 +68,10 @@ enum class WebContextType(
     COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc -> c.copyToClipboard(wc.text) }),
     SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc -> c.shareText(wc.url) }),
     DEBUG_LINK(R.string.debug_link, { it.hasUrl }, { c, wc ->
-        c.materialDialogThemed {
+        c.materialDialog {
             title(R.string.debug_link)
-            content(R.string.debug_link_desc)
-            positiveText(R.string.kau_ok)
-            onPositive { _, _ ->
+            message(R.string.debug_link_desc)
+            positiveButton(R.string.kau_ok) {
                 c.sendFrostEmail(R.string.debug_link_subject) {
                     message = c.string(R.string.debug_link_content)
                     addItem("Unformatted url", wc.unformattedUrl!!)
