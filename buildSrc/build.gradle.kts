@@ -2,6 +2,8 @@ plugins {
     `kotlin-dsl`
 }
 
+group = "com.pitchedapps"
+
 repositories {
     jcenter()
     maven("https://jitpack.io")
