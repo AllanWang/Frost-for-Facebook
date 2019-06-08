@@ -11,4 +11,6 @@
     <dimen name="badge_icon_size">20dp</dimen>
 
     <dimen name="toolbar_icon_size">24dp</dimen>
+
+    <dimen name="dialog_corner_radius">8dp</dimen>
 </resources>

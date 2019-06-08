@@ -40,6 +40,7 @@ import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeScaleTransition
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.restart
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.setMenuIcons
@@ -56,6 +57,7 @@ import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
 import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
+import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -99,7 +101,6 @@ import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchLogin
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
-import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -293,21 +294,21 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                     FbCookie.reset()
                                     launchLogin(cookies(), true)
                                 } else {
-                                    materialDialogThemed {
+                                    materialDialog {
                                         title(R.string.kau_logout)
-                                        content(
+                                        message(
+                                            text =
                                             String.format(
                                                 string(R.string.kau_logout_confirm_as_x),
                                                 currentCookie.name ?: Prefs.userId.toString()
                                             )
                                         )
-                                        positiveText(R.string.kau_yes)
-                                        negativeText(R.string.kau_no)
-                                        onPositive { _, _ ->
+                                        positiveButton(R.string.kau_yes) {
                                             this@BaseMainActivity.launch {
                                                 FbCookie.logout(this@BaseMainActivity)
                                             }
                                         }
+                                        negativeButton(R.string.kau_no)
                                     }
                                 }
                             }
@@ -518,13 +519,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         if (currentFragment.onBackPressed()) return true
         if (Prefs.exitConfirmation) {
-            materialDialogThemed {
+            materialDialog {
                 title(R.string.kau_exit)
-                content(R.string.kau_exit_confirmation)
-                positiveText(R.string.kau_yes)
-                negativeText(R.string.kau_no)
-                onPositive { _, _ -> finish() }
-                checkBoxPromptRes(R.string.kau_do_not_show_again, false) { _, b -> Prefs.exitConfirmation = !b }
+                message(R.string.kau_exit_confirmation)
+                positiveButton(R.string.kau_yes) { finish() }
+                negativeButton(R.string.kau_no)
+                checkBoxPrompt(R.string.kau_do_not_show_again, isCheckedDefault = false) {
+                    Prefs.exitConfirmation = !it
+                }
             }
             return true
         }

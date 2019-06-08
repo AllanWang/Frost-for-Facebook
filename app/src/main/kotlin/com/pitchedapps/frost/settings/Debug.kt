@@ -24,6 +24,8 @@ import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withMainContext
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.list.listItems
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.DebugActivity
 import com.pitchedapps.frost.activities.SettingsActivity
@@ -68,20 +70,18 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
             val parsers = arrayOf(NotifParser, MessageParser, SearchParser)
 
             materialDialog {
-                items(parsers.map { string(it.nameRes) })
-                itemsCallback { dialog, _, position, _ ->
+                listItems(items = parsers.map { string(it.nameRes) }) { dialog, position, _ ->
                     dialog.dismiss()
                     val parser = parsers[position]
                     var attempt: Job? = null
                     val loading = materialDialog {
-                        content(parser.nameRes)
-                        progress(true, 100)
-                        negativeText(R.string.kau_cancel)
-                        onNegative { dialog, _ ->
+                        message(parser.nameRes)
+                        // TODO change dialog? No more progress view
+                        negativeButton(R.string.kau_cancel) {
                             attempt?.cancel()
-                            dialog.dismiss()
+                            it.dismiss()
                         }
-                        canceledOnTouchOutside(false)
+                        cancelOnTouchOutside(false)
                     }
 
                     attempt = launch(Dispatchers.IO) {
@@ -122,18 +122,17 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     val md = materialDialog {
         title(R.string.parsing_data)
-        progress(false, 100)
-        negativeText(R.string.kau_cancel)
-        onNegative { dialog, _ -> dialog.dismiss() }
-        canceledOnTouchOutside(false)
-        dismissListener { job.cancel() }
+        // TODO remove dialog? No progress ui
+        negativeButton(R.string.kau_cancel) { it.dismiss() }
+        cancelOnTouchOutside(false)
+        onDismiss { job.cancel() }
     }
 
     val progressChannel = Channel<Int>(10)
 
     launchMain {
         for (p in progressChannel) {
-            md.setProgress(p)
+//            md.setProgress(p)
         }
     }
 

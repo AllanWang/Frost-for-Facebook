@@ -9,7 +9,7 @@ repositories {
     maven("https://jitpack.io")
 }
 
-val KAU: String = "df94b2f"
+val KAU: String = "db3b6c0"
 
 dependencies {
     implementation("ca.allanwang.kau:gradle-plugin:$KAU")

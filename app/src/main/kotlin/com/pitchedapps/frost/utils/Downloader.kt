@@ -25,6 +25,7 @@ import android.webkit.URLUtil
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.isAppEnabled
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.showAppInfo
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
@@ -64,12 +65,13 @@ fun Context.frostDownload(
         return L.e { "Invalid download $uri" }
     }
     if (!isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
-        materialDialogThemed {
+        materialDialog {
             title(R.string.no_download_manager)
-            content(R.string.no_download_manager_desc)
-            positiveText(R.string.kau_yes)
-            onPositive { _, _ -> showAppInfo(DOWNLOAD_MANAGER_PACKAGE) }
-            negativeText(R.string.kau_no)
+            message(R.string.no_download_manager_desc)
+            positiveButton(R.string.kau_yes) {
+                showAppInfo(DOWNLOAD_MANAGER_PACKAGE)
+            }
+            negativeButton(R.string.kau_no)
         }
         return
     }
