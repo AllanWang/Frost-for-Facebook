@@ -8,13 +8,11 @@ buildscript {
 
     dependencies {
         classpath kau.Plugins.android
-//        classpath 'com.android.tools.build.jetifier:jetifier-processor:1.0.0-beta02'
-//        classpath "com.android.tools.build:gradle:${ANDROID_GRADLE}"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN}"
-        classpath "com.bugsnag:bugsnag-android-gradle-plugin:${BUGSNAG_PLUGIN}"
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:${SPOTLESS}"
-        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:${DEX_PLUGIN}"
-        classpath "com.gladed.androidgitversion:gradle-android-git-version:${GIT_PLUGIN}"
+        classpath kau.Plugins.kotlin
+        classpath kau.Plugins.bugsnag
+        classpath kau.Plugins.spotless
+        classpath kau.Plugins.dexCount
+        classpath kau.Plugins.gitVersion
     }
 
     wrapper.setDistributionType(Wrapper.DistributionType.ALL)

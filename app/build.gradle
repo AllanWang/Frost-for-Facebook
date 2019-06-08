@@ -180,92 +180,92 @@ dependencies {
     androidTestImplementation kau.Dependencies.espresso
     androidTestImplementation kau.Dependencies.testRules
     androidTestImplementation kau.Dependencies.testRunner
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
+    androidTestImplementation kau.Dependencies.kotlinReflect
 
     testImplementation kau.Dependencies.kotlinTest
-    testImplementation "org.jetbrains.kotlin:kotlin-reflect:${KOTLIN}"
+    testImplementation kau.Dependencies.kotlinReflect
     testImplementation kau.Dependencies.junit
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN}"
+    implementation kau.Dependencies.kotlin
 
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:adapter:${Versions.kau}"
+    implementation "ca.allanwang.kau:adapter:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:about:${Versions.kau}"
+    implementation "ca.allanwang.kau:about:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:colorpicker:${Versions.kau}"
+    implementation "ca.allanwang.kau:colorpicker:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:mediapicker:${Versions.kau}"
+    implementation "ca.allanwang.kau:mediapicker:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:kpref-activity:${Versions.kau}"
+    implementation "ca.allanwang.kau:kpref-activity:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:searchview:${Versions.kau}"
+    implementation "ca.allanwang.kau:searchview:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:core:${Versions.kau}"
+    implementation "ca.allanwang.kau:core:${KAU}"
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:core-ui:${Versions.kau}"
+    implementation "ca.allanwang.kau:core-ui:${KAU}"
 
-    implementation "androidx.core:core-ktx:${KTX}"
+    implementation "androidx.core:core-ktx:${Versions.ktx}"
 
-    implementation "androidx.biometric:biometric:${ANDX_BIOMETRIC}"
+    implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    implementation "org.koin:koin-android:${KOIN}"
-    testImplementation "org.koin:koin-test:${KOIN}"
-    androidTestImplementation "org.koin:koin-test:${KOIN}"
+    implementation "org.koin:koin-android:${Versions.koin}"
+    testImplementation "org.koin:koin-test:${Versions.koin}"
+    androidTestImplementation "org.koin:koin-test:${Versions.koin}"
 
-//    androidTestImplementation "io.mockk:mockk:${MOCKK}"
+//    androidTestImplementation "io.mockk:mockk:${Versions.mockk}"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kau.Versions.coroutines}"
+    implementation kau.Dependencies.coroutines
 
-    implementation "org.apache.commons:commons-text:${COMMONS_TEXT}"
+    implementation "org.apache.commons:commons-text:${Versions.apacheCommonsText}"
 
-    implementation "com.devbrackets.android:exomedia:${EXOMEDIA}"
+    implementation "com.devbrackets.android:exomedia:${Versions.exoMedia}"
 
-    implementation "com.mikepenz:fastadapter-extensions:${kau.Versions.fastAdapter}@aar"
-
-    //noinspection GradleDependency
-    implementation "com.github.bumptech.glide:okhttp3-integration:${kau.Versions.glide}"
-    //noinspection GradleDependency
-    kapt "com.github.bumptech.glide:compiler:${kau.Versions.glide}"
-
-    implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON}"
+    implementation kau.Dependencies.fastAdapter("extensions")
 
     //noinspection GradleDependency
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    implementation kau.Dependencies.glide
     //noinspection GradleDependency
-    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
-    //noinspection GradleDependency
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY}"
-//    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY}"
+    kapt kau.Dependencies.glideKapt
 
-    implementation "com.github.Raizlabs.DBFlow:dbflow:${DBFLOW}"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${DBFLOW}"
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${DBFLOW}"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${DBFLOW}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}"
+
+    //noinspection GradleDependency
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
+    //noinspection GradleDependency
+    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
+    //noinspection GradleDependency
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
+//    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
+
+    implementation "com.github.Raizlabs.DBFlow:dbflow:${Versions.dbflow}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${Versions.dbflow}"
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${Versions.dbflow}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${Versions.dbflow}"
 
     //Icons
-    implementation "com.mikepenz:material-design-iconic-typeface:${kau.Versions.iconicsMaterial}@aar"
-    implementation "com.mikepenz:community-material-typeface:${kau.Versions.iconicsCommunity}@aar"
+    implementation kau.Dependencies.iconicsMaterial
+    implementation kau.Dependencies.iconicsCommunity
 
-    implementation "org.jsoup:jsoup:${JSOUP}"
+    implementation "org.jsoup:jsoup:${Versions.jsoup}"
 
-    implementation "com.squareup.okhttp3:okhttp:${OKHTTP}"
-    implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP}"
-    testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP}"
+    implementation "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
 
-    implementation "co.zsmb:materialdrawer-kt:${MATERIAL_DRAWER_KT}"
+    implementation "co.zsmb:materialdrawer-kt:${Versions.materialDrawerKt}"
 
-    implementation "com.bugsnag:bugsnag-android:${BUGSNAG}"
+    implementation kau.Dependencies.bugsnag
 
-    implementation "com.davemorrissey.labs:subsampling-scale-image-view:${SCALE_IMAGE_VIEW}"
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view:${Versions.scaleImageView}"
 
-    implementation "com.sothree.slidinguppanel:library:${SLIDING_PANEL}"
+    implementation "com.sothree.slidinguppanel:library:${Versions.slidingPanel}"
 
-    implementation "androidx.room:room-coroutines:${ROOM}"
-    implementation "androidx.room:room-runtime:${ROOM}"
-    kapt "androidx.room:room-compiler:${ROOM}"
-    testImplementation "androidx.room:room-testing:${ROOM}"
+    implementation "androidx.room:room-ktx:${Versions.room}"
+    implementation "androidx.room:room-runtime:${Versions.room}"
+    kapt "androidx.room:room-compiler:${Versions.room}"
+    testImplementation "androidx.room:room-testing:${Versions.room}"
 
 }
 
@@ -290,7 +290,7 @@ configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
         if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
-            details.useVersion KOTLIN
+            details.useVersion kau.Versions.kotlin
         }
     }
 }
