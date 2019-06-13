@@ -28,7 +28,7 @@ import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.startActivity
 import ca.allanwang.kau.utils.string
-import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity

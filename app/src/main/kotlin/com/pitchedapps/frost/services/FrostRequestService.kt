@@ -82,7 +82,7 @@ private const val ARG_1 = "frost_request_arg_1"
 private const val ARG_2 = "frost_request_arg_2"
 private const val ARG_3 = "frost_request_arg_3"
 
-private fun BaseBundle.getCookie() = getString(ARG_COOKIE)
+private fun BaseBundle.getCookie(): String = getString(ARG_COOKIE)!!
 private fun BaseBundle.putCookie(cookie: String) = putString(ARG_COOKIE, cookie)
 
 /**

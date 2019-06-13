@@ -60,7 +60,7 @@ import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
-import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.materialdrawer.AccountHeader

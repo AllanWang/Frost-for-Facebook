@@ -389,7 +389,7 @@ fun File.createFreshFile(): Boolean {
         if (!delete()) return false
     } else {
         val parent = parentFile
-        if (!parent.exists() && !parent.mkdirs())
+        if (parent != null && !parent.exists() && !parent.mkdirs())
             return false
     }
     return createNewFile()
