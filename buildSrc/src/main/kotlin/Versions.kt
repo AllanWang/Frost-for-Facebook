@@ -27,7 +27,7 @@ object Versions {
     // https://github.com/square/okhttp/releases
     const val okhttp = "3.14.1"
     // https://developer.android.com/jetpack/androidx/releases/room
-    const val room = "2.1.0-rc01"
+    const val room = "2.1.0"
     // http://robolectric.org/getting-started/
     const val roboelectric = "4.2"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
