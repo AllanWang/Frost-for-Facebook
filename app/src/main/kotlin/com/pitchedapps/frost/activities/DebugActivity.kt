@@ -25,7 +25,7 @@ import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.visible
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions

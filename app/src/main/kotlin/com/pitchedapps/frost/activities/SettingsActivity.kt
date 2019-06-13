@@ -29,14 +29,16 @@ import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.finishSlideOut
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.startLink
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withSceneTransitionAnimation
-import com.mikepenz.community_material_typeface_library.CommunityMaterial
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.afollestad.materialdialogs.list.listItems
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.getAppearancePrefs
@@ -55,7 +57,6 @@ import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostTheme
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -235,10 +236,11 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_email -> materialDialogThemed {
+            R.id.action_email -> materialDialog {
                 title(R.string.subject)
-                items(Support.values().map { string(it.title) })
-                itemsCallback { _, _, which, _ -> Support.values()[which].sendEmail(this@SettingsActivity) }
+                listItems(items = Support.values().map { string(it.title) }) { _, index, _ ->
+                    Support.values()[index].sendEmail(this@SettingsActivity)
+                }
             }
             R.id.action_changelog -> frostChangelog()
             else -> return super.onOptionsItemSelected(item)

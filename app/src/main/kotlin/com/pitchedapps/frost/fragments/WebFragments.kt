@@ -17,7 +17,7 @@
 package com.pitchedapps.frost.fragments
 
 import android.webkit.WebView
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.facebook.FbItem

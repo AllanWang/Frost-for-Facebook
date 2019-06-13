@@ -33,6 +33,7 @@ import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.isHidden
 import ca.allanwang.kau.utils.isVisible
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.tint
@@ -41,7 +42,7 @@ import ca.allanwang.kau.utils.withMinAlpha
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
@@ -58,7 +59,6 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
-import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -297,18 +297,17 @@ internal enum class FabStates(
             val err =
                 activity.errorRef?.takeIf { it !is FileNotFoundException && it.message != "Image failed to decode using JPEG decoder" }
                     ?: return
-            activity.materialDialogThemed {
+            activity.materialDialog {
                 title(R.string.kau_error)
-                content(R.string.bad_image_overlay)
-                positiveText(R.string.kau_yes)
-                onPositive { _, _ ->
+                message(R.string.bad_image_overlay)
+                positiveButton(R.string.kau_yes) {
                     activity.sendFrostEmail(R.string.debug_image_link_subject) {
                         addItem("Url", activity.imageUrl)
                         addItem("Type", err.javaClass.name)
                         addItem("Message", err.message ?: "Null")
                     }
                 }
-                negativeText(R.string.kau_no)
+                negativeButton(R.string.kau_no)
             }
         }
     },

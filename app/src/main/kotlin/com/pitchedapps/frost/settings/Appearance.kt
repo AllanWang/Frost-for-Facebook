@@ -20,7 +20,9 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefColorPicker
 import ca.allanwang.kau.kpref.activity.items.KPrefSeekbar
 import ca.allanwang.kau.ui.views.RippleCanvas
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.string
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -33,7 +35,6 @@ import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.launchTabCustomizerActivity
-import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.views.KPrefTextSeekbar
 
@@ -46,20 +47,21 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     text(R.string.theme, Prefs::theme, { Prefs.theme = it }) {
         onClick = {
-            materialDialogThemed {
+            materialDialog {
                 title(R.string.theme)
-                items(Theme.values().map { string(it.textRes) })
-                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
-                    if (item.pref != which) {
-                        item.pref = which
+                listItemsSingleChoice(
+                    items = Theme.values().map { string(it.textRes) },
+                    initialSelection = item.pref
+                ) { _, index, _ ->
+                    if (item.pref != index) {
+                        item.pref = index
                         shouldRestartMain()
                         reload()
                         setFrostTheme(true)
                         themeExterior()
                         invalidateOptionsMenu()
-                        frostEvent("Theme", "Count" to Theme(which).name)
+                        frostEvent("Theme", "Count" to Theme(index).name)
                     }
-                    true
                 }
             }
         }
@@ -134,16 +136,17 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     text(R.string.main_activity_layout, Prefs::mainActivityLayoutType, { Prefs.mainActivityLayoutType = it }) {
         textGetter = { string(Prefs.mainActivityLayout.titleRes) }
         onClick = {
-            materialDialogThemed {
+            materialDialog {
                 title(R.string.main_activity_layout_desc)
-                items(MainActivityLayout.values.map { string(it.titleRes) })
-                itemsCallbackSingleChoice(item.pref) { _, _, which, _ ->
-                    if (item.pref != which) {
-                        item.pref = which
+                listItemsSingleChoice(
+                    items = MainActivityLayout.values.map { string(it.titleRes) },
+                    initialSelection = item.pref
+                ) { _, index, _ ->
+                    if (item.pref != index) {
+                        item.pref = index
                         shouldRestartMain()
-                        frostEvent("Main Layout", "Type" to MainActivityLayout(which).name)
+                        frostEvent("Main Layout", "Type" to MainActivityLayout(index).name)
                     }
-                    true
                 }
             }
         }

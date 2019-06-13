@@ -167,24 +167,6 @@ fun WebOverlayActivity.url(): String {
     return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
-fun Context.materialDialogThemed(action: MaterialDialog.Builder.() -> Unit): MaterialDialog {
-    val builder = MaterialDialog.Builder(this).theme()
-    builder.action()
-    return builder.show()
-}
-
-fun MaterialDialog.Builder.theme(): MaterialDialog.Builder {
-    val dimmerTextColor = Prefs.textColor.adjustAlpha(0.8f)
-    titleColor(Prefs.textColor)
-    contentColor(dimmerTextColor)
-    widgetColor(dimmerTextColor)
-    backgroundColor(Prefs.bgColor.lighten(0.1f).withMinAlpha(200))
-    positiveColor(Prefs.textColor)
-    negativeColor(Prefs.textColor)
-    neutralColor(Prefs.textColor)
-    return this
-}
-
 fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
     val isTransparent =
         (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255) || forceTransparent
@@ -360,9 +342,7 @@ val dependentSegments = arrayOf(
 inline val String?.isExplicitIntent
     get() = this != null && (startsWith("intent://") || startsWith("market://"))
 
-fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog, Prefs.textColor) {
-    theme()
-}
+fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog)
 
 fun Context.frostUriFromFile(file: File): Uri =
     FileProvider.getUriForFile(

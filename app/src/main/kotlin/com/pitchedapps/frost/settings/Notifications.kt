@@ -24,8 +24,12 @@ import android.os.Build
 import android.provider.Settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.kpref.activity.items.KPrefText
+import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.minuteToText
 import ca.allanwang.kau.utils.string
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.customview.customView
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
@@ -35,7 +39,6 @@ import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostSnackbar
-import com.pitchedapps.frost.utils.materialDialogThemed
 import com.pitchedapps.frost.views.Keywords
 import kotlinx.coroutines.launch
 
@@ -49,13 +52,11 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         val options = longArrayOf(15, 30, 60, 120, 180, 300, 1440, 2880)
         val texts = options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
         onClick = {
-            materialDialogThemed {
+            materialDialog {
                 title(R.string.notification_frequency)
-                items(texts)
-                itemsCallbackSingleChoice(options.indexOf(item.pref)) { _, _, which, _ ->
-                    item.pref = options[which]
+                listItemsSingleChoice(items = texts, initialSelection = options.indexOf(item.pref)) { _, index, _ ->
+                    item.pref = options[index]
                     scheduleNotifications(item.pref)
-                    true
                 }
             }
         }
@@ -72,11 +73,11 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.notification_keywords_desc
         onClick = {
             val keywordView = Keywords(this@getNotificationPrefs)
-            materialDialogThemed {
+            materialDialog {
                 title(R.string.notification_keywords)
-                customView(keywordView, false)
-                dismissListener { keywordView.save() }
-                positiveText(R.string.kau_done)
+                customView(view = keywordView)
+                positiveButton(R.string.kau_done)
+                onDismiss { keywordView.save() }
             }
         }
     }
