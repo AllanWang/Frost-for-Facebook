@@ -34,11 +34,9 @@ import ca.allanwang.kau.email.EmailBuilder
 import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
-import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.darken
 import ca.allanwang.kau.utils.isColorDark
-import ca.allanwang.kau.utils.lighten
 import ca.allanwang.kau.utils.navigationBarColor
 import ca.allanwang.kau.utils.snackbar
 import ca.allanwang.kau.utils.startActivity
@@ -47,9 +45,7 @@ import ca.allanwang.kau.utils.statusBarColor
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.with
 import ca.allanwang.kau.utils.withAlpha
-import ca.allanwang.kau.utils.withMinAlpha
 import ca.allanwang.kau.xml.showChangelog
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.SnackbarContentLayout
 import com.pitchedapps.frost.BuildConfig

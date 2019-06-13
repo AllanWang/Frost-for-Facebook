@@ -44,7 +44,6 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
                         item.pref = index
                         shouldRestartMain()
                     }
-
                 }
             }
         }
