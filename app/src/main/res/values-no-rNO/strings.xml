@@ -44,6 +44,7 @@
     <string name="preview">Forhåndsvisning</string>
     <string name="options">Alternativer</string>
     <string name="tab_customizer_instructions">Langt trykk og dra for å endre topp ikonene.</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -52,6 +53,5 @@
 
     The first element is the day, and the second element is the time
     -->
-
     <string name="disclaimer">Ansvarsfraskrivelse</string>
 </resources>
