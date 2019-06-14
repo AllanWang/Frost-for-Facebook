@@ -170,7 +170,7 @@ enum class NotificationType(
         val ringtone = ringtone()
         notifs.forEachIndexed { i, notif ->
             // Ring at most twice
-            notif.withAlert(i < 2, ringtone).notify(context)
+            notif.withAlert(context, i < 2, ringtone).notify(context)
         }
         return notifs.size
     }
@@ -302,8 +302,8 @@ data class FrostNotification(
     val notif: NotificationCompat.Builder
 ) {
 
-    fun withAlert(enable: Boolean, ringtone: String): FrostNotification {
-        notif.setFrostAlert(enable, ringtone)
+    fun withAlert(context: Context, enable: Boolean, ringtone: String): FrostNotification {
+        notif.setFrostAlert(context, enable, ringtone)
         return this
     }
 

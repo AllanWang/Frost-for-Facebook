@@ -7,6 +7,7 @@
 * Update translations
 * Add fingerprint unlock screen
 * Fix messenger redirect
+* Lots of internal updates
 
 ## v2.2.4
 * Show top bar to allow sharing posts

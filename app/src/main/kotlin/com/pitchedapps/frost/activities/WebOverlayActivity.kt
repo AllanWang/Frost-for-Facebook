@@ -47,8 +47,8 @@ import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
-import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.community_material_typeface_library.CommunityMaterial
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.contracts.FileChooserContract
@@ -163,13 +163,16 @@ open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : Base
     val content: FrostContentWeb by bindView(R.id.frost_content_web)
     val web: FrostWebView
         get() = content.coreView
-    val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
+    private val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
     private inline val urlTest: String?
         get() = intent.getStringExtra(ARG_URL) ?: intent.dataString
 
+    /**
+     * Nonnull variant; verify by checking [urlTest]
+     */
     override val baseUrl: String
-        get() = (intent.getStringExtra(ARG_URL) ?: intent.dataString).formattedFbUrl
+        get() = urlTest!!.formattedFbUrl
 
     override val baseEnum: FbItem? = null
 

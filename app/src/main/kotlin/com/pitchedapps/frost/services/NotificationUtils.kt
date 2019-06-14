@@ -24,7 +24,6 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.net.Uri
 import android.os.Build
 import android.os.PersistableBundle
 import androidx.annotation.RequiresApi
@@ -34,6 +33,7 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostUri
 
 /**
  * Created by Allan Wang on 07/04/18.
@@ -85,7 +85,7 @@ fun Context.frostNotification(id: String) =
  * Delegates to channels if Android O and up
  * Otherwise uses our provided preferences
  */
-fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String): NotificationCompat.Builder {
+fun NotificationCompat.Builder.setFrostAlert(context: Context, enable: Boolean, ringtone: String): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
             if (enable) NotificationCompat.GROUP_ALERT_CHILDREN
@@ -97,7 +97,7 @@ fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String):
         var defaults = 0
         if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
         if (Prefs.notificationSound) {
-            if (ringtone.isNotBlank()) setSound(Uri.parse(ringtone))
+            if (ringtone.isNotBlank()) setSound(context.frostUri(ringtone))
             else defaults = defaults or Notification.DEFAULT_SOUND
         }
         if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS

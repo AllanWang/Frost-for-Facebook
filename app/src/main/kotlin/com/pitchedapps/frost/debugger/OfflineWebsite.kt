@@ -209,9 +209,9 @@ class OfflineWebsite(
                     delete()
                 }
                 baseDir.listFiles { file -> file != zip }
-                    .forEach { it.zip() }
+                    ?.forEach { it.zip() }
                 assetDir.listFiles()
-                    .forEach { it.zip("assets/${it.name}") }
+                    ?.forEach { it.zip("assets/${it.name}") }
 
                 assetDir.delete()
             }

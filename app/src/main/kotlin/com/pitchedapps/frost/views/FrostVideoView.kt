@@ -97,7 +97,7 @@ class FrostVideoView @JvmOverloads constructor(
                         if (!isPlaying) showControls()
                         else viewerContract.onControlsHidden()
                     }
-                }
+                }.start()
             } else {
                 hideControls()
                 val (scale, tX, tY) = mapBounds()
@@ -108,7 +108,7 @@ class FrostVideoView @JvmOverloads constructor(
                     withAnimator(origScale, scale) { scaleXY = it }
                     withAnimator(origX, tX) { translationX = it }
                     withAnimator(origY, tY) { translationY = it }
-                }
+                }.start()
             }
         }
 
@@ -231,7 +231,7 @@ class FrostVideoView @JvmOverloads constructor(
                 duration = FAST_ANIMATION_DURATION
                 withAnimator(alpha, 0f) { alpha = it }
                 withEndAction { onFinishedListener() }
-            }
+            }.start()
         else
             onFinishedListener()
     }

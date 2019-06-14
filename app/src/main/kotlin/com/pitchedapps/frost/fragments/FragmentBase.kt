@@ -82,7 +82,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
 
-    override val baseUrl: String by lazy { arguments!!.getString(ARG_URL) }
+    override val baseUrl: String by lazy { arguments!!.getString(ARG_URL)!! }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
     override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
 

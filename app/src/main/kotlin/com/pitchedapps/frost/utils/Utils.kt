@@ -34,11 +34,9 @@ import ca.allanwang.kau.email.EmailBuilder
 import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
-import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.darken
 import ca.allanwang.kau.utils.isColorDark
-import ca.allanwang.kau.utils.lighten
 import ca.allanwang.kau.utils.navigationBarColor
 import ca.allanwang.kau.utils.snackbar
 import ca.allanwang.kau.utils.startActivity
@@ -47,9 +45,7 @@ import ca.allanwang.kau.utils.statusBarColor
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.with
 import ca.allanwang.kau.utils.withAlpha
-import ca.allanwang.kau.utils.withMinAlpha
 import ca.allanwang.kau.xml.showChangelog
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.SnackbarContentLayout
 import com.pitchedapps.frost.BuildConfig
@@ -351,6 +347,18 @@ fun Context.frostUriFromFile(file: File): Uri =
         file
     )
 
+/**
+ * Gets uri from our own resolver if it's a file, or return the parsed uri otherwise
+ */
+fun Context.frostUri(entry: String): Uri {
+    val uri = Uri.parse(entry)
+    val path = uri.path
+    if (uri.scheme == "file" && path != null) {
+        return frostUriFromFile(File(path))
+    }
+    return uri
+}
+
 inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) =
     sendFrostEmail(string(subjectId), builder)
 
@@ -389,7 +397,7 @@ fun File.createFreshFile(): Boolean {
         if (!delete()) return false
     } else {
         val parent = parentFile
-        if (!parent.exists() && !parent.mkdirs())
+        if (parent != null && !parent.exists() && !parent.mkdirs())
             return false
     }
     return createNewFile()

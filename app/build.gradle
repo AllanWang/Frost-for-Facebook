@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "${project.APP_GROUP}." + project.APP_ID.toLowerCase(Locale.CANADA)
+        applicationId "${project.APP_GROUP}.${project.APP_ID.toLowerCase(Locale.CANADA)}"
         minSdkVersion kau.Versions.minSdk
         targetSdkVersion kau.Versions.targetSdk
         versionCode androidGitVersion.code()

@@ -42,7 +42,7 @@ import ca.allanwang.kau.utils.withMinAlpha
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
@@ -121,7 +121,7 @@ class ImageActivity : KauBaseActivity() {
 
     private val cookie: String? by lazy { intent.getStringExtra(ARG_COOKIE) }
 
-    val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL).trim('"') }
+    val imageUrl: String by lazy { intent.getStringExtra(ARG_IMAGE_URL)?.trim('"') ?: "" }
 
     private lateinit var trueImageUrl: Deferred<String>
 
@@ -146,7 +146,9 @@ class ImageActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        intent?.extras ?: return finish()
+        if (imageUrl.isEmpty()) {
+            return finish()
+        }
         L.i { "Displaying image" }
         trueImageUrl = async(Dispatchers.IO) {
             val result = if (!imageUrl.isIndirectImageUrl) imageUrl
