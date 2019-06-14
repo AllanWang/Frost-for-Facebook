@@ -34,6 +34,7 @@ import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostUri
 
 /**
  * Created by Allan Wang on 07/04/18.
@@ -85,7 +86,7 @@ fun Context.frostNotification(id: String) =
  * Delegates to channels if Android O and up
  * Otherwise uses our provided preferences
  */
-fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String): NotificationCompat.Builder {
+fun NotificationCompat.Builder.setFrostAlert(context: Context, enable: Boolean, ringtone: String): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
             if (enable) NotificationCompat.GROUP_ALERT_CHILDREN
@@ -97,8 +98,7 @@ fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String):
         var defaults = 0
         if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
         if (Prefs.notificationSound) {
-            // Ringtones have uris of format /content:/media/...; Uri.parse is okay
-            if (ringtone.isNotBlank()) setSound(Uri.parse(ringtone))
+            if (ringtone.isNotBlank()) setSound(context.frostUri(ringtone))
             else defaults = defaults or Notification.DEFAULT_SOUND
         }
         if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS

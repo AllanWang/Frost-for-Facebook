@@ -19,7 +19,6 @@ package com.pitchedapps.frost.settings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
@@ -39,6 +38,7 @@ import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostSnackbar
+import com.pitchedapps.frost.utils.frostUri
 import com.pitchedapps.frost.views.Keywords
 import kotlinx.coroutines.launch
 
@@ -136,8 +136,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             enabler = Prefs::notificationSound
             textGetter = {
                 if (it.isBlank()) string(R.string.kau_default)
-                // Ringtones have uris of format /content:/media/...; Uri.parse is okay
-                else RingtoneManager.getRingtone(this@getNotificationPrefs, Uri.parse(it))
+                else RingtoneManager.getRingtone(this@getNotificationPrefs, frostUri(it))
                     ?.getTitle(this@getNotificationPrefs)
                     ?: "---" //todo figure out why this happens
             }
@@ -148,8 +147,10 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
                     putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
                     if (item.pref.isNotBlank()) {
-                        // Ringtones have uris of format /content:/media/...; Uri.parse is okay
-                        putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(item.pref))
+                        putExtra(
+                            RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                            frostUri(item.pref)
+                        )
                     }
                 }
                 startActivityForResult(intent, code)

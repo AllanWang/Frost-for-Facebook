@@ -132,7 +132,7 @@ class NotificationService : BaseJobService() {
 
     private fun generalNotification(id: Int, textRes: Int, withDefaults: Boolean) {
         val notifBuilder = frostNotification(NOTIF_CHANNEL_GENERAL)
-            .setFrostAlert(withDefaults, Prefs.notificationRingtone)
+            .setFrostAlert(this, withDefaults, Prefs.notificationRingtone)
             .setContentTitle(string(R.string.frost_name))
             .setContentText(string(textRes))
         NotificationManagerCompat.from(this).notify(id, notifBuilder.build())

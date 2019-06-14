@@ -347,6 +347,18 @@ fun Context.frostUriFromFile(file: File): Uri =
         file
     )
 
+/**
+ * Gets uri from our own resolver if it's a file, or return the parsed uri otherwise
+ */
+fun Context.frostUri(entry: String): Uri {
+    val uri = Uri.parse(entry)
+    val path = uri.path
+    if (uri.scheme == "file" && path != null) {
+        return frostUriFromFile(File(path))
+    }
+    return uri
+}
+
 inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) =
     sendFrostEmail(string(subjectId), builder)
 
