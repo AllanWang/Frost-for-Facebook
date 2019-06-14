@@ -24,7 +24,6 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.net.Uri
 import android.os.Build
 import android.os.PersistableBundle
 import androidx.annotation.RequiresApi
