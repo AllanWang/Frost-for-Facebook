@@ -57,9 +57,12 @@ Special thanks to the following awesome people for translating significant porti
 
 | Language | Contributors |
 |----------|--------------|
+| Arabic | [Faris Sabaa](https://crowdin.com/profile/farissabaa) &bull; [hdmed.dev](https://crowdin.com/profile/hdmed) &bull; [Mohammed Qubati](https://crowdin.com/profile/Mrkqubati) |
 | Chinese (Simplified) | [Zhengang](https://crowdin.com/profile/Zhengang) |
-| Chinese (Traditional) | [StanAttack](https://crowdin.com/profile/StanAttack) &bull; [yipinghuang](https://crowdin.com/profile/yipinghuang) &bull; [jpss](https://crowdin.com/profile/jpss) &bull; [BrLi](https://crowdin.com/profile/brli) |
+| Chinese (Traditional) | [StanAttack](https://crowdin.com/profile/StanAttack) &bull; [yipinghuang](https://crowdin.com/profile/yipinghuang) &bull; [jpss](https://crowdin.com/profile/jpss) &bull; [BrLi](https://crowdin.com/profile/brli) &bull; [Артём Х. Местный](https://crowdin.com/profile/megaahmadf) &bull; [Julio M.](https://crowdin.com/profile/juliomc31) |
+| Czech | [Richard Janda](https://crowdin.com/profile/risajanda) &bull; [Misat11](https://crowdin.com/profile/Misat11) |
 | Danish | [mhtorp](https://crowdin.com/profile/mhtorp) |
+| Dutch | [ItGuillaume](https://crowdin.com/profile/ltGuillaume) &bull; [msoehnchen](https://crowdin.com/profile/msoehnchen) &bull; [T.T.](https://crowdin.com/profile/LifeisallBeerndSkittles) &bull; [just_a_tech](https://crowdin.com/profile/just_a_tech) |
 | French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
 | Galician | [Xesús M. Mosquera](https://twitter.com/xesusmmc?lang=en) |
 | German | [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) &bull; [Marcel Soehnchen](https://crowdin.com/profile/msoehnchen) &bull; [3LD0mi HA](https://forum.xda-developers.com/member.php?u=5860523) |
