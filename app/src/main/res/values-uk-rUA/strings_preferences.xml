@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Визначте що показувати у стрічці новин</string>
     <string name="behaviour">Поведінка</string>
     <string name="behaviour_desc">Визначте як аплікація поводитиметься у певних обставинах</string>
+    <string name="security">Безпека</string>
+    <string name="security_desc">Блокування екрана, біометричні дані, тощо</string>
     <string name="network">Мережа</string>
     <string name="network_desc">Визначте що робити у мережах з платним трафіком</string>
     <string name="experimental">Експериментальне</string>
