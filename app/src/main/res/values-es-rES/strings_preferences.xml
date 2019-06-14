@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Define qué elementos aparecen en el muro de noticias</string>
     <string name="behaviour">Comportamiento</string>
     <string name="behaviour_desc">Define cómo interactúa la aplicación en determinados ajustes</string>
+    <string name="security">Seguridad</string>
+    <string name="security_desc">Bloquear pantalla, dispositivos biométricos, etc</string>
     <string name="network">Red</string>
     <string name="network_desc">Define las opciones que afectan las redes de uso medido</string>
     <string name="experimental">Funciones Experimentales</string>
