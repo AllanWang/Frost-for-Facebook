@@ -97,6 +97,7 @@ fun NotificationCompat.Builder.setFrostAlert(enable: Boolean, ringtone: String):
         var defaults = 0
         if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
         if (Prefs.notificationSound) {
+            // Ringtones have uris of format /content:/media/...; Uri.parse is okay
             if (ringtone.isNotBlank()) setSound(Uri.parse(ringtone))
             else defaults = defaults or Notification.DEFAULT_SOUND
         }

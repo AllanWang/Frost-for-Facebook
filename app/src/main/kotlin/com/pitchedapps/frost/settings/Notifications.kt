@@ -136,6 +136,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             enabler = Prefs::notificationSound
             textGetter = {
                 if (it.isBlank()) string(R.string.kau_default)
+                // Ringtones have uris of format /content:/media/...; Uri.parse is okay
                 else RingtoneManager.getRingtone(this@getNotificationPrefs, Uri.parse(it))
                     ?.getTitle(this@getNotificationPrefs)
                     ?: "---" //todo figure out why this happens
@@ -146,8 +147,10 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
                     putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
                     putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
-                    if (item.pref.isNotBlank())
+                    if (item.pref.isNotBlank()) {
+                        // Ringtones have uris of format /content:/media/...; Uri.parse is okay
                         putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(item.pref))
+                    }
                 }
                 startActivityForResult(intent, code)
             }
