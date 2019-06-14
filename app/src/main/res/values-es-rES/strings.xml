@@ -47,6 +47,7 @@
     <string name="tab_customizer_instructions">Mantén pulsado y arrastra para reorganizar los iconos superiores.</string>
     <string name="no_new_notifications">No se han encontrado Notificaciones</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">Autenticar Frost</string>
     <string name="today">Hoy</string>
     <string name="yesterday">Ayer</string>
     <!--
