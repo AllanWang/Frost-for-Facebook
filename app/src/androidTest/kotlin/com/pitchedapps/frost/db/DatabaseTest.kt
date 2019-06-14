@@ -18,8 +18,7 @@ package com.pitchedapps.frost.db
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.runner.RunWith
-import org.koin.error.NoBeanDefFoundException
-import org.koin.standalone.get
+import org.koin.core.error.NoBeanDefFoundException
 import org.koin.test.KoinTest
 import kotlin.reflect.KClass
 import kotlin.reflect.full.functions
@@ -33,7 +32,7 @@ class DatabaseTest : KoinTest {
 
     fun <T : Any> hasKoin(klazz: KClass<T>): Boolean =
         try {
-            get<T>(clazz = klazz)
+            getKoin().get<T>(klazz, qualifier = null, parameters = null)
             true
         } catch (e: NoBeanDefFoundException) {
             false
@@ -48,7 +47,7 @@ class DatabaseTest : KoinTest {
         val members = FrostDatabase::class.java.kotlin.functions.filter { it.name.endsWith("Dao") }
             .mapNotNull { it.returnType.classifier as? KClass<*> }
         assertTrue(members.isNotEmpty(), "Failed to find dao interfaces")
-        val missingKoins = (members + FrostDatabase::class).filter { !hasKoin(it) }
+        val missingKoins = members.filter { !hasKoin(it) }
         assertTrue(missingKoins.isEmpty(), "Missing koins: $missingKoins")
     }
 }

@@ -51,7 +51,7 @@ class GenericDbTest : BaseDbTest() {
     @Test
     fun ignoreErrors() {
         runBlocking {
-            dao.save(GenericEntity(GenericDao.TYPE_TABS, "${FbItem.ACTIVITY_LOG.name},unknown,${FbItem.EVENTS.name}"))
+            dao._save(GenericEntity(GenericDao.TYPE_TABS, "${FbItem.ACTIVITY_LOG.name},unknown,${FbItem.EVENTS.name}"))
             assertEquals(
                 listOf(FbItem.ACTIVITY_LOG, FbItem.EVENTS),
                 dao.getTabs(),
