@@ -12,6 +12,7 @@
     <string name="suggested_groups">Önerilen gruplar</string>
     <string name="suggested_groups_desc">Özet akışında \"önerilen grup\" ları göster</string>
     <string name="show_stories">Hikayeleri göster</string>
+    <string name="show_stories_desc">Akışdaki hikayeleri göster</string>
     <string name="facebook_ads">Facebook reklamları</string>
     <string name="facebook_ads_desc">Yerli Facebook reklamlarını göster</string>
 </resources>
