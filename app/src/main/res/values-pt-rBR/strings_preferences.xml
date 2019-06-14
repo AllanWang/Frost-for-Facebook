@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Definir quais itens aparecem no Feed de Notícias</string>
     <string name="behaviour">Comportamento</string>
     <string name="behaviour_desc">Definir como o aplicativo interage em determinadas configurações</string>
+    <string name="security">Segurança</string>
+    <string name="security_desc">Tela de bloqueio, biometria, etc</string>
     <string name="network">Rede</string>
     <string name="network_desc">Definir opções que afetam planos de dados</string>
     <string name="experimental">Experimental</string>
