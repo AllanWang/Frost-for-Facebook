@@ -17,6 +17,8 @@
     <string name="force_message_bottom_desc">Ao cargar o fío dunha mensaxe, activa o desprazamento cara á parte inferior en vez de cargar a páxina tal como é.</string>
     <string name="enable_pip">Activar PIP</string>
     <string name="enable_pip_desc">Activa a función dos vídeos en miniatura</string>
+    <string name="autoplay_settings">Axustes da reprodución automática</string>
+    <string name="autoplay_settings_desc">Abrir os axustes de reprodución automática de Facebook. Debes desactivalos para que funcione o PIP.</string>
     <string name="exit_confirmation">Confirmación de saída</string>
     <string name="exit_confirmation_desc">Mostra un diálogo de confirmación antes de saír</string>
     <string name="analytics">Estatísticas</string>

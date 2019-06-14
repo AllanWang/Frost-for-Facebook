@@ -17,6 +17,8 @@
     <string name="force_message_bottom_desc">Під час завантаження низки повідомлень, прогорнути до низу сторінки, а не завантажувати сторінку як завжди.</string>
     <string name="enable_pip">Увімкнути Картинку в Картинці</string>
     <string name="enable_pip_desc">Увімкнути режим картинка в картинці для відео</string>
+    <string name="autoplay_settings">Налаштування автовідтворення</string>
+    <string name="autoplay_settings_desc">Відкрити налаштування автовідтворення Facebook. Зауважте, що для роботи PIP це потрібно вимкнути.</string>
     <string name="exit_confirmation">Підтвердження виходу</string>
     <string name="exit_confirmation_desc">Показати діалогове вікно підтвердження перед тим, як вийти з програми</string>
     <string name="analytics">Аналітика</string>

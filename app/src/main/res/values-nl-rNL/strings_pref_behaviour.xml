@@ -17,6 +17,7 @@
     <string name="force_message_bottom_desc">Scroll bij het bekijken van berichten automatisch naar het laatste bericht (onderaan).</string>
     <string name="enable_pip">PIP inschakelen</string>
     <string name="enable_pip_desc">Toon video\'s Picture-in-Picture</string>
+    <string name="autoplay_settings">Instellingen voor automatisch afspelen</string>
     <string name="exit_confirmation">Afsluiten bevestigen</string>
     <string name="exit_confirmation_desc">Vraag om bevestiging bij het afsluiten van de app</string>
     <string name="analytics">Statistieken</string>

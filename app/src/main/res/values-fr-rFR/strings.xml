@@ -57,5 +57,6 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="time_template">%1$s à %2$s</string>
     <string name="disclaimer">Clause de non-responsabilité</string>
 </resources>

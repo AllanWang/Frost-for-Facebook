@@ -3,13 +3,15 @@
 <resources>
     <string name="appearance">外觀</string>
     <string name="appearance_desc">主題、要顯示的項目等</string>
-    <string name="notifications_desc">頻率、篩檢程式、鈴聲等</string>
+    <string name="notifications_desc">頻率、篩選、鈴聲等</string>
     <string name="newsfeed">動態消息</string>
     <string name="newsfeed_desc">定義在新聞複製中出現的項目</string>
     <string name="behaviour">行為</string>
     <string name="behaviour_desc">定義應用程式在某些設置中的方式</string>
+    <string name="security">安全</string>
+    <string name="security_desc">螢幕鎖定、生物辨識等等</string>
     <string name="network">網路</string>
-    <string name="network_desc">定義影響計量網路的選項</string>
+    <string name="network_desc">使用計量付費連線網路時的選項</string>
     <string name="experimental">實驗</string>
     <string name="experimental_desc">啟用對潛在不穩定功能的功能</string>
     <string name="about_frost">關於Frost 的臉書</string>
