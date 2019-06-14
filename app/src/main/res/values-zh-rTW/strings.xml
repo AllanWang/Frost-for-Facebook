@@ -17,35 +17,39 @@
     <string name="birthdays">生日</string>
     <string name="chat">對話</string>
     <string name="photos">相片</string>
+    <string name="marketplace">商品買賣群組</string>
     <string name="notes">備註</string>
-    <string name="on_this_day">在這一天</string>
+    <string name="on_this_day">我的這一天</string>
     <string name="loading_account">一切準備就緒..。</string>
     <string name="welcome">欢迎，%s！</string>
-    <string name="select_facebook_account">選擇臉書帳戶</string>
+    <string name="select_facebook_account">選擇 Facebook 帳戶</string>
     <string name="account_not_found">當前帳戶不在資料庫中</string>
     <string name="frost_requests">Frost for Facebook 要求</string>
     <string name="frost_notifications">Frost 通知</string>
     <string name="requires_custom_theme">需要自訂主題</string>
     <string name="subject">主題</string>
     <string name="share">分享</string>
-    <string name="web_overlay_swipe_hint">向右滑可回到上一個窗口。</string>
+    <string name="web_overlay_swipe_hint">向右滑可返回之前的介面</string>
     <string name="profile_picture">用戶個人相片</string>
     <string name="new_message">新訊息</string>
     <string name="no_text">沒有文字</string>
     <string name="show_all_results">顯示所有結果</string>
     <string name="frost_description">Frost 是一個完全支持指定主題的應用, 完全功能給用戶多從臉書多一個選擇的應用程式, 從頭開始, 並自豪的開放源碼</string>
     <string name="faq_title">Frost 常見問題</string>
-    <string name="html_extraction_error">提取 Html 中出現錯誤。</string>
+    <string name="html_extraction_error">提取 html 時出現錯誤</string>
     <string name="html_extraction_cancelled">請求已取消</string>
-    <string name="html_extraction_timeout">請求已超時。</string>
+    <string name="html_extraction_timeout">請求已超時</string>
     <string name="file_chooser_not_found">找不到文件選擇程序</string>
     <string name="top_bar">頂欄</string>
     <string name="bottom_bar">底欄</string>
     <string name="preview">預覽</string>
     <string name="options">選項</string>
     <string name="tab_customizer_instructions">長按及拖曳頂部圖標可重新排列位置</string>
-    <string name="no_new_notifications">沒有新通知。</string>
+    <string name="no_new_notifications">沒有新通知</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">驗證 Frost</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
     <!--
     Template used to display human readable string;
     For instance:
