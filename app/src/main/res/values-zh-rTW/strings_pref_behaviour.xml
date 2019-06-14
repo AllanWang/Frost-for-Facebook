@@ -17,6 +17,8 @@
     <string name="force_message_bottom_desc">在載入消息執線程時, 會觸發一個滾動到頁面底部, 而不是像載入頁面一樣。</string>
     <string name="enable_pip">啟用影片中的圖片</string>
     <string name="enable_pip_desc">在含圖片的影片中啟用圖片</string>
+    <string name="autoplay_settings">自動播放設置</string>
+    <string name="autoplay_settings_desc">開啟 Facebook 的自動播放設定。若要使用 PIP，此項必需為停用。</string>
     <string name="exit_confirmation">確認離開</string>
     <string name="exit_confirmation_desc">關閉應用程式前顯示確認對話框</string>
     <string name="analytics">分析</string>

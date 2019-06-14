@@ -8,6 +8,7 @@
     <string name="newsfeed_desc">Define os elementos que aparecen na canle de novas</string>
     <string name="behaviour">Comportamento</string>
     <string name="behaviour_desc">Define como a aplicación actúa con determinados axustes</string>
+    <string name="security">Seguranza</string>
     <string name="network">Rede</string>
     <string name="network_desc">Define as opcións que afectan ás redes limitadas</string>
     <string name="experimental">Funcións experimentais</string>

@@ -46,6 +46,10 @@
     <string name="options">Опції</string>
     <string name="tab_customizer_instructions">Довге натискання та перетягніть, щоб переставити верхній значок.</string>
     <string name="no_new_notifications">Нових повідомлень не знайдено</string>
+    <!--Biometrics-->
+    <string name="biometrics_prompt_title">Авторизація у Frost</string>
+    <string name="today">Сьогодні</string>
+    <string name="yesterday">Вчора</string>
     <!--
     Template used to display human readable string;
     For instance:
@@ -54,7 +58,5 @@
 
     The first element is the day, and the second element is the time
     -->
-
     <string name="disclaimer">Відмова від відповідальності</string>
-
 </resources>

@@ -11,6 +11,8 @@
     <string name="suggested_friends_desc">Toon \"Mensen die je misschien kent\" in de nieuwsfeed</string>
     <string name="suggested_groups">Suggesties voor groepen</string>
     <string name="suggested_groups_desc">Toon suggesties voor groepen in de nieuwsfeed</string>
+    <string name="show_stories">Toon verhalen</string>
+    <string name="show_stories_desc">Toon verhalen in de feed</string>
     <string name="facebook_ads">Facebook-advertenties</string>
     <string name="facebook_ads_desc">Toon de advertenties van Facebook</string>
 </resources>

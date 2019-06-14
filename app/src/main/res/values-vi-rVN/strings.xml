@@ -46,6 +46,7 @@
     <string name="options">Tuỳ chọn</string>
     <string name="tab_customizer_instructions">Bấm giữ và kéo để sắp xếp biểu tượng trên cùng.</string>
     <string name="no_new_notifications">Không có thông báo mới</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -54,7 +55,5 @@
 
     The first element is the day, and the second element is the time
     -->
-
     <string name="disclaimer">Chối bỏ trách nhiệm</string>
-
 </resources>

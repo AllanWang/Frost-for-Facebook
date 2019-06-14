@@ -40,6 +40,7 @@
     <string name="file_chooser_not_found">未找到文件选择程序</string>
     <string name="top_bar">顶栏</string>
     <string name="bottom_bar">底栏</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -48,7 +49,5 @@
 
     The first element is the day, and the second element is the time
     -->
-
     <string name="disclaimer">免责声明</string>
-
 </resources>
