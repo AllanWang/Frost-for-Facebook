@@ -42,6 +42,7 @@
     <string name="file_chooser_not_found">파일 선택기를 찾을 수 없습니다.</string>
     <string name="top_bar">상단 바</string>
     <string name="bottom_bar">하단 바</string>
+    <!--Biometrics-->
     <!--
     Template used to display human readable string;
     For instance:
@@ -50,7 +51,5 @@
 
     The first element is the day, and the second element is the time
     -->
-
     <string name="disclaimer">경고</string>
-
 </resources>
