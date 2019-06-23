@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="fancy_animations">Λαμπερά Animations</string>
+    <string name="fancy_animations_desc">Αποκάλυψε την όψη για web χρησιμοποιώντας διακυμάνσεις και οπτικοποίησε τις μεταβάσεις.</string>
+    <string name="overlay_swipe">Ενεργοποίηση επικαλύψεων</string>
+    <string name="overlay_swipe_desc">Πατώντας τους περισσότερους συνδέσμους θα εκκινήσει μία νέα επικάλυψη στην οθόνη ώστε να μπορείς εύκολα να συρθείς στην αρχική σελίδα.Πρόσεξε ότι αυτό οδηηγεί σε μία λιγότερο πιο αργή φόρτωση,δεδομένου ότι επαναφορτώνεται ολόκληρη η σελίδα.</string>
+    <string name="overlay_full_screen_swipe">Επικάλυψη πλήρους οθόνης Σύρε για την απόρριψη της</string>
+    <string name="overlay_full_screen_swipe_desc">Σύρε δεξιά από οπουδήποτε στο επικαλυπτόμενο web για να κλείσεις τον φυλλομετρητή.Αν δεν είναι ενεργοποιημένο,μόνο το σύρσιμο από το αριστερό άκρο θα το μετακινήσει.</string>
+    <string name="open_links_in_default">Άνοιγμα συνδέσμων στην προκαθορισμένη εφαρμογή</string>
+    <string name="open_links_in_default_desc">Όταν είναι δυνατό,άνοιξε στην προεπιλεγμένη εφαρμογή τους συνδέσμους παρά στην web επικάλυψη του Frost</string>
+    <string name="viewpager_swipe">Σύρσιμο όψης οθόνης</string>
+    <string name="viewpager_swipe_desc">Επέτρεψε την μετάβαση μεταξώ των σελίδων στην κύρια όψη για να αλλάξεις καρτέλες.Προκαθορισμένα,το σύρσιμο αυτόματα σταματάει όταν πατάς παρατεταμένα ένα αντικείμενο,όπως το κουμπί "μου αρέσει" . Απενεργοποιώντας το θα αποτρέψει τη σελίδα να συρθεί ολόκληρη.</string>
+    <string name="search_bar">Μπάρα αναζήτησης</string>
+    <string name="search_bar_desc">Ενεργοποίηση της μπάρας αναζήτησης αντί για την επικάλυψη αναζήτησης</string>
+    <string name="force_message_bottom">Οδήγησε τα μηνύματα στο πάτο</string>
+    <string name="force_message_bottom_desc">Όταν φορτώνεται ένα μήνυμα,πλοηγήσου μέχρι κάτω στη σελίδα αντί να φορτώσεις τη σελίδα όπως είναι.</string>
+    <string name="enable_pip">Ενεργοποίηση PIP</string>
+    <string name="enable_pip_desc">Ενεργοποίηση εικόνας στα βίντεο με εικόνες.</string>
+    <string name="autoplay_settings">Ρυθμίσεις αυτόματης αναπαραγωγής</string>
+    <string name="autoplay_settings_desc">Άνοιξε τις ρυθμίσεις αυτόματης αναπαραγωγής του Facebook. Πρόσεξε ότι πρέπει να είναι απενεργοποιημένες για να λειτουργήσει το PIP.</string>
+    <string name="exit_confirmation">Έξοδος επιβεβαίωσης</string>
+    <string name="exit_confirmation_desc">Εμφάνισε διάλογο επιβεβαίωσης προτού αποχωρήσεις από την εφαρμογή</string>
+    <string name="analytics">Στατιστικά</string>
+    <string name="analytics_desc">Επέτρεψε ανώνυμη συλλογή στατιστικών στοιχείων και αναφορές δυσλειτουργίας με σκοπό την βελτίωση της εφαρμογής. Καμία προσωπική πληροφορία δεν εκτίθεται.</string>
+
+</resources>

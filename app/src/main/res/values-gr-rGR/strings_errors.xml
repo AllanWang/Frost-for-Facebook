@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="null_url_overlay">Κενή διεύθυνση URL,αποτυχία στην επικάλυψη</string>
+    <string name="bad_image_overlay">Η διεύθυνση URL δε μπορεί να φορτωθεί σωστά.Θα θέλατε να την στείλετε για διόρθωση σφαλμάτων;</string>
+    <string name="invalid_share_url">Μη έγκυρη κοινοποίηση διεύθυνσης URL</string>
+    <string name="invalid_share_url_desc">Έχεις μοιραστεί ένα κείμενο που δεν είναι URL διεύθυνση.Το κείμενο έχει αντιγραφεί,οπότε θα μπορούσες να το κοινοποιήσεις χειροκίνητα.</string>
+    <string name="no_download_manager">Χωρίς διαχειριστή λήψεων</string>
+    <string name="no_download_manager_desc">Ο διαχειριστής λήψεων δεν είναι ενεργοποιημένος.Θα θέλατε να τον ενεργοποιήσετε για να επιτραπούν οι λήψεις;</string>
+    <string name="error_generic">Προέκυψε σφάλμα.</string>
+    <string name="video_load_failed">Αποτυχία στη φόρτωση του βίντεο</string>
+    <string name="error_notification">Προέκυψε σφάλμα στην λήψη ειδοποιήσεων</string>
+    <string name="error_sdk">Το SDK της συσκευής σου (%d) δεν είναι συμβατό. Το Frost υποστηρίζει μόνο Lollipop (SDK 21) και πάνω</string>
+    <string name="error_webview">Η συσκευής σου φαίνεται να μην διαθέτει όψη για web.Παρακαλώ πρόσθεσε ή ενεργοποίησε την.</string>
+</resources>

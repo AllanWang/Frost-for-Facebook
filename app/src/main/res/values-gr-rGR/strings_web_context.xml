@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="share_link">Κοινοποίηση Συνδέσμου</string>
+    <string name="debug_link">Αποσφαλμάτωση Συνδέσμου</string>
+    <string name="local_service_name" translatable="false">Τοπική Υπηρεσία Frost </string>
+    <string name="debug_link_subject" translatable="false">Frost για Facebook : Διόρθωση σφαλμάτων Συνδέσμων</string>
+    <string name="debug_link_content" translatable="false">Γράψε εδώ. Πρόσεξε γιατί ο σύνδεσμος μπορεί να περιέχει προσωπικές πληροφορίες, αλλά εγώ δε θα μπορώ να τις δω μιας και η ανάρτηση δεν είναι δημόσια. Η URL διεύθυνση μπορεί ακόμη να βοηθήσει με τη διόρθωση σφαλμάτων όμως.</string>
+    <string name="debug_link_desc">Αν ένας σύνδεσμος δεν φορτώνει σωστά, μπορείς να μου στείλεις email για να βοηθήσω στη διόρθωση σφαλμάτων.Πατώντας okay θα ανοίξει μία αίτηση για email</string>
+    <string name="open_link">Άνοιγμα Συνδέσμου</string>
+    <string name="copy_link">Αντιγραφή Συνδέσμου</string>
+    <string name="copy_text">Αντιγραφή Κειμένου</string>
+    <string name="debug_image_link_subject" translatable="false">Frost για Facebook: Διόρθωση Σφαλμάτων Συνδέσμων Εικόνων</string>
+</resources>

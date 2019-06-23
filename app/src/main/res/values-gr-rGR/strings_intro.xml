@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="skip">Skip</string>
+    <string name="intro_welcome_to_frost">Καλώς ήρθες στο Frost</string>
+    <string name="intro_slide_to_continue">Σύρε για να συνεχίσεις</string>
+    <string name="intro_select_theme">Διάλεξε θέμα</string>
+
+    <string name="intro_multiple_accounts">Πολλαπλοί λογαριασμοί</string>
+    <string name="intro_multiple_accounts_desc">Πρόσθεσε και ενάλλαξε λογαριασμούς απευθείας από τη μπάρα πλοήγησης.\nΠάτα το τρέχον εικονίδιο για να μεταβείς στο προφίλ σου.</string>
+    <string name="intro_easy_navigation">Εύκολη πλοήγηση</string>
+    <string name="intro_easy_navigation_desc">Σύρε μεταξύ των όψεων με μία κίνηση και πάτα στο εικονίδιο καρτέλας για να πας πίσω στη κορυφή. \nΠάτα στο εικονίδιο για να φορτώσεις ξανά τη σελίδα.</string>
+    <string name="intro_context_aware">Προσαρμοστικό στο περιβάλλον</string>
+    <string name="intro_context_aware_desc">Παρατεταμένο πάτημα στους συνδέσμους για την αντιγραφή και την κοινοποίηση τους. \nΠαρατεταμένο πάτημα στις εικόνες για zoom και λήψη. \nΠαρατεταμένο πάτημα στις καρτέλες για την οριζόντια πλοήγηση.</string>
+
+    <string name="intro_end">Ας ξεκινήσουμε!</string>
+    <string name="intro_tap_to_exit">Πάτα οπουδήποτε για έξοδο</string>
+</resources>
