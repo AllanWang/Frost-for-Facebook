@@ -87,6 +87,9 @@ class LoginActivity : BaseActivity() {
             toolbar(toolbar)
         }
         profileLoader = GlideApp.with(profile)
+        swipeRefresh.setOnChildScrollUpCallback { parent, child ->
+            web.canScrollVertically(-1)
+        }
         launch {
             for (refreshing in refreshChannel.uniqueOnly(this)) {
                 if (refreshing) swipeRefresh.isEnabled = true
