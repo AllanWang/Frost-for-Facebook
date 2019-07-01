@@ -6,6 +6,13 @@
     <item text="" />
     -->
 
+    <version title="v2.3.1" />
+    <item text="Hide all story panels if enabled" />
+    <item text="Prevent swipe to refresh if not at the very top" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.3.0" />
     <item text="Converted internals of Facebook data storage; auto migration will only work from 2.2.x to 2.3.x" />
     <item text="Added notification widget" />
