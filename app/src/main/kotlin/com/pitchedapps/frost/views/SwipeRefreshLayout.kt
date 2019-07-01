@@ -24,11 +24,13 @@ class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: Attr
     private var downY: Float = -1f
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
 
+    private var nestedCanChildScrollUp: OnChildScrollUpCallback? = null
+
     /**
      * Copy of [canChildScrollUp], with additional support if necessary
      */
     private val canChildScrollUp = OnChildScrollUpCallback { parent, child ->
-        when (child) {
+        nestedCanChildScrollUp?.canChildScrollUp(parent, child) ?: when (child) {
             is WebView -> child.canScrollVertically(-1).apply {
                 L.d { "Webview can scroll up $this" }
             }
@@ -40,6 +42,10 @@ class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: Attr
 
     init {
         setOnChildScrollUpCallback(canChildScrollUp)
+    }
+
+    override fun setOnChildScrollUpCallback(callback: OnChildScrollUpCallback?) {
+        this.nestedCanChildScrollUp = callback
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
