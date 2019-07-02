@@ -1,0 +1,73 @@
+<resources>
+    <string name="feed">Δημοσιεύσεις</string>
+    <string name="most_recent">Πιο πρόσφατα</string>
+    <string name="top_stories">Κορυφαίες ιστορίες</string>
+    <string name="profile">Προφίλ</string>
+    <string name="bookmarks">Σελιδοδείκτες</string>
+    <string name="events">Εκδηλώσεις</string>
+    <string name="friends">Φίλοι</string>
+    <string name="messages">Μηνύματα</string>
+    <string name="notifications">Ειδοποιήσεις</string>
+    <string name="activity_log">Αρχείο δραστηριοτήτων</string>
+    <string name="pages">Σελίδες</string>
+    <string name="groups">Ομάδες</string>
+    <string name="saved">Αποθηκευμένα</string>
+    <string name="birthdays">Γενέθλια</string>
+    <string name="chat">Συζήτηση</string>
+    <string name="photos">Φωτογραφίες</string>
+    <string name="marketplace">Αγορά</string>
+    <string name="menu" translatable="false">@string/kau_menu</string>
+    <string name="settings" translatable="false">@string/kau_settings</string>
+    <string name="notes">Σημειώσεις</string>
+    <string name="on_this_day">Σαν σήμερα</string>
+
+    <string name="loading_account">Φόρτωση…</string>
+    <string name="welcome">Καλώς ήρθες %s</string>
+    <string name="select_facebook_account">Διάλεξε λογαριασμό Facebook</string>
+    <string name="account_not_found">Ο συγκεκριμένος λογαριασμός δεν βρίσκεται στη βάση δεδομένων</string>
+
+    <string name="frost_requests">Frost Αιτήματα</string>
+    <string name="frost_notifications">Frost Ειδοποιήσεις</string>
+    <string name="requires_custom_theme">Απαιτείται δικό σου θέμα</string>
+
+    <string name="subject">Θέμα</string>
+    <string name="share">Κοινοποίηση</string>
+
+    <string name="web_overlay_swipe_hint">Σύρε δεξιά για να πας στο προηγούμενο παράθυρο.</string>
+    <string name="profile_picture">Φωτογραφία προφίλ</string>
+
+    <string name="new_message">Νέο μήνυμα</string>
+    <string name="no_text">Χωρίς κείμενο</string>
+
+    <string name="show_all_results">Εμφάνισε όλα τα αποτελέσματα</string>
+
+
+    <string name="frost_description">Το Frost είναι μία πλήρως διαμορφωμένη και πλήρως λειτουργική εναλλακτική της επίσημης εφαρμογής του Facebook,που δημιουργήθηκε από το μηδέν και είναι ανοιχτού κώδικά.</string>
+
+    <string name="faq_title">Συχνές ερωτήσεις για Frost</string>
+
+    <string name="html_extraction_error">Προέκυψε σφάλμα στην εξαγωγή html.</string>
+    <string name="html_extraction_cancelled">Το αίτημα έχει ακυρωθεί.</string>
+    <string name="html_extraction_timeout">Το χρονικό όριο του αιτήματος ξεπεράστηκε.</string>
+    <string name="file_chooser_not_found">Δε βρέθηκε διαχειριστής αρχείων</string>
+
+    <string name="top_bar">Μπάρα στο πάνω μέρος</string>
+    <string name="bottom_bar">Μπάρα στο κάτω μέρος</string>
+
+    <string name="pip" translatable="false">PIP</string>
+    <string name="preview">Προεπισκόπηση</string>
+    <string name="options">Επιλογές</string>
+    <string name="tab_customizer_instructions">Πάτα συνεχόμενα και σύρε για να αλλάξεις τα εικονίδια στο πάνω μέρος.</string>
+
+    <string name="no_new_notifications">Δε βρέθηκαν νέες ειδοποιήσεις</string>
+
+    <!--Biometrics-->
+    <string name="biometrics_prompt_title">Αυθεντικοποίηση Frost</string>
+    <string name="today">Σήμερα</string>
+    <string name="yesterday">Χτες</string>
+    
+    <string name="time_template">%1$s στιε %2$s</string>
+
+    <string name="disclaimer">Άρνηση</string>
+
+</resources>

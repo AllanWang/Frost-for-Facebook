@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pick_image">Διάλεξε εικόνα</string>
+    <string name="download">Λήψη</string>
+    <string name="downloading">Λήψη…</string>
+    <string name="image_download_success">Η εικόνα ελήφθη</string>
+    <string name="image_download_fail">Η εικόνα απέτυχε να ληφθεί</string>
+    <string name="image_share_failed">Αποτυχία στην κοινοποίηση εικόνας</string>
+
+    <string name="downloading_video">Το βίντεο κατεβαίνει</string>
+    <string name="downloaded_video">Το βίντεο ελήφθη</string>
+    <string name="downloading_file">Το αρχείο κατεβαίνει</string>
+    <string name="downloaded_file">Το αρχείο ελήφθη</string>
+
+    <string name="error_invalid_download">Μη έγκυρη προσπάθεια λήψης</string>
+</resources>

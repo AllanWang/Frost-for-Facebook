@@ -1,0 +1,4 @@
+<resources>
+    <string name="network_media_on_metered">Απενεργοποίηση εικόνων σε περιορισμένο δίκτυο.</string>
+    <string name="network_media_on_metered_desc">Αν εντοπιστεί ένα περιορισμένο δίκτυο, το Frost αυτόματα θα αποτρέψει όλες τις εικόνες και τα βίντεο από το να φορτώσουν.</string>
+</resources>

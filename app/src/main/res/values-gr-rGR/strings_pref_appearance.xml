@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="theme_customization">Εξατομίκευση θέματος</string>
+
+    <string name="theme">Θέμα</string>
+    <string name="text_color">Χρώμα κειμένου</string>
+    <string name="accent_color">Χρώμα έμφασης</string>
+    <string name="background_color">Χρώμα φόντου</string>
+    <string name="header_color">Χρώμα επικεφαλίδας</string>
+    <string name="icon_color">Χρώμα εικονιδίου</string>
+
+    <string name="global_customization">Γενική εξατομίκευση</string>
+
+    <string name="main_activity_layout">Σχέδιο κύριας δραστηριότητας</string>
+    <string name="main_activity_layout_desc">Επεξεργασία σχεδίου κύριας δραστηριότητας</string>
+
+    <string name="main_tabs">Καρτέλα κύριας δραστηριότητας</string>
+    <string name="main_tabs_desc">Όρισε ποιες καρτέλες θα βλέπεις στη κύρια δραστηριότητα σου</string>
+
+    <string name="tint_nav">Απόχρωση μπάρας πλοήγησης</string>
+    <string name="tint_nav_desc">Η μπάρα πλοήγησης θα έχει ίδιο χρώμα με την επικεφαλίδα</string>
+    <string name="web_text_scaling">Κλίμακα web κειμένου</string>
+    <string name="web_text_scaling_desc">Παράδειγμα κλίμακας κειμένου : Παρατεταμένο πάτημα στο κείμενο για επαναφορά.</string>
+
+    <string name="enforce_black_media_bg">Ορισμός μαύρων μέσων για φόντο</string>
+    <string name="enforce_black_media_bg_desc">Δημιουργία φόντο των μέσων αναπαραγωγής ως μαύρο : το προκαθορισμένο είναι το επιλεγμένο φόντο επάνω</string>
+</resources>
