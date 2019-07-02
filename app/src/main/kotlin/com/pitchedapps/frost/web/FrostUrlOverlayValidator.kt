@@ -78,16 +78,16 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         val shouldUseDesktop = url.formattedFbUrl.shouldUseDesktopAgent
         //already overlay; manage user agent
         if (userAgentString != USER_AGENT_DESKTOP && shouldUseDesktop) {
-            L.i { "Switch to desktop agent overlay" }
+            L._i { "Switch to desktop agent overlay" }
             context.launchWebOverlayDesktop(url)
             return true
         }
         if (userAgentString == USER_AGENT_DESKTOP && !shouldUseDesktop) {
-            L.i { "Switch from desktop agent" }
+            L._i { "Switch from desktop agent" }
             context.launchWebOverlay(url)
             return true
         }
-        L.i { "return false switch" }
+        L._i { "return false switch" }
         return false
     }
     L.v { "Request web overlay passed" }

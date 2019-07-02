@@ -327,6 +327,10 @@ val dependentSegments = arrayOf(
      * Editing images
      */
     "/confirmation/?",
+    /**
+     * Remove entry from "people you may know"
+     */
+    "/pymk/xout/",
     /*
      * Facebook messages have the following cases for the tid query
      * mid* or id* for newer threads, which can be launched in new windows
