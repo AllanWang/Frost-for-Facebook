@@ -40,8 +40,6 @@ enum class CssHider(vararg val items: String) : InjectorContract {
     NON_RECENT("article:not([data-store*=actor_name])"),
     STORIES(
         "#MStoriesTray",
-        // Main article wrapper; this may end up excluding more than just stories
-        "article:not([data-store-id])",
         // Sub element with just the tray; title is not a part of this
         "[data-testid=story_tray]"
     )
