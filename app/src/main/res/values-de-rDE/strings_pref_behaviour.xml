@@ -17,6 +17,8 @@
     <string name="force_message_bottom_desc">Beim Laden eines Nachrichten-Threads, direkt nach ganz unten scrollen anstatt die Seite normal zu laden.</string>
     <string name="enable_pip">PIP aktivieren</string>
     <string name="enable_pip_desc">Bild-in-Bild-Videos aktivieren</string>
+    <string name="autoplay_settings">Video Autoplay Einstellungen</string>
+    <string name="autoplay_settings_desc">Öffne Facebooks automatische Videowiedergabe Einstellungen. Beachte das diese deaktiviert werden muss damit PIP funktioniert.</string>
     <string name="exit_confirmation">Beenden bestätigen</string>
     <string name="exit_confirmation_desc">Zeigen Sie einen Bestätigungsdialog vor dem Beenden der app</string>
     <string name="analytics">Statistik</string>

@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Definieren Sie, welche Elemente in den Newsfeed angezeigt werden</string>
     <string name="behaviour">Verhalten</string>
     <string name="behaviour_desc">Definiere, wie sich die App in bestimmten Einstellungen verhält</string>
+    <string name="security">Sicherheit</string>
+    <string name="security_desc">Sperrbildschirm, Biometrie, etc</string>
     <string name="network">Netzwerk</string>
     <string name="network_desc">Definieren Sie die Optionen, beeinflussen des getakten Netzwerks</string>
     <string name="experimental">Experimentell</string>
