@@ -11,13 +11,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/image_photo"
+    <com.pitchedapps.frost.views.DragFrame
+        android:id="@+id/image_drag"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:scaleX="0.9"
-        android:scaleY="0.9" />
+        android:layout_height="match_parent">
+
+        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+            android:id="@+id/image_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:scaleX="0.9"
+            android:scaleY="0.9" />
+
+    </com.pitchedapps.frost.views.DragFrame>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/image_fab"

@@ -23,11 +23,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
+import androidx.customview.widget.ViewDragHelper
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.mediapicker.scanMedia
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
+import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.fadeOut
@@ -75,6 +77,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -102,6 +106,8 @@ class ImageActivity : KauBaseActivity() {
             field = value
             value.update(image_fab)
         }
+
+    private lateinit var dragHelper: ViewDragHelper
 
     companion object {
         /**
@@ -135,6 +141,9 @@ class ImageActivity : KauBaseActivity() {
         )}_${Math.abs(imageUrl.hashCode())}"
     }
 
+    private val baseBackgroundColor = if (Prefs.blackMediaBg) Color.BLACK
+    else Prefs.bgColor.withMinAlpha(235)
+
     private fun loadError(e: Throwable) {
         errorRef = e
         e.logFrostEvent("Image load error")
@@ -158,12 +167,10 @@ class ImageActivity : KauBaseActivity() {
             result
         }
 
-        val layout = if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
+        val layout =
+            if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
         setContentView(layout)
-        image_container.setBackgroundColor(
-            if (Prefs.blackMediaBg) Color.BLACK
-            else Prefs.bgColor.withMinAlpha(235)
-        )
+        image_container.setBackgroundColor(baseBackgroundColor)
         image_text?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
         image_text?.setBackgroundColor(
             (if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
@@ -171,7 +178,8 @@ class ImageActivity : KauBaseActivity() {
         )
         image_text?.text = imageText
         image_progress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
-        image_panel?.addPanelSlideListener(object : SlidingUpPanelLayout.SimplePanelSlideListener() {
+        image_panel?.addPanelSlideListener(object :
+            SlidingUpPanelLayout.SimplePanelSlideListener() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset == 0f && !image_fab.isShown) image_fab.show()
                 else if (slideOffset != 0f && image_fab.isShown) image_fab.hide()
@@ -179,7 +187,8 @@ class ImageActivity : KauBaseActivity() {
             }
         })
         image_fab.setOnClickListener { fabAction.onClick(this) }
-        image_photo.setOnImageEventListener(object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
+        image_photo.setOnImageEventListener(object :
+            SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception) {
                 loadError(e)
             }
@@ -194,14 +203,73 @@ class ImageActivity : KauBaseActivity() {
             image_photo.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
             fabAction = FabStates.DOWNLOAD
             image_photo.animate().alpha(1f).scaleXY(1f).start()
+            dragHelper = ViewDragHelper.create(image_drag, ViewDragCallback()).apply {
+                setEdgeTrackingEnabled(ViewDragHelper.EDGE_TOP or ViewDragHelper.EDGE_BOTTOM)
+            }
+            image_drag.dragHelper = dragHelper
         }
+    }
+
+    private inner class ViewDragCallback : ViewDragHelper.Callback() {
+        private var scrollPercent: Float = 0f
+        private var scrollThreshold = 0.5f
+        private var scrollToTop = false
+
+        override fun tryCaptureView(view: View, i: Int): Boolean {
+            return true
+        }
+
+        override fun getViewHorizontalDragRange(child: View): Int = 0
+
+        override fun getViewVerticalDragRange(child: View): Int = child.height
+
+        override fun onViewPositionChanged(
+            changedView: View,
+            left: Int,
+            top: Int,
+            dx: Int,
+            dy: Int
+        ) {
+            super.onViewPositionChanged(changedView, left, top, dx, dy)
+            //make sure that we are using the proper axis
+            scrollPercent = abs(top.toFloat() / image_container.height)
+            scrollToTop = top < 0
+            val multiplier = max(1f - scrollPercent, 0f)
+            image_fab.alpha = multiplier
+            image_panel?.alpha = multiplier
+            image_container.setBackgroundColor(baseBackgroundColor.adjustAlpha(multiplier))
+
+            if (scrollPercent >= 1) {
+                if (!isFinishing) {
+                    finish()
+                    overridePendingTransition(0, 0)
+                }
+            }
+        }
+
+        override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
+            val overScrolled = scrollPercent > scrollThreshold
+            val maxOffset = releasedChild.height + 10
+            val finalTop = when {
+                scrollToTop && (overScrolled || yvel < -dragHelper.minVelocity) -> -maxOffset
+                !scrollToTop && (overScrolled || yvel > dragHelper.minVelocity) -> maxOffset
+                else -> 0
+            }
+            dragHelper.settleCapturedViewAt(0, finalTop)
+            image_drag.invalidate()
+        }
+
+        override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int = 0
+
+        override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int = top
     }
 
     @Throws(IOException::class)
     private fun createPublicMediaFile(): File {
         val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
         val imageFileName = "${IMG_TAG}_${timeStamp}_"
-        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val storageDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val frostDir = File(storageDir, IMG_TAG)
         if (!frostDir.exists()) frostDir.mkdirs()
         return File.createTempFile(imageFileName, IMG_EXTENSION, frostDir)
