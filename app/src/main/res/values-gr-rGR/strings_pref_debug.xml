@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="debug_toast_enabled">Ο τομέας διόρθωσης σφαλμάτων είναι ενεργοποιημένος! Πήγαινε πίσω στις ρυθμίσεις.</string>
+    <string name="debug_toast_already_enabled">Ο τομέας διόρθωσης σφαλμάτων είναι ήδη ενεργοποιημένος. Πήγαινε πίσω στις ρυθμίσεις.</string>
+
+    <string name="debug_disclaimer_info">Παρόλο που το πιο προσωπικό υλικό αυτόματα αφαιρείται στην αναφορά, κάποιες ευαίσθητες πληροφορίες μπορεί να είναι ακόμη ορατές.
+        \nΠαρακαλώ ρίξε μία ματιά στην αναφορά διόρθωσης σφαλμάτων προτού τη στείλεις.
+        \n\nΠατώντας σε μία από τις παρακάτω επιλογές θα συντάξει μία απάντηση email με τα web δεδομένα της σελίδας.
+    </string>
+
+    <string name="debug_incomplete">Μη ολοκληρωμένη αναφορά</string>
+
+    <string name="debug_report_email_title" translatable="false">Frost για Facebook : Αναφορά διόρθωσης σφαλμάτων</string>
+
+    <string name="debug_web">Διόρθωση σφαλμάτων από το Web</string>
+    <string name="debug_web_desc">Πλοηγήσου στη σελίδα με το σφάλμα και στείλε τις πηγές για διόρθωση σφαλμάτων.</string>
+
+    <string name="parsing_data">Ανάλυση Δεδομένων</string>
+
+    <string name="debug_parsers">Αναλυτές διόρθωσης σφαλμάτων</string>
+    <string name="debug_parsers_desc">Έναρξη ενός από τους διαθέσιμους αναλυτές για την διόρθωση σφαλμάτων στα δεδομένα που απαντήθηκαν</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="newsfeed_sort">Σειρά Δημοσιεύσεων</string>
+    <string name="newsfeed_sort_desc">Ορίζει την σειρά με την οποία οι δημοσιεύσεις θα εμφανίζονται</string>
+    <string name="aggressive_recents">Επιθετικά Πρόσφατα</string>
+    <string name="aggressive_recents_desc">Φίλτραρε επιπλέον παλιές δημοσιεύσεις από το αρχικό feed πιο πρόσφατων δημοσιεύσεων του Facebook. Απενεργοποίησε το αν το feed σου είναι κενό.</string>
+    <string name="composer">Δημιουργία Δημοσίευσης</string>
+    <string name="composer_desc">Εμφάνιση Δημιουργίας Δημοσίευσης στο feed δημοσιεύσεων</string>
+
+    <string name="suggested_friends">Προτεινόμενοι Φίλοι</string>
+    <string name="suggested_friends_desc">Εμφάνισε "Ανθρώπους που ίσως γνωρίζετε" στο feed δημοσιεύσεων</string>
+    <string name="suggested_groups">Προτεινόμενες ομάδες</string>
+    <string name="suggested_groups_desc">Εμφάνισε "Προτεινόμενες ομάδες" στο feed</string>
+    <string name="show_stories">Εμφάνιση Ιστοριών</string>
+    <string name="show_stories_desc">Εμφάνιση ιστοριών στο feed</string>
+    <string name="facebook_ads">Διαφημίσεις Facebook</string>
+    <string name="facebook_ads_desc">Εμφάνισε τοπικές διαφημίσεις Facebook</string>
+
+</resources>

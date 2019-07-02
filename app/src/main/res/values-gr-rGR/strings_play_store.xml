@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <string name="restoring_purchases">Αποκατάσταση αγορών…</string>
+
+    <string name="uh_oh">Ω όχι</string>
+    <string name="reload">Επαναφόρτωση</string>
+</resources>

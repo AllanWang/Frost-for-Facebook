@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="security_disclaimer_info">Οι προτιμήσεις ασφάλειας βοηθούν στην πρόσβαση του Frost από τη διεπαφή χρήστη. Παρόλα αυτά,τα τοπικά δεδομένα δεν είναι κρυπτογραφημένα και μπορούν να έχουν πρόσβαση σε αυτά οι διαχειριστές.</string>
+    <string name="enable_biometrics">Ενεργοποίηση βιομετρικών στοιχείων</string>
+    <string name="enable_biometrics_desc">Αίτηση βιομετρικής αυθεντικοποιήσης έπειτα από μη δραστηριότητα</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_frequency">Συχνότητα ειδοποιήσεων</string>
+    <string name="no_notifications">Χωρίς ειδοποιήσεις</string>
+    <string name="notification_keywords">Λέξεις-Κλειδιά</string>
+    <string name="notification_keywords_desc">Δεν ειδοποιεί όταν η δημοσίευση περιέχει μία από αυτές τις λέξεις-κλειδιά.</string>
+    <string name="add_keyword">Προσθήκη λέξης-κλειδί</string>
+    <string name="hint_keyword">Πληκτρολόγησε τη λέξη-κλειδί και πάτα +</string>
+    <string name="empty_keyword">Κενή λέξη-κλειδί</string>
+    <string name="notification_general">Ενεργοποίησε γενικές ειδοποιήσεις</string>
+    <string name="notification_general_desc">Λάβε γενικές ειδοποιήσεις για τον τρέχον λογαριασμό.</string>
+    <string name="notification_general_all_accounts">Ειδοποιήσου από όλους τους λογαριασμούς</string>
+    <string name="notification_general_all_accounts_desc">Λάβε γενικές ειδοποιήσεις από όλους τους λογαριασμούς που είναι συνδεδεμένοι.</string>
+    <string name="notification_messages">Ενεργοποιήσε ειδοποιήσεις μηνυμάτων</string>
+    <string name="notification_messages_desc">Λάβε στιγμιαίες ειδοποιήσεις μηνυμάτων για τον τρέχον λογαριασμό.</string>
+    <string name="notification_messages_all_accounts">Ειδοποίησε για μηνύματα από όλους τους λογαριασμούς</string>
+    <string name="notification_messages_all_accounts_desc">Λάβε στιγμιαία μηνύματα από όλους τους λογαριασμούς</string>
+    <string name="notification_fetch_now">Λάβε ειδοποιήσεις τώρα</string>
+    <string name="notification_fetch_now_desc">Δώσε έναυσμα στον ειδοποιητή.</string>
+    <string name="notification_fetch_success">Λήψη ειδοποιήσεων…</string>
+    <string name="notification_fetch_fail">Αδύνατη η λήψη ειδοποιήσεων</string>
+    <string name="notification_sound">Ήχος Ειδοποιήσεων</string>
+    <string name="notification_channel">Εξατομίκευση καναλιών ειδοποίησης</string>
+    <string name="notification_channel_desc">Ρύθμιση ήχων, δονήσεων, προτεραιότητας, κτλ</string>
+
+    <string name="notification_ringtone">Ήχος Ειδοποίησης</string>
+    <string name="message_ringtone">Ήχος Μηνύματος</string>
+    <string name="select_ringtone">Επιλογή Ήχου</string>
+
+    <string name="notification_vibrate">Δόνηση Ειδοποίησης</string>
+    <string name="notification_lights">Φώτα Ειδοποιήσης</string>
+
+</resources>
