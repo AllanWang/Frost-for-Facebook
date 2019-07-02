@@ -86,7 +86,12 @@ class StartActivity : KauBaseActivity() {
                 FbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
-                L._d { "Cookies: ${cookies.joinToString("\t", transform = CookieEntity::toSensitiveString)}" }
+                L._d {
+                    "Cookies: ${cookies.joinToString(
+                        "\t",
+                        transform = CookieEntity::toSensitiveString
+                    )}"
+                }
                 loadAssets()
                 authDefer.await()
                 when {
@@ -112,7 +117,8 @@ class StartActivity : KauBaseActivity() {
      */
     private suspend fun migrate() = withContext(Dispatchers.IO) {
         if (cookieDao.selectAll().isNotEmpty()) return@withContext
-        val cookies = (select from CookieModel::class).queryList().map { CookieEntity(it.id, it.name, it.cookie) }
+        val cookies = (select from CookieModel::class).queryList()
+            .map { CookieEntity(it.id, it.name, it.cookie) }
         if (cookies.isNotEmpty()) {
             cookieDao.save(cookies)
             L._d { "Migrated cookies ${cookieDao.selectAll()}" }

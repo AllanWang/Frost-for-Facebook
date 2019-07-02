@@ -9,7 +9,7 @@
     <version title="v2.3.1" />
     <item text="Hide all story panels if enabled" />
     <item text="Prevent swipe to refresh if not at the very top" />
-    <item text="" />
+    <item text="Add vertical swipe to dismiss when viewing images" />
     <item text="" />
     <item text="" />
 
@@ -21,9 +21,6 @@
     <item text="Add fingerprint unlock screen" />
     <item text="Fix messenger redirect" />
     <item text="Lots of internal updates" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.2.4" />
     <item text="Show top bar to allow sharing posts" />

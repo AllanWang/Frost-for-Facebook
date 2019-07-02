@@ -17,8 +17,6 @@
 package com.pitchedapps.frost.utils
 
 import ca.allanwang.kau.kpref.KPref
-import ca.allanwang.kau.kpref.kpref
-import ca.allanwang.kau.kpref.kprefSingle
 
 /**
  * Created by Allan Wang on 2017-07-03.
