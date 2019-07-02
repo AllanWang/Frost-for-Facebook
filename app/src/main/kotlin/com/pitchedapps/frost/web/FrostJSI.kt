@@ -140,4 +140,9 @@ class FrostJSI(val web: FrostWebView) {
         html ?: return
         header?.offer(html)
     }
+
+    @JavascriptInterface
+    fun allowHorizontalScrolling(enable: Boolean) {
+        activity?.viewPager?.enableSwipe = enable
+    }
 }

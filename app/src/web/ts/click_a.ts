@@ -91,14 +91,16 @@
         prevented = true;
     };
 
+    const _frostAllowClick = () => {
+        prevented = false;
+        clearTimeout(clickTimeout)
+    };
+
     document.addEventListener('click', _frostAClick, true);
     let clickTimeout: number | undefined = undefined;
     document.addEventListener('touchstart', () => {
         clickTimeout = setTimeout(_frostPreventClick, 400);
     }, true);
-    document.addEventListener('touchend', () => {
-        prevented = false;
-        clearTimeout(clickTimeout)
-    }, true);
+    document.addEventListener('touchend', _frostAllowClick, true);
 }).call(undefined);
 

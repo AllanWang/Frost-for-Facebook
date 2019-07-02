@@ -34,7 +34,7 @@ import java.util.Locale
  */
 enum class JsAssets : InjectorContract {
     MENU, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
-    DOCUMENT_WATCHER
+    DOCUMENT_WATCHER, HORIZONTAL_SCROLLING
     ;
 
     @VisibleForTesting

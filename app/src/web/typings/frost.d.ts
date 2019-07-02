@@ -1,27 +1,29 @@
 declare interface FrostJSI {
-    loadUrl(url: string | null): boolean
+  loadUrl(url: string | null): boolean
 
-    loadVideo(url: string | null, isGif: boolean): boolean
+  loadVideo(url: string | null, isGif: boolean): boolean
 
-    reloadBaseUrl(animate: boolean)
+  reloadBaseUrl(animate: boolean)
 
-    contextMenu(url: string | null, text: string | null)
+  contextMenu(url: string | null, text: string | null)
 
-    longClick(start: boolean)
+  longClick(start: boolean)
 
-    disableSwipeRefresh(disable: boolean)
+  disableSwipeRefresh(disable: boolean)
 
-    loadLogin()
+  loadLogin()
 
-    loadImage(imageUrl: string, text: string | null)
+  loadImage(imageUrl: string, text: string | null)
 
-    emit(flag: number)
+  emit(flag: number)
 
-    isReady()
+  isReady()
 
-    handleHtml(html: string | null)
+  handleHtml(html: string | null)
 
-    handleHeader(html: string | null)
+  handleHeader(html: string | null)
+
+  allowHorizontalScrolling(enable: boolean)
 }
 
 declare var Frost: FrostJSI;

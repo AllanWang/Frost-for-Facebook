@@ -102,6 +102,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                         Prefs.aggressiveRecents
                 ),
                 JsAssets.DOCUMENT_WATCHER,
+                JsAssets.HORIZONTAL_SCROLLING,
                 JsAssets.CLICK_A,
                 CssHider.ADS.maybe(!Prefs.showFacebookAds),
                 JsAssets.CONTEXT_A,
