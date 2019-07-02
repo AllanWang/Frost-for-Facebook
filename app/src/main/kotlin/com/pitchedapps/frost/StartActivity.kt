@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -26,11 +25,9 @@ import android.widget.TextView
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import ca.allanwang.kau.utils.setIcon
-import ca.allanwang.kau.utils.startActivity
 import ca.allanwang.kau.utils.string
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.activities.LoginActivity
-import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
@@ -43,9 +40,9 @@ import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.BiometricUtils
-import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
 import com.raizlabs.android.dbflow.kotlinextensions.from
@@ -86,18 +83,24 @@ class StartActivity : KauBaseActivity() {
                 FbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
-                L._d { "Cookies: ${cookies.joinToString("\t", transform = CookieEntity::toSensitiveString)}" }
+                L._d {
+                    "Cookies: ${cookies.joinToString(
+                        "\t",
+                        transform = CookieEntity::toSensitiveString
+                    )}"
+                }
                 loadAssets()
                 authDefer.await()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account
                     Prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
-                    else -> startActivity<MainActivity>(intentBuilder = {
-                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    })
+                    else -> launchImageActivity("https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500")
+//                    else -> startActivity<MainActivity>(intentBuilder = {
+//                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
+//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+//                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+//                    })
                 }
             } catch (e: Exception) {
                 L._e(e) { "Load start failed" }
@@ -112,7 +115,8 @@ class StartActivity : KauBaseActivity() {
      */
     private suspend fun migrate() = withContext(Dispatchers.IO) {
         if (cookieDao.selectAll().isNotEmpty()) return@withContext
-        val cookies = (select from CookieModel::class).queryList().map { CookieEntity(it.id, it.name, it.cookie) }
+        val cookies = (select from CookieModel::class).queryList()
+            .map { CookieEntity(it.id, it.name, it.cookie) }
         if (cookies.isNotEmpty()) {
             cookieDao.save(cookies)
             L._d { "Migrated cookies ${cookieDao.selectAll()}" }

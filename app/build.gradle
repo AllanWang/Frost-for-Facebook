@@ -189,21 +189,21 @@ dependencies {
     implementation kau.Dependencies.kotlin
 
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:adapter:${KAU}"
+    implementation kau.Dependencies.kau('core', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:about:${KAU}"
+    implementation kau.Dependencies.kau('core-ui', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:colorpicker:${KAU}"
+    implementation kau.Dependencies.kau('adapter', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:mediapicker:${KAU}"
+    implementation kau.Dependencies.kau('about', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:kpref-activity:${KAU}"
+    implementation kau.Dependencies.kau('colorpicker', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:searchview:${KAU}"
+    implementation kau.Dependencies.kau('mediapicker', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:core:${KAU}"
+    implementation kau.Dependencies.kau('kpref-activity', KAU)
     //noinspection GradleDependency
-    implementation "ca.allanwang.kau:core-ui:${KAU}"
+    implementation kau.Dependencies.kau('searchview', KAU)
 
     implementation "androidx.core:core-ktx:${Versions.ktx}"
 
