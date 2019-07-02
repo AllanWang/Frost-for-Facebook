@@ -17,6 +17,7 @@
     <string name="force_message_bottom_desc">Podczas ładowania wątku wiadomości, wywołaj przewinięcie w dół strony.</string>
     <string name="enable_pip">Włącz PIP</string>
     <string name="enable_pip_desc">Włącz filmy w opcji obraz w obrazie</string>
+    <string name="autoplay_settings">Ustawienia autoodtwarzania</string>
     <string name="exit_confirmation">Potwierdzenie wyjścia</string>
     <string name="exit_confirmation_desc">Pokaż okno dialogowe przed zamknięciem aplikacji</string>
     <string name="analytics">Statystyki</string>
