@@ -41,7 +41,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.glide.transform
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostEvent
