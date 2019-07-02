@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Définir quels éléments apparaissent dans le fil d’actualité</string>
     <string name="behaviour">Comportement</string>
     <string name="behaviour_desc">Définir l’interaction entre l’application dans certains contextes</string>
+    <string name="security">Sécurité</string>
+    <string name="security_desc">Écran de verrouillage, biométriques, etc</string>
     <string name="network">Réseau</string>
     <string name="network_desc">Définir les options qui affectent les réseaux limités</string>
     <string name="experimental">Expérimental</string>
