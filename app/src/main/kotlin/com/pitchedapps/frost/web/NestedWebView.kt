@@ -72,8 +72,6 @@ open class NestedWebView @JvmOverloads constructor(
                 // NestedPreScroll
                 if (dispatchNestedPreScroll(0, deltaY, scrollConsumed, scrollOffset)) {
                     deltaY -= scrollConsumed[1]
-                    event.offsetLocation(0f, -scrollOffset[1].toFloat())
-                    nestedOffsetY += scrollOffset[1]
                 }
                 lastY = eventY - scrollOffset[1]
                 returnValue = super.onTouchEvent(event)
