@@ -28,6 +28,7 @@ import android.webkit.WebChromeClient
 import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import ca.allanwang.kau.swipe.SwipeBackContract
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
 import ca.allanwang.kau.utils.ContextHelper
@@ -168,6 +169,8 @@ open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : Base
     private inline val urlTest: String?
         get() = intent.getStringExtra(ARG_URL) ?: intent.dataString
 
+    lateinit var swipeBack: SwipeBackContract
+
     /**
      * Nonnull variant; verify by checking [urlTest]
      */
@@ -235,7 +238,7 @@ open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : Base
         FrostRunnable.propagate(this, intent)
         L.v { "Done propagation" }
 
-        kauSwipeOnCreate {
+        swipeBack = kauSwipeOnCreate {
             if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
             transitionSystemBars = false
         }
