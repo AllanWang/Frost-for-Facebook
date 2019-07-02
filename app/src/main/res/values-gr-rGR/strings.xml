@@ -16,8 +16,6 @@
     <string name="chat">Συζήτηση</string>
     <string name="photos">Φωτογραφίες</string>
     <string name="marketplace">Αγορά</string>
-    <string name="menu" translatable="false">@string/kau_menu</string>
-    <string name="settings" translatable="false">@string/kau_settings</string>
     <string name="notes">Σημειώσεις</string>
     <string name="on_this_day">Σαν σήμερα</string>
 
@@ -54,7 +52,6 @@
     <string name="top_bar">Μπάρα στο πάνω μέρος</string>
     <string name="bottom_bar">Μπάρα στο κάτω μέρος</string>
 
-    <string name="pip" translatable="false">PIP</string>
     <string name="preview">Προεπισκόπηση</string>
     <string name="options">Επιλογές</string>
     <string name="tab_customizer_instructions">Πάτα συνεχόμενα και σύρε για να αλλάξεις τα εικονίδια στο πάνω μέρος.</string>

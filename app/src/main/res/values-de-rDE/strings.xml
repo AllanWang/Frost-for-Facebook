@@ -47,6 +47,9 @@
     <string name="tab_customizer_instructions">Durch langes Drücken und Ziehen können Sie die oberen Symbole neu anordnen.</string>
     <string name="no_new_notifications">Keine neue Benachrichtigungen gefunden</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">Authentifiziere Frost</string>
+    <string name="today">Heute</string>
+    <string name="yesterday">Gestern</string>
     <!--
     Template used to display human readable string;
     For instance:
@@ -55,5 +58,6 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="time_template">%1$s um %2$s</string>
     <string name="disclaimer">Haftungsausschluss</string>
 </resources>
