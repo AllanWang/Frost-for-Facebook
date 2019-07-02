@@ -10,9 +10,6 @@
     </string>
 
     <string name="debug_incomplete">Μη ολοκληρωμένη αναφορά</string>
-
-    <string name="debug_report_email_title" translatable="false">Frost για Facebook : Αναφορά διόρθωσης σφαλμάτων</string>
-
     <string name="debug_web">Διόρθωση σφαλμάτων από το Web</string>
     <string name="debug_web_desc">Πλοηγήσου στη σελίδα με το σφάλμα και στείλε τις πηγές για διόρθωση σφαλμάτων.</string>
 
