@@ -162,7 +162,7 @@ class ImageActivity : KauBaseActivity() {
         setContentView(layout)
         image_container.setBackgroundColor(
             if (Prefs.blackMediaBg) Color.BLACK
-            else Prefs.bgColor.withMinAlpha(222)
+            else Prefs.bgColor.withMinAlpha(235)
         )
         image_text?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
         image_text?.setBackgroundColor(

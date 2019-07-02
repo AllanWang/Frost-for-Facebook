@@ -147,7 +147,7 @@
             android:theme="@style/Kau.About" />
         <activity
             android:name=".activities.ImageActivity"
-            android:theme="@style/FrostTheme.Transparent" />
+            android:theme="@style/FrostTheme.Overlay" />
         <activity android:name=".activities.DebugActivity" />
 
         <service
