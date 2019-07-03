@@ -187,6 +187,9 @@ node {
 }
 
 task frostWebGen(type: NpmTask) {
+    dependsOn npmInstall
+    group 'build'
+    description 'Generate Frost web assets'
     args = ['run', 'compile']
 }
 
