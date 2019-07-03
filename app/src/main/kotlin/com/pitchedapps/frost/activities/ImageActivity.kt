@@ -144,7 +144,7 @@ class ImageActivity : KauBaseActivity() {
     }
 
     private lateinit var binding: ActivityImageBinding
-    private lateinit var bottomBehavior: BottomSheetBehavior<View>
+    private var bottomBehavior: BottomSheetBehavior<View>? = null
 
     private val baseBackgroundColor = if (Prefs.blackMediaBg) Color.BLACK
     else Prefs.bgColor.withMinAlpha(235)
@@ -260,8 +260,10 @@ class ImageActivity : KauBaseActivity() {
                 val multiplier = max(1f - scrollPercent, 0f)
 
                 imageFab.alpha = multiplier
-                imageText.alpha =
-                    multiplier * (if (bottomBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) 0.5f else 1f)
+                bottomBehavior?.also {
+                    imageText.alpha =
+                        multiplier * (if (it.state == BottomSheetBehavior.STATE_COLLAPSED) 0.5f else 1f)
+                }
                 imageContainer.setBackgroundColor(baseBackgroundColor.adjustAlpha(multiplier))
 
                 if (scrollPercent >= 1) {
