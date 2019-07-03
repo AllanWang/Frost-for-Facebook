@@ -188,7 +188,7 @@ class ImageActivity : KauBaseActivity() {
     private fun ActivityImageBinding.onCreate() {
         imageContainer.setBackgroundColor(baseBackgroundColor)
         this@ImageActivity.imageText.also { text ->
-            if (text == null) {
+            if (text.isNullOrBlank()) {
                 imageText.gone()
             } else {
                 imageText.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
