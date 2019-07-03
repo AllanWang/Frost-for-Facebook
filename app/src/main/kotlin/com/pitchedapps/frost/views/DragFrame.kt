@@ -25,7 +25,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.customview.widget.ViewDragHelper
-import com.pitchedapps.frost.utils.L
 
 class DragFrame @JvmOverloads constructor(
     context: Context,
@@ -84,7 +83,6 @@ class DragFrame @JvmOverloads constructor(
         v.getDrawingRect(rect)
         v.getLocationOnScreen(location)
         rect.offset(location[0], location[1])
-        L.d { "${event.rawX} ${event.x} ${event.rawY} ${event.y} ${rect}" }
         return rect.contains(event.rawX.toInt(), event.rawY.toInt())
     }
 
