@@ -39,6 +39,7 @@ import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
 import com.davemorrissey.labs.subscaleview.ImageSource
@@ -145,6 +146,11 @@ class ImageActivity : KauBaseActivity() {
     else Prefs.bgColor.withMinAlpha(235)
 
     private fun loadError(e: Throwable) {
+        if (e.message?.contains("<!DOCTYPE html>") == true) {
+            applicationContext.toast(R.string.image_not_found)
+            finish()
+            return
+        }
         errorRef = e
         e.logFrostEvent("Image load error")
         if (image_progress.isVisible)
