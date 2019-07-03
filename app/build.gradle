@@ -188,6 +188,8 @@ task frostWebGen(type: NpmTask) {
     args = ['run', 'compile']
 }
 
+preBuild.dependsOn(frostWebGen)
+
 repositories {
     google()
     jcenter()
