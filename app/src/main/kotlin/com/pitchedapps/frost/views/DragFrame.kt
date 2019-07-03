@@ -18,8 +18,10 @@ package com.pitchedapps.frost.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.customview.widget.ViewDragHelper
@@ -29,9 +31,20 @@ class DragFrame @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
     var dragHelper: ViewDragHelper? = null
+    var viewToIgnore: View? = null
+    private val rect = Rect()
+    private val location = IntArray(2)
+    private var shouldIgnore: Boolean = false
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            shouldIgnore = shouldIgnore(event)
+        }
+        if (shouldIgnore) {
+            return false
+        }
         return try {
             dragHelper?.shouldInterceptTouchEvent(event) ?: false
         } catch (e: Exception) {
@@ -41,12 +54,36 @@ class DragFrame @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            shouldIgnore = shouldIgnore(event)
+        }
+        if (shouldIgnore) {
+            return false
+        }
         try {
             dragHelper?.processTouchEvent(event) ?: return false
         } catch (e: Exception) {
             return false
         }
         return true
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            shouldIgnore = shouldIgnore(event)
+        }
+        if (shouldIgnore) {
+            return false
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    private fun shouldIgnore(event: MotionEvent): Boolean {
+        val v = viewToIgnore ?: return false
+        v.getDrawingRect(rect)
+        v.getLocationOnScreen(location)
+        rect.offset(location[0], location[1])
+        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
     }
 
     override fun computeScroll() {

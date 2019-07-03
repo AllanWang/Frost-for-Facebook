@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import androidx.customview.widget.ViewDragHelper
+import androidx.databinding.DataBindingUtil
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.mediapicker.scanMedia
@@ -33,6 +34,7 @@ import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.fadeOut
+import ca.allanwang.kau.utils.gone
 import ca.allanwang.kau.utils.isHidden
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.materialDialog
@@ -43,10 +45,12 @@ import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ActivityImageBinding
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
@@ -63,8 +67,6 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import kotlinx.android.synthetic.main.activity_image.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -104,7 +106,7 @@ class ImageActivity : KauBaseActivity() {
         set(value) {
             if (field == value) return
             field = value
-            value.update(image_fab)
+            value.update(binding.imageFab)
         }
 
     private lateinit var dragHelper: ViewDragHelper
@@ -141,14 +143,19 @@ class ImageActivity : KauBaseActivity() {
         )}_${Math.abs(imageUrl.hashCode())}"
     }
 
+    private lateinit var binding: ActivityImageBinding
+    private var bottomBehavior: BottomSheetBehavior<View>? = null
+
     private val baseBackgroundColor = if (Prefs.blackMediaBg) Color.BLACK
     else Prefs.bgColor.withMinAlpha(235)
 
     private fun loadError(e: Throwable) {
         errorRef = e
         e.logFrostEvent("Image load error")
-        if (image_progress.isVisible)
-            image_progress.fadeOut()
+        with(binding) {
+            if (imageProgress.isVisible)
+                imageProgress.fadeOut()
+        }
         tempFile.delete()
         fabAction = FabStates.ERROR
     }
@@ -166,28 +173,49 @@ class ImageActivity : KauBaseActivity() {
                 L.v { "Launching with true url $result" }
             result
         }
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_image)
+        binding.onCreate()
+        tempFile = File(cacheDir(this), imageHash)
+        launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
+            downloadImageTo(tempFile)
+            binding.imageProgress.fadeOut()
+            binding.imagePhoto.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
+            fabAction = FabStates.DOWNLOAD
+            binding.imagePhoto.animate().alpha(1f).scaleXY(1f).start()
+        }
+    }
 
-        val layout =
-            if (!imageText.isNullOrBlank()) R.layout.activity_image else R.layout.activity_image_textless
-        setContentView(layout)
-        image_container.setBackgroundColor(baseBackgroundColor)
-        image_text?.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
-        image_text?.setBackgroundColor(
-            (if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
-                .colorToForeground(0.2f).withAlpha(255)
-        )
-        image_text?.text = imageText
-        image_progress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
-        image_panel?.addPanelSlideListener(object :
-            SlidingUpPanelLayout.SimplePanelSlideListener() {
-            override fun onPanelSlide(panel: View, slideOffset: Float) {
-                if (slideOffset == 0f && !image_fab.isShown) image_fab.show()
-                else if (slideOffset != 0f && image_fab.isShown) image_fab.hide()
-                image_text?.alpha = slideOffset / 2 + 0.5f
+    private fun ActivityImageBinding.onCreate() {
+        imageContainer.setBackgroundColor(baseBackgroundColor)
+        this@ImageActivity.imageText.also { text ->
+            if (text.isNullOrBlank()) {
+                imageText.gone()
+            } else {
+                imageText.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
+                imageText.setBackgroundColor(
+                    (if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
+                        .colorToForeground(0.2f).withAlpha(255)
+                )
+                imageText.text = text
+                bottomBehavior = BottomSheetBehavior.from<View>(imageText).apply {
+                    setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                            if (slideOffset == 0f && !imageFab.isShown) imageFab.show()
+                            else if (slideOffset != 0f && imageFab.isShown) imageFab.hide()
+                            imageText.alpha = slideOffset / 2 + 0.5f
+                        }
+
+                        override fun onStateChanged(bottomSheet: View, newState: Int) {
+                            // No op
+                        }
+                    })
+                }
+                imageText.bringToFront()
             }
-        })
-        image_fab.setOnClickListener { fabAction.onClick(this) }
-        image_photo.setOnImageEventListener(object :
+        }
+        imageProgress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
+        imageFab.setOnClickListener { fabAction.onClick(this@ImageActivity) }
+        imagePhoto.setOnImageEventListener(object :
             SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception) {
                 loadError(e)
@@ -196,18 +224,11 @@ class ImageActivity : KauBaseActivity() {
         setFrostColors {
             themeWindow = false
         }
-        tempFile = File(cacheDir(this), imageHash)
-        launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
-            downloadImageTo(tempFile)
-            image_progress.fadeOut()
-            image_photo.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
-            fabAction = FabStates.DOWNLOAD
-            image_photo.animate().alpha(1f).scaleXY(1f).start()
-            dragHelper = ViewDragHelper.create(image_drag, ViewDragCallback()).apply {
-                setEdgeTrackingEnabled(ViewDragHelper.EDGE_TOP or ViewDragHelper.EDGE_BOTTOM)
-            }
-            image_drag.dragHelper = dragHelper
+        dragHelper = ViewDragHelper.create(imageDrag, ViewDragCallback()).apply {
+            setEdgeTrackingEnabled(ViewDragHelper.EDGE_TOP or ViewDragHelper.EDGE_BOTTOM)
         }
+        imageDrag.dragHelper = dragHelper
+        imageDrag.viewToIgnore = imageText
     }
 
     private inner class ViewDragCallback : ViewDragHelper.Callback() {
@@ -216,7 +237,8 @@ class ImageActivity : KauBaseActivity() {
         private var scrollToTop = false
 
         override fun tryCaptureView(view: View, i: Int): Boolean {
-            return true
+            L.d { "Try capture ${view.id} $i ${binding.imagePhoto.id} ${binding.imageText.id}" }
+            return view === binding.imagePhoto
         }
 
         override fun getViewHorizontalDragRange(child: View): Int = 0
@@ -231,18 +253,24 @@ class ImageActivity : KauBaseActivity() {
             dy: Int
         ) {
             super.onViewPositionChanged(changedView, left, top, dx, dy)
-            //make sure that we are using the proper axis
-            scrollPercent = abs(top.toFloat() / image_container.height)
-            scrollToTop = top < 0
-            val multiplier = max(1f - scrollPercent, 0f)
-            image_fab.alpha = multiplier
-            image_panel?.alpha = multiplier
-            image_container.setBackgroundColor(baseBackgroundColor.adjustAlpha(multiplier))
+            with(binding) {
+                //make sure that we are using the proper axis
+                scrollPercent = abs(top.toFloat() / imageContainer.height)
+                scrollToTop = top < 0
+                val multiplier = max(1f - scrollPercent, 0f)
 
-            if (scrollPercent >= 1) {
-                if (!isFinishing) {
-                    finish()
-                    overridePendingTransition(0, 0)
+                imageFab.alpha = multiplier
+                bottomBehavior?.also {
+                    imageText.alpha =
+                        multiplier * (if (it.state == BottomSheetBehavior.STATE_COLLAPSED) 0.5f else 1f)
+                }
+                imageContainer.setBackgroundColor(baseBackgroundColor.adjustAlpha(multiplier))
+
+                if (scrollPercent >= 1) {
+                    if (!isFinishing) {
+                        finish()
+                        overridePendingTransition(0, 0)
+                    }
                 }
             }
         }
@@ -256,7 +284,7 @@ class ImageActivity : KauBaseActivity() {
                 else -> 0
             }
             dragHelper.settleCapturedViewAt(0, finalTop)
-            image_drag.invalidate()
+            binding.imageDrag.invalidate()
         }
 
         override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int = 0

@@ -1,44 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/image_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ProgressBar
-        android:id="@+id/image_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/image_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/kau_fab_margin"
-        android:visibility="invisible" />
-
-    <com.pitchedapps.frost.views.DragFrame
-        android:id="@+id/image_drag"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/image_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.sothree.slidinguppanel.SlidingUpPanelLayout
-            android:id="@+id/image_panel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            app:umanoPanelHeight="44dp"
-            app:umanoShadowHeight="0dp">
+        <ProgressBar
+            android:id="@+id/image_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
-            <TextView
-                android:id="@+id/image_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:alpha="0.5"
-                android:padding="@dimen/kau_padding_normal" />
+        <com.pitchedapps.frost.views.DragFrame
+            android:id="@+id/image_drag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
                 android:id="@+id/image_photo"
@@ -48,8 +27,25 @@
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
 
-        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        </com.pitchedapps.frost.views.DragFrame>
 
-    </com.pitchedapps.frost.views.DragFrame>
+        <TextView
+            android:id="@+id/image_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.5"
+            android:padding="@dimen/kau_padding_normal"
+            app:behavior_peekHeight="44dp"
+            app:layout_behavior="@string/bottom_sheet_behavior" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/image_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/kau_fab_margin"
+            android:visibility="invisible" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

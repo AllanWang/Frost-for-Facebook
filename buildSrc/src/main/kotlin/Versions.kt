@@ -1,5 +1,7 @@
 object Versions {
 
+    const val targetSdk = 28
+
     const val andxBiometric = "1.0.0-alpha04"
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
@@ -32,8 +34,6 @@ object Versions {
     const val roboelectric = "4.2"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
     const val scaleImageView = "3.10.0"
-    // https://github.com/umano/AndroidSlidingUpPanel#importing-the-library
-    const val slidingPanel = "3.4.0"
     // https://github.com/srs/gradle-node-plugin/releases
     const val nodeGradle = "1.3.1"
 }

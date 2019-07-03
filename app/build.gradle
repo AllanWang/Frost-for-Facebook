@@ -22,7 +22,7 @@ apply from: '../spotless.gradle'
 group = APP_GROUP
 
 android {
-    compileSdkVersion kau.Versions.targetSdk
+    compileSdkVersion Versions.targetSdk
     buildToolsVersion kau.Versions.buildTools
 
     androidGitVersion {
@@ -34,7 +34,7 @@ android {
     defaultConfig {
         applicationId "${project.APP_GROUP}.${project.APP_ID.toLowerCase(Locale.CANADA)}"
         minSdkVersion kau.Versions.minSdk
-        targetSdkVersion kau.Versions.targetSdk
+        targetSdkVersion Versions.targetSdk
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
         multiDexEnabled true
@@ -63,6 +63,10 @@ android {
         xmlReport false
         textReport true
         textOutput 'stdout'
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     def testKeystoreFile = file('../files/test.keystore')
@@ -294,8 +298,6 @@ dependencies {
     implementation kau.Dependencies.bugsnag
 
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${Versions.scaleImageView}"
-
-    implementation "com.sothree.slidinguppanel:library:${Versions.slidingPanel}"
 
     implementation "androidx.room:room-ktx:${Versions.room}"
     implementation "androidx.room:room-runtime:${Versions.room}"
