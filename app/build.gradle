@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'kotlin-android'
@@ -279,6 +281,12 @@ task createGithubReleaseApk(type: GradleBuild) {
              'connectedAndroidTest',
              'assembleRelease']
 }
+
+task frostWebGen(type: Exec) {
+    commandLine file("${project.rootDir}/files/web_gen.sh")
+}
+
+preBuild.dependsOn frostWebGen
 
 def kotlinResolutions = ['kotlin-reflect',
                          'kotlin-stdlib',

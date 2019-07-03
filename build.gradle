@@ -26,7 +26,7 @@ task generateChangelogMd() {
     def changelog = kau.ChangelogGenerator.generate("${project.rootDir}/app/src/main/res/xml/frost_changelog.xml", "${project.rootDir}/docs/Changelog.md")
     // If we have no changelog, something is wrong
     def entry = changelog[0]
-    def whatsNewFile = new File("${project.rootDir}/app/src/main/play/en-US/whatsnew")
+    def whatsNewFile = file("${project.rootDir}/app/src/main/play/en-US/whatsnew")
     if (!whatsNewFile.exists()) {
         // Throw exceptions so that moving this file will require us to update the script
         throw new RuntimeException("Whatsnew file not found")
