@@ -180,6 +180,8 @@ android {
 }
 
 node {
+    version = '12.4.0'
+    npmVersion = '6.9.0'
     download = true
     nodeModulesDir = file("${project.projectDir}/src/web")
 }
