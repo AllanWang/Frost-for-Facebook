@@ -1,5 +1,7 @@
 object Versions {
 
+    const val targetSdk = 28
+
     const val andxBiometric = "1.0.0-alpha04"
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text

@@ -46,6 +46,7 @@ import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
 import com.raizlabs.android.dbflow.kotlinextensions.from
@@ -98,11 +99,12 @@ class StartActivity : KauBaseActivity() {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account
                     Prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
-                    else -> startActivity<MainActivity>(intentBuilder = {
-                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    })
+                    else -> launchImageActivity("https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "Hello world\nLong Text\nLSEF")
+//                    else -> startActivity<MainActivity>(intentBuilder = {
+//                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
+//                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+//                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+//                    })
                 }
             } catch (e: Exception) {
                 L._e(e) { "Load start failed" }
