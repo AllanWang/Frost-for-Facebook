@@ -68,7 +68,6 @@ class AboutActivity : AboutActivityBase(null, {
         val include = arrayOf(
             "AboutLibraries",
             "AndroidIconics",
-            "androidslidinguppanel",
             "dbflow",
             "fastadapter",
             "glide",
