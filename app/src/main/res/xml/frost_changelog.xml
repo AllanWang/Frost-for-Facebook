@@ -10,7 +10,7 @@
     <item text="Hide all story panels if enabled" />
     <item text="Prevent swipe to refresh if not at the very top" />
     <item text="Add vertical swipe to dismiss when viewing images" />
-    <item text="" />
+    <item text="Add horizontal scroll support for webviews" />
     <item text="" />
 
     <version title="v2.3.0" />

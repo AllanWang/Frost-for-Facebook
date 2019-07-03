@@ -6,6 +6,18 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
 
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:${Versions.nodeGradle}"
+    }
+}
+
+apply plugin: com.moowork.gradle.node.NodePlugin
+
 apply from: '../spotless.gradle'
 group = APP_GROUP
 
@@ -166,6 +178,27 @@ android {
     }
 
 }
+
+node {
+    version = '12.4.0'
+    npmVersion = '6.9.0'
+    download = true
+    nodeModulesDir = file("${project.projectDir}/src/web")
+}
+
+task npmCi(type: NpmTask) {
+    dependsOn npmSetup
+    npmCommand = ["ci"]
+}
+
+task frostWebGen(type: NpmTask) {
+    dependsOn npmCi
+    group 'build'
+    description 'Generate Frost web assets'
+    args = ['run', 'compile']
+}
+
+preBuild.dependsOn(frostWebGen)
 
 repositories {
     google()

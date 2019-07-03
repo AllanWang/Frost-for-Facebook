@@ -79,7 +79,7 @@ class OfflineWebsiteTest {
         )
     }
 
-    @Ignore
+    @Ignore("Not really a test")
     @Test
     fun fbOffline() {
         // Not really a test. Skip in CI

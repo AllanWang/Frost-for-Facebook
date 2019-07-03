@@ -1,24 +1,34 @@
-language: java
-services:
-- docker
+language: android
+jdk:
+  - oraclejdk8
+env:
+  global:
+    - ANDROID_API=29
+    - ANDROID_BUILD_TOOLS=29.0.0
+    - secure: X3J97ccW+8K0bXPXhX608vPx7Pr/G4ju7quxydqMaYGgClHxoL/WpXOBAyyllde5P28PY4kioaqcI21BEhnAw0QUbmnzVLA1Qd5VS7aMPHpEnInKuOxGZ2d570OZd1f+ozFVt05vzG0VBJlBAkVhz2GWNxQdmIV1sO28MH526JMuYaEREuuywVSZmAeY7AAbW9MeCC2wvHvNmhk2nk6NLRQcsrDHcBsimy9fnnQ9lT/QsvToi1ZJd/MN7YkGDUULR+YmaotBzG546UJ1EiZQX91bFEJfP0oL43Pk7t5snzmHnKjLOr8Mt5QsIUXaiy/uzhUVmuDh1i0GEpZmhqM7nz/T6P7ogaLbbyJeauNmf15nu+e3hSvNiTzKyIwfSSflv8Do3g8/Eo3dKfIi3I8/OKF/uZ76kywh2LRqtZAqxRDiAMDZVwsRgD4aztoWm5AWa3tSoGy1J7i1eoqX6bNqokRbjgheTqcjN13kCdSZi3pZX7UBYm2Vumhn4izhTume19Rh9SqTmRgQ8jM7ynxHh7vVsJPPJG0HbQ623xz+d9mtXGy1fAb0dcUJMXdOhFN3m6AnKuHiF7cmsqje7Euk/TOZyqZmu0xEhTkugMbNKwGrklJiwRr3IoLtPdhLE38u3/auloUqBQ4K/iA9ZdhAreTSHEaI9d3J4N6kqCj3U30=
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-$ANDROID_BUILD_TOOLS
+    - android-$ANDROID_API
+    - extra-android-support
+    - extra-android-m2repository
+    - extra-google-m2repository
+  licenses:
+    - ".+"
 git:
   depth: 500
 before_install:
-- openssl aes-256-cbc -K $encrypted_0454d0cf846c_key -iv $encrypted_0454d0cf846c_iv
-  -in files/frost.tar.enc -out files/frost.tar -d
-- tar xvf files/frost.tar
-- docker build -q -t frost .
-- docker volume create -o device=$HOME/.gradle/caches/ -o o=bind gradle_caches
-- docker volume create -o device=$HOME/.gradle/wrapper/ -o o=bind gradle_wrapper
-install: true
+  - openssl aes-256-cbc -K $encrypted_0454d0cf846c_key -iv $encrypted_0454d0cf846c_iv
+    -in files/frost.tar.enc -out files/frost.tar -d
+  - tar xvf files/frost.tar
+  - yes | sdkmanager "platforms;android-$ANDROID_API"
 after_success:
-- "./generate-apk-release.sh"
+  - "./generate-apk-release.sh"
 script:
-- cd $TRAVIS_BUILD_DIR
-- docker run --name frost_container -v gradle_caches:/root/.gradle/caches/ -v gradle_wrapper:/root/.gradle/wrapper/
-  frost
-- mkdir $HOME/Frost
-- docker cp frost_container:/frost/app/build/outputs/apk/releaseTest/. $HOME/Frost
+  - "./gradlew --quiet androidGitVersion"
+  - "./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest"
 notifications:
   email: false
   slack:
@@ -27,23 +37,20 @@ notifications:
     on_success: always
     on_failure: always
     template:
-    - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of
-      %{repository}@%{branch} %{result} in %{duration}
-    - "%{commit_subject}"
-    - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
+      - Frost Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of
+        %{repository}@%{branch} %{result} in %{duration}
+      - "%{commit_subject}"
+      - "<https://github.com/AllanWang/Frost-for-Facebook-APK-Builder/releases/tag/v%{build_number}|APK
       Download>"
 sudo: false
 branches:
   except:
-  - master
-  - l10n_dev
+    - master
+    - l10n_dev
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-env:
-  global:
-  - secure: X3J97ccW+8K0bXPXhX608vPx7Pr/G4ju7quxydqMaYGgClHxoL/WpXOBAyyllde5P28PY4kioaqcI21BEhnAw0QUbmnzVLA1Qd5VS7aMPHpEnInKuOxGZ2d570OZd1f+ozFVt05vzG0VBJlBAkVhz2GWNxQdmIV1sO28MH526JMuYaEREuuywVSZmAeY7AAbW9MeCC2wvHvNmhk2nk6NLRQcsrDHcBsimy9fnnQ9lT/QsvToi1ZJd/MN7YkGDUULR+YmaotBzG546UJ1EiZQX91bFEJfP0oL43Pk7t5snzmHnKjLOr8Mt5QsIUXaiy/uzhUVmuDh1i0GEpZmhqM7nz/T6P7ogaLbbyJeauNmf15nu+e3hSvNiTzKyIwfSSflv8Do3g8/Eo3dKfIi3I8/OKF/uZ76kywh2LRqtZAqxRDiAMDZVwsRgD4aztoWm5AWa3tSoGy1J7i1eoqX6bNqokRbjgheTqcjN13kCdSZi3pZX7UBYm2Vumhn4izhTume19Rh9SqTmRgQ8jM7ynxHh7vVsJPPJG0HbQ623xz+d9mtXGy1fAb0dcUJMXdOhFN3m6AnKuHiF7cmsqje7Euk/TOZyqZmu0xEhTkugMbNKwGrklJiwRr3IoLtPdhLE38u3/auloUqBQ4K/iA9ZdhAreTSHEaI9d3J4N6kqCj3U30=
+    - "$HOME/.gradle/caches/"
+    - "$HOME/.gradle/wrapper/"

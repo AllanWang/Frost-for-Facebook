@@ -2,8 +2,14 @@
   "scripts": {
     "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/css"
   },
+  "license": "GPL-3.0",
+  "repository": {
+    "url": "https://github.com/AllanWang/Frost-for-Facebook"
+  },
   "dependencies": {
-    "typescript": "^3.3.1",
-    "sass": "^1.19.0"
+    "compile": "0.0.2",
+    "run": "^1.4.0",
+    "sass": "^1.19.0",
+    "typescript": "^3.3.1"
   }
 }

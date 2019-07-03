@@ -34,4 +34,6 @@ object Versions {
     const val scaleImageView = "3.10.0"
     // https://github.com/umano/AndroidSlidingUpPanel#importing-the-library
     const val slidingPanel = "3.4.0"
+    // https://github.com/srs/gradle-node-plugin/releases
+    const val nodeGradle = "1.3.1"
 }
