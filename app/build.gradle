@@ -186,8 +186,13 @@ node {
     nodeModulesDir = file("${project.projectDir}/src/web")
 }
 
+task npmCi(type: NpmTask) {
+    dependsOn npmSetup
+    npmCommand = ["ci"]
+}
+
 task frostWebGen(type: NpmTask) {
-    dependsOn npmInstall
+    dependsOn npmCi
     group 'build'
     description 'Generate Frost web assets'
     args = ['run', 'compile']
