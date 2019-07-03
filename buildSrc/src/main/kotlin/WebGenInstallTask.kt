@@ -1,6 +1,7 @@
 import com.moowork.gradle.node.npm.NpmTask
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
@@ -9,7 +10,8 @@ import java.io.File
 /**
  * Based on https://github.com/apollographql/apollo-android/blob/master/apollo-gradle-plugin/src/main/groovy/com/apollographql/apollo/gradle/ApolloCodegenInstallTask.groovy
  */
-class WebGenInstallTask : DefaultTask() {
+@CacheableTask
+open class WebGenInstallTask : DefaultTask() {
 
     companion object {
         const val TAG = "frost-web-gen"
@@ -34,7 +36,6 @@ class WebGenInstallTask : DefaultTask() {
 
         installDir.set(project.file(File(project.buildDir, INSTALLATION_PATH)))
         packageFile.set(project.file(File(project.buildDir, PACKAGE_FILE_PATH)))
-
         npmTask.setWorkingDir(File(project.buildDir, TAG))
     }
 

@@ -12,6 +12,7 @@ class FrostPlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
+        println("Applying Frost Plugin")
         project.plugins.withId("java-base") {
             project.applyWebGenPlugin()
         }

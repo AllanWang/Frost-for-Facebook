@@ -22,6 +22,15 @@ val kau = rootProps.useLines {
 
 println("Using kau $kau")
 
+gradlePlugin {
+    plugins {
+        register("frost-web-gen") {
+            id = "frost"
+            implementationClass = "FrostPlugin"
+        }
+    }
+}
+
 dependencies {
     implementation("ca.allanwang.kau:gradle-plugin:$kau")
     implementation("com.moowork.gradle:gradle-node-plugin:1.3.1")
