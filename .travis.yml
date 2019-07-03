@@ -50,7 +50,6 @@ branches:
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
-  - rm -rf app/.gradle
 cache:
   directories:
     - "$HOME/.gradle/caches/"
