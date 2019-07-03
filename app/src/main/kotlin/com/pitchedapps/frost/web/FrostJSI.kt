@@ -19,6 +19,7 @@ package com.pitchedapps.frost.web
 import android.content.Context
 import android.webkit.JavascriptInterface
 import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.db.CookieEntity
@@ -139,5 +140,11 @@ class FrostJSI(val web: FrostWebView) {
     fun handleHeader(html: String?) {
         html ?: return
         header?.offer(html)
+    }
+
+    @JavascriptInterface
+    fun allowHorizontalScrolling(enable: Boolean) {
+        activity?.viewPager?.enableSwipe = enable
+        (context as? WebOverlayActivityBase)?.swipeBack?.disallowIntercept = !enable
     }
 }

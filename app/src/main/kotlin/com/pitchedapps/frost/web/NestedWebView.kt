@@ -72,8 +72,6 @@ open class NestedWebView @JvmOverloads constructor(
                 // NestedPreScroll
                 if (dispatchNestedPreScroll(0, deltaY, scrollConsumed, scrollOffset)) {
                     deltaY -= scrollConsumed[1]
-                    event.offsetLocation(0f, -scrollOffset[1].toFloat())
-                    nestedOffsetY += scrollOffset[1]
                 }
                 lastY = eventY - scrollOffset[1]
                 returnValue = super.onTouchEvent(event)
@@ -122,10 +120,20 @@ open class NestedWebView @JvmOverloads constructor(
         dxUnconsumed: Int,
         dyUnconsumed: Int,
         offsetInWindow: IntArray?
-    ) = childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
+    ) = childHelper.dispatchNestedScroll(
+        dxConsumed,
+        dyConsumed,
+        dxUnconsumed,
+        dyUnconsumed,
+        offsetInWindow
+    )
 
-    final override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?) =
-        childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
+    final override fun dispatchNestedPreScroll(
+        dx: Int,
+        dy: Int,
+        consumed: IntArray?,
+        offsetInWindow: IntArray?
+    ) = childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
     final override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean) =
         childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
