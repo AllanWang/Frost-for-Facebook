@@ -5,7 +5,18 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
-apply plugin: FrostPlugin
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:${Versions.nodeGradle}"
+    }
+}
+
+apply plugin: com.moowork.gradle.node.NodePlugin
 
 apply from: '../spotless.gradle'
 group = APP_GROUP
@@ -166,6 +177,15 @@ android {
         experimental = true
     }
 
+}
+
+node {
+    download = true
+    nodeModulesDir = file("${project.projectDir}/src/web")
+}
+
+task frostWebGen(type: NpmTask) {
+    args = ['run', 'compile']
 }
 
 repositories {

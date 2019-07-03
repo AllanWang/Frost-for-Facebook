@@ -33,5 +33,4 @@ gradlePlugin {
 
 dependencies {
     implementation("ca.allanwang.kau:gradle-plugin:$kau")
-    implementation("com.moowork.gradle:gradle-node-plugin:1.3.1")
 }
