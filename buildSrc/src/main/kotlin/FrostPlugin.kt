@@ -17,16 +17,14 @@ class FrostPlugin : Plugin<Project> {
         }
         project.gradle.taskGraph.whenReady {
             if (!project.plugins.hasPlugin("java-base")) {
-                throw  IllegalArgumentException(
-                    "Frost plugin can't be applied without Android or Java or Kotlin plugin."
-                )
+                throw IllegalArgumentException("Frost plugin can't be applied without Android or Java or Kotlin plugin.")
             }
         }
     }
 
     private fun Project.applyWebGenPlugin() {
         setupNode()
-//        tasks.create(WebGenInstallTask.NAME, WebGenInstallTask::class)
+        tasks.create(WebGenInstallTask.NAME, WebGenInstallTask::class)
     }
 
     private fun Project.setupNode() {
