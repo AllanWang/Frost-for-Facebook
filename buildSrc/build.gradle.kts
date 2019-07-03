@@ -1,9 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     `kotlin-dsl`
-//    groovy
-//    idea
 }
 
 group = "com.pitchedapps"
@@ -26,22 +22,7 @@ val kau = rootProps.useLines {
 
 println("Using kau $kau")
 
-//sourceSets {
-//    main {
-//        withConvention(GroovySourceSet::class) {
-//            groovy.srcDir("src/main/groovy")
-//        }
-//    }
-//}
-
 dependencies {
     implementation("ca.allanwang.kau:gradle-plugin:$kau")
     implementation("com.moowork.gradle:gradle-node-plugin:1.3.1")
 }
-
-//val compileGroovy = tasks.withType<GroovyCompile>().first()
-//val compileKotlin = tasks.withType<KotlinCompile>().first()
-//
-//compileGroovy.dependsOn.remove(compileKotlin)
-//compileKotlin.dependsOn(compileGroovy)
-//compileKotlin.classpath += files(compileGroovy.destinationDir)
