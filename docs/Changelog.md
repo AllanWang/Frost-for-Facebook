@@ -6,6 +6,7 @@
 * Add vertical swipe to dismiss when viewing images
 * Add horizontal scroll support for webviews
 * Fix theme for F-Droid builds
+* Added Greek translations
 
 ## v2.3.0
 * Converted internals of Facebook data storage; auto migration will only work from 2.2.x to 2.3.x

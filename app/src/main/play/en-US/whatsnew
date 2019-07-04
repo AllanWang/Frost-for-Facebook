@@ -5,3 +5,4 @@ v2.3.1
 * Add vertical swipe to dismiss when viewing images
 * Add horizontal scroll support for webviews
 * Fix theme for F-Droid builds
+* Added Greek translations

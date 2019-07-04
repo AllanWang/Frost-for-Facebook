@@ -98,6 +98,7 @@ class ImageActivityTest {
     fun invalidImageTest() {
         launchActivity(mockServer.url("text").toString())
         mockServer.takeRequest()
+        activity.activity.isFinishing
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
             assertEquals(FabStates.ERROR, fabAction, "Text should not be a valid image format, error state expected")
