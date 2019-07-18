@@ -31,7 +31,7 @@
   border-bottom: 1px solid $divider !important;
 }
 
-.item a.primary.touched .primarywrap, ._4dwt ._5y33, ._1ih_, ._5_50, ._6beq, ._69aj,
+.item a.primary.touched .primarywrap, ._4dwt ._5y33, ._1ih_, ._5_50, ._6beq, ._69aj, ._3iyw ._37fb,
 ._5fjv, ._3on6, ._2u4w, ._2om3, ._2ol-, ._5fjw, ._4z83, ._1gkq, ._4-dy {
   border-top: 1px solid $divider !important;
   border-bottom: 1px solid $divider !important;
@@ -45,7 +45,7 @@
 ._1_y5, ._lr0, ._5hgt, ._2cpp, ._50uu, ._50uw, ._31yd, ._1e3d, ._3xz7, ._1xoz,
 ._4kcb, ._2lut, .jewel .touchable-notification.touched, .touchable-notification .touchable.touched,
 .home-notification .touchable.touched, ._6beo ._6ber,
-._73ku ._73jw, ._6--d, ._26vk._56bt,
+._73ku ._73jw, ._6--d, ._26vk._56bt, ._3iyw ._2whz ._13-g,
 ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer,
 ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd, ._5n_f {
   border: 1px solid $divider !important;
@@ -91,4 +91,8 @@
 
 ._484w.selected > ._6zf, ._5kqs::after, ._3lvo ._5xum._5xuk, ._x0b {
   border-bottom: 1px solid $text !important;
+}
+
+._484w.selected ._6zf {
+  border-bottom: 2px solid $accent !important;
 }
