@@ -490,8 +490,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview?.resumeTimers()
         launch {
             FbCookie.switchBackUser()
-            if (shouldReload)
-                refreshAll()
+//            if (shouldReload)
+//                refreshAll()
         }
     }
 
