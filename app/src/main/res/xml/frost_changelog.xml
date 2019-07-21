@@ -6,6 +6,15 @@
     <item text="" />
     -->
 
+
+    <version title="v2.3.2" />
+    <item text="Disable auto feed refresh by default and add setting to re-enable it" />
+    <item text="Update theme" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.3.1" />
     <item text="Hide all story panels if enabled" />
     <item text="Prevent swipe to refresh if not at the very top" />
