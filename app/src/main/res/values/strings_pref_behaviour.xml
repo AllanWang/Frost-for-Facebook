@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="auto_refresh_feed">Auto Refresh Feed</string>
+    <string name="auto_refresh_feed_desc">Refresh the feed after 30 minutes of inactivity</string>
     <string name="fancy_animations">Fancy Animations</string>
     <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
     <string name="overlay_swipe">Enable Overlays</string>

@@ -271,7 +271,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 }
                 profileSetting(nameRes = R.string.kau_add_account) {
                     iconDrawable =
-                        IconicsDrawable(this@BaseMainActivity, GoogleMaterial.Icon.gmd_add).actionBar().paddingDp(5)
+                        IconicsDrawable(
+                            this@BaseMainActivity,
+                            GoogleMaterial.Icon.gmd_add
+                        ).actionBar().paddingDp(5)
                             .color(Prefs.textColor)
                     textColor = Prefs.textColor.toLong()
                     identifier = -3L
@@ -362,14 +365,15 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
-    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) = this.secondaryItem(title) {
-        textColor = Prefs.textColor.toLong()
-        selectedIconColor = Prefs.textColor.toLong()
-        selectedTextColor = Prefs.textColor.toLong()
-        selectedColor = 0x00000001.toLong()
-        identifier = title.toLong()
-        onClick { _ -> onClick(); false }
-    }
+    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) =
+        this.secondaryItem(title) {
+            textColor = Prefs.textColor.toLong()
+            selectedIconColor = Prefs.textColor.toLong()
+            selectedTextColor = Prefs.textColor.toLong()
+            selectedColor = 0x00000001.toLong()
+            identifier = title.toLong()
+            onClick { _ -> onClick(); false }
+        }
 
     private fun refreshAll() {
         L.d { "Refresh all" }
@@ -413,7 +417,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     }
                 }
                 textDebounceInterval = 300
-                searchCallback = { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
+                searchCallback =
+                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
                 closeListener = { _ -> searchViewCache.clear() }
                 foregroundColor = Prefs.textColor
                 backgroundColor = Prefs.bgColor.withMinAlpha(200)
@@ -429,7 +434,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 val intent = Intent(this, SettingsActivity::class.java)
                 intent.putParcelableArrayListExtra(EXTRA_COOKIES, cookies())
                 val bundle =
-                    ActivityOptions.makeCustomAnimation(this, R.anim.kau_slide_in_right, R.anim.kau_fade_out).toBundle()
+                    ActivityOptions.makeCustomAnimation(
+                        this,
+                        R.anim.kau_slide_in_right,
+                        R.anim.kau_fade_out
+                    ).toBundle()
                 startActivityForResult(intent, ACTIVITY_SETTINGS, bundle)
             }
             else -> return super.onOptionsItemSelected(item)
@@ -490,8 +499,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview?.resumeTimers()
         launch {
             FbCookie.switchBackUser()
-//            if (shouldReload)
-//                refreshAll()
+            if (shouldReload && Prefs.autoRefreshFeed) {
+                refreshAll()
+            }
         }
     }
 
@@ -557,7 +567,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             this.pages.forEachIndexed { index, fbItem ->
                 tabs.addTab(
                     tabs.newTab()
-                        .setCustomView(BadgedIcon(this@BaseMainActivity).apply { iicon = fbItem.icon }.also {
+                        .setCustomView(BadgedIcon(this@BaseMainActivity).apply {
+                            iicon = fbItem.icon
+                        }.also {
                             it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
                         })
                 )

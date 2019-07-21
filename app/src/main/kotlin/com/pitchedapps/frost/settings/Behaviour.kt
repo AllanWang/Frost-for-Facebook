@@ -29,6 +29,10 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  */
 fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
+    checkbox(R.string.auto_refresh_feed, Prefs::autoRefreshFeed, { Prefs.autoRefreshFeed = it }) {
+        descRes = R.string.auto_refresh_feed_desc
+    }
+
     checkbox(R.string.fancy_animations, Prefs::animate, { Prefs.animate = it; animate = it }) {
         descRes = R.string.fancy_animations_desc
     }
@@ -40,11 +44,17 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.overlay_swipe_desc
     }
 
-    checkbox(R.string.overlay_full_screen_swipe, Prefs::overlayFullScreenSwipe, { Prefs.overlayFullScreenSwipe = it }) {
+    checkbox(
+        R.string.overlay_full_screen_swipe,
+        Prefs::overlayFullScreenSwipe,
+        { Prefs.overlayFullScreenSwipe = it }) {
         descRes = R.string.overlay_full_screen_swipe_desc
     }
 
-    checkbox(R.string.open_links_in_default, Prefs::linksInDefaultApp, { Prefs.linksInDefaultApp = it }) {
+    checkbox(
+        R.string.open_links_in_default,
+        Prefs::linksInDefaultApp,
+        { Prefs.linksInDefaultApp = it }) {
         descRes = R.string.open_links_in_default_desc
     }
 
@@ -52,7 +62,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.viewpager_swipe_desc
     }
 
-    checkbox(R.string.force_message_bottom, Prefs::messageScrollToBottom, { Prefs.messageScrollToBottom = it }) {
+    checkbox(
+        R.string.force_message_bottom,
+        Prefs::messageScrollToBottom,
+        { Prefs.messageScrollToBottom = it }) {
         descRes = R.string.force_message_bottom_desc
     }
 
