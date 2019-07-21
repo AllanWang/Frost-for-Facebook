@@ -173,6 +173,8 @@ object Prefs : KPref() {
 
     var blackMediaBg: Boolean by kpref("black_media_bg", false)
 
+    var autoRefreshFeed: Boolean by kpref("auto_refresh_feed", false)
+
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 
