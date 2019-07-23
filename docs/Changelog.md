@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.2
+* Disable auto feed refresh by default and add setting to re-enable it
+* Update theme
+
 ## v2.3.1
 * Hide all story panels if enabled
 * Prevent swipe to refresh if not at the very top

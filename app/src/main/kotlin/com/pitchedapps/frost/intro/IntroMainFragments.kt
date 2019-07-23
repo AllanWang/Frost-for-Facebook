@@ -30,10 +30,13 @@ import androidx.fragment.app.Fragment
 import ca.allanwang.kau.kotlin.LazyResettableRegistry
 import ca.allanwang.kau.utils.Kotterknife
 import ca.allanwang.kau.utils.bindViewResettable
+import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.setOnSingleTapListener
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.utils.Prefs
+import kotlinx.android.synthetic.main.intro_analytics.*
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -56,7 +59,8 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
         val increment = maxTranslation / views.size
         views.forEachIndexed { i, group ->
             group.forEach {
-                it.translationX = if (offset > 0) -maxTranslation + i * increment else -(i + 1) * increment
+                it.translationX =
+                    if (offset > 0) -maxTranslation + i * increment else -(i + 1) * increment
                 it.alpha = 1 - Math.abs(offset)
             }
         }
@@ -73,9 +77,14 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     protected val image: ImageView by bindViewResettable(R.id.intro_image)
     protected val desc: TextView by bindViewResettable(R.id.intro_desc)
 
-    protected fun defaultViewArray(): Array<Array<out View>> = arrayOf(arrayOf(title), arrayOf(image), arrayOf(desc))
+    protected fun defaultViewArray(): Array<Array<out View>> =
+        arrayOf(arrayOf(title), arrayOf(image), arrayOf(desc))
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(layoutRes, container, false)
     }
 
@@ -125,6 +134,31 @@ class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
         image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+    }
+}
+
+class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
+
+    val container: ConstraintLayout by bindViewResettable(R.id.intro_end_container)
+
+    override fun viewArray(): Array<Array<out View>> = arrayOf(
+        arrayOf(title), arrayOf(image),
+        arrayOf(intro_switch), arrayOf(desc)
+    )
+
+    override fun themeFragmentImpl() {
+        super.themeFragmentImpl()
+        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        image.setIcon(GoogleMaterial.Icon.gmd_bug_report, 120)
+        intro_switch.isSelected = Prefs.analytics
+        intro_switch.setOnCheckedChangeListener { _, isChecked ->
+            Prefs.analytics = isChecked
+        }
     }
 }
 

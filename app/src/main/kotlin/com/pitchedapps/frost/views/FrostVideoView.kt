@@ -33,8 +33,8 @@ import ca.allanwang.kau.utils.toast
 import com.devbrackets.android.exomedia.ui.widget.VideoControls
 import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -154,8 +154,7 @@ class FrostVideoView @JvmOverloads constructor(
             if (isExpanded) showControls()
         }
         setOnErrorListener {
-            if (Prefs.analytics)
-                L.e(it) { "Failed to load video $videoUri" }
+            L.e(it) { "Failed to load video ${videoUri?.toString()?.formattedFbUrl}" }
             toast(R.string.video_load_failed, Toast.LENGTH_SHORT)
             destroy()
             true
@@ -168,7 +167,10 @@ class FrostVideoView @JvmOverloads constructor(
         v.setOnTouchListener(VideoTouchListener(context))
         setOnVideoSizedChangedListener { intrinsicWidth, intrinsicHeight, pixelWidthHeightRatio ->
             // todo use provided ratio?
-            val ratio = Math.min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
+            val ratio = Math.min(
+                width.toFloat() / intrinsicWidth,
+                height.toFloat() / intrinsicHeight.toFloat()
+            )
             /**
              * Only remap if not expanded and if dimensions have changed
              */
@@ -237,7 +239,8 @@ class FrostVideoView @JvmOverloads constructor(
     }
 
     private fun onHorizontalSwipe(offset: Float) {
-        val alpha = Math.max((1f - Math.abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD)) * 0.5f + 0.5f, 0f)
+        val alpha =
+            Math.max((1f - Math.abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD)) * 0.5f + 0.5f, 0f)
         this.alpha = alpha
     }
 
@@ -247,7 +250,8 @@ class FrostVideoView @JvmOverloads constructor(
      * -------------------------------------------------------------------
      */
 
-    private inner class FrameTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(),
+    private inner class FrameTouchListener(context: Context) :
+        GestureDetector.SimpleOnGestureListener(),
         View.OnTouchListener {
 
         private val gestureDetector: GestureDetector = GestureDetector(context, this)
@@ -274,7 +278,8 @@ class FrostVideoView @JvmOverloads constructor(
     /**
      * Monitors the view click events to show and hide the video controls if they have been specified.
      */
-    private inner class VideoTouchListener(context: Context) : GestureDetector.SimpleOnGestureListener(),
+    private inner class VideoTouchListener(context: Context) :
+        GestureDetector.SimpleOnGestureListener(),
         View.OnTouchListener {
 
         private val gestureDetector: GestureDetector = GestureDetector(context, this)
@@ -314,7 +319,9 @@ class FrostVideoView @JvmOverloads constructor(
                         if (Math.abs(baseSwipeX - event.rawX) > SWIPE_TO_CLOSE_OFFSET_THRESHOLD)
                             destroy()
                         else
-                            animate().translationX(baseTranslateX).setDuration(FAST_ANIMATION_DURATION).withStartAction {
+                            animate().translationX(baseTranslateX).setDuration(
+                                FAST_ANIMATION_DURATION
+                            ).withStartAction {
                                 animate().alpha(1f)
                             }
                     }

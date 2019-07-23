@@ -45,6 +45,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
+import com.pitchedapps.frost.intro.IntroFragmentAnalytics
 import com.pitchedapps.frost.intro.IntroFragmentEnd
 import com.pitchedapps.frost.intro.IntroFragmentTheme
 import com.pitchedapps.frost.intro.IntroFragmentWelcome
@@ -80,6 +81,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         IntroAccountFragment(),
         IntroTabTouchFragment(),
         IntroTabContextFragment(),
+        IntroFragmentAnalytics(),
         IntroFragmentEnd()
     )
 
