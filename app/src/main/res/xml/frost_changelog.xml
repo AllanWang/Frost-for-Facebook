@@ -10,7 +10,7 @@
     <version title="v2.3.2" />
     <item text="Disable auto feed refresh by default and add setting to re-enable it" />
     <item text="Update theme" />
-    <item text="" />
+    <item text="Disable bugsnag completely when opting out of analytics" />
     <item text="" />
     <item text="" />
     <item text="" />
