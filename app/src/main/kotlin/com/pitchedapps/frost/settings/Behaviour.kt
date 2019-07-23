@@ -17,6 +17,8 @@
 package com.pitchedapps.frost.settings
 
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import com.bugsnag.android.Bugsnag
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.facebook.FB_URL_BASE
@@ -84,7 +86,16 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.exit_confirmation_desc
     }
 
-    checkbox(R.string.analytics, Prefs::analytics, { Prefs.analytics = it }) {
+    checkbox(R.string.analytics, Prefs::analytics, {
+        if (!BuildConfig.DEBUG) {
+            if (it) {
+                Bugsnag.enableExceptionHandler()
+            } else {
+                Bugsnag.disableExceptionHandler()
+            }
+        }
+        Prefs.analytics = it
+    }) {
         descRes = R.string.analytics_desc
     }
 }

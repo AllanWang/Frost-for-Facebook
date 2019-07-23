@@ -22,6 +22,7 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -153,7 +154,7 @@ object Prefs : KPref() {
 
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
-    var analytics: Boolean by kpref("analytics", true)
+    var analytics: Boolean by kpref("analytics", false)
 
     var biometricsEnabled: Boolean by kpref("biometrics_enabled", false)
 
