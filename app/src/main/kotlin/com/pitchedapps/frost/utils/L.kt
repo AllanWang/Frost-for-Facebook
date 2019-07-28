@@ -61,7 +61,7 @@ object L : KauLogger("Frost", {
     var bugsnagInit = false
 
     override fun logImpl(priority: Int, message: String?, t: Throwable?) {
-        if (BuildConfig.DEBUG || !bugsnagInit || Prefs.analytics) {
+        if (BuildConfig.DEBUG || !bugsnagInit || !Prefs.analytics) {
             super.logImpl(priority, message, t)
         } else {
             if (message != null) {
