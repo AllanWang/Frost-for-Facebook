@@ -25,6 +25,7 @@ import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
+import com.bugsnag.android.Configuration
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
@@ -92,8 +93,12 @@ class FrostApp : Application() {
         Prefs.verboseLogging = false
         L.i { "Begin Frost for Facebook" }
         FrostPglAdBlock.init(this)
-        if (Prefs.installDate == -1L) Prefs.installDate = System.currentTimeMillis()
-        if (Prefs.identifier == -1) Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        if (Prefs.installDate == -1L) {
+            Prefs.installDate = System.currentTimeMillis()
+        }
+        if (Prefs.identifier == -1) {
+            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        }
         Prefs.lastLaunch = System.currentTimeMillis()
 
         super.onCreate()
@@ -137,25 +142,32 @@ class FrostApp : Application() {
                 }
             })
         startKoin {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 androidLogger()
+            }
             androidContext(this@FrostApp)
             modules(FrostDatabase.module(this@FrostApp))
         }
     }
 
     private fun initBugsnag() {
-        if (BuildConfig.DEBUG) return
-        Bugsnag.init(this)
-        Bugsnag.disableExceptionHandler()
-        if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) return
+        if (BuildConfig.DEBUG) {
+            return
+        }
+        if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) {
+            return
+        }
         val version = BuildUtils.match(BuildConfig.VERSION_NAME)
             ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
-        Bugsnag.enableExceptionHandler()
-        Bugsnag.setNotifyReleaseStages(*BuildUtils.getAllStages())
-        Bugsnag.setAppVersion(version.versionName)
-        Bugsnag.setReleaseStage(BuildUtils.getStage(BuildConfig.BUILD_TYPE))
-        Bugsnag.setAutoCaptureSessions(true)
+        val config = Configuration("83cf680ed01a6fda10fe497d1c0962bb").apply {
+            enableExceptionHandler = true
+            appVersion = version.versionName
+            releaseStage = BuildUtils.getStage(BuildConfig.BUILD_TYPE)
+            notifyReleaseStages = BuildUtils.getAllStages()
+            autoCaptureSessions = Prefs.analytics
+        }
+        Bugsnag.init(this, config)
+        L.bugsnagInit = true
         Bugsnag.setUserId(Prefs.frostId)
         Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
         Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
