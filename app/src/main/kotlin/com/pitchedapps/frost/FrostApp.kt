@@ -114,7 +114,7 @@ class FrostApp : Application() {
                     .thumbnail(old).into(imageView)
             }
         })
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
                 override fun onActivityPaused(activity: Activity) {}
                 override fun onActivityResumed(activity: Activity) {}
@@ -132,6 +132,7 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} created" }
                 }
             })
+        }
         startKoin {
             if (BuildConfig.DEBUG) {
                 androidLogger()
@@ -142,6 +143,7 @@ class FrostApp : Application() {
     }
 
     private fun initPrefs() {
+        Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
         Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
         KL.shouldLog = { BuildConfig.DEBUG }
         Prefs.verboseLogging = false
