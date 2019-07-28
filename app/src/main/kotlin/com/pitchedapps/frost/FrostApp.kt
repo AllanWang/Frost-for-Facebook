@@ -84,22 +84,13 @@ class FrostApp : Application() {
                 .withDatabase(NotificationDb.NAME, NotificationDb::class)
                 .build()
         )
-        Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
-        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
 //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
+        initPrefs()
         initBugsnag()
-        KL.shouldLog = { BuildConfig.DEBUG }
-        Prefs.verboseLogging = false
+
         L.i { "Begin Frost for Facebook" }
         FrostPglAdBlock.init(this)
-        if (Prefs.installDate == -1L) {
-            Prefs.installDate = System.currentTimeMillis()
-        }
-        if (Prefs.identifier == -1) {
-            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
-        }
-        Prefs.lastLaunch = System.currentTimeMillis()
 
         super.onCreate()
 
@@ -148,6 +139,19 @@ class FrostApp : Application() {
             androidContext(this@FrostApp)
             modules(FrostDatabase.module(this@FrostApp))
         }
+    }
+
+    private fun initPrefs() {
+        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        KL.shouldLog = { BuildConfig.DEBUG }
+        Prefs.verboseLogging = false
+        if (Prefs.installDate == -1L) {
+            Prefs.installDate = System.currentTimeMillis()
+        }
+        if (Prefs.identifier == -1) {
+            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        }
+        Prefs.lastLaunch = System.currentTimeMillis()
     }
 
     private fun initBugsnag() {
