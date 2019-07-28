@@ -7,6 +7,8 @@ assignees: AllanWang
 
 ---
 
+- [ ] I have verified that the bug does not occur in my mobile browser (at https://touch.facebook.com/)
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
