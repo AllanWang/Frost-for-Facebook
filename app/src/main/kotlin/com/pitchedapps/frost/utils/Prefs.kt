@@ -160,8 +160,10 @@ object Prefs : KPref() {
     var analytics: Boolean by kpref("analytics", false) {
         if (!BuildConfig.DEBUG) {
             if (it) {
+                Bugsnag.setAutoCaptureSessions(true)
                 Bugsnag.enableExceptionHandler()
             } else {
+                Bugsnag.setAutoCaptureSessions(false)
                 Bugsnag.disableExceptionHandler()
             }
         }

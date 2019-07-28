@@ -61,6 +61,11 @@ object L : KauLogger("Frost", {
     var bugsnagInit = false
 
     override fun logImpl(priority: Int, message: String?, t: Throwable?) {
+        /*
+         * Debug flag is constant and should help with optimization
+         * bugsnagInit is changed per application and helps prevent crashes (if calling pre init)
+         * analytics is changed by the user, and may be toggled throughout the app
+         */
         if (BuildConfig.DEBUG || !bugsnagInit || !Prefs.analytics) {
             super.logImpl(priority, message, t)
         } else {

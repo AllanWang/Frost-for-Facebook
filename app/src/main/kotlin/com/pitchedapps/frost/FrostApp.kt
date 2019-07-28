@@ -160,11 +160,11 @@ class FrostApp : Application() {
         val version = BuildUtils.match(BuildConfig.VERSION_NAME)
             ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
         val config = Configuration("83cf680ed01a6fda10fe497d1c0962bb").apply {
-            enableExceptionHandler = true
             appVersion = version.versionName
             releaseStage = BuildUtils.getStage(BuildConfig.BUILD_TYPE)
             notifyReleaseStages = BuildUtils.getAllStages()
             autoCaptureSessions = Prefs.analytics
+            enableExceptionHandler = Prefs.analytics
         }
         Bugsnag.init(this, config)
         L.bugsnagInit = true
