@@ -1,5 +1,6 @@
 //border between like and comment
 ._15kl::before, ._37fd .inlineComposerButton, ._1hb:before,
+._pfn ._pfo::before,
 ._5j35::after, ._2k4b, ._3to7, ._4nw8 {
   border-left: 1px solid $divider !important;
 }
@@ -13,12 +14,13 @@
 ._2pbp, ._5rou:first-child, ._egf:first-child, ._io2, ._3qdi ._48_m::after, ._46dd::before,
 ._15n_, ._3-2-, ._27ve, ._2s20, ._gui, ._2s21 > *::after, ._32qk, ._d00, ._d01, ._38o9,
 ._3u9t, ._55fj, .mEventProfileSection.useBorder td, ._3ils, ._5as0, ._5as2, ._5-lw,
+._2s1_:before, ._143z::before, ._143z::after,
 ._52x1, ._3wjp, ._usq, ._2cul:before, ._13e_, .jewel .flyout, ._3bg5 ._52x6, ._56d8, .al {
   border-top: 1px solid $divider !important;
 }
 
 ._15ny::after, ._z-w, ._8i2, ._2nk0, ._22_8, ._1t4h, ._37fd, ._1ha, ._3bg5 ._56do, ._8he,
-._400s, ._5hoc, ._1bhn, ._5ag6, ._4pvz,
+._400s, ._5hoc, ._1bhn, ._5ag6, ._4pvz, ._31y5,
 ._301x, ._x08 ._x0a:after, ._36dc, ._6-l ._57jn, ._527k, ._g_k,
 ._577z:not(:last-child) ._ygd, ._3u9u, ._3mgz, ._52x6, ._2066, ._5luf, ._2bdc, ._3ci9,
 .mAppCenterFatLabel, .appCenterCategorySelectorButton, ._1q6v, ._5q_r, ._5yt8, ._38do, ._38dt,
@@ -31,7 +33,7 @@
   border-bottom: 1px solid $divider !important;
 }
 
-.item a.primary.touched .primarywrap, ._4dwt ._5y33, ._1ih_, ._5_50, ._6beq, ._69aj,
+.item a.primary.touched .primarywrap, ._4dwt ._5y33, ._1ih_, ._5_50, ._6beq, ._69aj, ._3iyw ._37fb,
 ._5fjv, ._3on6, ._2u4w, ._2om3, ._2ol-, ._5fjw, ._4z83, ._1gkq, ._4-dy {
   border-top: 1px solid $divider !important;
   border-bottom: 1px solid $divider !important;
@@ -44,8 +46,8 @@
 ._2q7w, .acy, ._58ak, ._3t_l, ._4msa, ._3h8i, ._3clk, ._1kt6, ._1ksq,
 ._1_y5, ._lr0, ._5hgt, ._2cpp, ._50uu, ._50uw, ._31yd, ._1e3d, ._3xz7, ._1xoz,
 ._4kcb, ._2lut, .jewel .touchable-notification.touched, .touchable-notification .touchable.touched,
-.home-notification .touchable.touched, ._6beo ._6ber,
-._73ku ._73jw, ._6--d, ._26vk._56bt,
+.home-notification .touchable.touched, ._6beo ._6ber, ._7kxg,
+._73ku ._73jw, ._6--d, ._26vk._56bt, ._3iyw ._2whz ._13-g, ._-jx,
 ._4e8n, ._uww, .mentions-placeholder, .mentions-shadow, .mentions-measurer,
 ._5whq, ._59tt, ._41ft::after, .jx-tokenizer, ._3uqf, ._4756, ._1rrd, ._5n_f {
   border: 1px solid $divider !important;
@@ -91,4 +93,8 @@
 
 ._484w.selected > ._6zf, ._5kqs::after, ._3lvo ._5xum._5xuk, ._x0b {
   border-bottom: 1px solid $text !important;
+}
+
+._484w.selected ._6zf {
+  border-bottom: 2px solid $accent !important;
 }

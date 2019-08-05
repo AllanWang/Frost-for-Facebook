@@ -2,10 +2,10 @@
   background: $background !important;
 }
 
-body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4,
+html, body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, ._5lp4, div[style*="background-color: #FFFFFF"],
 ._5lp5, .container, .subpage, ._5n_f, #static_templates, ._22_8, ._1t4h, ._uoq, ._3qdh, ._8ca, ._3h8i,
 ._6-l ._2us7, ._6-l ._6-p:not([style*="background-image:"]), ._333v, div.sharerSelector, ._529j, ._305j, ._1pph, ._3t_l, ._4pvz,
-._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._24e1, ._-j7,
+._1g05, .acy, ._51-g, ._533c, ._ib-, .sharerAttachmentEmpty, .sharerBottomWrapper, ._24e1,
 ._3bg5 ._56do, ._5hfh, ._52e-, .mQuestionsPollResultsBar, ._5hoc, ._5oxw, ._32_4, ._1hiz,
 ._38do, .bo, .cq, ._234-, ._a-5, ._2zh4, ._15ks, ._3oyc, ._36dc, ._3iyw ._3iyx, ._6bes, ._55wo, ._4-dy,
 .tlBody, #timelineBody, .timelineX, .timeline, .feed, .tlPrelude, .tlFeedPlaceholder, ._4_d0,
@@ -17,9 +17,9 @@ body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, 
 ._5c9u, div._5y57::before, ._59f6._55so::before, .structuredPublisher, ._94v, ._vqv, ._5lp5,
 ._55wm, ._2om3, ._2ol-, ._1f9d, ._vee, ._31a-, ._3r8b, ._3r9d, ._5vq5, ._3tl8, ._65wz, ._4edl,
 .acw, ._4_xl, ._1p70, ._1p70, ._1ih_, ._51v6, ._u2c, ._484w, ._3ils, ._rm7, ._32qk, ._d01, ._1glm,
-._ue6, ._hdn._hdn, ._6vzw, ._77xj, ._38nq, ._9_7, ._51li, ._7hkf, ._6vzz,
+._ue6, ._hdn._hdn, ._6vzw, ._77xj, ._38nq, ._9_7, ._51li, ._7hkf, ._6vzz, ._3iyw ._37fb,
 ._2y60, ._5fu3, ._2foa, ._2y5_, ._38o9, ._1kb, .mAppCenterFatLabel, ._3bmj, ._5zmb, ._2x2s, ._3kac, ._3kad,
-._3f50, .mentions-placeholder, .mentions, .mentions-measurer, .acg, ._59tu,
+._3f50, .mentions-placeholder, .mentions, .mentions-measurer, .acg, ._59tu, ._7lcm, ._7kxh,
 ._4l9b, ._4gj3, .groupChromeView, ._i3g, ._3jcf, .error, ._1dbp, ._5zma, ._6beq, ._vi6,
 ._uww, textarea, ._15n_, ._skt, ._5f28, ._14_j, ._3bg5, ._53_-, ._52x1, ._35au, ._cwy,
 ._1rfn ._1rfk ._4vc-, ._1rfk, ._1rfk ._2v9s, ._301x {
@@ -27,7 +27,7 @@ body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, 
 }
 
 //card related
-._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s, ._13fn {
+._31nf, ._2v9s, ._d4i, article._55wo, ._10c_, ._2jl2, ._6150, ._50mi, ._4-dw, ._4_2z, ._5m_s, ._13fn, ._7kxe {
   background: $card !important;
 }
 
@@ -46,7 +46,7 @@ body, :root, #root, #header, #MComposer, ._1upc, input, ._2f9r, ._59e9, ._5pz4, 
   background: transparent !important;
 }
 
-.jewel, .flyout, ._52z5, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p, .mentions-suggest-item, ._2suk,
+.jewel, .flyout, ._52z5, ._13e_, ._5-lw, ._5c0e, .jx-result, ._336p, .mentions-suggest-item, ._2suk, ._-j7,
 .mentions-suggest, ._1xoz, ._1xow {
   background: $bg_opaque !important;
 }
