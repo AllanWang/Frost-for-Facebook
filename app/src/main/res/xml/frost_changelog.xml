@@ -11,7 +11,7 @@
     <item text="Disable auto feed refresh by default and add setting to re-enable it" />
     <item text="Update theme" />
     <item text="Disable bugsnag completely when opting out of analytics" />
-    <item text="" />
+    <item text="Filter urls before sending to other apps" />
     <item text="" />
     <item text="" />
 

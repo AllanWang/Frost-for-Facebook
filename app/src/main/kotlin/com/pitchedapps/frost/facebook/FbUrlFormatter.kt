@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.facebook
 
+import android.net.Uri
 import com.pitchedapps.frost.utils.L
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -27,6 +28,12 @@ import java.nio.charset.StandardCharsets
  */
 inline val String.formattedFbUrl: String
     get() = FbUrlFormatter(this).toString()
+
+inline val Uri.formattedFbUri: Uri
+    get() {
+        val url = toString()
+        return if (url.startsWith("http")) Uri.parse(url.formattedFbUrl) else this
+    }
 
 class FbUrlFormatter(url: String) {
     private val queries = mutableMapOf<String, String>()
@@ -72,7 +79,10 @@ class FbUrlFormatter(url: String) {
         }
         discardableQueries.forEach { queries.remove(it) }
         if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
-        cleanedUrl = cleanedUrl.replaceFirst(".facebook.com//", ".facebook.com/") //sometimes we are given a bad url
+        cleanedUrl = cleanedUrl.replaceFirst(
+            ".facebook.com//",
+            ".facebook.com/"
+        ) //sometimes we are given a bad url
         L.v { "Formatted url from $url to $cleanedUrl" }
         return cleanedUrl
     }
