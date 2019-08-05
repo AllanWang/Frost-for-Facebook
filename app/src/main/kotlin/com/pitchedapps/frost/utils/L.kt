@@ -41,28 +41,40 @@ object L : KauLogger("Frost", {
     }
 
     inline fun _i(message: () -> Any?) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             i(message)
+        }
     }
 
     inline fun _d(message: () -> Any?) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             d(message)
+        }
     }
 
     inline fun _e(e: Throwable?, message: () -> Any?) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             e(e, message)
+        }
     }
 
+    var bugsnagInit = false
+
     override fun logImpl(priority: Int, message: String?, t: Throwable?) {
-        if (BuildConfig.DEBUG)
+        /*
+         * Debug flag is constant and should help with optimization
+         * bugsnagInit is changed per application and helps prevent crashes (if calling pre init)
+         * analytics is changed by the user, and may be toggled throughout the app
+         */
+        if (BuildConfig.DEBUG || !bugsnagInit || !Prefs.analytics) {
             super.logImpl(priority, message, t)
-        else {
-            if (message != null)
+        } else {
+            if (message != null) {
                 Bugsnag.leaveBreadcrumb(message)
-            if (t != null)
+            }
+            if (t != null) {
                 Bugsnag.notify(t)
+            }
         }
     }
 }

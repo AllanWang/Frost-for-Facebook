@@ -86,11 +86,15 @@
     <style name="IntroTitle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">20sp</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:paddingStart">@dimen/kau_activity_horizontal_margin</item>
+        <item name="android:paddingEnd">@dimen/kau_activity_horizontal_margin</item>
     </style>
 
     <style name="IntroSubTitle" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:textSize">18sp</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:paddingStart">@dimen/kau_activity_horizontal_margin</item>
+        <item name="android:paddingEnd">@dimen/kau_activity_horizontal_margin</item>
     </style>
 
     <style name="IntroButton" parent="TextAppearance.AppCompat.Button">

@@ -45,6 +45,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
+import com.pitchedapps.frost.intro.IntroFragmentAnalytics
 import com.pitchedapps.frost.intro.IntroFragmentEnd
 import com.pitchedapps.frost.intro.IntroFragmentTheme
 import com.pitchedapps.frost.intro.IntroFragmentWelcome
@@ -54,6 +55,7 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
+import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -80,6 +82,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         IntroAccountFragment(),
         IntroTabTouchFragment(),
         IntroTabContextFragment(),
+        IntroFragmentAnalytics(),
         IntroFragmentEnd()
     )
 
@@ -111,6 +114,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         indicator.setColour(Prefs.textColor)
         indicator.invalidate()
         fragments.forEach { it.themeFragment() }
+        setFrostTheme(true)
     }
 
     /**
