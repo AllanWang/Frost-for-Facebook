@@ -1,8 +1,5 @@
-v2.3.1
+v2.3.2
 
-* Hide all story panels if enabled
-* Prevent swipe to refresh if not at the very top
-* Add vertical swipe to dismiss when viewing images
-* Add horizontal scroll support for webviews
-* Fix theme for F-Droid builds
-* Added Greek translations
+* Disable auto feed refresh by default and add setting to re-enable it
+* Update theme
+* Disable bugsnag completely when opting out of analytics

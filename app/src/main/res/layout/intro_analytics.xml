@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/intro_end_container"
+    android:id="@+id/intro_analytics_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,7 +11,7 @@
         style="@style/IntroTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/intro_end"
+        android:text="@string/analytics"
         app:layout_constraintBottom_toTopOf="@id/intro_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,22 +23,30 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/frost_f_200"
-        app:layout_constraintBottom_toTopOf="@id/intro_desc"
+        app:layout_constraintBottom_toTopOf="@id/intro_switch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/intro_title"
         tools:layout_editor_absoluteX="112dp" />
+
+    <Switch
+        android:id="@+id/intro_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/intro_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/intro_image" />
 
     <TextView
         android:id="@id/intro_desc"
         style="@style/IntroSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/intro_tap_to_exit"
+        android:text="@string/analytics_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/intro_image" />
+        app:layout_constraintTop_toBottomOf="@id/intro_switch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

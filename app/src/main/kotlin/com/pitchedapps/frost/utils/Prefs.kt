@@ -22,6 +22,8 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.withAlpha
+import com.bugsnag.android.Bugsnag
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -41,7 +43,9 @@ object Prefs : KPref() {
 
     var prevId: Long by kpref("prev_id", -1L)
 
-    var theme: Int by kpref("theme", 0, postSetter = { _: Int -> loader.invalidate() })
+    var theme: Int by kpref("theme", 0) { _: Int ->
+        loader.invalidate()
+    }
 
     var customTextColor: Int by kpref("color_text", 0xffeceff1.toInt())
 
@@ -153,7 +157,17 @@ object Prefs : KPref() {
 
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
-    var analytics: Boolean by kpref("analytics", true)
+    var analytics: Boolean by kpref("analytics", false) {
+        if (!BuildConfig.DEBUG) {
+            if (it) {
+                Bugsnag.setAutoCaptureSessions(true)
+                Bugsnag.enableExceptionHandler()
+            } else {
+                Bugsnag.setAutoCaptureSessions(false)
+                Bugsnag.disableExceptionHandler()
+            }
+        }
+    }
 
     var biometricsEnabled: Boolean by kpref("biometrics_enabled", false)
 
