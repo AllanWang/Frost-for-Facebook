@@ -24,7 +24,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.REQUEST_REFRESH
+import com.pitchedapps.frost.utils.REQUEST_FAB
 
 /**
  * Created by Allan Wang on 2017-06-29.
@@ -52,42 +52,49 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.aggressive_recents, Prefs::aggressiveRecents, {
         Prefs.aggressiveRecents = it
-        setFrostResult(REQUEST_REFRESH)
+        shouldRefreshMain()
     }) {
         descRes = R.string.aggressive_recents_desc
     }
 
     checkbox(R.string.composer, Prefs::showComposer, {
         Prefs.showComposer = it
-        setFrostResult(REQUEST_REFRESH)
+        shouldRefreshMain()
     }) {
         descRes = R.string.composer_desc
     }
 
+    checkbox(R.string.create_fab, Prefs::showCreateFab, {
+        Prefs.showCreateFab = it
+        setFrostResult(REQUEST_FAB)
+    }) {
+        descRes = R.string.create_fab_desc
+    }
+
     checkbox(R.string.suggested_friends, Prefs::showSuggestedFriends, {
         Prefs.showSuggestedFriends = it
-        setFrostResult(REQUEST_REFRESH)
+        shouldRefreshMain()
     }) {
         descRes = R.string.suggested_friends_desc
     }
 
     checkbox(R.string.suggested_groups, Prefs::showSuggestedGroups, {
         Prefs.showSuggestedGroups = it
-        setFrostResult(REQUEST_REFRESH)
+        shouldRefreshMain()
     }) {
         descRes = R.string.suggested_groups_desc
     }
 
     checkbox(R.string.show_stories, Prefs::showStories, {
         Prefs.showStories = it
-        setFrostResult(REQUEST_REFRESH)
+        shouldRefreshMain()
     }) {
         descRes = R.string.show_stories_desc
     }
 
     checkbox(R.string.facebook_ads, Prefs::showFacebookAds, {
         Prefs.showFacebookAds = it
-        setFrostResult(REQUEST_REFRESH)
+        shouldRefreshMain()
     }) {
         descRes = R.string.facebook_ads_desc
     }

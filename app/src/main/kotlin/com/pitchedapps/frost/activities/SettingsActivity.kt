@@ -51,6 +51,7 @@ import com.pitchedapps.frost.settings.getSecurityPrefs
 import com.pitchedapps.frost.settings.sendDebug
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.frostChangelog
@@ -104,7 +105,11 @@ class SettingsActivity : KPrefActivity() {
         val uriString: String = uri?.toString() ?: ""
         if (uri != null) {
             try {
-                grantUriPermission("com.android.systemui", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                grantUriPermission(
+                    "com.android.systemui",
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
             } catch (e: Exception) {
                 L.e(e) { "grantUriPermission" }
             }
@@ -193,8 +198,16 @@ class SettingsActivity : KPrefActivity() {
         }
     }
 
+    fun setFrostResult(flag: Int) {
+        resultFlag = resultFlag or flag
+    }
+
     fun shouldRestartMain() {
         setFrostResult(REQUEST_RESTART)
+    }
+
+    fun shouldRefreshMain() {
+        setFrostResult(REQUEST_REFRESH)
     }
 
     @SuppressLint("MissingSuperCall")
@@ -246,9 +259,5 @@ class SettingsActivity : KPrefActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    fun setFrostResult(flag: Int) {
-        resultFlag = resultFlag or flag
     }
 }

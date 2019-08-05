@@ -88,6 +88,7 @@ import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.MAIN_TIMEOUT_DURATION
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_FAB
 import com.pitchedapps.frost.utils.REQUEST_NAV
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
@@ -113,6 +114,7 @@ import kotlinx.android.synthetic.main.view_main_viewpager.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -206,7 +208,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         fab.hide()
         appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (!hasFab) return@OnOffsetChangedListener
-            val percent = Math.abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
+            val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
             val shouldShow = percent < 0.2
             if (this.shouldShow != shouldShow) {
                 this.shouldShow = shouldShow
@@ -457,6 +459,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (onActivityResultWeb(requestCode, resultCode, data)) return
         super.onActivityResult(requestCode, resultCode, data)
+
+        fun hasRequest(flag: Int) = resultCode and flag > 0
+
         if (requestCode == ACTIVITY_SETTINGS) {
             if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
                 L.d { "Restart Application Requested" }
@@ -473,10 +478,21 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             /*
              * These results can be stacked
              */
-            if (resultCode and REQUEST_REFRESH > 0) fragmentChannel.offer(REQUEST_REFRESH)
-            if (resultCode and REQUEST_NAV > 0) frostNavigationBar()
-            if (resultCode and REQUEST_TEXT_ZOOM > 0) fragmentChannel.offer(REQUEST_TEXT_ZOOM)
-            if (resultCode and REQUEST_SEARCH > 0) invalidateOptionsMenu()
+            if (hasRequest(REQUEST_REFRESH)) {
+                fragmentChannel.offer(REQUEST_REFRESH)
+            }
+            if (hasRequest(REQUEST_NAV)) {
+                frostNavigationBar()
+            }
+            if (hasRequest(REQUEST_TEXT_ZOOM)) {
+                fragmentChannel.offer(REQUEST_TEXT_ZOOM)
+            }
+            if (hasRequest(REQUEST_SEARCH)) {
+                invalidateOptionsMenu()
+            }
+            if (hasRequest(REQUEST_FAB)) {
+                fragmentChannel.offer(lastPosition)
+            }
         }
     }
 
@@ -578,8 +594,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             viewPager.setCurrentItem(0, false)
             viewPager.offscreenPageLimit = pages.size
             viewPager.post {
-                if (!fragmentChannel.isClosedForSend)
+                if (!fragmentChannel.isClosedForSend) {
                     fragmentChannel.offer(0)
+                }
             } //trigger hook so title is set
         }
 
