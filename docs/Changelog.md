@@ -4,6 +4,7 @@
 * Disable auto feed refresh by default and add setting to re-enable it
 * Update theme
 * Disable bugsnag completely when opting out of analytics
+* Filter urls before sending to other apps
 
 ## v2.3.1
 * Hide all story panels if enabled
