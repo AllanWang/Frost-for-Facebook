@@ -45,13 +45,21 @@ class MainActivity : BaseMainActivity() {
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if (lastPosition == position) return
-                if (lastPosition != -1) fragmentChannel.offer(-(lastPosition + 1))
+                if (lastPosition == position) {
+                    return
+                }
+                if (lastPosition != -1) {
+                    fragmentChannel.offer(-(lastPosition + 1))
+                }
                 fragmentChannel.offer(position)
                 lastPosition = position
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 val delta = positionOffset * (SELECTED_TAB_ALPHA - UNSELECTED_TAB_ALPHA)
                 tabsForEachView { tabPosition, view ->
