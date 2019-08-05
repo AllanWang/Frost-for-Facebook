@@ -65,6 +65,7 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
+import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
@@ -270,9 +271,16 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
  */
 fun Context.resolveActivityForUri(uri: Uri): Boolean {
     val url = uri.toString()
-    if (url.isFacebookUrl && !url.isExplicitIntent) return false
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-    if (intent.resolveActivity(packageManager) == null) return false
+    if (url.isFacebookUrl && !url.isExplicitIntent) {
+        return false
+    }
+    val intent = Intent(
+        Intent.ACTION_VIEW,
+        uri.formattedFbUri
+    )
+    if (intent.resolveActivity(packageManager) == null) {
+        return false
+    }
     startActivity(intent)
     return true
 }

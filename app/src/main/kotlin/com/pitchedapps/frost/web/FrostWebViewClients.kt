@@ -54,7 +54,10 @@ import kotlinx.coroutines.channels.SendChannel
  */
 open class BaseWebViewClient : WebViewClient() {
 
-    override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? =
+    override fun shouldInterceptRequest(
+        view: WebView,
+        request: WebResourceRequest
+    ): WebResourceResponse? =
         view.shouldFrostInterceptRequest(request)
 }
 
@@ -173,12 +176,18 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             view.context.resolveActivityForUri(request.url)
             return true
         }
-        if (path.startsWith("/composer/")) return launchRequest(request)
-        if (url.isImageUrl)
-            return launchImage(url.formattedFbUrl)
-        if (url.isIndirectImageUrl)
+        if (path.startsWith("/composer/")) {
+            return launchRequest(request)
+        }
+        if (url.isIndirectImageUrl) {
             return launchImage(url.formattedFbUrl, cookie = FbCookie.webCookie)
-        if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) return true
+        }
+        if (url.isImageUrl) {
+            return launchImage(url.formattedFbUrl)
+        }
+        if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) {
+            return true
+        }
         return super.shouldOverrideUrlLoading(view, request)
     }
 }
