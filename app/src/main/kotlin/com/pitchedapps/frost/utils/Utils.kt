@@ -137,7 +137,8 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
 
 fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
 
-fun Context.launchWebOverlayDesktop(url: String) = launchWebOverlayImpl<WebOverlayDesktopActivity>(url)
+fun Context.launchWebOverlayDesktop(url: String) =
+    launchWebOverlayImpl<WebOverlayDesktopActivity>(url)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
     this,
@@ -154,9 +155,11 @@ fun Context.launchImageActivity(imageUrl: String, text: String? = null, cookie: 
 }
 
 fun Activity.launchTabCustomizerActivity() {
-    startActivityForResult<TabCustomizerActivity>(SettingsActivity.ACTIVITY_REQUEST_TABS, bundleBuilder = {
-        with(fadeBundle())
-    })
+    startActivityForResult<TabCustomizerActivity>(
+        SettingsActivity.ACTIVITY_REQUEST_TABS,
+        bundleBuilder = {
+            with(fadeBundle())
+        })
 }
 
 fun WebOverlayActivity.url(): String {
@@ -165,11 +168,12 @@ fun WebOverlayActivity.url(): String {
 
 fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
     val isTransparent =
-        (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255) || forceTransparent
-    if (Prefs.bgColor.isColorDark)
+        forceTransparent || (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255)
+    if (Prefs.bgColor.isColorDark) {
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
-    else
+    } else {
         setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
+    }
 }
 
 class ActivityThemeUtils {

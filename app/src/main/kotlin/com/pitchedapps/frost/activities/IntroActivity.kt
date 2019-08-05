@@ -55,6 +55,7 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
+import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -113,6 +114,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         indicator.setColour(Prefs.textColor)
         indicator.invalidate()
         fragments.forEach { it.themeFragment() }
+        setFrostTheme(true)
     }
 
     /**

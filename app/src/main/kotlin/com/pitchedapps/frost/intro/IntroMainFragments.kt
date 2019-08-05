@@ -139,7 +139,7 @@ class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
 
 class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
 
-    val container: ConstraintLayout by bindViewResettable(R.id.intro_end_container)
+    val container: ConstraintLayout by bindViewResettable(R.id.intro_analytics_container)
 
     override fun viewArray(): Array<Array<out View>> = arrayOf(
         arrayOf(title), arrayOf(image),
