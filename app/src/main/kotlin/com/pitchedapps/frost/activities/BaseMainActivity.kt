@@ -113,6 +113,7 @@ import kotlinx.android.synthetic.main.view_main_viewpager.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -206,7 +207,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         fab.hide()
         appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (!hasFab) return@OnOffsetChangedListener
-            val percent = Math.abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
+            val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
             val shouldShow = percent < 0.2
             if (this.shouldShow != shouldShow) {
                 this.shouldShow = shouldShow

@@ -23,6 +23,7 @@ import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
@@ -51,7 +52,7 @@ class WebFragment : BaseFragment() {
             L.e { "Webview not found in fragment $baseEnum" }
             return super.updateFab(contract)
         }
-        if (baseEnum.isFeed) {
+        if (baseEnum.isFeed && Prefs.showCreateFab) {
             contract.showFab(GoogleMaterial.Icon.gmd_edit) {
                 JsActions.CREATE_POST.inject(web)
             }
