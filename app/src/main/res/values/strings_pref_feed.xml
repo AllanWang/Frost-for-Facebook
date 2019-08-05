@@ -7,6 +7,8 @@
     <string name="aggressive_recents_desc">Filter out additional old posts from Facebook\'s original most recents feed. Disable this if your feed is empty.</string>
     <string name="composer">Status Composer</string>
     <string name="composer_desc">Show status composer in the feed</string>
+    <string name="create_fab">Create FAB</string>
+    <string name="create_fab_desc">Show FAB in feed to create new post</string>
 
     <string name="suggested_friends">Suggested Friends</string>
     <string name="suggested_friends_desc">Show "People You May Know" in the feed</string>

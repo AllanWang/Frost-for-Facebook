@@ -64,6 +64,10 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.composer_desc
     }
 
+    checkbox(R.string.create_fab, Prefs::showCreateFab, { Prefs.showCreateFab = it }) {
+        descRes = R.string.create_fab_desc
+    }
+
     checkbox(R.string.suggested_friends, Prefs::showSuggestedFriends, {
         Prefs.showSuggestedFriends = it
         setFrostResult(REQUEST_REFRESH)
