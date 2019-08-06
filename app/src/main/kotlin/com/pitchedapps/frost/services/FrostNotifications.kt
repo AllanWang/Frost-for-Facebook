@@ -49,6 +49,7 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.isIndependent
 import java.util.Locale
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 2017-07-08.
@@ -93,7 +94,10 @@ enum class NotificationType(
     /**
      * Optional binder to return the request bundle builder
      */
-    internal open fun bindRequest(content: NotificationContent, cookie: String): (BaseBundle.() -> Unit)? = null
+    internal open fun bindRequest(
+        content: NotificationContent,
+        cookie: String
+    ): (BaseBundle.() -> Unit)? = null
 
     private fun bindRequest(intent: Intent, content: NotificationContent) {
         val cookie = content.data.cookie ?: return
@@ -194,7 +198,8 @@ enum class NotificationType(
      */
     fun putContentExtra(intent: Intent, content: NotificationContent): Intent {
         // We will show the notification page for dependent urls. We can trigger a click next time
-        intent.data = Uri.parse(if (content.href.isIndependent) content.href else FbItem.NOTIFICATIONS.url)
+        intent.data =
+            Uri.parse(if (content.href.isIndependent) content.href else FbItem.NOTIFICATIONS.url)
         bindRequest(intent, content)
         return intent
     }
@@ -213,12 +218,16 @@ enum class NotificationType(
     /**
      * Create and submit a new notification with the given [content]
      */
-    private fun createNotification(context: Context, content: NotificationContent): FrostNotification =
+    private fun createNotification(
+        context: Context,
+        content: NotificationContent
+    ): FrostNotification =
         with(content) {
             val intent = createCommonIntent(context, content.data.id)
             putContentExtra(intent, content)
             val group = "${groupPrefix}_${data.id}"
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val notifBuilder = context.frostNotification(channelId)
                 .setContentTitle(title ?: context.string(R.string.frost_name))
                 .setContentText(text)
@@ -257,7 +266,8 @@ enum class NotificationType(
         intent.data = Uri.parse(fbItem.url)
         intent.putExtra(ARG_USER_ID, userId)
         val group = "${groupPrefix}_$userId"
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notifBuilder = context.frostNotification(channelId)
             .setContentTitle(context.string(R.string.frost_name))
             .setContentText("$count ${context.string(fbItem.titleId)}")
@@ -289,7 +299,7 @@ data class NotificationContent(
     val unread: Boolean
 ) {
 
-    val notifId = Math.abs(id.toInt())
+    val notifId = abs(id.toInt())
 }
 
 /**
