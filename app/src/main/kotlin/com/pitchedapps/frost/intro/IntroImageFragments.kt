@@ -31,7 +31,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchTabCustomizerActivity
-import java.lang.Math.abs
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 2017-07-28.
