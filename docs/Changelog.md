@@ -5,6 +5,7 @@
 * Update theme
 * Disable bugsnag completely when opting out of analytics
 * Filter urls before sending to other apps
+* Allow hiding main fab (see settings > newsfeed)
 
 ## v2.3.1
 * Hide all story panels if enabled

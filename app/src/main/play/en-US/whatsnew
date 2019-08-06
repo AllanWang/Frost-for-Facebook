@@ -4,3 +4,4 @@ v2.3.2
 * Update theme
 * Disable bugsnag completely when opting out of analytics
 * Filter urls before sending to other apps
+* Allow hiding main fab (see settings > newsfeed)
