@@ -50,23 +50,24 @@ abstract class RecyclerFragment<T, Item : IItem<*, *>> : BaseFragment(), Recycle
         }
     }
 
-    final override suspend fun reload(progress: (Int) -> Unit): Boolean = withContext(Dispatchers.IO) {
-        val data = try {
-            reloadImpl(progress)
-        } catch (e: Exception) {
-            L.e(e) { "Recycler reload fail $baseUrl" }
-            null
-        }
-        withMainContext {
-            if (data == null) {
-                valid = false
-                false
-            } else {
-                adapter.setNewList(data)
-                true
+    final override suspend fun reload(progress: (Int) -> Unit): Boolean =
+        withContext(Dispatchers.IO) {
+            val data = try {
+                reloadImpl(progress)
+            } catch (e: Exception) {
+                L.e(e) { "Recycler reload fail $baseUrl" }
+                null
+            }
+            withMainContext {
+                if (data == null) {
+                    valid = false
+                    false
+                } else {
+                    adapter.setNewList(data)
+                    true
+                }
             }
         }
-    }
 
     protected abstract suspend fun reloadImpl(progress: (Int) -> Unit): List<T>?
 }
@@ -95,7 +96,8 @@ abstract class GenericRecyclerFragment<T, Item : IItem<*, *>> : RecyclerFragment
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 }
 
-abstract class FrostParserFragment<T : ParseData, Item : IItem<*, *>> : RecyclerFragment<Item, Item>() {
+abstract class FrostParserFragment<T : ParseData, Item : IItem<*, *>> :
+    RecyclerFragment<Item, Item>() {
 
     /**
      * The parser to make this all happen
@@ -125,24 +127,25 @@ abstract class FrostParserFragment<T : ParseData, Item : IItem<*, *>> : Recycler
      */
     open fun getAdapter(): FastAdapter<IItem<*, *>> = fastAdapter(this.adapter)
 
-    override suspend fun reloadImpl(progress: (Int) -> Unit): List<Item>? = withContext(Dispatchers.IO) {
-        progress(10)
-        val cookie = FbCookie.webCookie
-        val doc = getDoc(cookie)
-        progress(60)
-        val response = try {
-            parser.parse(cookie, doc)
-        } catch (ignored: Exception) {
-            null
+    override suspend fun reloadImpl(progress: (Int) -> Unit): List<Item>? =
+        withContext(Dispatchers.IO) {
+            progress(10)
+            val cookie = FbCookie.webCookie
+            val doc = getDoc(cookie)
+            progress(60)
+            val response = try {
+                parser.parse(cookie, doc)
+            } catch (ignored: Exception) {
+                null
+            }
+            if (response == null) {
+                L.i { "RecyclerFragment failed for ${baseEnum.name}" }
+                L._d { "Cookie used: $cookie" }
+                return@withContext null
+            }
+            progress(80)
+            val items = toItems(response)
+            progress(97)
+            return@withContext items
         }
-        if (response == null) {
-            L.i { "RecyclerFragment failed for ${baseEnum.name}" }
-            L._d { "Cookie used: $cookie" }
-            return@withContext null
-        }
-        progress(80)
-        val items = toItems(response)
-        progress(97)
-        return@withContext items
-    }
 }

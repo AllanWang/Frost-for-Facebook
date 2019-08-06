@@ -33,7 +33,8 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 fun Context.showWebContextMenu(wc: WebContext) {
     if (wc.isEmpty) return
     var title = wc.url ?: string(R.string.menu)
-    title = title.substring(title.indexOf("m/") + 1) //just so if defaults to 0 in case it's not .com/
+    title =
+        title.substring(title.indexOf("m/") + 1) //just so if defaults to 0 in case it's not .com/
     if (title.length > 100) title = title.substring(0, 100) + '\u2026'
 
     val menuItems = WebContextType.values
@@ -63,7 +64,10 @@ enum class WebContextType(
     val constraint: (wc: WebContext) -> Boolean,
     val onClick: (c: Context, wc: WebContext) -> Unit
 ) {
-    OPEN_LINK(R.string.open_link, { it.hasUrl }, { c, wc -> c.launchWebOverlay(wc.unformattedUrl!!) }),
+    OPEN_LINK(
+        R.string.open_link,
+        { it.hasUrl },
+        { c, wc -> c.launchWebOverlay(wc.unformattedUrl!!) }),
     COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc -> c.copyToClipboard(wc.url) }),
     COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc -> c.copyToClipboard(wc.text) }),
     SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc -> c.shareText(wc.url) }),

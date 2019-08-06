@@ -52,7 +52,11 @@ import org.koin.core.inject
 
 class NotificationWidget : AppWidgetProvider() {
 
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         val type = NotificationType.GENERAL
         val userId = Prefs.userId
@@ -87,7 +91,8 @@ class NotificationWidget : AppWidgetProvider() {
     companion object {
         fun forceUpdate(context: Context) {
             val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(ComponentName(context, NotificationWidget::class.java))
+            val ids =
+                manager.getAppWidgetIds(ComponentName(context, NotificationWidget::class.java))
             val intent = Intent().apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
@@ -109,7 +114,8 @@ private fun RemoteViews.setBackgroundColor(@IdRes viewId: Int, @ColorInt color: 
  */
 private fun RemoteViews.setIcon(@IdRes viewId: Int, context: Context, @DrawableRes res: Int, @ColorInt color: Int) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val icon = Icon.createWithResource(context, res).setTint(color).setTintMode(PorterDuff.Mode.SRC_IN)
+        val icon =
+            Icon.createWithResource(context, res).setTint(color).setTintMode(PorterDuff.Mode.SRC_IN)
         setImageViewIcon(viewId, icon)
     } else {
         val bitmap = BitmapFactory.decodeResource(context.resources, res)
@@ -128,7 +134,8 @@ private fun RemoteViews.setIcon(@IdRes viewId: Int, context: Context, @DrawableR
 }
 
 class NotificationWidgetService : RemoteViewsService() {
-    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory = NotificationWidgetDataProvider(this, intent)
+    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
+        NotificationWidgetDataProvider(this, intent)
 
     companion object {
         fun createIntent(context: Context, type: NotificationType, userId: Long): Intent =
@@ -138,7 +145,8 @@ class NotificationWidgetService : RemoteViewsService() {
     }
 }
 
-class NotificationWidgetDataProvider(val context: Context, val intent: Intent) : RemoteViewsService.RemoteViewsFactory,
+class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
+    RemoteViewsService.RemoteViewsFactory,
     KoinComponent {
 
     private val notifDao: NotificationDao by inject()
@@ -179,7 +187,8 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
         views.setTextColor(R.id.item_date, Prefs.textColor.withAlpha(150))
         views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
 
-        val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop).submit(avatarSize, avatarSize).get()
+        val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop)
+            .submit(avatarSize, avatarSize).get()
         views.setImageViewBitmap(R.id.item_avatar, avatar)
         views.setOnClickFillInIntent(R.id.item_frame, type.putContentExtra(Intent(), notif))
         return views

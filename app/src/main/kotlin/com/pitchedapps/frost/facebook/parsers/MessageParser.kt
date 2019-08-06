@@ -38,7 +38,8 @@ import org.jsoup.nodes.Element
  */
 object MessageParser : FrostParser<FrostMessages> by MessageParserImpl() {
 
-    fun queryUser(cookie: String?, name: String) = parseFromUrl(cookie, "${FbItem.MESSAGES.url}/?q=$name")
+    fun queryUser(cookie: String?, name: String) =
+        parseFromUrl(cookie, "${FbItem.MESSAGES.url}/?q=$name")
 }
 
 data class FrostMessages(
@@ -120,7 +121,10 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
     override fun parseImpl(doc: Document): FrostMessages? {
         val threadList = doc.getElementById("threadlist_rows") ?: return null
         val threads: List<FrostThread> =
-            threadList.getElementsByAttributeValueMatching("id", ".*${FB_MESSAGE_NOTIF_ID_MATCHER.pattern}.*")
+            threadList.getElementsByAttributeValueMatching(
+                "id",
+                ".*${FB_MESSAGE_NOTIF_ID_MATCHER.pattern}.*"
+            )
                 .mapNotNull(this::parseMessage)
         val seeMore = parseLink(doc.getElementById("see_older_threads"))
         val extraLinks = threadList.nextElementSibling().select("a")

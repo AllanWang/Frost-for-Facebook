@@ -52,7 +52,8 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
      */
     private val injector = lazyContext {
         try {
-            var content = it.assets.open("css/$folder/$file").bufferedReader().use(BufferedReader::readText)
+            var content =
+                it.assets.open("css/$folder/$file").bufferedReader().use(BufferedReader::readText)
             if (this == CUSTOM) {
                 val bt = if (Color.alpha(Prefs.bgColor) == 255)
                     Prefs.bgColor.toRgbaString()

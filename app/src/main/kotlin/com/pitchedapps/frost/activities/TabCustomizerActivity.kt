@@ -66,7 +66,8 @@ class TabCustomizerActivity : BaseActivity() {
 
         pseudo_toolbar.setBackgroundColor(Prefs.headerColor)
 
-        tab_recycler.layoutManager = GridLayoutManager(this, TAB_COUNT, RecyclerView.VERTICAL, false)
+        tab_recycler.layoutManager =
+            GridLayoutManager(this, TAB_COUNT, RecyclerView.VERTICAL, false)
         tab_recycler.adapter = adapter
         tab_recycler.setHasFixedSize(true)
 

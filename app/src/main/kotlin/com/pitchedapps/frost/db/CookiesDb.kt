@@ -83,7 +83,10 @@ object CookiesDb {
 
 @Parcelize
 @Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
-data class CookieModel(@PrimaryKey var id: Long = -1L, var name: String? = null, var cookie: String? = null) :
+data class CookieModel(
+    @PrimaryKey var id: Long = -1L, var name: String? = null,
+    var cookie: String? = null
+) :
     BaseModel(), Parcelable {
 
     override fun toString(): String = "CookieModel(${hashCode()})"

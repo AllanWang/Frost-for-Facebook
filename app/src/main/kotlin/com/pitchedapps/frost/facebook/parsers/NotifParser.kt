@@ -96,7 +96,8 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
         val notifications = notificationList
             .getElementsByAttributeValueMatching("id", ".*${FB_NOTIF_ID_MATCHER.pattern}.*")
             .mapNotNull(this::parseNotif)
-        val seeMore = parseLink(doc.getElementsByAttributeValue("href", "/notifications.php?more").first())
+        val seeMore =
+            parseLink(doc.getElementsByAttributeValue("href", "/notifications.php?more").first())
         return FrostNotifs(notifications, seeMore)
     }
 
@@ -109,7 +110,8 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
             ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
         val img = element.getInnerImgStyle()
         val timeString = abbr.text()
-        val content = a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
+        val content =
+            a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
         val thumbnail = element.selectFirst("img.thumbnail")?.attr("src")
         return FrostNotif(
             id = id,

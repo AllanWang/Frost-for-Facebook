@@ -140,14 +140,20 @@ suspend fun NotificationDao.deleteAll() = dao { _deleteAll() }
 fun NotificationDao.selectNotificationsSync(userId: Long, type: String): List<NotificationContent> =
     _selectNotifications(userId, type).map { it.toNotifContent() }
 
-suspend fun NotificationDao.selectNotifications(userId: Long, type: String): List<NotificationContent> = dao {
+suspend fun NotificationDao.selectNotifications(
+    userId: Long,
+    type: String
+): List<NotificationContent> = dao {
     selectNotificationsSync(userId, type)
 }
 
 /**
  * Returns true if successful, given that there are constraints to the insertion
  */
-suspend fun NotificationDao.saveNotifications(type: String, notifs: List<NotificationContent>): Boolean = dao {
+suspend fun NotificationDao.saveNotifications(
+    type: String,
+    notifs: List<NotificationContent>
+): Boolean = dao {
     try {
         _saveNotifications(type, notifs)
         true
@@ -187,7 +193,11 @@ class NotificationMigration2(modelClass: Class<NotificationModel>) :
     }
 }
 
-@Table(database = NotificationDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
+@Table(
+    database = NotificationDb::class,
+    allFields = true,
+    primaryKeyConflict = ConflictAction.REPLACE
+)
 data class NotificationModel(
     @PrimaryKey var id: Long = -1L,
     var epoch: Long = -1L,

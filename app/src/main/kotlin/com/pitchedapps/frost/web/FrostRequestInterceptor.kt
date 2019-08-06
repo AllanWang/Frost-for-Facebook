@@ -76,4 +76,5 @@ fun WebResourceResponse?.filter(filter: Boolean): WebResourceResponse? = this
 fun WebResourceResponse?.filterCss(request: WebResourceRequest): WebResourceResponse? =
     filter(request) { it.endsWith(".css") }
 
-fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse? = filter(request.isImage)
+fun WebResourceResponse?.filterImage(request: WebResourceRequest): WebResourceResponse? =
+    filter(request.isImage)

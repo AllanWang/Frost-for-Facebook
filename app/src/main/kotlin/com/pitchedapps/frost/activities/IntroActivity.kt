@@ -137,7 +137,10 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
 
     fun finish(x: Float, y: Float) {
         val blue = color(R.color.facebook_blue)
-        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
         ripple.ripple(blue, x, y, 600) {
             postDelayed(1000) { finish() }
         }

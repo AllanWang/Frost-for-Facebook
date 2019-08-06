@@ -52,9 +52,15 @@ class SelectorActivity : BaseActivity() {
         adapter.add(cookies().map { AccountItem(it) })
         adapter.add(AccountItem(null)) // add account
         adapter.withEventHook(object : ClickEventHook<AccountItem>() {
-            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? = (viewHolder as? AccountItem.ViewHolder)?.v
+            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
+                (viewHolder as? AccountItem.ViewHolder)?.v
 
-            override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<AccountItem>, item: AccountItem) {
+            override fun onClick(
+                v: View,
+                position: Int,
+                fastAdapter: FastAdapter<AccountItem>,
+                item: AccountItem
+            ) {
                 if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
                 else launch {
                     FbCookie.switchUser(item.cookie)

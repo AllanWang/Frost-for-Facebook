@@ -84,32 +84,33 @@ class NotificationService : BaseJobService() {
         return true
     }
 
-    private suspend fun sendNotifications(params: JobParameters?): Unit = withContext(Dispatchers.Default) {
-        val currentId = Prefs.userId
-        val cookies = cookieDao.selectAll()
-        yield()
-        val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
-        var notifCount = 0
-        for (cookie in cookies) {
+    private suspend fun sendNotifications(params: JobParameters?): Unit =
+        withContext(Dispatchers.Default) {
+            val currentId = Prefs.userId
+            val cookies = cookieDao.selectAll()
             yield()
-            val current = cookie.id == currentId
-            if (Prefs.notificationsGeneral &&
-                (current || Prefs.notificationAllAccounts)
-            )
-                notifCount += fetch(jobId, NotificationType.GENERAL, cookie)
-            if (Prefs.notificationsInstantMessages &&
-                (current || Prefs.notificationsImAllAccounts)
-            )
-                notifCount += fetch(jobId, NotificationType.MESSAGE, cookie)
-        }
+            val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
+            var notifCount = 0
+            for (cookie in cookies) {
+                yield()
+                val current = cookie.id == currentId
+                if (Prefs.notificationsGeneral &&
+                    (current || Prefs.notificationAllAccounts)
+                )
+                    notifCount += fetch(jobId, NotificationType.GENERAL, cookie)
+                if (Prefs.notificationsInstantMessages &&
+                    (current || Prefs.notificationsImAllAccounts)
+                )
+                    notifCount += fetch(jobId, NotificationType.MESSAGE, cookie)
+            }
 
-        L.i { "Sent $notifCount notifications" }
-        if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
-            generalNotification(665, R.string.no_new_notifications, BuildConfig.DEBUG)
-        if (notifCount > 0) {
-            NotificationWidget.forceUpdate(this@NotificationService)
+            L.i { "Sent $notifCount notifications" }
+            if (notifCount == 0 && jobId == NOTIFICATION_JOB_NOW)
+                generalNotification(665, R.string.no_new_notifications, BuildConfig.DEBUG)
+            if (notifCount > 0) {
+                NotificationWidget.forceUpdate(this@NotificationService)
+            }
         }
-    }
 
     /**
      * Implemented fetch to also notify when an error occurs

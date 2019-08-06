@@ -50,7 +50,12 @@ enum class FbItem(
     MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", ::MenuFragment),
     MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
     NOTES(R.string.notes, CommunityMaterial.Icon2.cmd_note, "notes"),
-    NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications", ::NotificationFragment),
+    NOTIFICATIONS(
+        R.string.notifications,
+        MaterialDesignIconic.Icon.gmi_globe,
+        "notifications",
+        ::NotificationFragment
+    ),
     ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
     PAGES(R.string.pages, GoogleMaterial.Icon.gmd_flag, "pages"),
     PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
@@ -77,4 +82,5 @@ enum class FbItem(
     companion object : EnumCompanion<FbItem>("frost_arg_fb_item", values())
 }
 
-fun defaultTabs(): List<FbItem> = listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)
+fun defaultTabs(): List<FbItem> =
+    listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)

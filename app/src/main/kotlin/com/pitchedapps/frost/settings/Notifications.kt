@@ -48,13 +48,20 @@ import kotlinx.coroutines.launch
 @SuppressLint("InlinedApi")
 fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
-    text(R.string.notification_frequency, Prefs::notificationFreq, { Prefs.notificationFreq = it }) {
+    text(
+        R.string.notification_frequency,
+        Prefs::notificationFreq,
+        { Prefs.notificationFreq = it }) {
         val options = longArrayOf(15, 30, 60, 120, 180, 300, 1440, 2880)
-        val texts = options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
+        val texts =
+            options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
         onClick = {
             materialDialog {
                 title(R.string.notification_frequency)
-                listItemsSingleChoice(items = texts, initialSelection = options.indexOf(item.pref)) { _, index, _ ->
+                listItemsSingleChoice(
+                    items = texts,
+                    initialSelection = options.indexOf(item.pref)
+                ) { _, index, _ ->
                     item.pref = options[index]
                     scheduleNotifications(item.pref)
                 }

@@ -62,16 +62,17 @@ class LoginWebView @JvmOverloads constructor(
         webChromeClient = LoginChromeClient()
     }
 
-    suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieEntity> = coroutineScope {
-        this@LoginWebView.progressCallback = progressCallback
-        L.d { "Begin loading login" }
-        launchMain {
-            FbCookie.reset()
-            setupWebview()
-            loadUrl(FB_LOGIN_URL)
+    suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieEntity> =
+        coroutineScope {
+            this@LoginWebView.progressCallback = progressCallback
+            L.d { "Begin loading login" }
+            launchMain {
+                FbCookie.reset()
+                setupWebview()
+                loadUrl(FB_LOGIN_URL)
+            }
+            completable
         }
-        completable
-    }
 
     private inner class LoginClient : BaseWebViewClient() {
 

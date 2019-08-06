@@ -58,7 +58,8 @@ class Keywords @JvmOverloads constructor(
         editText.tint(Prefs.textColor)
         addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context))
         addIcon.setOnClickListener {
-            if (editText.text.isNullOrEmpty()) editText.error = context.string(R.string.empty_keyword)
+            if (editText.text.isNullOrEmpty()) editText.error =
+                context.string(R.string.empty_keyword)
             else {
                 adapter.add(0, KeywordItem(editText.text.toString()))
                 editText.text?.clear()
@@ -71,7 +72,12 @@ class Keywords @JvmOverloads constructor(
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
                 (viewHolder as? KeywordItem.ViewHolder)?.delete
 
-            override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<KeywordItem>, item: KeywordItem) {
+            override fun onClick(
+                v: View,
+                position: Int,
+                fastAdapter: FastAdapter<KeywordItem>,
+                item: KeywordItem
+            ) {
                 adapter.remove(position)
             }
         })
@@ -82,7 +88,8 @@ class Keywords @JvmOverloads constructor(
     }
 }
 
-private fun IIcon.keywordDrawable(context: Context): Drawable = toDrawable(context, 20, Prefs.textColor)
+private fun IIcon.keywordDrawable(context: Context): Drawable =
+    toDrawable(context, 20, Prefs.textColor)
 
 class KeywordItem(val keyword: String) : AbstractItem<KeywordItem, KeywordItem.ViewHolder>() {
 

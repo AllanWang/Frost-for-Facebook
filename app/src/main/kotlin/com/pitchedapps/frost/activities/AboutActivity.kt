@@ -127,7 +127,8 @@ class AboutActivity : AboutActivityBase(null, {
         }
     }
 
-    class AboutLinks : AbstractItem<AboutLinks, AboutLinks.ViewHolder>(), ThemableIItem by ThemableIItemDelegate() {
+    class AboutLinks : AbstractItem<AboutLinks, AboutLinks.ViewHolder>(),
+        ThemableIItem by ThemableIItemDelegate() {
         override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
         override fun getType(): Int = R.id.item_about_links
@@ -166,22 +167,24 @@ class AboutActivity : AboutActivityBase(null, {
                     CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
                     CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) })
 
-                images = (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
-                    icon.toDrawable(
-                        c,
-                        32
-                    ) to onClick
-                }).mapIndexed { i, (icon, onClick) ->
-                    ImageView(c).apply {
-                        layoutParams = ViewGroup.LayoutParams(size, size)
-                        id = 109389 + i
-                        setImageDrawable(icon)
-                        scaleType = ImageView.ScaleType.CENTER
-                        background = context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
-                        setOnClickListener { onClick() }
-                        container.addView(this)
+                images =
+                    (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
+                        icon.toDrawable(
+                            c,
+                            32
+                        ) to onClick
+                    }).mapIndexed { i, (icon, onClick) ->
+                        ImageView(c).apply {
+                            layoutParams = ViewGroup.LayoutParams(size, size)
+                            id = 109389 + i
+                            setImageDrawable(icon)
+                            scaleType = ImageView.ScaleType.CENTER
+                            background =
+                                context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
+                            setOnClickListener { onClick() }
+                            container.addView(this)
+                        }
                     }
-                }
                 val set = ConstraintSet()
                 set.clone(container)
                 set.createHorizontalChain(

@@ -83,7 +83,13 @@ class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: Attr
         return super.onInterceptTouchEvent(ev)
     }
 
-    override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int) {
+    override fun onNestedScroll(
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int
+    ) {
         if (preventRefresh) {
             /*
              * Ignoring offsetInWindow since

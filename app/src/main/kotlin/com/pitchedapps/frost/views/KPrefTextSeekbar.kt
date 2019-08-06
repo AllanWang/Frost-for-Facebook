@@ -50,7 +50,10 @@ class KPrefTextSeekbar(builder: KPrefSeekbarContract) : KPrefSeekbar(builder) {
         descOriginalSize = holder.desc?.textSize ?: 1f
         holder.desc?.layoutParams
         builder.toText = {
-            holder.desc?.setTextSize(TypedValue.COMPLEX_UNIT_PX, descOriginalSize * it.toFloat() / 100)
+            holder.desc?.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                descOriginalSize * it.toFloat() / 100
+            )
             "$it%"
         }
     }

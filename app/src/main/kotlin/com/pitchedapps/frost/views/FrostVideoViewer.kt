@@ -68,14 +68,19 @@ class FrostVideoViewer @JvmOverloads constructor(
          * This is under the assumption that the container allows for overlays,
          * such as a FrameLayout
          */
-        fun showVideo(url: String, repeat: Boolean, contract: FrostVideoContainerContract): FrostVideoViewer {
+        fun showVideo(
+            url: String,
+            repeat: Boolean,
+            contract: FrostVideoContainerContract
+        ): FrostVideoViewer {
             val container = contract.videoContainer
             val videoViewer = FrostVideoViewer(container.context)
             container.addView(videoViewer)
             videoViewer.bringToFront()
             videoViewer.setVideo(url, repeat)
             videoViewer.video.containerContract = contract
-            videoViewer.video.onFinishedListener = { container.removeView(videoViewer); contract.onVideoFinished() }
+            videoViewer.video.onFinishedListener =
+                { container.removeView(videoViewer); contract.onVideoFinished() }
             return videoViewer
         }
     }
@@ -101,7 +106,8 @@ class FrostVideoViewer @JvmOverloads constructor(
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.ctxCoroutine.launchMain {
-                    val cookie = FrostDatabase.get().cookieDao().currentCookie() ?: return@launchMain
+                    val cookie =
+                        FrostDatabase.get().cookieDao().currentCookie() ?: return@launchMain
                     context.frostDownload(cookie, video.videoUri)
                 }
             }
@@ -162,7 +168,8 @@ class FrostVideoViewer @JvmOverloads constructor(
     }
 
     fun updateLocation() {
-        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 video.updateLocation()
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -172,7 +179,9 @@ class FrostVideoViewer @JvmOverloads constructor(
 
     override fun onControlsShown() {
         if (video.isExpanded)
-            video_toolbar.fadeIn(duration = CONTROL_ANIMATION_DURATION, onStart = { video_toolbar.visible() })
+            video_toolbar.fadeIn(
+                duration = CONTROL_ANIMATION_DURATION,
+                onStart = { video_toolbar.visible() })
     }
 
     override fun onControlsHidden() {
