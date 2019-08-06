@@ -21,7 +21,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**

@@ -42,9 +42,13 @@ class BadgedIcon @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_badged_icon, this)
-        val badgeColor = Prefs.mainActivityLayout.backgroundColor().withAlpha(255).colorToForeground(0.2f)
+        val badgeColor =
+            Prefs.mainActivityLayout.backgroundColor().withAlpha(255).colorToForeground(0.2f)
         val badgeBackground =
-            GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(badgeColor, badgeColor))
+            GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP,
+                intArrayOf(badgeColor, badgeColor)
+            )
         badgeBackground.cornerRadius = 13.dpToPx.toFloat()
         badge_text.background = badgeBackground
         badge_text.setTextColor(Prefs.mainActivityLayout.iconColor())

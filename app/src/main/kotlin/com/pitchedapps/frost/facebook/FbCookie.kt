@@ -77,11 +77,12 @@ object FbCookie {
         }
     }
 
-    private suspend fun CookieManager.setSingleWebCookie(cookie: String): Boolean = suspendCoroutine { cont ->
-        setCookie(COOKIE_DOMAIN, cookie.trim()) {
-            cont.resume(it)
+    private suspend fun CookieManager.setSingleWebCookie(cookie: String): Boolean =
+        suspendCoroutine { cont ->
+            setCookie(COOKIE_DOMAIN, cookie.trim()) {
+                cont.resume(it)
+            }
         }
-    }
 
     suspend fun save(id: Long) {
         L.d { "New cookie found" }

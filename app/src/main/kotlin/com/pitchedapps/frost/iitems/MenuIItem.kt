@@ -80,6 +80,8 @@ class MenuHeaderIItem(val data: MenuHeader) : HeaderIItem(
     itemId = R.id.item_menu_header
 )
 
-class MenuFooterIItem(val data: MenuFooterItem) : TextIItem(data.name, data.url, R.id.item_menu_footer)
+class MenuFooterIItem(val data: MenuFooterItem) :
+    TextIItem(data.name, data.url, R.id.item_menu_footer)
 
-class MenuFooterSmallIItem(val data: MenuFooterItem) : TextIItem(data.name, data.url, R.id.item_menu_footer_small)
+class MenuFooterSmallIItem(val data: MenuFooterItem) :
+    TextIItem(data.name, data.url, R.id.item_menu_footer_small)

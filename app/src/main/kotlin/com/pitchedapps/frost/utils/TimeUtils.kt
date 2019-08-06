@@ -39,8 +39,18 @@ fun Long.toReadableTime(context: Context): String {
     val timeFormatter = SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
     val time = timeFormatter.format(Date(this))
     val day = when {
-        cal >= Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) } -> context.string(R.string.today)
-        cal >= Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -2) } -> context.string(R.string.yesterday)
+        cal >= Calendar.getInstance().apply {
+            add(
+                Calendar.DAY_OF_MONTH,
+                -1
+            )
+        } -> context.string(R.string.today)
+        cal >= Calendar.getInstance().apply {
+            add(
+                Calendar.DAY_OF_MONTH,
+                -2
+            )
+        } -> context.string(R.string.yesterday)
         else -> {
             val dayFormatter = SimpleDateFormat("MMM dd", Locale.getDefault())
             dayFormatter.format(Date(this))

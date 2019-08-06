@@ -34,7 +34,10 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.experimental_disclaimer_info
     }
 
-    checkbox(R.string.experimental_by_default, Showcase::experimentalDefault, { Showcase.experimentalDefault = it }) {
+    checkbox(
+        R.string.experimental_by_default,
+        Showcase::experimentalDefault,
+        { Showcase.experimentalDefault = it }) {
         descRes = R.string.experimental_by_default_desc
     }
 

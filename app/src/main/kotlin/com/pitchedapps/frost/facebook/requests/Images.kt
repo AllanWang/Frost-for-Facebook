@@ -52,18 +52,19 @@ fun RequestAuth.getFullSizedImage(fbid: Long) = frostRequest(::getJsonUrl) {
 /**
  * Attempts to get the fbcdn url of the supplied image redirect url
  */
-suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): String? = withContext(Dispatchers.IO) {
-    try {
-        withTimeout(timeout) {
-            val redirect = requestBuilder().url(url).get().call()
-                .execute().body()?.string() ?: return@withTimeout null
-            FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
+suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): String? =
+    withContext(Dispatchers.IO) {
+        try {
+            withTimeout(timeout) {
+                val redirect = requestBuilder().url(url).get().call()
+                    .execute().body()?.string() ?: return@withTimeout null
+                FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
+            }
+        } catch (e: Exception) {
+            L.e(e) { "Failed to load full size image url" }
+            null
         }
-    } catch (e: Exception) {
-        L.e(e) { "Failed to load full size image url" }
-        null
     }
-}
 
 /**
  * Request loader for a potentially hd version of a url
@@ -135,7 +136,8 @@ class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream>
                 withTimeout(20000L) {
                     val auth = fbAuth.fetch(model.cookie).await()
                     if (cancelled) throw RuntimeException("Cancelled")
-                    val url = auth.getFullSizedImage(model.id).invoke() ?: throw RuntimeException("Null url")
+                    val url = auth.getFullSizedImage(model.id).invoke()
+                        ?: throw RuntimeException("Null url")
                     if (cancelled) throw RuntimeException("Cancelled")
                     if (!url.contains("png") && !url.contains("jpg")) throw RuntimeException("Invalid format")
                     urlCall?.execute()?.body()?.byteStream()
@@ -145,7 +147,9 @@ class HdImageFetcher(private val model: HdImageMaybe) : DataFetcher<InputStream>
         if (result.isSuccess)
             callback.onDataReady(result.getOrNull())
         else
-            callback.onLoadFailed(result.exceptionOrNull() as? Exception ?: RuntimeException("Failed"))
+            callback.onLoadFailed(
+                result.exceptionOrNull() as? Exception ?: RuntimeException("Failed")
+            )
     }
 
     override fun cleanup() {

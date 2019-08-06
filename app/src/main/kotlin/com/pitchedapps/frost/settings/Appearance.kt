@@ -133,7 +133,10 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.global_customization)
 
-    text(R.string.main_activity_layout, Prefs::mainActivityLayoutType, { Prefs.mainActivityLayoutType = it }) {
+    text(
+        R.string.main_activity_layout,
+        Prefs::mainActivityLayoutType,
+        { Prefs.mainActivityLayoutType = it }) {
         textGetter = { string(Prefs.mainActivityLayout.titleRes) }
         onClick = {
             materialDialog {

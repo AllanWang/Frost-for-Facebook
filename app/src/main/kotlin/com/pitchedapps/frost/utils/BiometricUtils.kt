@@ -53,7 +53,8 @@ object BiometricUtils {
     @Suppress("DEPRECATION")
     fun isSupported(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return false
-        val fingerprintManager = context.getSystemService(FingerprintManager::class.java) ?: return false
+        val fingerprintManager =
+            context.getSystemService(FingerprintManager::class.java) ?: return false
         return fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()
     }
 

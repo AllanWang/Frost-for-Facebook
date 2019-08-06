@@ -59,7 +59,10 @@ interface FrostDao : FrostPrivateDao, FrostPublicDao {
 /**
  * Composition of all database interfaces
  */
-class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val publicDb: FrostPublicDatabase) :
+class FrostDatabase(
+    private val privateDb: FrostPrivateDatabase,
+    private val publicDb: FrostPublicDatabase
+) :
     FrostDao,
     FrostPrivateDao by privateDb,
     FrostPublicDao by publicDb {
@@ -71,11 +74,12 @@ class FrostDatabase(private val privateDb: FrostPrivateDatabase, private val pub
 
     companion object {
 
-        private fun <T : RoomDatabase> RoomDatabase.Builder<T>.frostBuild() = if (BuildConfig.DEBUG) {
-            fallbackToDestructiveMigration().build()
-        } else {
-            build()
-        }
+        private fun <T : RoomDatabase> RoomDatabase.Builder<T>.frostBuild() =
+            if (BuildConfig.DEBUG) {
+                fallbackToDestructiveMigration().build()
+            } else {
+                build()
+            }
 
         fun create(context: Context): FrostDatabase {
             val privateDb = Room.databaseBuilder(

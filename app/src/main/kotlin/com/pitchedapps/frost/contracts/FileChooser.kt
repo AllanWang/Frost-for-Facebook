@@ -66,11 +66,18 @@ class FileChooserDelegate : FileChooserContract {
             val intent = Intent()
             intent.type = fileChooserParams.acceptTypes.firstOrNull()
             intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent, string(R.string.pick_image)), MEDIA_CHOOSER_RESULT)
+            startActivityForResult(
+                Intent.createChooser(intent, string(R.string.pick_image)),
+                MEDIA_CHOOSER_RESULT
+            )
         }
     }
 
-    override fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
+    override fun Activity.onActivityResultWeb(
+        requestCode: Int,
+        resultCode: Int,
+        intent: Intent?
+    ): Boolean {
         L.d { "FileChooser On activity results web $requestCode" }
         if (requestCode != MEDIA_CHOOSER_RESULT) return false
         val data = intent?.data

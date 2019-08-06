@@ -35,4 +35,5 @@ object FbTabsDb {
 }
 
 @Table(database = FbTabsDb::class, allFields = true)
-data class FbTabModel(@PrimaryKey var position: Int = -1, var tab: FbItem = FbItem.FEED) : BaseModel()
+data class FbTabModel(@PrimaryKey var position: Int = -1, var tab: FbItem = FbItem.FEED) :
+    BaseModel()

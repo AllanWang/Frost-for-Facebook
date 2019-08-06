@@ -99,7 +99,8 @@ internal fun <T> List<T>.toJsonString(tag: String, indent: Int) = StringBuilder(
  * T should have a readable toString() function
  * [redirectToText] dictates whether all data should be converted to text then back to document before parsing
  */
-internal abstract class FrostParserBase<out T : ParseData>(private val redirectToText: Boolean) : FrostParser<T> {
+internal abstract class FrostParserBase<out T : ParseData>(private val redirectToText: Boolean) :
+    FrostParser<T> {
 
     final override fun parse(cookie: String?) = parseFromUrl(cookie, url)
 

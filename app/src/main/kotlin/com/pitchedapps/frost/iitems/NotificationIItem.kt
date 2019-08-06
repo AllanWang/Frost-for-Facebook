@@ -54,7 +54,10 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                     val notif = item.notification
                     if (notif.unread) {
                         FrostRunnable.markNotificationRead(v!!.context, notif.id, item.cookie)
-                        adapter.set(position, NotificationIItem(notif.copy(unread = false), item.cookie))
+                        adapter.set(
+                            position,
+                            NotificationIItem(notif.copy(unread = false), item.cookie)
+                        )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
                     v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)

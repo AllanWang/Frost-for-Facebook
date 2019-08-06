@@ -91,7 +91,8 @@ class DebugActivity : KauBaseActivity() {
                     }
                 }
 
-                val hasScreenshot: Boolean = debug_webview.getScreenshot(File(parent, "screenshot.png"))
+                val hasScreenshot: Boolean =
+                    debug_webview.getScreenshot(File(parent, "screenshot.png"))
 
                 val intent = Intent()
                 intent.putExtra(RESULT_URL, debug_webview.url)

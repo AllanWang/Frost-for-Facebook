@@ -58,7 +58,10 @@ fun setupNotificationChannels(c: Context) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-private fun NotificationManager.createNotificationChannel(id: String, name: String): NotificationChannel {
+private fun NotificationManager.createNotificationChannel(
+    id: String,
+    name: String
+): NotificationChannel {
     val channel = NotificationChannel(
         id,
         name, NotificationManager.IMPORTANCE_DEFAULT
@@ -85,7 +88,11 @@ fun Context.frostNotification(id: String) =
  * Delegates to channels if Android O and up
  * Otherwise uses our provided preferences
  */
-fun NotificationCompat.Builder.setFrostAlert(context: Context, enable: Boolean, ringtone: String): NotificationCompat.Builder {
+fun NotificationCompat.Builder.setFrostAlert(
+    context: Context,
+    enable: Boolean,
+    ringtone: String
+): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
             if (enable) NotificationCompat.GROUP_ALERT_CHILDREN

@@ -67,7 +67,8 @@ class Flyweight<K, V>(
             completeExceptionally(result.exceptionOrNull()!!)
     }
 
-    private val errHandler = CoroutineExceptionHandler { _, throwable -> L.d { "FbAuth failed ${throwable.message}" } }
+    private val errHandler =
+        CoroutineExceptionHandler { _, throwable -> L.d { "FbAuth failed ${throwable.message}" } }
 
     init {
         job =

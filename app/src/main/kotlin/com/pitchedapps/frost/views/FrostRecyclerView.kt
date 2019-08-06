@@ -96,7 +96,8 @@ class FrostRecyclerView @JvmOverloads constructor(
      * Otherwise scroll to top
      */
     override fun onTabClicked() {
-        val firstPosition = (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        val firstPosition =
+            (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         if (firstPosition == 0) reloadBase(true)
         else scrollToTop()
     }
