@@ -37,6 +37,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.utils.Prefs
 import kotlinx.android.synthetic.main.intro_analytics.*
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -61,7 +62,7 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
             group.forEach {
                 it.translationX =
                     if (offset > 0) -maxTranslation + i * increment else -(i + 1) * increment
-                it.alpha = 1 - Math.abs(offset)
+                it.alpha = 1 - abs(offset)
             }
         }
     }

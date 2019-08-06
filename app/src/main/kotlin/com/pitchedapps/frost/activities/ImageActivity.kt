@@ -138,10 +138,7 @@ class ImageActivity : KauBaseActivity() {
 
     // a unique image identifier based on the id (if it exists), and its hash
     private val imageHash: String by lazy {
-        "${Math.abs(
-            FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode()
-                ?: 0
-        )}_${Math.abs(imageUrl.hashCode())}"
+        "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
     }
 
     private lateinit var binding: ActivityImageBinding

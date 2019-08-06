@@ -12,7 +12,7 @@
     <item text="Update theme" />
     <item text="Disable bugsnag completely when opting out of analytics" />
     <item text="Filter urls before sending to other apps" />
-    <item text="" />
+    <item text="Allow hiding main fab (see settings > newsfeed)" />
     <item text="" />
 
     <version title="v2.3.1" />

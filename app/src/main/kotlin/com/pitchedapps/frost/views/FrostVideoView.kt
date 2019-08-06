@@ -35,6 +35,9 @@ import com.devbrackets.android.exomedia.ui.widget.VideoView
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -119,11 +122,11 @@ class FrostVideoView @JvmOverloads constructor(
     private fun mapBounds(): Triple<Float, Float, Float> {
         if (videoDimensions.x <= 0f || videoDimensions.y <= 0f) {
             L.d { "Attempted to toggle video expansion when points have not been finalized" }
-            val dimen = Math.min(height, width).toFloat()
+            val dimen = min(height, width).toFloat()
             videoDimensions.set(dimen, dimen)
         }
         val portrait = height > width
-        val scale = Math.min(
+        val scale = min(
             height / (if (portrait) 4f else 2.3f) / videoDimensions.y,
             width / (if (portrait) 2.3f else 4f) / videoDimensions.x
         )
@@ -167,10 +170,8 @@ class FrostVideoView @JvmOverloads constructor(
         v.setOnTouchListener(VideoTouchListener(context))
         setOnVideoSizedChangedListener { intrinsicWidth, intrinsicHeight, pixelWidthHeightRatio ->
             // todo use provided ratio?
-            val ratio = Math.min(
-                width.toFloat() / intrinsicWidth,
-                height.toFloat() / intrinsicHeight.toFloat()
-            )
+            val ratio =
+                min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
             /**
              * Only remap if not expanded and if dimensions have changed
              */
@@ -240,7 +241,7 @@ class FrostVideoView @JvmOverloads constructor(
 
     private fun onHorizontalSwipe(offset: Float) {
         val alpha =
-            Math.max((1f - Math.abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD)) * 0.5f + 0.5f, 0f)
+            max((1f - abs(offset / SWIPE_TO_CLOSE_OFFSET_THRESHOLD)) * 0.5f + 0.5f, 0f)
         this.alpha = alpha
     }
 
@@ -305,9 +306,9 @@ class FrostVideoView @JvmOverloads constructor(
                         translationX = baseTranslateX - dx
                         onHorizontalSwipe(dx)
                     } else if (checkForDismiss) {
-                        if (Math.abs(event.rawY - downLoc.y) > SWIPE_TO_CLOSE_VERTICAL_THRESHOLD)
+                        if (abs(event.rawY - downLoc.y) > SWIPE_TO_CLOSE_VERTICAL_THRESHOLD)
                             checkForDismiss = false
-                        else if (Math.abs(event.rawX - downLoc.x) > SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD) {
+                        else if (abs(event.rawX - downLoc.x) > SWIPE_TO_CLOSE_HORIZONTAL_THRESHOLD) {
                             onSwipe = true
                             baseSwipeX = event.rawX
                             baseTranslateX = translationX
@@ -316,7 +317,7 @@ class FrostVideoView @JvmOverloads constructor(
                 }
                 MotionEvent.ACTION_UP -> {
                     if (onSwipe) {
-                        if (Math.abs(baseSwipeX - event.rawX) > SWIPE_TO_CLOSE_OFFSET_THRESHOLD)
+                        if (abs(baseSwipeX - event.rawX) > SWIPE_TO_CLOSE_OFFSET_THRESHOLD)
                             destroy()
                         else
                             animate().translationX(baseTranslateX).setDuration(

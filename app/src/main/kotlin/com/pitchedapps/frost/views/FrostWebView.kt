@@ -43,6 +43,9 @@ import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
 import com.pitchedapps.frost.web.shouldUseDesktopAgent
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -89,7 +92,14 @@ class FrostWebView @JvmOverloads constructor(
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
             context.ctxCoroutine.launchMain {
                 val cookie = db.cookieDao().currentCookie() ?: return@launchMain
-                context.frostDownload(cookie, url, userAgent, contentDisposition, mimetype, contentLength)
+                context.frostDownload(
+                    cookie,
+                    url,
+                    userAgent,
+                    contentDisposition,
+                    mimetype,
+                    contentLength
+                )
             }
         }
         return this
@@ -163,14 +173,14 @@ class FrostWebView @JvmOverloads constructor(
 
     private fun smoothScrollTo(y: Int) {
         ValueAnimator.ofInt(scrollY, y).apply {
-            duration = Math.min(Math.abs(scrollY - y), 500).toLong()
+            duration = min(abs(scrollY - y), 500).toLong()
             interpolator = AnimHolder.fastOutSlowInInterpolator(context)
             addUpdateListener { scrollY = it.animatedValue as Int }
             start()
         }
     }
 
-    private fun smoothScrollBy(y: Int) = smoothScrollTo(Math.max(0, scrollY + y))
+    private fun smoothScrollBy(y: Int) = smoothScrollTo(max(0, scrollY + y))
 
     override var active: Boolean = true
         set(value) {

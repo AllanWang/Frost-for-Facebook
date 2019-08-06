@@ -31,6 +31,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchTabCustomizerActivity
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -69,7 +70,7 @@ abstract class BaseImageIntroFragment(
 
     override fun onPageScrolledImpl(positionOffset: Float) {
         super.onPageScrolledImpl(positionOffset)
-        val alpha = ((1 - Math.abs(positionOffset)) * 255).toInt()
+        val alpha = ((1 - abs(positionOffset)) * 255).toInt()
         //apply alpha to all layers except the phone base
         (0 until imageDrawable.numberOfLayers).forEach {
             val d = imageDrawable.getDrawable(it)
@@ -89,7 +90,9 @@ abstract class BaseImageIntroFragment(
 }
 
 class IntroAccountFragment : BaseImageIntroFragment(
-    R.string.intro_multiple_accounts, R.drawable.intro_phone_nav, R.string.intro_multiple_accounts_desc
+    R.string.intro_multiple_accounts,
+    R.drawable.intro_phone_nav,
+    R.string.intro_multiple_accounts_desc
 ) {
 
     override fun themeFragmentImpl() {
@@ -132,16 +135,26 @@ class IntroTabTouchFragment : BaseImageIntroFragment(
 }
 
 class IntroTabContextFragment : BaseImageIntroFragment(
-    R.string.intro_context_aware, R.drawable.intro_phone_long_press, R.string.intro_context_aware_desc
+    R.string.intro_context_aware,
+    R.drawable.intro_phone_long_press,
+    R.string.intro_context_aware_desc
 ) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
         themeImageComponent(Prefs.headerColor, R.id.intro_phone_toolbar)
         themeImageComponent(Prefs.bgColor.colorToForeground(0.1f), R.id.intro_phone_image)
-        themeImageComponent(Prefs.bgColor.colorToForeground(0.2f), R.id.intro_phone_like, R.id.intro_phone_share)
+        themeImageComponent(
+            Prefs.bgColor.colorToForeground(0.2f),
+            R.id.intro_phone_like,
+            R.id.intro_phone_share
+        )
         themeImageComponent(Prefs.bgColor.colorToForeground(0.3f), R.id.intro_phone_comment)
-        themeImageComponent(Prefs.bgColor.colorToForeground(0.1f), R.id.intro_phone_card_1, R.id.intro_phone_card_2)
+        themeImageComponent(
+            Prefs.bgColor.colorToForeground(0.1f),
+            R.id.intro_phone_card_1,
+            R.id.intro_phone_card_2
+        )
         themeImageComponent(
             Prefs.textColor,
             R.id.intro_phone_image_indicator,
