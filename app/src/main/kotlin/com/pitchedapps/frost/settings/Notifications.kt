@@ -36,8 +36,8 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.deleteAll
 import com.pitchedapps.frost.services.fetchNotifications
-import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_NOTIFICATION
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUri
 import com.pitchedapps.frost.views.Keywords
@@ -46,6 +46,10 @@ import kotlinx.coroutines.launch
 /**
  * Created by Allan Wang on 2017-06-29.
  */
+
+val Prefs.hasNotifications: Boolean
+    get() = !webOnly && (notificationsGeneral || notificationsInstantMessages)
+
 @SuppressLint("InlinedApi")
 fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
@@ -56,7 +60,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 message(R.string.leave_web_only_desc)
                 positiveButton(R.string.kau_yes) {
                     Prefs.webOnly = false
-                    reloadList()
+                    reload()
                 }
                 negativeButton(R.string.kau_no)
             }
@@ -78,21 +82,14 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     initialSelection = options.indexOf(item.pref)
                 ) { _, index, _ ->
                     item.pref = options[index]
-                    scheduleNotifications(item.pref)
+                    setFrostResult(REQUEST_NOTIFICATION)
                 }
             }
         }
         onDisabledClick = {
             leaveWebOnlyDialog()
         }
-        enabler = {
-            val enabled =
-                !Prefs.webOnly && (Prefs.notificationsGeneral || Prefs.notificationsInstantMessages)
-            if (!enabled) {
-                scheduleNotifications(-1)
-            }
-            enabled
-        }
+        enabler = { Prefs.hasNotifications }
         textGetter = { minuteToText(it) }
     }
 

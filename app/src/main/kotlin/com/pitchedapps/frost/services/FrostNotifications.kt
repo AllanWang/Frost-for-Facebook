@@ -43,6 +43,7 @@ import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseNotification
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
+import com.pitchedapps.frost.settings.hasNotifications
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -319,6 +320,12 @@ data class FrostNotification(
 
     fun notify(context: Context) =
         NotificationManagerCompat.from(context).notify(tag, id, notif.build())
+}
+
+fun Context.scheduleNotificationsFromPrefs(): Boolean {
+    val shouldSchedule = Prefs.hasNotifications
+    return if (shouldSchedule) scheduleNotifications(Prefs.notificationFreq)
+    else scheduleNotifications(-1)
 }
 
 fun Context.scheduleNotifications(minutes: Long): Boolean =

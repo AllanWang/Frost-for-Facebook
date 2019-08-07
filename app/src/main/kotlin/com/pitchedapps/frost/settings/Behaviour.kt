@@ -83,7 +83,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.exit_confirmation_desc
     }
 
-    checkbox(R.string.web_only, Prefs::webOnly, { Prefs.webOnly = it }) {
+    checkbox(R.string.web_only, Prefs::webOnly, {
+        Prefs.webOnly = it
+        shouldRestartMain()
+    }) {
         descRes = R.string.web_only_desc
     }
 
