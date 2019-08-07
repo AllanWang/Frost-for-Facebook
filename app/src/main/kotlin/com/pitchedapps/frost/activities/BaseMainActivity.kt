@@ -635,12 +635,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
 
         override fun getItemPosition(fragment: Any) =
-            if (fragment !is BaseFragment)
-                POSITION_UNCHANGED
-            else if (fragment is WebFragment || fragment.valid)
-                POSITION_UNCHANGED
-            else
-                POSITION_NONE
+            when {
+                fragment !is BaseFragment -> POSITION_UNCHANGED
+                fragment is WebFragment || fragment.valid -> POSITION_UNCHANGED
+                else -> POSITION_NONE
+            }
     }
 
     override val lowerVideoPadding: PointF

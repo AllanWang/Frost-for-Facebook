@@ -72,6 +72,10 @@ class NotificationService : BaseJobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         super.onStartJob(params)
         L.i { "Fetching notifications" }
+        if (Prefs.webOnly) {
+            L.i { "Web only mode; skipping notification service" }
+            return false
+        }
         launch {
             try {
                 sendNotifications(params)
