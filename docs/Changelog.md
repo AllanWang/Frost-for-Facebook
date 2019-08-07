@@ -6,6 +6,7 @@
 * Disable bugsnag completely when opting out of analytics
 * Filter urls before sending to other apps
 * Allow hiding main fab (see settings > newsfeed)
+* Add option to disable non web based behaviour (settings > behaviour)
 
 ## v2.3.1
 * Hide all story panels if enabled
