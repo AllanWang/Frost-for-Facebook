@@ -91,7 +91,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
-        if (url.isFacebookUrl)
+        if (url.isFacebookUrl) {
             view.jsInject(
 //                    CssHider.CORE,
                 CssHider.HEADER,
@@ -111,8 +111,9 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                 JsAssets.CONTEXT_A,
                 JsAssets.MEDIA
             )
-        else
+        } else {
             refresh.offer(false)
+        }
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
@@ -212,19 +213,27 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
-        if (url == null) return
-        if (url.shouldInjectMenu) jsInject(JsAssets.MENU)
+        if (url == null) {
+            return
+        }
+        if (url.shouldInjectMenu) {
+            jsInject(JsAssets.MENU)
+        }
     }
 
     override fun emit(flag: Int) {
         super.emit(flag)
         when (flag) {
-            EMIT_FINISH -> super.injectAndFinish()
+            EMIT_FINISH -> {
+                super.injectAndFinish()
+            }
         }
     }
 
     override fun onPageFinishedActions(url: String) {
         v { "Should inject ${url.shouldInjectMenu}" }
-        if (!url.shouldInjectMenu) injectAndFinish()
+        if (!url.shouldInjectMenu) {
+            injectAndFinish()
+        }
     }
 }

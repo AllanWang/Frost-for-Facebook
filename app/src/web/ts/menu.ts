@@ -20,6 +20,9 @@
         return
     }
 
+    /*
+     * Required to remove height restrictions
+     */
     const y = new MutationObserver(() => {
         viewport.removeAttribute('style');
         root.removeAttribute('style');

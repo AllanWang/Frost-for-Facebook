@@ -52,14 +52,19 @@ class JsBuilder {
                 val cssMin = css.replace(Regex("\\s*\n\\s*"), "")
                 append("var a=document.createElement('style');")
                 append("a.innerHTML='$cssMin';")
-                if (tag != null) append("a.id='$tag';")
+                if (tag != null) {
+                    append("a.id='$tag';")
+                }
                 append("document.head.appendChild(a);")
             }
-            if (js.isNotBlank())
+            if (js.isNotBlank()) {
                 append(js)
+            }
         }
         var content = builder.append("}()").toString()
-        if (tag != null) content = singleInjector(tag, content)
+        if (tag != null) {
+            content = singleInjector(tag, content)
+        }
         return content
     }
 
