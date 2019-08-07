@@ -22,6 +22,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.provider.Settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.kpref.activity.KPrefItemActions
 import ca.allanwang.kau.kpref.activity.items.KPrefText
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.minuteToText
@@ -48,6 +49,20 @@ import kotlinx.coroutines.launch
 @SuppressLint("InlinedApi")
 fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
+    fun KPrefItemActions.leaveWebOnlyDialog() {
+        if (Prefs.webOnly) {
+            materialDialog {
+                title(R.string.leave_web_only_title)
+                message(R.string.leave_web_only_desc)
+                positiveButton(R.string.kau_yes) {
+                    Prefs.webOnly = false
+                    reloadSelf()
+                }
+                negativeButton(R.string.kau_no)
+            }
+        }
+    }
+
     text(
         R.string.notification_frequency,
         Prefs::notificationFreq,
@@ -67,10 +82,15 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 }
             }
         }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
         enabler = {
-            val enabled = Prefs.notificationsGeneral || Prefs.notificationsInstantMessages
-            if (!enabled)
+            val enabled =
+                !Prefs.webOnly && (Prefs.notificationsGeneral || Prefs.notificationsInstantMessages)
+            if (!enabled) {
                 scheduleNotifications(-1)
+            }
             enabled
         }
         textGetter = { minuteToText(it) }
@@ -97,12 +117,19 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 reloadByTitle(R.string.notification_frequency)
         }) {
         descRes = R.string.notification_general_desc
+        enabler = { !Prefs.webOnly }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     checkbox(R.string.notification_general_all_accounts, Prefs::notificationAllAccounts,
         { Prefs.notificationAllAccounts = it }) {
         descRes = R.string.notification_general_all_accounts_desc
-        enabler = Prefs::notificationsGeneral
+        enabler = { !Prefs.webOnly && Prefs.notificationsGeneral }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     checkbox(R.string.notification_messages, Prefs::notificationsInstantMessages,
@@ -113,12 +140,19 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 reloadByTitle(R.string.notification_frequency)
         }) {
         descRes = R.string.notification_messages_desc
+        enabler = { !Prefs.webOnly }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     checkbox(R.string.notification_messages_all_accounts, Prefs::notificationsImAllAccounts,
         { Prefs.notificationsImAllAccounts = it }) {
         descRes = R.string.notification_messages_all_accounts_desc
-        enabler = Prefs::notificationsInstantMessages
+        enabler = { !Prefs.webOnly && Prefs.notificationsInstantMessages }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
