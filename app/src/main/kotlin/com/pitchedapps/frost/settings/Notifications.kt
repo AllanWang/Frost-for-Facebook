@@ -56,7 +56,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 message(R.string.leave_web_only_desc)
                 positiveButton(R.string.kau_yes) {
                     Prefs.webOnly = false
-                    reloadSelf()
+                    reloadList()
                 }
                 negativeButton(R.string.kau_no)
             }
