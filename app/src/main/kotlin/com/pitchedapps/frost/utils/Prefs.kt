@@ -193,6 +193,8 @@ object Prefs : KPref() {
 
     var webOnly: Boolean by kpref("web_only", false)
 
+    var singleUserAgent: Boolean by kpref("single_user_agent", false)
+
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 

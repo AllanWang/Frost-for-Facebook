@@ -52,6 +52,17 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.verbose_logging_desc
     }
 
+    checkbox(R.string.web_only, Prefs::webOnly, {
+        Prefs.webOnly = it
+        shouldRestartMain()
+    }) {
+        descRes = R.string.web_only_desc
+    }
+
+    checkbox(R.string.single_user_agent, Prefs::singleUserAgent, { Prefs.singleUserAgent }) {
+        descRes = R.string.single_user_agent_desc
+    }
+
     plainText(R.string.restart_frost) {
         descRes = R.string.restart_frost_desc
         onClick = {
