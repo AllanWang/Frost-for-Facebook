@@ -13,7 +13,7 @@
     <item text="Disable bugsnag completely when opting out of analytics" />
     <item text="Filter urls before sending to other apps" />
     <item text="Allow hiding main fab (see settings > newsfeed)" />
-    <item text="Add many options under settings > experimental to help with recent" />
+    <item text="Add option to disable non web based behaviour (settings > behaviour)" />
     <item text="" />
 
     <version title="v2.3.1" />

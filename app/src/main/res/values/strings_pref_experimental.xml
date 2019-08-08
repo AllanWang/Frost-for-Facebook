@@ -8,13 +8,4 @@
     <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev. This will automatically be disabled if the app restarts.</string>
     <string name="restart_frost">Restart Frost</string>
     <string name="restart_frost_desc">Launch a cold restart for the application.</string>
-
-    <!-- Disable translation as this is still experimental -->
-    <string name="web_only" translatable="false">Web Only</string>
-    <string name="web_only_desc" translatable="false">Having troubles? Enable to use web exclusive features. All parsing and background services will be disabled.</string>
-    <string name="leave_web_only_title" translatable="false">Leave web only mode</string>
-    <string name="leave_web_only_desc" translatable="false">Currently in web only mode. Would you like to disable it to continue?</string>
-
-    <string name="single_user_agent" translatable="false">Single user agent</string>
-    <string name="single_user_agent_desc" translatable="false">Use one user agent across entire app</string>
 </resources>

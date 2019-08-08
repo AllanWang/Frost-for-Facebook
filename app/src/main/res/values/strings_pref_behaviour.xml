@@ -19,6 +19,11 @@
     <string name="force_message_bottom_desc">When loading a message thread, trigger a scroll to the bottom of the page rather than loading the page as is.</string>
     <string name="enable_pip">Enable PIP</string>
     <string name="enable_pip_desc">Enable picture in picture videos</string>
+    <!-- Disable translation as this is still experimental -->
+    <string name="web_only" translatable="false">Web Only</string>
+    <string name="web_only_desc" translatable="false">Having troubles? Enable to use web exclusive features. All parsing and background services will be disabled.</string>
+    <string name="leave_web_only_title" translatable="false">Leave web only mode</string>
+    <string name="leave_web_only_desc" translatable="false">Currently in web only mode. Would you like to disable it to continue?</string>
     <string name="autoplay_settings">Autoplay Settings</string>
     <string name="autoplay_settings_desc">Open Facebook\'s auto play settings. Note that it must be disabled for PIP to work.</string>
     <string name="exit_confirmation">Exit Confirmation</string>
