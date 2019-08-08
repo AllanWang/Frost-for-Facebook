@@ -59,7 +59,10 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.web_only_desc
     }
 
-    checkbox(R.string.single_user_agent, Prefs::singleUserAgent, { Prefs.singleUserAgent }) {
+    checkbox(R.string.single_user_agent, Prefs::singleUserAgent, {
+        Prefs.singleUserAgent
+        shouldRestartMain()
+    }) {
         descRes = R.string.single_user_agent_desc
     }
 
