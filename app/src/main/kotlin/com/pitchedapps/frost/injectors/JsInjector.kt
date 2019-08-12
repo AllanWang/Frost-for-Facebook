@@ -115,7 +115,7 @@ private object TagObfuscator {
         val deviceId = Settings.Secure.getString(
                 FrostApp.applicationContext().contentResolver,
                 Settings.Secure.ANDROID_ID)
-        Random(deviceId.toLong(16))
+        Random(deviceId.dropLast(1).toLong(16))
     }
 
     private val prefix : String by lazy {
