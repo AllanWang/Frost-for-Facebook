@@ -16,10 +16,12 @@
  */
 package com.pitchedapps.frost.injectors
 
+import android.provider.Settings
 import android.webkit.WebView
+import com.pitchedapps.frost.FrostApp
 import com.pitchedapps.frost.web.FrostWebViewClient
 import org.apache.commons.text.StringEscapeUtils
-import java.util.Locale
+import kotlin.random.Random
 
 class JsBuilder {
     private val css = StringBuilder()
@@ -38,7 +40,7 @@ class JsBuilder {
     }
 
     fun single(tag: String): JsBuilder {
-        this.tag = "_frost_${tag.toLowerCase(Locale.CANADA)}"
+        this.tag = TagObfuscator.makeTag(tag)
         return this
     }
 
@@ -101,4 +103,37 @@ fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract) = web.jsInje
 class JsInjector(val function: String) : InjectorContract {
     override fun inject(webView: WebView) =
         webView.evaluateJavascript(function, null)
+}
+
+/**
+ * Helper functions to obfuscate the tags injected into the window.
+ */
+private object TagObfuscator {
+
+    // Initialize the RNG with the device ID.
+    private val random by lazy {
+        val deviceId = Settings.Secure.getString(
+                FrostApp.applicationContext().contentResolver,
+                Settings.Secure.ANDROID_ID)
+        Random(deviceId.toLong(16))
+    }
+
+    private val prefix : String by lazy {
+        // Vary the prefix length based on the device id
+        val length = random.nextInt(10, 20)
+        makeIdentifier(length)
+    }
+
+    fun makeTag(tag: String) : String {
+        return prefix + makeIdentifier(tag.length)
+    }
+
+    private fun makeIdentifier(length: Int) : String {
+        assert(length > 0)
+        val id = StringBuilder()
+        for (i in 1..length) {
+            id.append('a' + random.nextInt(0,26))
+        }
+        return id.toString()
+    }
 }

@@ -18,6 +18,7 @@ package com.pitchedapps.frost
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -62,6 +63,18 @@ class FrostApp : Application() {
 //    }
 
 //    lateinit var refWatcher: RefWatcher
+
+    init {
+        instance = this
+    }
+
+    companion object {
+        private lateinit var instance: FrostApp
+
+        fun applicationContext() : Context {
+            return instance.applicationContext
+        }
+    }
 
     private fun FlowConfig.Builder.withDatabase(name: String, klass: KClass<*>) =
         addDatabaseConfig(
