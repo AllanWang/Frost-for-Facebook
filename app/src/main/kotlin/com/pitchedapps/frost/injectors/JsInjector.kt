@@ -17,9 +17,11 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import androidx.annotation.VisibleForTesting
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
 import org.apache.commons.text.StringEscapeUtils
-import java.util.Locale
+import kotlin.random.Random
 
 class JsBuilder {
     private val css = StringBuilder()
@@ -38,7 +40,7 @@ class JsBuilder {
     }
 
     fun single(tag: String): JsBuilder {
-        this.tag = "_frost_${tag.toLowerCase(Locale.CANADA)}"
+        this.tag = TagObfuscator.obfuscateTag(tag)
         return this
     }
 
@@ -106,4 +108,35 @@ fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract) = web.jsInje
 class JsInjector(val function: String) : InjectorContract {
     override fun inject(webView: WebView) =
         webView.evaluateJavascript(function, null)
+}
+
+/**
+ * Helper object to obfuscate window tags for JS injection.
+ */
+@VisibleForTesting
+internal object TagObfuscator {
+
+    fun obfuscateTag(tag: String): String {
+        val rnd = Random(tag.hashCode() + salt)
+        val obfuscated = buildString {
+            append(prefix)
+            append('_')
+            appendRandomChars(rnd, 16)
+        }
+        L.v { "TagObfuscator: Obfuscating tag '$tag' to '$obfuscated'" }
+        return obfuscated
+    }
+
+    private val salt: Long = System.currentTimeMillis()
+
+    private val prefix: String by lazy {
+        val rnd = Random(System.currentTimeMillis())
+        buildString { appendRandomChars(rnd, 8) }
+    }
+
+    private fun Appendable.appendRandomChars(random: Random, count: Int) {
+        for (i in 1..count) {
+            append('a' + random.nextInt(26))
+        }
+    }
 }
