@@ -16,13 +16,11 @@
  */
 package com.pitchedapps.frost.injectors
 
-import android.util.Log
 import android.webkit.WebView
-import com.pitchedapps.frost.BuildConfig
+import androidx.annotation.VisibleForTesting
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
 import org.apache.commons.text.StringEscapeUtils
-import java.util.Locale
 import kotlin.random.Random
 
 class JsBuilder {
@@ -115,33 +113,30 @@ class JsInjector(val function: String) : InjectorContract {
 /**
  * Helper object to obfuscate window tags for JS injection.
  */
-private object TagObfuscator {
+@VisibleForTesting
+internal object TagObfuscator {
 
-    fun obfuscateTag(tag: String) : String {
+    fun obfuscateTag(tag: String): String {
         val rnd = Random(tag.hashCode() + salt)
-        val obfuscated = StringBuilder()
-            .append(prefix)
-            .append(randomChars(rnd, tag.length))
-        L._d { "TagObfuscator: Obfuscating tag '$tag' to '$obfuscated'" }
-        //if (BuildConfig.DEBUG) {
-        //    return "_frost_${tag.toLowerCase(Locale.CANADA)}"
-        //} else
-        return obfuscated.toString()
-    }
-
-    private val salt by lazy { System.currentTimeMillis() }
-
-    private val prefix by lazy {
-        val rnd = Random(System.currentTimeMillis())
-        val length = rnd.nextInt(10, 16)
-        randomChars(rnd, length)
-    }
-
-    private fun randomChars(random: Random, count: Int) : String {
-        val result = StringBuilder()
-        for (i in 1..count) {
-            result.append('a' + random.nextInt(0, 26))
+        val obfuscated = buildString {
+            append(prefix)
+            append('_')
+            appendRandomChars(rnd, 16)
         }
-        return result.toString()
+        L.v { "TagObfuscator: Obfuscating tag '$tag' to '$obfuscated'" }
+        return obfuscated
+    }
+
+    private val salt: Long = System.currentTimeMillis()
+
+    private val prefix: String by lazy {
+        val rnd = Random(System.currentTimeMillis())
+        buildString { appendRandomChars(rnd, 8) }
+    }
+
+    private fun Appendable.appendRandomChars(random: Random, count: Int) {
+        for (i in 1..count) {
+            append('a' + random.nextInt(26))
+        }
     }
 }
