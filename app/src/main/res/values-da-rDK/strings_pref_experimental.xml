@@ -8,4 +8,5 @@
     <string name="verbose_logging_desc">Aktivér detaljeret logføring for at hjælpe med nedbrudsrapporter. Log-filer vil kun blive sent ved fejl, så gentag den fejlen for at underrette udvikleren. Dette bliver automatisk deaktiveret, når app\'en genstartes.</string>
     <string name="restart_frost">Genstart Frost</string>
     <string name="restart_frost_desc">Foretag en koldstart af applikationen.</string>
+    <!-- Debugging phishing warnings -->
 </resources>
