@@ -22,6 +22,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.provider.Settings
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
+import ca.allanwang.kau.kpref.activity.KPrefItemActions
 import ca.allanwang.kau.kpref.activity.items.KPrefText
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.minuteToText
@@ -35,8 +36,8 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.deleteAll
 import com.pitchedapps.frost.services.fetchNotifications
-import com.pitchedapps.frost.services.scheduleNotifications
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.REQUEST_NOTIFICATION
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUri
 import com.pitchedapps.frost.views.Keywords
@@ -45,8 +46,26 @@ import kotlinx.coroutines.launch
 /**
  * Created by Allan Wang on 2017-06-29.
  */
+
+val Prefs.hasNotifications: Boolean
+    get() = !webOnly && (notificationsGeneral || notificationsInstantMessages)
+
 @SuppressLint("InlinedApi")
 fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
+
+    fun KPrefItemActions.leaveWebOnlyDialog() {
+        if (Prefs.webOnly) {
+            materialDialog {
+                title(R.string.leave_web_only_title)
+                message(R.string.leave_web_only_desc)
+                positiveButton(R.string.kau_yes) {
+                    Prefs.webOnly = false
+                    reload()
+                }
+                negativeButton(R.string.kau_no)
+            }
+        }
+    }
 
     text(
         R.string.notification_frequency,
@@ -63,16 +82,14 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                     initialSelection = options.indexOf(item.pref)
                 ) { _, index, _ ->
                     item.pref = options[index]
-                    scheduleNotifications(item.pref)
+                    setFrostResult(REQUEST_NOTIFICATION)
                 }
             }
         }
-        enabler = {
-            val enabled = Prefs.notificationsGeneral || Prefs.notificationsInstantMessages
-            if (!enabled)
-                scheduleNotifications(-1)
-            enabled
+        onDisabledClick = {
+            leaveWebOnlyDialog()
         }
+        enabler = { Prefs.hasNotifications }
         textGetter = { minuteToText(it) }
     }
 
@@ -97,12 +114,19 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 reloadByTitle(R.string.notification_frequency)
         }) {
         descRes = R.string.notification_general_desc
+        enabler = { !Prefs.webOnly }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     checkbox(R.string.notification_general_all_accounts, Prefs::notificationAllAccounts,
         { Prefs.notificationAllAccounts = it }) {
         descRes = R.string.notification_general_all_accounts_desc
-        enabler = Prefs::notificationsGeneral
+        enabler = { !Prefs.webOnly && Prefs.notificationsGeneral }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     checkbox(R.string.notification_messages, Prefs::notificationsInstantMessages,
@@ -113,12 +137,19 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 reloadByTitle(R.string.notification_frequency)
         }) {
         descRes = R.string.notification_messages_desc
+        enabler = { !Prefs.webOnly }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     checkbox(R.string.notification_messages_all_accounts, Prefs::notificationsImAllAccounts,
         { Prefs.notificationsImAllAccounts = it }) {
         descRes = R.string.notification_messages_all_accounts_desc
-        enabler = Prefs::notificationsInstantMessages
+        enabler = { !Prefs.webOnly && Prefs.notificationsInstantMessages }
+        onDisabledClick = {
+            leaveWebOnlyDialog()
+        }
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

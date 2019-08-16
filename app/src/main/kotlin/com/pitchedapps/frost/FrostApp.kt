@@ -35,7 +35,7 @@ import com.pitchedapps.frost.db.FbTabsDb
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.NotificationDb
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.services.scheduleNotifications
+import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
@@ -96,7 +96,7 @@ class FrostApp : Application() {
 
         setupNotificationChannels(applicationContext)
 
-        applicationContext.scheduleNotifications(Prefs.notificationFreq)
+        scheduleNotificationsFromPrefs()
 
         /**
          * Drawer profile loading logic

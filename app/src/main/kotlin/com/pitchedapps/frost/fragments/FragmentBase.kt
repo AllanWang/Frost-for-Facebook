@@ -67,7 +67,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
             data: FbItem,
             position: Int
         ): BaseFragment {
-            val fragment = if (!useFallback) base() else WebFragment()
+            val fragment = if (useFallback || Prefs.webOnly) WebFragment() else base()
             val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
             fragment.withArguments(
                 ARG_URL to d.url,

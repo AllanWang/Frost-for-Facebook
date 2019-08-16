@@ -31,6 +31,7 @@ import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -162,13 +163,17 @@ class FrostRequestService : BaseJobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         super.onStartJob(params)
+        if (Prefs.webOnly) {
+            L.i { "Web only; skipping request service" }
+            return false
+        }
         val bundle = params?.extras
         if (bundle == null) {
             L.eThrow("Launched ${this::class.java.simpleName} without param data")
             return false
         }
         val cookie = bundle.getCookie()
-        if (cookie.isNullOrBlank()) {
+        if (cookie.isBlank()) {
             L.eThrow("Launched ${this::class.java.simpleName} without cookie")
             return false
         }

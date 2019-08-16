@@ -83,6 +83,7 @@ import com.pitchedapps.frost.facebook.parsers.SearchParser
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.utils.ACTIVITY_SETTINGS
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
@@ -90,6 +91,7 @@ import com.pitchedapps.frost.utils.MAIN_TIMEOUT_DURATION
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_FAB
 import com.pitchedapps.frost.utils.REQUEST_NAV
+import com.pitchedapps.frost.utils.REQUEST_NOTIFICATION
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
 import com.pitchedapps.frost.utils.REQUEST_RESTART_APPLICATION
@@ -493,6 +495,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             if (hasRequest(REQUEST_FAB)) {
                 fragmentChannel.offer(lastPosition)
             }
+            if (hasRequest(REQUEST_NOTIFICATION)) {
+                scheduleNotificationsFromPrefs()
+            }
         }
     }
 
@@ -635,12 +640,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         override fun getPageTitle(position: Int): CharSequence = getString(pages[position].titleId)
 
         override fun getItemPosition(fragment: Any) =
-            if (fragment !is BaseFragment)
-                POSITION_UNCHANGED
-            else if (fragment is WebFragment || fragment.valid)
-                POSITION_UNCHANGED
-            else
-                POSITION_NONE
+            when {
+                fragment !is BaseFragment -> POSITION_UNCHANGED
+                fragment is WebFragment || fragment.valid -> POSITION_UNCHANGED
+                else -> POSITION_NONE
+            }
     }
 
     override val lowerVideoPadding: PointF
