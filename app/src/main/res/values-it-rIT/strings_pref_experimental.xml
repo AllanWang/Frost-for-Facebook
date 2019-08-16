@@ -8,4 +8,5 @@
     <string name="verbose_logging_desc">Abilita log dettagliati per aiutare con il rapporto dei crash. Il log verrà mandato solamente quando verrà riscontrato un errore, quindi ricrea la situazione per notificare gli sviluppatori. Verrà automaticamente disattivato se si riavvia l\'applicazione.</string>
     <string name="restart_frost">Riavvia Frost</string>
     <string name="restart_frost_desc">Riavvia l\'applicazione a freddo.</string>
+    <!-- Debugging phishing warnings -->
 </resources>
