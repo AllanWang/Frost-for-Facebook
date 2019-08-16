@@ -8,4 +8,5 @@
     <string name="verbose_logging_desc">Habilita los registros detallados para ayudar con los informes de errores. El registro sólo será enviado una vez se detecte el error, debes repetir el fallo para notificar al desarrollador. Esta función quedará desactivada una vez se reinicie la app.</string>
     <string name="restart_frost">Reiniciar Frost</string>
     <string name="restart_frost_desc">Inicie un reinicio en frío para la aplicación.</string>
+    <!-- Debugging phishing warnings -->
 </resources>
