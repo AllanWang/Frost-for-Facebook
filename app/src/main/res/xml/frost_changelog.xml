@@ -15,6 +15,7 @@
     <item text="Allow hiding main fab (see settings > newsfeed)" />
     <item text="Add some experimental options to debug login problems (settings > experimental)" />
     <item text="Enforce desktop user agent for now" />
+    <item text="Obfuscate js tags" />
 
     <version title="v2.3.1" />
     <item text="Hide all story panels if enabled" />
