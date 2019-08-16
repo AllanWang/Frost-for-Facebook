@@ -7,4 +7,5 @@
     <string name="verbose_logging">Detaljerad loggning</string>
     <string name="verbose_logging_desc">Aktivera utförlig loggning för att hjälpa till med felrapporter. Loggar skickas endast när ett fel påträffas, så upprepa problemet i appen för att skicka informationen till utvecklaren. Detta inaktiveras automatiskt om appen startas om.</string>
     <string name="restart_frost">Starta om Frost</string>
+    <!-- Debugging phishing warnings -->
 </resources>
