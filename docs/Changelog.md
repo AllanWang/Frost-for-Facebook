@@ -8,6 +8,7 @@
 * Allow hiding main fab (see settings > newsfeed)
 * Add some experimental options to debug login problems (settings > experimental)
 * Enforce desktop user agent for now
+* Obfuscate js tags
 
 ## v2.3.1
 * Hide all story panels if enabled

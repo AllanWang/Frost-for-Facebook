@@ -7,3 +7,4 @@ v2.3.2
 * Allow hiding main fab (see settings > newsfeed)
 * Add some experimental options to debug login problems (settings > experimental)
 * Enforce desktop user agent for now
+* Obfuscate js tags
