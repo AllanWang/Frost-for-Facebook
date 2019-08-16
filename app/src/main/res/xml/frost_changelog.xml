@@ -13,8 +13,8 @@
     <item text="Disable bugsnag completely when opting out of analytics" />
     <item text="Filter urls before sending to other apps" />
     <item text="Allow hiding main fab (see settings > newsfeed)" />
-    <item text="Add option to disable non web based behaviour (settings > behaviour)" />
-    <item text="" />
+    <item text="Add some experimental options to debug login problems (settings > experimental)" />
+    <item text="Enforce desktop user agent for now" />
 
     <version title="v2.3.1" />
     <item text="Hide all story panels if enabled" />
