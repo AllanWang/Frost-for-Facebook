@@ -8,4 +8,5 @@
     <string name="verbose_logging_desc">Ativar o registo detalhado para nos ajudar com os erros. Os registos apenas serão enviados se for encontrado um erro. Esta opção será desativada automaticamente se reiniciar a aplicação.</string>
     <string name="restart_frost">Reiniciar</string>
     <string name="restart_frost_desc">Impor um reinício da aplicação.</string>
+    <!-- Debugging phishing warnings -->
 </resources>
