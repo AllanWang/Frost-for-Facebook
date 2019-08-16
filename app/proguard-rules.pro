@@ -1,6 +1,5 @@
 -ignorewarnings
 -dontwarn kotlin.**
--keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
 -keepattributes *Annotation*
 # Enums
 #-keepclassmembers class * extends java.lang.Enum {
