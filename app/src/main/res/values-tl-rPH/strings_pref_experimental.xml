@@ -7,4 +7,5 @@
     <string name="verbose_logging">Ang pagsasalita ay logging</string>
     <string name="verbose_logging_desc">I-enable ang logging na pagsasalita para matulongan ang mga ulat pagbangga. Ang logging ay pinapadala lamang kapag may mali na naranasan, kaya ulitin ang isyu para masabihan ang taga-gawa. Ito ay awtomatikong idi-disable kapag ang aplikasyon ay nirestart.</string>
     <string name="restart_frost">I-restart ang Frost</string>
+    <!-- Debugging phishing warnings -->
 </resources>
