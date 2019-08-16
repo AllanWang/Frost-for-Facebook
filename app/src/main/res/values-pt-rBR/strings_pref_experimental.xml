@@ -8,4 +8,5 @@
     <string name="verbose_logging_desc">Habilite o relatório detalhado para ajudar com relatórios de falhas. O relatório só será enviado quando um erro for encontrado, então repita o problema para notificar o desenvolvedor. Isso será automaticamente desabilitado se o aplicativo for reiniciado.</string>
     <string name="restart_frost">Reiniciar o Frost</string>
     <string name="restart_frost_desc">Inicie uma reinicialização do aplicativo.</string>
+    <!-- Debugging phishing warnings -->
 </resources>
