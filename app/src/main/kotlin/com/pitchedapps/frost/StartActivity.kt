@@ -34,12 +34,7 @@ import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.SelectorActivity
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.CookieModel
-import com.pitchedapps.frost.db.FbTabModel
 import com.pitchedapps.frost.db.GenericDao
-import com.pitchedapps.frost.db.getTabs
-import com.pitchedapps.frost.db.save
-import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.BiometricUtils
@@ -48,11 +43,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.raizlabs.android.dbflow.kotlinextensions.from
-import com.raizlabs.android.dbflow.kotlinextensions.select
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import java.util.ArrayList
 
@@ -82,7 +73,6 @@ class StartActivity : KauBaseActivity() {
         launch {
             val authDefer = BiometricUtils.authenticate(this@StartActivity)
             try {
-                migrate()
                 FbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
@@ -109,27 +99,6 @@ class StartActivity : KauBaseActivity() {
                 showInvalidWebView()
             }
         }
-    }
-
-    /**
-     * Migrate from dbflow to room
-     * TODO delete dbflow data
-     */
-    private suspend fun migrate() = withContext(Dispatchers.IO) {
-        if (cookieDao.selectAll().isNotEmpty()) return@withContext
-        val cookies = (select from CookieModel::class).queryList()
-            .map { CookieEntity(it.id, it.name, it.cookie) }
-        if (cookies.isNotEmpty()) {
-            cookieDao.save(cookies)
-            L._d { "Migrated cookies ${cookieDao.selectAll()}" }
-        }
-        val tabs = (select from FbTabModel::class).queryList().map(FbTabModel::tab)
-        if (tabs.isNotEmpty()) {
-            genericDao.saveTabs(tabs)
-            L._d { "Migrated tabs ${genericDao.getTabs()}" }
-        }
-        deleteDatabase("Cookies.db")
-        deleteDatabase("FrostTabs.db")
     }
 
     private fun showInvalidWebView() =

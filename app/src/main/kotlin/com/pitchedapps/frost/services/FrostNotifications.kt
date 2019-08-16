@@ -144,7 +144,6 @@ enum class NotificationType(
         if (notifContents.isEmpty()) return 0
 
         val userId = data.id
-        // Legacy, remove with dbflow
         val prevLatestEpoch = notifDao.latestEpoch(userId, channelId)
         L.v { "Notif $name prev epoch $prevLatestEpoch" }
 

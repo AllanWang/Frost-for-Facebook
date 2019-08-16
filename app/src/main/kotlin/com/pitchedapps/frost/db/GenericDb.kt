@@ -56,6 +56,8 @@ interface GenericDao {
     }
 }
 
+const val TAB_COUNT = 4
+
 suspend fun GenericDao.saveTabs(tabs: List<FbItem>) = dao {
     val content = tabs.joinToString(",") { it.name }
     _save(GenericEntity(GenericDao.TYPE_TABS, content))
