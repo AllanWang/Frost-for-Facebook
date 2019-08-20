@@ -7,8 +7,6 @@ object Versions {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     // Updates blocked due to javax.script dependency
     const val apacheCommonsText = "1.4"
-    // https://github.com/Raizlabs/DBFlow/releases
-    const val dbflow = "4.2.4"
     // https://github.com/brianwernick/ExoMedia/releases
     const val exoMedia = "4.3.0"
     // https://github.com/InsertKoinIO/koin/blob/master/CHANGELOG.md

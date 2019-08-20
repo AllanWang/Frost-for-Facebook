@@ -30,10 +30,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
-import com.pitchedapps.frost.db.CookiesDb
-import com.pitchedapps.frost.db.FbTabsDb
 import com.pitchedapps.frost.db.FrostDatabase
-import com.pitchedapps.frost.db.NotificationDb
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
@@ -42,15 +39,10 @@ import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
-import com.raizlabs.android.dbflow.config.DatabaseConfig
-import com.raizlabs.android.dbflow.config.FlowConfig
-import com.raizlabs.android.dbflow.config.FlowManager
-import com.raizlabs.android.dbflow.runtime.ContentResolverNotifier
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import java.util.Random
-import kotlin.reflect.KClass
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -63,27 +55,12 @@ class FrostApp : Application() {
 
 //    lateinit var refWatcher: RefWatcher
 
-    private fun FlowConfig.Builder.withDatabase(name: String, klass: KClass<*>) =
-        addDatabaseConfig(
-            DatabaseConfig.builder(klass.java)
-                .databaseName(name)
-                .modelNotifier(ContentResolverNotifier("${BuildConfig.APPLICATION_ID}.dbflow.provider"))
-                .build()
-        )
-
     override fun onCreate() {
         if (!buildIsLollipopAndUp) { // not supported
             super.onCreate()
             return
         }
 
-        FlowManager.init(
-            FlowConfig.Builder(this)
-                .withDatabase(CookiesDb.NAME, CookiesDb::class)
-                .withDatabase(FbTabsDb.NAME, FbTabsDb::class)
-                .withDatabase(NotificationDb.NAME, NotificationDb::class)
-                .build()
-        )
 //        if (LeakCanary.isInAnalyzerProcess(this)) return
 //        refWatcher = LeakCanary.install(this)
         initPrefs()
