@@ -31,7 +31,11 @@ class FbUrlTest {
     @Suppress("NOTHING_TO_INLINE")
     inline fun assertFbFormat(expected: String, url: String) {
         val fbUrl = FbUrlFormatter(url)
-        assertEquals(expected, fbUrl.toString(), "FbUrl Mismatch:\n${fbUrl.toLogList().joinToString("\n\t")}")
+        assertEquals(
+            expected,
+            fbUrl.toString(),
+            "FbUrl Mismatch:\n${fbUrl.toLogList().joinToString("\n\t")}"
+        )
     }
 
     @Test
@@ -65,8 +69,10 @@ class FbUrlTest {
 
     @Test
     fun ampersand() {
-        val url = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/123.jpg?_nc_cat=0&amp;efg=asdf"
-        val formattedUrl = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/123.jpg?_nc_cat=0&efg=asdf"
+        val url =
+            "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/123.jpg?_nc_cat=0&amp;efg=asdf"
+        val formattedUrl =
+            "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/123.jpg?_nc_cat=0&efg=asdf"
         assertFbFormat(formattedUrl, url)
     }
 
@@ -138,8 +144,16 @@ class FbUrlTest {
 
     @Test
     fun viewFullImage() {
-        val url = "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/asdf_n.jpg?efg=asdf&oh=asdf&oe=asdf"
+        val url =
+            "https://scontent-yyz1-1.xx.fbcdn.net/v/t1.0-9/fr/cp0/e15/q65/asdf_n.jpg?efg=asdf&oh=asdf&oe=asdf"
         assertFbFormat(url, "#!$url")
+    }
+
+    @Test
+    fun queryFt() {
+        val url = "${FB_URL_BASE}sample/photos/a.12346/?source=48&_ft_=xxx"
+        val expected = "${FB_URL_BASE}sample/photos/a.12346/?source=48"
+        assertFbFormat(expected, url)
     }
 
 //    @Test
