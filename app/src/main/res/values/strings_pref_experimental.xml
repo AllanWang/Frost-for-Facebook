@@ -12,6 +12,8 @@
     <!-- Debugging phishing warnings -->
     <string name="web_only" translatable="false">Web Only</string>
     <string name="web_only_desc" translatable="false">Having troubles? Enable to use web exclusive features. All parsing and background services will be disabled.</string>
+    <string name="web_requests" translatable="false">Web Requests</string>
+    <string name="web_requests_desc" translatable="false">Enables features such as marking notifications as read. Known to potentially cause phishing responses.</string>
     <string name="leave_web_only_title" translatable="false">Leave web only mode</string>
     <string name="leave_web_only_desc" translatable="false">Currently in web only mode. Would you like to disable it to continue?</string>
 </resources>

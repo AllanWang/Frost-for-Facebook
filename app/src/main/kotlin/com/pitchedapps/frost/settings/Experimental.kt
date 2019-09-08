@@ -43,11 +43,8 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     // Experimental content starts here ------------------
 
-    checkbox(R.string.web_only, Prefs::webOnly, {
-        Prefs.webOnly = it
-        shouldRestartMain()
-    }) {
-        descRes = R.string.web_only_desc
+    checkbox(R.string.web_requests, Prefs::authRequests, { Prefs.authRequests = it }) {
+        descRes = R.string.web_requests_desc
     }
 
     // Experimental content ends here --------------------
