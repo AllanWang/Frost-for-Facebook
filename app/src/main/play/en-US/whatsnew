@@ -1,10 +1,3 @@
-v2.3.2
+v2.4.0
 
-* Disable auto feed refresh by default and add setting to re-enable it
-* Update theme
-* Disable bugsnag completely when opting out of analytics
-* Filter urls before sending to other apps
-* Allow hiding main fab (see settings > newsfeed)
-* Add some experimental options to debug login problems (settings > experimental)
-* Enforce desktop user agent for now
-* Obfuscate js tags
+* Removed web only mode for auth requests. Marking notifications as read is now disabled by default to deal with phishing accusations.
