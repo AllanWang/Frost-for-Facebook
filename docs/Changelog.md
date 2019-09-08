@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.0
+* Removed web only mode for auth requests. Marking notifications as read is now disabled by default to deal with phishing accusations.
+
 ## v2.3.2
 * Disable auto feed refresh by default and add setting to re-enable it
 * Update theme

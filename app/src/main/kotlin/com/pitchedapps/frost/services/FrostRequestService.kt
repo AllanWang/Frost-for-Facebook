@@ -163,8 +163,8 @@ class FrostRequestService : BaseJobService() {
 
     override fun onStartJob(params: JobParameters?): Boolean {
         super.onStartJob(params)
-        if (Prefs.webOnly) {
-            L.i { "Web only; skipping request service" }
+        if (!Prefs.authRequests) {
+            L.i { "Auth requests disabled; skipping request service" }
             return false
         }
         val bundle = params?.extras

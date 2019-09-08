@@ -24,11 +24,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pitchedapps.frost.utils.Prefs
-import com.raizlabs.android.dbflow.annotation.ConflictAction
-import com.raizlabs.android.dbflow.annotation.Database
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
-import com.raizlabs.android.dbflow.structure.BaseModel
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -74,21 +69,3 @@ suspend fun CookieDao.save(cookie: CookieEntity) = dao { _save(cookie) }
 suspend fun CookieDao.save(cookies: List<CookieEntity>) = dao { _save(cookies) }
 suspend fun CookieDao.deleteById(id: Long) = dao { _deleteById(id) }
 suspend fun CookieDao.currentCookie() = selectById(Prefs.userId)
-
-@Database(version = CookiesDb.VERSION)
-object CookiesDb {
-    const val NAME = "Cookies"
-    const val VERSION = 2
-}
-
-@Parcelize
-@Table(database = CookiesDb::class, allFields = true, primaryKeyConflict = ConflictAction.REPLACE)
-data class CookieModel(
-    @PrimaryKey var id: Long = -1L,
-    var name: String? = null,
-    var cookie: String? = null
-) :
-    BaseModel(), Parcelable {
-
-    override fun toString(): String = "CookieModel(${hashCode()})"
-}

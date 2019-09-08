@@ -137,7 +137,20 @@ class FbUrlFormatter(url: String) {
          *
          * acontext is not required for "friends interested in" notifications
          */
-        val discardableQueries = arrayOf("ref", "refid", "SharedWith", "fbclid")
+        val discardableQueries = arrayOf(
+            "ref",
+            "refid",
+            "SharedWith",
+            "fbclid",
+            "_ft_",
+            "_tn_",
+            "_xt_",
+            "bacr",
+            "frefs",
+            "hc_ref",
+            "loc_ref",
+            "pn_ref"
+        )
 
         val converter = listOf(
             "\\3C " to "%3C", "\\3E " to "%3E", "\\23 " to "%23", "\\25 " to "%25",

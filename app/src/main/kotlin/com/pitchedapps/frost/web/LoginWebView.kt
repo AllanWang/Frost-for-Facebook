@@ -33,7 +33,7 @@ import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE
+import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
@@ -58,7 +58,7 @@ class LoginWebView @JvmOverloads constructor(
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebview() {
         settings.javaScriptEnabled = true
-        settings.userAgentString = USER_AGENT_MOBILE
+        settings.userAgentString = USER_AGENT
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webViewClient = LoginClient()
         webChromeClient = LoginChromeClient()

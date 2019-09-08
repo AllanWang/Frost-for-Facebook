@@ -277,11 +277,6 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
 //    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
 
-    implementation "com.github.Raizlabs.DBFlow:dbflow:${Versions.dbflow}"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${Versions.dbflow}"
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${Versions.dbflow}"
-    implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${Versions.dbflow}"
-
     //Icons
     implementation kau.Dependencies.iconicsMaterial
     implementation kau.Dependencies.iconicsCommunity

@@ -60,13 +60,6 @@
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
-            android:name=".activities.WebOverlayDesktopActivity"
-            android:configChanges="orientation|screenSize|locale"
-            android:hardwareAccelerated="true"
-            android:label="@string/frost_web"
-            android:launchMode="singleTop"
-            android:theme="@style/FrostTheme.Overlay.Slide" />
-        <activity
             android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:configChanges="orientation|screenSize|locale"
@@ -197,11 +190,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <provider
-            android:name="com.raizlabs.android.dbflow.runtime.StubContentProvider"
-            android:authorities="${applicationId}.dbflow.provider"
-            android:exported="false" />
-
         <meta-data
             android:name="com.bugsnag.android.API_KEY"
             android:value="83cf680ed01a6fda10fe497d1c0962bb" />

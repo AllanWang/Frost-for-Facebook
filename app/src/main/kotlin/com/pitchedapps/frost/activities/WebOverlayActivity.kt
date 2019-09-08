@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PointF
 import android.net.Uri
@@ -60,7 +59,6 @@ import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.services.FrostRunnable
@@ -94,7 +92,7 @@ import okhttp3.HttpUrl
  * Going back will bring you back to the previous app
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
-class FrostWebActivity : WebOverlayActivityBase(false) {
+class FrostWebActivity : WebOverlayActivityBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val requiresAction = !parseActionSend()
@@ -143,19 +141,12 @@ class FrostWebActivity : WebOverlayActivityBase(false) {
 }
 
 /**
- * Variant that forces a desktop user agent. This is largely internal,
- * and is only necessary when we are launching from an existing [WebOverlayActivityBase]
- */
-class WebOverlayDesktopActivity : WebOverlayActivityBase(true)
-
-/**
  * Internal overlay for the app; this is tied with the main task and is singleTop as opposed to singleInstance
  */
-class WebOverlayActivity : WebOverlayActivityBase(false)
+class WebOverlayActivity : WebOverlayActivityBase()
 
-@SuppressLint("Registered")
 @UseExperimental(ExperimentalCoroutinesApi::class)
-open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : BaseActivity(),
+abstract class WebOverlayActivityBase : BaseActivity(),
     ActivityContract, FrostContentContainer,
     VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
@@ -217,8 +208,6 @@ open class WebOverlayActivityBase(private val forceDesktopAgent: Boolean) : Base
         }
 
         with(web) {
-            if (forceDesktopAgent) //todo check; the webview already adds it dynamically
-                userAgentString = USER_AGENT_DESKTOP
             Prefs.prevId = Prefs.userId
             launch {
                 val authDefer = BiometricUtils.authenticate(this@WebOverlayActivityBase)

@@ -23,7 +23,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_RESTART_APPLICATION
-import com.pitchedapps.frost.utils.Showcase
 
 /**
  * Created by Allan Wang on 2017-06-29.
@@ -34,20 +33,10 @@ fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.experimental_disclaimer_info
     }
 
-    checkbox(
-        R.string.experimental_by_default,
-        Showcase::experimentalDefault,
-        { Showcase.experimentalDefault = it }) {
-        descRes = R.string.experimental_by_default_desc
-    }
-
     // Experimental content starts here ------------------
 
-    checkbox(R.string.web_only, Prefs::webOnly, {
-        Prefs.webOnly = it
-        shouldRestartMain()
-    }) {
-        descRes = R.string.web_only_desc
+    checkbox(R.string.auth_requests, Prefs::authRequests, { Prefs.authRequests = it }) {
+        descRes = R.string.auth_requests_desc
     }
 
     // Experimental content ends here --------------------
