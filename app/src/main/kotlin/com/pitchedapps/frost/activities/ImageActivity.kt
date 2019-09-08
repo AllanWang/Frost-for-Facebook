@@ -112,6 +112,8 @@ class ImageActivity : KauBaseActivity() {
 
     private lateinit var dragHelper: ViewDragHelper
 
+    private var imgExtension: String = ".jpg"
+
     companion object {
         /**
          * Cache folder to store images
@@ -120,7 +122,6 @@ class ImageActivity : KauBaseActivity() {
         private const val IMAGE_FOLDER = "images"
         private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
         private const val IMG_TAG = "Frost"
-        private const val IMG_EXTENSION = ".png"
         const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
 
@@ -295,6 +296,18 @@ class ImageActivity : KauBaseActivity() {
         override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int = top
     }
 
+    private fun getImageExtension(type: String?): String? {
+        if (type?.startsWith("image/") != true) {
+            return null
+        }
+        return when (type.substring(6)) {
+            "jpeg" -> ".jpg"
+            "png" -> ".png"
+            "gif" -> ".gif"
+            else -> null
+        }
+    }
+
     @Throws(IOException::class)
     private fun createPublicMediaFile(): File {
         val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
@@ -303,7 +316,7 @@ class ImageActivity : KauBaseActivity() {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val frostDir = File(storageDir, IMG_TAG)
         if (!frostDir.exists()) frostDir.mkdirs()
-        return File.createTempFile(imageFileName, IMG_EXTENSION, frostDir)
+        return File.createTempFile(imageFileName, imgExtension, frostDir)
     }
 
     /**
@@ -352,6 +365,8 @@ class ImageActivity : KauBaseActivity() {
             if (!response.isSuccessful) {
                 throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
             }
+
+            imgExtension = getImageExtension(response.header("Content-Type")) ?: ".jpg"
 
             val body = response.body() ?: throw IOException("Failed to retrieve image body")
 
