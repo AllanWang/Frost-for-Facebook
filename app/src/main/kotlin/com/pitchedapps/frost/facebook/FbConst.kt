@@ -28,6 +28,13 @@ fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=l
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
 const val FB_HOME_URL = "${FB_URL_BASE}home.php"
 
+/*
+ * User agent candidates.
+ * For those building from source, you can feel free to set the used agent to one of these options.
+ * Following https://github.com/AllanWang/Frost-for-Facebook/pull/1531, we do not support multiple
+ * agents per login session.
+ */
+
 // Default user agent
 private const val USER_AGENT_MOBILE_CONST =
     "Mozilla/5.0 (Linux; Android 8.0.0; ONEPLUS A3000) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36"
@@ -35,8 +42,7 @@ private const val USER_AGENT_MOBILE_CONST =
 private const val USER_AGENT_DESKTOP_CONST =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Safari/537.36"
 
-const val USER_AGENT_MOBILE = USER_AGENT_DESKTOP_CONST
-const val USER_AGENT_DESKTOP = USER_AGENT_DESKTOP_CONST
+const val USER_AGENT = USER_AGENT_DESKTOP_CONST
 
 /**
  * Animation transition delay, just to ensure that the styles

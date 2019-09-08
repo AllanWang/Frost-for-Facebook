@@ -63,7 +63,7 @@ import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
-import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
+import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAssets
@@ -74,6 +74,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.io.File
 import java.io.IOException
@@ -388,13 +389,13 @@ fun EmailBuilder.addFrostDetails() {
     addItem("Locale", Locale.getDefault().displayName)
 }
 
-fun frostJsoup(url: String) = frostJsoup(FbCookie.webCookie, url)
+fun frostJsoup(url: String): Document = frostJsoup(FbCookie.webCookie, url)
 
-fun frostJsoup(cookie: String?, url: String) =
+fun frostJsoup(cookie: String?, url: String): Document =
     Jsoup.connect(url).run {
         if (cookie.isNullOrBlank()) this
         else cookie(FACEBOOK_COM, cookie)
-    }.userAgent(USER_AGENT_DESKTOP).get()!!
+    }.userAgent(USER_AGENT).get()
 
 fun Element.first(vararg select: String): Element? {
     select.forEach {

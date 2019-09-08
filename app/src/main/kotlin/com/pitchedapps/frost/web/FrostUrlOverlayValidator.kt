@@ -85,6 +85,7 @@ val messageWhitelist: Set<String> =
     setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
         .mapTo(mutableSetOf(), FbItem::url)
 
+@Deprecated(message = "Should not be used in production as we only support one user agent at a time.")
 val String.shouldUseDesktopAgent: Boolean
     get() = when {
         contains("story.php") -> false // do not use desktop for comment section
