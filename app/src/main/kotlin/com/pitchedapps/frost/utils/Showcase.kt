@@ -30,8 +30,5 @@ object Showcase : KPref() {
 
     val intro: Boolean by kprefSingle("intro_pages")
 
-    //not a showcase but cannot be in the same file as Prefs
-    var experimentalDefault: Boolean by kpref("experimental_by_default", false)
-
-    override fun deleteKeys() = arrayOf("shown_release")
+    override fun deleteKeys() = arrayOf("shown_release", "experimental_by_default")
 }

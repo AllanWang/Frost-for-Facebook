@@ -65,6 +65,7 @@ class FbRequestTest {
     }
 
     @Test
+    @Ignore("Post requests are now experimental")
     fun markNotification() {
         val notifId = 1514443903880
         AUTH.markNotificationRead(notifId).call.assertNoError()
