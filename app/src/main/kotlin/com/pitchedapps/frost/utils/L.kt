@@ -18,6 +18,7 @@ package com.pitchedapps.frost.utils
 
 import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
+import ca.allanwang.kau.logging.KauLoggerExtension
 import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 
@@ -76,5 +77,11 @@ object L : KauLogger("Frost", {
                 Bugsnag.notify(t)
             }
         }
+    }
+}
+
+fun KauLoggerExtension.test(message: () -> Any?) {
+    if (BuildConfig.DEBUG) {
+        d { "Test1234 ${message()}" }
     }
 }
