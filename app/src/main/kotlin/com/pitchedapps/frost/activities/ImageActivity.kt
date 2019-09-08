@@ -301,8 +301,9 @@ class ImageActivity : KauBaseActivity() {
             return null
         }
         return when (type.substring(6)) {
-            "jpeg", "jpg" -> ".jpg"
+            "jpeg" -> ".jpg"
             "png" -> ".png"
+            "gif" -> ".gif"
             else -> null
         }
     }
