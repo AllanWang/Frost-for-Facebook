@@ -65,6 +65,11 @@ object BiometricUtils {
         return Prefs.biometricsEnabled && System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
     }
 
+    /**
+     * Generates a prompt dialog and attempt to return an auth object.
+     * Note that the underlying request will call [androidx.fragment.app.FragmentTransaction.commit],
+     * so this cannot happen after onSaveInstanceState.
+     */
     fun authenticate(activity: FragmentActivity, force: Boolean = false): BiometricDeferred {
         val deferred: BiometricDeferred = CompletableDeferred()
         if (!force && !shouldPrompt(activity)) {
