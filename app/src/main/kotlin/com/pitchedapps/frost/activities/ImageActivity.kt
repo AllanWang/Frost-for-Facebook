@@ -362,11 +362,11 @@ class ImageActivity : KauBaseActivity() {
                 .call()
                 .execute()
 
-            imgExtension = getImageExtension(response.header("Content-Type")) ?: ".jpg"
-
             if (!response.isSuccessful) {
                 throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
             }
+
+            imgExtension = getImageExtension(response.header("Content-Type")) ?: ".jpg"
 
             val body = response.body() ?: throw IOException("Failed to retrieve image body")
 
