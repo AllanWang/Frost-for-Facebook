@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/css"
+    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/css",
+    "scss-watch": "sass --no-source-map --style compressed --update scss:assets/css --watch"
   },
   "license": "GPL-3.0",
   "repository": {
