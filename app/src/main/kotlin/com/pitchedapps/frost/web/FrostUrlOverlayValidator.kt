@@ -22,7 +22,6 @@ import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -32,7 +31,6 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.isVideoUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchWebOverlay
-import com.pitchedapps.frost.utils.launchWebOverlayDesktop
 import com.pitchedapps.frost.views.FrostWebView
 
 /**
@@ -74,22 +72,7 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         return false
     }
     if (!Prefs.overlayEnabled) return false
-    if (context is WebOverlayActivityBase) {
-        val shouldUseDesktop = url.formattedFbUrl.shouldUseDesktopAgent
-        //already overlay; manage user agent
-        if (userAgentString != USER_AGENT_DESKTOP && shouldUseDesktop) {
-            L._i { "Switch to desktop agent overlay" }
-            context.launchWebOverlayDesktop(url)
-            return true
-        }
-        if (userAgentString == USER_AGENT_DESKTOP && !shouldUseDesktop) {
-            L._i { "Switch from desktop agent" }
-            context.launchWebOverlay(url)
-            return true
-        }
-        L._i { "return false switch" }
-        return false
-    }
+    if (context is WebOverlayActivityBase) return false
     L.v { "Request web overlay passed" }
     context.launchWebOverlay(url)
     return true

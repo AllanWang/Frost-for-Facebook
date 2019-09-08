@@ -57,7 +57,6 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.activities.TabCustomizerActivity
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
-import com.pitchedapps.frost.activities.WebOverlayDesktopActivity
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
 import com.pitchedapps.frost.facebook.FBCDN_NET
@@ -137,9 +136,6 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
 }
 
 fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
-
-fun Context.launchWebOverlayDesktop(url: String) =
-    launchWebOverlayImpl<WebOverlayDesktopActivity>(url)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
     this,
