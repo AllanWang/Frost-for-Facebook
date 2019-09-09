@@ -70,8 +70,8 @@ class StartActivity : KauBaseActivity() {
             showInvalidWebView()
         }
 
+        val authDefer = BiometricUtils.authenticate(this@StartActivity)
         launch {
-            val authDefer = BiometricUtils.authenticate(this@StartActivity)
             try {
                 FbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
