@@ -79,13 +79,6 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         }
     }
 
-    checkbox(R.string.native_ui, Prefs::nativeUi, {
-        Prefs.nativeUi = it
-        shouldRestartMain()
-    }) {
-        descRes = R.string.native_ui_desc
-    }
-
     checkbox(R.string.exit_confirmation, Prefs::exitConfirmation, { Prefs.exitConfirmation = it }) {
         descRes = R.string.exit_confirmation_desc
     }

@@ -17,16 +17,9 @@
 package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.facebook.FB_DTSG_MATCHER
 import com.pitchedapps.frost.facebook.FB_JSON_URL_MATCHER
-import com.pitchedapps.frost.facebook.FB_REV_MATCHER
-import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.kotlin.Flyweight
-import com.pitchedapps.frost.utils.L
-import kotlinx.coroutines.GlobalScope
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -35,39 +28,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.commons.text.StringEscapeUtils
 
 /**
- * Created by Allan Wang on 21/12/17.
- */
-val fbAuth = Flyweight<String, RequestAuth>(GlobalScope, 3600000 /* an hour */) {
-    it.getAuth()
-}
-
-/**
- * Underlying container for all fb requests
- */
-data class RequestAuth(
-    val userId: Long = -1,
-    val cookie: String = "",
-    val fb_dtsg: String = "",
-    val rev: String = ""
-) {
-    val isComplete
-        get() = userId > 0 && cookie.isNotEmpty() && fb_dtsg.isNotEmpty() && rev.isNotEmpty()
-}
-
-/**
  * Request container with the execution call
  */
 class FrostRequest<out T : Any?>(val call: Call, private val invoke: (Call) -> T) {
     fun invoke() = invoke(call)
-}
-
-internal inline fun <T : Any?> RequestAuth.frostRequest(
-    noinline invoke: (Call) -> T,
-    builder: Request.Builder.() -> Request.Builder // to ensure we don't do anything extra at the end
-): FrostRequest<T> {
-    val request = cookie.requestBuilder()
-    request.builder()
-    return FrostRequest(request.call(), invoke)
 }
 
 val httpClient: OkHttpClient by lazy {
@@ -105,39 +69,6 @@ internal fun String?.requestBuilder(): Request.Builder {
 }
 
 fun Request.Builder.call(): Call = httpClient.newCall(build())
-
-fun String.getAuth(): RequestAuth {
-    L.v { "Getting auth for ${hashCode()}" }
-    var auth = RequestAuth(cookie = this)
-    val id = FB_USER_MATCHER.find(this)[1]?.toLong() ?: return auth
-    auth = auth.copy(userId = id)
-    val call = this.requestBuilder()
-        .url(FB_URL_BASE)
-        .get()
-        .call()
-    call.execute().body()?.charStream()?.useLines { lines ->
-        lines.forEach {
-            val text = try {
-                StringEscapeUtils.unescapeEcmaScript(it)
-            } catch (ignore: Exception) {
-                return@forEach
-            }
-            val fb_dtsg = FB_DTSG_MATCHER.find(text)[1]
-            if (fb_dtsg != null) {
-                auth = auth.copy(fb_dtsg = fb_dtsg)
-                if (auth.isComplete) return auth
-            }
-
-            val rev = FB_REV_MATCHER.find(text)[1]
-            if (rev != null) {
-                auth = auth.copy(rev = rev)
-                if (auth.isComplete) return auth
-            }
-        }
-    }
-
-    return auth
-}
 
 /**
  * Execute the call and attempt to check validity

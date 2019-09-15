@@ -1,7 +1,7 @@
 # Changelog
 
 ## v2.4.0
-* Removed web only mode for auth requests. Marking notifications as read is now disabled by default to deal with phishing accusations.
+* Removed request services, which potentially caused phishing warnings.
 * Save images with the correct extensions.
 
 ## v2.3.2

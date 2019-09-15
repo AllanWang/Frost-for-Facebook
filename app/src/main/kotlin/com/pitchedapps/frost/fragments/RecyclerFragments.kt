@@ -16,32 +16,18 @@
  */
 package com.pitchedapps.frost.fragments
 
-import com.mikepenz.fastadapter.IItem
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotifs
 import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseResponse
-import com.pitchedapps.frost.facebook.requests.MenuFooterItem
-import com.pitchedapps.frost.facebook.requests.MenuHeader
-import com.pitchedapps.frost.facebook.requests.MenuItem
-import com.pitchedapps.frost.facebook.requests.MenuItemData
-import com.pitchedapps.frost.facebook.requests.fbAuth
-import com.pitchedapps.frost.facebook.requests.getMenuData
-import com.pitchedapps.frost.iitems.ClickableIItemContract
-import com.pitchedapps.frost.iitems.MenuContentIItem
-import com.pitchedapps.frost.iitems.MenuFooterIItem
-import com.pitchedapps.frost.iitems.MenuFooterSmallIItem
-import com.pitchedapps.frost.iitems.MenuHeaderIItem
 import com.pitchedapps.frost.iitems.NotificationIItem
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.views.FrostRecyclerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 27/12/17.
  */
+@Deprecated(message = "Retained as an example; currently does not support marking a notification as read")
 class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>() {
 
     override val parser = NotifParser
@@ -54,34 +40,4 @@ class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>
     override fun bindImpl(recyclerView: FrostRecyclerView) {
         NotificationIItem.bindEvents(adapter)
     }
-}
-
-class MenuFragment : GenericRecyclerFragment<MenuItemData, IItem<*, *>>() {
-
-    override fun mapper(data: MenuItemData): IItem<*, *> = when (data) {
-        is MenuHeader -> MenuHeaderIItem(data)
-        is MenuItem -> MenuContentIItem(data)
-        is MenuFooterItem ->
-            if (data.isSmall) MenuFooterSmallIItem(data)
-            else MenuFooterIItem(data)
-        else -> throw IllegalArgumentException("Menu item in fragment has invalid type ${data::class.java.simpleName}")
-    }
-
-    override fun bindImpl(recyclerView: FrostRecyclerView) {
-        ClickableIItemContract.bindEvents(adapter)
-    }
-
-    override suspend fun reloadImpl(progress: (Int) -> Unit): List<MenuItemData>? =
-        withContext(Dispatchers.IO) {
-            val cookie = FbCookie.webCookie ?: return@withContext null
-            progress(10)
-            val auth = fbAuth.fetch(cookie).await()
-            progress(30)
-            val data = auth.getMenuData().invoke() ?: return@withContext null
-            if (data.data.isEmpty()) return@withContext null
-            progress(70)
-            val items = data.flatMapValid()
-            progress(90)
-            return@withContext items
-        }
 }

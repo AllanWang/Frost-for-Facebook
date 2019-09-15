@@ -193,8 +193,6 @@ object Prefs : KPref() {
 
     var authRequests: Boolean by kpref("web_requests", false)
 
-    var nativeUi: Boolean by kpref("native_ui", true)
-
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 

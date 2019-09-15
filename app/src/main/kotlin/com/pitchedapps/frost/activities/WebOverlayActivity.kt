@@ -61,7 +61,6 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
-import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
@@ -223,9 +222,6 @@ abstract class WebOverlayActivityBase : BaseActivity(),
                 }
             }
         }
-
-        FrostRunnable.propagate(this, intent)
-        L.v { "Done propagation" }
 
         swipeBack = kauSwipeOnCreate {
             if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx

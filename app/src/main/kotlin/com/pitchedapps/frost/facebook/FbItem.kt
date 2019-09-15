@@ -23,8 +23,6 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.fragments.BaseFragment
-import com.pitchedapps.frost.fragments.MenuFragment
-import com.pitchedapps.frost.fragments.NotificationFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.EnumBundle
 import com.pitchedapps.frost.utils.EnumBundleCompanion
@@ -47,15 +45,10 @@ enum class FbItem(
     FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
     GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
     MARKETPLACE(R.string.marketplace, GoogleMaterial.Icon.gmd_store, "marketplace"),
-    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings", ::MenuFragment),
+    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings"),
     MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
     NOTES(R.string.notes, CommunityMaterial.Icon2.cmd_note, "notes"),
-    NOTIFICATIONS(
-        R.string.notifications,
-        MaterialDesignIconic.Icon.gmi_globe,
-        "notifications",
-        ::NotificationFragment
-    ),
+    NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
     ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
     PAGES(R.string.pages, GoogleMaterial.Icon.gmd_flag, "pages"),
     PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
