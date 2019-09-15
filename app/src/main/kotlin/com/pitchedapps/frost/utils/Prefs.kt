@@ -191,8 +191,6 @@ object Prefs : KPref() {
 
     var showCreateFab: Boolean by kpref("show_create_fab", true)
 
-    var authRequests: Boolean by kpref("web_requests", false)
-
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 

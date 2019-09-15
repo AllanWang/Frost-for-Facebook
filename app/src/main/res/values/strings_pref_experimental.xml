@@ -7,7 +7,4 @@
     <string name="restart_frost">Restart Frost</string>
     <string name="restart_frost_desc">Launch a cold restart for the application.</string>
 
-    <!-- Debugging phishing warnings -->
-    <string name="auth_requests" translatable="false">Auth Requests</string>
-    <string name="auth_requests_desc" translatable="false">Enables post features such as marking notifications as read. Known to potentially cause phishing responses.</string>
 </resources>
