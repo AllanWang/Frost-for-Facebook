@@ -127,7 +127,9 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun isReady() {
-        refresh.offer(false)
+        if (web.frostWebClient !is FrostWebViewClientMenu) {
+            refresh.offer(false)
+        }
     }
 
     @JavascriptInterface

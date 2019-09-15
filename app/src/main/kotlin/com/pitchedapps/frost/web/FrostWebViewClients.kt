@@ -23,7 +23,6 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import ca.allanwang.kau.utils.withAlpha
-import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -203,22 +202,12 @@ private const val EMIT_FINISH = 0
  */
 class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
-    private val String.shouldInjectMenu
-        get() = when (removePrefix(FB_URL_BASE)) {
-            "settings",
-            "settings#",
-            "settings#!/settings?soft=bookmarks" -> true
-            else -> false
-        }
-
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
         if (url == null) {
             return
         }
-        if (url.shouldInjectMenu) {
-            jsInject(JsAssets.MENU)
-        }
+        jsInject(JsAssets.MENU)
     }
 
     override fun emit(flag: Int) {
@@ -231,9 +220,6 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
     }
 
     override fun onPageFinishedActions(url: String) {
-        v { "Should inject ${url.shouldInjectMenu}" }
-        if (!url.shouldInjectMenu) {
-            injectAndFinish()
-        }
+        // Skip
     }
 }
