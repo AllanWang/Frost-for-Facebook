@@ -26,6 +26,8 @@ import com.pitchedapps.frost.views.FrostRecyclerView
 
 /**
  * Created by Allan Wang on 27/12/17.
+ *
+ * Retained as an example. Deletion made at https://github.com/AllanWang/Frost-for-Facebook/pull/1542
  */
 @Deprecated(message = "Retained as an example; currently does not support marking a notification as read")
 class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>() {
