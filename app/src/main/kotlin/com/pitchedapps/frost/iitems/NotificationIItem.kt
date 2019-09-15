@@ -34,7 +34,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.services.FrostRunnable
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
@@ -53,7 +52,6 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                 .withOnClickListener { v, _, item, position ->
                     val notif = item.notification
                     if (notif.unread) {
-                        FrostRunnable.markNotificationRead(v!!.context, notif.id, item.cookie)
                         adapter.set(
                             position,
                             NotificationIItem(notif.copy(unread = false), item.cookie)

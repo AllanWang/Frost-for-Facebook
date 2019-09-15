@@ -19,8 +19,6 @@ package com.pitchedapps.frost.internal
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.facebook.requests.RequestAuth
-import com.pitchedapps.frost.facebook.requests.getAuth
 import com.pitchedapps.frost.utils.frostJsoup
 import org.junit.Assume
 import java.io.File
@@ -53,11 +51,6 @@ val PROPS: Properties by lazy {
 
 val COOKIE: String by lazy { PROPS.getProperty("COOKIE") ?: "" }
 val USER_ID: Long by lazy { FB_USER_MATCHER.find(COOKIE)[1]?.toLong() ?: -1 }
-val AUTH: RequestAuth by lazy {
-    COOKIE.getAuth().apply {
-        println("Auth:\nuser:$userId\nfb_dtsg: $fb_dtsg\nrev: $rev\ncomplete: $isComplete")
-    }
-}
 
 private val VALID_COOKIE: Boolean by lazy {
     val data = testJsoup(FbItem.SETTINGS.url)

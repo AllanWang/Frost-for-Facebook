@@ -76,11 +76,7 @@ enum class NotificationType(
         FbItem.NOTIFICATIONS,
         NotifParser,
         Prefs::notificationRingtone
-    ) {
-
-        override fun bindRequest(content: NotificationContent, cookie: String) =
-            FrostRunnable.prepareMarkNotificationRead(content.id, cookie)
-    },
+    ),
 
     MESSAGE(
         NOTIF_CHANNEL_MESSAGES,

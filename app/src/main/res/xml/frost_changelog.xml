@@ -7,7 +7,7 @@
     -->
 
     <version title="v2.4.0" />
-    <item text="Removed web only mode for auth requests. Marking notifications as read is now disabled by default to deal with phishing accusations." />
+    <item text="Removed request services, which potentially caused phishing warnings." />
     <item text="Save images with the correct extensions." />
     <item text="" />
 
