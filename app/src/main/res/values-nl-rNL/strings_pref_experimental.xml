@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Schakel uitgebreide logging in om te helpen met crashrapporten. Logs worden alleen doorgestuurd bij fouten, dus herhaal de stappen die het probleem veroorzaken om de ontwikkelaar op de hoogte te brengen. Deze optie wordt automatisch uitgeschakeld bij een herstart van de app.</string>
     <string name="restart_frost">Frost herstarten</string>
     <string name="restart_frost_desc">Initieer een volledige herstart van de app.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
