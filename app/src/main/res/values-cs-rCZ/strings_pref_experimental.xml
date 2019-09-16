@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Povolit detailní protokolování v hlášeních o pádu aplikace. Pošle vývojářům hlášení chyby při jejím výskytu. Toto nastavení se automaticky vypne při restartu aplikace.</string>
     <string name="restart_frost">Restartovat Frost</string>
     <string name="restart_frost_desc">Natvrdo restartovat aplikaci.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
