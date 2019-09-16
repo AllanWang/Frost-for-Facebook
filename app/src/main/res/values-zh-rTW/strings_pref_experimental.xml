@@ -8,5 +8,4 @@
     <string name="verbose_logging_desc">啟用Verbose記錄以幫助崩潰報告。只有在遇到錯誤後才會發送日誌記錄, 因此重複此問題以通知我們。如果應用程式重新啟動, 會自動禁用此功能。</string>
     <string name="restart_frost">重啟 Frost</string>
     <string name="restart_frost_desc">冷重啟應用程式</string>
-    <!-- Debugging phishing warnings -->
 </resources>
