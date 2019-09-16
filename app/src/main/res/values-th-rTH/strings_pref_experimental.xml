@@ -5,5 +5,4 @@
     <string name="verbose_logging">การบันทึกทั่วไป</string>
     <string name="verbose_logging_desc">เปิดบันทิกทั่วไปและรายงานข้อผิดพลาด บันทึกจะส่งเมื่อเจอข้อผิดพลาด ดังนั้นกรุณาทำให้เกิดข้อผิดพลาดอีกครั้งนึง ตัวเลือกนี้จะปิดเองเมื่อแอพเริ่มต้นใหม่</string>
     <string name="restart_frost">เริ่ม Frost ใหม่</string>
-    <!-- Debugging phishing warnings -->
 </resources>
