@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Укључите потпуну евиденцију и помозите нам у отклањању грешака. Евиденција ће бити послата само уколико дође до грешке, зато поновите грешку да би помогли програмерима. Оција ће бити искључена уколико се апликација рестартује.</string>
     <string name="restart_frost">Рестартујте Фрост</string>
     <string name="restart_frost_desc">Покрените потпуни рестарт апликације.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
