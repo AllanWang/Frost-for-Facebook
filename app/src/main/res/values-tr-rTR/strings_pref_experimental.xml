@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Kilitlenme raporlarıyla yardımcı olmak için ayrıntılı günlüğü etkinleştirin. Günlüğe kaydetme yalnızca bir hata ile karşılaştığında gönderilir, bu nedenle devi bilgilendirmek için sorunu tekrarlayın. Uygulama yeniden başlatılırsa, bu otomatik olarak devre dışı bırakılacaktır.</string>
     <string name="restart_frost">Frostu yeniden başlatın</string>
     <string name="restart_frost_desc">Uygulama için soğuk bir başlangıç yap.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
