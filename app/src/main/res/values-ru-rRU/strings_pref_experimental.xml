@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Включите ведение подробного журнала, чтобы помочь с падениях. Протоколирование будет отправлено только после того, как возникает ошибка, так повторить вопрос уведомления dev. Это будет автоматически отключается, если приложение перезапускается.</string>
     <string name="restart_frost">Перезапустить Frost</string>
     <string name="restart_frost_desc">Запуск холодного перезапуска приложения.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
