@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">تمكين خاصية التسجيل المطول للمساعدة في تقارير الأعطال. سترسل التسجيلات فقط عند حدوث أخطاء، لهذا كرر الخطأ لإخطار المطور. سيتم تلقائياً تعطيلها إذا تمت إعادة تشغيل التطبيق.</string>
     <string name="restart_frost">إعادة تشغيل Frost</string>
     <string name="restart_frost_desc">إعادة تشغيل خفيف للتطبيق.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
