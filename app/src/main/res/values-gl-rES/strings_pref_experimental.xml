@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Activa os rexistros detallados o cal resultará de axuda cos informes de erros. Os informes enviaranse de cada vez que se atope un erro, de modo que ao se repetir o problema notificarase ao desenvolvedor. Esta función quedará deshabilitada unha vez que se reinicie a aplicación.</string>
     <string name="restart_frost">Reiniciar Frost</string>
     <string name="restart_frost_desc">Reinicio en frío da aplicación.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
