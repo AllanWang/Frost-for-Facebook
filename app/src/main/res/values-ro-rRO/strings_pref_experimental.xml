@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Activează logări repetate să ajuți cu report-uri ale erorilor. Logarile vor fi trimise când o eroare este prezentă, așadar repetă problema să anunți dezvoltatorii. Acesta va fi dezactivat când repornești.</string>
     <string name="restart_frost">Reporniţi Frost</string>
     <string name="restart_frost_desc">Pornește la rece aplicația.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
