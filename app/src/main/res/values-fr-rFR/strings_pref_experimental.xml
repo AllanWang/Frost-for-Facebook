@@ -6,5 +6,4 @@
     <string name="verbose_logging_desc">Activer les logs détaillés pour aider avec les rapports d\'incidents. Les logs seront seulement envoyés lorsqu\'un erreur est rencontré, alors répétez le problème pour aviser le développeur. Ceci sera automatiquement désactivé si l\'application redémarre.</string>
     <string name="restart_frost">Redémarrer Frost</string>
     <string name="restart_frost_desc">Lancer un redémarrage à froid pour l’application.</string>
-    <!-- Debugging phishing warnings -->
 </resources>
