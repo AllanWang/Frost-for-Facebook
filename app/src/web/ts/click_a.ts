@@ -42,7 +42,10 @@
     type EventHandler = (e: Event, target: HTMLElement) => Boolean
 
     const _frostGeneral: EventHandler = (e, target) => {
-        // Notifications are two layers under
+        // We now disable clicks for the main notification page
+        if (document.getElementById("notifications_list")) {
+            return false
+        }
         const url = _parentUrl(target, 2);
         return Frost.loadUrl(url);
     };

@@ -68,6 +68,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val isMain = web.parent.baseEnum != null
 
+    override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
+        v { "History $url" }
+        super.doUpdateVisitedHistory(view, url, isReload)
+    }
+
     protected inline fun v(crossinline message: () -> Any?) = L.v { "web client: ${message()}" }
 
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {

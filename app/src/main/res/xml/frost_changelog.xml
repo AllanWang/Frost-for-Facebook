@@ -6,10 +6,15 @@
     <item text="" />
     -->
 
+    <version title="v2.4.1" />
+    <item text="Notification tab will keep first page in the same window; fixes marking notifications as read" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.4.0" />
     <item text="Removed request services, which potentially caused phishing warnings." />
     <item text="Save images with the correct extensions." />
-    <item text="" />
 
     <version title="v2.3.2" />
     <item text="Disable auto feed refresh by default and add setting to re-enable it" />
