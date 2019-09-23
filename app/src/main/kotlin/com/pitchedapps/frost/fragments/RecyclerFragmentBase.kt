@@ -18,10 +18,8 @@ package com.pitchedapps.frost.fragments
 
 import ca.allanwang.kau.adapters.fastAdapter
 import ca.allanwang.kau.utils.withMainContext
-import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.pitchedapps.frost.R

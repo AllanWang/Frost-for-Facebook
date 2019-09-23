@@ -258,7 +258,7 @@ class ImageActivity : KauBaseActivity() {
         ) {
             super.onViewPositionChanged(changedView, left, top, dx, dy)
             with(binding) {
-                //make sure that we are using the proper axis
+                // make sure that we are using the proper axis
                 scrollPercent = abs(top.toFloat() / imageContainer.height)
                 scrollToTop = top < 0
                 val multiplier = max(1f - scrollPercent, 0f)

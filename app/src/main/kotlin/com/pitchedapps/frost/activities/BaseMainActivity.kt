@@ -467,7 +467,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         fun hasRequest(flag: Int) = resultCode and flag > 0
 
         if (requestCode == ACTIVITY_SETTINGS) {
-            if (resultCode and REQUEST_RESTART_APPLICATION > 0) { //completely restart application
+            if (resultCode and REQUEST_RESTART_APPLICATION > 0) { // completely restart application
                 L.d { "Restart Application Requested" }
                 val intent = packageManager.getLaunchIntentForPackage(packageName)!!
                 Intent.makeRestartActivityTask(intent.component)
@@ -604,7 +604,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 if (!fragmentChannel.isClosedForSend) {
                     fragmentChannel.offer(0)
                 }
-            } //trigger hook so title is set
+            } // trigger hook so title is set
         }
 
         fun saveInstanceState(outState: Bundle) {

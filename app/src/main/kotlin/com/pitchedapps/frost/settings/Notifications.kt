@@ -144,7 +144,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
                 if (it.isBlank()) string(R.string.kau_default)
                 else RingtoneManager.getRingtone(this@getNotificationPrefs, frostUri(it))
                     ?.getTitle(this@getNotificationPrefs)
-                    ?: "---" //todo figure out why this happens
+                    ?: "---" // todo figure out why this happens
             }
             onClick = {
                 val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {

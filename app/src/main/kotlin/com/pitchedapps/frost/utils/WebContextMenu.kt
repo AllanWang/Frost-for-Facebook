@@ -34,7 +34,7 @@ fun Context.showWebContextMenu(wc: WebContext) {
     if (wc.isEmpty) return
     var title = wc.url ?: string(R.string.menu)
     title =
-        title.substring(title.indexOf("m/") + 1) //just so if defaults to 0 in case it's not .com/
+        title.substring(title.indexOf("m/") + 1) // just so if defaults to 0 in case it's not .com/
     if (title.length > 100) title = title.substring(0, 100) + '\u2026'
 
     val menuItems = WebContextType.values
@@ -46,7 +46,7 @@ fun Context.showWebContextMenu(wc: WebContext) {
             menuItems[position].onClick(this@showWebContextMenu, wc)
         }
         onDismiss {
-            //showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
+            // showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
             (this@showWebContextMenu as? MainActivity)?.viewPager?.enableSwipe = true
         }
     }

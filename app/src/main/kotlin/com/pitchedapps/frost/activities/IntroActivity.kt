@@ -123,7 +123,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
      * All fragments are locked in position
      */
     override fun transformPage(page: View, position: Float) {
-        //only apply to adjacent pages
+        // only apply to adjacent pages
         if ((position < 0 && position > -1) || (position > 0 && position < 1)) {
             val pageWidth = page.width
             val translateValue = position * -pageWidth

@@ -136,7 +136,7 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
         val a = element.getElementsByTag("a").first() ?: return null
         val abbr = element.getElementsByTag("abbr")
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
-        //fetch id
+        // fetch id
         val id = FB_MESSAGE_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
             ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
         val snippet = element.select("span.snippet").firstOrNull()

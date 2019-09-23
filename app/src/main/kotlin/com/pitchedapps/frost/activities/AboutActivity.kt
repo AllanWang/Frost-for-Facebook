@@ -41,7 +41,6 @@ import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial

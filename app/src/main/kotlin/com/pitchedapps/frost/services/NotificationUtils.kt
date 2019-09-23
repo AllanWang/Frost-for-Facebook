@@ -140,7 +140,7 @@ inline fun <reified T : JobService> Context.scheduleJob(id: Int, minutes: Long):
         .setPeriodic(minutes * 60000)
         .setExtras(id)
         .setPersisted(true)
-        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) //TODO add options
+        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // TODO add options
     val result = scheduler.schedule(builder.build())
     if (result <= 0) {
         L.eThrow("${T::class.java.simpleName} scheduler failed")

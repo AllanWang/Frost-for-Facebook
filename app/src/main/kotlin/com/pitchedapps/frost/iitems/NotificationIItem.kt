@@ -68,7 +68,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
             }
         }
 
-        //todo see if necessary
+        // todo see if necessary
         val DIFF: DiffCallback<NotificationIItem> by lazy(::Diff)
     }
 

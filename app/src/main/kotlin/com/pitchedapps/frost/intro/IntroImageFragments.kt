@@ -71,7 +71,7 @@ abstract class BaseImageIntroFragment(
     override fun onPageScrolledImpl(positionOffset: Float) {
         super.onPageScrolledImpl(positionOffset)
         val alpha = ((1 - abs(positionOffset)) * 255).toInt()
-        //apply alpha to all layers except the phone base
+        // apply alpha to all layers except the phone base
         (0 until imageDrawable.numberOfLayers).forEach {
             val d = imageDrawable.getDrawable(it)
             if (d != phone) d.alpha = alpha
