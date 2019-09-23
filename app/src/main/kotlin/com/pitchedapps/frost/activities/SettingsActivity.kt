@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
  */
 class SettingsActivity : KPrefActivity() {
 
-    var resultFlag = Activity.RESULT_CANCELED
+    private var resultFlag = Activity.RESULT_CANCELED
 
     companion object {
         private const val REQUEST_RINGTONE = 0b10111 shl 5
@@ -78,6 +78,7 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (fetchRingtone(requestCode, resultCode, data)) return
         when (requestCode) {
             ACTIVITY_REQUEST_TABS -> {
