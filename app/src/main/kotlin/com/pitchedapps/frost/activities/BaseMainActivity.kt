@@ -60,9 +60,11 @@ import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.mikepenz.iconics.utils.colorInt
+import com.mikepenz.iconics.utils.paddingDp
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.BuildConfig
@@ -279,7 +281,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             this@BaseMainActivity,
                             GoogleMaterial.Icon.gmd_add
                         ).actionBar().paddingDp(5)
-                            .color(Prefs.textColor)
+                            .colorInt(Prefs.textColor)
                     textColor = Prefs.textColor.toLong()
                     identifier = -3L
                 }

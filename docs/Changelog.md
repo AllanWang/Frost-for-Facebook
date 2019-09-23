@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.1
+* Notification tab will keep first page in the same window; fixes marking notifications as read
+
 ## v2.4.0
 * Removed request services, which potentially caused phishing warnings.
 * Save images with the correct extensions.

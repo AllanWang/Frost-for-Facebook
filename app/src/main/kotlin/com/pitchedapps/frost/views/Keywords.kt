@@ -31,11 +31,11 @@ import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.listeners.ClickEventHook
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 
@@ -68,7 +68,7 @@ class Keywords @JvmOverloads constructor(
         adapter.add(Prefs.notificationKeywords.map { KeywordItem(it) })
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = adapter
-        adapter.withEventHook(object : ClickEventHook<KeywordItem>() {
+        adapter.addEventHook(object : ClickEventHook<KeywordItem>() {
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
                 (viewHolder as? KeywordItem.ViewHolder)?.delete
 
@@ -91,13 +91,15 @@ class Keywords @JvmOverloads constructor(
 private fun IIcon.keywordDrawable(context: Context): Drawable =
     toDrawable(context, 20, Prefs.textColor)
 
-class KeywordItem(val keyword: String) : AbstractItem<KeywordItem, KeywordItem.ViewHolder>() {
+class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() {
 
     override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
-    override fun getType(): Int = R.id.item_keyword
+    override val layoutRes: Int
+        get() = R.layout.item_keyword
 
-    override fun getLayoutRes(): Int = R.layout.item_keyword
+    override val type: Int
+        get() = R.id.item_keyword
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)

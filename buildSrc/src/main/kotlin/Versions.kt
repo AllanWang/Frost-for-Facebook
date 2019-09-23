@@ -14,7 +14,7 @@ object Versions {
     // https://github.com/mockk/mockk/releases
     const val mockk = "1.9.3"
     // https://mvnrepository.com/artifact/androidx.core/core-ktx?repo=google
-    const val ktx = "1.0.2"
+    const val ktx = "1.1.0"
 
     // https://github.com/FasterXML/jackson-core/releases
     const val jackson = "2.9.8"
@@ -23,7 +23,7 @@ object Versions {
     // https://github.com/square/leakcanary/releases
     const val leakCanary = "1.6.2"
     // https://github.com/zsmb13/MaterialDrawerKt/releases
-    const val materialDrawerKt = "2.0.1"
+    const val materialDrawerKt = "3.0.0-rc01"
     // https://github.com/square/okhttp/releases
     const val okhttp = "3.14.1"
     // https://developer.android.com/jetpack/androidx/releases/room

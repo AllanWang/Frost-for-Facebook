@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.allanwang.kau.utils.bindView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
@@ -51,9 +51,9 @@ class SelectorActivity : BaseActivity() {
         recycler.adapter = adapter
         adapter.add(cookies().map { AccountItem(it) })
         adapter.add(AccountItem(null)) // add account
-        adapter.withEventHook(object : ClickEventHook<AccountItem>() {
+        adapter.addEventHook(object : ClickEventHook<AccountItem>() {
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
-                (viewHolder as? AccountItem.ViewHolder)?.v
+                (viewHolder as? AccountItem.ViewHolder)?.itemView
 
             override fun onClick(
                 v: View,

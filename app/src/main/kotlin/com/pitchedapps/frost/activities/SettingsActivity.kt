@@ -37,8 +37,8 @@ import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withSceneTransitionAnimation
 import com.afollestad.materialdialogs.list.listItems
-import com.mikepenz.community_material_typeface_library.CommunityMaterial
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.getAppearancePrefs

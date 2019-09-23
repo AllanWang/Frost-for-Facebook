@@ -80,7 +80,7 @@ class FrostApp : Application() {
          * Reload the image on every version update
          */
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
-            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String) {
+            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String?) {
                 val c = imageView.context
                 val request = GlideApp.with(c)
                 val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
