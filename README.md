@@ -8,7 +8,6 @@
 [![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/dev/LICENSE)
 
 [Download from Github Releases](https://github.com/AllanWang/Frost-for-Facebook/releases) <br/>
-[Download from F-Droid for automatic updates](https://f-droid.org/packages/com.pitchedapps.frost/) <br/>
 [Join the Slack Workspace](https://frost-slack.allanwang.ca)
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
