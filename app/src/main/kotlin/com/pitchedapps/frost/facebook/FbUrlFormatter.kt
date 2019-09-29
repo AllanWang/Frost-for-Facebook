@@ -78,6 +78,8 @@ class FbUrlFormatter(url: String) {
             cleanedUrl = cleanedUrl.substring(0, qm)
         }
         discardableQueries.forEach { queries.remove(it) }
+        // Convert desktop urls to mobile ones
+        cleanedUrl = cleanedUrl.replace(WWW_FACEBOOK_COM, FACEBOOK_BASE_COM)
         if (cleanedUrl.startsWith("/")) cleanedUrl = FB_URL_BASE + cleanedUrl.substring(1)
         cleanedUrl = cleanedUrl.replaceFirst(
             ".facebook.com//",

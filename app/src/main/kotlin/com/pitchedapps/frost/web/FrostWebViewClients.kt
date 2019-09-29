@@ -23,8 +23,10 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.JsActions
@@ -186,6 +188,11 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             return launchImage(url.formattedFbUrl)
         }
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) {
+            return true
+        }
+        // Convert desktop urls to mobile ones
+        if (url.contains("https://www.facebook.com")) {
+            view.loadUrl(url.replace(WWW_FACEBOOK_COM, FACEBOOK_BASE_COM))
             return true
         }
         return super.shouldOverrideUrlLoading(view, request)
