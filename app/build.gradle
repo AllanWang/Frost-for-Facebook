@@ -269,8 +269,6 @@ dependencies {
     //noinspection GradleDependency
     kapt kau.Dependencies.glideKapt
 
-    implementation "com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}"
-
     //noinspection GradleDependency
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
     //noinspection GradleDependency
