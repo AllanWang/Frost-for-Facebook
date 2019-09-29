@@ -21,6 +21,9 @@ import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import kotlinx.coroutines.CompletableDeferred
@@ -80,7 +83,19 @@ object BiometricUtils {
             .setTitle(activity.string(R.string.biometrics_prompt_title))
             .setNegativeButtonText(activity.string(R.string.kau_cancel))
             .build()
-        BiometricPrompt(activity, executor, Callback(activity, deferred)).authenticate(info)
+        val prompt = BiometricPrompt(activity, executor, Callback(activity, deferred))
+        activity.lifecycle.addObserver(object : LifecycleObserver {
+            @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+            fun onPause() {
+                if (!deferred.isCompleted) {
+                    prompt.cancelAuthentication()
+                    deferred.cancel()
+                    activity.finish()
+                }
+                activity.lifecycle.removeObserver(this)
+            }
+        })
+        prompt.authenticate(info)
         return deferred
     }
 
