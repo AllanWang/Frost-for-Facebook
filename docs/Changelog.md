@@ -5,6 +5,8 @@
 * Notification tab will keep first page in the same window; fixes marking notifications as read
 * Fix nav and status bar icon colors for custom themes (Android O+)
 * Fix biometric prompt, and prompt on activity resume
+* Fix notification title
+* Add option to open overlay links in browser
 
 ## v2.4.0
 * Removed request services, which potentially caused phishing warnings.

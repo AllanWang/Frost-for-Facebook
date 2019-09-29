@@ -258,9 +258,8 @@ enum class NotificationType(
      * and will only show if we have at least 2 notifications
      */
     private fun summaryNotification(context: Context, userId: Long, count: Int): FrostNotification {
-        val intent = Intent(context, FrostWebActivity::class.java)
+        val intent = createCommonIntent(context, userId)
         intent.data = Uri.parse(fbItem.url)
-        intent.putExtra(ARG_USER_ID, userId)
         val group = "${groupPrefix}_$userId"
         val pendingIntent =
             PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)

@@ -38,8 +38,8 @@ import ca.allanwang.kau.utils.dpToPx
 import ca.allanwang.kau.utils.finishSlideOut
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.navigationBarColor
-import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.shareText
+import ca.allanwang.kau.utils.startLink
 import ca.allanwang.kau.utils.statusBarColor
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
@@ -47,7 +47,6 @@ import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityContract
@@ -314,18 +313,15 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         menuInflater.inflate(R.menu.menu_web, menu)
         overlayContext?.onMenuCreate(this, menu)
         toolbar.tint(Prefs.iconColor)
-        setMenuIcons(
-            menu, Prefs.iconColor,
-            R.id.action_share to CommunityMaterial.Icon2.cmd_share,
-            R.id.action_copy_link to GoogleMaterial.Icon.gmd_content_copy
-        )
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val url = web.currentUrl.formattedFbUrl
         when (item.itemId) {
-            R.id.action_copy_link -> copyToClipboard(web.currentUrl.formattedFbUrl)
-            R.id.action_share -> shareText(web.currentUrl.formattedFbUrl)
+            R.id.action_copy_link -> copyToClipboard(url)
+            R.id.action_share -> shareText(url)
+            R.id.action_open_in_browser -> startLink(url)
             else -> if (!OverlayContext.onOptionsItemSelected(web, item.itemId))
                 return super.onOptionsItemSelected(item)
         }

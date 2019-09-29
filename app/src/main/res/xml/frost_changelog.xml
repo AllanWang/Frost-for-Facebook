@@ -11,6 +11,8 @@
     <item text="Notification tab will keep first page in the same window; fixes marking notifications as read" />
     <item text="Fix nav and status bar icon colors for custom themes (Android O+)" />
     <item text="Fix biometric prompt, and prompt on activity resume" />
+    <item text="Fix notification title" />
+    <item text="Add option to open overlay links in browser" />
     <item text="" />
 
     <version title="v2.4.0" />
