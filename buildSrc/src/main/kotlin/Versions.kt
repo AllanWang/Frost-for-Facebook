@@ -16,8 +16,6 @@ object Versions {
     // https://mvnrepository.com/artifact/androidx.core/core-ktx?repo=google
     const val ktx = "1.1.0"
 
-    // https://github.com/FasterXML/jackson-core/releases
-    const val jackson = "2.9.8"
     // https://github.com/jhy/jsoup/releases
     const val jsoup = "1.11.3"
     // https://github.com/square/leakcanary/releases
