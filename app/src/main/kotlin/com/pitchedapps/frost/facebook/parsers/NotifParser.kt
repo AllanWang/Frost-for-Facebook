@@ -103,6 +103,7 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
 
     private fun parseNotif(element: Element): FrostNotif? {
         val a = element.getElementsByTag("a").first() ?: return null
+        a.selectFirst("span.accessible_elem")?.remove()
         val abbr = element.getElementsByTag("abbr")
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
         //fetch id
