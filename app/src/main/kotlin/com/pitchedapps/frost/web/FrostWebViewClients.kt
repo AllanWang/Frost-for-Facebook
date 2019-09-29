@@ -133,8 +133,9 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     }
 
     internal open fun onPageFinishedActions(url: String) {
-        if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom)
+        if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom) {
             web.pageDown(true)
+        }
         injectAndFinish()
     }
 
