@@ -22,15 +22,19 @@ import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.isVideoUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchWebOverlay
+import com.pitchedapps.frost.utils.launchWebOverlayDesktop
+import com.pitchedapps.frost.utils.launchWebOverlayMobile
 import com.pitchedapps.frost.views.FrostWebView
 
 /**
@@ -50,21 +54,22 @@ import com.pitchedapps.frost.views.FrostWebView
  * as we have no need of sending a new intent to the same activity
  */
 fun FrostWebView.requestWebOverlay(url: String): Boolean {
+    @Suppress("NAME_SHADOWING") val url = url.formattedFbUrl
     L.v { "Request web overlay: $url" }
     val context = context // finalize reference
     if (url.isVideoUrl && context is VideoViewHolder) {
         L.d { "Found video through overlay" }
-        context.runOnUiThread { context.showVideo(url.formattedFbUrl) }
+        context.runOnUiThread { context.showVideo(url) }
         return true
     }
     if (url.isImageUrl) {
         L.d { "Found fb image" }
-        context.launchImageActivity(url.formattedFbUrl)
+        context.launchImageActivity(url)
         return true
     }
     if (url.isIndirectImageUrl) {
         L.d { "Found indirect fb image" }
-        context.launchImageActivity(url.formattedFbUrl, cookie = FbCookie.webCookie)
+        context.launchImageActivity(url, cookie = FbCookie.webCookie)
         return true
     }
     if (!url.isIndependent) {
@@ -72,7 +77,22 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         return false
     }
     if (!Prefs.overlayEnabled) return false
-    if (context is WebOverlayActivityBase) return false
+    if (context is WebOverlayActivityBase) {
+        val shouldUseDesktop = url.isFacebookUrl
+        //already overlay; manage user agent
+        if (userAgentString != USER_AGENT_DESKTOP_CONST && shouldUseDesktop) {
+            L._i { "Switch to desktop agent overlay" }
+            context.launchWebOverlayDesktop(url)
+            return true
+        }
+        if (userAgentString == USER_AGENT_DESKTOP_CONST && !shouldUseDesktop) {
+            L._i { "Switch from desktop agent" }
+            context.launchWebOverlayMobile(url)
+            return true
+        }
+        L._i { "return false switch" }
+        return false
+    }
     L.v { "Request web overlay passed" }
     context.launchWebOverlay(url)
     return true

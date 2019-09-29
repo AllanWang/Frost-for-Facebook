@@ -24,7 +24,6 @@
     <string name="select_facebook_account">Διάλεξε λογαριασμό Facebook</string>
     <string name="account_not_found">Ο συγκεκριμένος λογαριασμός δεν βρίσκεται στη βάση δεδομένων</string>
 
-    <string name="frost_requests">Frost Αιτήματα</string>
     <string name="frost_notifications">Frost Ειδοποιήσεις</string>
     <string name="requires_custom_theme">Απαιτείται δικό σου θέμα</string>
 

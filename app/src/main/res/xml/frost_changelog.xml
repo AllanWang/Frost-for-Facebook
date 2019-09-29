@@ -7,6 +7,7 @@
     -->
 
     <version title="v2.4.1" />
+    <item text="Add better support for mobile url conversions" />
     <item text="Notification tab will keep first page in the same window; fixes marking notifications as read" />
     <item text="Fix nav and status bar icon colors for custom themes (Android O+)" />
     <item text="" />

@@ -60,6 +60,20 @@
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
+            android:name=".activities.WebOverlayDesktopActivity"
+            android:configChanges="orientation|screenSize|locale"
+            android:hardwareAccelerated="true"
+            android:label="@string/frost_web"
+            android:launchMode="singleTop"
+            android:theme="@style/FrostTheme.Overlay.Slide" />
+        <activity
+            android:name=".activities.WebOverlayMobileActivity"
+            android:configChanges="orientation|screenSize|locale"
+            android:hardwareAccelerated="true"
+            android:label="@string/frost_web"
+            android:launchMode="singleTop"
+            android:theme="@style/FrostTheme.Overlay.Slide" />
+        <activity
             android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
             android:configChanges="orientation|screenSize|locale"
@@ -147,11 +161,6 @@
             android:name=".services.NotificationService"
             android:enabled="true"
             android:label="@string/frost_notifications"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".services.FrostRequestService"
-            android:enabled="true"
-            android:label="@string/frost_requests"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.LocalService"

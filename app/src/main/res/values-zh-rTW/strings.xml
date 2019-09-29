@@ -24,7 +24,6 @@
     <string name="welcome">欢迎，%s！</string>
     <string name="select_facebook_account">選擇 Facebook 帳戶</string>
     <string name="account_not_found">當前帳戶不在資料庫中</string>
-    <string name="frost_requests">Frost for Facebook 要求</string>
     <string name="frost_notifications">Frost 通知</string>
     <string name="requires_custom_theme">需要自訂主題</string>
     <string name="subject">主題</string>

@@ -23,7 +23,6 @@
     <string name="welcome">Velkommen %s</string>
     <string name="select_facebook_account">Velg Facebook-konto</string>
     <string name="account_not_found">Gjeldende konto er ikke i databasen</string>
-    <string name="frost_requests">Frost forespørsel</string>
     <string name="frost_notifications">Frost varsler</string>
     <string name="requires_custom_theme">Krever tilpasset tema</string>
     <string name="subject">Emne</string>

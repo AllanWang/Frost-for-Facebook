@@ -24,7 +24,6 @@
     <string name="welcome">Bienvenue %s</string>
     <string name="select_facebook_account">Sélectionnez le compte Facebook</string>
     <string name="account_not_found">Le compte actuel n’est pas dans la base de données</string>
-    <string name="frost_requests">Demandes Frost</string>
     <string name="frost_notifications">Notifications Frost</string>
     <string name="requires_custom_theme">Nécessite un thème personnalisé</string>
     <string name="subject">Sujet</string>

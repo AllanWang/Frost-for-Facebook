@@ -24,7 +24,6 @@
     <string name="welcome">Bienvenido %s</string>
     <string name="select_facebook_account">Seleccionar cuenta de Facebook</string>
     <string name="account_not_found">El perfil actual no está en la base de datos</string>
-    <string name="frost_requests">Solicitudes de Frost</string>
     <string name="frost_notifications">Notificaciones de Frost</string>
     <string name="requires_custom_theme">Requiere tema personalizado</string>
     <string name="subject">Asunto</string>

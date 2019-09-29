@@ -23,7 +23,6 @@
     <string name="welcome">Vítej %s!</string>
     <string name="select_facebook_account">Zvolte Facebookový profil</string>
     <string name="account_not_found">Tento účet není v databázi</string>
-    <string name="frost_requests">Frost žádosti</string>
     <string name="frost_notifications">Frost upozornění</string>
     <string name="requires_custom_theme">Vyžaduje vlastní motiv</string>
     <string name="subject">Předmět</string>

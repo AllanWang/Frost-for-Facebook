@@ -24,7 +24,6 @@
     <string name="welcome">Добро пожаловать, %s</string>
     <string name="select_facebook_account">Выберите учётную запись Facebook</string>
     <string name="account_not_found">Учётная запись не существует</string>
-    <string name="frost_requests">Требования Frost</string>
     <string name="frost_notifications">Приостановить уведомления</string>
     <string name="requires_custom_theme">Требования пользовательской темы</string>
     <string name="subject">Тема</string>

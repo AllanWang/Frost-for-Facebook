@@ -23,7 +23,6 @@
     <string name="welcome">Maligayang Pagdating %s</string>
     <string name="select_facebook_account">Pumili ng Akawnt ng Facebook</string>
     <string name="account_not_found">Ang kasalukuyang akawnt ay wala duon sa database</string>
-    <string name="frost_requests">Ang mga kahilingan sa Frost</string>
     <string name="frost_notifications">Ang mga Notipikasyon ng Frost</string>
     <string name="requires_custom_theme">Ang pasadyang tema ay kinakailangan</string>
     <string name="subject">Paksa</string>
