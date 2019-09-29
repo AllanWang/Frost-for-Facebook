@@ -24,7 +24,6 @@
     <string name="welcome">Chào mừng %s</string>
     <string name="select_facebook_account">Chọn tài khoản Facebook</string>
     <string name="account_not_found">Tài khoản không có trong dữ liệu</string>
-    <string name="frost_requests">Yêu cầu Frost</string>
     <string name="frost_notifications">Thông báo từ Frost</string>
     <string name="requires_custom_theme">Yêu cầu gói giao diện riêng</string>
     <string name="subject">Chủ đề</string>

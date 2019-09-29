@@ -24,7 +24,6 @@
     <string name="welcome">Welkom %s</string>
     <string name="select_facebook_account">Selecteer een Facebook-account</string>
     <string name="account_not_found">Het huidige account is niet opgeslagen in de database</string>
-    <string name="frost_requests">Frost Verzoeken</string>
     <string name="frost_notifications">Frost Notificaties</string>
     <string name="requires_custom_theme">Aangepast thema vereist</string>
     <string name="subject">Onderwerp</string>

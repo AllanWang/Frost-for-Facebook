@@ -23,7 +23,6 @@
     <string name="welcome">Bună, %s!</string>
     <string name="select_facebook_account">Alege contul Facebook</string>
     <string name="account_not_found">Contul curect nu este în baza de date</string>
-    <string name="frost_requests">Cerințe Frost</string>
     <string name="frost_notifications">Notificări Frost</string>
     <string name="requires_custom_theme">Teme custom cerute</string>
     <string name="subject">Subiect</string>

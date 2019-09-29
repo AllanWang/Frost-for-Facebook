@@ -24,7 +24,6 @@
     <string name="welcome">مرحبًا %s</string>
     <string name="select_facebook_account">قم باختيار حساب فيسبوك</string>
     <string name="account_not_found">الحساب الحالي غير موجود في قاعدة البيانات</string>
-    <string name="frost_requests">طلبات Frost</string>
     <string name="frost_notifications">إشعارات Frost</string>
     <string name="requires_custom_theme">يتطلب ثيم مخصص</string>
     <string name="subject">الموضوع</string>

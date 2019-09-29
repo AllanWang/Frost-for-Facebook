@@ -37,10 +37,10 @@ const val FB_HOME_URL = "${FB_URL_BASE}home.php"
  */
 
 // Default user agent
-private const val USER_AGENT_MOBILE_CONST =
+const val USER_AGENT_MOBILE_CONST =
     "Mozilla/5.0 (Linux; Android 8.0.0; ONEPLUS A3000) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36"
 // Desktop agent, for pages like messages
-private const val USER_AGENT_DESKTOP_CONST =
+const val USER_AGENT_DESKTOP_CONST =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Safari/537.36"
 
 const val USER_AGENT = USER_AGENT_DESKTOP_CONST

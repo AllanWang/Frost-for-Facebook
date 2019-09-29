@@ -24,7 +24,6 @@
     <string name="welcome">Hoşgeldiniz %s</string>
     <string name="select_facebook_account">Facebook hesabını seç</string>
     <string name="account_not_found">Cari hesap veritabanı değil</string>
-    <string name="frost_requests">Donma talebi</string>
     <string name="frost_notifications">Frost bildirimleri</string>
     <string name="requires_custom_theme">Özel Tema gerektirir</string>
     <string name="subject">Başlık</string>

@@ -23,7 +23,6 @@
     <string name="welcome">ยินดีต้อนรับ%s</string>
     <string name="select_facebook_account">เลือกบัญชี Facebook</string>
     <string name="account_not_found">บัญชีปัจจุบันไม่ได้อยู่ในฐานข้อมูล</string>
-    <string name="frost_requests">ร้องขอ Frost</string>
     <string name="frost_notifications">การแจ้งเตือน Frost</string>
     <string name="requires_custom_theme">ขอชุดรูปแบบที่กำหนดเอง</string>
     <string name="subject">เรื่อง</string>

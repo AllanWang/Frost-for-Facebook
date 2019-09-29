@@ -24,7 +24,6 @@
     <string name="welcome">Вітаємо %s</string>
     <string name="select_facebook_account">Обрати аккаунт Facebook</string>
     <string name="account_not_found">Даний аккаунт не міститься у базі даних</string>
-    <string name="frost_requests">Frost запити</string>
     <string name="frost_notifications">Frost сповіщення</string>
     <string name="requires_custom_theme">Потребує користувацької теми</string>
     <string name="subject">Тема</string>

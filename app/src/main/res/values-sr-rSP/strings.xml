@@ -23,7 +23,6 @@
     <string name="welcome">Добродошли %s</string>
     <string name="select_facebook_account">Одаберите Фејсбук налог</string>
     <string name="account_not_found">Одабрани налог не постоји у бази</string>
-    <string name="frost_requests">Фрост Захтеви</string>
     <string name="frost_notifications">Фрост нотификације</string>
     <string name="requires_custom_theme">Захтева модификовану тему</string>
     <string name="subject">Тема</string>

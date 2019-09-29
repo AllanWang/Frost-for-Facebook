@@ -59,6 +59,9 @@ import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.USER_AGENT
+import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
+import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.ARG_URL
@@ -140,12 +143,24 @@ class FrostWebActivity : WebOverlayActivityBase() {
 }
 
 /**
+ * Variant that forces a mobile user agent. This is largely internal,
+ * and is only necessary when we are launching from an existing [WebOverlayActivityBase]
+ */
+class WebOverlayMobileActivity : WebOverlayActivityBase(USER_AGENT_MOBILE_CONST)
+
+/**
+ * Variant that forces a desktop user agent. This is largely internal,
+ * and is only necessary when we are launching from an existing [WebOverlayActivityBase]
+ */
+class WebOverlayDesktopActivity : WebOverlayActivityBase(USER_AGENT_DESKTOP_CONST)
+
+/**
  * Internal overlay for the app; this is tied with the main task and is singleTop as opposed to singleInstance
  */
 class WebOverlayActivity : WebOverlayActivityBase()
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class WebOverlayActivityBase : BaseActivity(),
+abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) : BaseActivity(),
     ActivityContract, FrostContentContainer,
     VideoViewHolder, FileChooserContract by FileChooserDelegate() {
 
@@ -207,6 +222,7 @@ abstract class WebOverlayActivityBase : BaseActivity(),
         }
 
         with(web) {
+            userAgentString = userAgent
             Prefs.prevId = Prefs.userId
             val authDefer = BiometricUtils.authenticate(this@WebOverlayActivityBase)
             launch {

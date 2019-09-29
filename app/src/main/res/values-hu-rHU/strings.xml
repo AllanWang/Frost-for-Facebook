@@ -24,7 +24,6 @@
     <string name="welcome">Üdv, %s</string>
     <string name="select_facebook_account">Válaszd ki a Facebook-fiókod</string>
     <string name="account_not_found">A jelenlegi fiók nem szerepel az adatbázisban</string>
-    <string name="frost_requests">Frost kérések</string>
     <string name="frost_notifications">Frost értesítések</string>
     <string name="requires_custom_theme">Egyéni téma szükséges</string>
     <string name="subject">Tárgy</string>

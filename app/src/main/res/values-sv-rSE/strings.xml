@@ -23,7 +23,6 @@
     <string name="welcome">Välkommen %s</string>
     <string name="select_facebook_account">Välj Facebook-konto</string>
     <string name="account_not_found">Kontot existerar inte</string>
-    <string name="frost_requests">Frost Requests</string>
     <string name="frost_notifications">Frost-Notifikationer</string>
     <string name="requires_custom_theme">Kräver anpassat tema</string>
     <string name="subject">Ämne</string>

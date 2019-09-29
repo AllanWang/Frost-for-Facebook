@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.1
+* Convert facebook desktop urls to mobile ones
+
 ## v2.4.0
 * Removed request services, which potentially caused phishing warnings.
 * Save images with the correct extensions.
