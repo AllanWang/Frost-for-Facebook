@@ -87,6 +87,7 @@ import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.utils.ACTIVITY_SETTINGS
+import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.MAIN_TIMEOUT_DURATION
@@ -521,7 +522,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         lastAccessTime = System.currentTimeMillis() // precaution to avoid loops
         controlWebview?.resumeTimers()
         launch {
+            val authDefer = BiometricUtils.authenticate(this@BaseMainActivity)
             FbCookie.switchBackUser()
+            authDefer.await()
             if (shouldReload && Prefs.autoRefreshFeed) {
                 refreshAll()
             }
