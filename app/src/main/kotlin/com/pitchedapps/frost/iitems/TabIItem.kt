@@ -26,8 +26,7 @@ import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter_extensions.drag.IDraggable
+import com.mikepenz.fastadapter.drag.IDraggable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
@@ -35,14 +34,12 @@ import com.pitchedapps.frost.utils.Prefs
 /**
  * Created by Allan Wang on 26/11/17.
  */
-class TabIItem(val item: FbItem) : KauIItem<TabIItem, TabIItem.ViewHolder>(
+class TabIItem(val item: FbItem) : KauIItem<TabIItem.ViewHolder>(
     R.layout.iitem_tab_preview,
     { ViewHolder(it) }
-), IDraggable<TabIItem, IItem<*, *>> {
+), IDraggable {
 
-    override fun withIsDraggable(draggable: Boolean): TabIItem = this
-
-    override fun isDraggable() = true
+    override val isDraggable: Boolean = true
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TabIItem>(itemView) {
 

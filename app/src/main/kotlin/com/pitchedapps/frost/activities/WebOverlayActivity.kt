@@ -47,8 +47,8 @@ import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.mikepenz.community_material_typeface_library.CommunityMaterial
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.contracts.FileChooserContract
@@ -290,6 +290,7 @@ abstract class WebOverlayActivityBase : BaseActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (onActivityResultWeb(requestCode, resultCode, data)) return
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

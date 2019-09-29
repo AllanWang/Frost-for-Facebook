@@ -67,7 +67,7 @@ class FbUrlFormatter(url: String) {
             return url
         }
         cleanedUrl = cleanedUrl.replace("&amp;", "&")
-        if (changed && !cleanedUrl.contains("?")) //ensure we aren't missing '?'
+        if (changed && !cleanedUrl.contains("?")) // ensure we aren't missing '?'
             cleanedUrl = cleanedUrl.replaceFirst("&", "?")
         val qm = cleanedUrl.indexOf("?")
         if (qm > -1) {
@@ -82,7 +82,7 @@ class FbUrlFormatter(url: String) {
         cleanedUrl = cleanedUrl.replaceFirst(
             ".facebook.com//",
             ".facebook.com/"
-        ) //sometimes we are given a bad url
+        ) // sometimes we are given a bad url
         L.v { "Formatted url from $url to $cleanedUrl" }
         return cleanedUrl
     }

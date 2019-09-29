@@ -48,7 +48,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
@@ -258,7 +258,7 @@ class ImageActivity : KauBaseActivity() {
         ) {
             super.onViewPositionChanged(changedView, left, top, dx, dy)
             with(binding) {
-                //make sure that we are using the proper axis
+                // make sure that we are using the proper axis
                 scrollPercent = abs(top.toFloat() / imageContainer.height)
                 scrollToTop = top < 0
                 val multiplier = max(1f - scrollPercent, 0f)

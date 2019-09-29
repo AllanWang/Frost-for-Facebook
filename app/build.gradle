@@ -260,7 +260,9 @@ dependencies {
 
     implementation "com.devbrackets.android:exomedia:${Versions.exoMedia}"
 
-    implementation kau.Dependencies.fastAdapter("extensions")
+    implementation kau.Dependencies.fastAdapter("diff")
+    implementation kau.Dependencies.fastAdapter("drag")
+    implementation kau.Dependencies.fastAdapter("expandable")
 
     //noinspection GradleDependency
     implementation kau.Dependencies.glide

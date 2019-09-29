@@ -40,11 +40,11 @@ import ca.allanwang.kau.utils.withMinAlpha
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
-import com.mikepenz.community_material_typeface_library.CommunityMaterial
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.typeface.IIcon
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
@@ -87,7 +87,7 @@ class AboutActivity : AboutActivityBase(null, {
     var lastClick = -1L
     var clickCount = 0
 
-    override fun postInflateMainPage(adapter: FastItemThemedAdapter<IItem<*, *>>) {
+    override fun postInflateMainPage(adapter: FastItemThemedAdapter<GenericItem>) {
         /**
          * Frost may not be a library but we're conveying the same info
          */
@@ -104,7 +104,7 @@ class AboutActivity : AboutActivityBase(null, {
             }
         }
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
-        adapter.withOnClickListener { _, _, item, _ ->
+        adapter.onClickListener = { _, _, item, _ ->
             if (item is LibraryIItem) {
                 val now = System.currentTimeMillis()
                 if (now - lastClick > 500)
@@ -126,13 +126,15 @@ class AboutActivity : AboutActivityBase(null, {
         }
     }
 
-    class AboutLinks : AbstractItem<AboutLinks, AboutLinks.ViewHolder>(),
+    class AboutLinks : AbstractItem< AboutLinks.ViewHolder>(),
         ThemableIItem by ThemableIItemDelegate() {
         override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
-        override fun getType(): Int = R.id.item_about_links
+        override val layoutRes: Int
+            get() = R.layout.item_about_links
 
-        override fun getLayoutRes(): Int = R.layout.item_about_links
+        override val type: Int
+            get() = R.id.item_about_links
 
         override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
             super.bindView(holder, payloads)

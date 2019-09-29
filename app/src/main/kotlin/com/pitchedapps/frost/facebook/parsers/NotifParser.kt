@@ -105,13 +105,13 @@ private class NotifParserImpl : FrostParserBase<FrostNotifs>(false) {
         val a = element.getElementsByTag("a").first() ?: return null
         val abbr = element.getElementsByTag("abbr")
         val epoch = FB_EPOCH_MATCHER.find(abbr.attr("data-store"))[1]?.toLongOrNull() ?: -1L
-        //fetch id
+        // fetch id
         val id = FB_NOTIF_ID_MATCHER.find(element.id())[1]?.toLongOrNull()
             ?: System.currentTimeMillis() % FALLBACK_TIME_MOD
         val img = element.getInnerImgStyle()
         val timeString = abbr.text()
         val content =
-            a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() //remove &nbsp;
+            a.text().replace("\u00a0", " ").removeSuffix(timeString).trim() // remove &nbsp;
         val thumbnail = element.selectFirst("img.thumbnail")?.attr("src")
         return FrostNotif(
             id = id,

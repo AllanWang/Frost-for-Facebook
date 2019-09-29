@@ -41,7 +41,7 @@ import ca.allanwang.kau.utils.postDelayed
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.statusBarColor
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
@@ -123,7 +123,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
      * All fragments are locked in position
      */
     override fun transformPage(page: View, position: Float) {
-        //only apply to adjacent pages
+        // only apply to adjacent pages
         if ((position < 0 && position > -1) || (position > 0 && position < 1)) {
             val pageWidth = page.width
             val translateValue = position * -pageWidth

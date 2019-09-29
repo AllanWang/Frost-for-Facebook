@@ -45,7 +45,7 @@ class KPrefTextSeekbar(builder: KPrefSeekbarContract) : KPrefSeekbar(builder) {
     }
 
     @SuppressLint("MissingSuperCall")
-    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
         descOriginalSize = holder.desc?.textSize ?: 1f
         holder.desc?.layoutParams

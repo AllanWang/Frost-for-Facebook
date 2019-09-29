@@ -32,7 +32,7 @@ import ca.allanwang.kau.utils.Kotterknife
 import ca.allanwang.kau.utils.bindViewResettable
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.setOnSingleTapListener
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.utils.Prefs
