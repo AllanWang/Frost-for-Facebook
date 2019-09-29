@@ -89,7 +89,9 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun longClick(start: Boolean) {
         activity?.viewPager?.enableSwipe = !start
-        web.parent.swipeEnabled = !start
+        if (web.frostWebClient.urlSupportsRefresh) {
+            web.parent.swipeEnabled = !start
+        }
     }
 
     /**
@@ -97,6 +99,9 @@ class FrostJSI(val web: FrostWebView) {
      */
     @JavascriptInterface
     fun disableSwipeRefresh(disable: Boolean) {
+        if (!web.frostWebClient.urlSupportsRefresh) {
+            return
+        }
         web.parent.swipeEnabled = !disable
         if (disable) {
             // locked onto an input field; ensure content is visible
