@@ -37,8 +37,8 @@ import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withSceneTransitionAnimation
 import com.afollestad.materialdialogs.list.listItems
-import com.mikepenz.community_material_typeface_library.CommunityMaterial
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.settings.getAppearancePrefs
@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
  */
 class SettingsActivity : KPrefActivity() {
 
-    var resultFlag = Activity.RESULT_CANCELED
+    private var resultFlag = Activity.RESULT_CANCELED
 
     companion object {
         private const val REQUEST_RINGTONE = 0b10111 shl 5
@@ -78,6 +78,7 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (fetchRingtone(requestCode, resultCode, data)) return
         when (requestCode) {
             ACTIVITY_REQUEST_TABS -> {

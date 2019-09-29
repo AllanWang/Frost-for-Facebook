@@ -249,11 +249,11 @@ fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) 
 @SuppressLint("RestrictedApi")
 private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
     builder()
-    //hacky workaround, but it has proper checks and shouldn't crash
+    // hacky workaround, but it has proper checks and shouldn't crash
     ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
         messageView.setTextColor(Prefs.textColor)
         actionView.setTextColor(Prefs.accentColor)
-        //only set if previous text colors are set
+        // only set if previous text colors are set
         view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
     }
 }
@@ -323,10 +323,10 @@ inline val String.isIndirectImageUrl: Boolean
  */
 inline val String?.isIndependent: Boolean
     get() {
-        if (this == null || length < 5) return false                // ignore short queries
-        if (this[0] == '#' && !contains('/')) return false          // ignore element values
-        if (startsWith("http") && !isFacebookUrl) return true       // ignore non facebook urls
-        if (dependentSegments.any { contains(it) }) return false    // ignore known dependent segments
+        if (this == null || length < 5) return false // ignore short queries
+        if (this[0] == '#' && !contains('/')) return false // ignore element values
+        if (startsWith("http") && !isFacebookUrl) return true // ignore non facebook urls
+        if (dependentSegments.any { contains(it) }) return false // ignore known dependent segments
         return true
     }
 

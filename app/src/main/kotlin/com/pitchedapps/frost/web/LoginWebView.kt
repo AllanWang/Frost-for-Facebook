@@ -106,7 +106,7 @@ class LoginWebView @JvmOverloads constructor(
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            //For now, we will ignore all attempts to launch external apps during login
+            // For now, we will ignore all attempts to launch external apps during login
             if (request.url == null || request.url.scheme == "intent" || request.url.scheme == "android-app")
                 return true
             return super.shouldOverrideUrlLoading(view, request)

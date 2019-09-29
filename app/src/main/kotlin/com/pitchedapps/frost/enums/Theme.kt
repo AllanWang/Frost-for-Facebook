@@ -104,7 +104,7 @@ enum class Theme(
         get() = iconColorGetter()
 
     companion object {
-        val values = values() //save one instance
+        val values = values() // save one instance
         operator fun invoke(index: Int) = values[index]
     }
 }

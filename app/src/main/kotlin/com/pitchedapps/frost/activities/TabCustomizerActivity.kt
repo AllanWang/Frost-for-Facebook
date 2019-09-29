@@ -29,10 +29,10 @@ import ca.allanwang.kau.utils.launchMain
 import ca.allanwang.kau.utils.scaleXY
 import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.withAlpha
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
-import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
-import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.drag.ItemTouchCallback
+import com.mikepenz.fastadapter.drag.SimpleDragCallback
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.TAB_COUNT
@@ -84,7 +84,7 @@ class TabCustomizerActivity : BaseActivity() {
 
             bindSwapper(adapter, tab_recycler)
 
-            adapter.withOnClickListener { view, _, _, _ -> view!!.wobble(); true }
+            adapter.onClickListener = { view, _, _, _ -> view!!.wobble(); true }
         }
 
         setResult(Activity.RESULT_CANCELED)

@@ -25,7 +25,7 @@ import kotlin.test.assertEquals
  */
 class PrefsTest {
 
-    //Replicate logic
+    // Replicate logic
     var test: Long = -1L
         get() {
             if (field == -1L) field = file

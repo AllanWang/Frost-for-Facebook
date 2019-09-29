@@ -28,7 +28,8 @@ import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.commons.utils.DiffCallback
+import com.mikepenz.fastadapter.diff.DiffCallback
+import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
@@ -42,14 +43,17 @@ import com.pitchedapps.frost.utils.launchWebOverlay
  * Created by Allan Wang on 27/12/17.
  */
 class NotificationIItem(val notification: FrostNotif, val cookie: String) :
-    KauIItem<NotificationIItem, NotificationIItem.ViewHolder>(
+    KauIItem<NotificationIItem.ViewHolder>(
         R.layout.iitem_notification, ::ViewHolder
     ) {
 
     companion object {
         fun bindEvents(adapter: ItemAdapter<NotificationIItem>) {
-            adapter.fastAdapter.withSelectable(false)
-                .withOnClickListener { v, _, item, position ->
+            adapter.fastAdapter?.apply {
+                selectExtension {
+                    isSelectable = false
+                }
+                onClickListener = { v, _, item, position ->
                     val notif = item.notification
                     if (notif.unread) {
                         adapter.set(
@@ -61,9 +65,10 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                     v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
                     true
                 }
+            }
         }
 
-        //todo see if necessary
+        // todo see if necessary
         val DIFF: DiffCallback<NotificationIItem> by lazy(::Diff)
     }
 
@@ -72,7 +77,10 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         override fun areItemsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
             oldItem.notification.id == newItem.notification.id
 
-        override fun areContentsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
+        override fun areContentsTheSame(
+            oldItem: NotificationIItem,
+            newItem: NotificationIItem
+        ) =
             oldItem.notification == newItem.notification
 
         override fun getChangePayload(

@@ -23,8 +23,9 @@ import ca.allanwang.kau.iitems.KauIItem
 import ca.allanwang.kau.ui.createSimpleRippleDrawable
 import ca.allanwang.kau.utils.bindView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
@@ -46,15 +47,19 @@ interface ClickableIItemContract {
     }
 
     companion object {
-        fun bindEvents(adapter: IAdapter<IItem<*, *>>) {
-            adapter.fastAdapter.withSelectable(false)
-                .withOnClickListener { v, _, item, _ ->
+        fun bindEvents(adapter: IAdapter<GenericItem>) {
+            adapter.fastAdapter?.apply {
+                selectExtension {
+                    isSelectable = false
+                }
+                onClickListener = { v, _, item, _ ->
                     if (item is ClickableIItemContract) {
                         item.click(v!!.context)
                         true
                     } else
                         false
                 }
+            }
         }
     }
 }
@@ -66,7 +71,7 @@ interface ClickableIItemContract {
 open class HeaderIItem(
     val text: String?,
     itemId: Int = R.layout.iitem_header
-) : KauIItem<HeaderIItem, HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
+) : KauIItem<HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView) {
 
@@ -92,7 +97,7 @@ open class TextIItem(
     val text: String?,
     override val url: String?,
     itemId: Int = R.layout.iitem_text
-) : KauIItem<TextIItem, TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
+) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
     ClickableIItemContract {
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView) {

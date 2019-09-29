@@ -67,7 +67,7 @@ class BadgedIcon @JvmOverloads constructor(
         }
 
     fun setAllAlpha(alpha: Float) {
-        //badgeTextView.setTextColor(Prefs.textColor.withAlpha(alpha.toInt()))
+        // badgeTextView.setTextColor(Prefs.textColor.withAlpha(alpha.toInt()))
         badge_image.drawable.alpha = alpha.toInt()
     }
 

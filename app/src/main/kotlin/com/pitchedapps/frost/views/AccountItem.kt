@@ -31,7 +31,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.profilePictureUrl
@@ -42,12 +42,12 @@ import com.pitchedapps.frost.utils.Prefs
 /**
  * Created by Allan Wang on 2017-06-05.
  */
-class AccountItem(val cookie: CookieEntity?) : KauIItem<AccountItem, AccountItem.ViewHolder>
+class AccountItem(val cookie: CookieEntity?) : KauIItem<AccountItem.ViewHolder>
     (R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
 
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any>) {
-        super.bindView(viewHolder, payloads)
-        with(viewHolder) {
+    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+        super.bindView(holder, payloads)
+        with(holder) {
             text.invisible()
             text.setTextColor(Prefs.textColor)
             if (cookie != null) {
@@ -97,7 +97,7 @@ class AccountItem(val cookie: CookieEntity?) : KauIItem<AccountItem, AccountItem
         }
     }
 
-    class ViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val image: ImageView by bindView(R.id.account_image)
         val text: AppCompatTextView by bindView(R.id.account_text)
     }

@@ -78,7 +78,7 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun contextMenu(url: String?, text: String?) {
-        //url will be formatted through webcontext
+        // url will be formatted through webcontext
         web.post { context.showWebContextMenu(WebContext(url.takeIf { it.isIndependent }, text)) }
     }
 

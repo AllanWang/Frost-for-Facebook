@@ -29,7 +29,7 @@ enum class FeedSort(@StringRes val textRes: Int, val item: FbItem) {
     TOP(R.string.top_stories, FbItem.FEED_TOP_STORIES);
 
     companion object {
-        val values = values() //save one instance
+        val values = values() // save one instance
         operator fun invoke(index: Int) = values[index]
     }
 }

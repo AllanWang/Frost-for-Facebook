@@ -103,7 +103,7 @@ class FbUrlTest {
 
     @Test
     fun video() {
-        //note that the video numbers have been changed to maintain privacy
+        // note that the video numbers have been changed to maintain privacy
         val url =
             "/video_redirect/?src=https%3A%2F%2Fvideo-yyz1-1.xx.fbcdn.net%2Fv%2Ft42.1790-2%2F2349078999904_n.mp4%3Fefg%3DeyJ87J9%26oh%3Df5777784%26oe%3D56FD4&source=media_collage&id=1735049&refid=8&_ft_=qid.6484464%3Amf_story_key.-43172431214%3Atop_level_post_id.102773&__tn__=FEH-R"
         val expected =

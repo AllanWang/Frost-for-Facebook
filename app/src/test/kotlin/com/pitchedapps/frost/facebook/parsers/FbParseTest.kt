@@ -44,11 +44,17 @@ class FbParseTest {
     private inline fun <reified T : ParseData> FrostParser<T>.test(action: T.() -> Unit = {}) =
         parse(COOKIE).test(url, action)
 
-    private inline fun <reified T : ParseData> ParseResponse<T>?.test(url: String, action: T.() -> Unit = {}) {
+    private inline fun <reified T : ParseData> ParseResponse<T>?.test(
+        url: String,
+        action: T.() -> Unit = {}
+    ) {
         val response = this
             ?: fail("${T::class.simpleName} parser returned null for $url")
         println(response)
-        assertFalse(response.data.isEmpty, "${T::class.simpleName} parser returned empty data for $url")
+        assertFalse(
+            response.data.isEmpty,
+            "${T::class.simpleName} parser returned empty data for $url"
+        )
         response.data.action()
     }
 
@@ -77,5 +83,14 @@ class FbParseTest {
             assertNotNull(it.img, "img may not be properly matched")
         }
         notifs.map(FrostNotif::time).assertDescending("notif time values")
+        if (notifs.none { it.unread }) {
+            println("No messages unread.")
+        }
+        notifs.forEach {
+            assertFalse(
+                it.content.startsWith("unread", ignoreCase = true),
+                "Parse error; notif starts with 'Unread'"
+            )
+        }
     }
 }

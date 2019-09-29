@@ -25,7 +25,7 @@ import ca.allanwang.kau.kpref.KPref
  */
 object Showcase : KPref() {
 
-    //check if this is the first time launching the web overlay; show snackbar if true
+    // check if this is the first time launching the web overlay; show snackbar if true
     val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
 
     val intro: Boolean by kprefSingle("intro_pages")
