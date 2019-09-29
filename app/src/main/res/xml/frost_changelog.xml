@@ -13,6 +13,7 @@
     <item text="Fix biometric prompt, and prompt on activity resume" />
     <item text="Fix notification title" />
     <item text="Add option to open overlay links in browser" />
+    <item text="Disable swipe to refresh for composer and sharer pages" />
     <item text="" />
 
     <version title="v2.4.0" />

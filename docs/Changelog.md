@@ -7,6 +7,7 @@
 * Fix biometric prompt, and prompt on activity resume
 * Fix notification title
 * Add option to open overlay links in browser
+* Disable swipe to refresh for composer and sharer pages
 
 ## v2.4.0
 * Removed request services, which potentially caused phishing warnings.

@@ -6,3 +6,4 @@ v2.4.1
 * Fix biometric prompt, and prompt on activity resume
 * Fix notification title
 * Add option to open overlay links in browser
+* Disable swipe to refresh for composer and sharer pages
