@@ -24,7 +24,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
-import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM

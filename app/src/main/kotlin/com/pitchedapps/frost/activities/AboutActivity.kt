@@ -126,7 +126,7 @@ class AboutActivity : AboutActivityBase(null, {
         }
     }
 
-    class AboutLinks : AbstractItem< AboutLinks.ViewHolder>(),
+    class AboutLinks : AbstractItem<AboutLinks.ViewHolder>(),
         ThemableIItem by ThemableIItemDelegate() {
         override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
