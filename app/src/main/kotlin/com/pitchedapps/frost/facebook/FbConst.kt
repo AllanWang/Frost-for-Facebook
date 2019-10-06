@@ -42,6 +42,8 @@ const val USER_AGENT_MOBILE_CONST =
 // Desktop agent, for pages like messages
 const val USER_AGENT_DESKTOP_CONST =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Safari/537.36"
+const val USER_AGENT_HD_CONST =
+    "Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
 
 const val USER_AGENT = USER_AGENT_DESKTOP_CONST
 

@@ -398,11 +398,11 @@ fun EmailBuilder.addFrostDetails() {
 
 fun frostJsoup(url: String): Document = frostJsoup(FbCookie.webCookie, url)
 
-fun frostJsoup(cookie: String?, url: String): Document =
+fun frostJsoup(cookie: String?, url: String, userAgent: String = USER_AGENT): Document =
     Jsoup.connect(url).run {
         if (cookie.isNullOrBlank()) this
         else cookie(FACEBOOK_COM, cookie)
-    }.userAgent(USER_AGENT).get()
+    }.userAgent(userAgent).get()
 
 fun Element.first(vararg select: String): Element? {
     select.forEach {
