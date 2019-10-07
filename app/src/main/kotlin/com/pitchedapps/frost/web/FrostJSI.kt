@@ -126,11 +126,6 @@ class FrostJSI(val web: FrostWebView) {
     }
 
     @JavascriptInterface
-    fun loadImageById(url: String): Boolean {
-        return false
-    }
-
-    @JavascriptInterface
     fun emit(flag: Int) {
         web.post { web.frostWebClient.emit(flag) }
     }
