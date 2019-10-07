@@ -57,7 +57,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import org.koin.android.ext.android.inject
 import java.net.UnknownHostException
 import kotlin.coroutines.resume
@@ -175,9 +174,7 @@ class LoginActivity : BaseActivity() {
 
     private suspend fun loadUsername(cookie: CookieEntity): String? = withContext(Dispatchers.IO) {
         val result: String? = try {
-            withTimeout(5000) {
-                frostJsoup(cookie.cookie, FbItem.PROFILE.url).title()
-            }
+            frostJsoup(cookie.cookie, FbItem.PROFILE.url).title()
         } catch (e: Exception) {
             if (e !is UnknownHostException)
                 e.logFrostEvent("Fetch username failed")

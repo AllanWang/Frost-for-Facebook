@@ -21,6 +21,7 @@ import com.pitchedapps.frost.internal.authDependent
 import kotlinx.coroutines.runBlocking
 import org.junit.BeforeClass
 import org.junit.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 /**
@@ -38,11 +39,16 @@ class FbFullImageTest {
 
     @Test
     fun getFullImage() {
-        val url = "https://touch.facebook.com/photo/view_full_size/?fbid=107368839645039"
-        val result = runBlocking {
-            COOKIE.getFullSizedImageUrl(url)
-        }
-        assertNotNull(result)
+        val id = "107368839645039"
+        val url = FbImageData.fullSizeImageUrl(id)
+        val result = COOKIE.getFullSizedImageUrl(url)
+        assertEquals(id, FbImageData.urlImageId(result))
+    }
+
+    @Test
+    fun getImageData() {
+        val result = COOKIE.getImageData("895534407495141")
+        assertEquals(FbImageData(current = "895534407495141", prev = "508130796235506", next = "895534404161808"), result)
         println(result)
     }
 }

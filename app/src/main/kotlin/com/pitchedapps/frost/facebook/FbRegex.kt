@@ -57,7 +57,8 @@ val FB_JSON_URL_MATCHER: Regex = Regex("\"(http.*?)\"")
  * Currently, opening this url in a new tab is not possible.
  * However, the photos id alone is sufficient.
  */
-val FB_IMAGE_ID_MATCHER: Regex = Regex("fbcdn.*?/[0-9]+_([0-9]+)_")
+val FB_FBCDN_ID_MATCHER: Regex = Regex("fbcdn.*?/[0-9]+_([0-9]+)_")
+val FB_PHOTO_ID_MATCHER: Regex = Regex("photo.*?fbid=([0-9]+)")
 val FB_REDIRECT_URL_MATCHER: Regex = Regex("url=(.*?fbcdn.*?)\"")
 
 operator fun MatchResult?.get(groupIndex: Int) = this?.groupValues?.get(groupIndex)

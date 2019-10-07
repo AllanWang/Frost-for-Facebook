@@ -52,10 +52,11 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
-import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
+import com.pitchedapps.frost.facebook.FB_FBCDN_ID_MATCHER
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
+import com.pitchedapps.frost.facebook.requests.getImageData
 import com.pitchedapps.frost.facebook.requests.requestBuilder
 import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
@@ -64,7 +65,6 @@ import com.pitchedapps.frost.utils.ARG_TEXT
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile
-import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
@@ -139,7 +139,7 @@ class ImageActivity : KauBaseActivity() {
 
     // a unique image identifier based on the id (if it exists), and its hash
     private val imageHash: String by lazy {
-        "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
+        "${abs(FB_FBCDN_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
     }
 
     private lateinit var binding: ActivityImageBinding
@@ -171,11 +171,13 @@ class ImageActivity : KauBaseActivity() {
         }
         L.i { "Displaying image" }
         trueImageUrl = async(Dispatchers.IO) {
-            val result = if (!imageUrl.isIndirectImageUrl) imageUrl
-            else cookie?.getFullSizedImageUrl(imageUrl) ?: imageUrl
+            val result = cookie.getFullSizedImageUrl(imageUrl)
             if (result != imageUrl)
                 L.v { "Launching with true url $result" }
             result
+        }
+        launch(Dispatchers.IO) {
+            cookie?.getImageData(imageUrl)
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_image)
         binding.onCreate()

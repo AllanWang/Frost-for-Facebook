@@ -17,14 +17,18 @@
 package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.BuildConfig
+import com.pitchedapps.frost.facebook.HTTP_TIMEOUT_MS
 import com.pitchedapps.frost.facebook.USER_AGENT
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 
 val httpClient: OkHttpClient by lazy {
     val builder = OkHttpClient.Builder()
+        .connectTimeout(HTTP_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+        .callTimeout(HTTP_TIMEOUT_MS, TimeUnit.MILLISECONDS)
     if (BuildConfig.DEBUG)
         builder.addInterceptor(
             HttpLoggingInterceptor()

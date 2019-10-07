@@ -71,6 +71,6 @@ class FbRegexTest {
     fun imageIdRegex() {
         val id = 123456L
         val img = "https://scontent-yyz1-1.xx.fbcdn.net/v/t31.0-8/fr/cp0/e15/q65/89056_${id}_98239_o.jpg"
-        assertEquals(id, FB_IMAGE_ID_MATCHER.find(img)[1]?.toLongOrNull())
+        assertEquals(id, FB_FBCDN_ID_MATCHER.find(img)[1]?.toLongOrNull())
     }
 }

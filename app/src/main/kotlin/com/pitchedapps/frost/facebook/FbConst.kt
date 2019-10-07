@@ -56,3 +56,5 @@ const val WEB_LOAD_DELAY = 50L
  * will never make a load slower than it is
  */
 const val WEB_COMMIT_LOAD_DELAY = 200L
+
+const val HTTP_TIMEOUT_MS = 15000L
