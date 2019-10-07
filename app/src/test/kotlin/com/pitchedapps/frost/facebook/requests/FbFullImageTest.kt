@@ -23,6 +23,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 /**
  * Created by Allan Wang on 12/04/18.
@@ -48,7 +49,10 @@ class FbFullImageTest {
     @Test
     fun getImageData() {
         val result = COOKIE.getImageData("895534407495141")
-        assertEquals(FbImageData(current = "895534407495141", prev = "508130796235506", next = "895534404161808"), result)
+        assertEquals("895534407495141", result.current)
+        assertEquals("508130796235506", result.prev)
+        assertEquals("895534404161808", result.next)
+        assertTrue(result.url.contains("fbcdn"))
         println(result)
     }
 }

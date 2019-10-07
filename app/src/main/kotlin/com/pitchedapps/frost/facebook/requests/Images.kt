@@ -47,18 +47,26 @@ fun String?.getFullSizedImageUrl(url: String): String {
 }
 
 @Parcelize
-data class FbImageData(val current: String, val prev: String? = null, val next: String? = null) :
+data class FbImageData(
+    val current: String,
+    val url: String,
+    val prev: String? = null,
+    val next: String? = null
+) :
     Parcelable {
     companion object {
         fun imageContextUrl(id: String) = "https://mbasic.facebook.com/photo.php?fbid=$id"
         fun fullSizeImageUrl(id: String) =
             "https://mbasic.facebook.com/photo/view_full_size/?fbid=$id"
-        fun urlImageId(url: String): String? = FB_FBCDN_ID_MATCHER.find(url)[1] ?: FB_PHOTO_ID_MATCHER.find(url)[1]
+
+        fun urlImageId(url: String): String? =
+            FB_FBCDN_ID_MATCHER.find(url)[1] ?: FB_PHOTO_ID_MATCHER.find(url)[1]
     }
 }
 
 fun String?.getImageData(id: String): FbImageData {
-    fun fallback() = FbImageData(current = id)
+    val url = getFullSizedImageUrl(FbImageData.fullSizeImageUrl(id))
+    fun fallback() = FbImageData(current = id, url = url)
     if (this == null) return fallback()
     val doc = try {
         frostJsoup(url = FbImageData.imageContextUrl(id), cookie = this)
@@ -72,7 +80,6 @@ fun String?.getImageData(id: String): FbImageData {
      */
     fun Element.adjacentId(): String? {
         val adjacentUrl = selectFirst("a")?.attr("href") ?: return null
-        println(adjacentUrl)
         return FbImageData.urlImageId(adjacentUrl)
     }
 
@@ -84,5 +91,5 @@ fun String?.getImageData(id: String): FbImageData {
             ?.takeIf { it.size == 2 }
             ?: return fallback()
 
-    return FbImageData(current = id, prev = adjacent[0], next = adjacent[1])
+    return FbImageData(current = id, url = url, prev = adjacent[0], next = adjacent[1])
 }
