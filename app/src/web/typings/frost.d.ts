@@ -15,6 +15,8 @@ declare interface FrostJSI {
 
   loadImage(imageUrl: string, text: string | null)
 
+  loadImageById(id: string): boolean
+
   emit(flag: number)
 
   isReady()

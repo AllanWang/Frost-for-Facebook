@@ -71,6 +71,21 @@
     };
 
     /**
+     * Opens image activity by nearest link parent
+     */
+    const _frostImageById: EventHandler = (e, target) => {
+        const element = _parentEl(target, 5, (el) => el.tagName === 'A');
+        if (!element) {
+            return false;
+        }
+        const url = element.getAttribute('href');
+        if (!url || url.indexOf('photo') === -1) {
+            return false;
+        }
+        return Frost.loadImageById(url);
+    };
+
+    /**
      * Opens image activity for posts with just one image
      */
     const _frostImage: EventHandler = (e, target) => {
@@ -103,7 +118,7 @@
         return true;
     };
 
-    const handlers: EventHandler[] = [_frostImage, _frostCopyComment, _frostCopyPost];
+    const handlers: EventHandler[] = [_frostImageById, _frostImage, _frostCopyComment, _frostCopyPost];
 
     const _frostAContext = (e: Event) => {
         Frost.longClick(true);
