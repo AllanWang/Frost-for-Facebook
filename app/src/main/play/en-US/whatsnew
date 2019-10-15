@@ -1,9 +1,3 @@
-v2.4.1
+v2.4.2
 
-* Add better support for mobile url conversions
-* Notification tab will keep first page in the same window; fixes marking notifications as read
-* Fix nav and status bar icon colors for custom themes (Android O+)
-* Fix biometric prompt, and prompt on activity resume
-* Fix notification title
-* Add option to open overlay links in browser
-* Disable swipe to refresh for composer and sharer pages
+* Fix back stack history

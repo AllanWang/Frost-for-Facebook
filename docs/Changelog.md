@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.2
+* Fix back stack history
+
 ## v2.4.1
 * Add better support for mobile url conversions
 * Notification tab will keep first page in the same window; fixes marking notifications as read
