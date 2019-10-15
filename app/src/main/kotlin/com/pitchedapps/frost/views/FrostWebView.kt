@@ -33,6 +33,7 @@ import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
@@ -130,15 +131,23 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     /**
-     * By 2018-10-17, facebook automatically adds their home page to the back stack,
+     * 2018-10-17. facebook automatically adds their home page to the back stack,
      * regardless of the loaded url. We will make sure we skip it when going back.
+     *
+     * 2019-10-14. Looks like facebook now randomly populates some links with the home page,
+     * especially those that are launched with a blank target...
+     * In some cases, there can be more than one home target in a row.
      */
     override fun onBackPressed(): Boolean {
-        if (canGoBackOrForward(-2)) {
-            goBack()
+        val list = copyBackForwardList()
+        if (list.currentIndex >= 2) {
+            val skipCount = (1..list.currentIndex).firstOrNull {
+                list.getItemAtIndex(list.currentIndex - it).url != FB_HOME_URL
+            } ?: return false // If no non home url is found, we will treat the stack as empty
+            L.v { "onBackPress: going back ${if (skipCount == 1) "one page" else "$skipCount pages"}" }
+            goBackOrForward(-skipCount)
             return true
         }
-        val list = copyBackForwardList()
         if (list.currentIndex == 1 && list.getItemAtIndex(0).url == FB_HOME_URL) {
             return false
         }
