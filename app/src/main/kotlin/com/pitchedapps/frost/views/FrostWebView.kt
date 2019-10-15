@@ -211,10 +211,7 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     override fun destroy() {
-        val parent = getParent() as? ViewGroup
-        if (parent != null) {
-            parent.removeView(this)
-            super.destroy()
-        }
+        (getParent() as? ViewGroup)?.removeView(this)
+        super.destroy()
     }
 }
