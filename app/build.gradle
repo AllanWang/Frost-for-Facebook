@@ -245,6 +245,7 @@ dependencies {
     implementation kau.Dependencies.kau('searchview', KAU)
 
     implementation "androidx.core:core-ktx:${Versions.ktx}"
+    implementation kau.Dependencies.swipeRefreshLayout
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 

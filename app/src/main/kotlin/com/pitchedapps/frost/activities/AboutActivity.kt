@@ -78,7 +78,12 @@ class AboutActivity : AboutActivityBase(null, {
             "subsamplingscaleimageview"
         )
 
-        val l = libs.prepareLibraries(this, include, null, false, true, true)
+        val l = libs.prepareLibraries(
+            this, include, emptyArray(),
+            autoDetect = false,
+            checkCachedDetection = true,
+            sort = true
+        )
         if (BuildConfig.DEBUG)
             l.forEach { KL.d { "Lib ${it.definedName}" } }
         return l
@@ -91,18 +96,22 @@ class AboutActivity : AboutActivityBase(null, {
         /**
          * Frost may not be a library but we're conveying the same info
          */
-        val frost = Library().apply {
-            libraryName = string(R.string.frost_name)
-            author = string(R.string.dev_name)
-            libraryWebsite = string(R.string.github_url)
-            isOpenSource = true
-            libraryDescription = string(R.string.frost_description)
-            libraryVersion = BuildConfig.VERSION_NAME
-            license = License().apply {
-                licenseName = "GNU GPL v3"
-                licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-            }
-        }
+        val frost = Library(
+            definedName = "frost",
+            libraryName = string(R.string.frost_name),
+            author = string(R.string.dev_name),
+            libraryWebsite = string(R.string.github_url),
+            isOpenSource = true,
+            libraryDescription = string(R.string.frost_description),
+            libraryVersion = BuildConfig.VERSION_NAME,
+            license = License(
+                definedName = "gplv3",
+                licenseName = "GNU GPL v3",
+                licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
+                licenseDescription = "",
+                licenseShortDescription = ""
+            )
+        )
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
         adapter.onClickListener = { _, _, item, _ ->
             if (item is LibraryIItem) {

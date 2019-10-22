@@ -31,6 +31,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -66,8 +67,8 @@ class OfflineWebsite(
      * Supplied url without the queries
      */
     private val baseUrl: String = baseUrl ?: run {
-        val url: HttpUrl = HttpUrl.parse(url) ?: throw IllegalArgumentException("Malformed url")
-        return@run "${url.scheme()}://${url.host()}"
+        val url: HttpUrl = url.toHttpUrlOrNull() ?: throw IllegalArgumentException("Malformed url")
+        return@run "${url.scheme}://${url.host}"
     }
 
     private val mainFile = File(baseDir, "index.html")
@@ -237,7 +238,7 @@ class OfflineWebsite(
         return try {
             val file = File(assetDir, fileName(url))
             file.createNewFile()
-            val stream = request(url).execute().body()?.byteStream()
+            val stream = request(url).execute().body?.byteStream()
                 ?: throw IllegalArgumentException("Response body not found for $url")
             file.copyFromInputStream(stream)
             true
@@ -252,7 +253,7 @@ class OfflineWebsite(
             val file = File(assetDir, fileName(url))
             file.createNewFile()
 
-            var content = request(url).execute().body()?.string()
+            var content = request(url).execute().body?.string()
                 ?: throw IllegalArgumentException("Response body not found for $url")
             val links = FB_CSS_URL_MATCHER.findAll(content).mapNotNull { it[1] }
             val absLinks = links.mapNotNull {
