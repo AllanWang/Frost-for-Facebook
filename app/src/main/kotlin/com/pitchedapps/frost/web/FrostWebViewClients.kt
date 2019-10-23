@@ -201,11 +201,8 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         if (path.startsWith("/composer/")) {
             return launchRequest(request)
         }
-        if (url.isIndirectImageUrl) {
-            return launchImage(url.formattedFbUrl, cookie = FbCookie.webCookie)
-        }
         if (url.isImageUrl) {
-            return launchImage(url.formattedFbUrl)
+            return launchImage(url.formattedFbUrl, cookie = FbCookie.webCookie)
         }
         if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) {
             return true

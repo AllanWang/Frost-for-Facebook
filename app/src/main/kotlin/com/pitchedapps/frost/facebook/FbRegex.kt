@@ -22,7 +22,7 @@ package com.pitchedapps.frost.facebook
  * Collection of regex matchers
  * Input text must be properly unescaped
  *
- * See [StringEscapeUtils]
+ * See [org.apache.commons.text.StringEscapeUtils]
  */
 
 /**
@@ -41,7 +41,24 @@ val FB_NOTIF_ID_MATCHER: Regex = Regex("notif_([0-9]+)")
 val FB_MESSAGE_NOTIF_ID_MATCHER: Regex = Regex("(?:thread|user)_fbid_([0-9]+)")
 val FB_CSS_URL_MATCHER: Regex = Regex("url\\([\"|']?(.*?)[\"|']?\\)")
 val FB_JSON_URL_MATCHER: Regex = Regex("\"(http.*?)\"")
-val FB_IMAGE_ID_MATCHER: Regex = Regex("fbcdn.*?/[0-9]+_([0-9]+)_")
+/**
+ * ID matcher for static images (fbcdn).
+ *
+ * List of other known id matchers:
+ *
+ * 1. Single images by pages:
+ * '/(page)/photos/.../(fbid)/...
+ *
+ * 2. Post pages:
+ * '/photo.php?fbid=(fbid)&id=...&...
+ *
+ * 3. Album images:
+ * '/photos/viewer?photoset_token=...&photos=(fbid)
+ * Currently, opening this url in a new tab is not possible.
+ * However, the photos id alone is sufficient.
+ */
+val FB_FBCDN_ID_MATCHER: Regex = Regex("fbcdn.*?/[0-9]+_([0-9]+)_")
+val FB_PHOTO_ID_MATCHER: Regex = Regex("photo.*?fbid=([0-9]+)")
 val FB_REDIRECT_URL_MATCHER: Regex = Regex("url=(.*?fbcdn.*?)\"")
 
 operator fun MatchResult?.get(groupIndex: Int) = this?.groupValues?.get(groupIndex)

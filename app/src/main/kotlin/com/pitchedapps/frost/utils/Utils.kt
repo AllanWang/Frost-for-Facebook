@@ -64,6 +64,7 @@ import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
+import com.pitchedapps.frost.facebook.HTTP_TIMEOUT_MS
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -399,7 +400,7 @@ fun EmailBuilder.addFrostDetails() {
 fun frostJsoup(url: String): Document = frostJsoup(FbCookie.webCookie, url)
 
 fun frostJsoup(cookie: String?, url: String): Document =
-    Jsoup.connect(url).run {
+    Jsoup.connect(url).timeout(HTTP_TIMEOUT_MS.toInt()).run {
         if (cookie.isNullOrBlank()) this
         else cookie(FACEBOOK_COM, cookie)
     }.userAgent(USER_AGENT).get()
