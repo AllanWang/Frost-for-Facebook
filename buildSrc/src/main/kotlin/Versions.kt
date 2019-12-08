@@ -3,7 +3,7 @@ object Versions {
     const val targetSdk = 29
 
     // https://developer.android.com/jetpack/androidx/releases/biometric
-    const val andxBiometric = "1.0.0-rc01"
+    const val andxBiometric = "1.0.0"
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     // Updates blocked due to javax.script dependency
@@ -14,8 +14,6 @@ object Versions {
     const val koin = "2.0.1"
     // https://github.com/mockk/mockk/releases
     const val mockk = "1.9.3"
-    // https://mvnrepository.com/artifact/androidx.core/core-ktx?repo=google
-    const val ktx = "1.1.0"
 
     // https://github.com/jhy/jsoup/releases
     const val jsoup = "1.12.1"
@@ -26,7 +24,7 @@ object Versions {
     // https://github.com/square/okhttp/releases
     const val okhttp = "4.2.2"
     // https://developer.android.com/jetpack/androidx/releases/room
-    const val room = "2.2.0"
+    const val room = "2.2.2"
     // http://robolectric.org/getting-started/
     const val roboelectric = "4.3"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
