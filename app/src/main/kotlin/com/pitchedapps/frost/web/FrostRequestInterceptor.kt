@@ -22,6 +22,7 @@ import android.webkit.WebView
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.io.ByteArrayInputStream
 
 /**
@@ -40,8 +41,8 @@ private val blankResource: WebResourceResponse by lazy {
 
 fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourceResponse? {
     val requestUrl = request.url?.toString() ?: return null
-    val httpUrl = HttpUrl.parse(requestUrl) ?: return null
-    val host = httpUrl.host()
+    val httpUrl = requestUrl.toHttpUrlOrNull() ?: return null
+    val host = httpUrl.host
     val url = httpUrl.toString()
     if (host.contains("facebook") || host.contains("fbcdn")) return null
     if (FrostPglAdBlock.isAd(host)) return blankResource

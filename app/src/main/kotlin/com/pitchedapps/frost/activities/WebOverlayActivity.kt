@@ -78,6 +78,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -125,7 +126,7 @@ class FrostWebActivity : WebOverlayActivityBase() {
     private fun parseActionSend(): Boolean {
         if (intent.action != Intent.ACTION_SEND || intent.type != "text/plain") return true
         val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return true
-        val url = HttpUrl.parse(text)?.toString()
+        val url = text.toHttpUrlOrNull()?.toString()
         return if (url == null) {
             L.i { "Attempted to share a non-url" }
             L._i { "Shared text: $text" }

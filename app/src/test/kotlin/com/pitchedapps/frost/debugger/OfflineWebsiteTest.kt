@@ -44,7 +44,8 @@ class OfflineWebsiteTest {
 
     @BeforeTest
     fun before() {
-        val buildPath = if (File("").absoluteFile.name == "app") "build/offline_test" else "app/build/offline_test"
+        val buildPath =
+            if (File("").absoluteFile.name == "app") "build/offline_test" else "app/build/offline_test"
         baseDir = File(buildPath)
         assertTrue(baseDir.deleteRecursively(), "Failed to clean base dir")
         server = MockWebServer()
@@ -56,7 +57,10 @@ class OfflineWebsiteTest {
         server.shutdown()
     }
 
-    private fun zipAndFetch(url: String = server.url("/").toString(), cookie: String = ""): ZipFile {
+    private fun zipAndFetch(
+        url: String = server.url("/").toString(),
+        cookie: String = ""
+    ): ZipFile {
         val name = "test${System.currentTimeMillis()}"
         runBlocking {
             val success = OfflineWebsite(url, cookie, baseDir = baseDir)
@@ -75,7 +79,8 @@ class OfflineWebsiteTest {
         val actualContent = getInputStream(entry).bufferedReader().use { it.readText() }
         assertEquals(
             content.replace(tagWhitespaceRegex, "><").toLowerCase(),
-            actualContent.replace(tagWhitespaceRegex, "><").toLowerCase(), "Content mismatch for $path"
+            actualContent.replace(tagWhitespaceRegex, "><").toLowerCase(),
+            "Content mismatch for $path"
         )
     }
 
@@ -129,13 +134,13 @@ class OfflineWebsiteTest {
             }
         """.trimIndent()
 
-        server.setDispatcher(object : Dispatcher() {
+        server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse =
                 when {
-                    request.path.contains(cssUrl.encodedPath()) -> MockResponse().setBody(css1)
+                    request.path?.contains(cssUrl.encodedPath) == true -> MockResponse().setBody(css1)
                     else -> MockResponse().setBody(content)
                 }
-        })
+        }
 
         val zip = zipAndFetch()
 
@@ -163,18 +168,21 @@ class OfflineWebsiteTest {
             console.log('hello');
         """.trimIndent()
 
-        server.setDispatcher(object : Dispatcher() {
+        server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse =
                 when {
-                    request.path.contains(jsUrl.encodedPath()) -> MockResponse().setBody(js1)
+                    request.path?.contains(jsUrl.encodedPath) == true -> MockResponse().setBody(js1)
                     else -> MockResponse().setBody(content)
                 }
-        })
+        }
 
         val zip = zipAndFetch()
 
         assertEquals(2, zip.size(), "2 files expected")
-        zip.assertContentEquals("index.html", content.replace(jsUrl.toString(), "assets/a0_1.js.txt"))
+        zip.assertContentEquals(
+            "index.html",
+            content.replace(jsUrl.toString(), "assets/a0_1.js.txt")
+        )
         zip.assertContentEquals("assets/a0_1.js.txt", js1)
     }
 
@@ -220,16 +228,18 @@ class OfflineWebsiteTest {
             console.log('world');
         """.trimIndent()
 
-        server.setDispatcher(object : Dispatcher() {
-            override fun dispatch(request: RecordedRequest): MockResponse =
-                when {
-                    request.path.contains(css1Url.encodedPath()) -> MockResponse().setBody(css1)
-                    request.path.contains(css2Url.encodedPath()) -> MockResponse().setBody(css2)
-                    request.path.contains(js1Url.encodedPath()) -> MockResponse().setBody(js1)
-                    request.path.contains(js2Url.encodedPath()) -> MockResponse().setBody(js2)
+        server.dispatcher=object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                val path = request.path ?: return MockResponse().setBody(content)
+                return when {
+                    path.contains(css1Url.encodedPath) -> MockResponse().setBody(css1)
+                    path.contains(css2Url.encodedPath) -> MockResponse().setBody(css2)
+                    path.contains(js1Url.encodedPath) -> MockResponse().setBody(js1)
+                    path.contains(js2Url.encodedPath) -> MockResponse().setBody(js2)
                     else -> MockResponse().setBody(content)
                 }
-        })
+            }
+        }
 
         val zip = zipAndFetch()
 

@@ -22,6 +22,7 @@ import ca.allanwang.kau.utils.use
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 /**
  * Created by Allan Wang on 2017-09-24.
@@ -50,8 +51,8 @@ open class AdBlocker(val assetPath: String) {
 
     fun isAd(url: String?): Boolean {
         url ?: return false
-        val httpUrl = HttpUrl.parse(url) ?: return false
-        return isAdHost(httpUrl.host())
+        val httpUrl = url.toHttpUrlOrNull() ?: return false
+        return isAdHost(httpUrl.host)
     }
 
     tailrec fun isAdHost(host: String): Boolean {

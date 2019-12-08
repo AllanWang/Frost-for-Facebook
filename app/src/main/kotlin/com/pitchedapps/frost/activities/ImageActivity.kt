@@ -368,7 +368,7 @@ class ImageActivity : KauBaseActivity() {
 
             imgExtension = getImageExtension(response.header("Content-Type")) ?: ".jpg"
 
-            val body = response.body() ?: throw IOException("Failed to retrieve image body")
+            val body = response.body ?: throw IOException("Failed to retrieve image body")
 
             file.copyFromInputStream(body.byteStream())
 
