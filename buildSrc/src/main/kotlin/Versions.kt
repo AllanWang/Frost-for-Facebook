@@ -14,6 +14,8 @@ object Versions {
     const val koin = "2.0.1"
     // https://github.com/mockk/mockk/releases
     const val mockk = "1.9.3"
+    // https://mvnrepository.com/artifact/androidx.core/core-ktx?repo=google
+    const val ktx = "1.1.0"
 
     // https://github.com/jhy/jsoup/releases
     const val jsoup = "1.12.1"
