@@ -65,7 +65,7 @@ android {
         textOutput 'stdout'
     }
 
-    dataBinding {
+    viewBinding {
         enabled = true
     }
 

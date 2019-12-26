@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import androidx.customview.widget.ViewDragHelper
-import androidx.databinding.DataBindingUtil
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.mediapicker.scanMedia
@@ -177,7 +176,8 @@ class ImageActivity : KauBaseActivity() {
                 L.v { "Launching with true url $result" }
             result
         }
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_image)
+        binding = ActivityImageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         binding.onCreate()
         tempFile = File(cacheDir(this), imageHash)
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
