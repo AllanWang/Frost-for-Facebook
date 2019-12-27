@@ -40,11 +40,13 @@
 
     <string name="show_all_results">Show All Results</string>
 
-
     <string name="frost_description">Frost is a fully themable,
         fully functional alternative to the official Facebook app, made from scratch and proudly open sourced.</string>
 
     <string name="faq_title">Frost FAQ</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
     <string name="html_extraction_error">An error occurred in the html extraction.</string>
     <string name="html_extraction_cancelled">The request has been cancelled.</string>

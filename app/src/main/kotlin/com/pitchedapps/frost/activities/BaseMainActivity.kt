@@ -18,9 +18,11 @@ package com.pitchedapps.frost.activities
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PointF
+import android.graphics.drawable.RippleDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -30,6 +32,8 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
@@ -37,6 +41,8 @@ import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
+import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.drawable
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.restart
@@ -45,6 +51,7 @@ import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.showIf
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
+import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.withMinAlpha
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
@@ -204,6 +211,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
 //        setupDrawer(savedInstanceState)
         L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
+        drawerWrapperBinding.initDrawer()
         contentBinding.initFab()
         lastAccessTime = System.currentTimeMillis()
     }
@@ -215,6 +223,85 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     private var hasFab = false
     private var shouldShow = false
+
+    private class FrostMenuBuilder(private val context: Context, private val menu: Menu) {
+        private var order: Int = 0
+        private var groupId: Int = 13
+        private val items: MutableList<Menu> = mutableListOf()
+
+        fun primaryFrostItem(fbItem: FbItem) {
+            val item = menu.add(groupId, fbItem.ordinal, order++, context.string(fbItem.titleId))
+            item.icon = fbItem.icon.toDrawable(context, 18)
+        }
+
+        fun divider() {
+            groupId++
+        }
+
+        fun secondaryFrostItem(fbItem: FbItem) {
+            menu.add(groupId, fbItem.ordinal, order++, context.string(fbItem.titleId))
+        }
+    }
+
+    private fun ActivityMainDrawerWrapperBinding.initDrawer() {
+
+        fun createNavDrawable(@ColorInt foregroundColor: Int): RippleDrawable {
+            val drawable = drawable(R.drawable.nav_item_background) as RippleDrawable
+            drawable.setColor(
+                ColorStateList(
+                    arrayOf(intArrayOf()),
+                    intArrayOf(foregroundColor.adjustAlpha(0.16f))
+                )
+            )
+            return drawable
+        }
+
+        val toggle = ActionBarDrawerToggle(
+            this@BaseMainActivity, drawer, contentBinding.toolbar,
+            R.string.open,
+            R.string.close
+        )
+        toggle.isDrawerSlideAnimationEnabled = false
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+
+        val foregroundColor = ColorStateList.valueOf(Prefs.textColor)
+
+        with(navigation) {
+            FrostMenuBuilder(this@BaseMainActivity, menu).apply {
+                primaryFrostItem(FbItem.FEED_MOST_RECENT)
+                primaryFrostItem(FbItem.FEED_TOP_STORIES)
+                primaryFrostItem(FbItem.ACTIVITY_LOG)
+                divider()
+                primaryFrostItem(FbItem.PHOTOS)
+                primaryFrostItem(FbItem.GROUPS)
+                primaryFrostItem(FbItem.FRIENDS)
+                primaryFrostItem(FbItem.CHAT)
+                primaryFrostItem(FbItem.PAGES)
+                divider()
+                primaryFrostItem(FbItem.EVENTS)
+                primaryFrostItem(FbItem.BIRTHDAYS)
+                primaryFrostItem(FbItem.ON_THIS_DAY)
+                divider()
+                primaryFrostItem(FbItem.NOTES)
+                primaryFrostItem(FbItem.SAVED)
+                primaryFrostItem(FbItem.MARKETPLACE)
+            }
+            setNavigationItemSelectedListener {
+                val item = FbItem.values[it.itemId]
+                frostEvent("Drawer Tab", "name" to item.name)
+                drawer.closeDrawer(navigation)
+                launchWebOverlay(item.url)
+                false
+            }
+            val navBg = Prefs.bgColor.withMinAlpha(200)
+            setBackgroundColor(navBg)
+            itemBackground = createNavDrawable(Prefs.accentColor)
+            itemTextColor = foregroundColor
+            itemIconTintList = foregroundColor
+
+        }
+    }
 
     private fun ActivityMainContentBinding.initFab() {
         hasFab = false
@@ -565,7 +652,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun backConsumer(): Boolean {
-        with (drawerWrapperBinding) {
+        with(drawerWrapperBinding) {
             if (drawer.isDrawerOpen(navigation)) {
                 drawer.closeDrawer(navigation)
                 return true

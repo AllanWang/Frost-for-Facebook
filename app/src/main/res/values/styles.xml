@@ -128,5 +128,16 @@
         <item name="tabMode">fixed</item>
     </style>
 
+    <style name="ThemeOverlay.Frost.NavigationView" parent="">
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+
+<!--    <style name="ShapeAppearanceOverlay.Item" parent="">-->
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSizeTopRight">10dp</item>-->
+<!--        <item name="cornerSizeBottomRight">10dp</item>-->
+<!--        <item name="cornerSizeBottomLeft">0dp</item>-->
+<!--        <item name="cornerSizeTopLeft">0dp</item>-->
+<!--    </style>-->
 
 </resources>
