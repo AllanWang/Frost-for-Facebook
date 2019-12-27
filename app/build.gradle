@@ -289,7 +289,7 @@ dependencies {
     testImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
 
-    implementation "co.zsmb:materialdrawer-kt:${Versions.materialDrawerKt}"
+//    implementation "co.zsmb:materialdrawer-kt:${Versions.materialDrawerKt}"
 
     implementation kau.Dependencies.bugsnag
 

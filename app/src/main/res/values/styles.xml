@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="FrostThemeBase" parent="MaterialDrawerTheme.ActionBar">
+    <style name="FrostTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/white</item>
@@ -11,12 +11,7 @@
         <item name="md_corner_radius">@dimen/dialog_corner_radius</item>
     </style>
 
-    <style name="FrostTheme" parent="@style/FrostThemeBase">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="FrostTheme.Light" parent="MaterialDrawerTheme.Light.DarkToolbar">
+    <style name="FrostTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/black</item>

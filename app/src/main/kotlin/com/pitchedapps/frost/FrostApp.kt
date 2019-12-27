@@ -28,8 +28,6 @@ import com.bugsnag.android.Bugsnag
 import com.bugsnag.android.Configuration
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ApplicationVersionSignature
-import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
-import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
@@ -79,18 +77,18 @@ class FrostApp : Application() {
          * Drawer profile loading logic
          * Reload the image on every version update
          */
-        DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
-            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String?) {
-                val c = imageView.context
-                val request = GlideApp.with(c)
-                val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
-                request.load(uri).apply(
-                    RequestOptions()
-                        .signature(ApplicationVersionSignature.obtain(c))
-                )
-                    .thumbnail(old).into(imageView)
-            }
-        })
+//        DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
+//            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String?) {
+//                val c = imageView.context
+//                val request = GlideApp.with(c)
+//                val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
+//                request.load(uri).apply(
+//                    RequestOptions()
+//                        .signature(ApplicationVersionSignature.obtain(c))
+//                )
+//                    .thumbnail(old).into(imageView)
+//            }
+//        })
         if (BuildConfig.DEBUG) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
                 override fun onActivityPaused(activity: Activity) {}

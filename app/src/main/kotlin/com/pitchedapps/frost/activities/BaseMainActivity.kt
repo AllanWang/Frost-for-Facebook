@@ -21,7 +21,6 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PointF
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -30,7 +29,6 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
-import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
@@ -47,26 +45,12 @@ import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.showIf
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
-import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withMinAlpha
-import co.zsmb.materialdrawerkt.builders.Builder
-import co.zsmb.materialdrawerkt.builders.accountHeader
-import co.zsmb.materialdrawerkt.builders.drawer
-import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
-import co.zsmb.materialdrawerkt.draweritems.badgeable.secondaryItem
-import co.zsmb.materialdrawerkt.draweritems.divider
-import co.zsmb.materialdrawerkt.draweritems.profile.profile
-import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
-import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
-import com.mikepenz.iconics.utils.colorInt
-import com.mikepenz.iconics.utils.paddingDp
-import com.mikepenz.materialdrawer.AccountHeader
-import com.mikepenz.materialdrawer.Drawer
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.FileChooserContract
@@ -75,14 +59,12 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.GenericDao
-import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostSearch
 import com.pitchedapps.frost.facebook.parsers.SearchParser
-import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
@@ -104,8 +86,6 @@ import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostNavigationBar
-import com.pitchedapps.frost.utils.launchLogin
-import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
@@ -150,8 +130,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     protected var lastPosition = -1
 
     override var videoViewer: FrostVideoViewer? = null
-    private lateinit var drawer: Drawer
-    private lateinit var drawerHeader: AccountHeader
+    //    private lateinit var drawer: Drawer
+//    private lateinit var drawerHeader: AccountHeader
     private var lastAccessTime = -1L
 
     override var searchView: SearchView? = null
@@ -192,7 +172,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 )
             }
         }
-        setupDrawer(savedInstanceState)
+//        setupDrawer(savedInstanceState)
         L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
         initFab()
         lastAccessTime = System.currentTimeMillis()
@@ -249,138 +229,138 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
-    private fun setupDrawer(savedInstanceState: Bundle?) {
-        val navBg = Prefs.bgColor.withMinAlpha(200).toLong()
-        val navHeader = Prefs.headerColor.withMinAlpha(200)
-        drawer = drawer {
-            toolbar = this@BaseMainActivity.toolbar
-            savedInstance = savedInstanceState
-            translucentStatusBar = false
-            sliderBackgroundColor = navBg
-            drawerHeader = accountHeader {
-                textColor = Prefs.iconColor.toLong()
-                backgroundDrawable = ColorDrawable(navHeader)
-                selectionSecondLineShown = false
-                cookies().forEach { (id, name) ->
-                    profile(name = name ?: "") {
-                        iconUrl = profilePictureUrl(id)
-                        textColor = Prefs.textColor.toLong()
-                        selectedTextColor = Prefs.textColor.toLong()
-                        selectedColor = 0x00000001.toLong()
-                        identifier = id
-                    }
-                }
-                profileSetting(nameRes = R.string.kau_logout) {
-                    iicon = GoogleMaterial.Icon.gmd_exit_to_app
-                    iconColor = Prefs.textColor.toLong()
-                    textColor = Prefs.textColor.toLong()
-                    identifier = -2L
-                }
-                profileSetting(nameRes = R.string.kau_add_account) {
-                    iconDrawable =
-                        IconicsDrawable(
-                            this@BaseMainActivity,
-                            GoogleMaterial.Icon.gmd_add
-                        ).actionBar().paddingDp(5)
-                            .colorInt(Prefs.textColor)
-                    textColor = Prefs.textColor.toLong()
-                    identifier = -3L
-                }
-                profileSetting(nameRes = R.string.kau_manage_account) {
-                    iicon = GoogleMaterial.Icon.gmd_settings
-                    iconColor = Prefs.textColor.toLong()
-                    textColor = Prefs.textColor.toLong()
-                    identifier = -4L
-                }
-                onProfileChanged { _, profile, current ->
-                    if (current) launchWebOverlay(FbItem.PROFILE.url)
-                    else when (profile.identifier) {
-                        -2L -> {
-                            // TODO no backpressure support
-                            this@BaseMainActivity.launch {
-                                val currentCookie = cookieDao.currentCookie()
-                                if (currentCookie == null) {
-                                    toast(R.string.account_not_found)
-                                    FbCookie.reset()
-                                    launchLogin(cookies(), true)
-                                } else {
-                                    materialDialog {
-                                        title(R.string.kau_logout)
-                                        message(
-                                            text =
-                                            String.format(
-                                                string(R.string.kau_logout_confirm_as_x),
-                                                currentCookie.name ?: Prefs.userId.toString()
-                                            )
-                                        )
-                                        positiveButton(R.string.kau_yes) {
-                                            this@BaseMainActivity.launch {
-                                                FbCookie.logout(this@BaseMainActivity)
-                                            }
-                                        }
-                                        negativeButton(R.string.kau_no)
-                                    }
-                                }
-                            }
-                        }
-                        -3L -> launchNewTask<LoginActivity>(clearStack = false)
-                        -4L -> launchNewTask<SelectorActivity>(cookies(), false)
-                        else -> {
-                            this@BaseMainActivity.launch {
-                                FbCookie.switchUser(profile.identifier)
-                                tabsForEachView { _, view -> view.badgeText = null }
-                                refreshAll()
-                            }
-                        }
-                    }
-                    false
-                }
-            }
-            drawerHeader.setActiveProfile(Prefs.userId)
-            primaryFrostItem(FbItem.FEED_MOST_RECENT)
-            primaryFrostItem(FbItem.FEED_TOP_STORIES)
-            primaryFrostItem(FbItem.ACTIVITY_LOG)
-            divider()
-            primaryFrostItem(FbItem.PHOTOS)
-            primaryFrostItem(FbItem.GROUPS)
-            primaryFrostItem(FbItem.FRIENDS)
-            primaryFrostItem(FbItem.CHAT)
-            primaryFrostItem(FbItem.PAGES)
-            divider()
-            primaryFrostItem(FbItem.EVENTS)
-            primaryFrostItem(FbItem.BIRTHDAYS)
-            primaryFrostItem(FbItem.ON_THIS_DAY)
-            divider()
-            primaryFrostItem(FbItem.NOTES)
-            primaryFrostItem(FbItem.SAVED)
-            primaryFrostItem(FbItem.MARKETPLACE)
-        }
-    }
+//    private fun setupDrawer(savedInstanceState: Bundle?) {
+//        val navBg = Prefs.bgColor.withMinAlpha(200).toLong()
+//        val navHeader = Prefs.headerColor.withMinAlpha(200)
+//        drawer = drawer {
+//            toolbar = this@BaseMainActivity.toolbar
+//            savedInstance = savedInstanceState
+//            translucentStatusBar = false
+//            sliderBackgroundColor = navBg
+//            drawerHeader = accountHeader {
+//                textColor = Prefs.iconColor.toLong()
+//                backgroundDrawable = ColorDrawable(navHeader)
+//                selectionSecondLineShown = false
+//                cookies().forEach { (id, name) ->
+//                    profile(name = name ?: "") {
+//                        iconUrl = profilePictureUrl(id)
+//                        textColor = Prefs.textColor.toLong()
+//                        selectedTextColor = Prefs.textColor.toLong()
+//                        selectedColor = 0x00000001.toLong()
+//                        identifier = id
+//                    }
+//                }
+//                profileSetting(nameRes = R.string.kau_logout) {
+//                    iicon = GoogleMaterial.Icon.gmd_exit_to_app
+//                    iconColor = Prefs.textColor.toLong()
+//                    textColor = Prefs.textColor.toLong()
+//                    identifier = -2L
+//                }
+//                profileSetting(nameRes = R.string.kau_add_account) {
+//                    iconDrawable =
+//                        IconicsDrawable(
+//                            this@BaseMainActivity,
+//                            GoogleMaterial.Icon.gmd_add
+//                        ).actionBar().paddingDp(5)
+//                            .colorInt(Prefs.textColor)
+//                    textColor = Prefs.textColor.toLong()
+//                    identifier = -3L
+//                }
+//                profileSetting(nameRes = R.string.kau_manage_account) {
+//                    iicon = GoogleMaterial.Icon.gmd_settings
+//                    iconColor = Prefs.textColor.toLong()
+//                    textColor = Prefs.textColor.toLong()
+//                    identifier = -4L
+//                }
+//                onProfileChanged { _, profile, current ->
+//                    if (current) launchWebOverlay(FbItem.PROFILE.url)
+//                    else when (profile.identifier) {
+//                        -2L -> {
+//                            // TODO no backpressure support
+//                            this@BaseMainActivity.launch {
+//                                val currentCookie = cookieDao.currentCookie()
+//                                if (currentCookie == null) {
+//                                    toast(R.string.account_not_found)
+//                                    FbCookie.reset()
+//                                    launchLogin(cookies(), true)
+//                                } else {
+//                                    materialDialog {
+//                                        title(R.string.kau_logout)
+//                                        message(
+//                                            text =
+//                                            String.format(
+//                                                string(R.string.kau_logout_confirm_as_x),
+//                                                currentCookie.name ?: Prefs.userId.toString()
+//                                            )
+//                                        )
+//                                        positiveButton(R.string.kau_yes) {
+//                                            this@BaseMainActivity.launch {
+//                                                FbCookie.logout(this@BaseMainActivity)
+//                                            }
+//                                        }
+//                                        negativeButton(R.string.kau_no)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        -3L -> launchNewTask<LoginActivity>(clearStack = false)
+//                        -4L -> launchNewTask<SelectorActivity>(cookies(), false)
+//                        else -> {
+//                            this@BaseMainActivity.launch {
+//                                FbCookie.switchUser(profile.identifier)
+//                                tabsForEachView { _, view -> view.badgeText = null }
+//                                refreshAll()
+//                            }
+//                        }
+//                    }
+//                    false
+//                }
+//            }
+//            drawerHeader.setActiveProfile(Prefs.userId)
+//            primaryFrostItem(FbItem.FEED_MOST_RECENT)
+//            primaryFrostItem(FbItem.FEED_TOP_STORIES)
+//            primaryFrostItem(FbItem.ACTIVITY_LOG)
+//            divider()
+//            primaryFrostItem(FbItem.PHOTOS)
+//            primaryFrostItem(FbItem.GROUPS)
+//            primaryFrostItem(FbItem.FRIENDS)
+//            primaryFrostItem(FbItem.CHAT)
+//            primaryFrostItem(FbItem.PAGES)
+//            divider()
+//            primaryFrostItem(FbItem.EVENTS)
+//            primaryFrostItem(FbItem.BIRTHDAYS)
+//            primaryFrostItem(FbItem.ON_THIS_DAY)
+//            divider()
+//            primaryFrostItem(FbItem.NOTES)
+//            primaryFrostItem(FbItem.SAVED)
+//            primaryFrostItem(FbItem.MARKETPLACE)
+//        }
+//    }
 
-    private fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
-        iicon = item.icon
-        iconColor = Prefs.textColor.toLong()
-        textColor = Prefs.textColor.toLong()
-        selectedIconColor = Prefs.textColor.toLong()
-        selectedTextColor = Prefs.textColor.toLong()
-        selectedColor = 0x00000001.toLong()
-        identifier = item.titleId.toLong()
-        onClick { _ ->
-            frostEvent("Drawer Tab", "name" to item.name)
-            launchWebOverlay(item.url)
-            false
-        }
-    }
-
-    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) =
-        this.secondaryItem(title) {
-            textColor = Prefs.textColor.toLong()
-            selectedIconColor = Prefs.textColor.toLong()
-            selectedTextColor = Prefs.textColor.toLong()
-            selectedColor = 0x00000001.toLong()
-            identifier = title.toLong()
-            onClick { _ -> onClick(); false }
-        }
+//    private fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
+//        iicon = item.icon
+//        iconColor = Prefs.textColor.toLong()
+//        textColor = Prefs.textColor.toLong()
+//        selectedIconColor = Prefs.textColor.toLong()
+//        selectedTextColor = Prefs.textColor.toLong()
+//        selectedColor = 0x00000001.toLong()
+//        identifier = item.titleId.toLong()
+//        onClick { _ ->
+//            frostEvent("Drawer Tab", "name" to item.name)
+//            launchWebOverlay(item.url)
+//            false
+//        }
+//    }
+//
+//    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) =
+//        this.secondaryItem(title) {
+//            textColor = Prefs.textColor.toLong()
+//            selectedIconColor = Prefs.textColor.toLong()
+//            selectedTextColor = Prefs.textColor.toLong()
+//            selectedColor = 0x00000001.toLong()
+//            identifier = title.toLong()
+//            onClick { _ -> onClick(); false }
+//        }
 
     private fun refreshAll() {
         L.d { "Refresh all" }
@@ -549,10 +529,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun backConsumer(): Boolean {
-        if (drawer.isDrawerOpen) {
-            drawer.closeDrawer()
-            return true
-        }
+//        if (drawer.isDrawerOpen) {
+//            drawer.closeDrawer()
+//            return true
+//        }
         if (currentFragment.onBackPressed()) return true
         if (Prefs.exitConfirmation) {
             materialDialog {
