@@ -25,18 +25,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.restart
@@ -48,6 +48,7 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withMinAlpha
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
@@ -57,6 +58,9 @@ import com.pitchedapps.frost.contracts.FileChooserContract
 import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.databinding.ActivityMainBinding
+import com.pitchedapps.frost.databinding.ActivityMainBottomTabsBinding
+import com.pitchedapps.frost.databinding.ActivityMainDrawerWrapperBinding
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.getTabs
@@ -92,10 +96,6 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
-import kotlinx.android.synthetic.main.activity_frame_wrapper.*
-import kotlinx.android.synthetic.main.view_main_fab.*
-import kotlinx.android.synthetic.main.view_main_toolbar.*
-import kotlinx.android.synthetic.main.view_main_viewpager.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -115,17 +115,29 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
      * Note that tabs themselves are initialized through a coroutine during onCreate
      */
     protected val adapter: SectionsPagerAdapter = SectionsPagerAdapter()
-    override val frameWrapper: FrameLayout get() = frame_wrapper
-    val viewPager: FrostViewPager get() = container
+    override val frameWrapper: FrameLayout get() = drawerWrapperBinding.mainContainer
+    lateinit var drawerWrapperBinding: ActivityMainDrawerWrapperBinding
+    lateinit var contentBinding: ActivityMainContentBinding
+    val viewPager: FrostViewPager get() = contentBinding.viewpager
+    val fab: FloatingActionButton get() =contentBinding.fab
+    val toolbar: Toolbar get() = contentBinding.toolbar
     val cookieDao: CookieDao by inject()
     val genericDao: GenericDao by inject()
 
     /*
      * Components with the same id in multiple layout files
      */
-    val tabs: TabLayout by bindView(R.id.tabs)
-    val appBar: AppBarLayout by bindView(R.id.appbar)
-    val coordinator: CoordinatorLayout by bindView(R.id.main_content)
+    val tabs: TabLayout get() = contentBinding.tabs
+    val appBar: AppBarLayout get() = contentBinding.appbar
+
+    interface ActivityMainContentBinding {
+        val root: View
+        val toolbar: Toolbar
+        val viewpager: FrostViewPager
+        val tabs: TabLayout
+        val appbar: AppBarLayout
+        val fab: FloatingActionButton
+    }
 
     protected var lastPosition = -1
 
@@ -141,7 +153,33 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val start = System.currentTimeMillis()
-        setFrameContentView(Prefs.mainActivityLayout.layoutRes)
+        drawerWrapperBinding = ActivityMainDrawerWrapperBinding.inflate(layoutInflater)
+        setContentView(drawerWrapperBinding.root)
+        contentBinding = when (Prefs.mainActivityLayout) {
+            MainActivityLayout.TOP_BAR -> {
+                val binding = ActivityMainBinding.inflate(layoutInflater)
+                object : ActivityMainContentBinding {
+                    override val root: View = binding.root
+                    override val toolbar: Toolbar = binding.toolbar
+                    override val viewpager: FrostViewPager = binding.viewpager
+                    override val tabs: TabLayout = binding.tabs
+                    override val appbar: AppBarLayout = binding.appbar
+                    override val fab: FloatingActionButton = binding.fab
+                }
+            }
+            MainActivityLayout.BOTTOM_BAR -> {
+                val binding = ActivityMainBottomTabsBinding.inflate(layoutInflater)
+                object : ActivityMainContentBinding {
+                    override val root: View = binding.root
+                    override val toolbar: Toolbar = binding.toolbar
+                    override val viewpager: FrostViewPager = binding.viewpager
+                    override val tabs: TabLayout = binding.tabs
+                    override val appbar: AppBarLayout = binding.appbar
+                    override val fab: FloatingActionButton = binding.fab
+                }
+            }
+        }
+        drawerWrapperBinding.mainContainer.addView(contentBinding.root)
         setFrostColors {
             toolbar(toolbar)
             themeWindow = false

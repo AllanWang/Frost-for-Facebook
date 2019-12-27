@@ -18,18 +18,12 @@ package com.pitchedapps.frost
 
 import android.app.Activity
 import android.app.Application
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
 import com.bugsnag.android.Configuration
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.signature.ApplicationVersionSignature
 import com.pitchedapps.frost.db.FrostDatabase
-import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils

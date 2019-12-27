@@ -13,14 +13,22 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <include layout="@layout/view_main_toolbar" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Main.Toolbar" />
 
-        <include layout="@layout/view_main_tab_layout" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            style="@style/Main.TabLayout" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/view_main_viewpager" />
+    <com.pitchedapps.frost.views.FrostViewPager
+        android:id="@+id/viewpager"
+        style="@style/Main.ViewPager" />
 
-    <include layout="@layout/view_main_fab" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        style="@style/Main.Fab" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

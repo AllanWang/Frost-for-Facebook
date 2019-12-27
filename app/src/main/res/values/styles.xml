@@ -98,4 +98,35 @@
         <item name="android:padding">@dimen/kau_padding_large</item>
     </style>
 
+    <!-- Main Activity Styles -->
+
+    <style name="Main.Toolbar" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="layout_scrollFlags">scroll|enterAlways|snap</item>
+        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+    </style>
+
+    <style name="Main.ViewPager" parent="" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
+    </style>
+
+    <style name="Main.Fab" parent="" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end|bottom</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="Main.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/tab_bar_height</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabMode">fixed</item>
+    </style>
+
+
 </resources>
