@@ -118,17 +118,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override val frameWrapper: FrameLayout get() = drawerWrapperBinding.mainContainer
     lateinit var drawerWrapperBinding: ActivityMainDrawerWrapperBinding
     lateinit var contentBinding: ActivityMainContentBinding
-    val viewPager: FrostViewPager get() = contentBinding.viewpager
-    val fab: FloatingActionButton get() =contentBinding.fab
-    val toolbar: Toolbar get() = contentBinding.toolbar
     val cookieDao: CookieDao by inject()
     val genericDao: GenericDao by inject()
-
-    /*
-     * Components with the same id in multiple layout files
-     */
-    val tabs: TabLayout get() = contentBinding.tabs
-    val appBar: AppBarLayout get() = contentBinding.appbar
 
     interface ActivityMainContentBinding {
         val root: View
@@ -142,8 +133,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     protected var lastPosition = -1
 
     override var videoViewer: FrostVideoViewer? = null
-    //    private lateinit var drawer: Drawer
-//    private lateinit var drawerHeader: AccountHeader
     private var lastAccessTime = -1L
 
     override var searchView: SearchView? = null
@@ -180,15 +169,18 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
         }
         drawerWrapperBinding.mainContainer.addView(contentBinding.root)
-        setFrostColors {
-            toolbar(toolbar)
-            themeWindow = false
-            header(appBar)
-            background(viewPager)
+        with(contentBinding) {
+            setFrostColors {
+                toolbar(toolbar)
+                themeWindow = false
+                header(appbar)
+                background(viewpager)
+            }
+            setSupportActionBar(toolbar)
+            viewpager.adapter = adapter
+            tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
+
         }
-        setSupportActionBar(toolbar)
-        viewPager.adapter = adapter
-        tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
         launch {
@@ -212,7 +204,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
 //        setupDrawer(savedInstanceState)
         L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
-        initFab()
+        contentBinding.initFab()
         lastAccessTime = System.currentTimeMillis()
     }
 
@@ -224,46 +216,52 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     private var hasFab = false
     private var shouldShow = false
 
-    private fun initFab() {
+    private fun ActivityMainContentBinding.initFab() {
         hasFab = false
         shouldShow = false
         fab.backgroundTintList = ColorStateList.valueOf(Prefs.headerColor.withMinAlpha(200))
         fab.hide()
-        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (!hasFab) return@OnOffsetChangedListener
             val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
             val shouldShow = percent < 0.2
-            if (this.shouldShow != shouldShow) {
-                this.shouldShow = shouldShow
+            if (this@BaseMainActivity.shouldShow != shouldShow) {
+                this@BaseMainActivity.shouldShow = shouldShow
                 fab.showIf(shouldShow)
             }
         })
     }
 
     override fun showFab(iicon: IIcon, clickEvent: () -> Unit) {
-        hasFab = true
-        fab.setOnClickListener { clickEvent() }
-        if (shouldShow) {
-            if (fab.isShown) {
-                fab.fadeScaleTransition {
-                    setIcon(iicon, Prefs.iconColor)
+        with(contentBinding) {
+            hasFab = true
+            fab.setOnClickListener { clickEvent() }
+            if (shouldShow) {
+                if (fab.isShown) {
+                    fab.fadeScaleTransition {
+                        setIcon(iicon, Prefs.iconColor)
+                    }
+                    return
                 }
-                return
             }
+            fab.setIcon(iicon, Prefs.iconColor)
+            fab.showIf(shouldShow)
         }
-        fab.setIcon(iicon, Prefs.iconColor)
-        fab.showIf(shouldShow)
     }
 
     override fun hideFab() {
-        hasFab = false
-        fab.setOnClickListener(null)
-        fab.hide()
+        with(contentBinding) {
+            hasFab = false
+            fab.setOnClickListener(null)
+            fab.hide()
+        }
     }
 
     fun tabsForEachView(action: (position: Int, view: BadgedIcon) -> Unit) {
-        (0 until tabs.tabCount).asSequence().forEach { i ->
-            action(i, tabs.getTabAt(i)!!.customView as BadgedIcon)
+        with(contentBinding) {
+            (0 until tabs.tabCount).asSequence().forEach { i ->
+                action(i, tabs.getTabAt(i)!!.customView as BadgedIcon)
+            }
         }
     }
 
@@ -407,7 +405,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        toolbar.tint(Prefs.iconColor)
+        contentBinding.toolbar.tint(Prefs.iconColor)
         setMenuIcons(
             menu, Prefs.iconColor,
             R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
@@ -522,8 +520,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
-    private val STATE_FORCE_FALLBACK = "frost_state_force_fallback"
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         adapter.saveInstanceState(outState)
@@ -563,14 +559,18 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     override fun collapseAppBar() {
-        appBar.post { appBar.setExpanded(false) }
+        with(contentBinding) {
+            appbar.post { appbar.setExpanded(false) }
+        }
     }
 
     override fun backConsumer(): Boolean {
-//        if (drawer.isDrawerOpen) {
-//            drawer.closeDrawer()
-//            return true
-//        }
+        with (drawerWrapperBinding) {
+            if (drawer.isDrawerOpen(navigation)) {
+                drawer.closeDrawer(navigation)
+                return true
+            }
+        }
         if (currentFragment.onBackPressed()) return true
         if (Prefs.exitConfirmation) {
             materialDialog {
@@ -588,7 +588,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     inline val currentFragment
-        get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${viewPager.currentItem}") as BaseFragment
+        get() = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.container}:${contentBinding.viewpager.currentItem}") as BaseFragment
 
     override fun reloadFragment(fragment: BaseFragment) {
         runOnUiThread { adapter.reloadFragment(fragment) }
@@ -607,25 +607,27 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             this.pages.clear()
             this.pages.addAll(pages)
             notifyDataSetChanged()
-            tabs.removeAllTabs()
-            this.pages.forEachIndexed { index, fbItem ->
-                tabs.addTab(
-                    tabs.newTab()
-                        .setCustomView(BadgedIcon(this@BaseMainActivity).apply {
-                            iicon = fbItem.icon
-                        }.also {
-                            it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
-                        })
-                )
-            }
-            lastPosition = 0
-            viewPager.setCurrentItem(0, false)
-            viewPager.offscreenPageLimit = pages.size
-            viewPager.post {
-                if (!fragmentChannel.isClosedForSend) {
-                    fragmentChannel.offer(0)
+            with(contentBinding) {
+                tabs.removeAllTabs()
+                this@SectionsPagerAdapter.pages.forEachIndexed { index, fbItem ->
+                    tabs.addTab(
+                        tabs.newTab()
+                            .setCustomView(BadgedIcon(this@BaseMainActivity).apply {
+                                iicon = fbItem.icon
+                            }.also {
+                                it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
+                            })
+                    )
                 }
-            } // trigger hook so title is set
+                lastPosition = 0
+                viewpager.setCurrentItem(0, false)
+                viewpager.offscreenPageLimit = pages.size
+                viewpager.post {
+                    if (!fragmentChannel.isClosedForSend) {
+                        fragmentChannel.offer(0)
+                    }
+                } // trigger hook so title is set
+            }
         }
 
         fun saveInstanceState(outState: Bundle) {
@@ -670,14 +672,19 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
     }
 
+    private val lowerVideoPaddingPointF = PointF()
+
     override val lowerVideoPadding: PointF
-        get() =
+        get() {
             if (Prefs.mainActivityLayout == MainActivityLayout.BOTTOM_BAR)
-                PointF(0f, toolbar.height.toFloat())
+                lowerVideoPaddingPointF.set(0f, contentBinding.toolbar.height.toFloat())
             else
-                PointF(0f, 0f)
+                lowerVideoPaddingPointF.set(0f, 0f)
+            return lowerVideoPaddingPointF
+        }
 
     companion object {
+        private const val STATE_FORCE_FALLBACK = "frost_state_force_fallback"
         const val SELECTED_TAB_ALPHA = 255f
         const val UNSELECTED_TAB_ALPHA = 128f
     }
