@@ -157,11 +157,28 @@
         <item name="android:layout_height">40dp</item>
     </style>
 
-    <style name="Main.DrawerAccountOptions" parent="Main.DrawerMargins">
+    <!-- Expected icon size is 20dp to match NavigationView -->
+    <style name="Main.DrawerAccountOptions" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawablePadding">16dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Avatar size is 32dp (R.dimen.drawer_account_avatar_size) -->
+    <style name="Main.DrawerAccountUserOptions" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">24dp</item>
     </style>
 
 </resources>

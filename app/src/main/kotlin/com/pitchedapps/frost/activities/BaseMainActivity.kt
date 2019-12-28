@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PointF
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -33,6 +34,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -47,11 +49,11 @@ import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.ui.ProgressAnimator
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.dimenPixelSize
 import ca.allanwang.kau.utils.drawable
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.gone
 import ca.allanwang.kau.utils.invisible
-import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.restart
 import ca.allanwang.kau.utils.setIcon
@@ -63,6 +65,9 @@ import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withMinAlpha
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
@@ -483,7 +488,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     )
                 )
                 var showOptions = false
-                val animator: ProgressAnimator = ProgressAnimator.ofFloat {  }
+                val animator: ProgressAnimator = ProgressAnimator.ofFloat { }
                 background.setOnClickListener {
                     animator.reset()
                     if (showOptions) {
@@ -499,7 +504,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         }
                     } else {
                         animator.apply {
-                            optionsContainer.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+                            optionsContainer.measure(
+                                View.MeasureSpec.UNSPECIFIED,
+                                View.MeasureSpec.UNSPECIFIED
+                            )
                             withAnimator(
                                 optionsContainer.height.toFloat(),
                                 optionsContainer.measuredHeight.toFloat()
@@ -516,6 +524,19 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     showOptions = !showOptions
                     animator.start()
                 }
+
+                fun TextView.setOptionsIcon(iicon: IIcon) {
+                    setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        iicon.toDrawable(this@BaseMainActivity, sizeDp = 20),
+                        null,
+                        null,
+                        null
+                    )
+                }
+
+                optionsLogout.setOptionsIcon(GoogleMaterial.Icon.gmd_exit_to_app)
+                optionsAddAccount.setOptionsIcon(GoogleMaterial.Icon.gmd_add)
+                optionsManageAccount.setOptionsIcon(GoogleMaterial.Icon.gmd_settings)
             }
         }
 
@@ -536,6 +557,44 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             avatarPrimary.setAccount(orderedAccounts.getOrNull(0), true)
             avatarSecondary.setAccount(orderedAccounts.getOrNull(1), false)
             avatarTertiary.setAccount(orderedAccounts.getOrNull(2), false)
+            optionsAccountsContainer.removeAllViews()
+            name.text = orderedAccounts.getOrNull(0)?.name
+            val glide = Glide.with(root)
+            val accountSize = dimenPixelSize(R.dimen.drawer_account_avatar_size)
+            orderedAccounts.forEach {
+                val tv =
+                    TextView(
+                        this@BaseMainActivity,
+                        null,
+                        0,
+                        R.style.Main_DrawerAccountUserOptions
+                    )
+                glide.load(profilePictureUrl(it.id)).transform(FrostGlide.circleCrop)
+                    .into(object : CustomTarget<Drawable>(accountSize, accountSize) {
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                            tv.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                placeholder,
+                                null,
+                                null,
+                                null
+                            )
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            transition: Transition<in Drawable>?
+                        ) {
+                            tv.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                resource,
+                                null,
+                                null,
+                                null
+                            )
+                        }
+                    })
+                tv.text = it.name
+                optionsAccountsContainer.addView(tv)
+            }
         }
 
         private fun closeDrawer() {

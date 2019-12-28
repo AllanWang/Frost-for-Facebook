@@ -8,6 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:elevation="2dp"
         android:layout_height="160dp">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -86,6 +87,18 @@
         android:visibility="gone"
         tools:visibility="visible">
 
+        <LinearLayout
+            android:id="@+id/options_accounts_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/options_logout"
+            style="@style/Main.DrawerAccountOptions"
+            android:text="@string/kau_logout"
+            tools:drawableStart="@drawable/abc_vector_test" />
+
         <TextView
             android:id="@+id/options_add_account"
             style="@style/Main.DrawerAccountOptions"
@@ -93,9 +106,9 @@
             tools:drawableStart="@drawable/abc_vector_test" />
 
         <TextView
-            android:id="@+id/options_logout"
+            android:id="@+id/options_manage_account"
             style="@style/Main.DrawerAccountOptions"
-            android:text="@string/kau_logout"
+            android:text="@string/kau_manage_account"
             tools:drawableStart="@drawable/abc_vector_test" />
 
     </LinearLayout>

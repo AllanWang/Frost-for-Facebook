@@ -13,4 +13,6 @@
     <dimen name="toolbar_icon_size">24dp</dimen>
 
     <dimen name="dialog_corner_radius">8dp</dimen>
+
+    <dimen name="drawer_account_avatar_size">32dp</dimen>
 </resources>
