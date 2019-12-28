@@ -32,18 +32,26 @@ import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.updateLayoutParams
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import ca.allanwang.kau.searchview.SearchItem
 import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
+import ca.allanwang.kau.ui.ProgressAnimator
 import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.drawable
 import ca.allanwang.kau.utils.fadeScaleTransition
+import ca.allanwang.kau.utils.gone
+import ca.allanwang.kau.utils.invisible
+import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.restart
 import ca.allanwang.kau.utils.setIcon
@@ -52,6 +60,7 @@ import ca.allanwang.kau.utils.showIf
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withMinAlpha
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.google.android.material.appbar.AppBarLayout
@@ -68,7 +77,9 @@ import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.databinding.ActivityMainBinding
 import com.pitchedapps.frost.databinding.ActivityMainBottomTabsBinding
 import com.pitchedapps.frost.databinding.ActivityMainDrawerWrapperBinding
+import com.pitchedapps.frost.databinding.ViewNavHeaderBinding
 import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
@@ -76,8 +87,11 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostSearch
 import com.pitchedapps.frost.facebook.parsers.SearchParser
+import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.glide.FrostGlide
+import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.utils.ACTIVITY_SETTINGS
 import com.pitchedapps.frost.utils.BiometricUtils
@@ -300,6 +314,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             itemTextColor = foregroundColor
             itemIconTintList = foregroundColor
 
+            val header = NavHeader()
+            addHeaderView(header.root)
         }
     }
 
@@ -439,51 +455,126 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 //                    false
 //                }
 //            }
-//            drawerHeader.setActiveProfile(Prefs.userId)
-//            primaryFrostItem(FbItem.FEED_MOST_RECENT)
-//            primaryFrostItem(FbItem.FEED_TOP_STORIES)
-//            primaryFrostItem(FbItem.ACTIVITY_LOG)
-//            divider()
-//            primaryFrostItem(FbItem.PHOTOS)
-//            primaryFrostItem(FbItem.GROUPS)
-//            primaryFrostItem(FbItem.FRIENDS)
-//            primaryFrostItem(FbItem.CHAT)
-//            primaryFrostItem(FbItem.PAGES)
-//            divider()
-//            primaryFrostItem(FbItem.EVENTS)
-//            primaryFrostItem(FbItem.BIRTHDAYS)
-//            primaryFrostItem(FbItem.ON_THIS_DAY)
-//            divider()
-//            primaryFrostItem(FbItem.NOTES)
-//            primaryFrostItem(FbItem.SAVED)
-//            primaryFrostItem(FbItem.MARKETPLACE)
-//        }
-//    }
 
-//    private fun Builder.primaryFrostItem(item: FbItem) = this.primaryItem(item.titleId) {
-//        iicon = item.icon
-//        iconColor = Prefs.textColor.toLong()
-//        textColor = Prefs.textColor.toLong()
-//        selectedIconColor = Prefs.textColor.toLong()
-//        selectedTextColor = Prefs.textColor.toLong()
-//        selectedColor = 0x00000001.toLong()
-//        identifier = item.titleId.toLong()
-//        onClick { _ ->
-//            frostEvent("Drawer Tab", "name" to item.name)
-//            launchWebOverlay(item.url)
-//            false
-//        }
-//    }
-//
-//    private fun Builder.secondaryFrostItem(@StringRes title: Int, onClick: () -> Unit) =
-//        this.secondaryItem(title) {
-//            textColor = Prefs.textColor.toLong()
-//            selectedIconColor = Prefs.textColor.toLong()
-//            selectedTextColor = Prefs.textColor.toLong()
-//            selectedColor = 0x00000001.toLong()
-//            identifier = title.toLong()
-//            onClick { _ -> onClick(); false }
-//        }
+    private inner class NavHeader {
+
+        private var orderedAccounts: List<CookieEntity> = cookies()
+        private var pendingUpdate: Boolean = false
+        private val binding = ViewNavHeaderBinding.inflate(layoutInflater)
+        val root: View get() = binding.root
+
+        init {
+            setPrimary(Prefs.userId)
+            binding.updateAccounts()
+            with(drawerWrapperBinding) {
+                drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+                    override fun onDrawerClosed(drawerView: View) {
+                        if (drawer !== navigation) return
+                        if (!pendingUpdate) return
+                        pendingUpdate = false
+                        binding.updateAccounts()
+                    }
+                })
+            }
+            with(binding) {
+                optionsContainer.setBackgroundColor(
+                    Prefs.bgColor.withMinAlpha(200).colorToForeground(
+                        0.1f
+                    )
+                )
+                var showOptions = false
+                val animator: ProgressAnimator = ProgressAnimator.ofFloat {  }
+                background.setOnClickListener {
+                    animator.reset()
+                    if (showOptions) {
+                        animator.apply {
+                            withAnimator(optionsContainer.height.toFloat(), 0f) {
+                                optionsContainer.updateLayoutParams {
+                                    height = it.toInt()
+                                }
+                            }
+                            withEndAction {
+                                optionsContainer.gone()
+                            }
+                        }
+                    } else {
+                        animator.apply {
+                            optionsContainer.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+                            withAnimator(
+                                optionsContainer.height.toFloat(),
+                                optionsContainer.measuredHeight.toFloat()
+                            ) {
+                                optionsContainer.updateLayoutParams {
+                                    height = it.toInt()
+                                }
+                            }
+                            withStartAction {
+                                optionsContainer.visible()
+                            }
+                        }
+                    }
+                    showOptions = !showOptions
+                    animator.start()
+                }
+            }
+        }
+
+        private fun setPrimary(id: Long) {
+            val (primaries, others) = orderedAccounts.partition { it.id == id }
+            if (primaries.size != 1) {
+                L._e(null) { "Updating account primaries, could not find specified id" }
+            }
+            orderedAccounts = primaries + others
+        }
+
+        /**
+         * Syncs UI to match [orderedAccounts].
+         *
+         * We keep this separate as we usually only want to update when the drawer is hidden.
+         */
+        private fun ViewNavHeaderBinding.updateAccounts() {
+            avatarPrimary.setAccount(orderedAccounts.getOrNull(0), true)
+            avatarSecondary.setAccount(orderedAccounts.getOrNull(1), false)
+            avatarTertiary.setAccount(orderedAccounts.getOrNull(2), false)
+        }
+
+        private fun closeDrawer() {
+            with(drawerWrapperBinding) {
+                drawer.closeDrawer(navigation)
+            }
+        }
+
+        private fun ImageView.setAccount(
+            cookie: CookieEntity?,
+            primary: Boolean
+        ) {
+            if (cookie == null) {
+                invisible()
+                setOnClickListener(null)
+            } else {
+                visible()
+                GlideApp.with(this)
+                    .load(profilePictureUrl(cookie.id))
+                    .transform(FrostGlide.circleCrop)
+                    .into(this)
+                setOnClickListener {
+                    if (primary) {
+                        launchWebOverlay(FbItem.PROFILE.url)
+                    } else {
+                        setPrimary(cookie.id)
+                        pendingUpdate = true
+                        closeDrawer()
+                        launch {
+                            FbCookie.switchUser(cookie.id)
+                            tabsForEachView { _, view -> view.badgeText = null }
+                            refreshAll()
+                        }
+                    }
+                    closeDrawer()
+                }
+            }
+        }
+    }
 
     private fun refreshAll() {
         L.d { "Refresh all" }

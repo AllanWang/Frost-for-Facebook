@@ -107,13 +107,13 @@
         <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
     </style>
 
-    <style name="Main.ViewPager" parent="" >
+    <style name="Main.ViewPager" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
     </style>
 
-    <style name="Main.Fab" parent="" >
+    <style name="Main.Fab" parent="Widget.Design.NavigationView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">end|bottom</item>
@@ -132,12 +132,36 @@
         <item name="android:colorControlHighlight">@android:color/transparent</item>
     </style>
 
-<!--    <style name="ShapeAppearanceOverlay.Item" parent="">-->
-<!--        <item name="cornerFamily">rounded</item>-->
-<!--        <item name="cornerSizeTopRight">10dp</item>-->
-<!--        <item name="cornerSizeBottomRight">10dp</item>-->
-<!--        <item name="cornerSizeBottomLeft">0dp</item>-->
-<!--        <item name="cornerSizeTopLeft">0dp</item>-->
-<!--    </style>-->
+    <!--    <style name="ShapeAppearanceOverlay.Item" parent="">-->
+    <!--        <item name="cornerFamily">rounded</item>-->
+    <!--        <item name="cornerSizeTopRight">10dp</item>-->
+    <!--        <item name="cornerSizeBottomRight">10dp</item>-->
+    <!--        <item name="cornerSizeBottomLeft">0dp</item>-->
+    <!--        <item name="cornerSizeTopLeft">0dp</item>-->
+    <!--    </style>-->
+
+    <style name="Main.DrawerMargins" parent="">
+        <item name="android:layout_marginStart">@dimen/kau_activity_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/kau_activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/kau_activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/kau_activity_vertical_margin</item>
+    </style>
+
+    <style name="Main.DrawerPrimaryAvatar" parent="Main.DrawerMargins">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+
+    <style name="Main.DrawerSecondaryAvatar" parent="Main.DrawerMargins">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+
+    <style name="Main.DrawerAccountOptions" parent="Main.DrawerMargins">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 
 </resources>

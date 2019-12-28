@@ -3,7 +3,7 @@
     android:color="#f0f">
     <item
         android:id="@android:id/mask"
-        android:right="8dp">
+        android:right="16dp">
         <shape android:shape="rectangle">
             <corners
                 android:bottomRightRadius="50dp"
