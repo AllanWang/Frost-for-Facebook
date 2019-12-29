@@ -15,4 +15,5 @@
     <dimen name="dialog_corner_radius">8dp</dimen>
 
     <dimen name="drawer_account_avatar_size">32dp</dimen>
+    <dimen name="drawer_nav_horizontal_margins">24dp</dimen>
 </resources>

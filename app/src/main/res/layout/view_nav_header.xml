@@ -8,10 +8,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:elevation="2dp"
-        android:layout_height="160dp">
+        android:layout_height="160dp"
+        android:elevation="2dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="160dp"
@@ -54,9 +54,9 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/kau_activity_horizontal_margin"
+            android:layout_marginStart="@dimen/drawer_nav_horizontal_margins"
             android:layout_marginTop="@dimen/kau_activity_vertical_margin"
-            android:layout_marginEnd="@dimen/kau_activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/drawer_nav_horizontal_margins"
             android:layout_marginBottom="@dimen/kau_activity_vertical_margin"
             android:clickable="false"
             android:lines="1"
@@ -69,10 +69,10 @@
 
         <ImageView
             android:id="@+id/arrow"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="@dimen/kau_activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/kau_activity_horizontal_margin"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="@dimen/drawer_nav_horizontal_margins"
+            android:layout_marginEnd="@dimen/drawer_nav_horizontal_margins"
             app:layout_constraintBottom_toBottomOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name" />
@@ -84,6 +84,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:visibility="gone"
         tools:visibility="visible">
 

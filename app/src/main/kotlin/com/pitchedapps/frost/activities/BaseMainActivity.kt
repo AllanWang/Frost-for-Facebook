@@ -35,7 +35,6 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.updateLayoutParams
@@ -62,6 +61,7 @@ import ca.allanwang.kau.utils.showIf
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
+import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withMinAlpha
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
@@ -86,6 +86,7 @@ import com.pitchedapps.frost.databinding.ViewNavHeaderBinding
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.GenericDao
+import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.facebook.FbCookie
@@ -116,6 +117,8 @@ import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostNavigationBar
+import com.pitchedapps.frost.utils.launchLogin
+import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.BadgedIcon
@@ -262,18 +265,18 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
-    private fun ActivityMainDrawerWrapperBinding.initDrawer() {
-
-        fun createNavDrawable(@ColorInt foregroundColor: Int): RippleDrawable {
-            val drawable = drawable(R.drawable.nav_item_background) as RippleDrawable
-            drawable.setColor(
-                ColorStateList(
-                    arrayOf(intArrayOf()),
-                    intArrayOf(foregroundColor.adjustAlpha(0.16f))
-                )
+    private fun createNavDrawable(): RippleDrawable {
+        val drawable = drawable(R.drawable.nav_item_background) as RippleDrawable
+        drawable.setColor(
+            ColorStateList(
+                arrayOf(intArrayOf()),
+                intArrayOf(Prefs.accentColor.adjustAlpha(0.16f))
             )
-            return drawable
-        }
+        )
+        return drawable
+    }
+
+    private fun ActivityMainDrawerWrapperBinding.initDrawer() {
 
         val toggle = ActionBarDrawerToggle(
             this@BaseMainActivity, drawer, contentBinding.toolbar,
@@ -315,7 +318,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             val navBg = Prefs.bgColor.withMinAlpha(200)
             setBackgroundColor(navBg)
-            itemBackground = createNavDrawable(Prefs.accentColor)
+            itemBackground = createNavDrawable()
             itemTextColor = foregroundColor
             itemIconTintList = foregroundColor
 
@@ -373,94 +376,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
-//    private fun setupDrawer(savedInstanceState: Bundle?) {
-//        val navBg = Prefs.bgColor.withMinAlpha(200).toLong()
-//        val navHeader = Prefs.headerColor.withMinAlpha(200)
-//        drawer = drawer {
-//            toolbar = this@BaseMainActivity.toolbar
-//            savedInstance = savedInstanceState
-//            translucentStatusBar = false
-//            sliderBackgroundColor = navBg
-//            drawerHeader = accountHeader {
-//                textColor = Prefs.iconColor.toLong()
-//                backgroundDrawable = ColorDrawable(navHeader)
-//                selectionSecondLineShown = false
-//                cookies().forEach { (id, name) ->
-//                    profile(name = name ?: "") {
-//                        iconUrl = profilePictureUrl(id)
-//                        textColor = Prefs.textColor.toLong()
-//                        selectedTextColor = Prefs.textColor.toLong()
-//                        selectedColor = 0x00000001.toLong()
-//                        identifier = id
-//                    }
-//                }
-//                profileSetting(nameRes = R.string.kau_logout) {
-//                    iicon = GoogleMaterial.Icon.gmd_exit_to_app
-//                    iconColor = Prefs.textColor.toLong()
-//                    textColor = Prefs.textColor.toLong()
-//                    identifier = -2L
-//                }
-//                profileSetting(nameRes = R.string.kau_add_account) {
-//                    iconDrawable =
-//                        IconicsDrawable(
-//                            this@BaseMainActivity,
-//                            GoogleMaterial.Icon.gmd_add
-//                        ).actionBar().paddingDp(5)
-//                            .colorInt(Prefs.textColor)
-//                    textColor = Prefs.textColor.toLong()
-//                    identifier = -3L
-//                }
-//                profileSetting(nameRes = R.string.kau_manage_account) {
-//                    iicon = GoogleMaterial.Icon.gmd_settings
-//                    iconColor = Prefs.textColor.toLong()
-//                    textColor = Prefs.textColor.toLong()
-//                    identifier = -4L
-//                }
-//                onProfileChanged { _, profile, current ->
-//                    if (current) launchWebOverlay(FbItem.PROFILE.url)
-//                    else when (profile.identifier) {
-//                        -2L -> {
-//                            // TODO no backpressure support
-//                            this@BaseMainActivity.launch {
-//                                val currentCookie = cookieDao.currentCookie()
-//                                if (currentCookie == null) {
-//                                    toast(R.string.account_not_found)
-//                                    FbCookie.reset()
-//                                    launchLogin(cookies(), true)
-//                                } else {
-//                                    materialDialog {
-//                                        title(R.string.kau_logout)
-//                                        message(
-//                                            text =
-//                                            String.format(
-//                                                string(R.string.kau_logout_confirm_as_x),
-//                                                currentCookie.name ?: Prefs.userId.toString()
-//                                            )
-//                                        )
-//                                        positiveButton(R.string.kau_yes) {
-//                                            this@BaseMainActivity.launch {
-//                                                FbCookie.logout(this@BaseMainActivity)
-//                                            }
-//                                        }
-//                                        negativeButton(R.string.kau_no)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        -3L -> launchNewTask<LoginActivity>(clearStack = false)
-//                        -4L -> launchNewTask<SelectorActivity>(cookies(), false)
-//                        else -> {
-//                            this@BaseMainActivity.launch {
-//                                FbCookie.switchUser(profile.identifier)
-//                                tabsForEachView { _, view -> view.badgeText = null }
-//                                refreshAll()
-//                            }
-//                        }
-//                    }
-//                    false
-//                }
-//            }
-
     private inner class NavHeader {
 
         private var orderedAccounts: List<CookieEntity> = cookies()
@@ -498,6 +413,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                     height = it.toInt()
                                 }
                             }
+                            withAnimator(arrow.rotation, 0f) {
+                                arrow.rotation = it
+                            }
                             withEndAction {
                                 optionsContainer.gone()
                             }
@@ -516,6 +434,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                     height = it.toInt()
                                 }
                             }
+                            withAnimator(arrow.rotation, 180f) {
+                                arrow.rotation = it
+                            }
                             withStartAction {
                                 optionsContainer.visible()
                             }
@@ -525,18 +446,67 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     animator.start()
                 }
 
+                val textColor = Prefs.textColor
+
                 fun TextView.setOptionsIcon(iicon: IIcon) {
                     setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        iicon.toDrawable(this@BaseMainActivity, sizeDp = 20),
+                        iicon.toDrawable(this@BaseMainActivity, color = textColor, sizeDp = 20),
                         null,
                         null,
                         null
                     )
+                    setTextColor(textColor)
+                    background = createNavDrawable()
                 }
 
-                optionsLogout.setOptionsIcon(GoogleMaterial.Icon.gmd_exit_to_app)
-                optionsAddAccount.setOptionsIcon(GoogleMaterial.Icon.gmd_add)
-                optionsManageAccount.setOptionsIcon(GoogleMaterial.Icon.gmd_settings)
+                with(optionsLogout) {
+                    setOptionsIcon(GoogleMaterial.Icon.gmd_exit_to_app)
+                    setOnClickListener {
+                        launch {
+                            val currentCookie = cookieDao.currentCookie()
+                            if (currentCookie == null) {
+                                toast(R.string.account_not_found)
+                                FbCookie.reset()
+                                launchLogin(cookies(), true)
+                            } else {
+                                materialDialog {
+                                    title(R.string.kau_logout)
+                                    message(
+                                        text =
+                                        String.format(
+                                            string(R.string.kau_logout_confirm_as_x),
+                                            currentCookie.name ?: Prefs.userId.toString()
+                                        )
+                                    )
+                                    positiveButton(R.string.kau_yes) {
+                                        this@BaseMainActivity.launch {
+                                            FbCookie.logout(this@BaseMainActivity)
+                                        }
+                                    }
+                                    negativeButton(R.string.kau_no)
+                                }
+                            }
+                        }
+                    }
+                }
+                with(optionsAddAccount) {
+                    setOptionsIcon(GoogleMaterial.Icon.gmd_add)
+                    setOnClickListener {
+                        launchNewTask<LoginActivity>(clearStack = false)
+                    }
+                }
+                with(optionsManageAccount) {
+                    setOptionsIcon(GoogleMaterial.Icon.gmd_settings)
+                    setOnClickListener {
+                        launchNewTask<SelectorActivity>(cookies(), false)
+                    }
+                }
+                arrow.setImageDrawable(
+                    GoogleMaterial.Icon.gmd_arrow_drop_down.toDrawable(
+                        this@BaseMainActivity,
+                        color = Prefs.textColor
+                    )
+                )
             }
         }
 
@@ -559,9 +529,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             avatarTertiary.setAccount(orderedAccounts.getOrNull(2), false)
             optionsAccountsContainer.removeAllViews()
             name.text = orderedAccounts.getOrNull(0)?.name
+            name.setTextColor(Prefs.textColor)
             val glide = Glide.with(root)
             val accountSize = dimenPixelSize(R.dimen.drawer_account_avatar_size)
-            orderedAccounts.forEach {
+            val textColor = Prefs.textColor
+            val navBackground = createNavDrawable()
+            orderedAccounts.forEach { cookie ->
                 val tv =
                     TextView(
                         this@BaseMainActivity,
@@ -569,7 +542,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         0,
                         R.style.Main_DrawerAccountUserOptions
                     )
-                glide.load(profilePictureUrl(it.id)).transform(FrostGlide.circleCrop)
+                glide.load(profilePictureUrl(cookie.id)).transform(FrostGlide.circleCrop)
                     .into(object : CustomTarget<Drawable>(accountSize, accountSize) {
                         override fun onLoadCleared(placeholder: Drawable?) {
                             tv.setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -592,7 +565,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             )
                         }
                     })
-                tv.text = it.name
+                tv.text = cookie.name
+                tv.setTextColor(textColor)
+                tv.background = navBackground
+                tv.setOnClickListener {
+                    switchAccount(cookie.id)
+                }
                 optionsAccountsContainer.addView(tv)
             }
         }
@@ -620,17 +598,22 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     if (primary) {
                         launchWebOverlay(FbItem.PROFILE.url)
                     } else {
-                        setPrimary(cookie.id)
-                        pendingUpdate = true
-                        closeDrawer()
-                        launch {
-                            FbCookie.switchUser(cookie.id)
-                            tabsForEachView { _, view -> view.badgeText = null }
-                            refreshAll()
-                        }
+                        switchAccount(cookie.id)
                     }
                     closeDrawer()
                 }
+            }
+        }
+
+        private fun switchAccount(id: Long) {
+            if (Prefs.userId == id) return
+            setPrimary(id)
+            pendingUpdate = true
+            closeDrawer()
+            launch {
+                FbCookie.switchUser(id)
+                tabsForEachView { _, view -> view.badgeText = null }
+                refreshAll()
             }
         }
     }

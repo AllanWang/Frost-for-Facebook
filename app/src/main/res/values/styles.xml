@@ -141,8 +141,8 @@
     <!--    </style>-->
 
     <style name="Main.DrawerMargins" parent="">
-        <item name="android:layout_marginStart">@dimen/kau_activity_horizontal_margin</item>
-        <item name="android:layout_marginEnd">@dimen/kau_activity_horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/drawer_nav_horizontal_margins</item>
+        <item name="android:layout_marginEnd">@dimen/drawer_nav_horizontal_margins</item>
         <item name="android:layout_marginTop">@dimen/kau_activity_vertical_margin</item>
         <item name="android:layout_marginBottom">@dimen/kau_activity_vertical_margin</item>
     </style>
@@ -162,8 +162,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:drawablePadding">16dp</item>
-        <item name="android:paddingStart">24dp</item>
-        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingStart">@dimen/drawer_nav_horizontal_margins</item>
+        <item name="android:paddingEnd">@dimen/drawer_nav_horizontal_margins</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -178,7 +178,7 @@
         <item name="android:drawablePadding">10dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingStart">18dp</item>
-        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingEnd">@dimen/drawer_nav_horizontal_margins</item>
     </style>
 
 </resources>
