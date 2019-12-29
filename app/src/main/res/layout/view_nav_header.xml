@@ -99,19 +99,22 @@
             android:id="@+id/options_logout"
             style="@style/Main.DrawerAccountOptions"
             android:text="@string/kau_logout"
-            tools:drawableStart="@drawable/abc_vector_test" />
+            tools:drawableStart="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
 
         <TextView
             android:id="@+id/options_add_account"
             style="@style/Main.DrawerAccountOptions"
             android:text="@string/kau_add_account"
-            tools:drawableStart="@drawable/abc_vector_test" />
+            tools:drawableStart="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
 
         <TextView
             android:id="@+id/options_manage_account"
             style="@style/Main.DrawerAccountOptions"
             android:text="@string/kau_manage_account"
-            tools:drawableStart="@drawable/abc_vector_test" />
+            tools:drawableStart="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
 
     </LinearLayout>
 
