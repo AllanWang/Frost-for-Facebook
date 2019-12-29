@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fitsSystemWindows="true"
-        tools:context=".activities.MainActivity">
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -19,17 +20,25 @@
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-            <include layout="@layout/view_main_toolbar" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Main.Toolbar" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <include layout="@layout/view_main_viewpager" />
+        <com.pitchedapps.frost.views.FrostViewPager
+            android:id="@+id/viewpager"
+            style="@style/Main.ViewPager" />
 
-        <include layout="@layout/view_main_fab" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            style="@style/Main.Fab" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <include layout="@layout/view_main_tab_layout" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        style="@style/Main.TabLayout" />
 
 </LinearLayout>
 

@@ -88,7 +88,7 @@ class FrostJSI(val web: FrostWebView) {
      */
     @JavascriptInterface
     fun longClick(start: Boolean) {
-        activity?.viewPager?.enableSwipe = !start
+        activity?.contentBinding?.viewpager?.enableSwipe = !start
         if (web.frostWebClient.urlSupportsRefresh) {
             web.parent.swipeEnabled = !start
         }
@@ -151,7 +151,7 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun allowHorizontalScrolling(enable: Boolean) {
-        activity?.viewPager?.enableSwipe = enable
+        activity?.contentBinding?.viewpager?.enableSwipe = enable
         (context as? WebOverlayActivityBase)?.swipeBack?.disallowIntercept = !enable
     }
 }

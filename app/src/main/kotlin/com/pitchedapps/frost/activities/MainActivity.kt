@@ -37,12 +37,14 @@ class MainActivity : BaseMainActivity() {
     override val headerBadgeChannel = BroadcastChannel<String>(Channel.CONFLATED)
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
-        setupTabs()
-        setupViewPager()
+        with(contentBinding) {
+            setupTabs()
+            setupViewPager()
+        }
     }
 
-    private fun setupViewPager() {
-        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+    private fun ActivityMainContentBinding.setupViewPager() {
+        viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if (lastPosition == position) {
@@ -75,9 +77,9 @@ class MainActivity : BaseMainActivity() {
         })
     }
 
-    private fun setupTabs() {
-        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+    private fun ActivityMainContentBinding.setupTabs() {
+        viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+        tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(viewpager) {
             override fun onTabReselected(tab: TabLayout.Tab) {
                 super.onTabReselected(tab)
                 currentFragment.onTabClick()
@@ -88,7 +90,7 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        headerBadgeChannel.subscribeDuringJob(this, Dispatchers.IO) { html ->
+        headerBadgeChannel.subscribeDuringJob(this@MainActivity, Dispatchers.IO) { html ->
             try {
                 val doc = Jsoup.parse(html)
                 if (doc.select("[data-sigil=count]").isEmpty())

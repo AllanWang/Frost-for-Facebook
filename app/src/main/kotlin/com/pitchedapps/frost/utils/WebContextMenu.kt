@@ -47,7 +47,10 @@ fun Context.showWebContextMenu(wc: WebContext) {
         }
         onDismiss {
             // showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
-            (this@showWebContextMenu as? MainActivity)?.viewPager?.enableSwipe = true
+            (this@showWebContextMenu as? MainActivity)
+                ?.contentBinding
+                ?.viewpager
+                ?.enableSwipe = true
         }
     }
 }

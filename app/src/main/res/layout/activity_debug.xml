@@ -31,6 +31,8 @@
 
     </com.pitchedapps.frost.views.SwipeRefreshLayout>
 
-    <include layout="@layout/view_main_fab" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        style="@style/Main.Fab" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

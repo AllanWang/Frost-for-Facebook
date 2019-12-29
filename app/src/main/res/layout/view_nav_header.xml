@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:elevation="2dp">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/status_bar_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <ImageView
+            android:id="@+id/avatar_primary"
+            style="@style/Main.DrawerPrimaryAvatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_bar_guide"
+            tools:src="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/avatar_secondary"
+            style="@style/Main.DrawerSecondaryAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_bar_guide"
+            tools:src="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/avatar_tertiary"
+            style="@style/Main.DrawerSecondaryAvatar"
+            app:layout_constraintEnd_toStartOf="@id/avatar_secondary"
+            app:layout_constraintTop_toBottomOf="@id/status_bar_guide"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/drawer_nav_horizontal_margins"
+            android:layout_marginTop="@dimen/kau_activity_vertical_margin"
+            android:layout_marginEnd="@dimen/drawer_nav_horizontal_margins"
+            android:layout_marginBottom="@dimen/kau_activity_vertical_margin"
+            android:clickable="false"
+            android:lines="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatar_primary"
+            app:layout_constraintVertical_bias="1"
+            tools:text="@tools:sample/full_names" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="@dimen/drawer_nav_horizontal_margins"
+            android:layout_marginEnd="@dimen/drawer_nav_horizontal_margins"
+            app:layout_constraintBottom_toBottomOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/options_accounts_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/options_logout"
+            style="@style/Main.DrawerAccountOptions"
+            android:text="@string/kau_logout"
+            tools:drawableStart="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
+
+        <TextView
+            android:id="@+id/options_add_account"
+            style="@style/Main.DrawerAccountOptions"
+            android:text="@string/kau_add_account"
+            tools:drawableStart="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
+
+        <TextView
+            android:id="@+id/options_manage_account"
+            style="@style/Main.DrawerAccountOptions"
+            android:text="@string/kau_manage_account"
+            tools:drawableStart="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
+
+    </LinearLayout>
+
+</LinearLayout>

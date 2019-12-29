@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="FrostThemeBase" parent="MaterialDrawerTheme.ActionBar">
+    <style name="FrostTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/white</item>
@@ -11,12 +11,7 @@
         <item name="md_corner_radius">@dimen/dialog_corner_radius</item>
     </style>
 
-    <style name="FrostTheme" parent="@style/FrostThemeBase">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="FrostTheme.Light" parent="MaterialDrawerTheme.Light.DarkToolbar">
+    <style name="FrostTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/facebook_blue</item>
         <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="colorAccent">@android:color/black</item>
@@ -101,6 +96,89 @@
         <item name="android:elevation">0dp</item>
         <item name="android:background">?android:selectableItemBackgroundBorderless</item>
         <item name="android:padding">@dimen/kau_padding_large</item>
+    </style>
+
+    <!-- Main Activity Styles -->
+
+    <style name="Main.Toolbar" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="layout_scrollFlags">scroll|enterAlways|snap</item>
+        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+    </style>
+
+    <style name="Main.ViewPager" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="layout_behavior">@string/appbar_scrolling_view_behavior</item>
+    </style>
+
+    <style name="Main.Fab" parent="Widget.Design.NavigationView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end|bottom</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="Main.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/tab_bar_height</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabMode">fixed</item>
+    </style>
+
+    <style name="ThemeOverlay.Frost.NavigationView" parent="">
+        <item name="android:colorControlHighlight">@android:color/transparent</item>
+    </style>
+
+    <!--    <style name="ShapeAppearanceOverlay.Item" parent="">-->
+    <!--        <item name="cornerFamily">rounded</item>-->
+    <!--        <item name="cornerSizeTopRight">10dp</item>-->
+    <!--        <item name="cornerSizeBottomRight">10dp</item>-->
+    <!--        <item name="cornerSizeBottomLeft">0dp</item>-->
+    <!--        <item name="cornerSizeTopLeft">0dp</item>-->
+    <!--    </style>-->
+
+    <style name="Main.DrawerMargins" parent="">
+        <item name="android:layout_marginStart">@dimen/drawer_nav_horizontal_margins</item>
+        <item name="android:layout_marginEnd">@dimen/drawer_nav_horizontal_margins</item>
+        <item name="android:layout_marginTop">@dimen/kau_activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/kau_activity_vertical_margin</item>
+    </style>
+
+    <style name="Main.DrawerPrimaryAvatar" parent="Main.DrawerMargins">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+
+    <style name="Main.DrawerSecondaryAvatar" parent="Main.DrawerMargins">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+
+    <!-- Expected icon size is 20dp to match NavigationView -->
+    <style name="Main.DrawerAccountOptions" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:paddingStart">@dimen/drawer_nav_horizontal_margins</item>
+        <item name="android:paddingEnd">@dimen/drawer_nav_horizontal_margins</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Avatar size is 32dp (R.dimen.drawer_account_avatar_size) -->
+    <style name="Main.DrawerAccountUserOptions" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">@dimen/drawer_nav_horizontal_margins</item>
     </style>
 
 </resources>
