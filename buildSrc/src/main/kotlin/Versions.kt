@@ -19,8 +19,6 @@ object Versions {
     const val jsoup = "1.12.1"
     // https://github.com/square/leakcanary/releases
     const val leakCanary = "1.6.2"
-    // https://github.com/zsmb13/MaterialDrawerKt/releases
-    const val materialDrawerKt = "3.0.0-rc01"
     // https://github.com/square/okhttp/releases
     const val okhttp = "4.2.2"
     // https://developer.android.com/jetpack/androidx/releases/room

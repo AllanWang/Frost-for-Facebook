@@ -74,7 +74,6 @@ class AboutActivity : AboutActivityBase(null, {
             "kau",
             "kotterknife",
             "materialdialogs",
-            "materialdrawer",
             "subsamplingscaleimageview"
         )
 

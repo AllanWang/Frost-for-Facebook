@@ -34,7 +34,6 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
 import kotlinx.android.synthetic.main.activity_debug.*
-import kotlinx.android.synthetic.main.view_main_fab.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import java.io.File
 import kotlin.coroutines.resume

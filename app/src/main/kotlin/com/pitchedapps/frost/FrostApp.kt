@@ -67,22 +67,6 @@ class FrostApp : Application() {
 
         scheduleNotificationsFromPrefs()
 
-        /**
-         * Drawer profile loading logic
-         * Reload the image on every version update
-         */
-//        DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
-//            override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable, tag: String?) {
-//                val c = imageView.context
-//                val request = GlideApp.with(c)
-//                val old = request.load(uri).apply(RequestOptions().placeholder(placeholder))
-//                request.load(uri).apply(
-//                    RequestOptions()
-//                        .signature(ApplicationVersionSignature.obtain(c))
-//                )
-//                    .thumbnail(old).into(imageView)
-//            }
-//        })
         if (BuildConfig.DEBUG) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
                 override fun onActivityPaused(activity: Activity) {}
