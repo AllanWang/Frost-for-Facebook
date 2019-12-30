@@ -282,6 +282,8 @@ dependencies {
     implementation kau.Dependencies.iconicsMaterial
     implementation kau.Dependencies.iconicsCommunity
 
+    implementation kau.Dependencies.materialDialog("input")
+
     implementation "org.jsoup:jsoup:${Versions.jsoup}"
 
     implementation "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
