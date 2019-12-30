@@ -21,6 +21,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.net.Uri
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
@@ -28,7 +29,6 @@ import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.gone
 import ca.allanwang.kau.utils.goneIf
-import ca.allanwang.kau.utils.inflate
 import ca.allanwang.kau.utils.isColorDark
 import ca.allanwang.kau.utils.isGone
 import ca.allanwang.kau.utils.isVisible
@@ -40,13 +40,13 @@ import ca.allanwang.kau.utils.withMinAlpha
 import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ViewVideoBinding
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
-import kotlinx.android.synthetic.main.view_video.view.*
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -78,31 +78,37 @@ class FrostVideoViewer @JvmOverloads constructor(
             container.addView(videoViewer)
             videoViewer.bringToFront()
             videoViewer.setVideo(url, repeat)
-            videoViewer.video.containerContract = contract
-            videoViewer.video.onFinishedListener =
+            videoViewer.binding.video.containerContract = contract
+            videoViewer.binding.video.onFinishedListener =
                 { container.removeView(videoViewer); contract.onVideoFinished() }
             return videoViewer
         }
     }
 
+    private val binding: ViewVideoBinding =
+        ViewVideoBinding.inflate(LayoutInflater.from(context), this, true)
+
     init {
-        inflate(R.layout.view_video, true)
+        binding.init()
+    }
+
+    fun ViewVideoBinding.init() {
         alpha = 0f
-        video_background.setBackgroundColor(
+        videoBackground.setBackgroundColor(
             if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
                 Prefs.bgColor.withMinAlpha(200)
             else
                 Color.BLACK
         )
-        video.setViewerContract(this)
+        video.setViewerContract(this@FrostVideoViewer)
         video.pause()
-        video_toolbar.inflateMenu(R.menu.menu_video)
+        videoToolbar.inflateMenu(R.menu.menu_video)
         context.setMenuIcons(
-            video_toolbar.menu, Prefs.iconColor,
+            videoToolbar.menu, Prefs.iconColor,
             R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
             R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )
-        video_toolbar.setOnMenuItemClickListener {
+        videoToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.ctxCoroutine.launchMain {
@@ -113,19 +119,21 @@ class FrostVideoViewer @JvmOverloads constructor(
             }
             true
         }
-        video_restart.gone().setIcon(GoogleMaterial.Icon.gmd_replay, 64)
-        video_restart.setOnClickListener {
+        videoRestart.gone().setIcon(GoogleMaterial.Icon.gmd_replay, 64)
+        videoRestart.setOnClickListener {
             video.restart()
-            video_restart.fadeOut { video_restart.gone() }
+            videoRestart.fadeOut { videoRestart.gone() }
         }
     }
 
     fun setVideo(url: String, repeat: Boolean = false) {
-        L.d { "Load video; repeat: $repeat" }
-        L._d { "Video Url: $url" }
-        animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
-        video.setVideoURI(Uri.parse(url))
-        video.repeat = repeat
+        with(binding) {
+            L.d { "Load video; repeat: $repeat" }
+            L._d { "Video Url: $url" }
+            animate().alpha(1f).setDuration(FrostVideoView.ANIMATION_DURATION).start()
+            video.setVideoURI(Uri.parse(url))
+            video.repeat = repeat
+        }
     }
 
     /**
@@ -133,15 +141,17 @@ class FrostVideoViewer @JvmOverloads constructor(
      * returns true if consumed, false otherwise
      */
     fun onBackPressed(): Boolean {
-        parent ?: return false
-        if (video.isExpanded)
-            video.isExpanded = false
-        else
-            video.destroy()
-        return true
+        with(binding) {
+            parent ?: return false
+            if (video.isExpanded)
+                video.isExpanded = false
+            else
+                video.destroy()
+            return true
+        }
     }
 
-    fun pause() = video.pause()
+    fun pause() = binding.video.pause()
 
     /*
      * -------------------------------------------------------------
@@ -150,43 +160,55 @@ class FrostVideoViewer @JvmOverloads constructor(
      */
 
     override fun onExpand(progress: Float) {
-        video_toolbar.goneIf(progress == 0f).alpha = progress
-        video_background.alpha = progress
+        with(binding) {
+            videoToolbar.goneIf(progress == 0f).alpha = progress
+            videoBackground.alpha = progress
+        }
     }
 
     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-        if (video_restart.isVisible) {
-            video_restart.performClick()
-            return true
+        with(binding) {
+            if (videoRestart.isVisible) {
+                videoRestart.performClick()
+                return true
+            }
+            return false
         }
-        return false
     }
 
     override fun onVideoComplete() {
-        video.jumpToStart()
-        video_restart.fadeIn()
+        with(binding) {
+            video.jumpToStart()
+            videoRestart.fadeIn()
+        }
     }
 
     fun updateLocation() {
-        viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                video.updateLocation()
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })
+        with(binding) {
+            viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    video.updateLocation()
+                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
     }
 
     override fun onControlsShown() {
-        if (video.isExpanded)
-            video_toolbar.fadeIn(
-                duration = CONTROL_ANIMATION_DURATION,
-                onStart = { video_toolbar.visible() })
+        with(binding) {
+            if (video.isExpanded)
+                videoToolbar.fadeIn(
+                    duration = CONTROL_ANIMATION_DURATION,
+                    onStart = { videoToolbar.visible() })
+        }
     }
 
     override fun onControlsHidden() {
-        if (!video_toolbar.isGone)
-            video_toolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { video_toolbar.gone() }
+        with(binding) {
+            if (!videoToolbar.isGone)
+                videoToolbar.fadeOut(duration = CONTROL_ANIMATION_DURATION) { videoToolbar.gone() }
+        }
     }
 }
 
