@@ -156,6 +156,13 @@ class FbUrlTest {
         assertFbFormat(expected, url)
     }
 
+    @Test
+    fun queryH() {
+        val url = "${FB_URL_BASE}sample/?h=asdfasdf"
+        val expected = "${FB_URL_BASE}sample/"
+        assertFbFormat(expected, url)
+    }
+
 //    @Test
 //    fun viewFullImageIndirect() {
 //        val urlBase = "photo/view_full_size/?fbid=1234&ref_component=mbasic_photo_permalink&ref_page=%2Fwap%2Fphoto.php&refid=13&_ft_=qid.1234%3Amf_story_key.1234%3Atop_level_post_id"

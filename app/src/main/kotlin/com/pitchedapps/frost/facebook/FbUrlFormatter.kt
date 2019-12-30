@@ -144,6 +144,7 @@ class FbUrlFormatter(url: String) {
             "refid",
             "SharedWith",
             "fbclid",
+            "h",
             "_ft_",
             "_tn_",
             "_xt_",
