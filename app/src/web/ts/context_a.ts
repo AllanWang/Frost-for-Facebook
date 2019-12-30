@@ -63,7 +63,8 @@
     };
 
     const _getImageStyleUrl = (el: Element): string | null => {
-        const img = el.querySelector("[style*=\"background-image: url(\"]");
+        // Emojis and special characters may be images from a span
+        const img = el.querySelector("[style*=\"background-image: url(\"]:not(span)");
         if (!img) {
             return null
         }
