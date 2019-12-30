@@ -18,12 +18,6 @@ package com.pitchedapps.frost.debugger
 
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.internal.COOKIE
-import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.Dispatcher
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
-import org.junit.Assume.assumeTrue
 import java.io.File
 import java.util.zip.ZipFile
 import kotlin.test.AfterTest
@@ -33,6 +27,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.runBlocking
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
+import org.junit.Assume.assumeTrue
 
 /**
  * Created by Allan Wang on 05/01/18.
@@ -228,7 +228,7 @@ class OfflineWebsiteTest {
             console.log('world');
         """.trimIndent()
 
-        server.dispatcher=object : Dispatcher() {
+        server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path ?: return MockResponse().setBody(content)
                 return when {

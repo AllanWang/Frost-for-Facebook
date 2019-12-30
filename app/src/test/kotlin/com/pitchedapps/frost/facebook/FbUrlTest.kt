@@ -18,10 +18,10 @@ package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndirectImageUrl
-import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import org.junit.Test
 
 /**
  * Created by Allan Wang on 2017-07-07.

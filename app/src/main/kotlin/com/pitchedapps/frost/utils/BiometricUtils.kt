@@ -26,10 +26,10 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
-import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlinx.coroutines.CompletableDeferred
 
 typealias BiometricDeferred = CompletableDeferred<BiometricPrompt.CryptoObject?>
 

@@ -20,9 +20,9 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import androidx.annotation.CallSuper
 import ca.allanwang.kau.utils.ContextHelper
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlin.coroutines.CoroutineContext
 
 abstract class BaseJobService : JobService(), CoroutineScope {
 

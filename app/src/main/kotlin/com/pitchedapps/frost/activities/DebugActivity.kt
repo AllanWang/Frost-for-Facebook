@@ -34,10 +34,10 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
-import kotlinx.coroutines.CoroutineExceptionHandler
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CoroutineExceptionHandler
 
 /**
  * Created by Allan Wang on 05/01/18.

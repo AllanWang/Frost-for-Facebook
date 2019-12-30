@@ -16,11 +16,6 @@
  */
 package com.pitchedapps.frost.kotlin
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.runBlocking
-import org.junit.Rule
-import org.junit.rules.Timeout
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -28,6 +23,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.runBlocking
+import org.junit.Rule
+import org.junit.rules.Timeout
 
 class FlyweightTest {
 

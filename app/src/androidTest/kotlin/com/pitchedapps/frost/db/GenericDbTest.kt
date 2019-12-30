@@ -18,9 +18,9 @@ package com.pitchedapps.frost.db
 
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.defaultTabs
-import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.runBlocking
 
 class GenericDbTest : BaseDbTest() {
 

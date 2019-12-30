@@ -36,8 +36,8 @@ import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.utils.Prefs
-import kotlinx.android.synthetic.main.intro_analytics.*
 import kotlin.math.abs
+import kotlinx.android.synthetic.main.intro_analytics.*
 
 /**
  * Created by Allan Wang on 2017-07-28.

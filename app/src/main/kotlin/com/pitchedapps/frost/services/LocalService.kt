@@ -24,10 +24,10 @@ import android.content.Context
 import android.os.PersistableBundle
 import com.pitchedapps.frost.activities.ImageActivity
 import com.pitchedapps.frost.utils.L
+import java.io.FileFilter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.FileFilter
 
 class LocalService : BaseJobService() {
 

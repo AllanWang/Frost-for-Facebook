@@ -20,13 +20,12 @@ import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.assertComponentsNotEmpty
 import com.pitchedapps.frost.internal.assertDescending
 import com.pitchedapps.frost.internal.authDependent
-import org.junit.BeforeClass
-import org.junit.Ignore
-import org.junit.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import org.junit.BeforeClass
+import org.junit.Test
 
 /**
  * Created by Allan Wang on 24/12/17.

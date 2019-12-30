@@ -31,9 +31,9 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.isFacebookUrl
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 
 /**
  * Created by Allan Wang on 2018-01-05.

@@ -17,10 +17,10 @@
 package com.pitchedapps.frost.utils
 
 import com.pitchedapps.frost.BuildConfig
-import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import org.junit.Test
 
 class BuildUtilsTest {
 

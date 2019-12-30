@@ -8,7 +8,9 @@
 
     <version title="v2.4.2" />
     <item text="Fix back stack history" />
-    <item text="" />
+    <item text="Fix search suggestions" />
+    <item text="Redesign navigation layout" />
+    <item text="Update theme" />
     <item text="" />
 
     <version title="v2.4.1" />

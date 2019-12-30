@@ -20,8 +20,8 @@ import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
-import org.apache.commons.text.StringEscapeUtils
 import kotlin.random.Random
+import org.apache.commons.text.StringEscapeUtils
 
 class JsBuilder {
     private val css = StringBuilder()

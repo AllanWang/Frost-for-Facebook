@@ -21,7 +21,6 @@ import android.text.TextUtils
 import ca.allanwang.kau.utils.use
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 /**

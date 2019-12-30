@@ -16,10 +16,10 @@
  */
 package com.pitchedapps.frost.db
 
-import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlinx.coroutines.runBlocking
 
 class CookieDbTest : BaseDbTest() {
 

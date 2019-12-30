@@ -26,6 +26,12 @@ import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.unescapeHtml
+import java.io.File
+import java.io.FileOutputStream
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -37,12 +43,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Entities
-import java.io.File
-import java.io.FileOutputStream
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 /**
  * Created by Allan Wang on 04/01/18.

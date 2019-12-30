@@ -2,6 +2,9 @@
 
 ## v2.4.2
 * Fix back stack history
+* Fix search suggestions
+* Redesign navigation layout
+* Update theme
 
 ## v2.4.1
 * Add better support for mobile url conversions

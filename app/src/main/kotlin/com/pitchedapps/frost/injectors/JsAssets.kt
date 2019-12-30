@@ -21,11 +21,11 @@ import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.utils.L
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-31.

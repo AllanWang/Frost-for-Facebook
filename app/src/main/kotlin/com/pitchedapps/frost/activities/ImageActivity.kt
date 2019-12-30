@@ -67,12 +67,6 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -81,6 +75,12 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.max
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-07-15.

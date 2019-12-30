@@ -50,6 +50,8 @@ import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.web.LoginWebView
+import java.net.UnknownHostException
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -59,8 +61,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.koin.android.ext.android.inject
-import java.net.UnknownHostException
-import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-06-01.

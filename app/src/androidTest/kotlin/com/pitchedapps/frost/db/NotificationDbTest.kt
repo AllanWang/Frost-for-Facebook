@@ -19,11 +19,11 @@ package com.pitchedapps.frost.db
 import com.pitchedapps.frost.services.NOTIF_CHANNEL_GENERAL
 import com.pitchedapps.frost.services.NOTIF_CHANNEL_MESSAGES
 import com.pitchedapps.frost.services.NotificationContent
-import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.runBlocking
 
 class NotificationDbTest : BaseDbTest() {
 

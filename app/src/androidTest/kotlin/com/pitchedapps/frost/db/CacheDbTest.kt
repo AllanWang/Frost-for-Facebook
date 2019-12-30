@@ -16,11 +16,11 @@
  */
 package com.pitchedapps.frost.db
 
-import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlinx.coroutines.runBlocking
 
 class CacheDbTest : BaseDbTest() {
 

@@ -69,6 +69,10 @@ import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
+import java.io.File
+import java.io.IOException
+import java.util.ArrayList
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
@@ -77,10 +81,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.io.File
-import java.io.IOException
-import java.util.ArrayList
-import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-06-03.
