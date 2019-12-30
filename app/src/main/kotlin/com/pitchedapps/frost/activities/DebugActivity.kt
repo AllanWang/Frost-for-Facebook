@@ -27,13 +27,13 @@ import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.visible
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ActivityDebugBinding
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
-import kotlinx.android.synthetic.main.activity_debug.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import java.io.File
 import kotlin.coroutines.resume
@@ -51,9 +51,16 @@ class DebugActivity : KauBaseActivity() {
         fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
     }
 
+    lateinit var binding: ActivityDebugBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_debug)
+        binding = ActivityDebugBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.init()
+    }
+
+    fun ActivityDebugBinding.init() {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -64,10 +71,10 @@ class DebugActivity : KauBaseActivity() {
         setFrostColors {
             toolbar(toolbar)
         }
-        debug_webview.loadUrl(FbItem.FEED.url)
-        debug_webview.onPageFinished = { swipe_refresh.isRefreshing = false }
+        debugWebview.loadUrl(FbItem.FEED.url)
+        debugWebview.onPageFinished = { swipeRefresh.isRefreshing = false }
 
-        swipe_refresh.setOnRefreshListener(debug_webview::reload)
+        swipeRefresh.setOnRefreshListener(debugWebview::reload)
 
         fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, Prefs.iconColor)
         fab.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
@@ -85,16 +92,16 @@ class DebugActivity : KauBaseActivity() {
                 parent.createFreshDir()
 
                 val body: String? = suspendCoroutine { cont ->
-                    debug_webview.evaluateJavascript(JsActions.RETURN_BODY.function) {
+                    debugWebview.evaluateJavascript(JsActions.RETURN_BODY.function) {
                         cont.resume(it)
                     }
                 }
 
                 val hasScreenshot: Boolean =
-                    debug_webview.getScreenshot(File(parent, "screenshot.png"))
+                    debugWebview.getScreenshot(File(parent, "screenshot.png"))
 
                 val intent = Intent()
-                intent.putExtra(RESULT_URL, debug_webview.url)
+                intent.putExtra(RESULT_URL, debugWebview.url)
                 intent.putExtra(RESULT_SCREENSHOT, hasScreenshot)
                 if (body != null)
                     intent.putExtra(RESULT_BODY, body)
@@ -111,17 +118,17 @@ class DebugActivity : KauBaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        debug_webview.resumeTimers()
+        binding.debugWebview.resumeTimers()
     }
 
     override fun onPause() {
-        debug_webview.pauseTimers()
+        binding.debugWebview.pauseTimers()
         super.onPause()
     }
 
     override fun onBackPressed() {
-        if (debug_webview.canGoBack())
-            debug_webview.goBack()
+        if (binding.debugWebview.canGoBack())
+            binding.debugWebview.goBack()
         else
             super.onBackPressed()
     }
