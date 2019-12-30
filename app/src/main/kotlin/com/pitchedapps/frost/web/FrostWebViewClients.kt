@@ -231,32 +231,12 @@ private const val EMIT_FINISH = 0
  */
 class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
-    override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
-        super.doUpdateVisitedHistory(view, url, isReload)
-        L.e { "doUpdateVisitedHistory $url" }
-    }
-
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
         if (url == null) {
             return
         }
         jsInject(JsAssets.MENU)
-    }
-
-    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-        L.e { "shouldOverrideUrlLoading $url" }
-        return super.shouldOverrideUrlLoading(view, url)
-    }
-
-    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
-        L.e { "Start $url" }
-    }
-
-    override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
-        return super.shouldOverrideKeyEvent(view, event)
-        L.e { "shouldOverrideKeyEvent ${event?.action} ${KeyEvent.KEYCODE_BACK}" }
     }
 
     override fun emit(flag: Int) {
