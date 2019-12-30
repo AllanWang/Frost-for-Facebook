@@ -7,4 +7,5 @@
     <string name="open_link">Відкрити посилання</string>
     <string name="copy_link">Копіювати посилання</string>
     <string name="copy_text">Скопіювати текст</string>
+    <string name="open_in_browser">Відкрити в браузері</string>
 </resources>
