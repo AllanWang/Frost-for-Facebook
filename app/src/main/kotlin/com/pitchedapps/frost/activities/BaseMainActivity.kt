@@ -89,6 +89,7 @@ import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
+import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostSearch

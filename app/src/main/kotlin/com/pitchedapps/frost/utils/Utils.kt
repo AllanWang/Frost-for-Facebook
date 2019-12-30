@@ -352,7 +352,11 @@ val dependentSegments = arrayOf(
      * mid* or id* for newer threads, which can be launched in new windows
      * or a hash for old threads, which must be loaded on old threads
      */
-    "messages/read/?tid=id", "messages/read/?tid=mid"
+    "messages/read/?tid=id", "messages/read/?tid=mid",
+    // For some reason townhall doesn't load independently
+    // This will allow it to load, but going back unfortunately messes up the menu client
+    // See https://github.com/AllanWang/Frost-for-Facebook/issues/1593
+    "/townhall/"
 )
 
 inline val String?.isExplicitIntent

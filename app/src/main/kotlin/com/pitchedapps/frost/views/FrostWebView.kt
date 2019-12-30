@@ -155,6 +155,7 @@ class FrostWebView @JvmOverloads constructor(
             goBack()
             return true
         }
+        L.e { "Url $url" }
         return false
     }
 
