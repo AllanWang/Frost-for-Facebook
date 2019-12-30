@@ -32,7 +32,8 @@ enum class FbItem(
     @StringRes val titleId: Int,
     val icon: IIcon,
     relativeUrl: String,
-    val fragmentCreator: () -> BaseFragment = ::WebFragment
+    val fragmentCreator: () -> BaseFragment = ::WebFragment,
+    prefix: String = FB_URL_BASE
 ) : EnumBundle<FbItem> {
 
     ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
@@ -57,11 +58,16 @@ enum class FbItem(
     /**
      * Note that this url only works if a query (?q=) is provided
      */
-    _SEARCH(R.string.kau_search, GoogleMaterial.Icon.gmd_search, "search/top"),
+    _SEARCH(
+        R.string.kau_search,
+        GoogleMaterial.Icon.gmd_search,
+        "search/top",
+        prefix = FB_URL_MBASIC_BASE
+    ),
     SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
     ;
 
-    val url = "$FB_URL_BASE$relativeUrl"
+    val url = "$prefix$relativeUrl"
 
     val isFeed: Boolean
         get() = when (this) {
