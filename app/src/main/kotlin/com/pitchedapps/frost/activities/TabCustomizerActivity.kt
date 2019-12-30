@@ -66,6 +66,7 @@ class TabCustomizerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTabCustomizerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.init()
     }
 
     fun ActivityTabCustomizerBinding.init() {
