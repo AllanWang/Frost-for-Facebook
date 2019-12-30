@@ -7,4 +7,5 @@
     <string name="open_link">Abrir enlace</string>
     <string name="copy_link">Copiar enlace</string>
     <string name="copy_text">Copiar texto</string>
+    <string name="open_in_browser">Abrir en el navegador</string>
 </resources>
