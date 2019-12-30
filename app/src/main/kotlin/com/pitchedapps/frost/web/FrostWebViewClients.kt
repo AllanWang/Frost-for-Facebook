@@ -18,8 +18,6 @@ package com.pitchedapps.frost.web
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Message
-import android.view.KeyEvent
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
