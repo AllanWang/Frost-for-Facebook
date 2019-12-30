@@ -11,4 +11,5 @@
     <string name="downloaded_video">동영상 다운로드됨</string>
     <string name="downloading_file">파일 다운로드 중</string>
     <string name="downloaded_file">파일 다운로드됨</string>
+    <string name="error_invalid_download">잘못된 다운로드 시도</string>
 </resources>

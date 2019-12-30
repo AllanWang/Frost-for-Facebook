@@ -12,4 +12,5 @@
     <string name="error_notification">Під час завантаження сповіщень сталася помилка</string>
     <string name="error_sdk">SDK вашого пристрою (%d) є несумісним. Frost підтримує тільки Lollipop (SDK 21) і вище</string>
     <string name="error_webview">Здається, що ваш пристрій не має веб-перегляду. Будь ласка, додайте або увімкніть його.</string>
+    <string name="image_not_found">Зображення відсутнє.</string>
 </resources>

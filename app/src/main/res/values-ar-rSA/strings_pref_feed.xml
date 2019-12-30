@@ -7,6 +7,8 @@
     <string name="aggressive_recents_desc">تصفية المنشورات القديمة الإضافية من أحدث ما في الصفحة الرئيسية لفيسبوك. عطّلها إذا كانت الصفحة الرئيسية فارغة.</string>
     <string name="composer">كاتب الحالات</string>
     <string name="composer_desc">إظهار حالة الملحن في تغذية</string>
+    <string name="create_fab">انشاء FAB</string>
+    <string name="create_fab_desc">اظهار FAB في الصفحة الرئيسية لإنشاء منشور جديد</string>
     <string name="suggested_friends">الأصدقاء المقترحين</string>
     <string name="suggested_friends_desc">إظهار \"الأشخاص الذين قد تعرفهم\" في الصفحة الرئيسية</string>
     <string name="suggested_groups">المجموعات المقترحة</string>

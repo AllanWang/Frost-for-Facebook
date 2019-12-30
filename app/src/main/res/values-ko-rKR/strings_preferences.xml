@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">뉴스 피드에 무엇이 보일지 설정</string>
     <string name="behaviour">동작</string>
     <string name="behaviour_desc">특정 설정에 앱이 어떻게 동작할지 설정</string>
+    <string name="security">보안</string>
+    <string name="security_desc">화면 잠금, 생체 인식 등</string>
     <string name="network">네트워크</string>
     <string name="network_desc">네트워크 문제에 관한 옵션 설정</string>
     <string name="experimental">실험적 기능</string>

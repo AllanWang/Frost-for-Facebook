@@ -7,10 +7,14 @@
     <string name="aggressive_recents_desc">Remover publicações antigas do feed de notícias recentes. Desative a opção se o seu feed estiver vazio.</string>
     <string name="composer">Compositor de estado</string>
     <string name="composer_desc">Mostra o compositor de estado no feed</string>
+    <string name="create_fab">Criar FAB</string>
+    <string name="create_fab_desc">Mostrar FAB no feed para criar um nova publicação</string>
     <string name="suggested_friends">Sugerir amigos</string>
     <string name="suggested_friends_desc">Mostrar \"Pessoas que pode conhecer\" no feed</string>
     <string name="suggested_groups">Sugerir grupos</string>
     <string name="suggested_groups_desc">Mostrar \"Grupos sugeridos\" no feed</string>
+    <string name="show_stories">Mostrar histórias</string>
+    <string name="show_stories_desc">Mostrar histórias no feed</string>
     <string name="facebook_ads">Anúncios Facebook</string>
     <string name="facebook_ads_desc">Mostrar anúncios nativos do facebook</string>
 </resources>

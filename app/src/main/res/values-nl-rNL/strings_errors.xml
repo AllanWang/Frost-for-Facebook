@@ -8,4 +8,5 @@
     <string name="error_notification">Fout opgetreden bij het laden van de notificaties</string>
     <string name="error_sdk">De SDK (%d) van dit apparaat wordt niet ondersteund. Frost draait alleen op Lollipop (SDK 21) en hoger</string>
     <string name="error_webview">Kan geen WebView op dit apparaat vinden. Voeg een WebView rendering engine toe of schakel de beschikbare WebView in.</string>
+    <string name="image_not_found">Afbeelding niet gevonden.</string>
 </resources>

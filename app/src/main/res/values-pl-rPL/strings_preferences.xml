@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Elementy pojawiające się w aktualnościach</string>
     <string name="behaviour">Zachowanie</string>
     <string name="behaviour_desc">Ustawienia działań aplikacji</string>
+    <string name="security">Bezpieczeństwo</string>
+    <string name="security_desc">Ekran blokady, biometryka, itp.</string>
     <string name="network">Sieć</string>
     <string name="network_desc">Opcje wpływające na wykorzystanie sieci</string>
     <string name="experimental">Eksperymentalne</string>

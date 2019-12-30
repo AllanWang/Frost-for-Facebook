@@ -7,6 +7,8 @@
     <string name="aggressive_recents_desc">Отфильтруйте дополнительные старых постов из Facebook в оригинале большинство recents корма. Отключите это, если ваш канал пуст.</string>
     <string name="composer">Статус композитор</string>
     <string name="composer_desc">Показать статус композитор в канале</string>
+    <string name="create_fab">Создать FAB</string>
+    <string name="create_fab_desc">Показать FAB в ленте для создания нового поста</string>
     <string name="suggested_friends">Рекоменд. знакомые</string>
     <string name="suggested_friends_desc">Смотреть «Люди которых вы можете знать» в канале</string>
     <string name="suggested_groups">Предлагаемые группы</string>

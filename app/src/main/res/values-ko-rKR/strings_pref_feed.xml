@@ -11,6 +11,8 @@
     <string name="suggested_friends_desc">\"당신을 알 수도 있는 사람\" 피드를 보여줍니다.</string>
     <string name="suggested_groups">추천 그룹</string>
     <string name="suggested_groups_desc">\"추천 그룹\"을 피드에 보여줍니다.</string>
+    <string name="show_stories">소식 보기</string>
+    <string name="show_stories_desc">피드에 있는 소식 보기</string>
     <string name="facebook_ads">페이스북 광고</string>
     <string name="facebook_ads_desc">페이스북 광고를 보여줍니다.</string>
 </resources>

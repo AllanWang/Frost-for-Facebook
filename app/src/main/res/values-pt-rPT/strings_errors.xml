@@ -12,4 +12,5 @@
     <string name="error_notification">Ocorreu um erro ao obter as notificações</string>
     <string name="error_sdk">O SDK (%d) do seu dispositivo é incompatível. Frost apenas tem suporte a Lollipop (SDK21) ou acima</string>
     <string name="error_webview">Parece que o seu dispositivo não tem um visualizador web. Por favor adicione ou ative um.</string>
+    <string name="image_not_found">Imagem não encontrada.</string>
 </resources>

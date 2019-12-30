@@ -8,16 +8,24 @@
     <string name="add_keyword">키워드 추가</string>
     <string name="hint_keyword">키워드를 작성하고 + 를 누르세요.</string>
     <string name="empty_keyword">키워드 비어있음</string>
+    <string name="notification_general">일반 알림 사용</string>
+    <string name="notification_general_desc">현재 계정에 대한 일반 알림을 받으십시오.</string>
+    <string name="notification_general_all_accounts">모든 계정에서 알림</string>
+    <string name="notification_general_all_accounts_desc">로그인 한 모든 계정에 대한 일반 알림을 받으십시오.</string>
     <string name="notification_messages">메시지 알림 활성화</string>
     <string name="notification_messages_desc">현재 계정의 메시지 알림을 받습니다.</string>
     <string name="notification_messages_all_accounts">모든 계정의 메시지 받기</string>
     <string name="notification_messages_all_accounts_desc">모든 계정으로부터 메시지를 받습니다.</string>
     <string name="notification_fetch_now">지금 알림 확인하기</string>
+    <string name="notification_fetch_now_desc">알림 가져 오기를 한 번 시도합니다.</string>
     <string name="notification_fetch_success">알림 확인 중…</string>
     <string name="notification_fetch_fail">알림 확인 실패</string>
     <string name="notification_sound">알림 소리</string>
+    <string name="notification_channel">알림 채널 맞춤 설정</string>
+    <string name="notification_channel_desc">소리, 진동, 우선 순위 등을 수정</string>
     <string name="notification_ringtone">알림 벨소리</string>
     <string name="message_ringtone">메시지 벨소리</string>
+    <string name="select_ringtone">벨소리 선택</string>
     <string name="notification_vibrate">알림 진동</string>
     <string name="notification_lights">알림 LED</string>
 </resources>
