@@ -8,6 +8,8 @@
     <string name="newsfeed_desc">Определить, какие элементы появляются в канале новостей</string>
     <string name="behaviour">Поведение</string>
     <string name="behaviour_desc">Определить, как приложение взаимодействует в определенных параметров</string>
+    <string name="security">Безопасность</string>
+    <string name="security_desc">Экран блокировки, биометрические данные и т. д</string>
     <string name="network">Сеть</string>
     <string name="network_desc">Определить параметры, которые влияют на дозированных сетей</string>
     <string name="experimental">Экспериментально</string>
