@@ -27,13 +27,13 @@
     <string name="requires_custom_theme">Wymaga motywu niestandardowego</string>
     <string name="subject">Temat</string>
     <string name="share">Udostępnij</string>
-    <string name="web_overlay_swipe_hint">Przesuń w prawo, aby wrócić do poprzedniego okna.</string>
+    <string name="web_overlay_swipe_hint">Przeciągnij w prawo, aby powrócić do poprzedniego okna.</string>
     <string name="profile_picture">Zdjęcie profilowe</string>
     <string name="new_message">Nowa wiadomość</string>
     <string name="no_text">Brak tekstu</string>
     <string name="show_all_results">Pokaż wszystkie wyniki</string>
     <string name="frost_description">Frost jest w pełni personalizowany, w pełni funkcjonalna alternatywa dla oficjalnej aplikacji Facebook, stworzona od podstaw i otwarto źródłowa.</string>
-    <string name="faq_title">Frost FAQ</string>
+    <string name="faq_title">FAQ Frost\'a</string>
     <string name="html_extraction_error">Wystąpił błąd w ekstrakcji html.</string>
     <string name="html_extraction_cancelled">Żądanie zostało anulowane.</string>
     <string name="html_extraction_timeout">Upłynął limit czasu żądania.</string>
@@ -57,5 +57,5 @@
     The first element is the day, and the second element is the time
     -->
     <string name="time_template">%1$s o %2$s</string>
-    <string name="disclaimer">Zrzeczenie się</string>
+    <string name="disclaimer">Zastrzeżenie</string>
 </resources>
