@@ -7,6 +7,8 @@
     <string name="aggressive_recents_desc">從 Facebook 原來最新的新聞中過濾更多的舊帖子。如果您的提要為空, 請禁用此功能。</string>
     <string name="composer">狀態編輯器</string>
     <string name="composer_desc">在新聞中顯示狀態編輯器</string>
+    <string name="create_fab">建立 FAB</string>
+    <string name="create_fab_desc">在 feed 中顯示 FAB 以建立新貼文</string>
     <string name="suggested_friends">推荐好友</string>
     <string name="suggested_friends_desc">在希望中顯示 \"您可能認識的人\"</string>
     <string name="suggested_groups">建議的組</string>
