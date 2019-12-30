@@ -34,6 +34,7 @@ import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ActivityTabCustomizerBinding
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.TAB_COUNT
 import com.pitchedapps.frost.db.getTabs
@@ -43,7 +44,6 @@ import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostColors
-import kotlinx.android.synthetic.main.activity_tab_customizer.*
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -60,16 +60,22 @@ class TabCustomizerActivity : BaseActivity() {
 
     private val wobble = lazyContext { AnimationUtils.loadAnimation(it, R.anim.rotate_delta) }
 
+    private lateinit var binding: ActivityTabCustomizerBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tab_customizer)
+        binding = ActivityTabCustomizerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.init()
+    }
 
-        pseudo_toolbar.setBackgroundColor(Prefs.headerColor)
+    fun ActivityTabCustomizerBinding.init() {
+        pseudoToolbar.setBackgroundColor(Prefs.headerColor)
 
-        tab_recycler.layoutManager =
-            GridLayoutManager(this, TAB_COUNT, RecyclerView.VERTICAL, false)
-        tab_recycler.adapter = adapter
-        tab_recycler.setHasFixedSize(true)
+        tabRecycler.layoutManager =
+            GridLayoutManager(this@TabCustomizerActivity, TAB_COUNT, RecyclerView.VERTICAL, false)
+        tabRecycler.adapter = adapter
+        tabRecycler.setHasFixedSize(true)
 
         divider.setBackgroundColor(Prefs.textColor.withAlpha(30))
         instructions.setTextColor(Prefs.textColor)
@@ -82,16 +88,16 @@ class TabCustomizerActivity : BaseActivity() {
             tabs.addAll(remaining)
             adapter.set(tabs.map(::TabIItem))
 
-            bindSwapper(adapter, tab_recycler)
+            bindSwapper(adapter, tabRecycler)
 
             adapter.onClickListener = { view, _, _, _ -> view!!.wobble(); true }
         }
 
         setResult(Activity.RESULT_CANCELED)
 
-        fab_save.setIcon(GoogleMaterial.Icon.gmd_check, Prefs.iconColor)
-        fab_save.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
-        fab_save.setOnClickListener {
+        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, Prefs.iconColor)
+        fabSave.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fabSave.setOnClickListener {
             launchMain(NonCancellable) {
                 val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
                 genericDao.saveTabs(tabs)
@@ -99,9 +105,9 @@ class TabCustomizerActivity : BaseActivity() {
                 finish()
             }
         }
-        fab_cancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
-        fab_cancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
-        fab_cancel.setOnClickListener { finish() }
+        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
+        fabCancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fabCancel.setOnClickListener { finish() }
         setFrostColors {
             themeWindow = true
         }

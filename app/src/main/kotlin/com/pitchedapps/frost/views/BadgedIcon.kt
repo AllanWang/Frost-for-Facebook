@@ -19,6 +19,7 @@ package com.pitchedapps.frost.views
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.dpToPx
@@ -27,9 +28,8 @@ import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.iconics.typeface.IIcon
-import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ViewBadgedIconBinding
 import com.pitchedapps.frost.utils.Prefs
-import kotlinx.android.synthetic.main.view_badged_icon.view.*
 
 /**
  * Created by Allan Wang on 2017-06-19.
@@ -40,8 +40,14 @@ class BadgedIcon @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
+    private val binding: ViewBadgedIconBinding =
+        ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)
+
     init {
-        inflate(context, R.layout.view_badged_icon, this)
+        binding.init()
+    }
+
+    fun ViewBadgedIconBinding.init() {
         val badgeColor =
             Prefs.mainActivityLayout.backgroundColor().withAlpha(255).colorToForeground(0.2f)
         val badgeBackground =
@@ -50,14 +56,14 @@ class BadgedIcon @JvmOverloads constructor(
                 intArrayOf(badgeColor, badgeColor)
             )
         badgeBackground.cornerRadius = 13.dpToPx.toFloat()
-        badge_text.background = badgeBackground
-        badge_text.setTextColor(Prefs.mainActivityLayout.iconColor())
+        badgeText.background = badgeBackground
+        badgeText.setTextColor(Prefs.mainActivityLayout.iconColor())
     }
 
     var iicon: IIcon? = null
         set(value) {
             field = value
-            badge_image.setImageDrawable(
+            binding.badgeImage.setImageDrawable(
                 value?.toDrawable(
                     context,
                     sizeDp = 20,
@@ -68,15 +74,17 @@ class BadgedIcon @JvmOverloads constructor(
 
     fun setAllAlpha(alpha: Float) {
         // badgeTextView.setTextColor(Prefs.textColor.withAlpha(alpha.toInt()))
-        badge_image.drawable.alpha = alpha.toInt()
+        binding.badgeImage.drawable.alpha = alpha.toInt()
     }
 
     var badgeText: String?
-        get() = badge_text.text.toString()
+        get() = binding.badgeText.text.toString()
         set(value) {
-            if (badge_text.text == value) return
-            badge_text.text = value
-            if (value != null && value != "0") badge_text.visible()
-            else badge_text.gone()
+            with(binding) {
+                if (badgeText.text == value) return
+                badgeText.text = value
+                if (value != null && value != "0") badgeText.visible()
+                else badgeText.gone()
+            }
         }
 }
