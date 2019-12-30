@@ -180,17 +180,21 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
 
     override fun getViewAt(position: Int): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_notification_item)
-        val notif = content[position]
-        views.setBackgroundColor(R.id.item_frame, Prefs.nativeBgColor(notif.unread))
-        views.setTextColor(R.id.item_content, Prefs.textColor)
-        views.setTextViewText(R.id.item_content, notif.text)
-        views.setTextColor(R.id.item_date, Prefs.textColor.withAlpha(150))
-        views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
+        try {
+            val notif = content[position]
+            views.setBackgroundColor(R.id.item_frame, Prefs.nativeBgColor(notif.unread))
+            views.setTextColor(R.id.item_content, Prefs.textColor)
+            views.setTextViewText(R.id.item_content, notif.text)
+            views.setTextColor(R.id.item_date, Prefs.textColor.withAlpha(150))
+            views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
 
-        val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop)
-            .submit(avatarSize, avatarSize).get()
-        views.setImageViewBitmap(R.id.item_avatar, avatar)
-        views.setOnClickFillInIntent(R.id.item_frame, type.putContentExtra(Intent(), notif))
+            val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop)
+                .submit(avatarSize, avatarSize).get()
+            views.setImageViewBitmap(R.id.item_avatar, avatar)
+            views.setOnClickFillInIntent(R.id.item_frame, type.putContentExtra(Intent(), notif))
+        } catch (_: IndexOutOfBoundsException) {
+            // Ignored; seems like an Android bug
+        }
         return views
     }
 
