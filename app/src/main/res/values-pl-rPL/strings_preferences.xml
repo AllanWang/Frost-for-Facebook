@@ -8,15 +8,17 @@
     <string name="newsfeed_desc">Elementy pojawiające się w aktualnościach</string>
     <string name="behaviour">Zachowanie</string>
     <string name="behaviour_desc">Ustawienia działań aplikacji</string>
+    <string name="security">Bezpieczeństwo</string>
+    <string name="security_desc">Ekran blokady, biometryka, itp.</string>
     <string name="network">Sieć</string>
     <string name="network_desc">Opcje wpływające na wykorzystanie sieci</string>
     <string name="experimental">Eksperymentalne</string>
-    <string name="experimental_desc">Włącz wcześniejszy dostęp do potencjalnie niestabilnych funkcji</string>
+    <string name="experimental_desc">Włącz wczesny dostęp do potencjalnie niestabilnych funkcji</string>
     <string name="about_frost">O aplikacji Frost for Facebook</string>
     <string name="about_frost_desc">Wersja, podziękowania i FAQ</string>
     <string name="help_translate">Pomóż tłumaczyć</string>
-    <string name="help_translate_desc">Frost jest tłumaczony w witrynie crowdin. Dołącz, jeśli chcesz zobaczyć go w swoim języku!</string>
+    <string name="help_translate_desc">Frost jest tłumaczony poprzez crowdin. Dołącz, jeśli chcesz zobaczyć go w swoim języku!</string>
     <string name="debug_frost">Debugowanie Frost</string>
     <string name="debug_frost_desc">Wyślij dane html, aby pomóc w debugowaniu.</string>
-    <string name="replay_intro">Wprowadzenie</string>
+    <string name="replay_intro">Powtórz wprowadzenie</string>
 </resources>

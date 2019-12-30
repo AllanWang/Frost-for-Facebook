@@ -17,6 +17,7 @@
     <string name="birthdays">Aniversários</string>
     <string name="chat">Chat</string>
     <string name="photos">Fotografias</string>
+    <string name="marketplace">Produtos &amp; Serviços</string>
     <string name="notes">Notas</string>
     <string name="on_this_day">Neste dia</string>
     <string name="loading_account">A preparar tudo…</string>
@@ -45,6 +46,9 @@
     <string name="tab_customizer_instructions">Toque longo e arraste para dispor os ícones superiores.</string>
     <string name="no_new_notifications">Sem notificações novas</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">Autenticar Frost</string>
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
     <!--
     Template used to display human readable string;
     For instance:
@@ -53,5 +57,6 @@
 
     The first element is the day, and the second element is the time
     -->
+    <string name="time_template">%1$s ás %2$s</string>
     <string name="disclaimer">Aviso legal</string>
 </resources>

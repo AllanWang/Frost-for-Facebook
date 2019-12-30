@@ -5,4 +5,12 @@
     <string name="bad_image_overlay">URL 이 제대로 로드되지 않았습니다. 디버그를 위해 보내시겠습니까?</string>
     <string name="invalid_share_url">올바르지 않은 공유 URL</string>
     <string name="invalid_share_url_desc">URL 이 아닌 텍스트를 공유했습니다. 텍스트는 클립보드로 복사되어 직접 공유하셔야 합니다.</string>
+    <string name="no_download_manager">다운로드 매니저가 없습니다.</string>
+    <string name="no_download_manager_desc">다운로드 관리자가 활성화되어 있지 않습니다. 다운로드를 허용하도록 설정 하시겠습니까?</string>
+    <string name="error_generic">에러가 발생하였습니다.</string>
+    <string name="video_load_failed">비디오를 로드하는데 실패하였습니다.</string>
+    <string name="error_notification">알림을 가져오는 도중 오류가 발생하였습니다.</string>
+    <string name="error_sdk">당신의 SDK(%d)가 호환되지 않습니다. Frost는 Lollipop (SDK 21) 이상을 지원합니다.</string>
+    <string name="error_webview">기기에서 웹뷰를 찾을 수 없습니다. 추가하거나 활성화 해주세요.</string>
+    <string name="image_not_found">이미지를 찾을 수 없습니다.</string>
 </resources>

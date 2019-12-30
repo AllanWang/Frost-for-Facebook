@@ -15,7 +15,12 @@
     <string name="search_bar_desc">검색 오버레이 대신 검색 바를 사용합니다.</string>
     <string name="force_message_bottom">강제 메시지 버튼</string>
     <string name="force_message_bottom_desc">메시지 목록을 로드 중에 가장 아래로 스크롤 해 줍니다.</string>
+    <string name="enable_pip">PIP 사용</string>
+    <string name="enable_pip_desc">영상속 부가 사진 기능 사용</string>
+    <string name="autoplay_settings">자동 재생 설정</string>
+    <string name="autoplay_settings_desc">Facebook의 자동 재생 설정을 엽니 다. PIP가 작동하려면이 기능을 사용하지 않아야합니다.</string>
     <string name="exit_confirmation">종료 전에 물어보기</string>
     <string name="exit_confirmation_desc">앱을 종료하기 전에 확인 창을 띄웁니다.</string>
     <string name="analytics">통계</string>
+    <string name="analytics_desc">앱을 개선하기위해 익명으로 분석 및 버그 보고서를 사용하도록 설정합니다. 개인 정보는 노출되지 않습니다.</string>
 </resources>

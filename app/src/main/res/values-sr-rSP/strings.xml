@@ -17,6 +17,7 @@
     <string name="birthdays">Рођендани</string>
     <string name="chat">Преписке</string>
     <string name="photos">Фотографије</string>
+    <string name="marketplace">продавница</string>
     <string name="notes">Белешке</string>
     <string name="on_this_day">На данашњи дан</string>
     <string name="loading_account">Спремам…</string>
@@ -45,6 +46,9 @@
     <string name="tab_customizer_instructions">Задржите и превуците да би прерасподелили горње иконице.</string>
     <string name="no_new_notifications">Нема нових обавештења</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">Биометрија</string>
+    <string name="today">данас</string>
+    <string name="yesterday">јуче</string>
     <!--
     Template used to display human readable string;
     For instance:

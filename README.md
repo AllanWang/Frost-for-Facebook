@@ -69,17 +69,18 @@ Special thanks to the following awesome people for translating significant porti
 | French | [Vincent Kulak](https://github.com/VonOx) &bull; [Jean-Philippe Gravel](https://crowdin.com/profile/wokija) |
 | Galician | [Xesús M. Mosquera](https://twitter.com/xesusmmc?lang=en) |
 | German | [Bushido1992](https://forum.xda-developers.com/member.php?u=5179246) &bull; [Marcel Soehnchen](https://crowdin.com/profile/msoehnchen) &bull; [3LD0mi HA](https://forum.xda-developers.com/member.php?u=5860523) |
-| Greek | [stathism27](https://github.com/stathism27) |
+| Greek | [Nick Choremiotis](https://crowdin.com/profile/FeVerSeCtioN) &bull; [George Kitsopoulos](https://crowdin.com/profile/GeorgeKitsopoulos) |
 | Hungarian | [János Erkli](https://crowdin.com/profile/erklijani0521) &bull; [Bálint Csurgai-Horváth](https://crowdin.com/profile/cshbalint) |
 | Indonesian | [M. Angga Ariska](https://www.youtube.com/channel/UCkqMw81s2aw7bYO-U2YhD7w) |
 | Italian | [Bonnee](https://github.com/Bonnee) |
-| Korean | [잇스테이크](https://crowdin.com/profile/bexco2010) |
+| Korean | [잇스테이크](https://crowdin.com/profile/bexco2010) &bull; [Jun-woo Kim](https://crowdin.com/profile/junwookapa) |
+| Malayalam | [Abhishek M](https://crowdin.com/profile/abhishekabhi789) |
 | Norwegian | [Julian Madsen](https://crowdin.com/profile/julianmadsen1) |
-| Polish | [Mroczny](https://crowdin.com/profile/Mroczny) &bull; [pantinPL](https://crowdin.com/profile/pantinPL) |
-| Portuguese | [Ekzos](https://crowdin.com/profile/Ekzos) &bull; [Sérgio Marques](https://crowdin.com/profile/smarquespt) &bull; [Francisco Fernandes](https://crowdin.com/profile/alex2fernandes) |
+| Polish | [Mroczny](https://crowdin.com/profile/Mroczny) &bull; [pantinPL](https://crowdin.com/profile/pantinPL) &bull; [B.O.S.S.](https://crowdin.com/profile/B.O.S.S) |
+| Portuguese | [Ekzos](https://crowdin.com/profile/Ekzos) &bull; [Sérgio Marques](https://crowdin.com/profile/smarquespt) &bull; [Francisco Fernandes](https://crowdin.com/profile/alex2fernandes) &bull; [Cláudio Faria](https://crowdin.com/profile/claudiofariacf) |
 | Portuguese (Brazilian) | [TheusKhan](https://crowdin.com/profile/TheusKhan) |
 | Romanian | [Drăgan Florin Ovidiu](https://crowdin.com/profile/ovidiudragan2012) &bull; [Marian Bailescu](https://crowdin.com/profile/marianbailescu) |
-| Russian | [Eugene Tareyev](https://crowdin.com/profile/haired) &bull; [Vitali Bl](https://crowdin.com/profile/vital0000000) &bull; [Felix Fester](https://crowdin.com/profile/slendy00880) |
+| Russian | [Eugene Tareyev](https://crowdin.com/profile/haired) &bull; [Vitali Bl](https://crowdin.com/profile/vital0000000) &bull; [Felix Fester](https://crowdin.com/profile/slendy00880) &bull; [Вадим Жушман](https://crowdin.com/profile/android54544)|
 | Serbian | [vuklozo](https://crowdin.com/profile/vuklozo) &bull; [Nikola Radmanović](https://crowdin.com/profile/nikoladradmanovic) &bull; [M23](https://crowdin.com/profile/M23) |
 | Spanish | [Jahir Fiquitiva](https://jahirfiquitiva.me/) &bull; [Nefi Salazar](https://plus.google.com/u/0/105547968033551087431) |
 | Swedish | [Artswitcher](https://crowdin.com/profile/Artswitcher) &bull; [Henrik Mattsson-Mårn](https://crowdin.com/profile/rchk) |

@@ -17,6 +17,7 @@
     <string name="birthdays">생일</string>
     <string name="chat">채팅</string>
     <string name="photos">사진</string>
+    <string name="marketplace">마켓플레이스</string>
     <string name="notes">노트</string>
     <string name="on_this_day">과거의 오늘</string>
     <string name="loading_account">모든 것을 준비 중입니다…</string>
@@ -42,7 +43,14 @@
     <string name="file_chooser_not_found">파일 선택기를 찾을 수 없습니다.</string>
     <string name="top_bar">상단 바</string>
     <string name="bottom_bar">하단 바</string>
+    <string name="preview">미리보기</string>
+    <string name="options">옵션</string>
+    <string name="tab_customizer_instructions">길게 누르고 드레그하여 상단의 아이콘들을 재배열 하십시오.</string>
+    <string name="no_new_notifications">새로운 알림이 없습니다.</string>
     <!--Biometrics-->
+    <string name="biometrics_prompt_title">Frost 인증</string>
+    <string name="today">오늘</string>
+    <string name="yesterday">僅用於中文</string>
     <!--
     Template used to display human readable string;
     For instance:

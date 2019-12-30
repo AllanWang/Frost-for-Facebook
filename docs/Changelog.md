@@ -7,6 +7,8 @@
 * Update theme
 * Open formatted urls from context menu
 * Allow copying text with emojis
+* Theme webview js dialogs
+* Update changelog
 
 ## v2.4.1
 * Add better support for mobile url conversions

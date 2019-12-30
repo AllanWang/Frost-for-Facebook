@@ -7,6 +7,8 @@
     <string name="aggressive_recents_desc">Відфільтруйте додаткові старі повідомлення з оригінальної новинної стрічки Facebook, який використовується в основному. Вимкнути це, якщо ваша новинна стрічка порожня.</string>
     <string name="composer">Актуалізація статусу</string>
     <string name="composer_desc">Показувати статус актуалізації в новинах</string>
+    <string name="create_fab">Створити FAB</string>
+    <string name="create_fab_desc">Показувати FAB у стрічці, щоб створити новий пост</string>
     <string name="suggested_friends">Рекомендовані друзі</string>
     <string name="suggested_friends_desc">Показати \"Люди, яких ви можете знати\" у новинній стрічці</string>
     <string name="suggested_groups">Пропоновані групи</string>

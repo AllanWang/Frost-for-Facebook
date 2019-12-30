@@ -7,4 +7,5 @@
     <string name="open_link">فتح الرابط</string>
     <string name="copy_link">نسخ رابط</string>
     <string name="copy_text">نسخ النص</string>
+    <string name="open_in_browser">افتح في المتصفح</string>
 </resources>

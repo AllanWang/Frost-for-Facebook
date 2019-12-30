@@ -12,4 +12,5 @@
     <string name="error_notification">抓取訊息時發生了錯誤.</string>
     <string name="error_sdk">你的裝置的SDK(%d) 不相容, Frost只支援Lillipop (SDK21) 以上(含).</string>
     <string name="error_webview">找不到您裝置中的webview. 請安裝或啓動webview.</string>
+    <string name="image_not_found">找不到圖像。</string>
 </resources>

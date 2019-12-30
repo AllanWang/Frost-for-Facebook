@@ -6,11 +6,15 @@
     <string name="aggressive_recents">Wymuszone ostatnie</string>
     <string name="aggressive_recents_desc">Odfiltruj dodatkowe stare posty z najnowszych aktualności Facebooka. Wyłączyć tę opcję, jeśli twoje aktualności są puste.</string>
     <string name="composer">Aktualizacja statusu</string>
-    <string name="composer_desc">Wyświetlaj aktualizację statusu</string>
+    <string name="composer_desc">Wyświetlaj pole do aktualizacji statusu</string>
+    <string name="create_fab">Utwórz FAB</string>
+    <string name="create_fab_desc">Pokaż FAB w kanale, aby utworzyć nowy post</string>
     <string name="suggested_friends">Proponowani znajomi</string>
     <string name="suggested_friends_desc">Wyświetlaj \"Osoby, które możesz znać\"</string>
     <string name="suggested_groups">Proponowane grupy</string>
     <string name="suggested_groups_desc">Wyświetlaj \"Proponowane grupy\"</string>
+    <string name="show_stories">Pokaż relacje</string>
+    <string name="show_stories_desc">Pokaż relacje w kanale</string>
     <string name="facebook_ads">Reklamy Facebooka</string>
     <string name="facebook_ads_desc">Wyświetlaj wbudowane reklamy Facebooka</string>
 </resources>

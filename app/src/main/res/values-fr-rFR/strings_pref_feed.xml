@@ -7,6 +7,8 @@
     <string name="aggressive_recents_desc">Éliminer les anciennes publications additionnelles du fil d\'actualité récentes de Facebook. Désactivez cette option si votre fil d\'actualités est vide.</string>
     <string name="composer">Compositeur de statut</string>
     <string name="composer_desc">Montrer le compositeur de statut dans le fil d\'actualité</string>
+    <string name="create_fab">Créer un FAB</string>
+    <string name="create_fab_desc">Afficher le FAB dans le flux pour créer un nouveau message</string>
     <string name="suggested_friends">Amis suggérés</string>
     <string name="suggested_friends_desc">Afficher les «Personnes que vous pouvez connaître» dans le fil d\'actualité</string>
     <string name="suggested_groups">Groupes Suggérés</string>

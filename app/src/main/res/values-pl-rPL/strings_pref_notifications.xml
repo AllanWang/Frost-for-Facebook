@@ -13,9 +13,9 @@
     <string name="notification_general_all_accounts">Powiadamiaj ze wszystkich kont</string>
     <string name="notification_general_all_accounts_desc">Otrzymuj powiadomienia dla każdego konta które jest zalogowane.</string>
     <string name="notification_messages">Włącz powiadomienia o wiadomościach</string>
-    <string name="notification_messages_desc">Otrzymuj natychmiastowe powiadomienia dla obecnego konta.</string>
+    <string name="notification_messages_desc">Otrzymuj powiadomienia o wiadomościach tekstowych dla obecnego konta.</string>
     <string name="notification_messages_all_accounts">Powiadamiaj ze wszystkich kont</string>
-    <string name="notification_messages_all_accounts_desc">Otrzymuj natychmiastowe powiadomienia dla wszystkich kont</string>
+    <string name="notification_messages_all_accounts_desc">Otrzymuj powiadomienia o wiadomościach tekstowych ze wszystkich kont</string>
     <string name="notification_fetch_now">Sprawdź powiadomienia teraz</string>
     <string name="notification_fetch_now_desc">Wywołaj jednorazowe odświeżenie powiadomień.</string>
     <string name="notification_fetch_success">Sprawdzanie powiadomień…</string>

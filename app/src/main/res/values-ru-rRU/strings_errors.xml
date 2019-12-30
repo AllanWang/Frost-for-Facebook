@@ -12,4 +12,5 @@
     <string name="error_notification">Ошибка при загрузке уведомлений</string>
     <string name="error_sdk">SDK (%d) для вашего устройства несовместима. Frost поддерживает только (SDK 21) и выше</string>
     <string name="error_webview">У вас не включен webview. Просьба установить или включить </string>
+    <string name="image_not_found">Изображение отсутствует.</string>
 </resources>

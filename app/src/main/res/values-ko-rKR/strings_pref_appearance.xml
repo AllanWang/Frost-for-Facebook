@@ -10,8 +10,13 @@
     <string name="icon_color">아이콘 색상</string>
     <string name="global_customization">전역 사용자 지정</string>
     <string name="main_activity_layout">주 액티비티 구성</string>
+    <string name="main_activity_layout_desc">메인 액티비티 설정</string>
+    <string name="main_tabs">메인 액티비티 탭</string>
+    <string name="main_tabs_desc">메인 액티비티에 표시 할 탭 커스터마이징</string>
     <string name="tint_nav">내비게이션 바 색상</string>
     <string name="tint_nav_desc">내비게이션 바가 헤더와 동일한 색상이 됩니다.</string>
     <string name="web_text_scaling">웹 텍스트 크기</string>
     <string name="web_text_scaling_desc">텍스트 크기 예제; 퍼센트 텍스트를 길게 눌러 초기화합니다.</string>
+    <string name="enforce_black_media_bg">블랙 미디어 배경 적용</string>
+    <string name="enforce_black_media_bg_desc">미디어 배경을 검정색으로 만듭니다; 기본값은 위의 선택된 배경입니다</string>
 </resources>
