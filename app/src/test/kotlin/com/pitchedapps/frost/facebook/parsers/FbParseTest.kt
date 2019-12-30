@@ -71,7 +71,6 @@ class FbParseTest {
     @Test
     fun messageUser() = MessageParser.queryUser(COOKIE, "allan").test("allan query")
 
-    @Ignore("No longer works as search results don't appear in html")
     @Test
     fun search() = SearchParser.test()
 
