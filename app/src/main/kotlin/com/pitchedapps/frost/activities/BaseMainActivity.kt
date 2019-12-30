@@ -231,7 +231,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 )
             }
         }
-//        setupDrawer(savedInstanceState)
         L.i { "Main started in ${System.currentTimeMillis() - start} ms" }
         drawerWrapperBinding.initDrawer()
         contentBinding.initFab()
@@ -808,7 +807,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     }
 
     inline val currentFragment: BaseFragment
-        get() = supportFragmentManager.findFragmentByTag("android:switcher:${contentBinding.viewpager.id}:${contentBinding.viewpager.currentItem}") as BaseFragment
+        get() {
+            val viewpager = contentBinding.viewpager
+            return supportFragmentManager.findFragmentByTag("android:switcher:${viewpager.id}:${viewpager.currentItem}") as BaseFragment
+        }
 
     override fun reloadFragment(fragment: BaseFragment) {
         runOnUiThread { adapter.reloadFragment(fragment) }
