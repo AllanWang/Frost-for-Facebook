@@ -19,11 +19,16 @@ package com.pitchedapps.frost.web
 import android.net.Uri
 import android.webkit.ConsoleMessage
 import android.webkit.GeolocationPermissions
+import android.webkit.JsPromptResult
+import android.webkit.JsResult
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import ca.allanwang.kau.permissions.PERMISSION_ACCESS_FINE_LOCATION
 import ca.allanwang.kau.permissions.kauRequestPermissions
+import ca.allanwang.kau.utils.materialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.afollestad.materialdialogs.input.input
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityContract
 import com.pitchedapps.frost.utils.L
@@ -71,6 +76,73 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
         activity?.openFileChooser(filePathCallback, fileChooserParams)
             ?: webView.frostSnackbar(R.string.file_chooser_not_found)
         return activity != null
+    }
+
+    override fun onJsAlert(
+        view: WebView,
+        url: String,
+        message: String,
+        result: JsResult
+    ): Boolean {
+        view.context.materialDialog {
+            title(text = url)
+            message(text = message)
+            positiveButton { result.confirm() }
+            onDismiss { result.cancel() }
+        }
+        return true
+    }
+
+    override fun onJsConfirm(
+        view: WebView,
+        url: String,
+        message: String,
+        result: JsResult
+    ): Boolean {
+        view.context.materialDialog {
+            title(text = url)
+            message(text = message)
+            positiveButton { result.confirm() }
+            negativeButton { result.cancel() }
+            onDismiss { result.cancel() }
+        }
+        return true
+    }
+
+    override fun onJsBeforeUnload(
+        view: WebView,
+        url: String,
+        message: String,
+        result: JsResult
+    ): Boolean {
+        view.context.materialDialog {
+            title(text = url)
+            message(text = message)
+            positiveButton { result.confirm() }
+            negativeButton { result.cancel() }
+            onDismiss { result.cancel() }
+        }
+        return true
+    }
+
+    override fun onJsPrompt(
+        view: WebView,
+        url: String,
+        message: String,
+        defaultValue: String?,
+        result: JsPromptResult
+    ): Boolean {
+        view.context.materialDialog {
+            title(text = url)
+            message(text = message)
+            input(prefill = defaultValue) { _, charSequence ->
+                result.confirm(charSequence.toString())
+            }
+            // positive button added through input
+            negativeButton { result.cancel() }
+            onDismiss { result.cancel() }
+        }
+        return true
     }
 
     override fun onGeolocationPermissionsShowPrompt(
