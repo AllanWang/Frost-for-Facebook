@@ -7,4 +7,5 @@
     <string name="open_link">打開連結</string>
     <string name="copy_link">複製連結</string>
     <string name="copy_text">複製文字</string>
+    <string name="open_in_browser">在瀏覽器中開啟</string>
 </resources>
