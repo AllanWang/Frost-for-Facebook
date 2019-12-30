@@ -62,8 +62,8 @@ class FbUrlTest {
      */
     @Test
     fun queryConversion() {
-        val url = "${FB_URL_BASE}l.php?u=https%3A%2F%2Fgoogle.ca&h=hi"
-        val expected = "https://google.ca?h=hi"
+        val url = "${FB_URL_BASE}l.php?u=https%3A%2F%2Fgoogle.ca&qc=hi"
+        val expected = "https://google.ca?qc=hi"
         assertFbFormat(expected, url)
     }
 
