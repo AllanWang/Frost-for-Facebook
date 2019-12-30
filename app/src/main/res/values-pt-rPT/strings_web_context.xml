@@ -7,4 +7,5 @@
     <string name="open_link">Abrir ligação</string>
     <string name="copy_link">Copiar ligação</string>
     <string name="copy_text">Copiar texto</string>
+    <string name="open_in_browser">Abrir no navegador</string>
 </resources>
