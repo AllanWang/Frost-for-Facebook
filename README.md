@@ -61,6 +61,7 @@ Special thanks to the following awesome people for translating significant porti
 | Language | Contributors |
 |----------|--------------|
 | Arabic | [Faris Sabaa](https://crowdin.com/profile/farissabaa) &bull; [hdmed.dev](https://crowdin.com/profile/hdmed) &bull; [Mohammed Qubati](https://crowdin.com/profile/Mrkqubati) |
+| Catalan | [Jaime Muñoz Martín](https://crowdin.com/profile/jmmartin_5) |
 | Chinese (Simplified) | [Zhengang](https://crowdin.com/profile/Zhengang) |
 | Chinese (Traditional) | [StanAttack](https://crowdin.com/profile/StanAttack) &bull; [yipinghuang](https://crowdin.com/profile/yipinghuang) &bull; [jpss](https://crowdin.com/profile/jpss) &bull; [BrLi](https://crowdin.com/profile/brli) &bull; [Артём Х. Местный](https://crowdin.com/profile/megaahmadf) &bull; [Julio M.](https://crowdin.com/profile/juliomc31) |
 | Czech | [Richard Janda](https://crowdin.com/profile/risajanda) &bull; [Misat11](https://crowdin.com/profile/Misat11) |
