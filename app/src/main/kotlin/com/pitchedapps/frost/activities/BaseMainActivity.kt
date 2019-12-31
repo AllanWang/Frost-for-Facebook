@@ -37,6 +37,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.alpha
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -46,7 +47,7 @@ import ca.allanwang.kau.searchview.SearchView
 import ca.allanwang.kau.searchview.SearchViewHolder
 import ca.allanwang.kau.searchview.bindSearchView
 import ca.allanwang.kau.ui.ProgressAnimator
-import ca.allanwang.kau.utils.adjustAlpha
+import ca.allanwang.kau.utils.blendWith
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.dimenPixelSize
 import ca.allanwang.kau.utils.drawable
@@ -63,6 +64,7 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.visible
+import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
 import com.afollestad.materialdialogs.checkbox.checkBoxPrompt
 import com.bumptech.glide.Glide
@@ -263,12 +265,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
     }
 
-    private fun createNavDrawable(): RippleDrawable {
+    private fun createNavDrawable(foreground: Int, background: Int): RippleDrawable {
         val drawable = drawable(R.drawable.nav_item_background) as RippleDrawable
         drawable.setColor(
             ColorStateList(
                 arrayOf(intArrayOf()),
-                intArrayOf(Prefs.accentColor.adjustAlpha(0.16f))
+                intArrayOf(background.blendWith(foreground.withAlpha(background.alpha), 0.2f))
             )
         )
         return drawable
@@ -316,7 +318,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             val navBg = Prefs.bgColor.withMinAlpha(200)
             setBackgroundColor(navBg)
-            itemBackground = createNavDrawable()
+            itemBackground = createNavDrawable(Prefs.accentColor, navBg)
             itemTextColor = foregroundColor
             itemIconTintList = foregroundColor
 
@@ -380,6 +382,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         private var pendingUpdate: Boolean = false
         private val binding = ViewNavHeaderBinding.inflate(layoutInflater)
         val root: View get() = binding.root
+        private val optionsBackground = Prefs.bgColor.withMinAlpha(200).colorToForeground(
+            0.1f
+        )
 
         init {
             setPrimary(Prefs.userId)
@@ -395,11 +400,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 })
             }
             with(binding) {
-                optionsContainer.setBackgroundColor(
-                    Prefs.bgColor.withMinAlpha(200).colorToForeground(
-                        0.1f
-                    )
-                )
+                optionsContainer.setBackgroundColor(optionsBackground)
                 var showOptions = false
                 val animator: ProgressAnimator = ProgressAnimator.ofFloat { }
                 background.setOnClickListener {
@@ -454,7 +455,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         null
                     )
                     setTextColor(textColor)
-                    background = createNavDrawable()
+                    background = createNavDrawable(Prefs.accentColor, optionsBackground)
                 }
 
                 with(optionsLogout) {
@@ -564,7 +565,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     })
                 tv.text = cookie.name
                 tv.setTextColor(textColor)
-                tv.background = createNavDrawable()
+                tv.background = createNavDrawable(Prefs.accentColor, optionsBackground)
                 tv.setOnClickListener {
                     switchAccount(cookie.id)
                 }
