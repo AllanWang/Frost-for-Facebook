@@ -125,10 +125,10 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
-import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -531,7 +531,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             val glide = Glide.with(root)
             val accountSize = dimenPixelSize(R.dimen.drawer_account_avatar_size)
             val textColor = Prefs.textColor
-            val navBackground = createNavDrawable()
             orderedAccounts.forEach { cookie ->
                 val tv =
                     TextView(
@@ -565,7 +564,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     })
                 tv.text = cookie.name
                 tv.setTextColor(textColor)
-                tv.background = navBackground
+                tv.background = createNavDrawable()
                 tv.setOnClickListener {
                     switchAccount(cookie.id)
                 }
