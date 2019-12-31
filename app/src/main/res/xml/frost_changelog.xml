@@ -7,14 +7,13 @@
     -->
 
     <version title="v2.4.2" />
-    <item text="Fix back stack history" />
+    <item text="Fix townhall loading" />
     <item text="Fix search suggestions" />
     <item text="Redesign navigation layout" />
     <item text="Update theme" />
     <item text="Open formatted urls from context menu" />
     <item text="Allow copying text with emojis" />
     <item text="Theme webview js dialogs" />
-    <item text="Update changelog" />
     <item text="" />
 
     <version title="v2.4.1" />

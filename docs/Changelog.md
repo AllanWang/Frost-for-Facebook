@@ -1,14 +1,13 @@
 # Changelog
 
 ## v2.4.2
-* Fix back stack history
+* Fix townhall loading
 * Fix search suggestions
 * Redesign navigation layout
 * Update theme
 * Open formatted urls from context menu
 * Allow copying text with emojis
 * Theme webview js dialogs
-* Update changelog
 
 ## v2.4.1
 * Add better support for mobile url conversions
