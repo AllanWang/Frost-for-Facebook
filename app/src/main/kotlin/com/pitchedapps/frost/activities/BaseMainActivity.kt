@@ -387,7 +387,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             with(drawerWrapperBinding) {
                 drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
                     override fun onDrawerClosed(drawerView: View) {
-                        if (drawer !== navigation) return
+                        if (drawerView !== navigation) return
                         if (!pendingUpdate) return
                         pendingUpdate = false
                         binding.updateAccounts()
