@@ -14,6 +14,7 @@
     <item text="Open formatted urls from context menu" />
     <item text="Allow copying text with emojis" />
     <item text="Theme webview js dialogs" />
+    <item text="Fix create post FAB" />
     <item text="" />
 
     <version title="v2.4.1" />

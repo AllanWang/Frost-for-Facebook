@@ -350,12 +350,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             if (shouldShow) {
                 if (fab.isShown) {
                     fab.fadeScaleTransition {
-                        setIcon(iicon, Prefs.iconColor)
+                        setIcon(iicon, color = Prefs.iconColor)
                     }
                     return
                 }
             }
-            fab.setIcon(iicon, Prefs.iconColor)
+            fab.setIcon(iicon, color = Prefs.iconColor)
             fab.showIf(shouldShow)
         }
     }

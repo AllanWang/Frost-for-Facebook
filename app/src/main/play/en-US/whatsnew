@@ -7,3 +7,4 @@ v2.4.2
 * Open formatted urls from context menu
 * Allow copying text with emojis
 * Theme webview js dialogs
+* Fix create post FAB

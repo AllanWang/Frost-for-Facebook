@@ -8,6 +8,7 @@
 * Open formatted urls from context menu
 * Allow copying text with emojis
 * Theme webview js dialogs
+* Fix create post FAB
 
 ## v2.4.1
 * Add better support for mobile url conversions
