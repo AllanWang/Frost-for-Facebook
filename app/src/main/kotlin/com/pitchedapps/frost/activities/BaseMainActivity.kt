@@ -270,7 +270,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         drawable.setColor(
             ColorStateList(
                 arrayOf(intArrayOf()),
-                intArrayOf(background.blendWith(foreground.withAlpha(background.alpha), 0.2f))
+                intArrayOf(background.blendWith(foreground.withAlpha(background.alpha), 0.35f))
             )
         )
         return drawable
