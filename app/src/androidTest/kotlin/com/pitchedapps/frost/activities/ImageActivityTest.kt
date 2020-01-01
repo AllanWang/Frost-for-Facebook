@@ -24,26 +24,27 @@ import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
 import com.pitchedapps.frost.utils.isIndirectImageUrl
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import okio.Buffer
-import okio.Okio
+import okio.source
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
 import org.junit.runner.RunWith
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
 class ImageActivityTest {
 
     @get:Rule
-    val activity: ActivityTestRule<ImageActivity> = ActivityTestRule(ImageActivity::class.java, true, false)
+    val activity: ActivityTestRule<ImageActivity> =
+        ActivityTestRule(ImageActivity::class.java, true, false)
 
     @get:Rule
     val globalTimeout: Timeout = Timeout.seconds(15)
@@ -63,16 +64,22 @@ class ImageActivityTest {
 
     private val mockServer: MockWebServer by lazy {
         val img = Buffer()
-        img.writeAll(Okio.source(getResource("bayer-pattern.jpg")))
+        img.writeAll(getResource("bayer-pattern.jpg").source())
         MockWebServer().apply {
-            setDispatcher(object : Dispatcher() {
+            dispatcher = object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =
                     when {
-                        request.path.contains("text") -> MockResponse().setResponseCode(200).setBody("Valid mock text response")
-                        request.path.contains("image") -> MockResponse().setResponseCode(200).setBody(img)
+                        request.path?.contains("text") == true -> MockResponse().setResponseCode(200).setBody(
+                            "Valid mock text response"
+                        )
+                        request.path?.contains("image") == true -> MockResponse().setResponseCode(
+                            200
+                        ).setBody(
+                            img
+                        )
                         else -> MockResponse().setResponseCode(404).setBody("Error mock response")
                     }
-            })
+            }
             start()
         }
     }
@@ -83,7 +90,11 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(FabStates.DOWNLOAD, fabAction, "Image should be successful, image should be downloaded")
+            assertEquals(
+                FabStates.DOWNLOAD,
+                fabAction,
+                "Image should be successful, image should be downloaded"
+            )
             assertTrue(tempFile.exists(), "Image should be located at temp file")
             assertTrue(
                 System.currentTimeMillis() - tempFile.lastModified() < 2000L,
@@ -101,7 +112,11 @@ class ImageActivityTest {
         activity.activity.isFinishing
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(FabStates.ERROR, fabAction, "Text should not be a valid image format, error state expected")
+            assertEquals(
+                FabStates.ERROR,
+                fabAction,
+                "Text should not be a valid image format, error state expected"
+            )
             assertEquals("Image format not supported", errorRef?.message, "Error message mismatch")
             assertFalse(tempFile.exists(), "Temp file should have been removed")
         }
