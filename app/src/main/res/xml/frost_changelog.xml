@@ -8,7 +8,7 @@
 
     <version title="v2.4.3" />
     <item text="Fix Android theme" />
-    <item text="" />
+    <item text="Fix nav header expansion when animations are disabled" />
     <item text="" />
     <item text="" />
     <item text="" />

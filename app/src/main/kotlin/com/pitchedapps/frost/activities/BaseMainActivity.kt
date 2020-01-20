@@ -129,10 +129,10 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
+import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
