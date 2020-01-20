@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.3
+* Fix Android theme
+
 ## v2.4.2
 * Fix townhall loading
 * Fix search suggestions

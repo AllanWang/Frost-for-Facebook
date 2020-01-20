@@ -1,10 +1,3 @@
-v2.4.2
+v2.4.3
 
-* Fix townhall loading
-* Fix search suggestions
-* Redesign navigation layout
-* Update theme
-* Open formatted urls from context menu
-* Allow copying text with emojis
-* Theme webview js dialogs
-* Fix create post FAB
+* Fix Android theme
