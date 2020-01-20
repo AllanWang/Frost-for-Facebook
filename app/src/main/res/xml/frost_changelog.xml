@@ -6,6 +6,13 @@
     <item text="" />
     -->
 
+    <version title="v2.4.3" />
+    <item text="Fix Android theme" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.4.2" />
     <item text="Fix townhall loading" />
     <item text="Fix search suggestions" />
@@ -15,7 +22,6 @@
     <item text="Allow copying text with emojis" />
     <item text="Theme webview js dialogs" />
     <item text="Fix create post FAB" />
-    <item text="" />
 
     <version title="v2.4.1" />
     <item text="Add better support for mobile url conversions" />
