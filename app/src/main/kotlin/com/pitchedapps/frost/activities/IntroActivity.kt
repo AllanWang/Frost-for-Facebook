@@ -22,18 +22,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.internal.KauBaseActivity
-import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.ui.widgets.InkPageIndicator
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.blendWith
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.fadeScaleTransition
@@ -44,6 +38,7 @@ import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.statusBarColor
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ActivityIntroBinding
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
 import com.pitchedapps.frost.intro.IntroFragmentAnalytics
@@ -69,12 +64,7 @@ import kotlinx.coroutines.launch
  */
 class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
 
-    val ripple: RippleCanvas by bindView(R.id.intro_ripple)
-    val viewpager: ViewPager by bindView(R.id.intro_viewpager)
-    lateinit var adapter: IntroPageAdapter
-    val indicator: InkPageIndicator by bindView(R.id.intro_indicator)
-    val skip: TextView by bindView(R.id.intro_skip)
-    val next: ImageButton by bindView(R.id.intro_next)
+    lateinit var binding: ActivityIntroBinding
     private var barHasNext = true
 
     val fragments = listOf(
@@ -89,12 +79,16 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
-        adapter = IntroPageAdapter(supportFragmentManager, fragments)
+        binding = ActivityIntroBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.init()
+    }
+
+    private fun ActivityIntroBinding.init() {
         viewpager.apply {
             setPageTransformer(true, this@IntroActivity)
             addOnPageChangeListener(this@IntroActivity)
-            adapter = this@IntroActivity.adapter
+            adapter = IntroPageAdapter(supportFragmentManager, fragments)
         }
         indicator.setViewPager(viewpager)
         next.setIcon(GoogleMaterial.Icon.gmd_navigate_next)
@@ -110,10 +104,12 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     fun theme() {
         statusBarColor = Prefs.headerColor
         navigationBarColor = Prefs.headerColor
-        skip.setTextColor(Prefs.textColor)
-        next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
-        indicator.setColour(Prefs.textColor)
-        indicator.invalidate()
+        with(binding) {
+            skip.setTextColor(Prefs.textColor)
+            next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+            indicator.setColour(Prefs.textColor)
+            indicator.invalidate()
+        }
         fragments.forEach { it.themeFragment() }
         setFrostTheme(true)
     }
@@ -142,12 +138,12 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         )
-        ripple.ripple(blue, x, y, 600) {
+        binding.ripple.ripple(blue, x, y, 600) {
             postDelayed(1000) { finish() }
         }
         val lastView: View? = fragments.last().view
         arrayOf<View?>(
-            skip, indicator, next,
+            binding.skip, binding.indicator, binding.next,
             lastView?.findViewById(R.id.intro_title),
             lastView?.findViewById(R.id.intro_desc)
         ).forEach {
@@ -187,8 +183,10 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     }
 
     override fun onBackPressed() {
-        if (viewpager.currentItem > 0) viewpager.setCurrentItem(viewpager.currentItem - 1, true)
-        else finish()
+        with(binding) {
+            if (viewpager.currentItem > 0) viewpager.setCurrentItem(viewpager.currentItem - 1, true)
+            else finish()
+        }
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -205,13 +203,13 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         val hasNext = position != fragments.size - 1
         if (barHasNext == hasNext) return
         barHasNext = hasNext
-        next.fadeScaleTransition {
+        binding.next.fadeScaleTransition {
             setIcon(
                 if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done,
                 color = Prefs.textColor
             )
         }
-        skip.animate().scaleXY(if (barHasNext) 1f else 0f)
+        binding.skip.animate().scaleXY(if (barHasNext) 1f else 0f)
     }
 
     class IntroPageAdapter(fm: FragmentManager, private val fragments: List<BaseIntroFragment>) :
