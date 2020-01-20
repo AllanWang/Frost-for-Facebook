@@ -29,6 +29,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -63,6 +64,7 @@ import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.toast
+import ca.allanwang.kau.utils.unboundedHeight
 import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
@@ -127,10 +129,10 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
-import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -402,14 +404,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             with(binding) {
                 optionsContainer.setBackgroundColor(optionsBackground)
                 var showOptions = false
-                val animator: ProgressAnimator = ProgressAnimator.ofFloat { }
+                val animator: ProgressAnimator = ProgressAnimator.ofFloat()
                 background.setOnClickListener {
                     animator.reset()
                     if (showOptions) {
                         animator.apply {
-                            withAnimator(optionsContainer.height.toFloat(), 0f) {
+                            withAnimator(optionsContainer.height, 0) {
                                 optionsContainer.updateLayoutParams {
-                                    height = it.toInt()
+                                    height = it
                                 }
                             }
                             withAnimator(arrow.rotation, 0f) {
@@ -420,24 +422,26 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             }
                         }
                     } else {
+                        optionsContainer.visible()
                         animator.apply {
-                            optionsContainer.measure(
-                                View.MeasureSpec.UNSPECIFIED,
-                                View.MeasureSpec.UNSPECIFIED
-                            )
                             withAnimator(
-                                optionsContainer.height.toFloat(),
-                                optionsContainer.measuredHeight.toFloat()
+                                optionsContainer.height,
+                                optionsContainer.unboundedHeight
                             ) {
                                 optionsContainer.updateLayoutParams {
-                                    height = it.toInt()
+                                    height = it
+                                }
+                            }
+                            withEndAction {
+                                // Sometimes, height remains the same as measured during collapse
+                                // if the animations are disabled.
+                                // We will resolve this by always falling back to wrap content afterwards
+                                optionsContainer.updateLayoutParams {
+                                    height = ViewGroup.LayoutParams.WRAP_CONTENT
                                 }
                             }
                             withAnimator(arrow.rotation, 180f) {
                                 arrow.rotation = it
-                            }
-                            withStartAction {
-                                optionsContainer.visible()
                             }
                         }
                     }
