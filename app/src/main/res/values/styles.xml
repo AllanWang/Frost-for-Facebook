@@ -74,6 +74,7 @@
     <style name="IntroBarButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:elevation">0dp</item>
         <item name="android:minWidth">100dp</item>
+        <item name="android:background">?selectableItemBackground</item>
         <item name="android:layout_marginStart">@dimen/kau_padding_small</item>
         <item name="android:layout_marginEnd">@dimen/kau_padding_small</item>
     </style>
@@ -94,7 +95,7 @@
 
     <style name="IntroButton" parent="TextAppearance.AppCompat.Button">
         <item name="android:elevation">0dp</item>
-        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
         <item name="android:padding">@dimen/kau_padding_large</item>
     </style>
 
