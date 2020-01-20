@@ -35,9 +35,9 @@ import ca.allanwang.kau.utils.setOnSingleTapListener
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
+import com.pitchedapps.frost.databinding.IntroAnalyticsBinding
 import com.pitchedapps.frost.utils.Prefs
 import kotlin.math.abs
-import kotlinx.android.synthetic.main.intro_analytics.*
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -142,10 +142,14 @@ class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
 
     val container: ConstraintLayout by bindViewResettable(R.id.intro_analytics_container)
 
-    override fun viewArray(): Array<Array<out View>> = arrayOf(
-        arrayOf(title), arrayOf(image),
-        arrayOf(intro_switch), arrayOf(desc)
-    )
+    private lateinit var binding: IntroAnalyticsBinding
+
+    override fun viewArray(): Array<Array<out View>> = with(binding) {
+        arrayOf(
+            arrayOf(title), arrayOf(image),
+            arrayOf(introSwitch), arrayOf(desc)
+        )
+    }
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
@@ -155,9 +159,14 @@ class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = IntroAnalyticsBinding.bind(view)
+        binding.init()
+    }
+
+    private fun IntroAnalyticsBinding.init() {
         image.setIcon(GoogleMaterial.Icon.gmd_bug_report, 120)
-        intro_switch.isSelected = Prefs.analytics
-        intro_switch.setOnCheckedChangeListener { _, isChecked ->
+        introSwitch.isSelected = Prefs.analytics
+        introSwitch.setOnCheckedChangeListener { _, isChecked ->
             Prefs.analytics = isChecked
         }
     }
