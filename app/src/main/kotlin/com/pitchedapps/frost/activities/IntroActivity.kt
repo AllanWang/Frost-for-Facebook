@@ -25,6 +25,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -72,7 +73,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     val viewpager: ViewPager by bindView(R.id.intro_viewpager)
     lateinit var adapter: IntroPageAdapter
     val indicator: InkPageIndicator by bindView(R.id.intro_indicator)
-    val skip: Button by bindView(R.id.intro_skip)
+    val skip: TextView by bindView(R.id.intro_skip)
     val next: ImageButton by bindView(R.id.intro_next)
     private var barHasNext = true
 
