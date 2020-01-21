@@ -61,6 +61,14 @@ enum class FbItem(
     _SEARCH(
         R.string.kau_search,
         GoogleMaterial.Icon.gmd_search,
+        "search/top"
+    ),
+    /**
+     * Non mbasic search cannot be parsed.
+     */
+    _SEARCH_PARSE(
+        R.string.kau_search,
+        GoogleMaterial.Icon.gmd_search,
         "search/top",
         prefix = FB_URL_MBASIC_BASE
     ),

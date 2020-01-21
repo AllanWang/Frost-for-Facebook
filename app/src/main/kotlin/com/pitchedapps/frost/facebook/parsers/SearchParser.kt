@@ -17,6 +17,8 @@
 package com.pitchedapps.frost.facebook.parsers
 
 import ca.allanwang.kau.searchview.SearchItem
+import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
+import com.pitchedapps.frost.facebook.FACEBOOK_MBASIC_COM
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.parsers.FrostSearch.Companion.create
@@ -29,7 +31,7 @@ import org.jsoup.nodes.Element
  */
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
     fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
-        val url = "${FbItem._SEARCH.url}?q=${if (input.isNotBlank()) input else "a"}"
+        val url = "${FbItem._SEARCH_PARSE.url}?q=${if (input.isNotBlank()) input else "a"}"
         L._i { "Search Query $url" }
         return parseFromUrl(cookie, url)
     }
@@ -74,9 +76,12 @@ data class FrostSearch(val href: String, val title: String, val description: Str
 
 private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
-    override var nameRes = FbItem._SEARCH.titleId
+    override var nameRes = FbItem._SEARCH_PARSE.titleId
 
-    override val url = "${FbItem._SEARCH.url}?q=google"
+    override val url = "${FbItem._SEARCH_PARSE.url}?q=google"
+
+    private val String.formattedSearchUrl: String
+        get() = replace(FACEBOOK_MBASIC_COM, FACEBOOK_BASE_COM)
 
     override fun parseImpl(doc: Document): FrostSearches? {
         val container: Element = doc.getElementById("BrowseResultsContainer")
@@ -87,9 +92,14 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
             // Our assumption is that search entries start with an image, followed by general info
             // There may be other <td />s, but we will not be parsing them
             // Furthermore, the <td /> entry wraps a link, containing all the necessary info
-            val a = el.select("td").getOrNull(1)?.selectFirst("a") ?: return@mapNotNull null
+            val a = el.select("td")
+                .getOrNull(1)
+                ?.selectFirst("a")
+                ?: return@mapNotNull null
             val url =
-                a.attr("href").takeIf { it.isNotEmpty() }?.formattedFbUrl ?: return@mapNotNull null
+                a.attr("href").takeIf { it.isNotEmpty() }
+                    ?.formattedFbUrl?.formattedSearchUrl
+                    ?: return@mapNotNull null
             // Currently, children should all be <div /> elements, where the first entry is the name/title
             // And the other entries are additional info.
             // There are also cases of nested tables, eg for the "join" button in groups.
