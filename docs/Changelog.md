@@ -3,6 +3,7 @@
 ## v2.4.3
 * Fix Android theme
 * Fix nav header expansion when animations are disabled
+* Fix search page UI
 
 ## v2.4.2
 * Fix townhall loading
