@@ -24,7 +24,7 @@ It is also useful to apply Frost's existing themes to see what is already config
 * [Visual Studio Code](https://code.visualstudio.com/) as the main IDE
 * [CSS & JS Injection](https://chrome.google.com/webstore/detail/css-and-javascript-inject/ckddknfdmcemedlmmebildepcmneakaa) or any other plugin that allows you to apply CSS to a web page.
 
-When opening the Frost project, navigating to `app/web` and install the npm packages. Run SASS to generate the files, and focus on `app/web/assets/css/core/core.css`; this is what you'll want to paste into the browser extension to see the updates. To update the theme, modify one of the `app/web/scss/core/_*.scss` files, which will update `core.css`. 
+When opening the Frost project, navigating to `app/web` and install the npm packages. Run SASS to generate the files, and focus on `app/web/assets/css/core/core.css`; this is what you'll want to paste into the browser extension to see the updates. To update the theme, modify one of the `app/web/scss/core/_core_*.scss` files, which will update `core.css`. 
 
 If the update works, the selected elements should change.
 Note that the core theme is intentionally a mix of weird colors, to make it easier to see changes.
