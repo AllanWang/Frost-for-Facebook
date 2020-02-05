@@ -24,6 +24,7 @@ import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
 import com.pitchedapps.frost.utils.isIndirectImageUrl
+import okhttp3.internal.closeQuietly
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -34,6 +35,8 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import okio.Buffer
 import okio.source
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
@@ -62,10 +65,22 @@ class ImageActivityTest {
         activity.launchActivity(intent)
     }
 
-    private val mockServer: MockWebServer by lazy {
+    lateinit var mockServer: MockWebServer
+
+    @Before
+    fun before() {
+        mockServer = mockServer()
+    }
+
+    @After
+    fun after() {
+        mockServer.closeQuietly()
+    }
+
+    private fun mockServer(): MockWebServer {
         val img = Buffer()
         img.writeAll(getResource("bayer-pattern.jpg").source())
-        MockWebServer().apply {
+        return MockWebServer().apply {
             dispatcher = object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =
                     when {
