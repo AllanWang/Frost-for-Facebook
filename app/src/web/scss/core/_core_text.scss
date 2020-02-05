@@ -21,12 +21,14 @@ a, ._5fpq, ._4gux, ._3bg5 ._52x1, ._3bg5 ._52x2, ._6dsj ._3gin, ._hdn._hdn, ._3i
 .mentions-input:not([style*="color: rgb"]), .mentions-placeholder:not([style*="color: rgb"]),
 .largeStatusBox .placeHolder, .fcw, ._2rgt, ._67i4 ._5hu6 ._59tt, ._2bu3, ._2bu4, ._1ii2, ._1ii3,
 ._5-7t, .fcl, ._4qas, .thread-title, .title, ._46pa, ._336p, ._1rrd, ._2om4, ._4yxo,
-._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs,
+._3m1m, ._2om2, ._5n_e, .appListExplanation, ._5yt8, ._8he, ._2luw, ._5rgs, ._t86 ._t87, ._t86 ._t88,
 h1, h2, h3, h4, h5, h6 {
   color: $text !important;
 }
 
-strong > a, a > ._2vyr, a[data-sigil~="unlike"], ._15ks ._2q8z._2q8z, ._1e3e, .blueName, ._5kqs ._55sr, ._484w.selected ._6zf, ._6_qj, ._2wn3,
+// Related to like buttons
+a[data-sigil~="unlike"], a[style*="color: rgb(32, 120, 244)"],
+strong > a, a > ._2vyr, ._15ks ._2q8z._2q8z, ._1e3e, .blueName, ._5kqs ._55sr, ._484w.selected ._6zf, ._6_qj, ._2wn3,
 ._by_, ._1r05 {
   color: $accent !important;
 }
