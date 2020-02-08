@@ -44,9 +44,6 @@ android {
         if (versionCode != androidGitVersion.code()) {
             throw new GradleException("Version code mismatch, expected ${androidGitVersion.code()}, got $versionCode")
         }
-        if (versionName != androidGitVersion.name()) {
-            throw new GradleException("Version name mismatch, expected ${androidGitVersion.name()}, got $versionName")
-        }
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
