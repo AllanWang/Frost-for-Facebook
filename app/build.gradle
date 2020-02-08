@@ -226,8 +226,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
-
     androidTestImplementation kau.Dependencies.kotlinTest
     androidTestImplementation kau.Dependencies.espresso
     androidTestImplementation kau.Dependencies.testRules
