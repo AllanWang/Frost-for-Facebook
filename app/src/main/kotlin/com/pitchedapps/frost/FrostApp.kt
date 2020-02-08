@@ -41,20 +41,11 @@ import org.koin.core.context.startKoin
  */
 class FrostApp : Application() {
 
-//    companion object {
-//        fun refWatcher(c: Context) = (c.applicationContext as FrostApp).refWatcher
-//    }
-
-//    lateinit var refWatcher: RefWatcher
-
     override fun onCreate() {
         if (!buildIsLollipopAndUp) { // not supported
             super.onCreate()
             return
         }
-
-//        if (LeakCanary.isInAnalyzerProcess(this)) return
-//        refWatcher = LeakCanary.install(this)
         initPrefs()
         initBugsnag()
 

@@ -283,13 +283,7 @@ dependencies {
     //noinspection GradleDependency
     kapt kau.Dependencies.glideKapt
 
-    //noinspection GradleDependency
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
-    //noinspection GradleDependency
-    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
-    //noinspection GradleDependency
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
-//    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
 
     //Icons
     implementation kau.Dependencies.iconicsMaterial
