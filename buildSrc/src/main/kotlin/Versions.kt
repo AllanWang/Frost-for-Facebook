@@ -10,8 +10,6 @@ object Versions {
     const val apacheCommonsText = "1.4"
     // https://github.com/brianwernick/ExoMedia/releases
     const val exoMedia = "4.3.0"
-    // https://github.com/InsertKoinIO/koin/blob/master/CHANGELOG.md
-    const val koin = "2.0.1"
     // https://github.com/mockk/mockk/releases
     const val mockk = "1.9.3"
 

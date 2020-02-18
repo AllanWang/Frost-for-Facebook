@@ -262,9 +262,9 @@ dependencies {
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    implementation "org.koin:koin-android:${Versions.koin}"
-    testImplementation "org.koin:koin-test:${Versions.koin}"
-    androidTestImplementation "org.koin:koin-test:${Versions.koin}"
+    implementation kau.Dependencies.koin
+    testImplementation kau.Dependencies.koinTest
+    androidTestImplementation kau.Dependencies.koinTest
 
 //    androidTestImplementation "io.mockk:mockk:${Versions.mockk}"
 
