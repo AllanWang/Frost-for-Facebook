@@ -76,6 +76,7 @@ class FrostWebView @JvmOverloads constructor(
             mediaPlaybackRequiresUserGesture = false // TODO check if we need this
             allowFileAccess = true
             textZoom = Prefs.webTextScaling
+            domStorageEnabled = true
         }
         setLayerType(LAYER_TYPE_HARDWARE, null)
         // attempt to get custom client; otherwise fallback to original
