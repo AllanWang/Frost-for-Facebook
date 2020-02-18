@@ -226,8 +226,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
-
     androidTestImplementation kau.Dependencies.kotlinTest
     androidTestImplementation kau.Dependencies.espresso
     androidTestImplementation kau.Dependencies.testRules
@@ -264,9 +262,9 @@ dependencies {
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    implementation "org.koin:koin-android:${Versions.koin}"
-    testImplementation "org.koin:koin-test:${Versions.koin}"
-    androidTestImplementation "org.koin:koin-test:${Versions.koin}"
+    implementation kau.Dependencies.koin
+    testImplementation kau.Dependencies.koinTest
+    androidTestImplementation kau.Dependencies.koinTest
 
 //    androidTestImplementation "io.mockk:mockk:${Versions.mockk}"
 
@@ -285,13 +283,7 @@ dependencies {
     //noinspection GradleDependency
     kapt kau.Dependencies.glideKapt
 
-    //noinspection GradleDependency
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
-    //noinspection GradleDependency
-    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
-    //noinspection GradleDependency
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
-//    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
 
     //Icons
     implementation kau.Dependencies.iconicsMaterial
