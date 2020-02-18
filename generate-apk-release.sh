@@ -44,7 +44,7 @@ git push -fq origin master > /dev/null
 
 echo "Create New Release"
 API_JSON="$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Automatic Release v%s for branch %s %s","draft": false,"prerelease": false}' ${TRAVIS_BUILD_NUMBER} ${TRAVIS_BUILD_NUMBER} ${TRAVIS_BUILD_NUMBER} "\`${TRAVIS_BRANCH}\`" "\nhttps://github.com/${TRAVIS_REPO_SLUG}/commit/${TRAVIS_COMMIT}")"
-newRelease="$(curl --data "${API_JSON}" https://api.github.com/repos/${RELEASE_REPO}/releases?access_token=${GITHUB_API_KEY})"
+newRelease="$(curl --data "${API_JSON}" -H "Authorization: token ${GITHUB_API_KEY}" https://api.github.com/repos/${RELEASE_REPO}/releases)"
 rID="$(echo "$newRelease" | jq ".id")"
 
 cd ${HOME}/${VERSION_KEY}
@@ -52,7 +52,7 @@ echo "Push apk to $rID"
 for apk in $(find *.apk -type f); do
   apkName="${apk::-4}"
   printf "Apk $apkName\n"
-  curl "https://uploads.github.com/repos/${RELEASE_REPO}/releases/${rID}/assets?access_token=${GITHUB_API_KEY}&name=${apkName}-v${TRAVIS_BUILD_NUMBER}.apk" --header 'Content-Type: application/zip' --upload-file ${apkName}.apk -X POST
+  curl -H "Authorization: token ${GITHUB_API_KEY}" "https://uploads.github.com/repos/${RELEASE_REPO}/releases/${rID}/assets?name=${apkName}-v${TRAVIS_BUILD_NUMBER}.apk" --header 'Content-Type: application/zip' --upload-file ${apkName}.apk -X POST
 done
 
 echo -e "Done\n"
