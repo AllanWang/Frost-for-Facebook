@@ -23,22 +23,11 @@ interface DynamicUiContract {
 
     /**
      * Change all necessary view components to the new theme
-     * Also propagate where applicable
      */
     fun reloadTheme()
 
     /**
-     * Change theme without propagation
-     */
-    fun reloadThemeSelf()
-
-    /**
-     * Change text size & propagate
+     * Change text size
      */
     fun reloadTextSize()
-
-    /**
-     * Change text size without propagation
-     */
-    fun reloadTextSizeSelf()
 }

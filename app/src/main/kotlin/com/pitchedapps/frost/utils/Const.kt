@@ -33,5 +33,7 @@ const val REQUEST_NAV = 1 shl 9
 const val REQUEST_SEARCH = 1 shl 10
 const val REQUEST_FAB = 1 shl 11
 const val REQUEST_NOTIFICATION = 1 shl 12
+const val REQUEST_ENABLE_IMAGES = 1 shl 13
+const val REQUEST_DISABLE_IMAGES = 1 shl 14
 
 const val MAIN_TIMEOUT_DURATION = 30 * 60 * 1000 // 30 min

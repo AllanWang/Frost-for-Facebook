@@ -196,18 +196,10 @@ class FrostWebView @JvmOverloads constructor(
         }
 
     override fun reloadTheme() {
-        reloadThemeSelf()
-    }
-
-    override fun reloadThemeSelf() {
         reload(false) // todo see if there's a better solution
     }
 
     override fun reloadTextSize() {
-        reloadTextSizeSelf()
-    }
-
-    override fun reloadTextSizeSelf() {
         settings.textZoom = Prefs.webTextScaling
     }
 

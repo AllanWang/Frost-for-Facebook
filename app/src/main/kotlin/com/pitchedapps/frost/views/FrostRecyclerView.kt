@@ -111,18 +111,10 @@ class FrostRecyclerView @JvmOverloads constructor(
     override var active: Boolean = true
 
     override fun reloadTheme() {
-        reloadThemeSelf()
-    }
-
-    override fun reloadThemeSelf() {
         reload(false) // todo see if there's a better solution
     }
 
     override fun reloadTextSize() {
-        reloadTextSizeSelf()
-    }
-
-    override fun reloadTextSizeSelf() {
         // todo
     }
 }

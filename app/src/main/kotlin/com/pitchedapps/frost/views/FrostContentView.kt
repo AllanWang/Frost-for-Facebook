@@ -143,6 +143,12 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         }
     }
 
+    private fun reloadThemeSelf() {
+        progress.tint(Prefs.textColor.withAlpha(180))
+        refresh.setColorSchemeColors(Prefs.iconColor)
+        refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
+    }
+
     override fun reloadTheme() {
         reloadThemeSelf()
         coreView.reloadTheme()
@@ -150,16 +156,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     override fun reloadTextSize() {
         coreView.reloadTextSize()
-    }
-
-    override fun reloadThemeSelf() {
-        progress.tint(Prefs.textColor.withAlpha(180))
-        refresh.setColorSchemeColors(Prefs.iconColor)
-        refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
-    }
-
-    override fun reloadTextSizeSelf() {
-        // intentionally blank
     }
 
     override fun destroy() {
