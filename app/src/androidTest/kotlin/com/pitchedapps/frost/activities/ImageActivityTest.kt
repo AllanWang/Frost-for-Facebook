@@ -19,6 +19,7 @@ package com.pitchedapps.frost.activities
 import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import com.pitchedapps.frost.FrostTestRule
 import com.pitchedapps.frost.helper.getResource
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
@@ -39,15 +40,19 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
+import org.junit.rules.TestRule
 import org.junit.rules.Timeout
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ImageActivityTest {
 
-    @get:Rule
     val activity: ActivityTestRule<ImageActivity> =
         ActivityTestRule(ImageActivity::class.java, true, false)
+
+    @get:Rule
+    val rule: TestRule = RuleChain.outerRule(FrostTestRule()).around(activity)
 
     @get:Rule
     val globalTimeout: Timeout = Timeout.seconds(15)
@@ -124,7 +129,6 @@ class ImageActivityTest {
     fun invalidImageTest() {
         launchActivity(mockServer.url("text").toString())
         mockServer.takeRequest()
-        activity.activity.isFinishing
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
             assertEquals(
