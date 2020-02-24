@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.4.4
+* Lots of under the hood fixes
+* Fixed sharing
+
 ## v2.4.3
 * Fix Android theme
 * Fix nav header expansion when animations are disabled
