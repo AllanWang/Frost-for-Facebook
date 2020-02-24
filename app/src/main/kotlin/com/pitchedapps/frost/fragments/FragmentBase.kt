@@ -32,6 +32,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.enums.FeedSort
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.L
@@ -82,6 +83,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, KoinComponent, Fragmen
         }
     }
 
+    protected val fbCookie: FbCookie by inject()
     protected val prefs: Prefs by inject()
     open lateinit var job: Job
     override val coroutineContext: CoroutineContext

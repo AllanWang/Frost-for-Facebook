@@ -130,7 +130,7 @@ abstract class FrostParserFragment<T : ParseData, Item : GenericItem> :
     override suspend fun reloadImpl(progress: (Int) -> Unit): List<Item>? =
         withContext(Dispatchers.IO) {
             progress(10)
-            val cookie = FbCookie.webCookie
+            val cookie = fbCookie.webCookie
             val doc = getDoc(cookie)
             progress(60)
             val response = try {

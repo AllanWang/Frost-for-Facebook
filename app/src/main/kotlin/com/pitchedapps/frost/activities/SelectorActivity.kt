@@ -63,7 +63,7 @@ class SelectorActivity : BaseActivity() {
             ) {
                 if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
                 else launch {
-                    FbCookie.switchUser(item.cookie)
+                    fbCookie.switchUser(item.cookie)
                     launchNewTask<MainActivity>(cookies())
                 }
             }

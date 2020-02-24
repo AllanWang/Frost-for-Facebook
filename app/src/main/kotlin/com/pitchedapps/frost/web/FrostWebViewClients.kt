@@ -67,6 +67,7 @@ open class BaseWebViewClient : WebViewClient() {
  */
 open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
+    private val fbCookie: FbCookie get() = web.fbCookie
     private val prefs: Prefs get() = web.prefs
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val isMain = web.parent.baseEnum != null
@@ -205,7 +206,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             return launchRequest(request)
         }
         if (url.isIndirectImageUrl) {
-            return launchImage(url.formattedFbUrl, cookie = FbCookie.webCookie)
+            return launchImage(url.formattedFbUrl, cookie = fbCookie.webCookie)
         }
         if (url.isImageUrl) {
             return launchImage(url.formattedFbUrl)

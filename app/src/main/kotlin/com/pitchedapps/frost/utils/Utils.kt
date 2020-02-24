@@ -125,14 +125,14 @@ fun Activity.cookies(): ArrayList<CookieEntity> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String) {
+private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String, fbCookie: FbCookie) {
     val prefs = Prefs.get()
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
         L.d { "Logout php found" }
         ctxCoroutine.launch {
-            FbCookie.logout(this@launchWebOverlayImpl)
+            fbCookie.logout(this@launchWebOverlayImpl)
         }
     } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
         startActivity<T>(false, intentBuilder = {
@@ -141,13 +141,13 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
     }
 }
 
-fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
+fun Context.launchWebOverlay(url: String, fbCookie: FbCookie) = launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie)
 
 // TODO Currently, default is overlay. Switch this if default changes
-fun Context.launchWebOverlayDesktop(url: String) = launchWebOverlay(url)
+fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie) = launchWebOverlay(url, fbCookie)
 
-fun Context.launchWebOverlayMobile(url: String) =
-    launchWebOverlayImpl<WebOverlayMobileActivity>(url)
+fun Context.launchWebOverlayMobile(url: String, fbCookie: FbCookie) =
+    launchWebOverlayImpl<WebOverlayMobileActivity>(url, fbCookie)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
     this,
@@ -408,8 +408,6 @@ fun EmailBuilder.addFrostDetails() {
     addItem("Random Frost ID", "${prefs.frostId}-$proTag")
     addItem("Locale", Locale.getDefault().displayName)
 }
-
-fun frostJsoup(url: String): Document = frostJsoup(FbCookie.webCookie, url)
 
 fun frostJsoup(cookie: String?, url: String): Document =
     Jsoup.connect(url).run {

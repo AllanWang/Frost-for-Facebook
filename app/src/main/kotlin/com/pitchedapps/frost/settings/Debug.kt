@@ -87,7 +87,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
                     attempt = launch(Dispatchers.IO) {
                         try {
-                            val data = parser.parse(FbCookie.webCookie)
+                            val data = parser.parse(fbCookie.webCookie)
                             withMainContext {
                                 loading.dismiss()
                                 createEmail(parser, data?.data)
@@ -113,7 +113,8 @@ private const val ZIP_NAME = "debug"
 fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     val downloader = OfflineWebsite(
-        url, FbCookie.webCookie ?: "",
+        url,
+        cookie = fbCookie.webCookie ?: "",
         baseUrl = FB_URL_BASE,
         html = html,
         baseDir = DebugActivity.baseDir(this)

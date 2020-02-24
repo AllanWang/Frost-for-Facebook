@@ -97,7 +97,7 @@ class LoginActivity : BaseActivity() {
         launch {
             val cookie = web.loadLogin { refresh(it != 100) }.await()
             L.d { "Login found" }
-            FbCookie.save(cookie.id)
+            fbCookie.save(cookie.id)
             webFadeOut()
             profile.fadeIn()
             loadInfo(cookie)

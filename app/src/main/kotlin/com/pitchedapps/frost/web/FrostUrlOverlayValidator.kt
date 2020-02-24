@@ -68,7 +68,7 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     }
     if (url.isIndirectImageUrl) {
         L.d { "Found indirect fb image" }
-        context.launchImageActivity(url, cookie = FbCookie.webCookie)
+        context.launchImageActivity(url, cookie = fbCookie.webCookie)
         return true
     }
     if (!url.isIndependent) {
@@ -81,19 +81,19 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         // already overlay; manage user agent
         if (userAgentString != USER_AGENT_DESKTOP_CONST && shouldUseDesktop) {
             L._i { "Switch to desktop agent overlay" }
-            context.launchWebOverlayDesktop(url)
+            context.launchWebOverlayDesktop(url, fbCookie)
             return true
         }
         if (userAgentString == USER_AGENT_DESKTOP_CONST && !shouldUseDesktop) {
             L._i { "Switch from desktop agent" }
-            context.launchWebOverlayMobile(url)
+            context.launchWebOverlayMobile(url, fbCookie)
             return true
         }
         L._i { "return false switch" }
         return false
     }
     L.v { "Request web overlay passed" }
-    context.launchWebOverlay(url)
+    context.launchWebOverlay(url, fbCookie)
     return true
 }
 

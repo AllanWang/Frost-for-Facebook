@@ -28,33 +28,35 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchLogin
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.dsl.module
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-05-30.
  *
  * The following component manages all cookie transfers.
  */
-object FbCookie : KoinComponent {
+class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
 
-    const val COOKIE_DOMAIN = FB_URL_BASE
+    companion object {
+        private const val COOKIE_DOMAIN = FB_URL_BASE
+
+        fun module() = module {
+            single { FbCookie(get(), get()) }
+        }
+    }
 
     /**
      * Retrieves the facebook cookie if it exists
      * Note that this is a synchronized call
      */
-    inline val webCookie: String?
+    val webCookie: String?
         get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
-
-    private val prefs: Prefs by inject()
-    private val cookieDao: CookieDao by inject()
 
     private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
         cookie ?: return true

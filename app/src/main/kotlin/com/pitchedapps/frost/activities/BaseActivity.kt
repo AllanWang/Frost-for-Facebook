@@ -21,6 +21,7 @@ import android.os.Bundle
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.searchview.SearchViewHolder
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.setFrostTheme
 import org.koin.android.ext.android.inject
@@ -30,6 +31,7 @@ import org.koin.android.ext.android.inject
  */
 abstract class BaseActivity : KauBaseActivity() {
 
+    val fbCookie: FbCookie by inject()
     val prefs: Prefs by inject()
 
     /**

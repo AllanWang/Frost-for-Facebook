@@ -43,15 +43,16 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import java.util.ArrayList
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import java.util.ArrayList
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
 class StartActivity : KauBaseActivity() {
 
+    private val fbCookie: FbCookie by inject()
     private val prefs: Prefs by inject()
     private val cookieDao: CookieDao by inject()
     private val genericDao: GenericDao by inject()
@@ -68,13 +69,14 @@ class StartActivity : KauBaseActivity() {
             // TODO add better descriptions
             CookieManager.getInstance()
         } catch (e: Exception) {
+            L.e(e) { "No cookiemanager instance" }
             showInvalidWebView()
         }
 
         launch {
             try {
                 val authDefer = BiometricUtils.authenticate(this@StartActivity)
-                FbCookie.switchBackUser()
+                fbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d {

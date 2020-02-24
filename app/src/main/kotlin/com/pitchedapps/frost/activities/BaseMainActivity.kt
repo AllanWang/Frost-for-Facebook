@@ -314,7 +314,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 val item = FbItem.values[it.itemId]
                 frostEvent("Drawer Tab", "name" to item.name)
                 drawer.closeDrawer(navigation)
-                launchWebOverlay(item.url)
+                launchWebOverlay(item.url, fbCookie)
                 false
             }
             val navBg = prefs.bgColor.withMinAlpha(200)
@@ -468,7 +468,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             val currentCookie = cookieDao.currentCookie()
                             if (currentCookie == null) {
                                 toast(R.string.account_not_found)
-                                FbCookie.reset()
+                                fbCookie.reset()
                                 launchLogin(cookies(), true)
                             } else {
                                 materialDialog {
@@ -482,7 +482,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                     )
                                     positiveButton(R.string.kau_yes) {
                                         this@BaseMainActivity.launch {
-                                            FbCookie.logout(this@BaseMainActivity)
+                                            fbCookie.logout(this@BaseMainActivity)
                                         }
                                     }
                                     negativeButton(R.string.kau_no)
@@ -597,7 +597,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     .into(this)
                 setOnClickListener {
                     if (primary) {
-                        launchWebOverlay(FbItem.PROFILE.url)
+                        launchWebOverlay(FbItem.PROFILE.url, fbCookie)
                     } else {
                         switchAccount(cookie.id)
                     }
@@ -612,7 +612,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             pendingUpdate = true
             closeDrawer()
             launch {
-                FbCookie.switchUser(id)
+                fbCookie.switchUser(id)
                 tabsForEachView { _, view -> view.badgeText = null }
                 refreshAll()
             }
@@ -644,7 +644,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     if (results != null)
                         searchView.results = results
                     else {
-                        val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results
+                        val data = SearchParser.query(fbCookie.webCookie, query)?.data?.results
                         if (data != null) {
                             val items = data.mapTo(mutableListOf(), FrostSearch::toSearchItem)
                             if (items.isNotEmpty())
@@ -662,11 +662,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 }
                 textDebounceInterval = 300
                 searchCallback =
-                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
+                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query", fbCookie); true }
                 closeListener = { _ -> searchViewCache.clear() }
                 foregroundColor = prefs.textColor
                 backgroundColor = prefs.bgColor.withMinAlpha(200)
-                onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
+                onItemClick = { _, key, _, _ -> launchWebOverlay(key, fbCookie) }
             }
         }
     }
@@ -758,7 +758,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         controlWebview?.resumeTimers()
         launch {
             val authDefer = BiometricUtils.authenticate(this@BaseMainActivity)
-            FbCookie.switchBackUser()
+            fbCookie.switchBackUser()
             authDefer.await()
             if (shouldReload && prefs.autoRefreshFeed) {
                 refreshAll()

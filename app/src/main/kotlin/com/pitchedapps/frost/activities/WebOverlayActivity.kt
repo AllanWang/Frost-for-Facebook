@@ -228,7 +228,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
             launch {
                 val authDefer = BiometricUtils.authenticate(this@WebOverlayActivityBase)
                 if (userId != prefs.userId) {
-                    FbCookie.switchUser(userId)
+                    fbCookie.switchUser(userId)
                 }
                 authDefer.await()
                 reloadBase(true)

@@ -27,6 +27,7 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
 import org.koin.core.KoinComponent
@@ -43,20 +44,20 @@ interface ClickableIItemContract {
 
     val url: String?
 
-    fun click(context: Context) {
+    fun click(context: Context, fbCookie: FbCookie) {
         val url = url ?: return
-        context.launchWebOverlay(url)
+        context.launchWebOverlay(url, fbCookie)
     }
 
     companion object {
-        fun bindEvents(adapter: IAdapter<GenericItem>) {
+        fun bindEvents(adapter: IAdapter<GenericItem>, fbCookie: FbCookie) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
                 }
                 onClickListener = { v, _, item, _ ->
                     if (item is ClickableIItemContract) {
-                        item.click(v!!.context)
+                        item.click(v!!.context, fbCookie)
                         true
                     } else
                         false

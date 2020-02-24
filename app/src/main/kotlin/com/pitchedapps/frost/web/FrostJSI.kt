@@ -35,13 +35,17 @@ import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
 class FrostJSI(val web: FrostWebView) {
 
-    private val prefs: Prefs = web.prefs
+    private val fbCookie: FbCookie get() = web.fbCookie
+    private val prefs: Prefs get() = web.prefs
     private val context: Context = web.context
     private val activity: MainActivity? = context as? MainActivity
     private val header: SendChannel<String>? = activity?.headerBadgeChannel
@@ -80,7 +84,7 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun contextMenu(url: String?, text: String?) {
         // url will be formatted through webcontext
-        web.post { context.showWebContextMenu(WebContext(url.takeIf { it.isIndependent }, text)) }
+        web.post { context.showWebContextMenu(WebContext(url.takeIf { it.isIndependent }, text), fbCookie) }
     }
 
     /**
@@ -114,7 +118,7 @@ class FrostJSI(val web: FrostWebView) {
     fun loadLogin() {
         L.d { "Sign up button found; load login" }
         context.ctxCoroutine.launch {
-            FbCookie.logout(context)
+            fbCookie.logout(context)
         }
     }
 

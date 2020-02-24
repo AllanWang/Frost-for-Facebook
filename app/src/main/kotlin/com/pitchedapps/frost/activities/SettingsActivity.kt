@@ -41,6 +41,7 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.settings.getAppearancePrefs
 import com.pitchedapps.frost.settings.getBehaviourPrefs
 import com.pitchedapps.frost.settings.getDebugPrefs
@@ -68,6 +69,7 @@ import org.koin.android.ext.android.inject
  */
 class SettingsActivity : KPrefActivity() {
 
+    val fbCookie: FbCookie by inject()
     val prefs: Prefs by inject()
 
     private var resultFlag = Activity.RESULT_CANCELED

@@ -31,6 +31,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.DiffCallback
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.glide.FrostGlide
@@ -50,7 +51,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
     ) {
 
     companion object {
-        fun bindEvents(adapter: ItemAdapter<NotificationIItem>) {
+        fun bindEvents(adapter: ItemAdapter<NotificationIItem>, fbCookie: FbCookie) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
@@ -64,7 +65,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                         )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
-                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
+                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url, fbCookie)
                     true
                 }
             }

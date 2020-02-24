@@ -54,6 +54,7 @@ class LoginWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr), KoinComponent {
 
+    private val fbCookie: FbCookie by inject()
     private val prefs: Prefs by inject()
     private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
@@ -72,7 +73,7 @@ class LoginWebView @JvmOverloads constructor(
             this@LoginWebView.progressCallback = progressCallback
             L.d { "Begin loading login" }
             launchMain {
-                FbCookie.reset()
+                fbCookie.reset()
                 setupWebview()
                 loadUrl(FB_LOGIN_URL)
             }

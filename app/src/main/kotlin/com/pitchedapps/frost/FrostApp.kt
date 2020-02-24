@@ -26,6 +26,7 @@ import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
 import com.bugsnag.android.Configuration
 import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
@@ -60,7 +61,8 @@ class FrostApp : Application(), KoinComponent {
                 FrostDatabase.module(),
                 prefFactoryModule(),
                 Prefs.module(),
-                Showcase.module()
+                Showcase.module(),
+                FbCookie.module()
             ))
         }
         if (!buildIsLollipopAndUp) { // not supported
