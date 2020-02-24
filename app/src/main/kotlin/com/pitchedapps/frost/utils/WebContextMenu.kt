@@ -72,10 +72,10 @@ enum class WebContextType(
         R.string.open_link,
         { it.hasUrl },
         { c, wc, fc -> c.launchWebOverlay(wc.url!!, fc) }),
-    COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, fc -> c.copyToClipboard(wc.url) }),
-    COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, fc -> c.copyToClipboard(wc.text) }),
-    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, fc -> c.shareText(wc.url) }),
-    DEBUG_LINK(R.string.debug_link, { it.hasUrl }, { c, wc, fc ->
+    COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, _ -> c.copyToClipboard(wc.url) }),
+    COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, _ -> c.copyToClipboard(wc.text) }),
+    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _ -> c.shareText(wc.url) }),
+    DEBUG_LINK(R.string.debug_link, { it.hasUrl }, { c, wc, _ ->
         c.materialDialog {
             title(R.string.debug_link)
             message(R.string.debug_link_desc)
