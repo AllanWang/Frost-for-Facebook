@@ -1,5 +1,4 @@
-v2.4.3
+v2.4.4
 
-* Fix Android theme
-* Fix nav header expansion when animations are disabled
-* Fix search page UI
+* Lots of under the hood fixes
+* Fixed sharing

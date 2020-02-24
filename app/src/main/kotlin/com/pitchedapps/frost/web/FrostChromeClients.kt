@@ -48,6 +48,7 @@ import kotlinx.coroutines.channels.SendChannel
  */
 class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
 
+    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val progress: SendChannel<Int> = web.parent.progressChannel
     private val title: SendChannel<String> = web.parent.titleChannel
     private val activity = (web.context as? ActivityContract)
@@ -83,6 +84,12 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
         return activity != null
     }
 
+    private fun JsResult.frostCancel() {
+        cancel()
+        refresh.offer(false)
+        progress.offer(100)
+    }
+
     override fun onJsAlert(
         view: WebView,
         url: String,
@@ -93,7 +100,7 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             title(text = url)
             message(text = message)
             positiveButton { result.confirm() }
-            onDismiss { result.cancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }
@@ -108,8 +115,8 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             title(text = url)
             message(text = message)
             positiveButton { result.confirm() }
-            negativeButton { result.cancel() }
-            onDismiss { result.cancel() }
+            negativeButton { result.frostCancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }
@@ -124,8 +131,8 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             title(text = url)
             message(text = message)
             positiveButton { result.confirm() }
-            negativeButton { result.cancel() }
-            onDismiss { result.cancel() }
+            negativeButton { result.frostCancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }
@@ -144,8 +151,8 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
                 result.confirm(charSequence.toString())
             }
             // positive button added through input
-            negativeButton { result.cancel() }
-            onDismiss { result.cancel() }
+            negativeButton { result.frostCancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }

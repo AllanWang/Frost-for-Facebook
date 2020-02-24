@@ -215,7 +215,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             return true
         }
         // Convert desktop urls to mobile ones
-        if (url.contains("https://www.facebook.com")) {
+        if (url.contains("https://www.facebook.com") && urlSupportsRefresh(url)) {
             view.loadUrl(url.replace(WWW_FACEBOOK_COM, FACEBOOK_BASE_COM))
             return true
         }
