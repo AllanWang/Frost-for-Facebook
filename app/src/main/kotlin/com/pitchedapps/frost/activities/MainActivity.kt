@@ -82,7 +82,7 @@ class MainActivity : BaseMainActivity() {
         tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(viewpager) {
             override fun onTabReselected(tab: TabLayout.Tab) {
                 super.onTabReselected(tab)
-                currentFragment.onTabClick()
+                currentFragment?.onTabClick()
             }
 
             override fun onTabSelected(tab: TabLayout.Tab) {

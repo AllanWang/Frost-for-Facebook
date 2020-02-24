@@ -791,7 +791,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 return true
             }
         }
-        if (currentFragment.onBackPressed()) return true
+        if (currentFragment?.onBackPressed() == true) return true
         if (prefs.exitConfirmation) {
             materialDialog {
                 title(R.string.kau_exit)
@@ -807,10 +807,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         return false
     }
 
-    inline val currentFragment: BaseFragment
+    inline val currentFragment: BaseFragment?
         get() {
             val viewpager = contentBinding.viewpager
-            return supportFragmentManager.findFragmentByTag("android:switcher:${viewpager.id}:${viewpager.currentItem}") as BaseFragment
+            return supportFragmentManager.findFragmentByTag("android:switcher:${viewpager.id}:${viewpager.currentItem}") as? BaseFragment
         }
 
     override fun reloadFragment(fragment: BaseFragment) {
