@@ -30,8 +30,6 @@ import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CompletableDeferred
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 typealias BiometricDeferred = CompletableDeferred<BiometricPrompt.CryptoObject?>
 
@@ -39,7 +37,7 @@ typealias BiometricDeferred = CompletableDeferred<BiometricPrompt.CryptoObject?>
  * Container for [BiometricPrompt]
  * Inspired by coroutine's CommonPool
  */
-object BiometricUtils  {
+object BiometricUtils {
 
     private val executor: Executor
         get() = pool ?: getOrCreatePoolSync()
