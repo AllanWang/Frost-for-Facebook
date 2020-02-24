@@ -31,6 +31,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.DiffCallback
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.glide.FrostGlide
@@ -38,6 +39,8 @@ import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -48,7 +51,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
     ) {
 
     companion object {
-        fun bindEvents(adapter: ItemAdapter<NotificationIItem>) {
+        fun bindEvents(adapter: ItemAdapter<NotificationIItem>, fbCookie: FbCookie) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
@@ -62,7 +65,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                         )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
-                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
+                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url, fbCookie)
                     true
                 }
             }
@@ -93,7 +96,9 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         }
     }
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView), KoinComponent {
+
+        private val prefs: Prefs by inject()
 
         private val frame: ViewGroup by bindView(R.id.item_frame)
         private val avatar: ImageView by bindView(R.id.item_avatar)
@@ -107,11 +112,11 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(
-                Prefs.textColor,
-                Prefs.nativeBgColor(notif.unread)
+                prefs.textColor,
+                prefs.nativeBgColor(notif.unread)
             )
-            content.setTextColor(Prefs.textColor)
-            date.setTextColor(Prefs.textColor.withAlpha(150))
+            content.setTextColor(prefs.textColor)
+            date.setTextColor(prefs.textColor.withAlpha(150))
 
             val glide = glide
             glide.load(notif.img)

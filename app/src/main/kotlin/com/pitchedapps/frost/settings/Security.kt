@@ -20,7 +20,6 @@ import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.BiometricUtils
-import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.launch
 
 /**
@@ -32,15 +31,15 @@ fun SettingsActivity.getSecurityPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.security_disclaimer_info
     }
 
-    checkbox(R.string.enable_biometrics, Prefs::biometricsEnabled, {
+    checkbox(R.string.enable_biometrics, prefs::biometricsEnabled, {
         launch {
             /*
              * For security, we should request authentication when:
              * - enabling to ensure that it is supported
              * - disabling to ensure that it is permitted
              */
-            BiometricUtils.authenticate(this@getSecurityPrefs, force = true).await()
-            Prefs.biometricsEnabled = it
+            BiometricUtils.authenticate(this@getSecurityPrefs, prefs, force = true).await()
+            prefs.biometricsEnabled = it
             reloadByTitle(R.string.enable_biometrics)
         }
     }) {

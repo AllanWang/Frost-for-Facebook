@@ -31,6 +31,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.utils.L
@@ -44,6 +45,8 @@ import com.pitchedapps.frost.web.NestedWebView
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -54,7 +57,11 @@ class FrostWebView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : NestedWebView(context, attrs, defStyleAttr),
-    FrostContentCore {
+    FrostContentCore,
+    KoinComponent {
+
+    val fbCookie: FbCookie by inject()
+    val prefs: Prefs by inject()
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -75,7 +82,7 @@ class FrostWebView @JvmOverloads constructor(
             javaScriptEnabled = true
             mediaPlaybackRequiresUserGesture = false // TODO check if we need this
             allowFileAccess = true
-            textZoom = Prefs.webTextScaling
+            textZoom = prefs.webTextScaling
             domStorageEnabled = true
         }
         setLayerType(LAYER_TYPE_HARDWARE, null)
@@ -208,7 +215,7 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     override fun reloadTextSizeSelf() {
-        settings.textZoom = Prefs.webTextScaling
+        settings.textZoom = prefs.webTextScaling
     }
 
     override fun destroy() {

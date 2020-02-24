@@ -41,6 +41,8 @@ import kotlinx.coroutines.launch
  */
 class FrostJSI(val web: FrostWebView) {
 
+    private val fbCookie: FbCookie get() = web.fbCookie
+    private val prefs: Prefs get() = web.prefs
     private val context: Context = web.context
     private val activity: MainActivity? = context as? MainActivity
     private val header: SendChannel<String>? = activity?.headerBadgeChannel
@@ -57,7 +59,7 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun loadVideo(url: String?, isGif: Boolean): Boolean =
-        if (url != null && Prefs.enablePip) {
+        if (url != null && prefs.enablePip) {
             web.post {
                 (context as? VideoViewHolder)?.showVideo(url, isGif)
                     ?: L.e { "Could not load video; contract not implemented" }
@@ -79,7 +81,7 @@ class FrostJSI(val web: FrostWebView) {
     @JavascriptInterface
     fun contextMenu(url: String?, text: String?) {
         // url will be formatted through webcontext
-        web.post { context.showWebContextMenu(WebContext(url.takeIf { it.isIndependent }, text)) }
+        web.post { context.showWebContextMenu(WebContext(url.takeIf { it.isIndependent }, text), fbCookie) }
     }
 
     /**
@@ -113,7 +115,7 @@ class FrostJSI(val web: FrostWebView) {
     fun loadLogin() {
         L.d { "Sign up button found; load login" }
         context.ctxCoroutine.launch {
-            FbCookie.logout(context)
+            fbCookie.logout(context)
         }
     }
 

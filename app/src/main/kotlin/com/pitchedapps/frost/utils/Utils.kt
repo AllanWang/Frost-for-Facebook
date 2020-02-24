@@ -123,27 +123,34 @@ fun Activity.cookies(): ArrayList<CookieEntity> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String) {
+private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(
+    url: String,
+    fbCookie: FbCookie
+) {
+    val prefs = Prefs.get()
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
         L.d { "Logout php found" }
         ctxCoroutine.launch {
-            FbCookie.logout(this@launchWebOverlayImpl)
+            fbCookie.logout(this@launchWebOverlayImpl)
         }
-    } else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
+    } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
         startActivity<T>(false, intentBuilder = {
             putExtra(ARG_URL, argUrl)
         })
+    }
 }
 
-fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
+fun Context.launchWebOverlay(url: String, fbCookie: FbCookie) =
+    launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie)
 
 // TODO Currently, default is overlay. Switch this if default changes
-fun Context.launchWebOverlayDesktop(url: String) = launchWebOverlay(url)
+fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie) =
+    launchWebOverlay(url, fbCookie)
 
-fun Context.launchWebOverlayMobile(url: String) =
-    launchWebOverlayImpl<WebOverlayMobileActivity>(url)
+fun Context.launchWebOverlayMobile(url: String, fbCookie: FbCookie) =
+    launchWebOverlayImpl<WebOverlayMobileActivity>(url, fbCookie)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
     this,
@@ -172,16 +179,17 @@ fun WebOverlayActivity.url(): String {
 }
 
 fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
+    val prefs = Prefs.get()
     val isTransparent =
-        forceTransparent || (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255)
-    if (Prefs.bgColor.isColorDark) {
+        forceTransparent || (Color.alpha(prefs.bgColor) != 255) || (Color.alpha(prefs.headerColor) != 255)
+    if (prefs.bgColor.isColorDark) {
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     } else {
         setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
     }
 }
 
-class ActivityThemeUtils {
+class ActivityThemeUtils(val prefs: Prefs) {
 
     private var toolbar: Toolbar? = null
     var themeWindow = true
@@ -207,21 +215,21 @@ class ActivityThemeUtils {
 
     fun theme(activity: Activity) {
         with(activity) {
-            statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
-            if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
-            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-            toolbar?.setBackgroundColor(Prefs.headerColor)
-            toolbar?.setTitleTextColor(Prefs.iconColor)
-            toolbar?.overflowIcon?.setTint(Prefs.iconColor)
-            texts.forEach { it.setTextColor(Prefs.textColor) }
-            headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
-            backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+            statusBarColor = prefs.headerColor.darken(0.1f).withAlpha(255)
+            if (prefs.tintNavBar) navigationBarColor = prefs.headerColor
+            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(prefs.bgColor))
+            toolbar?.setBackgroundColor(prefs.headerColor)
+            toolbar?.setTitleTextColor(prefs.iconColor)
+            toolbar?.overflowIcon?.setTint(prefs.iconColor)
+            texts.forEach { it.setTextColor(prefs.textColor) }
+            headers.forEach { it.setBackgroundColor(prefs.headerColor) }
+            backgrounds.forEach { it.setBackgroundColor(prefs.bgColor) }
         }
     }
 }
 
-inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
-    val themer = ActivityThemeUtils()
+inline fun Activity.setFrostColors(prefs: Prefs, builder: ActivityThemeUtils.() -> Unit) {
+    val themer = ActivityThemeUtils(prefs)
     themer.builder()
     themer.theme(this)
 }
@@ -248,18 +256,20 @@ fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) 
 
 @SuppressLint("RestrictedApi")
 private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
+    val prefs = Prefs.get()
     builder()
     // hacky workaround, but it has proper checks and shouldn't crash
     ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
-        messageView.setTextColor(Prefs.textColor)
-        actionView.setTextColor(Prefs.accentColor)
+        messageView.setTextColor(prefs.textColor)
+        actionView.setTextColor(prefs.accentColor)
         // only set if previous text colors are set
-        view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
+        view.setBackgroundColor(prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
     }
 }
 
 fun Activity.frostNavigationBar() {
-    navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
+    val prefs = Prefs.get()
+    navigationBarColor = if (prefs.tintNavBar) prefs.headerColor else Color.BLACK
 }
 
 @Throws(IOException::class)
@@ -393,14 +403,13 @@ inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailB
     }
 
 fun EmailBuilder.addFrostDetails() {
-    addItem("Prev version", Prefs.prevVersionCode.toString())
+    val prefs = Prefs.get()
+    addItem("Prev version", prefs.prevVersionCode.toString())
     val proTag = "FO"
 //    if (IS_FROST_PRO) "TY" else "FP"
-    addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
+    addItem("Random Frost ID", "${prefs.frostId}-$proTag")
     addItem("Locale", Locale.getDefault().displayName)
 }
-
-fun frostJsoup(url: String): Document = frostJsoup(FbCookie.webCookie, url)
 
 fun frostJsoup(cookie: String?, url: String): Document =
     Jsoup.connect(url).run {
@@ -438,7 +447,7 @@ fun String.unescapeHtml(): String =
         .replace("\\u003C", "<")
         .replace("\\\"", "\"")
 
-suspend fun Context.loadAssets(): Unit = coroutineScope {
-    CssAssets.load(this@loadAssets)
+suspend fun Context.loadAssets(prefs: Prefs): Unit = coroutineScope {
+    CssAssets.load(this@loadAssets, prefs)
     JsAssets.load(this@loadAssets)
 }

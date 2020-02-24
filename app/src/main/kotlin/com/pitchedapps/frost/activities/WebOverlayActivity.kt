@@ -56,7 +56,6 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
@@ -67,7 +66,6 @@ import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.setFrostColors
@@ -78,6 +76,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -170,6 +169,8 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         get() = content.coreView
     private val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
+    private val showcasePrefs: Showcase by inject()
+
     private inline val urlTest: String?
         get() = intent.getStringExtra(ARG_URL) ?: intent.dataString
 
@@ -184,7 +185,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
     override val baseEnum: FbItem? = null
 
     private inline val userId: Long
-        get() = intent.getLongExtra(ARG_USER_ID, Prefs.userId)
+        get() = intent.getLongExtra(ARG_USER_ID, prefs.userId)
 
     private val overlayContext: OverlayContext?
         get() = OverlayContext[intent.extras]
@@ -205,14 +206,14 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, Prefs.iconColor)
+        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, prefs.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
 
-        setFrostColors {
+        setFrostColors(prefs) {
             toolbar(toolbar)
             themeWindow = false
         }
-        coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
+        coordinator.setBackgroundColor(prefs.bgColor.withAlpha(255))
 
         content.bind(this)
 
@@ -222,15 +223,15 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
 
         with(web) {
             userAgentString = userAgent
-            Prefs.prevId = Prefs.userId
+            prefs.prevId = prefs.userId
             launch {
-                val authDefer = BiometricUtils.authenticate(this@WebOverlayActivityBase)
-                if (userId != Prefs.userId) {
-                    FbCookie.switchUser(userId)
+                val authDefer = BiometricUtils.authenticate(this@WebOverlayActivityBase, prefs)
+                if (userId != prefs.userId) {
+                    fbCookie.switchUser(userId)
                 }
                 authDefer.await()
                 reloadBase(true)
-                if (Showcase.firstWebOverlay) {
+                if (showcasePrefs.firstWebOverlay) {
                     coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
                         duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                         setAction(R.string.kau_got_it) { dismiss() }
@@ -240,7 +241,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         }
 
         swipeBack = kauSwipeOnCreate {
-            if (!Prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
+            if (!prefs.overlayFullScreenSwipe) edgeSize = 20.dpToPx
             transitionSystemBars = false
         }
     }
@@ -271,13 +272,13 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
      * Our theme for the overlay should be fully opaque
      */
     fun theme() {
-        val opaqueAccent = Prefs.headerColor.withAlpha(255)
+        val opaqueAccent = prefs.headerColor.withAlpha(255)
         statusBarColor = opaqueAccent.darken()
         navigationBarColor = opaqueAccent
         toolbar.setBackgroundColor(opaqueAccent)
-        toolbar.setTitleTextColor(Prefs.iconColor)
-        coordinator.setBackgroundColor(Prefs.bgColor.withAlpha(255))
-        toolbar.overflowIcon?.setTint(Prefs.iconColor)
+        toolbar.setTitleTextColor(prefs.iconColor)
+        coordinator.setBackgroundColor(prefs.bgColor.withAlpha(255))
+        toolbar.overflowIcon?.setTint(prefs.iconColor)
     }
 
     override fun onResume() {
@@ -312,7 +313,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_web, menu)
         overlayContext?.onMenuCreate(this, menu)
-        toolbar.tint(Prefs.iconColor)
+        toolbar.tint(prefs.iconColor)
         return true
     }
 

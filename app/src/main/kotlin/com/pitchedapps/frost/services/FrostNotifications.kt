@@ -67,7 +67,7 @@ enum class NotificationType(
     private val overlayContext: OverlayContext,
     private val fbItem: FbItem,
     private val parser: FrostParser<ParseNotification>,
-    private val ringtone: () -> String
+    private val ringtoneProvider: (Prefs) -> String
 ) {
 
     GENERAL(
@@ -75,7 +75,7 @@ enum class NotificationType(
         OverlayContext.NOTIFICATION,
         FbItem.NOTIFICATIONS,
         NotifParser,
-        Prefs::notificationRingtone
+        { it.notificationRingtone }
     ),
 
     MESSAGE(
@@ -83,7 +83,7 @@ enum class NotificationType(
         OverlayContext.MESSAGE,
         FbItem.MESSAGES,
         MessageParser,
-        Prefs::messageRingtone
+        { it.messageRingtone }
     );
 
     private val groupPrefix = "frost_${name.toLowerCase(Locale.CANADA)}"
@@ -112,7 +112,7 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    suspend fun fetch(context: Context, data: CookieEntity): Int {
+    suspend fun fetch(context: Context, data: CookieEntity, prefs: Prefs): Int {
         val notifDao = FrostDatabase.get().notifDao()
         val response = try {
             parser.parse(data.cookie)
@@ -129,7 +129,7 @@ enum class NotificationType(
          */
         fun validText(text: String?): Boolean {
             val t = text ?: return true
-            return Prefs.notificationKeywords.none {
+            return prefs.notificationKeywords.none {
                 t.contains(it, true)
             }
         }
@@ -167,7 +167,7 @@ enum class NotificationType(
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
-        val ringtone = ringtone()
+        val ringtone = ringtoneProvider(prefs)
         notifs.forEachIndexed { i, notif ->
             // Ring at most twice
             notif.withAlert(context, i < 2, ringtone).notify(context)
@@ -316,9 +316,9 @@ data class FrostNotification(
         NotificationManagerCompat.from(context).notify(tag, id, notif.build())
 }
 
-fun Context.scheduleNotificationsFromPrefs(): Boolean {
-    val shouldSchedule = Prefs.hasNotifications
-    return if (shouldSchedule) scheduleNotifications(Prefs.notificationFreq)
+fun Context.scheduleNotificationsFromPrefs(prefs: Prefs): Boolean {
+    val shouldSchedule = prefs.hasNotifications
+    return if (shouldSchedule) scheduleNotifications(prefs.notificationFreq)
     else scheduleNotifications(-1)
 }
 

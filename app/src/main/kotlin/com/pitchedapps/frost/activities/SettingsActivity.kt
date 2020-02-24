@@ -41,6 +41,7 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.enums.Support
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.settings.getAppearancePrefs
 import com.pitchedapps.frost.settings.getBehaviourPrefs
 import com.pitchedapps.frost.settings.getDebugPrefs
@@ -61,11 +62,15 @@ import com.pitchedapps.frost.utils.loadAssets
 import com.pitchedapps.frost.utils.setFrostTheme
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
 class SettingsActivity : KPrefActivity() {
+
+    val fbCookie: FbCookie by inject()
+    val prefs: Prefs by inject()
 
     private var resultFlag = Activity.RESULT_CANCELED
 
@@ -117,11 +122,11 @@ class SettingsActivity : KPrefActivity() {
         }
         when (requestCode) {
             REQUEST_NOTIFICATION_RINGTONE -> {
-                Prefs.notificationRingtone = uriString
+                prefs.notificationRingtone = uriString
                 reloadByTitle(R.string.notification_ringtone)
             }
             REQUEST_MESSAGE_RINGTONE -> {
-                Prefs.messageRingtone = uriString
+                prefs.messageRingtone = uriString
                 reloadByTitle(R.string.message_ringtone)
             }
         }
@@ -129,8 +134,8 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
-        textColor = { Prefs.textColor }
-        accentColor = { Prefs.accentColor }
+        textColor = { prefs.textColor }
+        accentColor = { prefs.accentColor }
     }
 
     override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
@@ -195,7 +200,7 @@ class SettingsActivity : KPrefActivity() {
         subItems(R.string.debug_frost, getDebugPrefs()) {
             descRes = R.string.debug_frost_desc
             iicon = CommunityMaterial.Icon.cmd_android_debug_bridge
-            visible = { Prefs.debugSettings }
+            visible = { prefs.debugSettings }
         }
     }
 
@@ -215,15 +220,15 @@ class SettingsActivity : KPrefActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setFrostTheme(true)
         super.onCreate(savedInstanceState)
-        animate = Prefs.animate
+        animate = prefs.animate
         themeExterior(false)
     }
 
     fun themeExterior(animate: Boolean = true) {
-        if (animate) bgCanvas.fade(Prefs.bgColor)
-        else bgCanvas.set(Prefs.bgColor)
-        if (animate) toolbarCanvas.ripple(Prefs.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
-        else toolbarCanvas.set(Prefs.headerColor)
+        if (animate) bgCanvas.fade(prefs.bgColor)
+        else bgCanvas.set(prefs.bgColor)
+        if (animate) toolbarCanvas.ripple(prefs.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
+        else toolbarCanvas.set(prefs.headerColor)
         frostNavigationBar()
     }
 
@@ -231,7 +236,7 @@ class SettingsActivity : KPrefActivity() {
         if (!super.backPress()) {
             setResult(resultFlag)
             launch(NonCancellable) {
-                loadAssets()
+                loadAssets(prefs)
                 finishSlideOut()
             }
         }
@@ -239,9 +244,9 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
-        toolbar.tint(Prefs.iconColor)
+        toolbar.tint(prefs.iconColor)
         setMenuIcons(
-            menu, Prefs.iconColor,
+            menu, prefs.iconColor,
             R.id.action_email to GoogleMaterial.Icon.gmd_email,
             R.id.action_changelog to GoogleMaterial.Icon.gmd_info
         )

@@ -30,6 +30,8 @@ import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.utils.Prefs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -41,7 +43,10 @@ class FrostRecyclerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr),
+    KoinComponent,
     FrostContentCore {
+
+    private val prefs: Prefs by inject()
 
     override fun reload(animate: Boolean) = reloadBase(animate)
 
@@ -71,13 +76,13 @@ class FrostRecyclerView @JvmOverloads constructor(
     var onReloadClear: () -> Unit = {}
 
     override fun reloadBase(animate: Boolean) {
-        if (Prefs.animate) fadeOut(onFinish = onReloadClear)
+        if (prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
             parent.refreshChannel.offer(true)
             recyclerContract.reload { parent.progressChannel.offer(it) }
             parent.progressChannel.offer(100)
             parent.refreshChannel.offer(false)
-            if (Prefs.animate) circularReveal()
+            if (prefs.animate) circularReveal()
         }
     }
 

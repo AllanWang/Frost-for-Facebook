@@ -52,6 +52,8 @@ import org.koin.android.ext.android.inject
  */
 class StartActivity : KauBaseActivity() {
 
+    private val fbCookie: FbCookie by inject()
+    private val prefs: Prefs by inject()
     private val cookieDao: CookieDao by inject()
     private val genericDao: GenericDao by inject()
 
@@ -67,13 +69,14 @@ class StartActivity : KauBaseActivity() {
             // TODO add better descriptions
             CookieManager.getInstance()
         } catch (e: Exception) {
+            L.e(e) { "No cookiemanager instance" }
             showInvalidWebView()
         }
 
         launch {
             try {
-                val authDefer = BiometricUtils.authenticate(this@StartActivity)
-                FbCookie.switchBackUser()
+                val authDefer = BiometricUtils.authenticate(this@StartActivity, prefs)
+                fbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d {
@@ -82,12 +85,12 @@ class StartActivity : KauBaseActivity() {
                         transform = CookieEntity::toSensitiveString
                     )}"
                 }
-                loadAssets()
+                loadAssets(prefs)
                 authDefer.await()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account
-                    Prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
+                    prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
                     else -> startActivity<MainActivity>(intentBuilder = {
                         putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or

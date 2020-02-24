@@ -30,6 +30,8 @@ import com.pitchedapps.frost.facebook.FbCookie
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 28/12/17.
@@ -63,10 +65,13 @@ class FrostGlideModule : AppGlideModule() {
 private fun getFrostHttpClient(): OkHttpClient =
     OkHttpClient.Builder().addInterceptor(FrostCookieInterceptor()).build()
 
-class FrostCookieInterceptor : Interceptor {
+class FrostCookieInterceptor : Interceptor, KoinComponent {
+
+    private val fbCookie: FbCookie by inject()
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val origRequest = chain.request()
-        val cookie = FbCookie.webCookie ?: return chain.proceed(origRequest)
+        val cookie = fbCookie.webCookie ?: return chain.proceed(origRequest)
         val request = origRequest.newBuilder().addHeader("Cookie", cookie).build()
         return chain.proceed(request)
     }

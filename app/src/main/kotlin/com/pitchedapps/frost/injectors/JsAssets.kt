@@ -21,6 +21,7 @@ import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
@@ -49,14 +50,14 @@ enum class JsAssets : InjectorContract {
         }
     }
 
-    override fun inject(webView: WebView) =
-        injector(webView.context).inject(webView)
+    override fun inject(webView: WebView, prefs: Prefs) =
+        injector(webView.context).inject(webView, prefs)
 
     companion object {
         // Ensures that all non themes and the selected theme are loaded
         suspend fun load(context: Context) {
             withContext(Dispatchers.IO) {
-                JsAssets.values().forEach { it.injector.invoke(context) }
+                values().forEach { it.injector.invoke(context) }
             }
         }
     }

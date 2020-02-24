@@ -68,4 +68,4 @@ suspend fun CookieDao.selectById(id: Long) = dao { _selectById(id) }
 suspend fun CookieDao.save(cookie: CookieEntity) = dao { _save(cookie) }
 suspend fun CookieDao.save(cookies: List<CookieEntity>) = dao { _save(cookies) }
 suspend fun CookieDao.deleteById(id: Long) = dao { _deleteById(id) }
-suspend fun CookieDao.currentCookie() = selectById(Prefs.userId)
+suspend fun CookieDao.currentCookie() = selectById(Prefs.get().userId)

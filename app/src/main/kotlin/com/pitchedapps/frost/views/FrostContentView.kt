@@ -47,6 +47,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
@@ -75,8 +77,9 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-    FrostContentParent where T : View, T : FrostContentCore {
+    FrostContentParent, KoinComponent where T : View, T : FrostContentCore {
 
+    private val prefs: Prefs by inject()
     private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
@@ -153,9 +156,9 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun reloadThemeSelf() {
-        progress.tint(Prefs.textColor.withAlpha(180))
-        refresh.setColorSchemeColors(Prefs.iconColor)
-        refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
+        progress.tint(prefs.textColor.withAlpha(180))
+        refresh.setColorSchemeColors(prefs.iconColor)
+        refresh.setProgressBackgroundColorSchemeColor(prefs.headerColor.withAlpha(255))
     }
 
     override fun reloadTextSizeSelf() {
@@ -192,7 +195,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
                             if (isVisible)
                                 fadeOut(duration = 200L)
                         } else if (loading) {
-                            if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                            if (animate && prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
                             else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
                             L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
                             receiver.cancel()

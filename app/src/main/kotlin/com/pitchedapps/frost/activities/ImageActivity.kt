@@ -81,11 +81,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-07-15.
  */
 class ImageActivity : KauBaseActivity() {
+
+    private val prefs: Prefs by inject()
 
     @Volatile
     internal var errorRef: Throwable? = null
@@ -106,7 +110,7 @@ class ImageActivity : KauBaseActivity() {
         set(value) {
             if (field == value) return
             field = value
-            value.update(binding.imageFab)
+            value.update(binding.imageFab, prefs)
         }
 
     private lateinit var dragHelper: ViewDragHelper
@@ -144,8 +148,8 @@ class ImageActivity : KauBaseActivity() {
     private lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
 
-    private val baseBackgroundColor = if (Prefs.blackMediaBg) Color.BLACK
-    else Prefs.bgColor.withMinAlpha(235)
+    private val baseBackgroundColor = if (prefs.blackMediaBg) Color.BLACK
+    else prefs.bgColor.withMinAlpha(235)
 
     private fun loadError(e: Throwable) {
         if (e.message?.contains("<!DOCTYPE html>") == true) {
@@ -195,9 +199,9 @@ class ImageActivity : KauBaseActivity() {
             if (text.isNullOrBlank()) {
                 imageText.gone()
             } else {
-                imageText.setTextColor(if (Prefs.blackMediaBg) Color.WHITE else Prefs.textColor)
+                imageText.setTextColor(if (prefs.blackMediaBg) Color.WHITE else prefs.textColor)
                 imageText.setBackgroundColor(
-                    (if (Prefs.blackMediaBg) Color.BLACK else Prefs.bgColor)
+                    (if (prefs.blackMediaBg) Color.BLACK else prefs.bgColor)
                         .colorToForeground(0.2f).withAlpha(255)
                 )
                 imageText.text = text
@@ -217,7 +221,7 @@ class ImageActivity : KauBaseActivity() {
                 imageText.bringToFront()
             }
         }
-        imageProgress.tint(if (Prefs.blackMediaBg) Color.WHITE else Prefs.accentColor)
+        imageProgress.tint(if (prefs.blackMediaBg) Color.WHITE else prefs.accentColor)
         imageFab.setOnClickListener { fabAction.onClick(this@ImageActivity) }
         imagePhoto.setOnImageEventListener(object :
             SubsamplingScaleImageView.DefaultOnImageEventListener() {
@@ -225,7 +229,7 @@ class ImageActivity : KauBaseActivity() {
                 loadError(e)
             }
         })
-        setFrostColors {
+        setFrostColors(prefs) {
             themeWindow = false
         }
         dragHelper = ViewDragHelper.create(imageDrag, ViewDragCallback()).apply {
@@ -405,10 +409,10 @@ class ImageActivity : KauBaseActivity() {
 
 internal enum class FabStates(
     val iicon: IIcon,
-    val iconColor: Int = Prefs.iconColor,
+    val iconColorProvider: (Prefs) -> Int = { it.iconColor },
     val backgroundTint: Int = Int.MAX_VALUE
 ) {
-    ERROR(GoogleMaterial.Icon.gmd_error, Color.WHITE, Color.RED) {
+    ERROR(GoogleMaterial.Icon.gmd_error, { Color.WHITE }, Color.RED) {
         override fun onClick(activity: ImageActivity) {
             val err =
                 activity.errorRef?.takeIf { it !is FileNotFoundException && it.message != "Image failed to decode using JPEG decoder" }
@@ -460,8 +464,9 @@ internal enum class FabStates(
      * https://github.com/AllanWang/KAU/issues/184
      *
      */
-    fun update(fab: FloatingActionButton) {
-        val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else Prefs.accentColor
+    fun update(fab: FloatingActionButton, prefs: Prefs) {
+        val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else prefs.accentColor
+        val iconColor = iconColorProvider(prefs)
         if (fab.isHidden) {
             fab.setIcon(iicon, color = iconColor)
             fab.backgroundTintList = ColorStateList.valueOf(tint)

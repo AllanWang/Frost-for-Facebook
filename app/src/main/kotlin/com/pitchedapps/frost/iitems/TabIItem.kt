@@ -30,6 +30,8 @@ import com.mikepenz.fastadapter.drag.IDraggable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 26/11/17.
@@ -41,14 +43,16 @@ class TabIItem(val item: FbItem) : KauIItem<TabIItem.ViewHolder>(
 
     override val isDraggable: Boolean = true
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TabIItem>(itemView) {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TabIItem>(itemView), KoinComponent {
+
+        private val prefs: Prefs by inject()
 
         val image: ImageView by bindView(R.id.image)
         val text: TextView by bindView(R.id.text)
 
         override fun bindView(item: TabIItem, payloads: MutableList<Any>) {
             val isInToolbar = adapterPosition < 4
-            val color = if (isInToolbar) Prefs.iconColor else Prefs.textColor
+            val color = if (isInToolbar) prefs.iconColor else prefs.textColor
             image.setIcon(item.item.icon, 20, color)
             if (isInToolbar)
                 text.invisible()

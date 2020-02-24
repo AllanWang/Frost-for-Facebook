@@ -32,6 +32,7 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.enums.FeedSort
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.L
@@ -47,6 +48,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -55,7 +57,8 @@ import kotlinx.coroutines.launch
  * Must be attached to activities implementing [MainActivityContract]
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, DynamicUiContract {
+abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
+    DynamicUiContract {
 
     companion object {
         private const val ARG_POSITION = "arg_position"
@@ -63,12 +66,13 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
 
         internal operator fun invoke(
             base: () -> BaseFragment,
+            prefs: Prefs,
             useFallback: Boolean,
             data: FbItem,
             position: Int
         ): BaseFragment {
             val fragment = if (useFallback) WebFragment() else base()
-            val d = if (data == FbItem.FEED) FeedSort(Prefs.feedSort).item else data
+            val d = if (data == FbItem.FEED) FeedSort(prefs.feedSort).item else data
             fragment.withArguments(
                 ARG_URL to d.url,
                 ARG_POSITION to position
@@ -78,6 +82,8 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
         }
     }
 
+    protected val fbCookie: FbCookie by inject()
+    protected val prefs: Prefs by inject()
     open lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
@@ -195,10 +201,10 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, Dyna
     protected fun FloatingActionButton.update(iicon: IIcon, click: () -> Unit) {
         if (isShown) {
             fadeScaleTransition {
-                setIcon(iicon, Prefs.iconColor)
+                setIcon(iicon, prefs.iconColor)
             }
         } else {
-            setIcon(iicon, Prefs.iconColor)
+            setIcon(iicon, prefs.iconColor)
             show()
         }
         setOnClickListener { click() }

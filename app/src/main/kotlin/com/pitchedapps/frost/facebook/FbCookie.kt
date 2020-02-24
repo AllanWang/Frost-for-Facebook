@@ -21,7 +21,6 @@ import android.content.Context
 import android.webkit.CookieManager
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.deleteById
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectById
@@ -35,26 +34,29 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import org.koin.dsl.module
 
 /**
  * Created by Allan Wang on 2017-05-30.
  *
  * The following component manages all cookie transfers.
  */
-object FbCookie {
+class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
 
-    const val COOKIE_DOMAIN = FB_URL_BASE
+    companion object {
+        private const val COOKIE_DOMAIN = FB_URL_BASE
+
+        fun module() = module {
+            single { FbCookie(get(), get()) }
+        }
+    }
 
     /**
      * Retrieves the facebook cookie if it exists
      * Note that this is a synchronized call
      */
-    inline val webCookie: String?
+    val webCookie: String?
         get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
-
-    private val cookieDao: CookieDao by lazy {
-        FrostDatabase.get().cookieDao()
-    }
 
     private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
         cookie ?: return true
@@ -86,14 +88,14 @@ object FbCookie {
 
     suspend fun save(id: Long) {
         L.d { "New cookie found" }
-        Prefs.userId = id
+        prefs.userId = id
         CookieManager.getInstance().flush()
-        val cookie = CookieEntity(Prefs.userId, null, webCookie)
+        val cookie = CookieEntity(prefs.userId, null, webCookie)
         cookieDao.save(cookie)
     }
 
     suspend fun reset() {
-        Prefs.userId = -1L
+        prefs.userId = -1L
         with(CookieManager.getInstance()) {
             removeAllCookies()
             flush()
@@ -112,7 +114,7 @@ object FbCookie {
         }
         withContext(NonCancellable) {
             L.d { "Switching User" }
-            Prefs.userId = cookie.id
+            prefs.userId = cookie.id
             CookieManager.getInstance().suspendSetWebCookie(cookie.cookie)
         }
     }
@@ -124,8 +126,8 @@ object FbCookie {
     suspend fun logout(context: Context) {
         val cookies = arrayListOf<CookieEntity>()
         if (context is Activity)
-            cookies.addAll(context.cookies().filter { it.id != Prefs.userId })
-        logout(Prefs.userId)
+            cookies.addAll(context.cookies().filter { it.id != prefs.userId })
+        logout(prefs.userId)
         context.launchLogin(cookies, true)
     }
 
@@ -145,13 +147,13 @@ object FbCookie {
      * When coming back to the main app, switch back to our original account before continuing
      */
     suspend fun switchBackUser() {
-        if (Prefs.prevId == -1L) return
-        val prevId = Prefs.prevId
-        Prefs.prevId = -1L
-        if (prevId != Prefs.userId) {
+        if (prefs.prevId == -1L) return
+        val prevId = prefs.prevId
+        prefs.prevId = -1L
+        if (prevId != prefs.userId) {
             switchUser(prevId)
             L.d { "Switch back user" }
-            L._d { "${Prefs.userId} to $prevId" }
+            L._d { "${prefs.userId} to $prevId" }
         }
     }
 }

@@ -22,6 +22,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-07-07.
@@ -29,12 +31,14 @@ import com.pitchedapps.frost.utils.Prefs
  * Basic override to allow us to control swiping
  */
 class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-    ViewPager(context, attrs) {
+    ViewPager(context, attrs), KoinComponent {
+
+    private val prefs: Prefs by inject()
     var enableSwipe = true
 
     override fun onInterceptTouchEvent(ev: MotionEvent?) =
         try {
-            Prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
+            prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
         } catch (e: IllegalArgumentException) {
             false
         }
@@ -42,7 +46,7 @@ class FrostViewPager @JvmOverloads constructor(context: Context, attrs: Attribut
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent?): Boolean =
         try {
-            Prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
+            prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
         } catch (e: IllegalArgumentException) {
             false
         }

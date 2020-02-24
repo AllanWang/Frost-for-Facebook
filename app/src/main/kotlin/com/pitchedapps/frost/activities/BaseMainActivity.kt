@@ -93,7 +93,6 @@ import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.db.getTabs
 import com.pitchedapps.frost.enums.MainActivityLayout
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostSearch
 import com.pitchedapps.frost.facebook.parsers.SearchParser
@@ -108,7 +107,6 @@ import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.MAIN_TIMEOUT_DURATION
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_FAB
 import com.pitchedapps.frost.utils.REQUEST_NAV
 import com.pitchedapps.frost.utils.REQUEST_NOTIFICATION
@@ -177,7 +175,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         val start = System.currentTimeMillis()
         drawerWrapperBinding = ActivityMainDrawerWrapperBinding.inflate(layoutInflater)
         setContentView(drawerWrapperBinding.root)
-        contentBinding = when (Prefs.mainActivityLayout) {
+        contentBinding = when (prefs.mainActivityLayout) {
             MainActivityLayout.TOP_BAR -> {
                 val binding = ActivityMainBinding.inflate(layoutInflater)
                 object : ActivityMainContentBinding {
@@ -203,7 +201,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         drawerWrapperBinding.mainContainer.addView(contentBinding.root)
         with(contentBinding) {
-            setFrostColors {
+            setFrostColors(prefs) {
                 toolbar(toolbar)
                 themeWindow = false
                 header(appbar)
@@ -211,7 +209,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             setSupportActionBar(toolbar)
             viewpager.adapter = adapter
-            tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
+            tabs.setBackgroundColor(prefs.mainActivityLayout.backgroundColor(prefs))
         }
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
@@ -219,18 +217,18 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             adapter.setPages(genericDao.getTabs())
         }
         controlWebview = WebView(this)
-        if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
-            Prefs.prevVersionCode = Prefs.versionCode
-            Prefs.versionCode = BuildConfig.VERSION_CODE
+        if (BuildConfig.VERSION_CODE > prefs.versionCode) {
+            prefs.prevVersionCode = prefs.versionCode
+            prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 frostChangelog()
                 frostEvent(
                     "Version",
                     "Version code" to BuildConfig.VERSION_CODE,
-                    "Prev version code" to Prefs.prevVersionCode,
+                    "Prev version code" to prefs.prevVersionCode,
                     "Version name" to BuildConfig.VERSION_NAME,
                     "Build type" to BuildConfig.BUILD_TYPE,
-                    "Frost id" to Prefs.frostId
+                    "Frost id" to prefs.frostId
                 )
             }
         }
@@ -289,7 +287,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        val foregroundColor = ColorStateList.valueOf(Prefs.textColor)
+        val foregroundColor = ColorStateList.valueOf(prefs.textColor)
 
         with(navigation) {
             FrostMenuBuilder(this@BaseMainActivity, menu).apply {
@@ -315,12 +313,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 val item = FbItem.values[it.itemId]
                 frostEvent("Drawer Tab", "name" to item.name)
                 drawer.closeDrawer(navigation)
-                launchWebOverlay(item.url)
+                launchWebOverlay(item.url, fbCookie)
                 false
             }
-            val navBg = Prefs.bgColor.withMinAlpha(200)
+            val navBg = prefs.bgColor.withMinAlpha(200)
             setBackgroundColor(navBg)
-            itemBackground = createNavDrawable(Prefs.accentColor, navBg)
+            itemBackground = createNavDrawable(prefs.accentColor, navBg)
             itemTextColor = foregroundColor
             itemIconTintList = foregroundColor
 
@@ -332,7 +330,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     private fun ActivityMainContentBinding.initFab() {
         hasFab = false
         shouldShow = false
-        fab.backgroundTintList = ColorStateList.valueOf(Prefs.headerColor.withMinAlpha(200))
+        fab.backgroundTintList = ColorStateList.valueOf(prefs.headerColor.withMinAlpha(200))
         fab.hide()
         appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (!hasFab) return@OnOffsetChangedListener
@@ -352,12 +350,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             if (shouldShow) {
                 if (fab.isShown) {
                     fab.fadeScaleTransition {
-                        setIcon(iicon, color = Prefs.iconColor)
+                        setIcon(iicon, color = prefs.iconColor)
                     }
                     return
                 }
             }
-            fab.setIcon(iicon, color = Prefs.iconColor)
+            fab.setIcon(iicon, color = prefs.iconColor)
             fab.showIf(shouldShow)
         }
     }
@@ -384,12 +382,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         private var pendingUpdate: Boolean = false
         private val binding = ViewNavHeaderBinding.inflate(layoutInflater)
         val root: View get() = binding.root
-        private val optionsBackground = Prefs.bgColor.withMinAlpha(200).colorToForeground(
+        private val optionsBackground = prefs.bgColor.withMinAlpha(200).colorToForeground(
             0.1f
         )
 
         init {
-            setPrimary(Prefs.userId)
+            setPrimary(prefs.userId)
             binding.updateAccounts()
             with(drawerWrapperBinding) {
                 drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -449,7 +447,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     animator.start()
                 }
 
-                val textColor = Prefs.textColor
+                val textColor = prefs.textColor
 
                 fun TextView.setOptionsIcon(iicon: IIcon) {
                     setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -459,7 +457,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         null
                     )
                     setTextColor(textColor)
-                    background = createNavDrawable(Prefs.accentColor, optionsBackground)
+                    background = createNavDrawable(prefs.accentColor, optionsBackground)
                 }
 
                 with(optionsLogout) {
@@ -469,7 +467,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             val currentCookie = cookieDao.currentCookie()
                             if (currentCookie == null) {
                                 toast(R.string.account_not_found)
-                                FbCookie.reset()
+                                fbCookie.reset()
                                 launchLogin(cookies(), true)
                             } else {
                                 materialDialog {
@@ -478,12 +476,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                         text =
                                         String.format(
                                             string(R.string.kau_logout_confirm_as_x),
-                                            currentCookie.name ?: Prefs.userId.toString()
+                                            currentCookie.name ?: prefs.userId.toString()
                                         )
                                     )
                                     positiveButton(R.string.kau_yes) {
                                         this@BaseMainActivity.launch {
-                                            FbCookie.logout(this@BaseMainActivity)
+                                            fbCookie.logout(this@BaseMainActivity)
                                         }
                                     }
                                     negativeButton(R.string.kau_no)
@@ -507,7 +505,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 arrow.setImageDrawable(
                     GoogleMaterial.Icon.gmd_arrow_drop_down.toDrawable(
                         this@BaseMainActivity,
-                        color = Prefs.textColor
+                        color = prefs.textColor
                     )
                 )
             }
@@ -532,10 +530,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             avatarTertiary.setAccount(orderedAccounts.getOrNull(2), false)
             optionsAccountsContainer.removeAllViews()
             name.text = orderedAccounts.getOrNull(0)?.name
-            name.setTextColor(Prefs.textColor)
+            name.setTextColor(prefs.textColor)
             val glide = Glide.with(root)
             val accountSize = dimenPixelSize(R.dimen.drawer_account_avatar_size)
-            val textColor = Prefs.textColor
+            val textColor = prefs.textColor
             orderedAccounts.forEach { cookie ->
                 val tv =
                     TextView(
@@ -569,7 +567,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     })
                 tv.text = cookie.name
                 tv.setTextColor(textColor)
-                tv.background = createNavDrawable(Prefs.accentColor, optionsBackground)
+                tv.background = createNavDrawable(prefs.accentColor, optionsBackground)
                 tv.setOnClickListener {
                     switchAccount(cookie.id)
                 }
@@ -598,7 +596,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     .into(this)
                 setOnClickListener {
                     if (primary) {
-                        launchWebOverlay(FbItem.PROFILE.url)
+                        launchWebOverlay(FbItem.PROFILE.url, fbCookie)
                     } else {
                         switchAccount(cookie.id)
                     }
@@ -608,12 +606,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
 
         private fun switchAccount(id: Long) {
-            if (Prefs.userId == id) return
+            if (prefs.userId == id) return
             setPrimary(id)
             pendingUpdate = true
             closeDrawer()
             launch {
-                FbCookie.switchUser(id)
+                fbCookie.switchUser(id)
                 tabsForEachView { _, view -> view.badgeText = null }
                 refreshAll()
             }
@@ -627,9 +625,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        contentBinding.toolbar.tint(Prefs.iconColor)
+        contentBinding.toolbar.tint(prefs.iconColor)
         setMenuIcons(
-            menu, Prefs.iconColor,
+            menu, prefs.iconColor,
             R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
             R.id.action_search to GoogleMaterial.Icon.gmd_search
         )
@@ -639,13 +637,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     private fun bindSearchView(menu: Menu) {
         searchViewBindIfNull {
-            bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
+            bindSearchView(menu, R.id.action_search, prefs.iconColor) {
                 textCallback = { query, searchView ->
                     val results = searchViewCache[query]
                     if (results != null)
                         searchView.results = results
                     else {
-                        val data = SearchParser.query(FbCookie.webCookie, query)?.data?.results
+                        val data = SearchParser.query(fbCookie.webCookie, query)?.data?.results
                         if (data != null) {
                             val items = data.mapTo(mutableListOf(), FrostSearch::toSearchItem)
                             if (items.isNotEmpty())
@@ -663,11 +661,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 }
                 textDebounceInterval = 300
                 searchCallback =
-                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
+                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query", fbCookie); true }
                 closeListener = { _ -> searchViewCache.clear() }
-                foregroundColor = Prefs.textColor
-                backgroundColor = Prefs.bgColor.withMinAlpha(200)
-                onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
+                foregroundColor = prefs.textColor
+                backgroundColor = prefs.bgColor.withMinAlpha(200)
+                onItemClick = { _, key, _, _ -> launchWebOverlay(key, fbCookie) }
             }
         }
     }
@@ -737,7 +735,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 fragmentChannel.offer(lastPosition)
             }
             if (hasRequest(REQUEST_NOTIFICATION)) {
-                scheduleNotificationsFromPrefs()
+                scheduleNotificationsFromPrefs(prefs)
             }
         }
     }
@@ -758,10 +756,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         lastAccessTime = System.currentTimeMillis() // precaution to avoid loops
         controlWebview?.resumeTimers()
         launch {
-            val authDefer = BiometricUtils.authenticate(this@BaseMainActivity)
-            FbCookie.switchBackUser()
+            val authDefer = BiometricUtils.authenticate(this@BaseMainActivity, prefs)
+            fbCookie.switchBackUser()
             authDefer.await()
-            if (shouldReload && Prefs.autoRefreshFeed) {
+            if (shouldReload && prefs.autoRefreshFeed) {
                 refreshAll()
             }
         }
@@ -794,14 +792,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
         }
         if (currentFragment.onBackPressed()) return true
-        if (Prefs.exitConfirmation) {
+        if (prefs.exitConfirmation) {
             materialDialog {
                 title(R.string.kau_exit)
                 message(R.string.kau_exit_confirmation)
                 positiveButton(R.string.kau_yes) { finish() }
                 negativeButton(R.string.kau_no)
                 checkBoxPrompt(R.string.kau_do_not_show_again, isCheckedDefault = false) {
-                    Prefs.exitConfirmation = !it
+                    prefs.exitConfirmation = !it
                 }
             }
             return true
@@ -879,6 +877,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             val item = pages[position]
             return BaseFragment(
                 item.fragmentCreator,
+                prefs,
                 forcedFallbacks.contains(item.name),
                 item,
                 position
@@ -901,7 +900,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override val lowerVideoPadding: PointF
         get() {
-            if (Prefs.mainActivityLayout == MainActivityLayout.BOTTOM_BAR)
+            if (prefs.mainActivityLayout == MainActivityLayout.BOTTOM_BAR)
                 lowerVideoPaddingPointF.set(0f, contentBinding.toolbar.height.toFloat())
             else
                 lowerVideoPaddingPointF.set(0f, 0f)

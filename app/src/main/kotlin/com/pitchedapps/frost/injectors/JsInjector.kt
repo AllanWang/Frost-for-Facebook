@@ -19,6 +19,7 @@ package com.pitchedapps.frost.injectors
 import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.web.FrostWebViewClient
 import kotlin.random.Random
 import org.apache.commons.text.StringEscapeUtils
@@ -83,7 +84,7 @@ class JsBuilder {
  * Contract for all injectors to allow it to interact properly with a webview
  */
 interface InjectorContract {
-    fun inject(webView: WebView)
+    fun inject(webView: WebView, prefs: Prefs)
     /**
      * Toggle the injector (usually through Prefs
      * If false, will fallback to an empty action
@@ -94,19 +95,19 @@ interface InjectorContract {
 /**
  * Helper method to inject multiple functions simultaneously with a single callback
  */
-fun WebView.jsInject(vararg injectors: InjectorContract) {
+fun WebView.jsInject(vararg injectors: InjectorContract, prefs: Prefs) {
     injectors.filter { it != JsActions.EMPTY }.forEach {
-        it.inject(this)
+        it.inject(this, prefs)
     }
 }
 
-fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract) = web.jsInject(*injectors)
+fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, prefs: Prefs) = web.jsInject(*injectors, prefs = prefs)
 
 /**
  * Wrapper class to convert a function into an injector
  */
 class JsInjector(val function: String) : InjectorContract {
-    override fun inject(webView: WebView) =
+    override fun inject(webView: WebView, prefs: Prefs) =
         webView.evaluateJavascript(function, null)
 }
 

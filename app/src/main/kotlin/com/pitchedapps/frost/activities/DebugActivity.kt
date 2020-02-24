@@ -38,6 +38,8 @@ import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineExceptionHandler
+import org.koin.android.ext.android.inject
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 05/01/18.
@@ -50,6 +52,8 @@ class DebugActivity : KauBaseActivity() {
         const val RESULT_BODY = "extra_result_body"
         fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
     }
+
+    private val prefs: Prefs by inject()
 
     lateinit var binding: ActivityDebugBinding
 
@@ -68,7 +72,7 @@ class DebugActivity : KauBaseActivity() {
         }
         setTitle(R.string.debug_frost)
 
-        setFrostColors {
+        setFrostColors(prefs) {
             toolbar(toolbar)
         }
         debugWebview.loadUrl(FbItem.FEED.url)
@@ -76,8 +80,8 @@ class DebugActivity : KauBaseActivity() {
 
         swipeRefresh.setOnRefreshListener(debugWebview::reload)
 
-        fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, Prefs.iconColor)
-        fab.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, prefs.iconColor)
+        fab.backgroundTintList = ColorStateList.valueOf(prefs.accentColor)
         fab.setOnClickListener { _ ->
             fab.hide()
 

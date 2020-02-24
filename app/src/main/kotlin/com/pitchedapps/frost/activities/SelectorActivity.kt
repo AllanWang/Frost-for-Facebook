@@ -27,7 +27,6 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.setFrostColors
@@ -63,12 +62,12 @@ class SelectorActivity : BaseActivity() {
             ) {
                 if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
                 else launch {
-                    FbCookie.switchUser(item.cookie)
+                    fbCookie.switchUser(item.cookie)
                     launchNewTask<MainActivity>(cookies())
                 }
             }
         })
-        setFrostColors {
+        setFrostColors(prefs) {
             text(text)
             background(container)
         }
