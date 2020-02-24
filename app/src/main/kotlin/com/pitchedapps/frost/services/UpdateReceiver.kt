@@ -21,17 +21,21 @@ import android.content.Context
 import android.content.Intent
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-31.
  *
  * Receiver that is triggered whenever the app updates so it can bind the notifications again
  */
-class UpdateReceiver : BroadcastReceiver() {
+class UpdateReceiver : BroadcastReceiver(), KoinComponent {
+
+    private val prefs: Prefs by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
         L.d { "Frost has updated" }
-        context.scheduleNotifications(Prefs.notificationFreq) // Update notifications
+        context.scheduleNotifications(prefs.notificationFreq) // Update notifications
     }
 }

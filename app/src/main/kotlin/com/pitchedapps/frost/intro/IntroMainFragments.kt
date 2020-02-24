@@ -37,6 +37,8 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.databinding.IntroAnalyticsBinding
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import kotlin.math.abs
 
 /**
@@ -48,7 +50,9 @@ import kotlin.math.abs
 /**
  * The core intro fragment for all other fragments
  */
-abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
+abstract class BaseIntroFragment(val layoutRes: Int) : Fragment(), KoinComponent {
+
+    protected val prefs: Prefs by inject()
 
     val screenWidth
         get() = resources.displayMetrics.widthPixels
@@ -105,7 +109,7 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     }
 
     protected open fun themeFragmentImpl() {
-        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(Prefs.textColor) }
+        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(prefs.textColor) }
     }
 
     protected val viewArray: Array<Array<out View>> by lazyResettableRegistered { viewArray() }
@@ -134,7 +138,7 @@ class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+        image.imageTintList = ColorStateList.valueOf(prefs.textColor)
     }
 }
 
@@ -153,7 +157,7 @@ class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+        image.imageTintList = ColorStateList.valueOf(prefs.textColor)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -165,9 +169,9 @@ class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
 
     private fun IntroAnalyticsBinding.init() {
         image.setIcon(GoogleMaterial.Icon.gmd_bug_report, 120)
-        introSwitch.isSelected = Prefs.analytics
+        introSwitch.isSelected = prefs.analytics
         introSwitch.setOnCheckedChangeListener { _, isChecked ->
-            Prefs.analytics = isChecked
+            prefs.analytics = isChecked
         }
     }
 }
@@ -180,7 +184,7 @@ class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+        image.imageTintList = ColorStateList.valueOf(prefs.textColor)
     }
 
     @SuppressLint("ClickableViewAccessibility")

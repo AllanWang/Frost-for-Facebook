@@ -17,18 +17,25 @@
 package com.pitchedapps.frost.utils
 
 import ca.allanwang.kau.kpref.KPref
+import ca.allanwang.kau.kpref.KPrefFactory
+import com.pitchedapps.frost.BuildConfig
+import org.koin.dsl.module
 
 /**
  * Created by Allan Wang on 2017-07-03.
  *
  * Showcase prefs that offer one time helpers to guide new users
  */
-object Showcase : KPref() {
+class Showcase(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory) {
 
     // check if this is the first time launching the web overlay; show snackbar if true
     val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
 
     val intro: Boolean by kprefSingle("intro_pages")
 
-    override fun deleteKeys() = arrayOf("shown_release", "experimental_by_default")
+    companion object {
+        fun module() = module {
+            single { Showcase(get()) }
+        }
+    }
 }

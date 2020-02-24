@@ -20,7 +20,6 @@ import android.content.Context
 import android.graphics.Color
 import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
-import ca.allanwang.kau.kotlin.lazyContext
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToBackground
 import ca.allanwang.kau.utils.colorToForeground
@@ -29,11 +28,11 @@ import ca.allanwang.kau.utils.use
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -50,29 +49,38 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
     /**
      * Note that while this can be loaded from any thread, it is typically done through [load]
      */
-    private val injector = lazyContext {
+    private var injector: JsInjector? = null
+
+    private fun injector(context: Context, prefs: Prefs): JsInjector =
+        injector ?: createInjector(context, prefs).also { injector = it }
+
+    /**
+     * Note that while this can be loaded from any thread, it is typically done through [load]
+     */
+    private fun createInjector(context: Context, prefs: Prefs): JsInjector =
         try {
             var content =
-                it.assets.open("css/$folder/$file").bufferedReader().use(BufferedReader::readText)
+                context.assets.open("css/$folder/$file").bufferedReader()
+                    .use(BufferedReader::readText)
             if (this == CUSTOM) {
-                val bt = if (Color.alpha(Prefs.bgColor) == 255)
-                    Prefs.bgColor.toRgbaString()
+                val bt = if (Color.alpha(prefs.bgColor) == 255)
+                    prefs.bgColor.toRgbaString()
                 else
                     "transparent"
 
-                val bb = Prefs.bgColor.colorToForeground(0.35f)
+                val bb = prefs.bgColor.colorToForeground(0.35f)
 
                 content = content
-                    .replace("\$T\$", Prefs.textColor.toRgbaString())
-                    .replace("\$TT\$", Prefs.textColor.colorToBackground(0.05f).toRgbaString())
-                    .replace("\$A\$", Prefs.accentColor.toRgbaString())
-                    .replace("\$AT\$", Prefs.iconColor.toRgbaString())
-                    .replace("\$B\$", Prefs.bgColor.toRgbaString())
+                    .replace("\$T\$", prefs.textColor.toRgbaString())
+                    .replace("\$TT\$", prefs.textColor.colorToBackground(0.05f).toRgbaString())
+                    .replace("\$A\$", prefs.accentColor.toRgbaString())
+                    .replace("\$AT\$", prefs.iconColor.toRgbaString())
+                    .replace("\$B\$", prefs.bgColor.toRgbaString())
                     .replace("\$BT\$", bt)
                     .replace("\$BBT\$", bb.withAlpha(51).toRgbaString())
-                    .replace("\$O\$", Prefs.bgColor.withAlpha(255).toRgbaString())
+                    .replace("\$O\$", prefs.bgColor.withAlpha(255).toRgbaString())
                     .replace("\$OO\$", bb.withAlpha(255).toRgbaString())
-                    .replace("\$D\$", Prefs.textColor.adjustAlpha(0.3f).toRgbaString())
+                    .replace("\$D\$", prefs.textColor.adjustAlpha(0.3f).toRgbaString())
                     .replace("\$TI\$", bb.withAlpha(60).toRgbaString())
                     .replace("\$C\$", bt)
             }
@@ -81,24 +89,24 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
             L.e(e) { "CssAssets file not found" }
             JsInjector(JsActions.EMPTY.function)
         }
-    }
 
-    override fun inject(webView: WebView) =
-        injector(webView.context).inject(webView)
+    override fun inject(webView: WebView, prefs: Prefs) =
+        injector(webView.context, prefs).inject(webView, prefs)
 
     fun reset() {
-        injector.invalidate()
+        injector = null
     }
 
     companion object {
+
         // Ensures that all non themes and the selected theme are loaded
-        suspend fun load(context: Context) {
+        suspend fun load(context: Context, prefs: Prefs) {
             withContext(Dispatchers.IO) {
-                val currentTheme = Prefs.t.injector as? CssAssets
+                val currentTheme = prefs.t.injector as? CssAssets
                 val (themes, others) = CssAssets.values().partition { it.folder == THEME_FOLDER }
                 themes.filter { it != currentTheme }.forEach { it.reset() }
-                currentTheme?.injector?.invoke(context)
-                others.forEach { it.injector.invoke(context) }
+                currentTheme?.injector(context, prefs)
+                others.forEach { it.injector(context, prefs) }
             }
         }
     }

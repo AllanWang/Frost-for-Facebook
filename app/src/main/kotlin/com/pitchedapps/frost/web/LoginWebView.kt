@@ -42,6 +42,8 @@ import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
@@ -50,8 +52,9 @@ class LoginWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr) {
+) : WebView(context, attrs, defStyleAttr), KoinComponent {
 
+    private val prefs: Prefs by inject()
     private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
 
@@ -101,7 +104,8 @@ class LoginWebView @JvmOverloads constructor(
             if (url.isFacebookUrl)
                 view.jsInject(
                     CssHider.CORE,
-                    Prefs.themeInjector
+                    prefs.themeInjector,
+                    prefs = prefs
                 )
         }
 

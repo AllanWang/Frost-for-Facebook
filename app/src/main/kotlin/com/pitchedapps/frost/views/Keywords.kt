@@ -38,6 +38,8 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-19.
@@ -46,8 +48,9 @@ class Keywords @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent {
 
+    private val prefs: Prefs by inject()
     val editText: AppCompatEditText by bindView(R.id.edit_text)
     val addIcon: ImageView by bindView(R.id.add_icon)
     val recycler: RecyclerView by bindView(R.id.recycler)
@@ -55,8 +58,8 @@ class Keywords @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_keywords, this)
-        editText.tint(Prefs.textColor)
-        addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context))
+        editText.tint(prefs.textColor)
+        addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context, prefs))
         addIcon.setOnClickListener {
             if (editText.text.isNullOrEmpty()) editText.error =
                 context.string(R.string.empty_keyword)
@@ -65,7 +68,7 @@ class Keywords @JvmOverloads constructor(
                 editText.text?.clear()
             }
         }
-        adapter.add(Prefs.notificationKeywords.map { KeywordItem(it) })
+        adapter.add(prefs.notificationKeywords.map { KeywordItem(it) })
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = adapter
         adapter.addEventHook(object : ClickEventHook<KeywordItem>() {
@@ -84,12 +87,12 @@ class Keywords @JvmOverloads constructor(
     }
 
     fun save() {
-        Prefs.notificationKeywords = adapter.adapterItems.mapTo(mutableSetOf()) { it.keyword }
+        prefs.notificationKeywords = adapter.adapterItems.mapTo(mutableSetOf()) { it.keyword }
     }
 }
 
-private fun IIcon.keywordDrawable(context: Context): Drawable =
-    toDrawable(context, 20, Prefs.textColor)
+private fun IIcon.keywordDrawable(context: Context, prefs: Prefs): Drawable =
+    toDrawable(context, 20, prefs.textColor)
 
 class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() {
 
@@ -111,13 +114,15 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() 
         holder.text.text = null
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v), KoinComponent {
+
+        private val prefs: Prefs by inject()
         val text: AppCompatTextView by bindView(R.id.keyword_text)
         val delete: ImageView by bindView(R.id.keyword_delete)
 
         init {
-            text.setTextColor(Prefs.textColor)
-            delete.setImageDrawable(GoogleMaterial.Icon.gmd_delete.keywordDrawable(itemView.context))
+            text.setTextColor(prefs.textColor)
+            delete.setImageDrawable(GoogleMaterial.Icon.gmd_delete.keywordDrawable(itemView.context, prefs))
         }
     }
 }

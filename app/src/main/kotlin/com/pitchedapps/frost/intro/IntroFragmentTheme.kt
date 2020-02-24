@@ -56,7 +56,7 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
         introThemeDark.setThemeClick(Theme.DARK)
         introThemeAmoled.setThemeClick(Theme.AMOLED)
         introThemeGlass.setThemeClick(Theme.GLASS)
-        val currentTheme = Prefs.theme - 1
+        val currentTheme = prefs.theme - 1
         if (currentTheme in 0..3)
             themeList.forEachIndexed { index, v ->
                 v.scaleXY = if (index == currentTheme) 1.6f else 0.8f
@@ -65,9 +65,9 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
 
     private fun View.setThemeClick(theme: Theme) {
         setOnClickListener { v ->
-            Prefs.theme = theme.ordinal
+            prefs.theme = theme.ordinal
             (activity as IntroActivity).apply {
-                binding.ripple.ripple(Prefs.bgColor, v.x + v.pivotX, v.y + v.pivotY)
+                binding.ripple.ripple(prefs.bgColor, v.x + v.pivotX, v.y + v.pivotY)
                 theme()
             }
             themeList.forEach { it.animate().scaleXY(if (it == this) 1.6f else 0.8f).start() }

@@ -52,9 +52,9 @@ class WebFragment : BaseFragment() {
             L.e { "Webview not found in fragment $baseEnum" }
             return super.updateFab(contract)
         }
-        if (baseEnum.isFeed && Prefs.showCreateFab) {
+        if (baseEnum.isFeed && prefs.showCreateFab) {
             contract.showFab(GoogleMaterial.Icon.gmd_edit) {
-                JsActions.CREATE_POST.inject(web)
+                JsActions.CREATE_POST.inject(web, prefs)
             }
             return
         }

@@ -177,7 +177,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         val start = System.currentTimeMillis()
         drawerWrapperBinding = ActivityMainDrawerWrapperBinding.inflate(layoutInflater)
         setContentView(drawerWrapperBinding.root)
-        contentBinding = when (Prefs.mainActivityLayout) {
+        contentBinding = when (prefs.mainActivityLayout) {
             MainActivityLayout.TOP_BAR -> {
                 val binding = ActivityMainBinding.inflate(layoutInflater)
                 object : ActivityMainContentBinding {
@@ -211,7 +211,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             setSupportActionBar(toolbar)
             viewpager.adapter = adapter
-            tabs.setBackgroundColor(Prefs.mainActivityLayout.backgroundColor())
+            tabs.setBackgroundColor(prefs.mainActivityLayout.backgroundColor(prefs))
         }
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
@@ -219,18 +219,18 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             adapter.setPages(genericDao.getTabs())
         }
         controlWebview = WebView(this)
-        if (BuildConfig.VERSION_CODE > Prefs.versionCode) {
-            Prefs.prevVersionCode = Prefs.versionCode
-            Prefs.versionCode = BuildConfig.VERSION_CODE
+        if (BuildConfig.VERSION_CODE > prefs.versionCode) {
+            prefs.prevVersionCode = prefs.versionCode
+            prefs.versionCode = BuildConfig.VERSION_CODE
             if (!BuildConfig.DEBUG) {
                 frostChangelog()
                 frostEvent(
                     "Version",
                     "Version code" to BuildConfig.VERSION_CODE,
-                    "Prev version code" to Prefs.prevVersionCode,
+                    "Prev version code" to prefs.prevVersionCode,
                     "Version name" to BuildConfig.VERSION_NAME,
                     "Build type" to BuildConfig.BUILD_TYPE,
-                    "Frost id" to Prefs.frostId
+                    "Frost id" to prefs.frostId
                 )
             }
         }
@@ -289,7 +289,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        val foregroundColor = ColorStateList.valueOf(Prefs.textColor)
+        val foregroundColor = ColorStateList.valueOf(prefs.textColor)
 
         with(navigation) {
             FrostMenuBuilder(this@BaseMainActivity, menu).apply {
@@ -318,9 +318,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 launchWebOverlay(item.url)
                 false
             }
-            val navBg = Prefs.bgColor.withMinAlpha(200)
+            val navBg = prefs.bgColor.withMinAlpha(200)
             setBackgroundColor(navBg)
-            itemBackground = createNavDrawable(Prefs.accentColor, navBg)
+            itemBackground = createNavDrawable(prefs.accentColor, navBg)
             itemTextColor = foregroundColor
             itemIconTintList = foregroundColor
 
@@ -332,7 +332,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     private fun ActivityMainContentBinding.initFab() {
         hasFab = false
         shouldShow = false
-        fab.backgroundTintList = ColorStateList.valueOf(Prefs.headerColor.withMinAlpha(200))
+        fab.backgroundTintList = ColorStateList.valueOf(prefs.headerColor.withMinAlpha(200))
         fab.hide()
         appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (!hasFab) return@OnOffsetChangedListener
@@ -352,12 +352,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             if (shouldShow) {
                 if (fab.isShown) {
                     fab.fadeScaleTransition {
-                        setIcon(iicon, color = Prefs.iconColor)
+                        setIcon(iicon, color = prefs.iconColor)
                     }
                     return
                 }
             }
-            fab.setIcon(iicon, color = Prefs.iconColor)
+            fab.setIcon(iicon, color = prefs.iconColor)
             fab.showIf(shouldShow)
         }
     }
@@ -384,12 +384,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         private var pendingUpdate: Boolean = false
         private val binding = ViewNavHeaderBinding.inflate(layoutInflater)
         val root: View get() = binding.root
-        private val optionsBackground = Prefs.bgColor.withMinAlpha(200).colorToForeground(
+        private val optionsBackground = prefs.bgColor.withMinAlpha(200).colorToForeground(
             0.1f
         )
 
         init {
-            setPrimary(Prefs.userId)
+            setPrimary(prefs.userId)
             binding.updateAccounts()
             with(drawerWrapperBinding) {
                 drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -449,7 +449,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     animator.start()
                 }
 
-                val textColor = Prefs.textColor
+                val textColor = prefs.textColor
 
                 fun TextView.setOptionsIcon(iicon: IIcon) {
                     setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -459,7 +459,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         null
                     )
                     setTextColor(textColor)
-                    background = createNavDrawable(Prefs.accentColor, optionsBackground)
+                    background = createNavDrawable(prefs.accentColor, optionsBackground)
                 }
 
                 with(optionsLogout) {
@@ -478,7 +478,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                                         text =
                                         String.format(
                                             string(R.string.kau_logout_confirm_as_x),
-                                            currentCookie.name ?: Prefs.userId.toString()
+                                            currentCookie.name ?: prefs.userId.toString()
                                         )
                                     )
                                     positiveButton(R.string.kau_yes) {
@@ -507,7 +507,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 arrow.setImageDrawable(
                     GoogleMaterial.Icon.gmd_arrow_drop_down.toDrawable(
                         this@BaseMainActivity,
-                        color = Prefs.textColor
+                        color = prefs.textColor
                     )
                 )
             }
@@ -532,10 +532,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             avatarTertiary.setAccount(orderedAccounts.getOrNull(2), false)
             optionsAccountsContainer.removeAllViews()
             name.text = orderedAccounts.getOrNull(0)?.name
-            name.setTextColor(Prefs.textColor)
+            name.setTextColor(prefs.textColor)
             val glide = Glide.with(root)
             val accountSize = dimenPixelSize(R.dimen.drawer_account_avatar_size)
-            val textColor = Prefs.textColor
+            val textColor = prefs.textColor
             orderedAccounts.forEach { cookie ->
                 val tv =
                     TextView(
@@ -569,7 +569,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     })
                 tv.text = cookie.name
                 tv.setTextColor(textColor)
-                tv.background = createNavDrawable(Prefs.accentColor, optionsBackground)
+                tv.background = createNavDrawable(prefs.accentColor, optionsBackground)
                 tv.setOnClickListener {
                     switchAccount(cookie.id)
                 }
@@ -608,7 +608,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
 
         private fun switchAccount(id: Long) {
-            if (Prefs.userId == id) return
+            if (prefs.userId == id) return
             setPrimary(id)
             pendingUpdate = true
             closeDrawer()
@@ -627,9 +627,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        contentBinding.toolbar.tint(Prefs.iconColor)
+        contentBinding.toolbar.tint(prefs.iconColor)
         setMenuIcons(
-            menu, Prefs.iconColor,
+            menu, prefs.iconColor,
             R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
             R.id.action_search to GoogleMaterial.Icon.gmd_search
         )
@@ -639,7 +639,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     private fun bindSearchView(menu: Menu) {
         searchViewBindIfNull {
-            bindSearchView(menu, R.id.action_search, Prefs.iconColor) {
+            bindSearchView(menu, R.id.action_search, prefs.iconColor) {
                 textCallback = { query, searchView ->
                     val results = searchViewCache[query]
                     if (results != null)
@@ -665,8 +665,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 searchCallback =
                     { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query"); true }
                 closeListener = { _ -> searchViewCache.clear() }
-                foregroundColor = Prefs.textColor
-                backgroundColor = Prefs.bgColor.withMinAlpha(200)
+                foregroundColor = prefs.textColor
+                backgroundColor = prefs.bgColor.withMinAlpha(200)
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key) }
             }
         }
@@ -737,7 +737,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 fragmentChannel.offer(lastPosition)
             }
             if (hasRequest(REQUEST_NOTIFICATION)) {
-                scheduleNotificationsFromPrefs()
+                scheduleNotificationsFromPrefs(prefs)
             }
         }
     }
@@ -761,7 +761,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             val authDefer = BiometricUtils.authenticate(this@BaseMainActivity)
             FbCookie.switchBackUser()
             authDefer.await()
-            if (shouldReload && Prefs.autoRefreshFeed) {
+            if (shouldReload && prefs.autoRefreshFeed) {
                 refreshAll()
             }
         }
@@ -794,14 +794,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
         }
         if (currentFragment.onBackPressed()) return true
-        if (Prefs.exitConfirmation) {
+        if (prefs.exitConfirmation) {
             materialDialog {
                 title(R.string.kau_exit)
                 message(R.string.kau_exit_confirmation)
                 positiveButton(R.string.kau_yes) { finish() }
                 negativeButton(R.string.kau_no)
                 checkBoxPrompt(R.string.kau_do_not_show_again, isCheckedDefault = false) {
-                    Prefs.exitConfirmation = !it
+                    prefs.exitConfirmation = !it
                 }
             }
             return true
@@ -879,6 +879,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             val item = pages[position]
             return BaseFragment(
                 item.fragmentCreator,
+                prefs,
                 forcedFallbacks.contains(item.name),
                 item,
                 position
@@ -901,7 +902,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override val lowerVideoPadding: PointF
         get() {
-            if (Prefs.mainActivityLayout == MainActivityLayout.BOTTOM_BAR)
+            if (prefs.mainActivityLayout == MainActivityLayout.BOTTOM_BAR)
                 lowerVideoPaddingPointF.set(0f, contentBinding.toolbar.height.toFloat())
             else
                 lowerVideoPaddingPointF.set(0f, 0f)

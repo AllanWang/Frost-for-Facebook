@@ -23,6 +23,8 @@ import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -82,11 +84,11 @@ enum class Theme(
 
     CUSTOM(R.string.kau_custom,
         CssAssets.CUSTOM,
-        { Prefs.customTextColor },
-        { Prefs.customAccentColor },
-        { Prefs.customBackgroundColor },
-        { Prefs.customHeaderColor },
-        { Prefs.customIconColor });
+        { prefs.customTextColor },
+        { prefs.customAccentColor },
+        { prefs.customBackgroundColor },
+        { prefs.customHeaderColor },
+        { prefs.customIconColor });
 
     val textColor: Int
         get() = textColorGetter()
@@ -103,7 +105,8 @@ enum class Theme(
     val iconColor: Int
         get() = iconColorGetter()
 
-    companion object {
+    companion object:KoinComponent {
+        private val prefs: Prefs by inject()
         val values = values() // save one instance
         operator fun invoke(index: Int) = values[index]
     }

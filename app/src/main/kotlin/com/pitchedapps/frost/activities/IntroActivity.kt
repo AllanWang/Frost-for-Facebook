@@ -55,6 +55,8 @@ import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -62,8 +64,10 @@ import kotlinx.coroutines.launch
  * A beautiful intro activity
  * Phone showcases are drawn via layers
  */
-class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
+class IntroActivity : KauBaseActivity(), KoinComponent, ViewPager.PageTransformer,
+    ViewPager.OnPageChangeListener {
 
+    private val prefs: Prefs by inject()
     lateinit var binding: ActivityIntroBinding
     private var barHasNext = true
 
@@ -97,17 +101,17 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             else finish(next.x + next.pivotX, next.y + next.pivotY)
         }
         skip.setOnClickListener { finish() }
-        ripple.set(Prefs.bgColor)
+        ripple.set(prefs.bgColor)
         theme()
     }
 
     fun theme() {
-        statusBarColor = Prefs.headerColor
-        navigationBarColor = Prefs.headerColor
+        statusBarColor = prefs.headerColor
+        navigationBarColor = prefs.headerColor
         with(binding) {
-            skip.setTextColor(Prefs.textColor)
-            next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
-            indicator.setColour(Prefs.textColor)
+            skip.setTextColor(prefs.textColor)
+            next.imageTintList = ColorStateList.valueOf(prefs.textColor)
+            indicator.setColour(prefs.textColor)
             indicator.invalidate()
         }
         fragments.forEach { it.themeFragment() }
@@ -149,21 +153,21 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         ).forEach {
             it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
-        if (Prefs.textColor != Color.WHITE) {
+        if (prefs.textColor != Color.WHITE) {
             val f = lastView?.findViewById<ImageView>(R.id.intro_image)?.drawable
             if (f != null)
                 ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
-                        f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                        f.setTint(prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
                     }
                     duration = 600
                     start()
                 }
         }
-        if (Prefs.headerColor != blue) {
+        if (prefs.headerColor != blue) {
             ValueAnimator.ofFloat(0f, 1f).apply {
                 addUpdateListener {
-                    val c = Prefs.headerColor.blendWith(blue, it.animatedValue as Float)
+                    val c = prefs.headerColor.blendWith(blue, it.animatedValue as Float)
                     statusBarColor = c
                     navigationBarColor = c
                 }
@@ -175,7 +179,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
 
     override fun finish() {
         launch(NonCancellable) {
-            loadAssets()
+            loadAssets(prefs)
             NotificationWidget.forceUpdate(this@IntroActivity)
             launchNewTask<MainActivity>(cookies(), false)
             super.finish()
@@ -206,7 +210,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         binding.next.fadeScaleTransition {
             setIcon(
                 if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done,
-                color = Prefs.textColor
+                color = prefs.textColor
             )
         }
         binding.skip.animate().scaleXY(if (barHasNext) 1f else 0f)

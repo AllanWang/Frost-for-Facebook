@@ -29,6 +29,8 @@ import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 30/12/17.
@@ -73,14 +75,16 @@ open class HeaderIItem(
     itemId: Int = R.layout.iitem_header
 ) : KauIItem<HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView) {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView), KoinComponent {
+
+        private val prefs: Prefs by inject()
 
         val text: TextView by bindView(R.id.item_header_text)
 
         override fun bindView(item: HeaderIItem, payloads: MutableList<Any>) {
-            text.setTextColor(Prefs.accentColor)
+            text.setTextColor(prefs.accentColor)
             text.text = item.text
-            text.setBackgroundColor(Prefs.nativeBgColor)
+            text.setBackgroundColor(prefs.nativeBgColor)
         }
 
         override fun unbindView(item: HeaderIItem) {
@@ -100,14 +104,16 @@ open class TextIItem(
 ) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
     ClickableIItemContract {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView) {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView),KoinComponent {
+
+        private val prefs: Prefs by inject()
 
         val text: TextView by bindView(R.id.item_text_view)
 
         override fun bindView(item: TextIItem, payloads: MutableList<Any>) {
-            text.setTextColor(Prefs.textColor)
+            text.setTextColor(prefs.textColor)
             text.text = item.text
-            text.background = createSimpleRippleDrawable(Prefs.bgColor, Prefs.nativeBgColor)
+            text.background = createSimpleRippleDrawable(prefs.bgColor, prefs.nativeBgColor)
         }
 
         override fun unbindView(item: TextIItem) {

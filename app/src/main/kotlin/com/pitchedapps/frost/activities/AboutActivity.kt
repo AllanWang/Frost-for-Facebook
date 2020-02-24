@@ -49,20 +49,25 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-06-26.
  */
-class AboutActivity : AboutActivityBase(null, {
-    textColor = Prefs.textColor
-    accentColor = Prefs.accentColor
-    backgroundColor = Prefs.bgColor.withMinAlpha(200)
-    cutoutForeground = Prefs.accentColor
-    cutoutDrawableRes = R.drawable.frost_f_200
-    faqPageTitleRes = R.string.faq_title
-    faqXmlRes = R.xml.frost_faq
-    faqParseNewLine = false
-}) {
+class AboutActivity : AboutActivityBase(null) {
+
+    private val prefs: Prefs by inject()
+
+    override fun Configs.buildConfigs() {
+        textColor = prefs.textColor
+        accentColor = prefs.accentColor
+        backgroundColor = prefs.bgColor.withMinAlpha(200)
+        cutoutForeground = prefs.accentColor
+        cutoutDrawableRes = R.drawable.frost_f_200
+        faqPageTitleRes = R.string.faq_title
+        faqXmlRes = R.xml.frost_faq
+        faqParseNewLine = false
+    }
 
     override fun getLibraries(libs: Libs): List<Library> {
         val include = arrayOf(
@@ -121,8 +126,8 @@ class AboutActivity : AboutActivityBase(null, {
                     clickCount++
                 lastClick = now
                 if (clickCount == 8) {
-                    if (!Prefs.debugSettings) {
-                        Prefs.debugSettings = true
+                    if (!prefs.debugSettings) {
+                        prefs.debugSettings = true
                         L.d { "Debugging section enabled" }
                         toast(R.string.debug_toast_enabled)
                     } else {

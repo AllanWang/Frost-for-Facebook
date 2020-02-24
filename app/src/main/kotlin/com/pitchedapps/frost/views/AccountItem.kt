@@ -38,18 +38,23 @@ import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.Prefs
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-05.
  */
-class AccountItem(val cookie: CookieEntity?) : KauIItem<AccountItem.ViewHolder>
-    (R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
+class AccountItem(val cookie: CookieEntity?) :
+    KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account) ,
+KoinComponent {
+
+    private val prefs: Prefs by inject()
 
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
         with(holder) {
             text.invisible()
-            text.setTextColor(Prefs.textColor)
+            text.setTextColor(prefs.textColor)
             if (cookie != null) {
                 text.text = cookie.name
                 GlideApp.with(itemView).load(profilePictureUrl(cookie.id))
@@ -81,7 +86,7 @@ class AccountItem(val cookie: CookieEntity?) : KauIItem<AccountItem.ViewHolder>
                     GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(
                         itemView.context,
                         100,
-                        Prefs.textColor
+                        prefs.textColor
                     )
                 )
                 text.text = itemView.context.getString(R.string.kau_add_account)

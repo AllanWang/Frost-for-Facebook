@@ -19,6 +19,7 @@ package com.pitchedapps.frost.utils
 import android.graphics.Color
 import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
+import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.withAlpha
@@ -29,13 +30,15 @@ import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.InjectorContract
+import org.koin.core.context.GlobalContext
+import org.koin.dsl.module
 
 /**
  * Created by Allan Wang on 2017-05-28.
  *
  * Shared Preference object with lazy cached retrievals
  */
-object Prefs : KPref() {
+class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs", factory) {
 
     var lastLaunch: Long by kpref("last_launch", -1L)
 
@@ -69,7 +72,7 @@ object Prefs : KPref() {
 
     var identifier: Int by kpref("identifier", -1)
 
-    private val loader = lazyResettable { Theme.values[Prefs.theme] }
+    private val loader = lazyResettable { Theme.values[theme] }
 
     val t: Theme by loader
 
@@ -87,9 +90,9 @@ object Prefs : KPref() {
         }
 
     inline val nativeBgColor: Int
-        get() = Prefs.bgColor.withAlpha(30)
+        get() = bgColor.withAlpha(30)
 
-    fun nativeBgColor(unread: Boolean) = Prefs.bgColor
+    fun nativeBgColor(unread: Boolean) = bgColor
         .colorToForeground(if (unread) 0.7f else 0.0f)
         .withAlpha(30)
 
@@ -194,5 +197,11 @@ object Prefs : KPref() {
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 
-    override fun deleteKeys() = arrayOf("search_bar")
+    companion object {
+        fun get(): Prefs = GlobalContext.get().koin.get()
+
+        fun module() = module {
+            single { Prefs(get()) }
+        }
+    }
 }

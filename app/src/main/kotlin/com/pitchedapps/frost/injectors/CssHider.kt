@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import com.pitchedapps.frost.utils.Prefs
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -53,6 +54,6 @@ enum class CssHider(vararg val items: String) : InjectorContract {
             .single(name).build()
     }
 
-    override fun inject(webView: WebView) =
-        injector.inject(webView)
+    override fun inject(webView: WebView, prefs: Prefs) =
+        injector.inject(webView, prefs)
 }

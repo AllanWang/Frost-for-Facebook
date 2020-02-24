@@ -34,6 +34,8 @@ import com.pitchedapps.frost.utils.isFacebookUrl
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2018-01-05.
@@ -44,8 +46,9 @@ class DebugWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr) {
+) : WebView(context, attrs, defStyleAttr), KoinComponent {
 
+    private val prefs: Prefs by inject()
     var onPageFinished: (String?) -> Unit = {}
 
     init {
@@ -93,7 +96,7 @@ class DebugWebView @JvmOverloads constructor(
 
         private fun injectBackgroundColor() {
             setBackgroundColor(
-                if (url.isFacebookUrl) Prefs.bgColor.withAlpha(255)
+                if (url.isFacebookUrl) prefs.bgColor.withAlpha(255)
                 else Color.WHITE
             )
         }
@@ -104,15 +107,16 @@ class DebugWebView @JvmOverloads constructor(
             if (url.isFacebookUrl)
                 view.jsInject(
 //                        CssHider.CORE,
-                    CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                    CssHider.STORIES.maybe(!Prefs.showStories),
-                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
-                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
-                    Prefs.themeInjector,
+                    CssHider.COMPOSER.maybe(!prefs.showComposer),
+                    CssHider.STORIES.maybe(!prefs.showStories),
+                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
+                    CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+                    prefs.themeInjector,
                     CssHider.NON_RECENT.maybe(
                         (url?.contains("?sk=h_chr") ?: false) &&
-                            Prefs.aggressiveRecents
-                    )
+                            prefs.aggressiveRecents
+                    ),
+                    prefs= prefs
                 )
         }
     }

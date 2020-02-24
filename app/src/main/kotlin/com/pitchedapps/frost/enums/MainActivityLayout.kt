@@ -24,17 +24,17 @@ import com.pitchedapps.frost.utils.Prefs
  */
 enum class MainActivityLayout(
     val titleRes: Int,
-    val backgroundColor: () -> Int,
-    val iconColor: () -> Int
+    val backgroundColor: (Prefs) -> Int,
+    val iconColor: (Prefs) -> Int
 ) {
 
     TOP_BAR(R.string.top_bar,
-        { Prefs.headerColor },
-        { Prefs.iconColor }),
+        { it.headerColor },
+        { it.iconColor }),
 
     BOTTOM_BAR(R.string.bottom_bar,
-        { Prefs.bgColor },
-        { Prefs.textColor });
+        { it.bgColor },
+        { it.textColor });
 
     companion object {
         val values = values() // save one instance

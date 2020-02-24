@@ -38,6 +38,8 @@ import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -93,7 +95,9 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         }
     }
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView), KoinComponent {
+
+        private val prefs: Prefs by inject()
 
         private val frame: ViewGroup by bindView(R.id.item_frame)
         private val avatar: ImageView by bindView(R.id.item_avatar)
@@ -107,11 +111,11 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(
-                Prefs.textColor,
-                Prefs.nativeBgColor(notif.unread)
+                prefs.textColor,
+                prefs.nativeBgColor(notif.unread)
             )
-            content.setTextColor(Prefs.textColor)
-            date.setTextColor(Prefs.textColor.withAlpha(150))
+            content.setTextColor(prefs.textColor)
+            date.setTextColor(prefs.textColor.withAlpha(150))
 
             val glide = glide
             glide.load(notif.img)

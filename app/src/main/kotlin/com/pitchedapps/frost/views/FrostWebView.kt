@@ -41,6 +41,8 @@ import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -54,7 +56,10 @@ class FrostWebView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : NestedWebView(context, attrs, defStyleAttr),
-    FrostContentCore {
+    FrostContentCore,
+    KoinComponent {
+
+    val prefs: Prefs by inject()
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -75,7 +80,7 @@ class FrostWebView @JvmOverloads constructor(
             javaScriptEnabled = true
             mediaPlaybackRequiresUserGesture = false // TODO check if we need this
             allowFileAccess = true
-            textZoom = Prefs.webTextScaling
+            textZoom = prefs.webTextScaling
             domStorageEnabled = true
         }
         setLayerType(LAYER_TYPE_HARDWARE, null)
@@ -208,7 +213,7 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     override fun reloadTextSizeSelf() {
-        settings.textZoom = Prefs.webTextScaling
+        settings.textZoom = prefs.webTextScaling
     }
 
     override fun destroy() {

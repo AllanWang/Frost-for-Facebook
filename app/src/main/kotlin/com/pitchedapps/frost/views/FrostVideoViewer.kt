@@ -47,6 +47,8 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-10-13.
@@ -55,7 +57,7 @@ class FrostVideoViewer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
+) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract , KoinComponent {
 
     companion object {
         /**
@@ -85,6 +87,8 @@ class FrostVideoViewer @JvmOverloads constructor(
         }
     }
 
+    private val prefs: Prefs by inject()
+
     private val binding: ViewVideoBinding =
         ViewVideoBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -95,8 +99,8 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun ViewVideoBinding.init() {
         alpha = 0f
         videoBackground.setBackgroundColor(
-            if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
-                Prefs.bgColor.withMinAlpha(200)
+            if (!prefs.blackMediaBg && prefs.bgColor.isColorDark)
+                prefs.bgColor.withMinAlpha(200)
             else
                 Color.BLACK
         )
@@ -104,7 +108,7 @@ class FrostVideoViewer @JvmOverloads constructor(
         video.pause()
         videoToolbar.inflateMenu(R.menu.menu_video)
         context.setMenuIcons(
-            videoToolbar.menu, Prefs.iconColor,
+            videoToolbar.menu, prefs.iconColor,
             R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
             R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )

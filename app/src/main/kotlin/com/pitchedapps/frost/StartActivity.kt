@@ -52,6 +52,7 @@ import org.koin.android.ext.android.inject
  */
 class StartActivity : KauBaseActivity() {
 
+    private val prefs: Prefs by inject()
     private val cookieDao: CookieDao by inject()
     private val genericDao: GenericDao by inject()
 
@@ -82,12 +83,12 @@ class StartActivity : KauBaseActivity() {
                         transform = CookieEntity::toSensitiveString
                     )}"
                 }
-                loadAssets()
+                loadAssets(prefs)
                 authDefer.await()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account
-                    Prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
+                    prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
                     else -> startActivity<MainActivity>(intentBuilder = {
                         putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or

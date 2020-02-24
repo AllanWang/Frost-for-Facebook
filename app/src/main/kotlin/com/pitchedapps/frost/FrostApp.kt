@@ -19,6 +19,8 @@ package com.pitchedapps.frost
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import ca.allanwang.kau.kpref.KPrefFactory
+import ca.allanwang.kau.kpref.KPrefFactoryAndroid
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.bugsnag.android.Bugsnag
@@ -31,21 +33,42 @@ import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
-import java.util.Random
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
+import org.koin.core.get
+import org.koin.core.module.Module
+import org.koin.dsl.module
+import java.util.Random
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
-class FrostApp : Application() {
+class FrostApp : Application(), KoinComponent {
+
+    private lateinit var showcasePrefs: Showcase
+    private lateinit var prefs: Prefs
 
     override fun onCreate() {
+        startKoin {
+            if (BuildConfig.DEBUG) {
+                androidLogger()
+            }
+            androidContext(this@FrostApp)
+            modules(listOf(
+                FrostDatabase.module(),
+                prefFactoryModule(),
+                Prefs.module(),
+                Showcase.module()
+            ))
+        }
         if (!buildIsLollipopAndUp) { // not supported
             super.onCreate()
             return
         }
+        prefs = get()
+        showcasePrefs = get()
         initPrefs()
         initBugsnag()
 
@@ -54,9 +77,9 @@ class FrostApp : Application() {
 
         super.onCreate()
 
-        setupNotificationChannels(applicationContext)
+        setupNotificationChannels(this, prefs)
 
-        scheduleNotificationsFromPrefs()
+        scheduleNotificationsFromPrefs(prefs)
 
         if (BuildConfig.DEBUG) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
@@ -77,27 +100,20 @@ class FrostApp : Application() {
                 }
             })
         }
-        startKoin {
-            if (BuildConfig.DEBUG) {
-                androidLogger()
-            }
-            androidContext(this@FrostApp)
-            modules(FrostDatabase.module(this@FrostApp))
-        }
     }
 
     private fun initPrefs() {
-        Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
-        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        prefs.deleteKeys("search_bar")
+        showcasePrefs.deleteKeys("shown_release", "experimental_by_default")
         KL.shouldLog = { BuildConfig.DEBUG }
-        Prefs.verboseLogging = false
-        if (Prefs.installDate == -1L) {
-            Prefs.installDate = System.currentTimeMillis()
+        prefs.verboseLogging = false
+        if (prefs.installDate == -1L) {
+            prefs.installDate = System.currentTimeMillis()
         }
-        if (Prefs.identifier == -1) {
-            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        if (prefs.identifier == -1) {
+            prefs.identifier = Random().nextInt(Int.MAX_VALUE)
         }
-        Prefs.lastLaunch = System.currentTimeMillis()
+        prefs.lastLaunch = System.currentTimeMillis()
     }
 
     private fun initBugsnag() {
@@ -113,12 +129,12 @@ class FrostApp : Application() {
             appVersion = version.versionName
             releaseStage = BuildUtils.getStage(BuildConfig.BUILD_TYPE)
             notifyReleaseStages = BuildUtils.getAllStages()
-            autoCaptureSessions = Prefs.analytics
-            enableExceptionHandler = Prefs.analytics
+            autoCaptureSessions = prefs.analytics
+            enableExceptionHandler = prefs.analytics
         }
         Bugsnag.init(this, config)
         L.bugsnagInit = true
-        Bugsnag.setUserId(Prefs.frostId)
+        Bugsnag.setUserId(prefs.frostId)
         Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
         Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
 
@@ -126,6 +142,14 @@ class FrostApp : Application() {
             when {
                 error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
                 else -> true
+            }
+        }
+    }
+
+    companion object {
+        fun prefFactoryModule(): Module = module {
+            single<KPrefFactory> {
+                KPrefFactoryAndroid(get())
             }
         }
     }

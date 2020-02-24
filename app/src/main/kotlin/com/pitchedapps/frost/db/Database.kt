@@ -93,8 +93,8 @@ class FrostDatabase(
             return FrostDatabase(privateDb, publicDb)
         }
 
-        fun module(context: Context) = module {
-            single { create(context) }
+        fun module() = module {
+            single { create(get()) }
             single { get<FrostDatabase>().cookieDao() }
             single { get<FrostDatabase>().cacheDao() }
             single { get<FrostDatabase>().notifDao() }

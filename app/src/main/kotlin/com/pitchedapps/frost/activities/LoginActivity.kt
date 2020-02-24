@@ -73,6 +73,7 @@ class LoginActivity : BaseActivity() {
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
     private val cookieDao: CookieDao by inject()
+    private val showcasePrefs: Showcase by inject()
 
     private lateinit var profileLoader: RequestManager
     private val refreshChannel = Channel<Boolean>(10)
@@ -138,7 +139,7 @@ class LoginActivity : BaseActivity() {
          */
         val cookies = ArrayList(cookieDao.selectAll())
         delay(1000)
-        if (Showcase.intro)
+        if (showcasePrefs.intro)
             launchNewTask<IntroActivity>(cookies, true)
         else
             launchNewTask<MainActivity>(cookies, true)

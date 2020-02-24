@@ -42,6 +42,8 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -67,6 +69,7 @@ open class BaseWebViewClient : WebViewClient() {
  */
 open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
+    private val prefs: Prefs get() = web.prefs
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val isMain = web.parent.baseEnum != null
     /**
@@ -102,7 +105,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         web.setBackgroundColor(
             when {
                 isMain -> Color.TRANSPARENT
-                web.url.isFacebookUrl -> Prefs.bgColor.withAlpha(255)
+                web.url.isFacebookUrl -> prefs.bgColor.withAlpha(255)
                 else -> Color.WHITE
             }
         )
@@ -115,21 +118,22 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             view.jsInject(
 //                    CssHider.CORE,
                 CssHider.HEADER,
-                CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                CssHider.STORIES.maybe(!Prefs.showStories),
-                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
-                CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
-                Prefs.themeInjector,
+                CssHider.COMPOSER.maybe(!prefs.showComposer),
+                CssHider.STORIES.maybe(!prefs.showStories),
+                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
+                CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+                prefs.themeInjector,
                 CssHider.NON_RECENT.maybe(
                     (web.url?.contains("?sk=h_chr") ?: false) &&
-                        Prefs.aggressiveRecents
+                        prefs.aggressiveRecents
                 ),
                 JsAssets.DOCUMENT_WATCHER,
                 JsAssets.HORIZONTAL_SCROLLING,
                 JsAssets.CLICK_A,
-                CssHider.ADS.maybe(!Prefs.showFacebookAds),
+                CssHider.ADS.maybe(!prefs.showFacebookAds),
                 JsAssets.CONTEXT_A,
-                JsAssets.MEDIA
+                JsAssets.MEDIA,
+                prefs = prefs
             )
         } else {
             refresh.offer(false)
@@ -147,7 +151,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     }
 
     internal open fun onPageFinishedActions(url: String) {
-        if (url.startsWith("${FbItem.MESSAGES.url}/read/") && Prefs.messageScrollToBottom) {
+        if (url.startsWith("${FbItem.MESSAGES.url}/read/") && prefs.messageScrollToBottom) {
             web.pageDown(true)
         }
         injectAndFinish()
@@ -160,7 +164,8 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         web.jsInject(
             JsActions.LOGIN_CHECK,
             JsAssets.TEXTAREA_LISTENER,
-            JsAssets.HEADER_BADGES.maybe(isMain)
+            JsAssets.HEADER_BADGES.maybe(isMain),
+            prefs = prefs
         )
     }
 
@@ -207,7 +212,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         if (url.isImageUrl) {
             return launchImage(url.formattedFbUrl)
         }
-        if (Prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) {
+        if (prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) {
             return true
         }
         // Convert desktop urls to mobile ones
@@ -229,12 +234,14 @@ private const val EMIT_FINISH = 0
  */
 class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
+    private val prefs: Prefs get() = web.prefs
+
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
         if (url == null) {
             return
         }
-        jsInject(JsAssets.MENU)
+        jsInject(JsAssets.MENU, prefs = prefs)
     }
 
     override fun emit(flag: Int) {

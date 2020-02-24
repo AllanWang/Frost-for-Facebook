@@ -32,7 +32,7 @@ fun SettingsActivity.getSecurityPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.security_disclaimer_info
     }
 
-    checkbox(R.string.enable_biometrics, Prefs::biometricsEnabled, {
+    checkbox(R.string.enable_biometrics, prefs::biometricsEnabled, {
         launch {
             /*
              * For security, we should request authentication when:
@@ -40,7 +40,7 @@ fun SettingsActivity.getSecurityPrefs(): KPrefAdapterBuilder.() -> Unit = {
              * - disabling to ensure that it is permitted
              */
             BiometricUtils.authenticate(this@getSecurityPrefs, force = true).await()
-            Prefs.biometricsEnabled = it
+            prefs.biometricsEnabled = it
             reloadByTitle(R.string.enable_biometrics)
         }
     }) {

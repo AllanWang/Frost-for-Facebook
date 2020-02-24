@@ -41,13 +41,13 @@ import com.pitchedapps.frost.utils.frostUri
 const val NOTIF_CHANNEL_GENERAL = "general"
 const val NOTIF_CHANNEL_MESSAGES = "messages"
 
-fun setupNotificationChannels(c: Context) {
+fun setupNotificationChannels(c: Context, prefs: Prefs) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
     val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val appName = c.string(R.string.frost_name)
     val msg = c.string(R.string.messages)
-    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
-    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
+    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName, prefs)
+    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg", prefs)
     manager.notificationChannels
         .filter {
             it.id != NOTIF_CHANNEL_GENERAL &&
@@ -60,14 +60,15 @@ fun setupNotificationChannels(c: Context) {
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NotificationManager.createNotificationChannel(
     id: String,
-    name: String
+    name: String,
+    prefs: Prefs
 ): NotificationChannel {
     val channel = NotificationChannel(
         id,
         name, NotificationManager.IMPORTANCE_DEFAULT
     )
     channel.enableLights(true)
-    channel.lightColor = Prefs.accentColor
+    channel.lightColor = prefs.accentColor
     channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
     createNotificationChannel(channel)
     return channel
@@ -93,6 +94,8 @@ fun NotificationCompat.Builder.setFrostAlert(
     enable: Boolean,
     ringtone: String
 ): NotificationCompat.Builder {
+    val prefs = Prefs.get()
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
             if (enable) NotificationCompat.GROUP_ALERT_CHILDREN
@@ -102,12 +105,12 @@ fun NotificationCompat.Builder.setFrostAlert(
         setDefaults(0)
     } else {
         var defaults = 0
-        if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
-        if (Prefs.notificationSound) {
+        if (prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
+        if (prefs.notificationSound) {
             if (ringtone.isNotBlank()) setSound(context.frostUri(ringtone))
             else defaults = defaults or Notification.DEFAULT_SOUND
         }
-        if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
+        if (prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
         setDefaults(defaults)
     }
     return this
