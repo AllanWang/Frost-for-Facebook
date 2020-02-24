@@ -77,10 +77,10 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
     val t: Theme by loader
 
     val textColor: Int
-        get() = t.textColor
+        get() = t.textColorGetter(this)
 
     val accentColor: Int
-        get() = t.accentColor
+        get() = t.accentColorGetter(this)
 
     inline val accentColorForWhite: Int
         get() = when {
@@ -97,13 +97,13 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
         .withAlpha(30)
 
     val bgColor: Int
-        get() = t.bgColor
+        get() = t.backgroundColorGetter(this)
 
     val headerColor: Int
-        get() = t.headerColor
+        get() = t.headerColorGetter(this)
 
     val iconColor: Int
-        get() = t.iconColor
+        get() = t.iconColorGetter(this)
 
     val themeInjector: InjectorContract
         get() = t.injector

@@ -23,8 +23,6 @@ import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.Prefs
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -35,11 +33,11 @@ const val BLUE_LIGHT = 0xff5d86dd.toInt()
 enum class Theme(
     @StringRes val textRes: Int,
     val injector: InjectorContract,
-    private val textColorGetter: () -> Int,
-    private val accentColorGetter: () -> Int,
-    private val backgroundColorGetter: () -> Int,
-    private val headerColorGetter: () -> Int,
-    private val iconColorGetter: () -> Int
+    val textColorGetter: (Prefs) -> Int,
+    val accentColorGetter: (Prefs) -> Int,
+    val backgroundColorGetter: (Prefs) -> Int,
+    val headerColorGetter: (Prefs) -> Int,
+    val iconColorGetter: (Prefs) -> Int
 ) {
 
     DEFAULT(R.string.kau_default,
@@ -84,29 +82,13 @@ enum class Theme(
 
     CUSTOM(R.string.kau_custom,
         CssAssets.CUSTOM,
-        { prefs.customTextColor },
-        { prefs.customAccentColor },
-        { prefs.customBackgroundColor },
-        { prefs.customHeaderColor },
-        { prefs.customIconColor });
+        { it.customTextColor },
+        { it.customAccentColor },
+        { it.customBackgroundColor },
+        { it.customHeaderColor },
+        { it.customIconColor });
 
-    val textColor: Int
-        get() = textColorGetter()
-
-    val accentColor: Int
-        get() = accentColorGetter()
-
-    val bgColor: Int
-        get() = backgroundColorGetter()
-
-    val headerColor: Int
-        get() = headerColorGetter()
-
-    val iconColor: Int
-        get() = iconColorGetter()
-
-    companion object : KoinComponent {
-        private val prefs: Prefs by inject()
+    companion object {
         val values = values() // save one instance
         operator fun invoke(index: Int) = values[index]
     }
