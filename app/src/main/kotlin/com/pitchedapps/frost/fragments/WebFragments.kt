@@ -23,7 +23,6 @@ import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu

@@ -43,10 +43,10 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.setFrostColors
+import java.util.Collections
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import java.util.Collections
 
 /**
  * Created by Allan Wang on 26/11/17.

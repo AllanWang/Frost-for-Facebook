@@ -104,7 +104,7 @@ open class TextIItem(
 ) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
     ClickableIItemContract {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView),KoinComponent {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView), KoinComponent {
 
         private val prefs: Prefs by inject()
 

@@ -105,7 +105,7 @@ enum class Theme(
     val iconColor: Int
         get() = iconColorGetter()
 
-    companion object:KoinComponent {
+    companion object : KoinComponent {
         private val prefs: Prefs by inject()
         val values = values() // save one instance
         operator fun invoke(index: Int) = values[index]

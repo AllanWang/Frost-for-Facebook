@@ -50,7 +50,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.SnackbarContentLayout
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.activities.BaseActivity
 import com.pitchedapps.frost.activities.ImageActivity
 import com.pitchedapps.frost.activities.LoginActivity
 import com.pitchedapps.frost.activities.SelectorActivity
@@ -70,6 +69,10 @@ import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
+import java.io.File
+import java.io.IOException
+import java.util.ArrayList
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
@@ -79,12 +82,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.koin.core.KoinComponent
-import org.koin.core.context.GlobalContext
 import org.koin.core.inject
-import java.io.File
-import java.io.IOException
-import java.util.ArrayList
-import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-06-03.

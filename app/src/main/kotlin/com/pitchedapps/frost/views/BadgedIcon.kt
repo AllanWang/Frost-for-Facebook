@@ -42,7 +42,6 @@ class BadgedIcon @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent {
 
-
     private val prefs: Prefs by inject()
     private val binding: ViewBadgedIconBinding =
         ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)

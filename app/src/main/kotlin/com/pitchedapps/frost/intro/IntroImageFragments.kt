@@ -29,7 +29,6 @@ import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchTabCustomizerActivity
 import kotlin.math.abs
 

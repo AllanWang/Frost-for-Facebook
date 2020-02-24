@@ -25,7 +25,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndependent

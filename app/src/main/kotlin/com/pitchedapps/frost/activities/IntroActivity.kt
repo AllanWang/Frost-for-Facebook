@@ -55,8 +55,7 @@ import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.widgets.NotificationWidget
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -64,7 +63,7 @@ import org.koin.core.inject
  * A beautiful intro activity
  * Phone showcases are drawn via layers
  */
-class IntroActivity : KauBaseActivity(), KoinComponent, ViewPager.PageTransformer,
+class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
     ViewPager.OnPageChangeListener {
 
     private val prefs: Prefs by inject()

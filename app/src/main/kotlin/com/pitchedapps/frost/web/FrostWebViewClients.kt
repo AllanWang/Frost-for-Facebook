@@ -42,8 +42,6 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-31.

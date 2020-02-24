@@ -38,13 +38,13 @@ import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineExceptionHandler
-import org.koin.core.KoinComponent
+import org.koin.android.ext.android.inject
 import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 05/01/18.
  */
-class DebugActivity : KauBaseActivity(), KoinComponent {
+class DebugActivity : KauBaseActivity() {
 
     companion object {
         const val RESULT_URL = "extra_result_url"

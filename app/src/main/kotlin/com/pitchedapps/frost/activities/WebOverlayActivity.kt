@@ -67,7 +67,6 @@ import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.setFrostColors

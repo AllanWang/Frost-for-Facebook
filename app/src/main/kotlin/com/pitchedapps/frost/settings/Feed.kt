@@ -23,7 +23,6 @@ import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.FeedSort
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_FAB
 
 /**

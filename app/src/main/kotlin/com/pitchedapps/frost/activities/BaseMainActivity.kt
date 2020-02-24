@@ -108,7 +108,6 @@ import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.MAIN_TIMEOUT_DURATION
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_FAB
 import com.pitchedapps.frost.utils.REQUEST_NAV
 import com.pitchedapps.frost.utils.REQUEST_NOTIFICATION

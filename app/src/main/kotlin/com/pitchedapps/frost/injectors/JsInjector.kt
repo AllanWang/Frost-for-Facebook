@@ -97,7 +97,7 @@ interface InjectorContract {
  */
 fun WebView.jsInject(vararg injectors: InjectorContract, prefs: Prefs) {
     injectors.filter { it != JsActions.EMPTY }.forEach {
-        it.inject(this,prefs)
+        it.inject(this, prefs)
     }
 }
 

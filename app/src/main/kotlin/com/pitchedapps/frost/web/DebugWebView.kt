@@ -116,7 +116,7 @@ class DebugWebView @JvmOverloads constructor(
                         (url?.contains("?sk=h_chr") ?: false) &&
                             prefs.aggressiveRecents
                     ),
-                    prefs= prefs
+                    prefs = prefs
                 )
         }
     }

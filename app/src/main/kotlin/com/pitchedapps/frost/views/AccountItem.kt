@@ -45,7 +45,7 @@ import org.koin.core.inject
  * Created by Allan Wang on 2017-06-05.
  */
 class AccountItem(val cookie: CookieEntity?) :
-    KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account) ,
+    KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account),
 KoinComponent {
 
     private val prefs: Prefs by inject()

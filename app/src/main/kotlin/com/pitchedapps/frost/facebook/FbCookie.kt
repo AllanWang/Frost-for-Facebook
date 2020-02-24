@@ -21,7 +21,6 @@ import android.content.Context
 import android.webkit.CookieManager
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.deleteById
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectById
@@ -43,7 +42,7 @@ import org.koin.core.inject
  *
  * The following component manages all cookie transfers.
  */
-object FbCookie :KoinComponent {
+object FbCookie : KoinComponent {
 
     const val COOKIE_DOMAIN = FB_URL_BASE
 

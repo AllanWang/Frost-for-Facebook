@@ -28,11 +28,11 @@ import ca.allanwang.kau.utils.use
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-31.
