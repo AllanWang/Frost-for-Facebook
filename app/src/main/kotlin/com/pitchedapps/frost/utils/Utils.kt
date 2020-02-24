@@ -81,8 +81,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -125,7 +123,10 @@ fun Activity.cookies(): ArrayList<CookieEntity> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String, fbCookie: FbCookie) {
+private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(
+    url: String,
+    fbCookie: FbCookie
+) {
     val prefs = Prefs.get()
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
@@ -141,10 +142,12 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
     }
 }
 
-fun Context.launchWebOverlay(url: String, fbCookie: FbCookie) = launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie)
+fun Context.launchWebOverlay(url: String, fbCookie: FbCookie) =
+    launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie)
 
 // TODO Currently, default is overlay. Switch this if default changes
-fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie) = launchWebOverlay(url, fbCookie)
+fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie) =
+    launchWebOverlay(url, fbCookie)
 
 fun Context.launchWebOverlayMobile(url: String, fbCookie: FbCookie) =
     launchWebOverlayImpl<WebOverlayMobileActivity>(url, fbCookie)
@@ -186,14 +189,13 @@ fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
     }
 }
 
-class ActivityThemeUtils : KoinComponent {
+class ActivityThemeUtils(val prefs: Prefs) {
 
     private var toolbar: Toolbar? = null
     var themeWindow = true
     private var texts = mutableListOf<TextView>()
     private var headers = mutableListOf<View>()
     private var backgrounds = mutableListOf<View>()
-    private val prefs: Prefs by inject()
 
     fun toolbar(toolbar: Toolbar) {
         this.toolbar = toolbar
@@ -226,8 +228,8 @@ class ActivityThemeUtils : KoinComponent {
     }
 }
 
-inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
-    val themer = ActivityThemeUtils()
+inline fun Activity.setFrostColors(prefs: Prefs, builder: ActivityThemeUtils.() -> Unit) {
+    val themer = ActivityThemeUtils(prefs)
     themer.builder()
     themer.theme(this)
 }

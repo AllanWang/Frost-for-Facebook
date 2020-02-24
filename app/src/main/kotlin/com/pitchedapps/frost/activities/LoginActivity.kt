@@ -82,7 +82,7 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors {
+        setFrostColors(prefs) {
             toolbar(toolbar)
         }
         profileLoader = GlideApp.with(profile)

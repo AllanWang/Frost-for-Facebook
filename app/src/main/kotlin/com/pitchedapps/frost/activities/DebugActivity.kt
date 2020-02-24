@@ -72,7 +72,7 @@ class DebugActivity : KauBaseActivity() {
         }
         setTitle(R.string.debug_frost)
 
-        setFrostColors {
+        setFrostColors(prefs) {
             toolbar(toolbar)
         }
         debugWebview.loadUrl(FbItem.FEED.url)

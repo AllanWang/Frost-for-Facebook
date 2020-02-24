@@ -67,7 +67,7 @@ class SelectorActivity : BaseActivity() {
                 }
             }
         })
-        setFrostColors {
+        setFrostColors(prefs) {
             text(text)
             background(container)
         }

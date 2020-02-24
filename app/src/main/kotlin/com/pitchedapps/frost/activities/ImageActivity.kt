@@ -229,7 +229,7 @@ class ImageActivity : KauBaseActivity() {
                 loadError(e)
             }
         })
-        setFrostColors {
+        setFrostColors(prefs) {
             themeWindow = false
         }
         dragHelper = ViewDragHelper.create(imageDrag, ViewDragCallback()).apply {
