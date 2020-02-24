@@ -16,28 +16,17 @@
  */
 package com.pitchedapps.frost.utils
 
-import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
 import ca.allanwang.kau.logging.KauLoggerExtension
 import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-28.
  *
  * Logging for frost
  */
-object L : KauLogger("Frost", {
-    when (it) {
-        Log.VERBOSE -> BuildConfig.DEBUG
-        Log.INFO, Log.ERROR -> true
-        else -> BuildConfig.DEBUG || L.prefs.verboseLogging
-    }
-}), KoinComponent {
-
-    private val prefs: Prefs by inject()
+object L : KauLogger("Frost") {
 
     inline fun test(message: () -> Any?) {
         _d {
@@ -63,7 +52,7 @@ object L : KauLogger("Frost", {
         }
     }
 
-    var bugsnagInit = false
+    var hasAnalytics: () -> Boolean = { false }
 
     override fun logImpl(priority: Int, message: String?, t: Throwable?) {
         /*
@@ -71,7 +60,7 @@ object L : KauLogger("Frost", {
          * bugsnagInit is changed per application and helps prevent crashes (if calling pre init)
          * analytics is changed by the user, and may be toggled throughout the app
          */
-        if (BuildConfig.DEBUG || !bugsnagInit || !prefs.analytics) {
+        if (BuildConfig.DEBUG || !hasAnalytics()) {
             super.logImpl(priority, message, t)
         } else {
             if (message != null) {

@@ -158,6 +158,10 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
 
     var enablePip: Boolean by kpref("enable_pip", true)
 
+    /**
+     * Despite the naming, this toggle currently only enables debug logging.
+     * Verbose is never logged in release builds.
+     */
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", false) {

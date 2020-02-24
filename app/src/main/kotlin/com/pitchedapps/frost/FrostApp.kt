@@ -19,6 +19,7 @@ package com.pitchedapps.frost
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.kpref.KPrefFactoryAndroid
 import ca.allanwang.kau.logging.KL
@@ -34,7 +35,6 @@ import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.Showcase
-import java.util.Random
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinComponent
@@ -42,6 +42,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.get
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import java.util.Random
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -57,13 +58,15 @@ class FrostApp : Application(), KoinComponent {
                 androidLogger()
             }
             androidContext(this@FrostApp)
-            modules(listOf(
-                FrostDatabase.module(),
-                prefFactoryModule(),
-                Prefs.module(),
-                Showcase.module(),
-                FbCookie.module()
-            ))
+            modules(
+                listOf(
+                    FrostDatabase.module(),
+                    prefFactoryModule(),
+                    Prefs.module(),
+                    Showcase.module(),
+                    FbCookie.module()
+                )
+            )
         }
         if (!buildIsLollipopAndUp) { // not supported
             super.onCreate()
@@ -108,6 +111,13 @@ class FrostApp : Application(), KoinComponent {
         prefs.deleteKeys("search_bar")
         showcasePrefs.deleteKeys("shown_release", "experimental_by_default")
         KL.shouldLog = { BuildConfig.DEBUG }
+        L.shouldLog = {
+            when (it) {
+                Log.VERBOSE -> BuildConfig.DEBUG
+                Log.INFO, Log.ERROR -> true
+                else -> BuildConfig.DEBUG || prefs.verboseLogging
+            }
+        }
         prefs.verboseLogging = false
         if (prefs.installDate == -1L) {
             prefs.installDate = System.currentTimeMillis()
@@ -135,7 +145,7 @@ class FrostApp : Application(), KoinComponent {
             enableExceptionHandler = prefs.analytics
         }
         Bugsnag.init(this, config)
-        L.bugsnagInit = true
+        L.hasAnalytics = { prefs.analytics }
         Bugsnag.setUserId(prefs.frostId)
         Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
         Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
