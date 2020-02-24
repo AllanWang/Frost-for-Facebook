@@ -810,7 +810,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     inline val currentFragment: BaseFragment?
         get() {
             val viewpager = contentBinding.viewpager
-            return supportFragmentManager.findFragmentByTag("android:switcher:${viewpager.id}:${viewpager.currentItem}") as? BaseFragment
+            return supportFragmentManager.findFragmentByTag("android:switcher:${viewpager.id}:${viewpager.currentItem}") as BaseFragment?
         }
 
     override fun reloadFragment(fragment: BaseFragment) {
