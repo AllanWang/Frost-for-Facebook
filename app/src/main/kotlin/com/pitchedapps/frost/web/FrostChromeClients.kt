@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.web
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.webkit.ConsoleMessage
 import android.webkit.GeolocationPermissions
@@ -51,6 +52,10 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
     private val title: SendChannel<String> = web.parent.titleChannel
     private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
+
+    override fun getDefaultVideoPoster(): Bitmap? =
+        super.getDefaultVideoPoster()
+            ?: Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         L.v { "Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
