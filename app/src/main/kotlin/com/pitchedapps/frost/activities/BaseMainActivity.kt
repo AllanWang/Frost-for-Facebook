@@ -756,7 +756,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         lastAccessTime = System.currentTimeMillis() // precaution to avoid loops
         controlWebview?.resumeTimers()
         launch {
-            val authDefer = BiometricUtils.authenticate(this@BaseMainActivity)
+            val authDefer = BiometricUtils.authenticate(this@BaseMainActivity, prefs)
             fbCookie.switchBackUser()
             authDefer.await()
             if (shouldReload && prefs.autoRefreshFeed) {

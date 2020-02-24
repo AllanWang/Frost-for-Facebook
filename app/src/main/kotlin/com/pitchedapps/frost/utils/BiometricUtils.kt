@@ -39,12 +39,10 @@ typealias BiometricDeferred = CompletableDeferred<BiometricPrompt.CryptoObject?>
  * Container for [BiometricPrompt]
  * Inspired by coroutine's CommonPool
  */
-object BiometricUtils : KoinComponent {
+object BiometricUtils  {
 
     private val executor: Executor
         get() = pool ?: getOrCreatePoolSync()
-
-    private val prefs: Prefs by inject()
 
     @Volatile
     private var pool: ExecutorService? = null
@@ -68,7 +66,7 @@ object BiometricUtils : KoinComponent {
     private fun getOrCreatePoolSync(): Executor =
         pool ?: Executors.newSingleThreadExecutor().also { pool = it }
 
-    private fun shouldPrompt(context: Context): Boolean {
+    private fun shouldPrompt(context: Context, prefs: Prefs): Boolean {
         return prefs.biometricsEnabled && System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
     }
 
@@ -77,9 +75,9 @@ object BiometricUtils : KoinComponent {
      * Note that the underlying request will call [androidx.fragment.app.FragmentTransaction.commit],
      * so this cannot happen after onSaveInstanceState.
      */
-    fun authenticate(activity: FragmentActivity, force: Boolean = false): BiometricDeferred {
+    fun authenticate(activity: FragmentActivity, prefs: Prefs, force: Boolean = false): BiometricDeferred {
         val deferred: BiometricDeferred = CompletableDeferred()
-        if (!force && !shouldPrompt(activity)) {
+        if (!force && !shouldPrompt(activity, prefs)) {
             deferred.complete(null)
             return deferred
         }

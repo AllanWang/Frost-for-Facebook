@@ -75,7 +75,7 @@ class StartActivity : KauBaseActivity() {
 
         launch {
             try {
-                val authDefer = BiometricUtils.authenticate(this@StartActivity)
+                val authDefer = BiometricUtils.authenticate(this@StartActivity, prefs)
                 fbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }

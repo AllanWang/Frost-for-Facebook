@@ -38,7 +38,7 @@ fun SettingsActivity.getSecurityPrefs(): KPrefAdapterBuilder.() -> Unit = {
              * - enabling to ensure that it is supported
              * - disabling to ensure that it is permitted
              */
-            BiometricUtils.authenticate(this@getSecurityPrefs, force = true).await()
+            BiometricUtils.authenticate(this@getSecurityPrefs, prefs, force = true).await()
             prefs.biometricsEnabled = it
             reloadByTitle(R.string.enable_biometrics)
         }
