@@ -32,7 +32,6 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQUEST_DEBUG
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.parsers.FrostParser
 import com.pitchedapps.frost.facebook.parsers.MessageParser
 import com.pitchedapps.frost.facebook.parsers.NotifParser

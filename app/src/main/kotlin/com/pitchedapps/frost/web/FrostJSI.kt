@@ -35,9 +35,6 @@ import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-01.

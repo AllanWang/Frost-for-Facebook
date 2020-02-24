@@ -43,9 +43,9 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
+import java.util.ArrayList
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import java.util.ArrayList
 
 /**
  * Created by Allan Wang on 2017-05-28.

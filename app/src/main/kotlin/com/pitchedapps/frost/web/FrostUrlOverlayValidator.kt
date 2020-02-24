@@ -20,7 +20,6 @@ import ca.allanwang.kau.utils.runOnUiThread
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl

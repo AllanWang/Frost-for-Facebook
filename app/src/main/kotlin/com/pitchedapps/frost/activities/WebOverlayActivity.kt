@@ -56,7 +56,6 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST

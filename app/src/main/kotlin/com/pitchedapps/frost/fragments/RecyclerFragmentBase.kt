@@ -23,7 +23,6 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.parsers.FrostParser
 import com.pitchedapps.frost.facebook.parsers.ParseData
 import com.pitchedapps.frost.facebook.parsers.ParseResponse

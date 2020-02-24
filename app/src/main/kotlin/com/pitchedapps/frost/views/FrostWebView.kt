@@ -42,11 +42,11 @@ import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.

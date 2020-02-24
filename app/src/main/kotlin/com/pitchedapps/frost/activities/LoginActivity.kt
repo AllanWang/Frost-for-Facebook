@@ -36,7 +36,6 @@ import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectAll
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide

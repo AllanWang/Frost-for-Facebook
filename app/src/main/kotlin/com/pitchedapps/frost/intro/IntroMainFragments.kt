@@ -37,8 +37,8 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.databinding.IntroAnalyticsBinding
 import com.pitchedapps.frost.utils.Prefs
-import org.koin.android.ext.android.inject
 import kotlin.math.abs
+import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-07-28.
