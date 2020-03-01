@@ -368,8 +368,8 @@ internal enum class FabStates(
     DOWNLOAD(GoogleMaterial.Icon.gmd_file_download) {
         override fun onClick(activity: ImageActivity) {
             activity.launch {
-                activity.saveImage()
                 activity.binding.download.fadeOut()
+                activity.saveImage()
             }
         }
     },
