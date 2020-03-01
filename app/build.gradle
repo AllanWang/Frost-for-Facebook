@@ -10,20 +10,20 @@ apply plugin: 'com.gladed.androidgitversion'
 buildscript {
     repositories {
         jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.moowork.gradle:gradle-node-plugin:${Versions.nodeGradle}"
+        classpath "com.github.node-gradle:gradle-node-plugin:${Versions.nodeGradle}"
     }
 }
 
-apply plugin: com.moowork.gradle.node.NodePlugin
+apply plugin: 'com.github.node-gradle.node'
 
 apply from: '../spotless.gradle'
 group = APP_GROUP
 
 android {
     compileSdkVersion Versions.targetSdk
-    buildToolsVersion kau.Versions.buildTools
 
     androidGitVersion {
         codeFormat = 'MMNNPPXX'
@@ -75,8 +75,8 @@ android {
         textOutput 'stdout'
     }
 
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding = true
     }
 
     def testKeystoreFile = file('../files/test.keystore')
@@ -199,8 +199,8 @@ android {
 }
 
 node {
-    version = '12.4.0'
-    npmVersion = '6.9.0'
+    version = '13.8.0'
+    npmVersion = '6.13.7'
     download = true
     nodeModulesDir = file("${project.projectDir}/src/web")
 }
@@ -283,7 +283,7 @@ dependencies {
     //noinspection GradleDependency
     kapt kau.Dependencies.glideKapt
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
+    debugImplementation kau.Dependencies.leakCanary
 
     //Icons
     implementation kau.Dependencies.iconicsMaterial

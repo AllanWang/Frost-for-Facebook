@@ -40,6 +40,7 @@ import com.afollestad.materialdialogs.list.listItems
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.settings.getAppearancePrefs
@@ -70,6 +71,7 @@ import org.koin.android.ext.android.inject
 class SettingsActivity : KPrefActivity() {
 
     val fbCookie: FbCookie by inject()
+    val notifDao: NotificationDao by inject()
     val prefs: Prefs by inject()
 
     private var resultFlag = Activity.RESULT_CANCELED
@@ -218,7 +220,7 @@ class SettingsActivity : KPrefActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFrostTheme(true)
+        setFrostTheme(prefs, true)
         super.onCreate(savedInstanceState)
         animate = prefs.animate
         themeExterior(false)
@@ -229,7 +231,7 @@ class SettingsActivity : KPrefActivity() {
         else bgCanvas.set(prefs.bgColor)
         if (animate) toolbarCanvas.ripple(prefs.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
         else toolbarCanvas.set(prefs.headerColor)
-        frostNavigationBar()
+        frostNavigationBar(prefs)
     }
 
     override fun onBackPressed() {

@@ -185,7 +185,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         plainText(R.string.reset_notif_epoch) {
             onClick = {
                 launch {
-                    FrostDatabase.get().notifDao().deleteAll()
+                    notifDao.deleteAll()
                 }
             }
         }

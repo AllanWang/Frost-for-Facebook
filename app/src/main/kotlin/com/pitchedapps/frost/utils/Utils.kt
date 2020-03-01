@@ -125,9 +125,9 @@ fun Activity.cookies(): ArrayList<CookieEntity> {
  */
 private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(
     url: String,
-    fbCookie: FbCookie
+    fbCookie: FbCookie,
+    prefs: Prefs
 ) {
-    val prefs = Prefs.get()
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
@@ -142,15 +142,15 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
     }
 }
 
-fun Context.launchWebOverlay(url: String, fbCookie: FbCookie) =
-    launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie)
+fun Context.launchWebOverlay(url: String, fbCookie: FbCookie, prefs: Prefs) =
+    launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie, prefs)
 
 // TODO Currently, default is overlay. Switch this if default changes
-fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie) =
-    launchWebOverlay(url, fbCookie)
+fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie, prefs: Prefs) =
+    launchWebOverlay(url, fbCookie, prefs)
 
-fun Context.launchWebOverlayMobile(url: String, fbCookie: FbCookie) =
-    launchWebOverlayImpl<WebOverlayMobileActivity>(url, fbCookie)
+fun Context.launchWebOverlayMobile(url: String, fbCookie: FbCookie, prefs: Prefs) =
+    launchWebOverlayImpl<WebOverlayMobileActivity>(url, fbCookie, prefs)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
     this,
@@ -178,8 +178,7 @@ fun WebOverlayActivity.url(): String {
     return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
-fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
-    val prefs = Prefs.get()
+fun Activity.setFrostTheme(prefs: Prefs, forceTransparent: Boolean = false) {
     val isTransparent =
         forceTransparent || (Color.alpha(prefs.bgColor) != 255) || (Color.alpha(prefs.headerColor) != 255)
     if (prefs.bgColor.isColorDark) {
@@ -267,8 +266,7 @@ private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snac
     }
 }
 
-fun Activity.frostNavigationBar() {
-    val prefs = Prefs.get()
+fun Activity.frostNavigationBar(prefs: Prefs) {
     navigationBarColor = if (prefs.tintNavBar) prefs.headerColor else Color.BLACK
 }
 

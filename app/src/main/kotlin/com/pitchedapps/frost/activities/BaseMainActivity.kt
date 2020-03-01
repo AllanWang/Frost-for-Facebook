@@ -313,7 +313,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 val item = FbItem.values[it.itemId]
                 frostEvent("Drawer Tab", "name" to item.name)
                 drawer.closeDrawer(navigation)
-                launchWebOverlay(item.url, fbCookie)
+                launchWebOverlay(item.url, fbCookie, prefs)
                 false
             }
             val navBg = prefs.bgColor.withMinAlpha(200)
@@ -464,7 +464,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     setOptionsIcon(GoogleMaterial.Icon.gmd_exit_to_app)
                     setOnClickListener {
                         launch {
-                            val currentCookie = cookieDao.currentCookie()
+                            val currentCookie = cookieDao.currentCookie(prefs)
                             if (currentCookie == null) {
                                 toast(R.string.account_not_found)
                                 fbCookie.reset()
@@ -596,7 +596,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     .into(this)
                 setOnClickListener {
                     if (primary) {
-                        launchWebOverlay(FbItem.PROFILE.url, fbCookie)
+                        launchWebOverlay(FbItem.PROFILE.url, fbCookie, prefs)
                     } else {
                         switchAccount(cookie.id)
                     }
@@ -661,11 +661,11 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 }
                 textDebounceInterval = 300
                 searchCallback =
-                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query", fbCookie); true }
+                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query", fbCookie, prefs); true }
                 closeListener = { _ -> searchViewCache.clear() }
                 foregroundColor = prefs.textColor
                 backgroundColor = prefs.bgColor.withMinAlpha(200)
-                onItemClick = { _, key, _, _ -> launchWebOverlay(key, fbCookie) }
+                onItemClick = { _, key, _, _ -> launchWebOverlay(key, fbCookie, prefs) }
             }
         }
     }
@@ -723,7 +723,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 fragmentChannel.offer(REQUEST_REFRESH)
             }
             if (hasRequest(REQUEST_NAV)) {
-                frostNavigationBar()
+                frostNavigationBar(prefs)
             }
             if (hasRequest(REQUEST_TEXT_ZOOM)) {
                 fragmentChannel.offer(REQUEST_TEXT_ZOOM)

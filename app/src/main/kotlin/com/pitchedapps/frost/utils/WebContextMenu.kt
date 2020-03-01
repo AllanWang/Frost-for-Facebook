@@ -71,7 +71,7 @@ enum class WebContextType(
     OPEN_LINK(
         R.string.open_link,
         { it.hasUrl },
-        { c, wc, fc -> c.launchWebOverlay(wc.url!!, fc) }),
+        { c, wc, fc -> c.launchWebOverlay(wc.url!!, fc, Prefs.get()) }),
     COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, _ -> c.copyToClipboard(wc.url) }),
     COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, _ -> c.copyToClipboard(wc.text) }),
     SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _ -> c.shareText(wc.url) }),

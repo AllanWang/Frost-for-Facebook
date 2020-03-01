@@ -14,9 +14,7 @@ object Versions {
     const val mockk = "1.9.3"
 
     // https://github.com/jhy/jsoup/releases
-    const val jsoup = "1.12.1"
-    // https://square.github.io/leakcanary/changelog/
-    const val leakCanary = "2.2"
+    const val jsoup = "1.13.1"
     // https://square.github.io/okhttp/changelog/
     const val okhttp = "4.3.1"
     // https://developer.android.com/jetpack/androidx/releases/room
@@ -25,6 +23,6 @@ object Versions {
     const val roboelectric = "4.3"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
     const val scaleImageView = "3.10.0"
-    // https://github.com/srs/gradle-node-plugin/releases
-    const val nodeGradle = "1.3.1"
+    // https://github.com/node-gradle/gradle-node-plugin/releases
+    const val nodeGradle = "2.2.3"
 }

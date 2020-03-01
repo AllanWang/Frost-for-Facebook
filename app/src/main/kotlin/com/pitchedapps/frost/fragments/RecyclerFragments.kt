@@ -40,6 +40,6 @@ class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>
         response.data.notifs.map { NotificationIItem(it, response.cookie) }
 
     override fun bindImpl(recyclerView: FrostRecyclerView) {
-        NotificationIItem.bindEvents(adapter, fbCookie)
+        NotificationIItem.bindEvents(adapter, fbCookie, prefs)
     }
 }
