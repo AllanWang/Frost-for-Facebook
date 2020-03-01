@@ -22,6 +22,7 @@ import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
 import android.os.Environment
 import android.webkit.URLUtil
+import androidx.core.content.getSystemService
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.isAppEnabled
@@ -64,7 +65,8 @@ fun Context.frostDownload(
         toast(R.string.error_invalid_download)
         return L.e { "Invalid download $uri" }
     }
-    if (!isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
+    val dm = getSystemService<DownloadManager>()
+    if (dm == null || !isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
         materialDialog {
             title(R.string.no_download_manager)
             message(R.string.no_download_manager_desc)
@@ -87,7 +89,6 @@ fun Context.frostDownload(
         request.allowScanningByMediaScanner()
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Frost/$title")
-        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         try {
             dm.enqueue(request)
         } catch (e: Exception) {

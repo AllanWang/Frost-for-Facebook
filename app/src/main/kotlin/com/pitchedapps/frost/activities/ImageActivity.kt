@@ -16,13 +16,18 @@
  */
 package com.pitchedapps.frost.activities
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
+import androidx.core.net.toFile
 import androidx.customview.widget.ViewDragHelper
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
@@ -49,6 +54,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
+import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
@@ -67,6 +73,13 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -75,14 +88,6 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.max
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -103,6 +108,8 @@ class ImageActivity : KauBaseActivity() {
      * Nonnull once the image is downloaded by the user
      */
     internal var savedFile: File? = null
+
+    internal var savedUri: Uri? = null
     /**
      * Indicator for fab's click result
      */
@@ -159,6 +166,7 @@ class ImageActivity : KauBaseActivity() {
         }
         errorRef = e
         e.logFrostEvent("Image load error")
+        L.e(e) { "ASDF" }
         with(binding) {
             if (imageProgress.isVisible)
                 imageProgress.fadeOut()
@@ -305,10 +313,40 @@ class ImageActivity : KauBaseActivity() {
             return null
         }
         return when (type.substring(6)) {
-            "jpeg" -> ".jpg"
-            "png" -> ".png"
-            "gif" -> ".gif"
+            "jpeg" -> "jpg"
+            "png" -> "png"
+            "gif" -> "gif"
             else -> null
+        }
+    }
+
+    private fun newImageUri(mimeType: String): Uri? {
+        val imageExtension = getImageExtension(mimeType)
+        val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
+        val imageFileName = "${IMG_TAG}_${timeStamp}"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, imageFileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, IMG_TAG)
+            }
+            return contentResolver.insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues
+            )
+        }
+        val storageDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val frostDir = File(storageDir, IMG_TAG)
+        if (!frostDir.exists()) frostDir.mkdirs()
+        val imageFile = File(frostDir, "$imageFileName.$imageExtension")
+        return try {
+            frostUriFromFile(imageFile)
+        } catch (e: IllegalArgumentException) {
+            if (BuildConfig.DEBUG) {
+                L.e(e) { "Could not get uri for ${imageFile.absolutePath}" }
+            }
+            null
         }
     }
 
@@ -343,7 +381,6 @@ class ImageActivity : KauBaseActivity() {
             } else {
                 file.setLastModified(System.currentTimeMillis())
             }
-
             // Forbid overwrites
             if (file.isFile && file.length() > 0) {
                 L.i { "Forbid image overwrite" }
@@ -370,7 +407,7 @@ class ImageActivity : KauBaseActivity() {
                 throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
             }
 
-            imgExtension = getImageExtension(response.header("Content-Type")) ?: ".jpg"
+            imgExtension = getImageExtension(response.header("Content-Type")) ?: "jpg"
 
             val body = response.body ?: throw IOException("Failed to retrieve image body")
 
