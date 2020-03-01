@@ -283,7 +283,7 @@ dependencies {
     //noinspection GradleDependency
     kapt kau.Dependencies.glideKapt
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
+    debugImplementation kau.Dependencies.leakCanary
 
     //Icons
     implementation kau.Dependencies.iconicsMaterial

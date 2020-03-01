@@ -15,8 +15,6 @@ object Versions {
 
     // https://github.com/jhy/jsoup/releases
     const val jsoup = "1.13.1"
-    // https://square.github.io/leakcanary/changelog/
-    const val leakCanary = "2.2"
     // https://square.github.io/okhttp/changelog/
     const val okhttp = "4.3.1"
     // https://developer.android.com/jetpack/androidx/releases/room
