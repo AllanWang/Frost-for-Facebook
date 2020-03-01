@@ -322,7 +322,9 @@ class ImageActivity : KauBaseActivity() {
         val body = response.body ?: throw IOException("Failed to retrieve image body")
 
         val tempFile = File(cacheDir(this@ImageActivity), "$imageHash.$imgExtension")
-        tempFile.copyFromInputStream(body.byteStream())
+        if (!tempFile.exists() || tempFile.length() == 0L) {
+            tempFile.copyFromInputStream(body.byteStream())
+        }
         tempFile
     }
 
