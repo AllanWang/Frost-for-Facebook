@@ -48,7 +48,7 @@ abstract class BaseActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (this !is WebOverlayActivityBase) setFrostTheme()
+        if (this !is WebOverlayActivityBase) setFrostTheme(prefs)
     }
 
     override fun onStop() {

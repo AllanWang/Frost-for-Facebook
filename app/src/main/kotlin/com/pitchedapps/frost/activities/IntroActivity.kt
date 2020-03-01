@@ -114,7 +114,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
             indicator.invalidate()
         }
         fragments.forEach { it.themeFragment() }
-        setFrostTheme(true)
+        setFrostTheme(prefs, true)
     }
 
     /**

@@ -44,20 +44,20 @@ interface ClickableIItemContract {
 
     val url: String?
 
-    fun click(context: Context, fbCookie: FbCookie) {
+    fun click(context: Context, fbCookie: FbCookie, prefs: Prefs) {
         val url = url ?: return
-        context.launchWebOverlay(url, fbCookie)
+        context.launchWebOverlay(url, fbCookie, prefs)
     }
 
     companion object {
-        fun bindEvents(adapter: IAdapter<GenericItem>, fbCookie: FbCookie) {
+        fun bindEvents(adapter: IAdapter<GenericItem>, fbCookie: FbCookie, prefs: Prefs) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
                 }
                 onClickListener = { v, _, item, _ ->
                     if (item is ClickableIItemContract) {
-                        item.click(v!!.context, fbCookie)
+                        item.click(v!!.context, fbCookie, prefs)
                         true
                     } else
                         false
@@ -76,7 +76,8 @@ open class HeaderIItem(
     itemId: Int = R.layout.iitem_header
 ) : KauIItem<HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView), KoinComponent {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView),
+        KoinComponent {
 
         private val prefs: Prefs by inject()
 

@@ -41,7 +41,7 @@ import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ViewVideoBinding
-import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -88,6 +88,7 @@ class FrostVideoViewer @JvmOverloads constructor(
     }
 
     private val prefs: Prefs by inject()
+    private val cookieDao: CookieDao by inject()
 
     private val binding: ViewVideoBinding =
         ViewVideoBinding.inflate(LayoutInflater.from(context), this, true)
@@ -116,8 +117,7 @@ class FrostVideoViewer @JvmOverloads constructor(
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.ctxCoroutine.launchMain {
-                    val cookie =
-                        FrostDatabase.get().cookieDao().currentCookie() ?: return@launchMain
+                    val cookie = cookieDao.currentCookie(prefs) ?: return@launchMain
                     context.frostDownload(cookie, video.videoUri)
                 }
             }

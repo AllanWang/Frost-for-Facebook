@@ -28,6 +28,7 @@ import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
@@ -62,6 +63,7 @@ class FrostWebView @JvmOverloads constructor(
 
     val fbCookie: FbCookie by inject()
     val prefs: Prefs by inject()
+    val cookieDao: CookieDao by inject()
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -92,10 +94,9 @@ class FrostWebView @JvmOverloads constructor(
         webChromeClient = FrostChromeClient(this)
         addJavascriptInterface(FrostJSI(this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
-        val db = FrostDatabase.get()
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
             context.ctxCoroutine.launchMain {
-                val cookie = db.cookieDao().currentCookie() ?: return@launchMain
+                val cookie = cookieDao.currentCookie(prefs) ?: return@launchMain
                 context.frostDownload(
                     cookie,
                     url,

@@ -33,6 +33,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.latestEpoch
 import com.pitchedapps.frost.db.saveNotifications
 import com.pitchedapps.frost.enums.OverlayContext
@@ -112,8 +113,7 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    suspend fun fetch(context: Context, data: CookieEntity, prefs: Prefs): Int {
-        val notifDao = FrostDatabase.get().notifDao()
+    suspend fun fetch(context: Context, data: CookieEntity, prefs: Prefs, notifDao: NotificationDao): Int {
         val response = try {
             parser.parse(data.cookie)
         } catch (ignored: Exception) {
@@ -170,7 +170,7 @@ enum class NotificationType(
         val ringtone = ringtoneProvider(prefs)
         notifs.forEachIndexed { i, notif ->
             // Ring at most twice
-            notif.withAlert(context, i < 2, ringtone).notify(context)
+            notif.withAlert(context, i < 2, ringtone, prefs).notify(context)
         }
         return notifs.size
     }
@@ -307,8 +307,8 @@ data class FrostNotification(
     val notif: NotificationCompat.Builder
 ) {
 
-    fun withAlert(context: Context, enable: Boolean, ringtone: String): FrostNotification {
-        notif.setFrostAlert(context, enable, ringtone)
+    fun withAlert(context: Context, enable: Boolean, ringtone: String, prefs: Prefs): FrostNotification {
+        notif.setFrostAlert(context, enable, ringtone, prefs)
         return this
     }
 
