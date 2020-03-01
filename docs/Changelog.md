@@ -3,6 +3,7 @@
 ## v2.4.4
 * Lots of under the hood fixes
 * Fixed sharing
+* Fix photo downloads for Android Q+
 
 ## v2.4.3
 * Fix Android theme
