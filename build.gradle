@@ -18,10 +18,6 @@ buildscript {
     wrapper.setDistributionType(Wrapper.DistributionType.ALL)
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 task generateChangelogMd() {
     def changelog = kau.ChangelogGenerator.generate("${project.rootDir}/app/src/main/res/xml/frost_changelog.xml", "${project.rootDir}/docs/Changelog.md")
     // If we have no changelog, something is wrong
