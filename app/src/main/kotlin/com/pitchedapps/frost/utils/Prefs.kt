@@ -31,6 +31,7 @@ import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.InjectorContract
 import org.koin.core.context.GlobalContext
+import org.koin.core.context.KoinContextHandler
 import org.koin.dsl.module
 
 /**
@@ -202,7 +203,7 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
         get() = MainActivityLayout(mainActivityLayoutType)
 
     companion object {
-        fun get(): Prefs = GlobalContext.get().koin.get()
+        fun get(): Prefs = KoinContextHandler.get().get()
 
         fun module() = module {
             single { Prefs(get()) }

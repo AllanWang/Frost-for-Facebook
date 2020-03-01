@@ -92,10 +92,9 @@ fun Context.frostNotification(id: String) =
 fun NotificationCompat.Builder.setFrostAlert(
     context: Context,
     enable: Boolean,
-    ringtone: String
+    ringtone: String,
+    prefs: Prefs
 ): NotificationCompat.Builder {
-    val prefs = Prefs.get()
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
             if (enable) NotificationCompat.GROUP_ALERT_CHILDREN

@@ -23,6 +23,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -34,7 +35,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import org.koin.android.ext.android.inject
-import org.koin.core.inject
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -47,6 +47,7 @@ import org.koin.core.inject
 class NotificationService : BaseJobService() {
 
     private val prefs: Prefs by inject()
+    private val notifDao: NotificationDao by inject()
     private val cookieDao: CookieDao by inject()
 
     override fun onStopJob(params: JobParameters?): Boolean {
@@ -119,7 +120,7 @@ class NotificationService : BaseJobService() {
      * Also normalized the output to return the number of notifications received
      */
     private suspend fun fetch(jobId: Int, type: NotificationType, cookie: CookieEntity): Int {
-        val count = type.fetch(this, cookie, prefs)
+        val count = type.fetch(this, cookie, prefs, notifDao)
         if (count < 0) {
             if (jobId == NOTIFICATION_JOB_NOW)
                 generalNotification(666, R.string.error_notification, BuildConfig.DEBUG)
@@ -135,7 +136,7 @@ class NotificationService : BaseJobService() {
 
     private fun generalNotification(id: Int, textRes: Int, withDefaults: Boolean) {
         val notifBuilder = frostNotification(NOTIF_CHANNEL_GENERAL)
-            .setFrostAlert(this, withDefaults, prefs.notificationRingtone)
+            .setFrostAlert(this, withDefaults, prefs.notificationRingtone, prefs)
             .setContentTitle(string(R.string.frost_name))
             .setContentText(string(textRes))
         NotificationManagerCompat.from(this).notify(id, notifBuilder.build())

@@ -22,6 +22,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.pitchedapps.frost.BuildConfig
 import org.koin.core.context.GlobalContext
+import org.koin.core.context.KoinContextHandler
 import org.koin.dsl.module
 
 interface FrostPrivateDao {
@@ -100,11 +101,5 @@ class FrostDatabase(
             single { get<FrostDatabase>().notifDao() }
             single { get<FrostDatabase>().genericDao() }
         }
-
-        /**
-         * Get from koin
-         * For the most part, you can retrieve directly from other koin components
-         */
-        fun get(): FrostDatabase = GlobalContext.get().koin.get()
     }
 }

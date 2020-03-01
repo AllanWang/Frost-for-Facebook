@@ -51,7 +51,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
     ) {
 
     companion object {
-        fun bindEvents(adapter: ItemAdapter<NotificationIItem>, fbCookie: FbCookie) {
+        fun bindEvents(adapter: ItemAdapter<NotificationIItem>, fbCookie: FbCookie, prefs: Prefs) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
@@ -65,7 +65,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                         )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
-                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url, fbCookie)
+                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url, fbCookie, prefs)
                     true
                 }
             }
