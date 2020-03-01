@@ -40,7 +40,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT
  * With reference to <a href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack Overflow</a>
  */
 fun Context.frostDownload(
-    cookie: CookieEntity,
+    cookie: String?,
     url: String?,
     userAgent: String = USER_AGENT,
     contentDisposition: String? = null,
@@ -52,7 +52,7 @@ fun Context.frostDownload(
 }
 
 fun Context.frostDownload(
-    cookie: CookieEntity,
+    cookie: String?,
     uri: Uri?,
     userAgent: String = USER_AGENT,
     contentDisposition: String? = null,
@@ -82,7 +82,9 @@ fun Context.frostDownload(
         val request = DownloadManager.Request(uri)
         request.setMimeType(mimeType)
         val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
-        request.addRequestHeader("Cookie", cookie.cookie)
+        if (cookie != null) {
+            request.addRequestHeader("Cookie", cookie)
+        }
         request.addRequestHeader("User-Agent", userAgent)
         request.setDescription(string(R.string.downloading))
         request.setTitle(title)

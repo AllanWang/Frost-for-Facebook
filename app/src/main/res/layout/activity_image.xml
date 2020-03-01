@@ -27,6 +27,37 @@
 
     </com.pitchedapps.frost.views.DragFrame>
 
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/error"
+            style="@style/Image.Icon" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/download"
+            style="@style/Image.Icon" />
+
+        <ImageView
+            android:id="@+id/share"
+            style="@style/Image.Icon" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/image_text"
         android:layout_width="match_parent"
@@ -35,13 +66,5 @@
         android:padding="@dimen/kau_padding_normal"
         app:behavior_peekHeight="44dp"
         app:layout_behavior="@string/bottom_sheet_behavior" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/image_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/kau_fab_margin"
-        android:visibility="invisible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

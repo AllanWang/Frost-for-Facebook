@@ -118,7 +118,7 @@ class FrostVideoViewer @JvmOverloads constructor(
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.ctxCoroutine.launchMain {
                     val cookie = cookieDao.currentCookie(prefs) ?: return@launchMain
-                    context.frostDownload(cookie, video.videoUri)
+                    context.frostDownload(cookie.cookie, video.videoUri)
                 }
             }
             true

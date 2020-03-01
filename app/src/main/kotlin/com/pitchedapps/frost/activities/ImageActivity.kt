@@ -16,29 +16,23 @@
  */
 package com.pitchedapps.frost.activities
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.view.View
-import androidx.core.net.toFile
+import android.widget.ImageView
 import androidx.customview.widget.ViewDragHelper
 import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
-import ca.allanwang.kau.mediapicker.scanMedia
-import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
-import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.copyFromInputStream
+import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.gone
+import ca.allanwang.kau.utils.invisible
 import ca.allanwang.kau.utils.isHidden
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.materialDialog
@@ -54,7 +48,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
-import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
@@ -67,6 +60,7 @@ import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
 import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.isIndirectImageUrl
@@ -83,9 +77,6 @@ import org.koin.android.ext.android.inject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -102,27 +93,9 @@ class ImageActivity : KauBaseActivity() {
     /**
      * Reference to the temporary file path
      */
-    internal lateinit var tempFile: File
-    /**
-     * Reference to path for downloaded image
-     * Nonnull once the image is downloaded by the user
-     */
-    internal var savedFile: File? = null
-
-    internal var savedUri: Uri? = null
-    /**
-     * Indicator for fab's click result
-     */
-    internal var fabAction: FabStates = FabStates.NOTHING
-        set(value) {
-            if (field == value) return
-            field = value
-            value.update(binding.imageFab, prefs)
-        }
+    internal var tempFile: File? = null
 
     private lateinit var dragHelper: ViewDragHelper
-
-    private var imgExtension: String = ".jpg"
 
     companion object {
         /**
@@ -152,7 +125,7 @@ class ImageActivity : KauBaseActivity() {
         "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
     }
 
-    private lateinit var binding: ActivityImageBinding
+    lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
 
     private val baseBackgroundColor = if (prefs.blackMediaBg) Color.BLACK
@@ -166,13 +139,12 @@ class ImageActivity : KauBaseActivity() {
         }
         errorRef = e
         e.logFrostEvent("Image load error")
-        L.e(e) { "ASDF" }
         with(binding) {
             if (imageProgress.isVisible)
                 imageProgress.fadeOut()
         }
-        tempFile.delete()
-        fabAction = FabStates.ERROR
+        tempFile?.delete()
+        binding.error.fadeIn()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -190,34 +162,31 @@ class ImageActivity : KauBaseActivity() {
         }
         binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.onCreate()
-        tempFile = File(cacheDir(this), imageHash)
+        binding.init()
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
-            downloadImageTo(tempFile)
+            val tempFile = downloadTempImage()
+            this@ImageActivity.tempFile = tempFile
             binding.imageProgress.fadeOut()
             binding.imagePhoto.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
-            fabAction = FabStates.DOWNLOAD
             binding.imagePhoto.animate().alpha(1f).scaleXY(1f).start()
         }
     }
 
-    private fun ActivityImageBinding.onCreate() {
+    private fun ActivityImageBinding.init() {
         imageContainer.setBackgroundColor(baseBackgroundColor)
+        toolbar.setBackgroundColor(baseBackgroundColor)
         this@ImageActivity.imageText.also { text ->
             if (text.isNullOrBlank()) {
                 imageText.gone()
             } else {
                 imageText.setTextColor(if (prefs.blackMediaBg) Color.WHITE else prefs.textColor)
                 imageText.setBackgroundColor(
-                    (if (prefs.blackMediaBg) Color.BLACK else prefs.bgColor)
-                        .colorToForeground(0.2f).withAlpha(255)
+                    baseBackgroundColor.colorToForeground(0.2f).withAlpha(255)
                 )
                 imageText.text = text
                 bottomBehavior = BottomSheetBehavior.from<View>(imageText).apply {
-                    setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                            if (slideOffset == 0f && !imageFab.isShown) imageFab.show()
-                            else if (slideOffset != 0f && imageFab.isShown) imageFab.hide()
                             imageText.alpha = slideOffset / 2 + 0.5f
                         }
 
@@ -229,8 +198,24 @@ class ImageActivity : KauBaseActivity() {
                 imageText.bringToFront()
             }
         }
-        imageProgress.tint(if (prefs.blackMediaBg) Color.WHITE else prefs.accentColor)
-        imageFab.setOnClickListener { fabAction.onClick(this@ImageActivity) }
+        val foregroundTint = if (prefs.blackMediaBg) Color.WHITE else prefs.accentColor
+
+        fun ImageView.setState(state: FabStates) {
+            setIcon(state.iicon, color = foregroundTint, sizeDp = 24)
+            setOnClickListener { state.onClick(this@ImageActivity) }
+        }
+
+        imageProgress.tint(foregroundTint)
+        error.apply {
+            invisible()
+            setState(FabStates.ERROR)
+        }
+        download.apply {
+            setState(FabStates.DOWNLOAD)
+        }
+        share.apply {
+            setState(FabStates.SHARE)
+        }
         imagePhoto.setOnImageEventListener(object :
             SubsamplingScaleImageView.DefaultOnImageEventListener() {
             override fun onImageLoadError(e: Exception) {
@@ -275,7 +260,7 @@ class ImageActivity : KauBaseActivity() {
                 scrollToTop = top < 0
                 val multiplier = max(1f - scrollPercent, 0f)
 
-                imageFab.alpha = multiplier
+                toolbar.alpha = multiplier
                 bottomBehavior?.also {
                     imageText.alpha =
                         multiplier * (if (it.state == BottomSheetBehavior.STATE_COLLAPSED) 0.5f else 1f)
@@ -320,122 +305,29 @@ class ImageActivity : KauBaseActivity() {
         }
     }
 
-    private fun newImageUri(mimeType: String): Uri? {
-        val imageExtension = getImageExtension(mimeType)
-        val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
-        val imageFileName = "${IMG_TAG}_${timeStamp}"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, imageFileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-                put(MediaStore.MediaColumns.RELATIVE_PATH, IMG_TAG)
-            }
-            return contentResolver.insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues
-            )
-        }
-        val storageDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val frostDir = File(storageDir, IMG_TAG)
-        if (!frostDir.exists()) frostDir.mkdirs()
-        val imageFile = File(frostDir, "$imageFileName.$imageExtension")
-        return try {
-            frostUriFromFile(imageFile)
-        } catch (e: IllegalArgumentException) {
-            if (BuildConfig.DEBUG) {
-                L.e(e) { "Could not get uri for ${imageFile.absolutePath}" }
-            }
-            null
-        }
-    }
-
     @Throws(IOException::class)
-    private fun createPublicMediaFile(): File {
-        val timeStamp = SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(Date())
-        val imageFileName = "${IMG_TAG}_${timeStamp}_"
-        val storageDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val frostDir = File(storageDir, IMG_TAG)
-        if (!frostDir.exists()) frostDir.mkdirs()
-        return File.createTempFile(imageFileName, imgExtension, frostDir)
+    private suspend fun downloadTempImage(): File = withContext(Dispatchers.IO) {
+        val response = cookie.requestBuilder()
+            .url(trueImageUrl.await())
+            .get()
+            .call()
+            .execute()
+
+        if (!response.isSuccessful) {
+            throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
+        }
+
+        val imgExtension = getImageExtension(response.header("Content-Type")) ?: "jpg"
+
+        val body = response.body ?: throw IOException("Failed to retrieve image body")
+
+        val tempFile = File(cacheDir(this@ImageActivity), "$imageHash.$imgExtension")
+        tempFile.copyFromInputStream(body.byteStream())
+        tempFile
     }
 
-    /**
-     * Saves the image to the specified file, creating it if it doesn't exist.
-     * Returns true if a change is made, false otherwise.
-     * Throws an error if something goes wrong.
-     */
-    @Throws(IOException::class)
-    private suspend fun downloadImageTo(file: File): Boolean {
-        val exceptionHandler = CoroutineExceptionHandler { _, err ->
-            if (file.isFile && file.length() == 0L) {
-                file.delete()
-            }
-            throw err
-        }
-        return withContext(Dispatchers.IO + exceptionHandler) {
-            if (!file.isFile) {
-                file.parentFile?.mkdirs()
-                file.createNewFile()
-            } else {
-                file.setLastModified(System.currentTimeMillis())
-            }
-            // Forbid overwrites
-            if (file.isFile && file.length() > 0) {
-                L.i { "Forbid image overwrite" }
-                return@withContext false
-            }
-
-            // Fast route, image is already downloaded
-            if (tempFile.isFile && tempFile.length() > 0) {
-                if (tempFile == file) {
-                    return@withContext false
-                }
-                tempFile.copyTo(file, true)
-                return@withContext true
-            }
-
-            // No temp file, download ourselves
-            val response = cookie.requestBuilder()
-                .url(trueImageUrl.await())
-                .get()
-                .call()
-                .execute()
-
-            if (!response.isSuccessful) {
-                throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
-            }
-
-            imgExtension = getImageExtension(response.header("Content-Type")) ?: "jpg"
-
-            val body = response.body ?: throw IOException("Failed to retrieve image body")
-
-            file.copyFromInputStream(body.byteStream())
-
-            return@withContext true
-        }
-    }
-
-    internal fun saveImage() {
-        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
-            L.d { "Download image callback granted: $granted" }
-            if (granted) {
-                val errorHandler = CoroutineExceptionHandler { _, throwable ->
-                    loadError(throwable)
-                    frostSnackbar(R.string.image_download_fail)
-                }
-                launch(errorHandler) {
-                    val destination = createPublicMediaFile()
-                    downloadImageTo(destination)
-                    L.d { "Download image async finished" }
-                    scanMedia(destination)
-                    savedFile = destination
-                    frostSnackbar(R.string.image_download_success)
-                    fabAction = FabStates.SHARE
-                }
-            }
-        }
+    internal suspend fun saveImage() {
+        frostDownload(cookie = cookie, url = trueImageUrl.await())
     }
 
     override fun onDestroy() {
@@ -472,12 +364,18 @@ internal enum class FabStates(
         override fun onClick(activity: ImageActivity) {}
     },
     DOWNLOAD(GoogleMaterial.Icon.gmd_file_download) {
-        override fun onClick(activity: ImageActivity) = activity.saveImage()
+        override fun onClick(activity: ImageActivity) {
+            activity.launch {
+                activity.saveImage()
+                activity.binding.download.fadeOut()
+            }
+        }
     },
     SHARE(GoogleMaterial.Icon.gmd_share) {
         override fun onClick(activity: ImageActivity) {
+            val file = activity.tempFile ?: return
             try {
-                val photoURI = activity.frostUriFromFile(activity.savedFile!!)
+                val photoURI = activity.frostUriFromFile(file)
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     putExtra(Intent.EXTRA_STREAM, photoURI)
