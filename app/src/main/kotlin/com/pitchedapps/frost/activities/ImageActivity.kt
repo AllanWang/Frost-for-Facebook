@@ -67,11 +67,6 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
-import kotlin.math.abs
-import kotlin.math.max
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -79,6 +74,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -307,6 +307,25 @@ class ImageActivity : KauBaseActivity() {
 
     @Throws(IOException::class)
     private suspend fun downloadTempImage(): File = withContext(Dispatchers.IO) {
+
+        // We assume all images are jpg
+        // Activity launcher may be able to provide specifics, but this beats sending a request
+        // just to get the content header
+        val file = File(cacheDir(this@ImageActivity), "$imageHash.jpg")
+
+        if (!file.isFile) {
+            file.parentFile?.mkdirs()
+            file.createNewFile()
+        } else {
+            file.setLastModified(System.currentTimeMillis())
+        }
+
+        // Forbid overwrites
+        if (file.isFile && file.length() > 0) {
+            L.i { "Forbid image overwrite" }
+            return@withContext file
+        }
+
         val response = cookie.requestBuilder()
             .url(trueImageUrl.await())
             .get()
@@ -317,15 +336,9 @@ class ImageActivity : KauBaseActivity() {
             throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
         }
 
-        val imgExtension = getImageExtension(response.header("Content-Type")) ?: "jpg"
-
         val body = response.body ?: throw IOException("Failed to retrieve image body")
-
-        val tempFile = File(cacheDir(this@ImageActivity), "$imageHash.$imgExtension")
-        if (!tempFile.exists() || tempFile.length() == 0L) {
-            tempFile.copyFromInputStream(body.byteStream())
-        }
-        tempFile
+        file.copyFromInputStream(body.byteStream())
+        file
     }
 
     internal suspend fun saveImage() {
