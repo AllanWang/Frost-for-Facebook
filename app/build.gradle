@@ -328,14 +328,29 @@ configurations.all {
     }
 }
 
+task lintGithubReleaseApk {
+    dependsOn 'spotlessCheck'
+    dependsOn 'lintRelease'
+}
+
+task testGithubReleaseApk {
+    dependsOn 'testReleaseUnitTest'
+    dependsOn 'connectedAndroidTest'
+}
+
+task assembleGithubReleaseApk {
+    dependsOn 'assembleRelease'
+}
+
 // Validates code and generates apk
 // TODO order tasks; though technically it doesn't matter
 task createGithubReleaseApk {
-    dependsOn 'spotlessCheck'
-    dependsOn 'lintRelease'
-    dependsOn 'testReleaseUnitTest'
-    dependsOn 'connectedAndroidTest'
-    dependsOn 'assembleRelease'
+    dependsOn 'lintGithubReleaseApk'
+    dependsOn 'testGithubReleaseApk'
+    dependsOn 'assembleGithubReleaseApk'
+
+    tasks.findByName('testGithubReleaseApk').mustRunAfter 'lintGithubReleaseApk'
+    tasks.findByName('assembleGithubReleaseApk').mustRunAfter 'testGithubReleaseApk'
 }
 
 apply plugin: 'com.bugsnag.android.gradle'
