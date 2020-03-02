@@ -107,7 +107,10 @@ class FlyweightTest {
             } catch (ignore: CancellationException) {
             }
             try {
-                assertFalse(longRunningResult.isActive, "Long running result should no longer be active")
+                assertFalse(
+                    longRunningResult.isActive,
+                    "Long running result should no longer be active"
+                )
                 longRunningResult.await()
                 fail("Flyweight should have cancelled previously running requests")
             } catch (ignore: CancellationException) {

@@ -661,7 +661,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 }
                 textDebounceInterval = 300
                 searchCallback =
-                    { query, _ -> launchWebOverlay("${FbItem._SEARCH.url}/?q=$query", fbCookie, prefs); true }
+                    { query, _ ->
+                        launchWebOverlay(
+                            "${FbItem._SEARCH.url}/?q=$query",
+                            fbCookie,
+                            prefs
+                        ); true
+                    }
                 closeListener = { _ -> searchViewCache.clear() }
                 foregroundColor = prefs.textColor
                 backgroundColor = prefs.bgColor.withMinAlpha(200)

@@ -61,7 +61,10 @@ class CoroutineTest {
         }
     }
 
-    private suspend fun <T> listen(channel: ReceiveChannel<T>, shouldEnd: suspend (T) -> Boolean = { false }): List<T> =
+    private suspend fun <T> listen(
+        channel: ReceiveChannel<T>,
+        shouldEnd: suspend (T) -> Boolean = { false }
+    ): List<T> =
         withContext(Dispatchers.IO) {
             val data = mutableListOf<T>()
             for (c in channel) {

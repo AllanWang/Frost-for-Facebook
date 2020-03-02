@@ -65,7 +65,11 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                         )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
-                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url, fbCookie, prefs)
+                    v!!.context.launchWebOverlay(
+                        if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url,
+                        fbCookie,
+                        prefs
+                    )
                     true
                 }
             }
@@ -96,7 +100,8 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         }
     }
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView), KoinComponent {
+    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView),
+        KoinComponent {
 
         private val prefs: Prefs by inject()
 

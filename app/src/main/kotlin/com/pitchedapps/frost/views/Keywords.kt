@@ -122,7 +122,12 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() 
 
         init {
             text.setTextColor(prefs.textColor)
-            delete.setImageDrawable(GoogleMaterial.Icon.gmd_delete.keywordDrawable(itemView.context, prefs))
+            delete.setImageDrawable(
+                GoogleMaterial.Icon.gmd_delete.keywordDrawable(
+                    itemView.context,
+                    prefs
+                )
+            )
         }
     }
 }

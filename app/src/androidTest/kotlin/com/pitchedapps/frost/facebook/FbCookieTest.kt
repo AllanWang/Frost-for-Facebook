@@ -24,6 +24,9 @@ class FbCookieTest {
 
     @Test
     fun managerAcceptsCookie() {
-        assertTrue(CookieManager.getInstance().acceptCookie(), "Cookie manager should accept cookie by default")
+        assertTrue(
+            CookieManager.getInstance().acceptCookie(),
+            "Cookie manager should accept cookie by default"
+        )
     }
 }

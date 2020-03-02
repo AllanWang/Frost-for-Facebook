@@ -40,7 +40,6 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUri
 import com.pitchedapps.frost.views.Keywords
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.get
 
 /**
  * Created by Allan Wang on 2017-06-29.

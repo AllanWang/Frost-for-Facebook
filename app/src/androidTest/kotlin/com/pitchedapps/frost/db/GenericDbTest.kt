@@ -31,7 +31,13 @@ class GenericDbTest : BaseDbTest() {
      */
     @Test
     fun save() {
-        val tabs = listOf(FbItem.ACTIVITY_LOG, FbItem.BIRTHDAYS, FbItem.EVENTS, FbItem.MARKETPLACE, FbItem.ACTIVITY_LOG)
+        val tabs = listOf(
+            FbItem.ACTIVITY_LOG,
+            FbItem.BIRTHDAYS,
+            FbItem.EVENTS,
+            FbItem.MARKETPLACE,
+            FbItem.ACTIVITY_LOG
+        )
         runBlocking {
             dao.saveTabs(tabs)
             assertEquals(tabs, dao.getTabs(), "Tab saving failed")
@@ -51,7 +57,12 @@ class GenericDbTest : BaseDbTest() {
     @Test
     fun ignoreErrors() {
         runBlocking {
-            dao._save(GenericEntity(GenericDao.TYPE_TABS, "${FbItem.ACTIVITY_LOG.name},unknown,${FbItem.EVENTS.name}"))
+            dao._save(
+                GenericEntity(
+                    GenericDao.TYPE_TABS,
+                    "${FbItem.ACTIVITY_LOG.name},unknown,${FbItem.EVENTS.name}"
+                )
+            )
             assertEquals(
                 listOf(FbItem.ACTIVITY_LOG, FbItem.EVENTS),
                 dao.getTabs(),

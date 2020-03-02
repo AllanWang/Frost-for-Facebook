@@ -101,7 +101,8 @@ fun WebView.jsInject(vararg injectors: InjectorContract, prefs: Prefs) {
     }
 }
 
-fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, prefs: Prefs) = web.jsInject(*injectors, prefs = prefs)
+fun FrostWebViewClient.jsInject(vararg injectors: InjectorContract, prefs: Prefs) =
+    web.jsInject(*injectors, prefs = prefs)
 
 /**
  * Wrapper class to convert a function into an injector

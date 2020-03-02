@@ -73,7 +73,11 @@ object BiometricUtils {
      * Note that the underlying request will call [androidx.fragment.app.FragmentTransaction.commit],
      * so this cannot happen after onSaveInstanceState.
      */
-    fun authenticate(activity: FragmentActivity, prefs: Prefs, force: Boolean = false): BiometricDeferred {
+    fun authenticate(
+        activity: FragmentActivity,
+        prefs: Prefs,
+        force: Boolean = false
+    ): BiometricDeferred {
         val deferred: BiometricDeferred = CompletableDeferred()
         if (!force && !shouldPrompt(activity, prefs)) {
             deferred.complete(null)

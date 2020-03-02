@@ -79,7 +79,10 @@ fun Any.assertComponentsNotEmpty() {
                 val result = it.call(this) as String
                 assertTrue(result.isNotEmpty(), "${it.name} returned empty string")
                 if (result.startsWith("https"))
-                    assertTrue(result.startsWith("https://"), "${it.name} has poorly formatted output $result")
+                    assertTrue(
+                        result.startsWith("https://"),
+                        "${it.name} has poorly formatted output $result"
+                    )
             }
         }
     }

@@ -137,7 +137,9 @@ class OfflineWebsiteTest {
         server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse =
                 when {
-                    request.path?.contains(cssUrl.encodedPath) == true -> MockResponse().setBody(css1)
+                    request.path?.contains(cssUrl.encodedPath) == true -> MockResponse().setBody(
+                        css1
+                    )
                     else -> MockResponse().setBody(content)
                 }
         }

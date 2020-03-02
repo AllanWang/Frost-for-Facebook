@@ -112,7 +112,12 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    suspend fun fetch(context: Context, data: CookieEntity, prefs: Prefs, notifDao: NotificationDao): Int {
+    suspend fun fetch(
+        context: Context,
+        data: CookieEntity,
+        prefs: Prefs,
+        notifDao: NotificationDao
+    ): Int {
         val response = try {
             parser.parse(data.cookie)
         } catch (ignored: Exception) {
@@ -306,7 +311,12 @@ data class FrostNotification(
     val notif: NotificationCompat.Builder
 ) {
 
-    fun withAlert(context: Context, enable: Boolean, ringtone: String, prefs: Prefs): FrostNotification {
+    fun withAlert(
+        context: Context,
+        enable: Boolean,
+        ringtone: String,
+        prefs: Prefs
+    ): FrostNotification {
         notif.setFrostAlert(context, enable, ringtone, prefs)
         return this
     }
