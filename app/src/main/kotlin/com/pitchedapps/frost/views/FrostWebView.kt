@@ -98,7 +98,7 @@ class FrostWebView @JvmOverloads constructor(
             context.ctxCoroutine.launchMain {
                 val cookie = cookieDao.currentCookie(prefs) ?: return@launchMain
                 context.frostDownload(
-                    cookie,
+                    cookie.cookie,
                     url,
                     userAgent,
                     contentDisposition,

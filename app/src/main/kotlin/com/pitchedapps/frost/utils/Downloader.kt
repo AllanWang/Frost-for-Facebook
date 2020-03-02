@@ -22,6 +22,7 @@ import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
 import android.os.Environment
 import android.webkit.URLUtil
+import androidx.core.content.getSystemService
 import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.isAppEnabled
@@ -39,7 +40,7 @@ import com.pitchedapps.frost.facebook.USER_AGENT
  * With reference to <a href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack Overflow</a>
  */
 fun Context.frostDownload(
-    cookie: CookieEntity,
+    cookie: String?,
     url: String?,
     userAgent: String = USER_AGENT,
     contentDisposition: String? = null,
@@ -51,7 +52,7 @@ fun Context.frostDownload(
 }
 
 fun Context.frostDownload(
-    cookie: CookieEntity,
+    cookie: String?,
     uri: Uri?,
     userAgent: String = USER_AGENT,
     contentDisposition: String? = null,
@@ -64,7 +65,8 @@ fun Context.frostDownload(
         toast(R.string.error_invalid_download)
         return L.e { "Invalid download $uri" }
     }
-    if (!isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
+    val dm = getSystemService<DownloadManager>()
+    if (dm == null || !isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
         materialDialog {
             title(R.string.no_download_manager)
             message(R.string.no_download_manager_desc)
@@ -80,14 +82,15 @@ fun Context.frostDownload(
         val request = DownloadManager.Request(uri)
         request.setMimeType(mimeType)
         val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
-        request.addRequestHeader("Cookie", cookie.cookie)
+        if (cookie != null) {
+            request.addRequestHeader("Cookie", cookie)
+        }
         request.addRequestHeader("User-Agent", userAgent)
         request.setDescription(string(R.string.downloading))
         request.setTitle(title)
         request.allowScanningByMediaScanner()
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Frost/$title")
-        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         try {
             dm.enqueue(request)
         } catch (e: Exception) {
