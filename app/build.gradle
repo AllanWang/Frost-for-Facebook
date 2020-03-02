@@ -40,18 +40,20 @@ android {
         versionName '2.4.4'
 //        versionName androidGitVersion.name()
 
-        // Verification for F-Droid builds
-        if (versionCode != androidGitVersion.code()) {
-            throw new GradleException("Version code mismatch, expected ${androidGitVersion.code()}, got $versionCode")
-        }
-        if (versionName != androidGitVersion.name()) {
-            throw new GradleException("Version name mismatch, expected ${androidGitVersion.name()}, got $versionName")
-        }
-        multiDexEnabled true
-        testInstrumentationRunner "com.pitchedapps.frost.FrostTestRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/src/schemas".toString()]
+        if (System.getenv('TRAVIS') != 'true') {
+            // Verification for F-Droid builds
+            if (versionCode != androidGitVersion.code()) {
+                throw new GradleException("Version code mismatch, expected ${androidGitVersion.code()}, got $versionCode")
+            }
+            if (versionName != androidGitVersion.name()) {
+                throw new GradleException("Version name mismatch, expected ${androidGitVersion.name()}, got $versionName")
+            }
+            multiDexEnabled true
+            testInstrumentationRunner "com.pitchedapps.frost.FrostTestRunner"
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = ["room.schemaLocation": "$projectDir/src/schemas".toString()]
+                }
             }
         }
     }

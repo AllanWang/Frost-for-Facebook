@@ -28,6 +28,7 @@ import com.pitchedapps.frost.utils.ARG_TEXT
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import okhttp3.internal.closeQuietly
@@ -45,7 +46,6 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.rules.Timeout
 import org.junit.runner.RunWith
-import kotlin.test.assertNotNull
 
 @RunWith(AndroidJUnit4::class)
 class ImageActivityTest {
