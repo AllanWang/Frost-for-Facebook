@@ -67,6 +67,11 @@ import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import kotlin.math.abs
+import kotlin.math.max
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -74,11 +79,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
-import kotlin.math.abs
-import kotlin.math.max
 
 /**
  * Created by Allan Wang on 2017-07-15.

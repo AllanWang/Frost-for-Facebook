@@ -20,7 +20,6 @@ import android.content.Context
 import androidx.annotation.StringRes
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.sendFrostEmail
 
 /**

@@ -32,7 +32,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.latestEpoch
 import com.pitchedapps.frost.db.saveNotifications

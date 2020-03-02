@@ -29,7 +29,6 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.db.CookieDao
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.FbCookie

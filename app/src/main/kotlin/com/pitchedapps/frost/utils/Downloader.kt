@@ -18,7 +18,6 @@ package com.pitchedapps.frost.utils
 
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
 import android.os.Environment
 import android.webkit.URLUtil
@@ -31,7 +30,6 @@ import ca.allanwang.kau.utils.showAppInfo
 import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toast
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.USER_AGENT
 
 /**

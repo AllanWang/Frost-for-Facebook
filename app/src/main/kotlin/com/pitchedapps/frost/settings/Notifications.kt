@@ -32,7 +32,6 @@ import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.deleteAll
 import com.pitchedapps.frost.services.fetchNotifications
 import com.pitchedapps.frost.utils.Prefs

@@ -30,7 +30,6 @@ import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.InjectorContract
-import org.koin.core.context.GlobalContext
 import org.koin.core.context.KoinContextHandler
 import org.koin.dsl.module
 

@@ -21,8 +21,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.pitchedapps.frost.BuildConfig
-import org.koin.core.context.GlobalContext
-import org.koin.core.context.KoinContextHandler
 import org.koin.dsl.module
 
 interface FrostPrivateDao {
