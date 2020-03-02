@@ -35,7 +35,3 @@ task generateChangelogMd() {
         }
     }
 }
-
-task fullRelease(type: GradleBuild) {
-    tasks = ['clean', 'lintRelease', 'test', 'assembleRelease']
-}

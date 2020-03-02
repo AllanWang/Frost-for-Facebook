@@ -19,6 +19,7 @@ package com.pitchedapps.frost.activities
 import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import ca.allanwang.kau.utils.isVisible
 import com.pitchedapps.frost.FrostTestRule
 import com.pitchedapps.frost.helper.getResource
 import com.pitchedapps.frost.utils.ARG_COOKIE
@@ -44,6 +45,7 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import org.junit.rules.Timeout
 import org.junit.runner.RunWith
+import kotlin.test.assertNotNull
 
 @RunWith(AndroidJUnit4::class)
 class ImageActivityTest {
@@ -110,11 +112,13 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(
-                FabStates.DOWNLOAD,
-                fabAction,
-                "Image should be successful, image should be downloaded"
-            )
+//            assertEquals(
+//                FabStates.DOWNLOAD,
+//                fabAction,
+//                "Image should be successful, image should be downloaded"
+//            )
+            assertFalse(binding.error.isVisible, "Error should not be shown")
+            val tempFile = assertNotNull(tempFile, "Temp file not created")
             assertTrue(tempFile.exists(), "Image should be located at temp file")
             assertTrue(
                 System.currentTimeMillis() - tempFile.lastModified() < 2000L,
@@ -131,13 +135,15 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(
-                FabStates.ERROR,
-                fabAction,
-                "Text should not be a valid image format, error state expected"
-            )
+            assertTrue(binding.error.isVisible, "Error should be shown")
+
+//            assertEquals(
+//                FabStates.ERROR,
+//                fabAction,
+//                "Text should not be a valid image format, error state expected"
+//            )
             assertEquals("Image format not supported", errorRef?.message, "Error message mismatch")
-            assertFalse(tempFile.exists(), "Temp file should have been removed")
+            assertFalse(tempFile?.exists() == true, "Temp file should have been removed")
         }
     }
 
@@ -147,13 +153,14 @@ class ImageActivityTest {
         mockServer.takeRequest()
         with(activity.activity) {
             assertEquals(1, mockServer.requestCount, "One http request expected")
-            assertEquals(FabStates.ERROR, fabAction, "Error response code, error state expected")
+            assertTrue(binding.error.isVisible, "Error should be shown")
+//            assertEquals(FabStates.ERROR, fabAction, "Error response code, error state expected")
             assertEquals(
                 "Unsuccessful response for image: Error mock response",
                 errorRef?.message,
                 "Error message mismatch"
             )
-            assertFalse(tempFile.exists(), "Temp file should have been removed")
+            assertFalse(tempFile?.exists() == true, "Temp file should have been removed")
         }
     }
 }

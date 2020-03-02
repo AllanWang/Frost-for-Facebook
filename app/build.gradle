@@ -309,15 +309,6 @@ dependencies {
 
 }
 
-// Validates code and generates apk
-task createGithubReleaseApk(type: GradleBuild) {
-    tasks = ['spotlessCheck',
-             'lintRelease',
-             'testReleaseUnitTest',
-             'connectedAndroidTest',
-             'assembleRelease']
-}
-
 def kotlinResolutions = ['kotlin-reflect',
                          'kotlin-stdlib',
                          'kotlin-stdlib-jdk7',
@@ -333,6 +324,16 @@ configurations.all {
             details.useVersion kau.Versions.kotlin
         }
     }
+}
+
+// Validates code and generates apk
+// TODO order tasks; though technically it doesn't matter
+task createGithubReleaseApk {
+    dependsOn 'spotlessCheck'
+    dependsOn 'lintRelease'
+    dependsOn 'testReleaseUnitTest'
+    dependsOn 'connectedAndroidTest'
+    dependsOn 'assembleRelease'
 }
 
 apply plugin: 'com.bugsnag.android.gradle'
