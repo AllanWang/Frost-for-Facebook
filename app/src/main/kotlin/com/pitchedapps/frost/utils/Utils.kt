@@ -71,6 +71,8 @@ import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
 import java.io.File
 import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
@@ -81,8 +83,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 /**
  * Created by Allan Wang on 2017-06-03.

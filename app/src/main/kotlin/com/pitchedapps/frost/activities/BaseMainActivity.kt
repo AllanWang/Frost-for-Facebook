@@ -39,7 +39,6 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.alpha
-import androidx.core.text.htmlEncode
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -133,8 +132,6 @@ import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 /**
  * Created by Allan Wang on 20/12/17.
