@@ -39,6 +39,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.alpha
+import androidx.core.text.htmlEncode
 import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -123,6 +124,7 @@ import com.pitchedapps.frost.utils.launchLogin
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
 import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.urlEncode
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
@@ -131,6 +133,8 @@ import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -649,12 +653,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             if (items.isNotEmpty())
                                 items.add(
                                     SearchItem(
-                                        "${FbItem._SEARCH.url}?q=$query",
+                                        "${FbItem._SEARCH.url}/?q=${query.urlEncode()}",
                                         string(R.string.show_all_results),
                                         iicon = null
                                     )
                                 )
                             searchViewCache[query] = items
+
                             searchView.results = items
                         }
                     }
@@ -663,7 +668,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 searchCallback =
                     { query, _ ->
                         launchWebOverlay(
-                            "${FbItem._SEARCH.url}/?q=$query",
+                            "${FbItem._SEARCH.url}/?q=${query.urlEncode()}",
                             fbCookie,
                             prefs
                         ); true

@@ -81,6 +81,8 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -369,6 +371,9 @@ val dependentSegments = arrayOf(
 
 inline val String?.isExplicitIntent
     get() = this != null && (startsWith("intent://") || startsWith("market://"))
+
+fun String.urlEncode(): String =
+    URLEncoder.encode(this, StandardCharsets.UTF_8.name())
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog)
 
