@@ -71,6 +71,8 @@ import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
 import java.io.File
 import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
@@ -369,6 +371,9 @@ val dependentSegments = arrayOf(
 
 inline val String?.isExplicitIntent
     get() = this != null && (startsWith("intent://") || startsWith("market://"))
+
+fun String.urlEncode(): String =
+    URLEncoder.encode(this, StandardCharsets.UTF_8.name())
 
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog)
 

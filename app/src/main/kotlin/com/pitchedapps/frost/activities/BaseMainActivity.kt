@@ -123,6 +123,7 @@ import com.pitchedapps.frost.utils.launchLogin
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
 import com.pitchedapps.frost.utils.setFrostColors
+import com.pitchedapps.frost.utils.urlEncode
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
@@ -649,12 +650,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             if (items.isNotEmpty())
                                 items.add(
                                     SearchItem(
-                                        "${FbItem._SEARCH.url}?q=$query",
+                                        "${FbItem._SEARCH.url}/?q=${query.urlEncode()}",
                                         string(R.string.show_all_results),
                                         iicon = null
                                     )
                                 )
                             searchViewCache[query] = items
+
                             searchView.results = items
                         }
                     }
@@ -663,7 +665,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 searchCallback =
                     { query, _ ->
                         launchWebOverlay(
-                            "${FbItem._SEARCH.url}/?q=$query",
+                            "${FbItem._SEARCH.url}/?q=${query.urlEncode()}",
                             fbCookie,
                             prefs
                         ); true

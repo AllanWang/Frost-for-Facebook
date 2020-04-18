@@ -24,6 +24,7 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.urlEncode
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -39,7 +40,7 @@ import org.jsoup.nodes.Element
 object MessageParser : FrostParser<FrostMessages> by MessageParserImpl() {
 
     fun queryUser(cookie: String?, name: String) =
-        parseFromUrl(cookie, "${FbItem.MESSAGES.url}/?q=$name")
+        parseFromUrl(cookie, "${FbItem.MESSAGES.url}/?q=${name.urlEncode()}")
 }
 
 data class FrostMessages(
