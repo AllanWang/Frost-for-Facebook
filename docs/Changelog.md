@@ -3,6 +3,7 @@
 ## v2.4.5
 * Fix url query encoding
 * Add option to make images full screen (settings > news feed)
+* Auto expand text area when typing
 
 ## v2.4.4
 * Lots of under the hood fixes
