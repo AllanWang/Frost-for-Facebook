@@ -29,6 +29,7 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.CssSmallAssets
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.jsInject
@@ -127,11 +128,12 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                     (web.url?.contains("?sk=h_chr") ?: false) &&
                         prefs.aggressiveRecents
                 ),
+                CssHider.ADS.maybe(!prefs.showFacebookAds),
+                CssSmallAssets.FullSizeImage.maybe(prefs.fullSizeImage),
                 JsAssets.DOCUMENT_WATCHER,
                 JsAssets.HORIZONTAL_SCROLLING,
                 JsAssets.AUTO_RESIZE_TEXTAREA,
                 JsAssets.CLICK_A,
-                CssHider.ADS.maybe(!prefs.showFacebookAds),
                 JsAssets.CONTEXT_A,
                 JsAssets.MEDIA,
                 prefs = prefs

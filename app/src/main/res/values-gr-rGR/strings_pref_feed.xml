@@ -9,7 +9,7 @@
     <string name="composer_desc">Εμφάνιση Δημιουργίας Δημοσίευσης στο feed δημοσιεύσεων</string>
 
     <string name="suggested_friends">Προτεινόμενοι Φίλοι</string>
-    <string name="suggested_friends_desc">Εμφάνισε "Ανθρώπους που ίσως γνωρίζετε" στο feed δημοσιεύσεων</string>
+    <string name="suggested_friends_desc">Εμφάνισε \"Ανθρώπους που ίσως γνωρίζετε\" στο feed δημοσιεύσεων</string>
     <string name="suggested_groups">Προτεινόμενες ομάδες</string>
     <string name="suggested_groups_desc">Εμφάνισε "Προτεινόμενες ομάδες" στο feed</string>
     <string name="show_stories">Εμφάνιση Ιστοριών</string>

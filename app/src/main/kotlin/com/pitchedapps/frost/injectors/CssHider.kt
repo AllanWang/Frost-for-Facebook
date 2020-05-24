@@ -24,7 +24,7 @@ import com.pitchedapps.frost.utils.Prefs
  *
  * List of elements to hide
  */
-enum class CssHider(vararg val items: String) : InjectorContract {
+enum class CssHider(private vararg val items: String) : InjectorContract {
     CORE("[data-sigil=m_login_upsell]", "[role=progressbar]"),
     HEADER(
         "#header:not(.mFuturePageHeader):not(.titled)",
@@ -51,7 +51,7 @@ enum class CssHider(vararg val items: String) : InjectorContract {
 
     val injector: JsInjector by lazy {
         JsBuilder().css("${items.joinToString(separator = ",")}{display:none !important}")
-            .single(name).build()
+            .single("css-hider-$name").build()
     }
 
     override fun inject(webView: WebView, prefs: Prefs) =
