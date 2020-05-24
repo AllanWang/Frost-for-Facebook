@@ -97,4 +97,11 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }) {
         descRes = R.string.facebook_ads_desc
     }
+
+    checkbox(R.string.full_size_image, prefs::fullSizeImage, {
+        prefs.fullSizeImage = it
+        shouldRefreshMain()
+    }) {
+        descRes = R.string.full_size_image_desc
+    }
 }
