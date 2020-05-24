@@ -56,4 +56,9 @@ class UrlTests {
         assertFalse(GOOGLE.isFacebookUrl, "google")
         assertTrue(FACEBOOK_COM.isFacebookUrl, "facebook")
     }
+
+    @Test
+    fun queryEncoding() {
+        assertEquals("%23foo", "#foo".urlEncode())
+    }
 }

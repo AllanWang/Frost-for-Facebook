@@ -23,6 +23,7 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.facebook.parsers.FrostSearch.Companion.create
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.urlEncode
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -31,7 +32,7 @@ import org.jsoup.nodes.Element
  */
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
     fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
-        val url = "${FbItem._SEARCH_PARSE.url}?q=${if (input.isNotBlank()) input else "a"}"
+        val url = "${FbItem._SEARCH_PARSE.url}/?q=${if (input.isNotBlank()) input.urlEncode() else "a"}"
         L._i { "Search Query $url" }
         return parseFromUrl(cookie, url)
     }
