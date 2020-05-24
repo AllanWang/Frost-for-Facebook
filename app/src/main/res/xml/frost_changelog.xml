@@ -6,6 +6,15 @@
     <item text="" />
     -->
 
+    <version title="v2.4.5" />
+    <item text="Fix url query encoding" />
+    <item text="Add option to make images full screen (settings > news feed)" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.4.4" />
     <item text="Lots of under the hood fixes" />
     <item text="Fixed sharing" />
