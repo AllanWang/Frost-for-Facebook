@@ -26,6 +26,7 @@ import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.CssSmallAssets
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.Prefs
@@ -116,6 +117,7 @@ class DebugWebView @JvmOverloads constructor(
                         (url?.contains("?sk=h_chr") ?: false) &&
                             prefs.aggressiveRecents
                     ),
+                    CssSmallAssets.FullSizeImage.maybe(prefs.fullSizeImage),
                     prefs = prefs
                 )
         }

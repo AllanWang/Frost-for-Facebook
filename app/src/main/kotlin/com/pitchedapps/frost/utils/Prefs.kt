@@ -198,6 +198,8 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
 
     var showCreateFab: Boolean by kpref("show_create_fab", true)
 
+    var fullSizeImage: Boolean by kpref("full_size_image", false)
+
     inline val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
 
