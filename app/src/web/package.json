@@ -10,7 +10,7 @@
   "dependencies": {
     "compile": "0.0.2",
     "run": "^1.4.0",
-    "sass": "^1.19.0",
-    "typescript": "^3.3.1"
+    "sass": "^1.26.5",
+    "typescript": "^3.9.3"
   }
 }

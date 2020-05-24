@@ -80,6 +80,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         super.doUpdateVisitedHistory(view, url, isReload)
         urlSupportsRefresh = urlSupportsRefresh(url)
         web.parent.swipeEnabled = urlSupportsRefresh
+        view.jsInject(JsAssets.AUTO_RESIZE_TEXTAREA, prefs = prefs)
         v { "History $url; refresh $urlSupportsRefresh" }
     }
 
