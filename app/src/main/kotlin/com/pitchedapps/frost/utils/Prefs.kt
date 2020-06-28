@@ -165,15 +165,15 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", false) {
-        if (!BuildConfig.DEBUG) {
-            if (it) {
-                Bugsnag.setAutoCaptureSessions(true)
-                Bugsnag.enableExceptionHandler()
-            } else {
-                Bugsnag.setAutoCaptureSessions(false)
-                Bugsnag.disableExceptionHandler()
-            }
-        }
+//        if (!BuildConfig.DEBUG) {
+//            if (it) {
+//                Bugsnag.setAutoCaptureSessions(true)
+//                Bugsnag.enableExceptionHandler()
+//            } else {
+//                Bugsnag.setAutoCaptureSessions(false)
+//                Bugsnag.disableExceptionHandler()
+//            }
+//        }
     }
 
     var biometricsEnabled: Boolean by kpref("biometrics_enabled", false)

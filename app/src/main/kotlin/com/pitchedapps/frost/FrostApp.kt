@@ -75,7 +75,7 @@ class FrostApp : Application(), KoinComponent {
         prefs = get()
         showcasePrefs = get()
         initPrefs()
-        initBugsnag()
+//        initBugsnag()
 
         L.i { "Begin Frost for Facebook" }
         FrostPglAdBlock.init(this)

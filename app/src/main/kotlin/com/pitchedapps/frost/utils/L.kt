@@ -63,12 +63,12 @@ object L : KauLogger("Frost") {
         if (BuildConfig.DEBUG || !hasAnalytics()) {
             super.logImpl(priority, message, t)
         } else {
-            if (message != null) {
-                Bugsnag.leaveBreadcrumb(message)
-            }
-            if (t != null) {
-                Bugsnag.notify(t)
-            }
+//            if (message != null) {
+//                Bugsnag.leaveBreadcrumb(message)
+//            }
+//            if (t != null) {
+//                Bugsnag.notify(t)
+//            }
         }
     }
 }

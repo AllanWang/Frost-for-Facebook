@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.bugsnag.android.gradle'
+//apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -350,5 +350,3 @@ task createGithubReleaseApk {
     tasks.findByName('testGithubReleaseApk').mustRunAfter 'lintGithubReleaseApk'
     tasks.findByName('assembleGithubReleaseApk').mustRunAfter 'testGithubReleaseApk'
 }
-
-apply plugin: 'com.bugsnag.android.gradle'
