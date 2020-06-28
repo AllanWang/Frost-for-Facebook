@@ -23,7 +23,6 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.withAlpha
-import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.FeedSort

@@ -18,7 +18,6 @@ package com.pitchedapps.frost.utils
 
 import ca.allanwang.kau.logging.KauLogger
 import ca.allanwang.kau.logging.KauLoggerExtension
-import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 
 /**
