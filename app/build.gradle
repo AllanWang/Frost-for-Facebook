@@ -3,7 +3,7 @@ apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.getkeepsafe.dexcount'
+//apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
 
 
@@ -188,7 +188,7 @@ android {
         // Always show the result of every unit test, even if it passes.
         all {
             testLogging {
-                events 'passed', 'skipped', 'failed', 'standardError'
+                events 'skipped', 'failed', 'standardError'
             }
         }
     }
@@ -267,8 +267,6 @@ dependencies {
     implementation kau.Dependencies.koin
     testImplementation kau.Dependencies.koinTest
     androidTestImplementation kau.Dependencies.koinTest
-
-//    androidTestImplementation "io.mockk:mockk:${Versions.mockk}"
 
     implementation kau.Dependencies.coroutines
 
