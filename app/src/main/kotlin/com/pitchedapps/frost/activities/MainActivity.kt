@@ -29,7 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import org.jsoup.Jsoup
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
