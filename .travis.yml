@@ -28,7 +28,7 @@ after_success:
   - "./generate-apk-release.sh"
 script:
   - "./gradlew --quiet androidGitVersion"
-  - "./gradlew lintReleaseTest testReleaseUnitTest assembleReleaseTest"
+  - "./gradlew spotlessCheck lintReleaseTest testReleaseUnitTest assembleReleaseTest"
 notifications:
   email: false
   slack:

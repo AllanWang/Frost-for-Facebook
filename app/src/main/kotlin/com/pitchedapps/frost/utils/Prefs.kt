@@ -23,7 +23,6 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.withAlpha
-import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.FeedSort
@@ -165,15 +164,15 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
     var verboseLogging: Boolean by kpref("verbose_logging", false)
 
     var analytics: Boolean by kpref("analytics", false) {
-        if (!BuildConfig.DEBUG) {
-            if (it) {
-                Bugsnag.setAutoCaptureSessions(true)
-                Bugsnag.enableExceptionHandler()
-            } else {
-                Bugsnag.setAutoCaptureSessions(false)
-                Bugsnag.disableExceptionHandler()
-            }
-        }
+//        if (!BuildConfig.DEBUG) {
+//            if (it) {
+//                Bugsnag.setAutoCaptureSessions(true)
+//                Bugsnag.enableExceptionHandler()
+//            } else {
+//                Bugsnag.setAutoCaptureSessions(false)
+//                Bugsnag.disableExceptionHandler()
+//            }
+//        }
     }
 
     var biometricsEnabled: Boolean by kpref("biometrics_enabled", false)

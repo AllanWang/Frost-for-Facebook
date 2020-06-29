@@ -18,7 +18,6 @@ package com.pitchedapps.frost.utils
 
 import ca.allanwang.kau.logging.KauLogger
 import ca.allanwang.kau.logging.KauLoggerExtension
-import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 
 /**
@@ -63,12 +62,12 @@ object L : KauLogger("Frost") {
         if (BuildConfig.DEBUG || !hasAnalytics()) {
             super.logImpl(priority, message, t)
         } else {
-            if (message != null) {
-                Bugsnag.leaveBreadcrumb(message)
-            }
-            if (t != null) {
-                Bugsnag.notify(t)
-            }
+//            if (message != null) {
+//                Bugsnag.leaveBreadcrumb(message)
+//            }
+//            if (t != null) {
+//                Bugsnag.notify(t)
+//            }
         }
     }
 }
