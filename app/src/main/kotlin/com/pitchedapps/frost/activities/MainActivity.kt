@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.parsers.BadgeParser
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
@@ -28,7 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import org.jsoup.Jsoup
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
@@ -91,32 +91,19 @@ class MainActivity : BaseMainActivity() {
             }
         })
         headerBadgeChannel.subscribeDuringJob(this@MainActivity, Dispatchers.IO) { html ->
-            try {
-                val doc = Jsoup.parse(html)
-                if (doc.select("[data-sigil=count]").isEmpty())
-                    return@subscribeDuringJob // Header doesn't exist
-                val (feed, requests, messages, notifications) = listOf(
-                    "feed",
-                    "requests",
-                    "messages",
-                    "notifications"
-                )
-                    .map { "[data-sigil*=$it] [data-sigil=count]" }
-                    .map { doc.select(it) }
-                    .map { e -> e?.getOrNull(0)?.ownText() }
-                L.v { "Badges $feed $requests $messages $notifications" }
-                withMainContext {
-                    tabsForEachView { _, view ->
-                        when (view.iicon) {
-                            FbItem.FEED.icon -> view.badgeText = feed
-                            FbItem.FRIENDS.icon -> view.badgeText = requests
-                            FbItem.MESSAGES.icon -> view.badgeText = messages
-                            FbItem.NOTIFICATIONS.icon -> view.badgeText = notifications
-                        }
+            val data =
+                BadgeParser.parseFromData(cookie = fbCookie.webCookie, text = html)?.data
+                    ?: return@subscribeDuringJob
+            L.v { "Badges $data" }
+            withMainContext {
+                tabsForEachView { _, view ->
+                    when (view.iicon) {
+                        FbItem.FEED.icon -> view.badgeText = data.feed
+                        FbItem.FRIENDS.icon -> view.badgeText = data.friends
+                        FbItem.MESSAGES.icon -> view.badgeText = data.messages
+                        FbItem.NOTIFICATIONS.icon -> view.badgeText = data.notifications
                     }
                 }
-            } catch (e: Exception) {
-                L.e(e) { "Header badge error" }
             }
         }
     }

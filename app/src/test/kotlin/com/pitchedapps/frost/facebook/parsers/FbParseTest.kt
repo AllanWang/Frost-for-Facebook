@@ -91,4 +91,7 @@ class FbParseTest {
             )
         }
     }
+
+    @Test
+    fun badge() = BadgeParser.test()
 }
