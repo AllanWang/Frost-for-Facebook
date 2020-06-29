@@ -50,7 +50,7 @@ class BadgedIcon @JvmOverloads constructor(
         binding.init()
     }
 
-    fun ViewBadgedIconBinding.init() {
+    private fun ViewBadgedIconBinding.init() {
         val badgeColor =
             prefs.mainActivityLayout.backgroundColor(prefs).withAlpha(255).colorToForeground(0.2f)
         val badgeBackground =
