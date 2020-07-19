@@ -24,12 +24,29 @@ import com.pitchedapps.frost.prefs.sections.FeedPrefs
 import com.pitchedapps.frost.prefs.sections.FeedPrefsImpl
 import com.pitchedapps.frost.prefs.sections.NotifPrefs
 import com.pitchedapps.frost.prefs.sections.NotifPrefsImpl
+import com.pitchedapps.frost.prefs.sections.ShowcasePrefs
+import com.pitchedapps.frost.prefs.sections.ShowcasePrefsImpl
 import com.pitchedapps.frost.prefs.sections.ThemePrefs
 import com.pitchedapps.frost.prefs.sections.ThemePrefsImpl
 import org.koin.core.context.KoinContextHandler
 import org.koin.dsl.module
 
-interface Prefs : BehaviourPrefs, CorePrefs, FeedPrefs, NotifPrefs, ThemePrefs {
+/**
+ * [Prefs] is no longer an actual pref, but we will expose the reset function as it is used elsewhere
+ */
+interface PrefsBase {
+    fun reset()
+    fun deleteKeys(vararg keys: String)
+}
+
+interface Prefs :
+    BehaviourPrefs,
+    CorePrefs,
+    FeedPrefs,
+    NotifPrefs,
+    ThemePrefs,
+    ShowcasePrefs,
+    PrefsBase {
     companion object {
         fun get(): Prefs = KoinContextHandler.get().get()
 
@@ -39,13 +56,15 @@ interface Prefs : BehaviourPrefs, CorePrefs, FeedPrefs, NotifPrefs, ThemePrefs {
             single<FeedPrefs> { FeedPrefsImpl(factory = get()) }
             single<NotifPrefs> { NotifPrefsImpl(factory = get()) }
             single<ThemePrefs> { ThemePrefsImpl(factory = get()) }
+            single<ShowcasePrefs> { ShowcasePrefsImpl(factory = get()) }
             single<Prefs> {
                 PrefsImpl(
                     behaviourPrefs = get(),
                     corePrefs = get(),
                     feedPrefs = get(),
                     notifPrefs = get(),
-                    themePrefs = get()
+                    themePrefs = get(),
+                    showcasePrefs = get()
                 )
             }
             // Needed for migration
@@ -55,14 +74,35 @@ interface Prefs : BehaviourPrefs, CorePrefs, FeedPrefs, NotifPrefs, ThemePrefs {
 }
 
 class PrefsImpl(
-    behaviourPrefs: BehaviourPrefs,
-    corePrefs: CorePrefs,
-    feedPrefs: FeedPrefs,
-    notifPrefs: NotifPrefs,
-    themePrefs: ThemePrefs
+    private val behaviourPrefs: BehaviourPrefs,
+    private val corePrefs: CorePrefs,
+    private val feedPrefs: FeedPrefs,
+    private val notifPrefs: NotifPrefs,
+    private val themePrefs: ThemePrefs,
+    private val showcasePrefs: ShowcasePrefs
 ) : Prefs,
     BehaviourPrefs by behaviourPrefs,
     CorePrefs by corePrefs,
     FeedPrefs by feedPrefs,
     NotifPrefs by notifPrefs,
-    ThemePrefs by themePrefs
+    ThemePrefs by themePrefs,
+    ShowcasePrefs by showcasePrefs {
+
+    override fun reset() {
+        behaviourPrefs.reset()
+        corePrefs.reset()
+        feedPrefs.reset()
+        notifPrefs.reset()
+        themePrefs.reset()
+        showcasePrefs.reset()
+    }
+
+    override fun deleteKeys(vararg keys: String) {
+        behaviourPrefs.deleteKeys()
+        corePrefs.deleteKeys()
+        feedPrefs.deleteKeys()
+        notifPrefs.deleteKeys()
+        themePrefs.deleteKeys()
+        showcasePrefs.deleteKeys()
+    }
+}

@@ -28,10 +28,11 @@ import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.prefs.OldPrefs
+import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-interface ThemePrefs {
+interface ThemePrefs  : PrefsBase {
     var theme: Int
 
     var customTextColor: Int

@@ -20,10 +20,11 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
+import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-interface BehaviourPrefs {
+interface BehaviourPrefs : PrefsBase {
     var biometricsEnabled: Boolean
 
     var overlayEnabled: Boolean
@@ -105,4 +106,5 @@ class BehaviourPrefsImpl(
         "full_size_image",
         oldPrefs.fullSizeImage /* false */
     )
+
 }

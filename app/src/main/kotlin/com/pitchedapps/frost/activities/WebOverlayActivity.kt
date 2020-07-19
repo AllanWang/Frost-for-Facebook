@@ -66,7 +66,6 @@ import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.FrostContentWeb
@@ -76,7 +75,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -169,8 +167,6 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         get() = content.coreView
     private val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
 
-    private val showcasePrefs: Showcase by inject()
-
     private inline val urlTest: String?
         get() = intent.getStringExtra(ARG_URL) ?: intent.dataString
 
@@ -231,7 +227,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
                 }
                 authDefer.await()
                 reloadBase(true)
-                if (showcasePrefs.firstWebOverlay) {
+                if (prefs.firstWebOverlay) {
                     coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
                         duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                         setAction(R.string.kau_got_it) { dismiss() }

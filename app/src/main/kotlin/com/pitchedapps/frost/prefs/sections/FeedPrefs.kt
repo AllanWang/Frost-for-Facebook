@@ -21,10 +21,11 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.prefs.OldPrefs
+import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-interface FeedPrefs {
+interface FeedPrefs : PrefsBase {
     var webTextScaling: Int
 
     var feedSort: Int

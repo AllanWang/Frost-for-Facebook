@@ -41,7 +41,6 @@ import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.launchNewTask
@@ -49,8 +48,6 @@ import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.web.LoginWebView
-import java.net.UnknownHostException
-import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -60,6 +57,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.koin.android.ext.android.inject
+import java.net.UnknownHostException
+import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -72,7 +71,6 @@ class LoginActivity : BaseActivity() {
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
     private val cookieDao: CookieDao by inject()
-    private val showcasePrefs: Showcase by inject()
 
     private lateinit var profileLoader: RequestManager
     private val refreshChannel = Channel<Boolean>(10)
@@ -138,7 +136,7 @@ class LoginActivity : BaseActivity() {
          */
         val cookies = ArrayList(cookieDao.selectAll())
         delay(1000)
-        if (showcasePrefs.intro)
+        if (prefs.intro)
             launchNewTask<IntroActivity>(cookies, true)
         else
             launchNewTask<MainActivity>(cookies, true)

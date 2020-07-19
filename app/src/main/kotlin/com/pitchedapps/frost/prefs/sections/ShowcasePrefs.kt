@@ -14,28 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.utils
+package com.pitchedapps.frost.prefs.sections
 
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
-import org.koin.dsl.module
+import com.pitchedapps.frost.prefs.PrefsBase
+
+interface ShowcasePrefs : PrefsBase {
+    /**
+     * Check if this is the first time launching the web overlay; show snackbar if true
+     */
+    val firstWebOverlay: Boolean
+
+    val intro: Boolean
+}
 
 /**
  * Created by Allan Wang on 2017-07-03.
  *
  * Showcase prefs that offer one time helpers to guide new users
  */
-class Showcase(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory) {
+class ShowcasePrefsImpl(
+    factory: KPrefFactory
+) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory),
+    ShowcasePrefs {
 
-    // check if this is the first time launching the web overlay; show snackbar if true
-    val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
+    override val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
 
-    val intro: Boolean by kprefSingle("intro_pages")
-
-    companion object {
-        fun module() = module {
-            single { Showcase(get()) }
-        }
-    }
+    override val intro: Boolean by kprefSingle("intro_pages")
 }

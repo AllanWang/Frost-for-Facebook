@@ -34,8 +34,6 @@ import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Showcase
-import java.util.Random
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinComponent
@@ -43,13 +41,13 @@ import org.koin.core.context.startKoin
 import org.koin.core.get
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import java.util.Random
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
 class FrostApp : Application(), KoinComponent {
 
-    private lateinit var showcasePrefs: Showcase
     private lateinit var prefs: Prefs
 
     override fun onCreate() {
@@ -63,7 +61,6 @@ class FrostApp : Application(), KoinComponent {
                     FrostDatabase.module(),
                     prefFactoryModule(),
                     Prefs.module(),
-                    Showcase.module(),
                     FbCookie.module()
                 )
             )
@@ -73,7 +70,6 @@ class FrostApp : Application(), KoinComponent {
             return
         }
         prefs = get()
-        showcasePrefs = get()
         initPrefs()
 //        initBugsnag()
 
@@ -108,8 +104,7 @@ class FrostApp : Application(), KoinComponent {
     }
 
     private fun initPrefs() {
-        prefs.deleteKeys("search_bar")
-        showcasePrefs.deleteKeys("shown_release", "experimental_by_default")
+        prefs.deleteKeys("search_bar", "shown_release", "experimental_by_default")
         KL.shouldLog = { BuildConfig.DEBUG }
         L.shouldLog = {
             when (it) {

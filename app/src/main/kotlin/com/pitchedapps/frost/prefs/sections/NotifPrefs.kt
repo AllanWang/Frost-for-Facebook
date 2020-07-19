@@ -20,10 +20,11 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
+import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-interface NotifPrefs {
+interface NotifPrefs  : PrefsBase {
     var notificationKeywords: Set<String>
 
     var notificationsGeneral: Boolean
