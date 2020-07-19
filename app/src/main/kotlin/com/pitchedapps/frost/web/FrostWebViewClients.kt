@@ -33,8 +33,8 @@ import com.pitchedapps.frost.injectors.CssSmallAssets
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.jsInject
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isExplicitIntent
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl
@@ -72,6 +72,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     private val prefs: Prefs get() = web.prefs
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val isMain = web.parent.baseEnum != null
+
     /**
      * True if current url supports refresh. See [doUpdateVisitedHistory] for updates
      */

@@ -34,8 +34,8 @@ import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.fragments.WebFragment
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.FrostChromeClient

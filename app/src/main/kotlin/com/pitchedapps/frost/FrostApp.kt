@@ -28,12 +28,12 @@ import com.bugsnag.android.Bugsnag
 import com.bugsnag.android.Configuration
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import java.util.Random
 import org.koin.android.ext.koin.androidContext

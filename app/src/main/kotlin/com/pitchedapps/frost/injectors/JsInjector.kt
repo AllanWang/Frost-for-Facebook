@@ -18,8 +18,8 @@ package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
 import kotlin.random.Random
 import org.apache.commons.text.StringEscapeUtils
@@ -85,6 +85,7 @@ class JsBuilder {
  */
 interface InjectorContract {
     fun inject(webView: WebView, prefs: Prefs)
+
     /**
      * Toggle the injector (usually through Prefs
      * If false, will fallback to an empty action

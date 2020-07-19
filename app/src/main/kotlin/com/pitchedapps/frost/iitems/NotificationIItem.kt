@@ -25,7 +25,6 @@ import ca.allanwang.kau.ui.createSimpleRippleDrawable
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.gone
 import ca.allanwang.kau.utils.visible
-import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.DiffCallback

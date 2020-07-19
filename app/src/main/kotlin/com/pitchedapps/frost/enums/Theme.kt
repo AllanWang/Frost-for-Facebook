@@ -22,7 +22,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
-import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.prefs.sections.ThemePrefs
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -33,11 +33,11 @@ const val BLUE_LIGHT = 0xff5d86dd.toInt()
 enum class Theme(
     @StringRes val textRes: Int,
     val injector: InjectorContract,
-    val textColorGetter: (Prefs) -> Int,
-    val accentColorGetter: (Prefs) -> Int,
-    val backgroundColorGetter: (Prefs) -> Int,
-    val headerColorGetter: (Prefs) -> Int,
-    val iconColorGetter: (Prefs) -> Int
+    val textColorGetter: (ThemePrefs) -> Int,
+    val accentColorGetter: (ThemePrefs) -> Int,
+    val backgroundColorGetter: (ThemePrefs) -> Int,
+    val headerColorGetter: (ThemePrefs) -> Int,
+    val iconColorGetter: (ThemePrefs) -> Int
 ) {
 
     DEFAULT(R.string.kau_default,

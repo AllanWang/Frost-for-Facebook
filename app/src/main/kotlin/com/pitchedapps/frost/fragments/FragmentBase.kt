@@ -34,9 +34,9 @@ import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent

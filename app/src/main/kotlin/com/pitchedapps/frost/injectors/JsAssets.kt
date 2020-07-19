@@ -20,8 +20,8 @@ import android.content.Context
 import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.kotlin.lazyContext
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.L
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale

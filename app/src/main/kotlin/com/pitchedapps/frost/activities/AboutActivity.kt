@@ -47,8 +47,8 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.L
 import org.koin.android.ext.android.inject
 
 /**
@@ -108,13 +108,15 @@ class AboutActivity : AboutActivityBase(null) {
             isOpenSource = true,
             libraryDescription = string(R.string.frost_description),
             libraryVersion = BuildConfig.VERSION_NAME,
-            licenses = setOf(License(
-                definedName = "gplv3",
-                licenseName = "GNU GPL v3",
-                licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
-                licenseDescription = "",
-                licenseShortDescription = ""
-            ))
+            licenses = setOf(
+                License(
+                    definedName = "gplv3",
+                    licenseName = "GNU GPL v3",
+                    licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
+                    licenseDescription = "",
+                    licenseShortDescription = ""
+                )
+            )
         )
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
         adapter.onClickListener = { _, _, item, _ ->
