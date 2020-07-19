@@ -83,7 +83,7 @@ open class HeaderIItem(
 
         val text: TextView by bindView(R.id.item_header_text)
 
-        override fun bindView(item: HeaderIItem, payloads: MutableList<Any>) {
+        override fun bindView(item: HeaderIItem, payloads: List<Any>) {
             text.setTextColor(prefs.accentColor)
             text.text = item.text
             text.setBackgroundColor(prefs.nativeBgColor)
@@ -112,7 +112,7 @@ open class TextIItem(
 
         val text: TextView by bindView(R.id.item_text_view)
 
-        override fun bindView(item: TextIItem, payloads: MutableList<Any>) {
+        override fun bindView(item: TextIItem, payloads: List<Any>) {
             text.setTextColor(prefs.textColor)
             text.text = item.text
             text.background = createSimpleRippleDrawable(prefs.bgColor, prefs.nativeBgColor)

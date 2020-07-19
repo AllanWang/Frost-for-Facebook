@@ -108,13 +108,13 @@ class AboutActivity : AboutActivityBase(null) {
             isOpenSource = true,
             libraryDescription = string(R.string.frost_description),
             libraryVersion = BuildConfig.VERSION_NAME,
-            license = License(
+            licenses = setOf(License(
                 definedName = "gplv3",
                 licenseName = "GNU GPL v3",
                 licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
                 licenseDescription = "",
                 licenseShortDescription = ""
-            )
+            ))
         )
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
         adapter.onClickListener = { _, _, item, _ ->
@@ -149,7 +149,7 @@ class AboutActivity : AboutActivityBase(null) {
         override val type: Int
             get() = R.id.item_about_links
 
-        override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+        override fun bindView(holder: ViewHolder, payloads: List<Any>) {
             super.bindView(holder, payloads)
             with(holder) {
                 bindIconColor(*images.toTypedArray())

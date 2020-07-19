@@ -104,7 +104,7 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() 
     override val type: Int
         get() = R.id.item_keyword
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         holder.text.text = keyword
     }

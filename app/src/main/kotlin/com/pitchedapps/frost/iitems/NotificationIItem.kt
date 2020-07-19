@@ -114,7 +114,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         private val glide
             get() = GlideApp.with(itemView)
 
-        override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
+        override fun bindView(item: NotificationIItem, payloads: List<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(
                 prefs.textColor,

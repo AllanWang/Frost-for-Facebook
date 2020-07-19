@@ -50,7 +50,7 @@ class TabIItem(val item: FbItem) : KauIItem<TabIItem.ViewHolder>(
         val image: ImageView by bindView(R.id.image)
         val text: TextView by bindView(R.id.text)
 
-        override fun bindView(item: TabIItem, payloads: MutableList<Any>) {
+        override fun bindView(item: TabIItem, payloads: List<Any>) {
             val isInToolbar = adapterPosition < 4
             val color = if (isInToolbar) prefs.iconColor else prefs.textColor
             image.setIcon(item.item.icon, 20, color)
