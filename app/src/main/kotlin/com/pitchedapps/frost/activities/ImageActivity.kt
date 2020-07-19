@@ -59,7 +59,7 @@ import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile

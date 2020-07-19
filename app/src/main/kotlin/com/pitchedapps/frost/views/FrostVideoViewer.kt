@@ -44,7 +44,7 @@ import com.pitchedapps.frost.databinding.ViewVideoBinding
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import org.koin.core.KoinComponent

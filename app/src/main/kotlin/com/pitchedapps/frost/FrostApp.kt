@@ -33,7 +33,7 @@ import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import java.util.Random
 import org.koin.android.ext.koin.androidContext

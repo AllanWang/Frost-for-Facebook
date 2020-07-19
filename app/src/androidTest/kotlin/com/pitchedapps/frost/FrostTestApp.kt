@@ -23,7 +23,7 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.kpref.KPrefFactoryInMemory
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.Showcase
 import org.junit.rules.TestRule
 import org.junit.runner.Description

@@ -37,7 +37,7 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

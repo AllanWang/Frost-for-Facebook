@@ -17,7 +17,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-05-31.

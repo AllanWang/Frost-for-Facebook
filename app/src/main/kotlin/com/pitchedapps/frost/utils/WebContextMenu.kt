@@ -27,6 +27,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-07-07.

@@ -34,7 +34,7 @@ import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.isExplicitIntent
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl

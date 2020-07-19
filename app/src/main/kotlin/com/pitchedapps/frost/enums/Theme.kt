@@ -22,7 +22,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-06-14.

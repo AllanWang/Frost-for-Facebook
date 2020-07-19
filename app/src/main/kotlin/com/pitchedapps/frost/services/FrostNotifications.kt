@@ -46,7 +46,7 @@ import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.settings.hasNotifications
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.isIndependent
 import java.util.Locale

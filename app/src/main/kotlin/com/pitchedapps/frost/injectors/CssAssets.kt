@@ -27,7 +27,7 @@ import ca.allanwang.kau.utils.toRgbaString
 import ca.allanwang.kau.utils.use
 import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale

@@ -25,7 +25,7 @@ import com.pitchedapps.frost.db.deleteById
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectById
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchLogin
 import kotlin.coroutines.resume

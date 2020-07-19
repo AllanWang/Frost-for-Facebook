@@ -45,7 +45,7 @@ import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.toReadableTime
 import org.koin.core.KoinComponent
 import org.koin.core.inject

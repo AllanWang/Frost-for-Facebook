@@ -17,7 +17,7 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Small misc inline css assets

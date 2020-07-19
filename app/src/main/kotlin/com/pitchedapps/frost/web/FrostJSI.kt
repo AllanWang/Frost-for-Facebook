@@ -25,7 +25,7 @@ import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.WebContext
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.ctxCoroutine

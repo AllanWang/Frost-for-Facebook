@@ -47,7 +47,7 @@ import com.pitchedapps.frost.intro.IntroFragmentTheme
 import com.pitchedapps.frost.intro.IntroFragmentWelcome
 import com.pitchedapps.frost.intro.IntroTabContextFragment
 import com.pitchedapps.frost.intro.IntroTabTouchFragment
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets

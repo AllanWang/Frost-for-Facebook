@@ -28,7 +28,7 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
 import org.koin.core.KoinComponent
 import org.koin.core.inject

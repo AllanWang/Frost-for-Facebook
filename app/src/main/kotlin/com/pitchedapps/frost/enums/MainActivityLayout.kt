@@ -17,7 +17,7 @@
 package com.pitchedapps.frost.enums
 
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-08-19.

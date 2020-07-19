@@ -38,7 +38,7 @@ import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope

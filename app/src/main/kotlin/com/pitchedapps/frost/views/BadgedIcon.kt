@@ -29,7 +29,7 @@ import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.databinding.ViewBadgedIconBinding
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

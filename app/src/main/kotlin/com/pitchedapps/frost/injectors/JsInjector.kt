@@ -19,7 +19,7 @@ package com.pitchedapps.frost.injectors
 import android.webkit.WebView
 import androidx.annotation.VisibleForTesting
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.web.FrostWebViewClient
 import kotlin.random.Random
 import org.apache.commons.text.StringEscapeUtils
