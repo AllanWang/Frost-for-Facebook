@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@id/intro_title"
         tools:layout_editor_absoluteX="112dp" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/intro_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
