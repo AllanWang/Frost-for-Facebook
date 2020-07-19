@@ -32,7 +32,7 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-interface ThemePrefs  : PrefsBase {
+interface ThemePrefs : PrefsBase {
     var theme: Int
 
     var customTextColor: Int

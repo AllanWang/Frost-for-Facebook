@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.utils.blendWith
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.navigationBarColor

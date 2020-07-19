@@ -24,7 +24,7 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-interface NotifPrefs  : PrefsBase {
+interface NotifPrefs : PrefsBase {
     var notificationKeywords: Set<String>
 
     var notificationsGeneral: Boolean

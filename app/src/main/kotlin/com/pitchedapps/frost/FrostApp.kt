@@ -34,6 +34,7 @@ import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
+import java.util.Random
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinComponent
@@ -41,7 +42,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.get
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import java.util.Random
 
 /**
  * Created by Allan Wang on 2017-05-28.

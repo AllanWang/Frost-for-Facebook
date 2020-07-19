@@ -106,5 +106,4 @@ class BehaviourPrefsImpl(
         "full_size_image",
         oldPrefs.fullSizeImage /* false */
     )
-
 }
