@@ -50,7 +50,7 @@ class AccountItem(val cookie: CookieEntity?) :
 
     private val prefs: Prefs by inject()
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         with(holder) {
             text.invisible()
