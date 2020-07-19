@@ -23,8 +23,7 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.kpref.KPrefFactoryInMemory
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.Showcase
+import com.pitchedapps.frost.prefs.Prefs
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -53,7 +52,6 @@ class FrostTestRule : TestRule {
 
                 // Reset prefs
                 get<Prefs>().reset()
-                get<Showcase>().reset()
 
                 base.evaluate()
             }
@@ -72,7 +70,6 @@ class FrostTestApp : Application() {
                     FrostDatabase.module(),
                     prefFactoryModule(),
                     Prefs.module(),
-                    Showcase.module(),
                     FbCookie.module()
                 )
             )

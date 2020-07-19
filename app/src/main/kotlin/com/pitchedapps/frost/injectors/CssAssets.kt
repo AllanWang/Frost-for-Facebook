@@ -26,8 +26,8 @@ import ca.allanwang.kau.utils.colorToForeground
 import ca.allanwang.kau.utils.toRgbaString
 import ca.allanwang.kau.utils.use
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
@@ -102,8 +102,8 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
         // Ensures that all non themes and the selected theme are loaded
         suspend fun load(context: Context, prefs: Prefs) {
             withContext(Dispatchers.IO) {
-                val currentTheme = prefs.t.injector as? CssAssets
-                val (themes, others) = CssAssets.values().partition { it.folder == THEME_FOLDER }
+                val currentTheme = prefs.themeInjector as? CssAssets
+                val (themes, others) = values().partition { it.folder == THEME_FOLDER }
                 themes.filter { it != currentTheme }.forEach { it.reset() }
                 currentTheme?.injector(context, prefs)
                 others.forEach { it.injector(context, prefs) }

@@ -19,8 +19,8 @@ package com.pitchedapps.frost.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

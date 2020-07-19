@@ -114,6 +114,7 @@ class FbUrlFormatter(url: String) {
     companion object {
 
         const val VIDEO_REDIRECT = "/video_redirect/?src="
+
         /**
          * Items here are explicitly removed from the url
          * Taken from FaceSlim

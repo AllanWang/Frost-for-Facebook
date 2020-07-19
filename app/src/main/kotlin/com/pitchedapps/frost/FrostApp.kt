@@ -28,13 +28,12 @@ import com.bugsnag.android.Bugsnag
 import com.bugsnag.android.Configuration
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.Showcase
 import java.util.Random
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -49,7 +48,6 @@ import org.koin.dsl.module
  */
 class FrostApp : Application(), KoinComponent {
 
-    private lateinit var showcasePrefs: Showcase
     private lateinit var prefs: Prefs
 
     override fun onCreate() {
@@ -63,7 +61,6 @@ class FrostApp : Application(), KoinComponent {
                     FrostDatabase.module(),
                     prefFactoryModule(),
                     Prefs.module(),
-                    Showcase.module(),
                     FbCookie.module()
                 )
             )
@@ -73,7 +70,6 @@ class FrostApp : Application(), KoinComponent {
             return
         }
         prefs = get()
-        showcasePrefs = get()
         initPrefs()
 //        initBugsnag()
 
@@ -108,8 +104,7 @@ class FrostApp : Application(), KoinComponent {
     }
 
     private fun initPrefs() {
-        prefs.deleteKeys("search_bar")
-        showcasePrefs.deleteKeys("shown_release", "experimental_by_default")
+        prefs.deleteKeys("search_bar", "shown_release", "experimental_by_default")
         KL.shouldLog = { BuildConfig.DEBUG }
         L.shouldLog = {
             when (it) {

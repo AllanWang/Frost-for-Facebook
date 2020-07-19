@@ -172,6 +172,7 @@ class FrostVideoView @JvmOverloads constructor(
             // todo use provided ratio?
             val ratio =
                 min(width.toFloat() / intrinsicWidth, height.toFloat() / intrinsicHeight.toFloat())
+
             /**
              * Only remap if not expanded and if dimensions have changed
              */

@@ -37,7 +37,7 @@ import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

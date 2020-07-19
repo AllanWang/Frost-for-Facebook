@@ -43,9 +43,9 @@ import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.selectNotificationsSync
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.toReadableTime
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -114,7 +114,12 @@ private fun RemoteViews.setBackgroundColor(@IdRes viewId: Int, @ColorInt color: 
 /**
  * Adds backward compatibility to setting tinted icons
  */
-private fun RemoteViews.setIcon(@IdRes viewId: Int, context: Context, @DrawableRes res: Int, @ColorInt color: Int) {
+private fun RemoteViews.setIcon(
+    @IdRes viewId: Int,
+    context: Context,
+    @DrawableRes res: Int,
+    @ColorInt color: Int
+) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val icon =
             Icon.createWithResource(context, res).setTint(color).setTintMode(PorterDuff.Mode.SRC_IN)
@@ -154,6 +159,7 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
     private val prefs: Prefs by inject()
 
     private val notifDao: NotificationDao by inject()
+
     @Volatile
     private var content: List<NotificationContent> = emptyList()
 

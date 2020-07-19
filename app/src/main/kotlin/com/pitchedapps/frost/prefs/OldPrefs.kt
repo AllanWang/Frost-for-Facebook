@@ -14,30 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.utils
+package com.pitchedapps.frost.prefs
 
-import android.graphics.Color
-import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
-import ca.allanwang.kau.utils.colorToForeground
-import ca.allanwang.kau.utils.isColorVisibleOn
-import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.FeedSort
-import com.pitchedapps.frost.enums.MainActivityLayout
-import com.pitchedapps.frost.enums.Theme
-import com.pitchedapps.frost.injectors.InjectorContract
-import org.koin.core.context.KoinContextHandler
-import org.koin.dsl.module
 
 /**
  * Created by Allan Wang on 2017-05-28.
  *
  * Shared Preference object with lazy cached retrievals
+ *
+ * As of 2020-07-18, prefs have been split up into multiple folders
  */
-class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs", factory) {
+@Deprecated(level = DeprecationLevel.WARNING, message = "Use pref segments")
+class OldPrefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs", factory) {
 
     var lastLaunch: Long by kpref("last_launch", -1L)
 
@@ -45,9 +37,7 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
 
     var prevId: Long by kpref("prev_id", -1L)
 
-    var theme: Int by kpref("theme", 0) { _: Int ->
-        loader.invalidate()
-    }
+    var theme: Int by kpref("theme", 0)
 
     var customTextColor: Int by kpref("color_text", 0xffeceff1.toInt())
 
@@ -70,48 +60,6 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
     var installDate: Long by kpref("install_date", -1L)
 
     var identifier: Int by kpref("identifier", -1)
-
-    private val loader = lazyResettable { Theme.values[theme] }
-
-    val t: Theme by loader
-
-    val textColor: Int
-        get() = t.textColorGetter(this)
-
-    val accentColor: Int
-        get() = t.accentColorGetter(this)
-
-    inline val accentColorForWhite: Int
-        get() = when {
-            accentColor.isColorVisibleOn(Color.WHITE) -> accentColor
-            textColor.isColorVisibleOn(Color.WHITE) -> textColor
-            else -> FACEBOOK_BLUE
-        }
-
-    inline val nativeBgColor: Int
-        get() = bgColor.withAlpha(30)
-
-    fun nativeBgColor(unread: Boolean) = bgColor
-        .colorToForeground(if (unread) 0.7f else 0.0f)
-        .withAlpha(30)
-
-    val bgColor: Int
-        get() = t.backgroundColorGetter(this)
-
-    val headerColor: Int
-        get() = t.headerColorGetter(this)
-
-    val iconColor: Int
-        get() = t.iconColorGetter(this)
-
-    val themeInjector: InjectorContract
-        get() = t.injector
-
-    val isCustomTheme: Boolean
-        get() = t == Theme.CUSTOM
-
-    inline val frostId: String
-        get() = "$installDate-$identifier"
 
     var tintNavBar: Boolean by kpref("tint_nav_bar", true)
 
@@ -198,15 +146,4 @@ class Prefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs"
     var showCreateFab: Boolean by kpref("show_create_fab", true)
 
     var fullSizeImage: Boolean by kpref("full_size_image", false)
-
-    inline val mainActivityLayout: MainActivityLayout
-        get() = MainActivityLayout(mainActivityLayoutType)
-
-    companion object {
-        fun get(): Prefs = KoinContextHandler.get().get()
-
-        fun module() = module {
-            single { Prefs(get()) }
-        }
-    }
 }

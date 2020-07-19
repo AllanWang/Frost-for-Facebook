@@ -43,6 +43,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.settings.getAppearancePrefs
 import com.pitchedapps.frost.settings.getBehaviourPrefs
 import com.pitchedapps.frost.settings.getDebugPrefs
@@ -52,7 +53,6 @@ import com.pitchedapps.frost.settings.getNotificationPrefs
 import com.pitchedapps.frost.settings.getSecurityPrefs
 import com.pitchedapps.frost.settings.sendDebug
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
 import com.pitchedapps.frost.utils.cookies

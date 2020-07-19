@@ -43,8 +43,8 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ViewVideoBinding
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import org.koin.core.KoinComponent
@@ -218,6 +218,7 @@ class FrostVideoViewer @JvmOverloads constructor(
 
 interface FrostVideoViewerContract : VideoControlsVisibilityListener {
     fun onSingleTapConfirmed(event: MotionEvent): Boolean
+
     /**
      * Process of expansion
      * 1f represents an expanded view, 0f represents a minimized view

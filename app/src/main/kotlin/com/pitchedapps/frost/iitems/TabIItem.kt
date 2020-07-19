@@ -29,7 +29,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

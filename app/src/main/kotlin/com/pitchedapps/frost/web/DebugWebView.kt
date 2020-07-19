@@ -28,8 +28,8 @@ import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.CssSmallAssets
 import com.pitchedapps.frost.injectors.jsInject
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.isFacebookUrl
 import java.io.File

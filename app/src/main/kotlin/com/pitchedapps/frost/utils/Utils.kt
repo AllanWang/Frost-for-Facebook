@@ -69,6 +69,7 @@ import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
+import com.pitchedapps.frost.prefs.Prefs
 import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
@@ -396,7 +397,10 @@ fun Context.frostUri(entry: String): Uri {
     return uri
 }
 
-inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) =
+inline fun Context.sendFrostEmail(
+    @StringRes subjectId: Int,
+    crossinline builder: EmailBuilder.() -> Unit
+) =
     sendFrostEmail(string(subjectId), builder)
 
 inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =

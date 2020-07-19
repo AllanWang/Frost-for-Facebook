@@ -55,6 +55,7 @@ enum class FbItem(
     PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
     PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
     SAVED(R.string.saved, GoogleMaterial.Icon.gmd_bookmark, "saved"),
+
     /**
      * Note that this url only works if a query (?q=) is provided
      */
@@ -63,6 +64,7 @@ enum class FbItem(
         GoogleMaterial.Icon.gmd_search,
         "search/top"
     ),
+
     /**
      * Non mbasic search cannot be parsed.
      */
