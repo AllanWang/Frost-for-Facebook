@@ -46,6 +46,12 @@ enum class CssHider(private vararg val items: String) : InjectorContract {
         "#MStoriesTray",
         // Sub element with just the tray; title is not a part of this
         "[data-testid=story_tray]"
+    ),
+    POST_ACTIONS(
+        "footer [data-sigil=\"ufi-inline-actions\"]"
+    ),
+    POST_REACTIONS(
+        "footer [data-sigil=\"reactions-bling-bar\"]"
     )
     ;
 
