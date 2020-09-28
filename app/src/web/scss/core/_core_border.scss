@@ -99,3 +99,8 @@
 ._484w.selected ._6zf, ._7gxa, ._2wn2 {
   border-bottom: 2px solid $accent !important;
 }
+
+// Small face previews
+.facepile .facepileItem.facepileItemOverLapped .facepileItemRound, .facepile .facepileItem.facepileItemOverLapped.facepileItemRound, .facepile .facepileItem.facepileItemOverLapped .facepileMoreDotsRound {
+  border: 2px solid $bg_opaque2 !important;
+}
