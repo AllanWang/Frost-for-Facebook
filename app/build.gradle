@@ -35,10 +35,10 @@ android {
         applicationId "${project.APP_GROUP}.${project.APP_ID.toLowerCase(Locale.CANADA)}"
         minSdkVersion kau.Versions.minSdk
         targetSdkVersion Versions.targetSdk
-//        versionCode 2040500
-        versionCode androidGitVersion.code()
-//        versionName '2.4.5'
-        versionName androidGitVersion.name()
+        versionCode 2040600
+//        versionCode androidGitVersion.code()
+        versionName '2.4.6'
+//        versionName androidGitVersion.name()
 
         if (System.getenv('TRAVIS') != 'true') {
             // Verification for F-Droid builds
