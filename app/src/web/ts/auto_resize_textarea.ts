@@ -1,6 +1,7 @@
 // Credits to https://codepen.io/tomhodgins/pen/KgazaE
 (function () {
-    const textareas = <NodeListOf<HTMLTextAreaElement>>document.querySelectorAll('textarea:not(.frostAutoExpand)');
+    const classTag = 'frostAutoExpand';
+    const textareas = <NodeListOf<HTMLTextAreaElement>>document.querySelectorAll(`textarea:not(.${classTag})`);
 
     const dataAttribute = 'data-frost-minHeight';
 
@@ -18,7 +19,7 @@
         textareas.forEach(_frostAutoExpand);
     }
     textareas.forEach(el => {
-        el.classList.add('frostAutoExpand')
+        el.classList.add(classTag)
         const __frostAutoExpand = () => {
             _frostAutoExpand(el)
         };

@@ -68,7 +68,7 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(
         R.string.auto_expand_text_box,
         prefs::autoExpandTextBox,
-        { prefs.autoExpandTextBox = it }) {
+        { prefs.autoExpandTextBox = it; shouldRefreshMain() }) {
         descRes = R.string.auto_expand_text_box_desc
     }
 
