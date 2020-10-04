@@ -153,7 +153,7 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.newsfeed, getFeedPrefs()) {
             descRes = R.string.newsfeed_desc
-            iicon = CommunityMaterial.Icon2.cmd_newspaper
+            iicon = CommunityMaterial.Icon3.cmd_newspaper
         }
 
         subItems(R.string.notifications, getNotificationPrefs()) {
@@ -196,7 +196,7 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.experimental, getExperimentalPrefs()) {
             descRes = R.string.experimental_desc
-            iicon = CommunityMaterial.Icon.cmd_flask_outline
+            iicon = CommunityMaterial.Icon2.cmd_flask_outline
         }
 
         subItems(R.string.debug_frost, getDebugPrefs()) {

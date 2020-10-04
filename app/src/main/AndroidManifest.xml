@@ -25,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/FrostTheme"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="UnusedAttribute">
         <!-- Matches general label under NotificationUtils.kt -->
         <meta-data
