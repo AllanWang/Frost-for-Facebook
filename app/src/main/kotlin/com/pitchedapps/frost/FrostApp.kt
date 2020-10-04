@@ -135,19 +135,19 @@ class FrostApp : Application(), KoinComponent {
         val config = Configuration("83cf680ed01a6fda10fe497d1c0962bb").apply {
             appVersion = version.versionName
             releaseStage = BuildUtils.getStage(BuildConfig.BUILD_TYPE)
-            notifyReleaseStages = BuildUtils.getAllStages()
-            autoCaptureSessions = prefs.analytics
-            enableExceptionHandler = prefs.analytics
+            enabledReleaseStages = BuildUtils.getAllStages()
+            autoTrackSessions = prefs.analytics
+            autoDetectErrors = prefs.analytics
         }
-        Bugsnag.init(this, config)
+        Bugsnag.start(this, config)
         L.hasAnalytics = { prefs.analytics }
-        Bugsnag.setUserId(prefs.frostId)
-        Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
-        Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
+        Bugsnag.setUser(prefs.frostId, null, null)
+        Bugsnag.addMetadata("Build", "Application", BuildConfig.APPLICATION_ID)
+        Bugsnag.addMetadata("Build", "Version", BuildConfig.VERSION_NAME)
 
-        Bugsnag.beforeNotify { error ->
+        Bugsnag.addOnError { event ->
             when {
-                error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
+                event.originalError?.stackTrace?.any { it.className.contains("XposedBridge") } == true -> false
                 else -> true
             }
         }

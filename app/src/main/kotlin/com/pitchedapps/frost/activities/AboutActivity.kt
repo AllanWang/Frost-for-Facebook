@@ -178,10 +178,11 @@ class AboutActivity : AboutActivityBase(null) {
                     arrayOf(R.drawable.ic_fdroid_24 to { c.startLink(R.string.fdroid_url) })
                 val iicons: Array<Pair<IIcon, () -> Unit>> = arrayOf(
                     GoogleMaterial.Icon.gmd_file_download to { c.startLink(R.string.github_downloads_url) },
-                    CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
-                    CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
-                    CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
-                    CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) })
+                    CommunityMaterial.Icon3.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                    CommunityMaterial.Icon2.cmd_github to { c.startLink(R.string.github_url) },
+                    CommunityMaterial.Icon3.cmd_slack to { c.startLink(R.string.slack_url) }
+//                    CommunityMaterial.Icon3.cmd_xda to { c.startLink(R.string.xda_url) }, // TODO add back?
+                )
 
                 images =
                     (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->

@@ -14,11 +14,11 @@ object Versions {
     // https://github.com/jhy/jsoup/releases
     const val jsoup = "1.13.1"
     // https://square.github.io/okhttp/changelog/
-    const val okhttp = "4.7.2"
+    const val okhttp = "4.9.0"
     // https://developer.android.com/jetpack/androidx/releases/room
     const val room = "2.2.5"
     // http://robolectric.org/getting-started/
-    const val roboelectric = "4.3"
+    const val roboelectric = "4.4"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
     const val scaleImageView = "3.10.0"
     // https://github.com/node-gradle/gradle-node-plugin/releases

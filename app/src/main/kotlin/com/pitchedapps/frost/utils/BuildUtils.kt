@@ -33,8 +33,8 @@ object BuildUtils {
         return Data("v${result[1]}", result[2])
     }
 
-    fun getAllStages(): Array<String> =
-        arrayOf(BUILD_PRODUCTION, BUILD_TEST, BUILD_GITHUB, BUILD_RELEASE, BUILD_UNNAMED)
+    fun getAllStages(): Set<String> =
+        setOf(BUILD_PRODUCTION, BUILD_TEST, BUILD_GITHUB, BUILD_RELEASE, BUILD_UNNAMED)
 
     fun getStage(build: String): String = build.takeIf { it in getAllStages() } ?: BUILD_UNNAMED
 }
