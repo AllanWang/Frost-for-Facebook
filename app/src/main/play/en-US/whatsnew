@@ -1,5 +1,3 @@
-v2.4.5
+v2.4.6
 
-* Fix url query encoding
-* Add option to make images full screen (settings > news feed)
-* Auto expand text area when typing
+* Add option to hide likes and action bar in newsfeed

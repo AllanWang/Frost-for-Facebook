@@ -91,11 +91,18 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.show_stories_desc
     }
 
-    checkbox(R.string.facebook_ads, prefs::showFacebookAds, {
-        prefs.showFacebookAds = it
+    checkbox(R.string.show_post_actions, prefs::showPostActions, {
+        prefs.showPostActions = it
         shouldRefreshMain()
     }) {
-        descRes = R.string.facebook_ads_desc
+        descRes = R.string.show_post_actions_desc
+    }
+
+    checkbox(R.string.show_post_reactions, prefs::showPostReactions, {
+        prefs.showPostReactions = it
+        shouldRefreshMain()
+    }) {
+        descRes = R.string.show_post_reactions_desc
     }
 
     checkbox(R.string.full_size_image, prefs::fullSizeImage, {

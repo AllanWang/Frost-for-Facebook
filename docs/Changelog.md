@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.4.6
+* Add option to hide likes and action bar in newsfeed
+
 ## v2.4.5
 * Fix url query encoding
 * Add option to make images full screen (settings > news feed)

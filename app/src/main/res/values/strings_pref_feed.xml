@@ -16,6 +16,10 @@
     <string name="suggested_groups_desc">Show \"Suggested Groups\" in the feed</string>
     <string name="show_stories">Show Stories</string>
     <string name="show_stories_desc">Show stories in the feed</string>
+    <string name="show_post_actions">Show Post Actions</string>
+    <string name="show_post_actions_desc">Show Like, Comment, and Share options</string>
+    <string name="show_post_reactions">Show Post Reactions</string>
+    <string name="show_post_reactions_desc">Show reaction counts to post</string>
     <string name="facebook_ads">Facebook Ads</string>
     <string name="facebook_ads_desc">Show native Facebook ads</string>
     <string name="full_size_image">Full Size Images</string>

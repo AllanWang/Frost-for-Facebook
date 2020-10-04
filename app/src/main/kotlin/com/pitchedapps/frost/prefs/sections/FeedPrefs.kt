@@ -45,6 +45,10 @@ interface FeedPrefs : PrefsBase {
     var mainActivityLayoutType: Int
 
     val mainActivityLayout: MainActivityLayout
+
+    var showPostActions: Boolean
+
+    var showPostReactions: Boolean
 }
 
 class FeedPrefsImpl(
@@ -95,4 +99,8 @@ class FeedPrefsImpl(
 
     override val mainActivityLayout: MainActivityLayout
         get() = MainActivityLayout(mainActivityLayoutType)
+
+    override var showPostActions: Boolean by kpref("show_post_actions", true)
+
+    override var showPostReactions: Boolean by kpref("show_post_reactions", true)
 }
