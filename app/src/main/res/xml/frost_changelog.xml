@@ -6,6 +6,11 @@
     <item text="" />
     -->
 
+    <version title="v2.4.6" />
+    <item text="Add option to hide likes and action bar in newsfeed" />
+    <item text="" />
+    <item text="" />
+
     <version title="v2.4.5" />
     <item text="Fix url query encoding" />
     <item text="Add option to make images full screen (settings > news feed)" />
