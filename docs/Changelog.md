@@ -2,6 +2,8 @@
 
 ## v2.4.6
 * Add option to hide likes and action bar in newsfeed
+* Fix textbox scroll position when typing multiple lines
+* Add option to disable textbox auto resize (settings > behaviour)
 
 ## v2.4.5
 * Fix url query encoding

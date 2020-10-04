@@ -46,6 +46,8 @@ interface BehaviourPrefs : PrefsBase {
     var showCreateFab: Boolean
 
     var fullSizeImage: Boolean
+
+    var autoExpandTextBox: Boolean
 }
 
 class BehaviourPrefsImpl(
@@ -106,4 +108,6 @@ class BehaviourPrefsImpl(
         "full_size_image",
         oldPrefs.fullSizeImage /* false */
     )
+
+    override var autoExpandTextBox: Boolean by kpref("auto_expand_text_box", true)
 }

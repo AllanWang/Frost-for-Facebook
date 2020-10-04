@@ -65,6 +65,13 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
         descRes = R.string.force_message_bottom_desc
     }
 
+    checkbox(
+        R.string.auto_expand_text_box,
+        prefs::autoExpandTextBox,
+        { prefs.autoExpandTextBox = it; shouldRefreshMain() }) {
+        descRes = R.string.auto_expand_text_box_desc
+    }
+
     checkbox(R.string.enable_pip, prefs::enablePip, { prefs.enablePip = it }) {
         descRes = R.string.enable_pip_desc
     }

@@ -23,6 +23,8 @@
     <string name="autoplay_settings_desc">Open Facebook\'s auto play settings. Note that it must be disabled for PIP to work.</string>
     <string name="exit_confirmation">Exit Confirmation</string>
     <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
+    <string name="auto_expand_text_box">Auto expand text box</string>
+    <string name="auto_expand_text_box_desc">Increase text box height while typing. Disable if there are scroll issues.</string>
     <string name="analytics">Analytics</string>
     <string name="analytics_desc">Enable anonymous analytics and bug reports to help improve the app. No personal information is ever exposed.</string>
 
