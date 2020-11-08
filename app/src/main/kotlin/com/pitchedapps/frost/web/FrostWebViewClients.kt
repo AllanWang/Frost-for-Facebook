@@ -99,6 +99,36 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     protected inline fun v(crossinline message: () -> Any?) = L.v { "web client: ${message()}" }
 
+    /**
+     * Main injections for facebook content
+     */
+    private fun WebView.facebookJsInject() {
+        jsInject(
+//                    CssHider.CORE,
+            CssHider.HEADER,
+            CssHider.COMPOSER.maybe(!prefs.showComposer),
+            CssHider.STORIES.maybe(!prefs.showStories),
+            CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
+            CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+            prefs.themeInjector,
+            CssHider.NON_RECENT.maybe(
+                (web.url?.contains("?sk=h_chr") ?: false) &&
+                    prefs.aggressiveRecents
+            ),
+            CssHider.ADS.maybe(!prefs.showFacebookAds),
+            CssHider.POST_ACTIONS.maybe(!prefs.showPostActions),
+            CssHider.POST_REACTIONS.maybe(!prefs.showPostReactions),
+            CssSmallAssets.FullSizeImage.maybe(prefs.fullSizeImage),
+            JsAssets.DOCUMENT_WATCHER,
+            JsAssets.HORIZONTAL_SCROLLING,
+            JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
+            JsAssets.CLICK_A,
+            JsAssets.CONTEXT_A,
+            JsAssets.MEDIA,
+            prefs = prefs
+        )
+    }
+
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
@@ -120,30 +150,8 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
         if (url.isFacebookUrl) {
-            view.jsInject(
-//                    CssHider.CORE,
-                CssHider.HEADER,
-                CssHider.COMPOSER.maybe(!prefs.showComposer),
-                CssHider.STORIES.maybe(!prefs.showStories),
-                CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
-                CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
-                prefs.themeInjector,
-                CssHider.NON_RECENT.maybe(
-                    (web.url?.contains("?sk=h_chr") ?: false) &&
-                        prefs.aggressiveRecents
-                ),
-                CssHider.ADS.maybe(!prefs.showFacebookAds),
-                CssHider.POST_ACTIONS.maybe(!prefs.showPostActions),
-                CssHider.POST_REACTIONS.maybe(!prefs.showPostReactions),
-                CssSmallAssets.FullSizeImage.maybe(prefs.fullSizeImage),
-                JsAssets.DOCUMENT_WATCHER,
-                JsAssets.HORIZONTAL_SCROLLING,
-                JsAssets.AUTO_RESIZE_TEXTAREA,
-                JsAssets.CLICK_A,
-                JsAssets.CONTEXT_A,
-                JsAssets.MEDIA,
-                prefs = prefs
-            )
+            v { "Page commit visible" }
+            view.facebookJsInject()
         } else {
             refresh.offer(false)
         }
@@ -176,6 +184,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             JsAssets.HEADER_BADGES.maybe(isMain),
             prefs = prefs
         )
+        web.facebookJsInject()
     }
 
     open fun handleHtml(html: String?) {
