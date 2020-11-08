@@ -166,7 +166,7 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun setScrolling(scrolling: Boolean) {
-        L.i { "Scrolling $scrolling" }
+        L.v { "Scrolling $scrolling" }
         this.isScrolling = scrolling
     }
 
