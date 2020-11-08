@@ -35,7 +35,7 @@ import kotlinx.coroutines.withContext
  */
 enum class JsAssets(private val singleLoad: Boolean = true) : InjectorContract {
     MENU, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
-    DOCUMENT_WATCHER, HORIZONTAL_SCROLLING, AUTO_RESIZE_TEXTAREA(singleLoad = false)
+    DOCUMENT_WATCHER, HORIZONTAL_SCROLLING, AUTO_RESIZE_TEXTAREA(singleLoad = false), SCROLL_STOP,
     ;
 
     @VisibleForTesting

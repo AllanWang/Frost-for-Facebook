@@ -125,6 +125,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             JsAssets.CLICK_A,
             JsAssets.CONTEXT_A,
             JsAssets.MEDIA,
+            JsAssets.SCROLL_STOP,
             prefs = prefs
         )
     }

@@ -110,6 +110,14 @@
         Frost.longClick(true);
         longClick = true;
 
+        /**
+         * Don't handle context events while scrolling
+         */
+        if (Frost.isScrolling()) {
+            console.log("Skip from scrolling");
+            return;
+        }
+
         /*
          * Commonality; check for valid target
          */
