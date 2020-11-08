@@ -161,4 +161,15 @@ class FrostJSI(val web: FrostWebView) {
         activity?.contentBinding?.viewpager?.enableSwipe = enable
         (context as? WebOverlayActivityBase)?.swipeBack?.disallowIntercept = !enable
     }
+
+    private var isScrolling = false
+
+    @JavascriptInterface
+    fun setScrolling(scrolling: Boolean) {
+        L.i { "Scrolling $scrolling" }
+        this.isScrolling = scrolling
+    }
+
+    @JavascriptInterface
+    fun isScrolling(): Boolean = isScrolling
 }
