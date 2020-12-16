@@ -47,7 +47,7 @@ enum class FbItem(
     GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
     MARKETPLACE(R.string.marketplace, GoogleMaterial.Icon.gmd_store, "marketplace"),
     MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings"),
-    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
+    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messenger"),
     NOTES(R.string.notes, CommunityMaterial.Icon3.cmd_note, "notes"),
     NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
     ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
@@ -77,7 +77,7 @@ enum class FbItem(
     SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
     ;
 
-    val url = "$prefix$relativeUrl"
+    val url = if (relativeUrl != "messenger") "$prefix$relativeUrl" else "https://messenger.com"
 
     val isFeed: Boolean
         get() = when (this) {
