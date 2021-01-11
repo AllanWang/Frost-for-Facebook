@@ -50,7 +50,6 @@ object L : KauLogger("Frost") {
             e(e, message)
         }
     }
-
 }
 
 fun KauLoggerExtension.test(message: () -> Any?) {

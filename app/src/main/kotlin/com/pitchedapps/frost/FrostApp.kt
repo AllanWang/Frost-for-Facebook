@@ -29,7 +29,6 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
-import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import java.util.Random
