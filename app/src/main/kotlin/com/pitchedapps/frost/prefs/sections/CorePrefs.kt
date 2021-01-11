@@ -21,8 +21,8 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 interface CorePrefs : PrefsBase {
     var lastLaunch: Long

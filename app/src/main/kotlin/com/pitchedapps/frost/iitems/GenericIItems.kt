@@ -30,8 +30,8 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 30/12/17.

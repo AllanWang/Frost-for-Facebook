@@ -21,8 +21,8 @@ import android.content.Context
 import android.content.Intent
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-05-31.

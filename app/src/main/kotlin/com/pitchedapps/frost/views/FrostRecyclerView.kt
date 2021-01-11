@@ -30,8 +30,8 @@ import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.prefs.Prefs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.

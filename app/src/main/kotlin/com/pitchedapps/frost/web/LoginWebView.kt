@@ -42,8 +42,8 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isFacebookUrl
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
