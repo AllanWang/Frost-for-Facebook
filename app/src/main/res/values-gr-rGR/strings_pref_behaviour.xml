@@ -21,7 +21,5 @@
     <string name="autoplay_settings_desc">Άνοιξε τις ρυθμίσεις αυτόματης αναπαραγωγής του Facebook. Πρόσεξε ότι πρέπει να είναι απενεργοποιημένες για να λειτουργήσει το PIP.</string>
     <string name="exit_confirmation">Έξοδος επιβεβαίωσης</string>
     <string name="exit_confirmation_desc">Εμφάνισε διάλογο επιβεβαίωσης προτού αποχωρήσεις από την εφαρμογή</string>
-    <string name="analytics">Στατιστικά</string>
-    <string name="analytics_desc">Επέτρεψε ανώνυμη συλλογή στατιστικών στοιχείων και αναφορές δυσλειτουργίας με σκοπό την βελτίωση της εφαρμογής. Καμία προσωπική πληροφορία δεν εκτίθεται.</string>
 
 </resources>

@@ -21,6 +21,4 @@
     <string name="autoplay_settings_desc">Obri els ajustos de reproducció automàtica de Facebook. Noteu que ha d\'estar desactivat perquè PIP funcioni.</string>
     <string name="exit_confirmation">Confirmació de sortida</string>
     <string name="exit_confirmation_desc">Mostra un diàleg de confirmació abans de sortir de l\'app</string>
-    <string name="analytics">Estadístiques</string>
-    <string name="analytics_desc">Permet la recollida de dades anònimes i informes d\'error per millorar l\'app. No s\'hi transmet cap dada personal.</string>
 </resources>

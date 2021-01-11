@@ -17,5 +17,4 @@
     <string name="force_message_bottom_desc">Når du laster en meldingstråd, bla til bunnen av tråden isteden for å laste den slik den er.</string>
     <string name="exit_confirmation">Avslutnings bekreftelse</string>
     <string name="exit_confirmation_desc">Vis bekreftelsesdialog før du avslutter programmet</string>
-    <string name="analytics">Analyser</string>
 </resources>

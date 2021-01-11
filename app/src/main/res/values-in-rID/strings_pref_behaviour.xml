@@ -19,5 +19,4 @@
     <string name="enable_pip_desc">Mengaktifkan gambar dalam gambar video</string>
     <string name="exit_confirmation">Konfirmasi Keluar</string>
     <string name="exit_confirmation_desc">Tampilkan dialog konfirmasi sebelum keluar aplikasi</string>
-    <string name="analytics">Analisis</string>
 </resources>
