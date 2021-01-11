@@ -30,8 +30,8 @@ import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.databinding.ViewBadgedIconBinding
 import com.pitchedapps.frost.prefs.Prefs
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-06-19.

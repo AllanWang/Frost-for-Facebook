@@ -22,8 +22,8 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 interface FeedPrefs : PrefsBase {
     var webTextScaling: Int
