@@ -27,7 +27,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.enums.Theme
-import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.REQUEST_NAV
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
@@ -44,7 +44,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.theme_customization)
 
-    text(R.string.theme, prefs::theme, { prefs.theme = it }) {
+    text(R.string.theme, prefs::theme, { prefs.theme = it; themeProvider.setTheme(it) }) {
         onClick = {
             materialDialog {
                 title(R.string.theme)
@@ -76,7 +76,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     fun invalidateCustomTheme() {
-        CssAssets.CUSTOM.reset()
+        themeProvider.reset()
     }
 
     colorPicker(R.string.text_color, prefs::customTextColor, {

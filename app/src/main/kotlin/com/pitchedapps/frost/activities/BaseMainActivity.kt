@@ -202,7 +202,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         drawerWrapperBinding.mainContainer.addView(contentBinding.root)
         with(contentBinding) {
-            setFrostColors(prefs) {
+            setFrostColors {
                 toolbar(toolbar)
                 themeWindow = false
                 header(appbar)

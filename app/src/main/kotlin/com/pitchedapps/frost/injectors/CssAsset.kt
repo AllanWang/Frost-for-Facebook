@@ -22,7 +22,7 @@ import com.pitchedapps.frost.prefs.Prefs
 /**
  * Small misc inline css assets
  */
-enum class CssSmallAssets(private val content: String) : InjectorContract {
+enum class CssAsset(private val content: String) : InjectorContract {
     FullSizeImage("div._4prr[style*=\"max-width\"][style*=\"max-height\"]{max-width:none !important;max-height:none !important}")
     ;
 

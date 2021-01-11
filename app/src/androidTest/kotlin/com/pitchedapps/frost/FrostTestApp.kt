@@ -23,6 +23,7 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.kpref.KPrefFactoryInMemory
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -70,7 +71,8 @@ class FrostTestApp : Application() {
                     FrostDatabase.module(),
                     prefFactoryModule(),
                     Prefs.module(),
-                    FbCookie.module()
+                    FbCookie.module(),
+                    ThemeProvider.module()
                 )
             )
         }

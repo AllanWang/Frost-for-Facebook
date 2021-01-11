@@ -106,7 +106,7 @@ class ThemePrefsImpl(
 
     private val loader = lazyResettable { Theme.values[theme] }
 
-    private val t: Theme by loader
+    val t: Theme by loader
 
     override val textColor: Int
         get() = t.textColorGetter(this)

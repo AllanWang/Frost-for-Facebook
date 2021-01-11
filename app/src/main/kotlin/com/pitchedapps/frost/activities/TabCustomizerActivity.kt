@@ -107,7 +107,7 @@ class TabCustomizerActivity : BaseActivity() {
         fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, prefs.iconColor)
         fabCancel.backgroundTintList = ColorStateList.valueOf(prefs.accentColor)
         fabCancel.setOnClickListener { finish() }
-        setFrostColors(prefs) {
+        setFrostColors {
             themeWindow = true
         }
     }

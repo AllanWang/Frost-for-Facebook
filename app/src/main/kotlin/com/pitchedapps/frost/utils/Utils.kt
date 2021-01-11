@@ -67,7 +67,7 @@ import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.injectors.CssAssets
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.prefs.Prefs
 import java.io.File
@@ -84,6 +84,8 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -191,7 +193,10 @@ fun Activity.setFrostTheme(prefs: Prefs, forceTransparent: Boolean = false) {
     }
 }
 
-class ActivityThemeUtils(val prefs: Prefs) {
+class ActivityThemeUtils : KoinComponent {
+
+    private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
 
     private var toolbar: Toolbar? = null
     var themeWindow = true
@@ -455,6 +460,6 @@ fun String.unescapeHtml(): String =
         .replace("\\\"", "\"")
 
 suspend fun Context.loadAssets(prefs: Prefs): Unit = coroutineScope {
-    CssAssets.load(this@loadAssets, prefs)
+    ThemeProvider.load(this@loadAssets, prefs)
     JsAssets.load(this@loadAssets)
 }

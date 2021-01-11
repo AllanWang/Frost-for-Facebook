@@ -18,53 +18,82 @@ package com.pitchedapps.frost.injectors
 
 import android.content.Context
 import android.graphics.Color
-import android.webkit.WebView
-import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToBackground
 import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.isColorVisibleOn
 import ca.allanwang.kau.utils.toRgbaString
 import ca.allanwang.kau.utils.use
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.enums.FACEBOOK_BLUE
+import com.pitchedapps.frost.enums.Theme
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import java.io.BufferedReader
 import java.io.FileNotFoundException
-import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-
-private const val THEME_FOLDER = "themes"
 
 /**
  * Created by Allan Wang on 2017-05-31.
  * Mapping of the available assets
  * The enum name must match the css file name
  */
-enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
-    MATERIAL_LIGHT, MATERIAL_DARK, MATERIAL_AMOLED, MATERIAL_GLASS, CUSTOM
-    ;
+class ThemeProvider(private val context: Context, private val prefs: Prefs) {
 
-    @VisibleForTesting
-    internal val file = "${name.toLowerCase(Locale.CANADA)}.css"
+    var theme: Theme = Theme.values[prefs.theme]
+
+    private val injectors: MutableMap<ThemeCategory, InjectorContract> = mutableMapOf()
+
+    val textColor: Int
+        get() = theme.textColorGetter(prefs)
+
+     val accentColor: Int
+        get() = theme.accentColorGetter(prefs)
+
+     val accentColorForWhite: Int
+        get() = when {
+            accentColor.isColorVisibleOn(Color.WHITE) -> accentColor
+            textColor.isColorVisibleOn(Color.WHITE) -> textColor
+            else -> FACEBOOK_BLUE
+        }
+
+     val nativeBgColor: Int
+        get() = bgColor.withAlpha(30)
+
+     fun nativeBgColor(unread: Boolean) = bgColor
+        .colorToForeground(if (unread) 0.7f else 0.0f)
+        .withAlpha(30)
+
+     val bgColor: Int
+        get() = theme.backgroundColorGetter(prefs)
+
+     val headerColor: Int
+        get() = theme.headerColorGetter(prefs)
+
+     val iconColor: Int
+        get() = theme.iconColorGetter(prefs)
+
+     val isCustomTheme: Boolean
+        get() = theme == Theme.CUSTOM
 
     /**
-     * Note that while this can be loaded from any thread, it is typically done through [load]
+     * Note that while this can be loaded from any thread, it is typically done through [preload]]
      */
-    private var injector: JsInjector? = null
-
-    private fun injector(context: Context, prefs: Prefs): JsInjector =
-        injector ?: createInjector(context, prefs).also { injector = it }
+    fun injector(category: ThemeCategory): InjectorContract =
+        injectors.getOrPut(category) { createInjector(category) }
 
     /**
-     * Note that while this can be loaded from any thread, it is typically done through [load]
+     * Note that while this can be loaded from any thread, it is typically done through [preload]
      */
-    private fun createInjector(context: Context, prefs: Prefs): JsInjector =
+    private fun createInjector(category: ThemeCategory): InjectorContract {
+        val file = theme.file ?: return JsActions.EMPTY
         try {
             var content =
-                context.assets.open("css/$folder/$file").bufferedReader()
+                context.assets.open("css/${category.folder}/theme/${file}").bufferedReader()
                     .use(BufferedReader::readText)
-            if (this == CUSTOM) {
+            if (theme == Theme.CUSTOM) {
                 val bt = if (Color.alpha(prefs.bgColor) == 255)
                     prefs.bgColor.toRgbaString()
                 else
@@ -86,30 +115,32 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
                     .replace("\$TI\$", bb.withAlpha(60).toRgbaString())
                     .replace("\$C\$", bt)
             }
-            JsBuilder().css(content).build()
+            return JsBuilder().css(content).build()
         } catch (e: FileNotFoundException) {
             L.e(e) { "CssAssets file not found" }
-            JsInjector(JsActions.EMPTY.function)
+            return JsActions.EMPTY
         }
+    }
 
-    override fun inject(webView: WebView, prefs: Prefs) =
-        injector(webView.context, prefs).inject(webView, prefs)
+    fun setTheme(id: Int) {
+        theme = Theme.values[id]
+        reset()
+    }
 
     fun reset() {
-        injector = null
+        injectors.clear()
+    }
+
+    suspend fun preload() {
+        withContext(Dispatchers.IO) {
+            reset()
+            ThemeCategory.values().forEach { injector(it) }
+        }
     }
 
     companion object {
-
-        // Ensures that all non themes and the selected theme are loaded
-        suspend fun load(context: Context, prefs: Prefs) {
-            withContext(Dispatchers.IO) {
-                val currentTheme = prefs.themeInjector as? CssAssets
-                val (themes, others) = values().partition { it.folder == THEME_FOLDER }
-                themes.filter { it != currentTheme }.forEach { it.reset() }
-                currentTheme?.injector(context, prefs)
-                others.forEach { it.injector(context, prefs) }
-            }
+        fun module() = org.koin.dsl.module {
+            single { ThemeProvider(get(), get()) }
         }
     }
 }

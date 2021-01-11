@@ -26,6 +26,7 @@ import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
@@ -58,7 +59,8 @@ class FrostApp : Application(), KoinComponent {
                     FrostDatabase.module(),
                     prefFactoryModule(),
                     Prefs.module(),
-                    FbCookie.module()
+                    FbCookie.module(),
+                    ThemeProvider.module()
                 )
             )
         }

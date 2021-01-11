@@ -43,6 +43,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.settings.getAppearancePrefs
 import com.pitchedapps.frost.settings.getBehaviourPrefs
@@ -73,6 +74,7 @@ class SettingsActivity : KPrefActivity() {
     val fbCookie: FbCookie by inject()
     val notifDao: NotificationDao by inject()
     val prefs: Prefs by inject()
+    val themeProvider: ThemeProvider by inject()
 
     private var resultFlag = Activity.RESULT_CANCELED
 
