@@ -87,8 +87,4 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(R.string.exit_confirmation, prefs::exitConfirmation, { prefs.exitConfirmation = it }) {
         descRes = R.string.exit_confirmation_desc
     }
-
-    checkbox(R.string.analytics, prefs::analytics, { prefs.analytics = it }) {
-        descRes = R.string.analytics_desc
-    }
 }

@@ -41,7 +41,6 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityIntroBinding
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
-import com.pitchedapps.frost.intro.IntroFragmentAnalytics
 import com.pitchedapps.frost.intro.IntroFragmentEnd
 import com.pitchedapps.frost.intro.IntroFragmentTheme
 import com.pitchedapps.frost.intro.IntroFragmentWelcome
@@ -76,7 +75,6 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
         IntroAccountFragment(),
         IntroTabTouchFragment(),
         IntroTabContextFragment(),
-        IntroFragmentAnalytics(),
         IntroFragmentEnd()
     )
 

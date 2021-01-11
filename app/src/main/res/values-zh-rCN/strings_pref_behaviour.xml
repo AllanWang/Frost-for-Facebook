@@ -17,5 +17,4 @@
     <string name="force_message_bottom_desc">在加载消息线程时, 会触发一个滚动到页面底部, 而不是像加载页面一样。</string>
     <string name="exit_confirmation">退出确认</string>
     <string name="exit_confirmation_desc">关闭前显示确认对话框</string>
-    <string name="analytics">统计</string>
 </resources>

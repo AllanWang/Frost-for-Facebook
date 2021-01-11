@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -139,7 +138,6 @@ android {
             signingConfig signingConfigs.debug
             resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
-            ext.enableBugsnag = false
 
             kotlinOptions.freeCompilerArgs += compilerArgs
         }
@@ -301,8 +299,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}"
     testImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
-
-    implementation kau.Dependencies.bugsnag
 
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${Versions.scaleImageView}"
 

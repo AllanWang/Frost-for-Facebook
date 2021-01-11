@@ -23,6 +23,4 @@
     <string name="autoplay_settings_desc">Відкрити налаштування автовідтворення Facebook. Зауважте, що для роботи PIP це потрібно вимкнути.</string>
     <string name="exit_confirmation">Підтвердження виходу</string>
     <string name="exit_confirmation_desc">Показати діалогове вікно підтвердження перед тим, як вийти з програми</string>
-    <string name="analytics">Аналітика</string>
-    <string name="analytics_desc">Увімкніть анонімні аналітики та звіти про помилки, щоб поліпшити додаток. Ніяка особиста інформація ніколи не розповсюджується.</string>
 </resources>

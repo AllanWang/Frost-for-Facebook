@@ -24,14 +24,11 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.kpref.KPrefFactoryAndroid
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
-import com.bugsnag.android.Bugsnag
-import com.bugsnag.android.Configuration
 import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
-import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import java.util.Random
@@ -71,7 +68,6 @@ class FrostApp : Application(), KoinComponent {
         }
         prefs = get()
         initPrefs()
-//        initBugsnag()
 
         L.i { "Begin Frost for Facebook" }
         FrostPglAdBlock.init(this)
@@ -121,36 +117,6 @@ class FrostApp : Application(), KoinComponent {
             prefs.identifier = Random().nextInt(Int.MAX_VALUE)
         }
         prefs.lastLaunch = System.currentTimeMillis()
-    }
-
-    private fun initBugsnag() {
-        if (BuildConfig.DEBUG) {
-            return
-        }
-        if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) {
-            return
-        }
-        val version = BuildUtils.match(BuildConfig.VERSION_NAME)
-            ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
-        val config = Configuration("83cf680ed01a6fda10fe497d1c0962bb").apply {
-            appVersion = version.versionName
-            releaseStage = BuildUtils.getStage(BuildConfig.BUILD_TYPE)
-            enabledReleaseStages = BuildUtils.getAllStages()
-            autoTrackSessions = prefs.analytics
-            autoDetectErrors = prefs.analytics
-        }
-        Bugsnag.start(this, config)
-        L.hasAnalytics = { prefs.analytics }
-        Bugsnag.setUser(prefs.frostId, null, null)
-        Bugsnag.addMetadata("Build", "Application", BuildConfig.APPLICATION_ID)
-        Bugsnag.addMetadata("Build", "Version", BuildConfig.VERSION_NAME)
-
-        Bugsnag.addOnError { event ->
-            when {
-                event.originalError?.stackTrace?.any { it.className.contains("XposedBridge") } == true -> false
-                else -> true
-            }
-        }
     }
 
     companion object {

@@ -21,6 +21,4 @@ Di default lo scorrimento si arresta in automatico quando premi a lungo su un og
     <string name="enable_pip_desc">Attiva video in modalità picture-in-picture</string>
     <string name="exit_confirmation">Conferma Uscita</string>
     <string name="exit_confirmation_desc">Mostra un avviso prima di uscire dall\'applicazione</string>
-    <string name="analytics">Statistiche</string>
-    <string name="analytics_desc">Abilita le statistiche anonime e la segnalazione dei bug per migliorare l\'applicazione. Nessuna informazione personale sarà mai resa pubblica o esposta.</string>
 </resources>

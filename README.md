@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.com/AllanWang/Frost-for-Facebook.svg?branch=dev)](https://travis-ci.com/AllanWang/Frost-for-Facebook)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/frost-for-facebook/localized.svg)](https://crowdin.com/project/frost-for-facebook)
 [![ZenHub](https://img.shields.io/badge/Shipping%20faster%20with-ZenHub-45529A.svg)](https://app.zenhub.com/workspace/o/allanwang/frost-for-facebook/boards)
-[![BugSnag](https://img.shields.io/badge/Bug%20tracking%20with-BugSnag-37C2D9.svg)](https://www.bugsnag.com/)
 [![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/dev/LICENSE)
 
 [Download from Github Releases](https://github.com/AllanWang/Frost-for-Facebook/releases) <br/>

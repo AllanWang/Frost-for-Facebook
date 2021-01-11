@@ -21,6 +21,4 @@
     <string name="autoplay_settings_desc">Facebook의 자동 재생 설정을 엽니 다. PIP가 작동하려면이 기능을 사용하지 않아야합니다.</string>
     <string name="exit_confirmation">종료 전에 물어보기</string>
     <string name="exit_confirmation_desc">앱을 종료하기 전에 확인 창을 띄웁니다.</string>
-    <string name="analytics">통계</string>
-    <string name="analytics_desc">앱을 개선하기위해 익명으로 분석 및 버그 보고서를 사용하도록 설정합니다. 개인 정보는 노출되지 않습니다.</string>
 </resources>

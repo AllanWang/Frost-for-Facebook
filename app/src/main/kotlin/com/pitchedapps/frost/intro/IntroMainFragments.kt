@@ -30,12 +30,9 @@ import androidx.fragment.app.Fragment
 import ca.allanwang.kau.kotlin.LazyResettableRegistry
 import ca.allanwang.kau.utils.Kotterknife
 import ca.allanwang.kau.utils.bindViewResettable
-import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.setOnSingleTapListener
-import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
-import com.pitchedapps.frost.databinding.IntroAnalyticsBinding
 import com.pitchedapps.frost.prefs.Prefs
 import kotlin.math.abs
 import org.koin.android.ext.android.inject
@@ -138,40 +135,6 @@ class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
         image.imageTintList = ColorStateList.valueOf(prefs.textColor)
-    }
-}
-
-class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
-
-    val container: ConstraintLayout by bindViewResettable(R.id.intro_analytics_container)
-
-    private lateinit var binding: IntroAnalyticsBinding
-
-    override fun viewArray(): Array<Array<out View>> = with(binding) {
-        arrayOf(
-            arrayOf(title), arrayOf(image),
-            arrayOf(introSwitch), arrayOf(desc)
-        )
-    }
-
-    override fun themeFragmentImpl() {
-        super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(prefs.textColor)
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = IntroAnalyticsBinding.bind(view)
-        binding.init()
-    }
-
-    private fun IntroAnalyticsBinding.init() {
-        image.setIcon(GoogleMaterial.Icon.gmd_bug_report, 120)
-        introSwitch.isSelected = prefs.analytics
-        introSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.analytics = isChecked
-        }
     }
 }
 

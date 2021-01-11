@@ -19,5 +19,4 @@
     <string name="enable_pip_desc">I-enable ang larawan sa larawan sa mga bidyo</string>
     <string name="exit_confirmation">Lumabas na Kumpimasyon</string>
     <string name="exit_confirmation_desc">Ipakita ang kumpirmasyon ng diyalog bago ilabas ang aplikasyon</string>
-    <string name="analytics">Analitiko</string>
 </resources>

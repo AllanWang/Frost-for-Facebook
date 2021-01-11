@@ -23,6 +23,4 @@
     <string name="autoplay_settings_desc">افتح إعدادات التشغيل التلقائي لفيسبوك. لاحظ أنه يجب تعطيلها لكي نعمل خاصية صورة في صورة.</string>
     <string name="exit_confirmation">تأكيد الخروج</string>
     <string name="exit_confirmation_desc">إظهار مربع التأكيد قبل إنهاء التطبيق</string>
-    <string name="analytics">إحصائيات</string>
-    <string name="analytics_desc">تمكين التحليلات خافية الهوية وتقارير الأخطاء للمساعدة في تحسين التطبيق. لا تكشف عنك أي معلومات شخصية على الإطلاق.</string>
 </resources>

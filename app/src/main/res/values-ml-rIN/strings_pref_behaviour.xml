@@ -23,6 +23,4 @@
     <string name="autoplay_settings_desc">Facebook- ന്റെ ഓട്ടോ പ്ലേ ക്രമീകരണങ്ങൾ തുറക്കുക. PIP പ്രവർത്തിക്കുന്നതിന് ഇത് അപ്രാപ്‌തമാക്കിയിരിക്കണം.</string>
     <string name="exit_confirmation">പുറത്തുകടക്കാൻ ചോദിക്കുക</string>
     <string name="exit_confirmation_desc">അപ്ലിക്കേഷനിൽ നിന്ന് പുറത്തുകടക്കുന്നതിന് മുമ്പ് സ്ഥിരീകരണ ഡയലോഗ് കാണിക്കുക</string>
-    <string name="analytics">അനലിറ്റിക്സ്</string>
-    <string name="analytics_desc">അപ്ലിക്കേഷൻ മെച്ചപ്പെടുത്താൻ സഹായിക്കുന്നതിന് അജ്ഞാത അനലിറ്റിക്സും ബഗ് റിപ്പോർട്ടുകളും പ്രവർത്തനക്ഷമമാക്കുക. വ്യക്തിഗത വിവരങ്ങളൊന്നും വെളിപ്പെടുത്തിയിട്ടില്ല.</string>
 </resources>
