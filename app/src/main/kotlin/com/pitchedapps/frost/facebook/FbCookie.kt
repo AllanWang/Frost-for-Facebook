@@ -117,6 +117,7 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
         }
         withContext(Dispatchers.IO + NonCancellable) {
             L.d { "Switching User" }
+            // TODO save old messenger cookie
             prefs.userId = cookie.id
             CookieManager.getInstance().apply {
                 removeAllCookies()
