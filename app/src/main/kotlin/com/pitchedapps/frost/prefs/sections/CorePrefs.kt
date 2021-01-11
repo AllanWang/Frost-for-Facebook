@@ -47,11 +47,6 @@ interface CorePrefs : PrefsBase {
      */
     var verboseLogging: Boolean
 
-    /**
-     * True to enable analytic reports (BugSnag)
-     */
-    var analytics: Boolean
-
     var enablePip: Boolean
 
     var exitConfirmation: Boolean
@@ -92,18 +87,6 @@ class CorePrefsImpl(
         "verbose_logging",
         oldPrefs.verboseLogging /* false */
     )
-
-    override var analytics: Boolean by kpref("analytics", oldPrefs.analytics /* false */) {
-//        if (!BuildConfig.DEBUG) {
-//            if (it) {
-//                Bugsnag.setAutoCaptureSessions(true)
-//                Bugsnag.enableExceptionHandler()
-//            } else {
-//                Bugsnag.setAutoCaptureSessions(false)
-//                Bugsnag.disableExceptionHandler()
-//            }
-//        }
-    }
 
     override var enablePip: Boolean by kpref("enable_pip", oldPrefs.enablePip /* true */)
 

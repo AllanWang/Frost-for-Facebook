@@ -51,25 +51,6 @@ object L : KauLogger("Frost") {
         }
     }
 
-    var hasAnalytics: () -> Boolean = { false }
-
-    override fun logImpl(priority: Int, message: String?, t: Throwable?) {
-        /*
-         * Debug flag is constant and should help with optimization
-         * bugsnagInit is changed per application and helps prevent crashes (if calling pre init)
-         * analytics is changed by the user, and may be toggled throughout the app
-         */
-        if (BuildConfig.DEBUG || !hasAnalytics()) {
-            super.logImpl(priority, message, t)
-        } else {
-//            if (message != null) {
-//                Bugsnag.leaveBreadcrumb(message)
-//            }
-//            if (t != null) {
-//                Bugsnag.notify(t)
-//            }
-        }
-    }
 }
 
 fun KauLoggerExtension.test(message: () -> Any?) {
