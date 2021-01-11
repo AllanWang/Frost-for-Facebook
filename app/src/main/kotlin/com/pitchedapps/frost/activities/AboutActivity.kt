@@ -179,7 +179,7 @@ class AboutActivity : AboutActivityBase(null) {
                 val iicons: Array<Pair<IIcon, () -> Unit>> = arrayOf(
                     GoogleMaterial.Icon.gmd_file_download to { c.startLink(R.string.github_downloads_url) },
                     CommunityMaterial.Icon3.cmd_reddit to { c.startLink(R.string.reddit_url) },
-                    CommunityMaterial.Icon2.cmd_github to { c.startLink(R.string.github_url) },
+                    CommunityMaterial.Icon2.cmd_github to { c.startLink(R.string.github_url) }
                 )
 
                 images =
