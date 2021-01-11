@@ -48,7 +48,7 @@ enum class FbItem(
     MARKETPLACE(R.string.marketplace, GoogleMaterial.Icon.gmd_store, "marketplace"),
     MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "settings"),
     MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
-    MESSENGER(R.string.messenger, CommunityMaterial.Icon2.cmd_facebook_messenger, "", prefix = MESSENGER_URL_BASE),
+    MESSENGER(R.string.messenger, CommunityMaterial.Icon2.cmd_facebook_messenger, "", prefix = HTTPS_MESSENGER_COM),
     NOTES(R.string.notes, CommunityMaterial.Icon3.cmd_note, "notes"),
     NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
     ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
