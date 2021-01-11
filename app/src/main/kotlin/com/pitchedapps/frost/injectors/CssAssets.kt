@@ -34,6 +34,8 @@ import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+private const val THEME_FOLDER = "themes"
+
 /**
  * Created by Allan Wang on 2017-05-31.
  * Mapping of the available assets
@@ -111,5 +113,3 @@ enum class CssAssets(val folder: String = THEME_FOLDER) : InjectorContract {
         }
     }
 }
-
-private const val THEME_FOLDER = "themes"
