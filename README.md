@@ -6,8 +6,7 @@
 [![ZenHub](https://img.shields.io/badge/Shipping%20faster%20with-ZenHub-45529A.svg)](https://app.zenhub.com/workspace/o/allanwang/frost-for-facebook/boards)
 [![GitHub license](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://raw.githubusercontent.com/AllanWang/Frost-for-Facebook/dev/LICENSE)
 
-[Download from Github Releases](https://github.com/AllanWang/Frost-for-Facebook/releases) <br/>
-[Join the Slack Workspace](https://frost-slack.allanwang.ca)
+[Download from Github Releases](https://github.com/AllanWang/Frost-for-Facebook/releases)
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
