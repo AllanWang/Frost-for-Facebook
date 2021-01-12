@@ -18,6 +18,4 @@
     <string name="enable_pip_desc">Омогући слику у слици видео записа</string>
     <string name="exit_confirmation">Изађите из потврде</string>
     <string name="exit_confirmation_desc">Прикажи дијалог за потврду изласка из апликације</string>
-    <string name="analytics">Аналитика</string>
-    <string name="analytics_desc">Омогућите анонимну аналитику и извештаје о грешкама да побољшате апликацију. Личне информације нече бити преузете.</string>
 </resources>
