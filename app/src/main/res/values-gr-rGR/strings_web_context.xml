@@ -2,8 +2,6 @@
 <resources>
 
     <string name="share_link">Κοινοποίηση Συνδέσμου</string>
-    <string name="debug_link">Αποσφαλμάτωση Συνδέσμου</string>
-    <string name="debug_link_desc">Αν ένας σύνδεσμος δεν φορτώνει σωστά, μπορείς να μου στείλεις email για να βοηθήσω στη διόρθωση σφαλμάτων.Πατώντας okay θα ανοίξει μία αίτηση για email</string>
     <string name="open_link">Άνοιγμα Συνδέσμου</string>
     <string name="copy_link">Αντιγραφή Συνδέσμου</string>
     <string name="copy_text">Αντιγραφή Κειμένου</string>

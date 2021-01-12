@@ -26,7 +26,6 @@
     <string name="account_not_found">Ο τωρινός λογαριασμός δεν είναι στη βάση δεδομένων</string>
     <string name="frost_notifications">Frost ειδοποιήσεις</string>
     <string name="requires_custom_theme">Απαιτεί προσαρμοσμένο θέμα</string>
-    <string name="subject">Θέμα</string>
     <string name="share">Κοινοποίηση</string>
     <string name="web_overlay_swipe_hint">Σαρώστε προς τα δεξιά για να επιστρέψετε στο προηγούμενο παράθυρο.</string>
     <string name="profile_picture">Φωτογραφία προφίλ</string>

@@ -25,7 +25,6 @@
     <string name="account_not_found">Kontot existerar inte</string>
     <string name="frost_notifications">Frost-Notifikationer</string>
     <string name="requires_custom_theme">Kräver anpassat tema</string>
-    <string name="subject">Ämne</string>
     <string name="share">Dela</string>
     <string name="web_overlay_swipe_hint">Svep åt höger för att gå tillbaka till föregående fönster.</string>
     <string name="profile_picture">Profilbild</string>

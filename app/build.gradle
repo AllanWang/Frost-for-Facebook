@@ -69,7 +69,16 @@ android {
                 'UnusedResources',
                 'ContentDescription',
                 'RtlSymmetry',
-                'MissingTranslation'
+                'MissingTranslation',
+                'TypographyQuotes',
+                'DuplicateStrings',
+                'UnusedIds',
+                'SyntheticAccessor',
+                'Recycle',
+                'AppLinksAutoVerifyWarning',
+                'AppLinksAutoVerifyError',
+                'GoogleAppIndexingApiWarning',
+                'SelectableText'
 
         xmlReport false
         textReport true

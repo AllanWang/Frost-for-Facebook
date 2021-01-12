@@ -25,7 +25,6 @@
     <string name="account_not_found">当前帐户不在数据库中</string>
     <string name="frost_notifications">Frost通知</string>
     <string name="requires_custom_theme">需要自定义主题</string>
-    <string name="subject">标题</string>
     <string name="share">分享</string>
     <string name="web_overlay_swipe_hint">往右滑回到前一个窗口</string>
     <string name="profile_picture">个人资料照片</string>
