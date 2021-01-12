@@ -29,19 +29,15 @@ import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.finishSlideOut
-import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.startLink
-import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withSceneTransitionAnimation
-import com.afollestad.materialdialogs.list.listItems
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.NotificationDao
-import com.pitchedapps.frost.enums.Support
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.settings.getAppearancePrefs
@@ -249,7 +245,6 @@ class SettingsActivity : KPrefActivity() {
         toolbar.tint(prefs.iconColor)
         setMenuIcons(
             menu, prefs.iconColor,
-            R.id.action_email to GoogleMaterial.Icon.gmd_email,
             R.id.action_changelog to GoogleMaterial.Icon.gmd_info
         )
         return true
@@ -257,12 +252,6 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_email -> materialDialog {
-                title(R.string.subject)
-                listItems(items = Support.values().map { string(it.title) }) { _, index, _ ->
-                    Support.values()[index].sendEmail(this@SettingsActivity)
-                }
-            }
             R.id.action_changelog -> frostChangelog()
             else -> return super.onOptionsItemSelected(item)
         }

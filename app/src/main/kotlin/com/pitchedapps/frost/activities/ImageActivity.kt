@@ -363,15 +363,7 @@ internal enum class FabStates(
                     ?: return
             activity.materialDialog {
                 title(R.string.kau_error)
-                message(R.string.bad_image_overlay)
-                positiveButton(R.string.kau_yes) {
-                    activity.sendFrostEmail(R.string.debug_image_link_subject) {
-                        addItem("Url", activity.imageUrl)
-                        addItem("Type", err.javaClass.name)
-                        addItem("Message", err.message ?: "Null")
-                    }
-                }
-                negativeButton(R.string.kau_no)
+                message(text = err.message)
             }
         }
     },

@@ -397,11 +397,22 @@ fun Context.frostUri(entry: String): Uri {
     return uri
 }
 
+inline fun Context.sendFrostEmail(
+    @StringRes subjectId: Int,
+    crossinline builder: EmailBuilder.() -> Unit
+) =
+    sendFrostEmail(string(subjectId), builder)
+
+inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =
+    sendEmail("", subjectId) {
+        builder()
+        addFrostDetails()
+    }
+
 fun EmailBuilder.addFrostDetails() {
     val prefs = Prefs.get()
     addItem("Prev version", prefs.prevVersionCode.toString())
     val proTag = "FO"
-//    if (IS_FROST_PRO) "TY" else "FP"
     addItem("Random Frost ID", "${prefs.frostId}-$proTag")
     addItem("Locale", Locale.getDefault().displayName)
 }
