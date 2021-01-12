@@ -18,5 +18,4 @@
     <string name="enable_pip_desc">Aktivera Picture in Picture-videovy</string>
     <string name="exit_confirmation">Avstängningsbekräftelse</string>
     <string name="exit_confirmation_desc">Visa en bekräftelseruta innan avstängning</string>
-    <string name="analytics">Analyser</string>
 </resources>
