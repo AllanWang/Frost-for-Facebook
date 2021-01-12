@@ -22,6 +22,4 @@
     <string name="autoplay_settings_desc">開啟 Facebook 的自動播放設定。若要使用 PIP，此項必需為停用。</string>
     <string name="exit_confirmation">確認離開</string>
     <string name="exit_confirmation_desc">關閉應用程式前顯示確認對話框</string>
-    <string name="analytics">分析</string>
-    <string name="analytics_desc">啟用匿名分析與錯誤報告以改善我們的軟體。其中並不會揭露任何個人資訊。</string>
 </resources>
