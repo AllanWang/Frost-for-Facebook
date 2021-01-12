@@ -22,6 +22,4 @@
     <string name="autoplay_settings_desc">Άνοιγμα ρυθμίσεων αυτόματης αναπαραγωγής του Facebook. Έχετε υπόψη πως το PIP πρέπει να είναι απενεργοποιημένο ώστε αυτό να δουλέψει.</string>
     <string name="exit_confirmation">Επιβεβαίωση Εξόδου</string>
     <string name="exit_confirmation_desc">Εμφάνιση διαλόγου επιβεβαίωσης πριν την έξοδο από την εφαρμογή</string>
-    <string name="analytics">Στατιστικά</string>
-    <string name="analytics_desc">Ενεργοποιήστε ανώνυμα στατιστικά και αναφορές σφαλμάτων για να βοηθήσετε την βελτίωση της εφαρμογής. Δεν εκθέτονται ποτέ προσωπικά δεδομένα.</string>
 </resources>
