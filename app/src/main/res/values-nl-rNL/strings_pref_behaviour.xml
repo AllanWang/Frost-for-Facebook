@@ -22,6 +22,4 @@
     <string name="autoplay_settings_desc">Open Facebooks instellingen voor automatisch afspelen. Let op dat dit uitgeschakeld moet staan om PIP te laten werken.</string>
     <string name="exit_confirmation">Afsluiten bevestigen</string>
     <string name="exit_confirmation_desc">Vraag om bevestiging bij het afsluiten van de app</string>
-    <string name="analytics">Statistieken</string>
-    <string name="analytics_desc">Schakel anonieme statistieken en foutrapporten in om mee te helpen met de ontwikkeling van de app. Persoonlijke informatie zal nooit worden doorgestuurd.</string>
 </resources>
