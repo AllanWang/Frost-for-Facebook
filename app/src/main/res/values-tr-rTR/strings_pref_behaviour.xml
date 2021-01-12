@@ -24,6 +24,4 @@
     <string name="autoplay_settings_desc">Facebook\'un otomatik oynatma ayarlarını açın. PIP (Ekran üzerinde video) çalışması için devre dışı bırakılması gerektiğini unutmayın.</string>
     <string name="exit_confirmation">Çıkış Onayı</string>
     <string name="exit_confirmation_desc">Uygulamadan çıkmadanönce onay iletişim kutusunu göster</string>
-    <string name="analytics">Analiz</string>
-    <string name="analytics_desc">Bu uygulamanın gelişmesi için anonim analitiğini ve hata raporlarını aktifleştir. Kişisel bilgiler açığa çıkmayacaktır.</string>
 </resources>
