@@ -22,6 +22,4 @@
     <string name="autoplay_settings_desc">Откройте настройки автовоспроизведения Facebook. Обратите внимание, что для работы PIP необходимо отключить.</string>
     <string name="exit_confirmation">Подтвердить Выход</string>
     <string name="exit_confirmation_desc">Предупреждать перед тем как выйти</string>
-    <string name="analytics">Аналитика</string>
-    <string name="analytics_desc">Отправлять анонимную статистику и баг репорты чтобы помочь улучшить программу. Персональная информация не используется.</string>
 </resources>
