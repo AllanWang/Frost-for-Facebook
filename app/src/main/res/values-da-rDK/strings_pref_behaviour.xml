@@ -18,6 +18,4 @@
     <string name="enable_pip_desc">Aktivér billede i billede-videoer</string>
     <string name="exit_confirmation">Afslutningsbekræftelse</string>
     <string name="exit_confirmation_desc">Vis bekræftelsesdialog før du afslutter app</string>
-    <string name="analytics">Analytics</string>
-    <string name="analytics_desc">Aktivér anonym dataindsamling og fejlrapportering for at hjælpe med at forbedre app\'en. Ingen personlig information er på noget tidspunkt tilgængelig.</string>
 </resources>
