@@ -75,20 +75,7 @@ enum class WebContextType(
         { c, wc, fc -> c.launchWebOverlay(wc.url!!, fc, Prefs.get()) }),
     COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, _ -> c.copyToClipboard(wc.url) }),
     COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, _ -> c.copyToClipboard(wc.text) }),
-    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _ -> c.shareText(wc.url) }),
-    DEBUG_LINK(R.string.debug_link, { it.hasUrl }, { c, wc, _ ->
-        c.materialDialog {
-            title(R.string.debug_link)
-            message(R.string.debug_link_desc)
-            positiveButton(R.string.kau_ok) {
-                c.sendFrostEmail(R.string.debug_link_subject) {
-                    message = c.string(R.string.debug_link_content)
-                    addItem("Unformatted url", wc.unformattedUrl!!)
-                    addItem("Formatted url", wc.url!!)
-                }
-            }
-        }
-    })
+    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _ -> c.shareText(wc.url) })
     ;
 
     companion object {

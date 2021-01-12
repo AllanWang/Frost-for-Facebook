@@ -25,7 +25,6 @@
     <string name="account_not_found">Gjeldende konto er ikke i databasen</string>
     <string name="frost_notifications">Frost varsler</string>
     <string name="requires_custom_theme">Krever tilpasset tema</string>
-    <string name="subject">Emne</string>
     <string name="share">Del</string>
     <string name="web_overlay_swipe_hint">Sveip til høyre for å gå tilbake til forrige vindu.</string>
     <string name="profile_picture">Profilbilde</string>

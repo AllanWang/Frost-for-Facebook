@@ -65,7 +65,6 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
-import com.pitchedapps.frost.utils.sendFrostEmail
 import com.pitchedapps.frost.utils.setFrostColors
 import java.io.File
 import java.io.FileNotFoundException
@@ -363,15 +362,7 @@ internal enum class FabStates(
                     ?: return
             activity.materialDialog {
                 title(R.string.kau_error)
-                message(R.string.bad_image_overlay)
-                positiveButton(R.string.kau_yes) {
-                    activity.sendFrostEmail(R.string.debug_image_link_subject) {
-                        addItem("Url", activity.imageUrl)
-                        addItem("Type", err.javaClass.name)
-                        addItem("Message", err.message ?: "Null")
-                    }
-                }
-                negativeButton(R.string.kau_no)
+                message(text = err.message ?: err.javaClass.name)
             }
         }
     },

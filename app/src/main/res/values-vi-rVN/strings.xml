@@ -26,7 +26,6 @@
     <string name="account_not_found">Tài khoản không có trong dữ liệu</string>
     <string name="frost_notifications">Thông báo từ Frost</string>
     <string name="requires_custom_theme">Yêu cầu gói giao diện riêng</string>
-    <string name="subject">Chủ đề</string>
     <string name="share">Chia sẻ</string>
     <string name="web_overlay_swipe_hint">Vuốt sang phải để trở lại cửa sổ trước đó.</string>
     <string name="profile_picture">Ảnh Đại diện</string>

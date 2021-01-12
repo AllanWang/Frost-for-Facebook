@@ -1,7 +1,7 @@
 <resources>
     <string name="dev_name" translatable="false">Pitched Apps</string>
-    <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
     <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
+    <string name="github" translatable="false">GitHub</string>
     <string name="github_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook</string>
     <string name="github_downloads_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook/releases</string>
     <string name="fdroid_url" translatable="false">https://f-droid.org/en/packages/com.pitchedapps.frost</string>

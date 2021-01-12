@@ -26,7 +26,6 @@
     <string name="account_not_found">현재 계정은 데이터베이스에 없습니다.</string>
     <string name="frost_notifications">Frost 알림</string>
     <string name="requires_custom_theme">커스텀 테마 필요</string>
-    <string name="subject">항목</string>
     <string name="share">공유</string>
     <string name="web_overlay_swipe_hint">이전 화면으로 돌아가려면 오른쪽으로 쓸어 넘기세요.</string>
     <string name="profile_picture">프로필 사진</string>

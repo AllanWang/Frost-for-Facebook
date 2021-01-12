@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.getkeepsafe.dexcount'
+//apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
 
 
@@ -69,7 +69,16 @@ android {
                 'UnusedResources',
                 'ContentDescription',
                 'RtlSymmetry',
-                'MissingTranslation'
+                'MissingTranslation',
+                'TypographyQuotes',
+                'DuplicateStrings',
+                'UnusedIds',
+                'SyntheticAccessor',
+                'Recycle',
+                'AppLinksAutoVerifyWarning',
+                'AppLinksAutoVerifyError',
+                'GoogleAppIndexingApiWarning',
+                'SelectableText'
 
         xmlReport false
         textReport true

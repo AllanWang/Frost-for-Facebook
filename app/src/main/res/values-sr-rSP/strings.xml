@@ -26,7 +26,6 @@
     <string name="account_not_found">Одабрани налог не постоји у бази</string>
     <string name="frost_notifications">Фрост нотификације</string>
     <string name="requires_custom_theme">Захтева модификовану тему</string>
-    <string name="subject">Тема</string>
     <string name="share">Подели</string>
     <string name="web_overlay_swipe_hint">Превуци на десно да се вратиш на претходни прозор.</string>
     <string name="profile_picture">Профилна слика</string>

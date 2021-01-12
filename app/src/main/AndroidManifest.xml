@@ -18,14 +18,15 @@
     <application
         android:name=".FrostApp"
         android:allowBackup="true"
+        android:extractNativeLibs="false"
         android:fullBackupContent="@xml/frost_backup_rules"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/frost_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FrostTheme"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
         tools:ignore="UnusedAttribute">
 
         <activity
