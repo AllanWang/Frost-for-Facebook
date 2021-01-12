@@ -20,6 +20,4 @@
     <string name="autoplay_settings_desc">Abrir os axustes de reprodución automática de Facebook. Debes desactivalos para que funcione o PIP.</string>
     <string name="exit_confirmation">Confirmación de saída</string>
     <string name="exit_confirmation_desc">Mostra un diálogo de confirmación antes de saír</string>
-    <string name="analytics">Estatísticas</string>
-    <string name="analytics_desc">Activa as estatísticas e os informes de erros anónimos que axudan a mellorar a aplicación. Ningunha información persoal será exposta.</string>
 </resources>
