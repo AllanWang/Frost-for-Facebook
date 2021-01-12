@@ -362,7 +362,7 @@ internal enum class FabStates(
                     ?: return
             activity.materialDialog {
                 title(R.string.kau_error)
-                message(text = err.message)
+                message(text = err.message ?: err.javaClass.name)
             }
         }
     },
