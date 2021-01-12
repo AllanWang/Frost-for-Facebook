@@ -18,6 +18,4 @@
     <string name="enable_pip_desc">Activează poza din pozele pentru videoclipuri</string>
     <string name="exit_confirmation">Confirmă ieșirea</string>
     <string name="exit_confirmation_desc">Arată caseta de confirm. părăsire aplicație</string>
-    <string name="analytics">Analize</string>
-    <string name="analytics_desc">Permite analize anonime şi rapoarte de erori pentru a ajuta aplicația. Informațiile peronale nu sunt expuse.</string>
 </resources>
