@@ -397,18 +397,6 @@ fun Context.frostUri(entry: String): Uri {
     return uri
 }
 
-inline fun Context.sendFrostEmail(
-    @StringRes subjectId: Int,
-    crossinline builder: EmailBuilder.() -> Unit
-) =
-    sendFrostEmail(string(subjectId), builder)
-
-inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =
-    sendEmail(string(R.string.dev_email), subjectId) {
-        builder()
-        addFrostDetails()
-    }
-
 fun EmailBuilder.addFrostDetails() {
     val prefs = Prefs.get()
     addItem("Prev version", prefs.prevVersionCode.toString())

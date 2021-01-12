@@ -26,7 +26,6 @@
     <string name="account_not_found">Учётная запись не существует</string>
     <string name="frost_notifications">Приостановить уведомления</string>
     <string name="requires_custom_theme">Требования пользовательской темы</string>
-    <string name="subject">Тема</string>
     <string name="share">Поделится</string>
     <string name="web_overlay_swipe_hint">Смахните вправо для возврата к предыдущему окну.</string>
     <string name="profile_picture">Фотография профиля</string>

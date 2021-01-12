@@ -26,7 +26,6 @@
     <string name="account_not_found">當前帳戶不在資料庫中</string>
     <string name="frost_notifications">Frost 通知</string>
     <string name="requires_custom_theme">需要自訂主題</string>
-    <string name="subject">主題</string>
     <string name="share">分享</string>
     <string name="web_overlay_swipe_hint">向右滑可返回之前的介面</string>
     <string name="profile_picture">用戶個人相片</string>

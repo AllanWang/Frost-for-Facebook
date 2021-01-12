@@ -25,7 +25,6 @@
     <string name="account_not_found">Tento účet není v databázi</string>
     <string name="frost_notifications">Frost upozornění</string>
     <string name="requires_custom_theme">Vyžaduje vlastní motiv</string>
-    <string name="subject">Předmět</string>
     <string name="share">Sdílet</string>
     <string name="web_overlay_swipe_hint">Tahem prstu doprava se vrátíte na předchozí okno.</string>
     <string name="profile_picture">Profilový obrázek</string>

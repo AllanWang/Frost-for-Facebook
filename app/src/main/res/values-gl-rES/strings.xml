@@ -26,7 +26,6 @@
     <string name="account_not_found">A conta actual non está na base de datos</string>
     <string name="frost_notifications">Notificacións de Frost</string>
     <string name="requires_custom_theme">Cómpre personalizar o tema</string>
-    <string name="subject">Asunto</string>
     <string name="share">Compartir</string>
     <string name="web_overlay_swipe_hint">Pasa o dedo cara á dereita para volver á xanela anterior.</string>
     <string name="profile_picture">Imaxe de perfil</string>
