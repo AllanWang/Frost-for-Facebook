@@ -22,6 +22,4 @@
     <string name="autoplay_settings_desc">Otwórz ustawienia automatycznego odtwarzania na Facebooku. Pamiętaj, że musi być ono wyłączone, aby PIP działał.</string>
     <string name="exit_confirmation">Potwierdzenie wyjścia</string>
     <string name="exit_confirmation_desc">Pokaż okno dialogowe przed zamknięciem aplikacji</string>
-    <string name="analytics">Statystyki</string>
-    <string name="analytics_desc">Włącz anonimowe statystyki i raporty o błędach, aby pomóc w ulepszaniu aplikacji. Żadne osobiste informacje nie zostaną nigdy ujawnione.</string>
 </resources>
