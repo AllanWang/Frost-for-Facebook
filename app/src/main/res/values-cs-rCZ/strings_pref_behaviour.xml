@@ -18,6 +18,4 @@
     <string name="enable_pip_desc">Povolit obraz v obraze pro videa</string>
     <string name="exit_confirmation">Potvrzení o ukončení</string>
     <string name="exit_confirmation_desc">Zobrazit potvrzení před ukončením aplikace</string>
-    <string name="analytics">Analytiky</string>
-    <string name="analytics_desc">Povolit anonymní statistiky pro zkvalitnění aplikace a hlášení chyb vývojářům. Vaše osobní informace nebudou sdíleny.</string>
 </resources>
