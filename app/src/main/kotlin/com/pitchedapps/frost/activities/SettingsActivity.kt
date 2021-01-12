@@ -245,6 +245,7 @@ class SettingsActivity : KPrefActivity() {
         toolbar.tint(prefs.iconColor)
         setMenuIcons(
             menu, prefs.iconColor,
+            R.id.action_github to CommunityMaterial.Icon2.cmd_github,
             R.id.action_changelog to GoogleMaterial.Icon.gmd_info
         )
         return true
@@ -252,6 +253,7 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_github -> startLink(R.string.github_url)
             R.id.action_changelog -> frostChangelog()
             else -> return super.onOptionsItemSelected(item)
         }
