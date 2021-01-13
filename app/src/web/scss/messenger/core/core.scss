@@ -4,3 +4,17 @@
 @import "core_text";
 @import "core_bg";
 @import "core_border";
+
+// Sizing adjustments
+[role="navigation"] {
+  .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.g5gj957u.rj1gh0hx.buofh1pr.hpfvmrgz.i1fnvgqd.bp9cbjyn.owycx6da.btwxx1t3.dflh9lhu.scb9dxdr.sj5x9vvc.cxgpxx05.sn0e7ne5.f6rbj1fe.l3ldwz01 /* New! Messenger app for windows */,
+  .rq0escxv.l9j0dhe7.du4w35lb.n851cfcs.aahdfvyu /* Search messenger */,
+  .wkznzc2l /* Top left chat + menu entry */ {
+    display: none !important;
+  }
+}
+
+.rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.hpfvmrgz.p8fzw8mz.pcp91wgn.iuny7tx3.ipjc6fyt /* Top bar call video info icons */,
+.kuivcneq /* Right sidebar */ {
+  display: none !important;
+}

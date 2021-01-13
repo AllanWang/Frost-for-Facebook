@@ -2,7 +2,7 @@
   --attachment-footer-background: #{$bg_opaque} !important;
   --card-background-flat: #{$bg_opaque} !important;
   --card-background: #{$bg_opaque} !important;
-  --comment-background: #{$bg_opaque} !important;
+  --comment-background: #{$bg_opaque2} !important;
   --comment-footer-background: #{$bg_opaque} !important;
   --disabled-button-background: #{$bg_opaque} !important;
   --disabled-icon: #{$text_disabled} !important;
@@ -25,6 +25,10 @@
   --secondary-text: #{$text} !important;
   --surface-background: #{$bg_opaque2} !important; // Emoji background
   --toggle-active-background: #{$bg_opaque2} !important;
+  --wash: #{$bg_opaque2} !important;
   --web-wash: #{$bg_opaque2} !important;
-  --web-wash: #{$bg_opaque2} !important;
+
+  [role="navigation"] {
+    --surface-background: #{$bg_opaque} !important; // Nav background
+  }
 }
