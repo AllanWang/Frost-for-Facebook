@@ -37,13 +37,12 @@ import kotlinx.coroutines.withContext
 import org.koin.core.context.GlobalContext
 
 /**
- * Created by Allan Wang on 2017-05-31.
- * Mapping of the available assets
- * The enum name must match the css file name
+ * Provides [InjectorContract] for each [ThemeCategory].
+ * Can be reloaded to take in changes from [Prefs]
  */
 class ThemeProvider(private val context: Context, private val prefs: Prefs) {
 
-    var theme: Theme = Theme.values[prefs.theme]
+    private var theme: Theme = Theme.values[prefs.theme]
 
     private val injectors: MutableMap<ThemeCategory, InjectorContract> = mutableMapOf()
 
