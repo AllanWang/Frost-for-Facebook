@@ -41,6 +41,7 @@ import com.pitchedapps.frost.utils.isExplicitIntent
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndirectImageUrl
+import com.pitchedapps.frost.utils.isMessengerUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
@@ -133,6 +134,13 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         )
     }
 
+    private fun WebView.messengerJsInject() {
+        jsInject(
+            themeProvider.injector(ThemeCategory.MESSENGER),
+            prefs = prefs
+        )
+    }
+
     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
@@ -153,18 +161,25 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
-        if (url.isFacebookUrl) {
-            v { "Page commit visible" }
-            view.facebookJsInject()
-        } else {
-            refresh.offer(false)
+        when {
+            url.isFacebookUrl -> {
+                v { "FB Page commit visible" }
+                view.facebookJsInject()
+            }
+            url.isMessengerUrl -> {
+                v { "Messenger Page commit visible" }
+                view.messengerJsInject()
+            }
+            else -> {
+                refresh.offer(false)
+            }
         }
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
         v { "finished $url" }
-        if (!url.isFacebookUrl) {
+        if (!url.isFacebookUrl && !url.isMessengerUrl) {
             refresh.offer(false)
             return
         }
@@ -182,13 +197,20 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         v { "page finished reveal" }
         refresh.offer(false)
         injectBackgroundColor()
-        web.jsInject(
-            JsActions.LOGIN_CHECK,
-            JsAssets.TEXTAREA_LISTENER,
-            JsAssets.HEADER_BADGES.maybe(isMain),
-            prefs = prefs
-        )
-        web.facebookJsInject()
+        when {
+            web.url.isFacebookUrl -> {
+                web.jsInject(
+                    JsActions.LOGIN_CHECK,
+                    JsAssets.TEXTAREA_LISTENER,
+                    JsAssets.HEADER_BADGES.maybe(isMain),
+                    prefs = prefs
+                )
+                web.facebookJsInject()
+            }
+            web.url.isMessengerUrl -> {
+                web.messengerJsInject()
+            }
+        }
     }
 
     open fun handleHtml(html: String?) {

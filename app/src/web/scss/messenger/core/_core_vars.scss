@@ -1,0 +1,10 @@
+:root, .__fb-light-mode {
+  // Main background; needs to be opaque to hide gradient used for sender card
+  --messenger-card-background: $bg_transparent !important;
+  // Date
+  --placeholder-text: $text !important;
+  // Emoji background
+  --surface-background: $bg_opaque2 !important;
+  --primary-text: $text !important;
+  --web-wash: #f0f !important;
+}

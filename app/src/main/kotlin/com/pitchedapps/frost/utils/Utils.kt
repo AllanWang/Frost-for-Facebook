@@ -64,6 +64,7 @@ import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
+import com.pitchedapps.frost.facebook.MESSENGER_COM
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
@@ -310,6 +311,9 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
  */
 inline val String?.isFacebookUrl
     get() = this != null && (contains(FACEBOOK_COM) || contains(FBCDN_NET))
+
+inline val String?.isMessengerUrl
+get() = this != null && contains(MESSENGER_COM)
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer
