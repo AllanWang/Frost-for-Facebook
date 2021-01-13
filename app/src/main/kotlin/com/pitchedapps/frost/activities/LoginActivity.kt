@@ -86,9 +86,7 @@ class LoginActivity : BaseActivity() {
         profileLoader = GlideApp.with(profile)
         launch {
             for (refreshing in refreshChannel.uniqueOnly(this)) {
-                if (refreshing) swipeRefresh.isEnabled = true
                 swipeRefresh.isRefreshing = refreshing
-                if (!refreshing) swipeRefresh.isEnabled = false
             }
         }
         launch {

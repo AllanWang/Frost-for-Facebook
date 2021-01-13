@@ -22,7 +22,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.circularReveal
@@ -104,13 +103,25 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     protected abstract val layoutRes: Int
 
-    override var swipeEnabled = true
+    @Volatile
+    override var swipeDisabledByAction = false
         set(value) {
-            if (field == value)
-                return
             field = value
-            refresh.post { refresh.isEnabled = value }
+            updateSwipeEnabler()
         }
+
+    @Volatile
+    override var swipeAllowedByPage: Boolean = true
+        set(value) {
+            field = value
+            updateSwipeEnabler()
+        }
+
+    private fun updateSwipeEnabler() {
+        val swipeEnabled = swipeAllowedByPage && !swipeDisabledByAction
+        if (refresh.isEnabled == swipeEnabled) return
+        refresh.post { refresh.isEnabled = swipeEnabled }
+    }
 
     /**
      * Sets up everything
@@ -136,7 +147,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
         refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
             refresh.isRefreshing = r
-            refresh.isEnabled = true
         }
 
         progressChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { p ->

@@ -97,7 +97,7 @@ class FrostJSI(val web: FrostWebView) {
     fun longClick(start: Boolean) {
         activity?.contentBinding?.viewpager?.enableSwipe = !start
         if (web.frostWebClient.urlSupportsRefresh) {
-            web.parent.swipeEnabled = !start
+            web.parent.swipeDisabledByAction = start
         }
     }
 
@@ -109,7 +109,7 @@ class FrostJSI(val web: FrostWebView) {
         if (!web.frostWebClient.urlSupportsRefresh) {
             return
         }
-        web.parent.swipeEnabled = !disable
+        web.parent.swipeDisabledByAction = disable
         if (disable) {
             // locked onto an input field; ensure content is visible
             (context as? MainActivityContract)?.collapseAppBar()

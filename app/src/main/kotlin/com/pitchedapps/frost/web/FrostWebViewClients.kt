@@ -85,7 +85,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
         super.doUpdateVisitedHistory(view, url, isReload)
         urlSupportsRefresh = urlSupportsRefresh(url)
-        web.parent.swipeEnabled = urlSupportsRefresh
+        web.parent.swipeAllowedByPage = urlSupportsRefresh
         view.jsInject(
             JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
             prefs = prefs
