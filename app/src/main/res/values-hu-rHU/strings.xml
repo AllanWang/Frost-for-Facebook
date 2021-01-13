@@ -25,7 +25,6 @@
     <string name="account_not_found">A jelenlegi fiók nem szerepel az adatbázisban</string>
     <string name="frost_notifications">Frost értesítések</string>
     <string name="requires_custom_theme">Egyéni téma szükséges</string>
-    <string name="subject">Tárgy</string>
     <string name="share">Megosztás</string>
     <string name="web_overlay_swipe_hint">Csúsztass jobbra az előző ablakra való visszalépéshez.</string>
     <string name="profile_picture">Profilkép</string>
