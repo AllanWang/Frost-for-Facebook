@@ -95,6 +95,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     private fun urlSupportsRefresh(url: String?): Boolean {
         if (url == null) return false
+        if (url.isMessengerUrl) return false
         if (!url.isFacebookUrl) return true
         if (url.contains("soft=composer")) return false
         if (url.contains("sharer.php") || url.contains("sharer-dialog.php")) return false
