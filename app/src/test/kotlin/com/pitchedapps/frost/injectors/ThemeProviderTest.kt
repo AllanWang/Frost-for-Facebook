@@ -16,6 +16,8 @@
  */
 package com.pitchedapps.frost.injectors
 
+import com.pitchedapps.frost.enums.Theme
+import com.pitchedapps.frost.enums.ThemeCategory
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -24,9 +26,11 @@ class ThemeProviderTest {
 
     @Test
     fun verifyAssetsExist() {
-        ThemeProvider.values().forEach { asset ->
-            val file = File("src/web/assets/css/${asset.folder}/${asset.file}").absoluteFile
-            assertTrue(file.exists(), "${asset.name} not found at ${file.path}")
+        ThemeCategory.values().forEach { category ->
+            Theme.values.filter { it != Theme.DEFAULT }.forEach { theme ->
+                val file = File("src/web/assets/css/${category.folder}/themes/${theme.file}").absoluteFile
+                assertTrue(file.exists(), "${theme.name} not found at ${file.path}")
+            }
         }
     }
 }
