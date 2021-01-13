@@ -105,6 +105,7 @@ class ThemeProvider(private val context: Context, private val prefs: Prefs) {
                 content = content
                     .replace("\$T\$", textColor.toRgbaString())
                     .replace("\$TT\$", textColor.colorToBackground(0.05f).toRgbaString())
+                    .replace("\$TD\$", textColor.adjustAlpha(0.6f).toRgbaString())
                     .replace("\$A\$", accentColor.toRgbaString())
                     .replace("\$AT\$", iconColor.toRgbaString())
                     .replace("\$B\$", bgColor.toRgbaString())

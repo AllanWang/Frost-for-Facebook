@@ -1,10 +1,30 @@
 :root, .__fb-light-mode {
-  // Main background; needs to be opaque to hide gradient used for sender card
-  --messenger-card-background: $bg_transparent !important;
-  // Date
-  --placeholder-text: $text !important;
-  // Emoji background
-  --surface-background: $bg_opaque2 !important;
-  --primary-text: $text !important;
-  --web-wash: #f0f !important;
+  --attachment-footer-background: #{$bg_opaque} !important;
+  --card-background-flat: #{$bg_opaque} !important;
+  --card-background: #{$bg_opaque} !important;
+  --comment-background: #{$bg_opaque} !important;
+  --comment-footer-background: #{$bg_opaque} !important;
+  --disabled-button-background: #{$bg_opaque} !important;
+  --disabled-icon: #{$text_disabled} !important;
+  --disabled-text: #{$text_disabled} !important;
+  --divider: #{$divider} !important;
+  --hero-banner-background: #{$bg_opaque} !important;
+  --highlight-bg: #{$bg_opaque2} !important;
+  --media-outer-border: #{$bg_opaque} !important;
+  --messenger-card-background: #{$bg_opaque} !important;
+  --messenger-card-background: #{$bg_opaque} !important; // Main background; needs to be opaque to hide gradient used for sender card
+  --messenger-reply-background: #{$bg_opaque2} !important;
+  --nav-bar-background-gradient-wash: #{$bg_opaque} !important;
+  --nav-bar-background-gradient: #{$bg_opaque} !important;
+  --nav-bar-background: #{$bg_opaque} !important;
+  --new-notification-background: #{$bg_opaque2} !important;
+  --placeholder-text: #{$text} !important; // Date
+  --primary-icon: #{$text} !important;
+  --primary-text: #{$text} !important;
+  --secondary-icon: #{$text} !important;
+  --secondary-text: #{$text} !important;
+  --surface-background: #{$bg_opaque2} !important; // Emoji background
+  --toggle-active-background: #{$bg_opaque2} !important;
+  --web-wash: #{$bg_opaque2} !important;
+  --web-wash: #{$bg_opaque2} !important;
 }
