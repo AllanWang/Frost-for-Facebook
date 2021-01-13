@@ -31,6 +31,7 @@ import androidx.core.app.NotificationCompat
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUri
@@ -41,13 +42,13 @@ import com.pitchedapps.frost.utils.frostUri
 const val NOTIF_CHANNEL_GENERAL = "general"
 const val NOTIF_CHANNEL_MESSAGES = "messages"
 
-fun setupNotificationChannels(c: Context, prefs: Prefs) {
+fun setupNotificationChannels(c: Context, themeProvider: ThemeProvider) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
     val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val appName = c.string(R.string.frost_name)
     val msg = c.string(R.string.messages)
-    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName, prefs)
-    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg", prefs)
+    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName, themeProvider)
+    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg", themeProvider)
     manager.notificationChannels
         .filter {
             it.id != NOTIF_CHANNEL_GENERAL &&
@@ -61,14 +62,14 @@ fun setupNotificationChannels(c: Context, prefs: Prefs) {
 private fun NotificationManager.createNotificationChannel(
     id: String,
     name: String,
-    prefs: Prefs
+    themeProvider: ThemeProvider
 ): NotificationChannel {
     val channel = NotificationChannel(
         id,
         name, NotificationManager.IMPORTANCE_DEFAULT
     )
     channel.enableLights(true)
-    channel.lightColor = prefs.accentColor
+    channel.lightColor = themeProvider.accentColor
     channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
     createNotificationChannel(channel)
     return channel

@@ -66,7 +66,7 @@ class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
         setOnClickListener { v ->
             prefs.theme = theme.ordinal
             (activity as IntroActivity).apply {
-                binding.ripple.ripple(prefs.bgColor, v.x + v.pivotX, v.y + v.pivotY)
+                binding.ripple.ripple(themeProvider.bgColor, v.x + v.pivotX, v.y + v.pivotY)
                 theme()
             }
             themeList.forEach { it.animate().scaleXY(if (it == this) 1.6f else 0.8f).start() }

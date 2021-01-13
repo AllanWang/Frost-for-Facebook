@@ -47,6 +47,7 @@ import org.koin.dsl.module
 class FrostApp : Application(), KoinComponent {
 
     private lateinit var prefs: Prefs
+    private lateinit var themeProvider: ThemeProvider
 
     override fun onCreate() {
         startKoin {
@@ -69,6 +70,7 @@ class FrostApp : Application(), KoinComponent {
             return
         }
         prefs = get()
+        themeProvider = get()
         initPrefs()
 
         L.i { "Begin Frost for Facebook" }
@@ -76,7 +78,7 @@ class FrostApp : Application(), KoinComponent {
 
         super.onCreate()
 
-        setupNotificationChannels(this, prefs)
+        setupNotificationChannels(this, themeProvider)
 
         scheduleNotificationsFromPrefs(prefs)
 

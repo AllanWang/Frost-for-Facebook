@@ -47,9 +47,11 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import org.koin.android.ext.android.inject
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-06-26.
@@ -57,12 +59,13 @@ import org.koin.android.ext.android.inject
 class AboutActivity : AboutActivityBase(null) {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
 
     override fun Configs.buildConfigs() {
-        textColor = prefs.textColor
-        accentColor = prefs.accentColor
-        backgroundColor = prefs.bgColor.withMinAlpha(200)
-        cutoutForeground = prefs.accentColor
+        textColor = themeProvider.textColor
+        accentColor = themeProvider.accentColor
+        backgroundColor = themeProvider.bgColor.withMinAlpha(200)
+        cutoutForeground = themeProvider.accentColor
         cutoutDrawableRes = R.drawable.frost_f_200
         faqPageTitleRes = R.string.faq_title
         faqXmlRes = R.xml.frost_faq

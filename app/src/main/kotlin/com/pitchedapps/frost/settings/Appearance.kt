@@ -43,7 +43,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.theme_customization)
 
-    text(R.string.theme, prefs::theme, { prefs.theme = it; themeProvider.setTheme(it) }) {
+    text(R.string.theme, prefs::theme, { prefs.theme = it }) {
         onClick = {
             materialDialog {
                 title(R.string.theme)
@@ -55,7 +55,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                         item.pref = index
                         shouldRestartMain()
                         reload()
-                        setFrostTheme(prefs, true)
+                        setFrostTheme(themeProvider, true)
                         themeExterior()
                         invalidateOptionsMenu()
                         frostEvent("Theme", "Count" to Theme(index).name)
@@ -69,7 +69,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 
     fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
-        enabler = prefs::isCustomTheme
+        enabler = themeProvider::isCustomTheme
         onDisabledClick = { frostSnackbar(R.string.requires_custom_theme) }
         allowCustom = true
     }
@@ -102,7 +102,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         prefs.customBackgroundColor = it
         bgCanvas.ripple(it, duration = 500L)
         invalidateCustomTheme()
-        setFrostTheme(prefs, true)
+        setFrostTheme(themeProvider, true)
         shouldRestartMain()
     }) {
         dependsOnCustom()
@@ -111,7 +111,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     colorPicker(R.string.header_color, prefs::customHeaderColor, {
         prefs.customHeaderColor = it
-        frostNavigationBar(prefs)
+        frostNavigationBar(prefs, themeProvider)
         toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
         reload()
         shouldRestartMain()
@@ -160,7 +160,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     checkbox(R.string.tint_nav, prefs::tintNavBar, {
         prefs.tintNavBar = it
-        frostNavigationBar(prefs)
+        frostNavigationBar(prefs, themeProvider)
         setFrostResult(REQUEST_NAV)
     }) {
         descRes = R.string.tint_nav_desc

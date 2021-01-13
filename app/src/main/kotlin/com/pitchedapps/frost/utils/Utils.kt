@@ -183,10 +183,10 @@ fun WebOverlayActivity.url(): String {
     return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
-fun Activity.setFrostTheme(prefs: Prefs, forceTransparent: Boolean = false) {
+fun Activity.setFrostTheme(themeProvider: ThemeProvider, forceTransparent: Boolean = false) {
     val isTransparent =
-        forceTransparent || (Color.alpha(prefs.bgColor) != 255) || (Color.alpha(prefs.headerColor) != 255)
-    if (prefs.bgColor.isColorDark) {
+        forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (Color.alpha(themeProvider.headerColor) != 255)
+    if (themeProvider.bgColor.isColorDark) {
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     } else {
         setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
@@ -263,19 +263,19 @@ fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) 
 
 @SuppressLint("RestrictedApi")
 private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
-    val prefs = Prefs.get()
+    val themeProvider = ThemeProvider.get()
     builder()
     // hacky workaround, but it has proper checks and shouldn't crash
     ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
-        messageView.setTextColor(prefs.textColor)
-        actionView.setTextColor(prefs.accentColor)
+        messageView.setTextColor(themeProvider.textColor)
+        actionView.setTextColor(themeProvider.accentColor)
         // only set if previous text colors are set
-        view.setBackgroundColor(prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
+        view.setBackgroundColor(themeProvider.bgColor.withAlpha(255).colorToForeground(0.1f))
     }
 }
 
-fun Activity.frostNavigationBar(prefs: Prefs) {
-    navigationBarColor = if (prefs.tintNavBar) prefs.headerColor else Color.BLACK
+fun Activity.frostNavigationBar(prefs: Prefs, themeProvider: ThemeProvider) {
+    navigationBarColor = if (prefs.tintNavBar) themeProvider.headerColor else Color.BLACK
 }
 
 @Throws(IOException::class)

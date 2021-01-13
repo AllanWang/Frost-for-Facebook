@@ -34,6 +34,7 @@ import java.io.BufferedReader
 import java.io.FileNotFoundException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.context.GlobalContext
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -94,24 +95,24 @@ class ThemeProvider(private val context: Context, private val prefs: Prefs) {
                 context.assets.open("css/${category.folder}/themes/$file").bufferedReader()
                     .use(BufferedReader::readText)
             if (theme == Theme.CUSTOM) {
-                val bt = if (Color.alpha(prefs.bgColor) == 255)
-                    prefs.bgColor.toRgbaString()
+                val bt = if (Color.alpha(bgColor) == 255)
+                    bgColor.toRgbaString()
                 else
                     "transparent"
 
-                val bb = prefs.bgColor.colorToForeground(0.35f)
+                val bb = bgColor.colorToForeground(0.35f)
 
                 content = content
-                    .replace("\$T\$", prefs.textColor.toRgbaString())
-                    .replace("\$TT\$", prefs.textColor.colorToBackground(0.05f).toRgbaString())
-                    .replace("\$A\$", prefs.accentColor.toRgbaString())
-                    .replace("\$AT\$", prefs.iconColor.toRgbaString())
-                    .replace("\$B\$", prefs.bgColor.toRgbaString())
+                    .replace("\$T\$", textColor.toRgbaString())
+                    .replace("\$TT\$", textColor.colorToBackground(0.05f).toRgbaString())
+                    .replace("\$A\$", accentColor.toRgbaString())
+                    .replace("\$AT\$", iconColor.toRgbaString())
+                    .replace("\$B\$", bgColor.toRgbaString())
                     .replace("\$BT\$", bt)
                     .replace("\$BBT\$", bb.withAlpha(51).toRgbaString())
-                    .replace("\$O\$", prefs.bgColor.withAlpha(255).toRgbaString())
+                    .replace("\$O\$", bgColor.withAlpha(255).toRgbaString())
                     .replace("\$OO\$", bb.withAlpha(255).toRgbaString())
-                    .replace("\$D\$", prefs.textColor.adjustAlpha(0.3f).toRgbaString())
+                    .replace("\$D\$", textColor.adjustAlpha(0.3f).toRgbaString())
                     .replace("\$TI\$", bb.withAlpha(60).toRgbaString())
                     .replace("\$C\$", bt)
             }
@@ -139,6 +140,9 @@ class ThemeProvider(private val context: Context, private val prefs: Prefs) {
     }
 
     companion object {
+
+        fun get(): ThemeProvider = GlobalContext.get().get()
+
         fun module() = org.koin.dsl.module {
             single { ThemeProvider(get(), get()) }
         }

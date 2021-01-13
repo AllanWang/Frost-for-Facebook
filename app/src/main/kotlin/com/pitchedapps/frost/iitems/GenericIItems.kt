@@ -28,6 +28,7 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
 import org.koin.core.component.KoinComponent
@@ -79,14 +80,14 @@ open class HeaderIItem(
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView),
         KoinComponent {
 
-        private val prefs: Prefs by inject()
+        private val themeProvider: ThemeProvider by inject()
 
         val text: TextView by bindView(R.id.item_header_text)
 
         override fun bindView(item: HeaderIItem, payloads: List<Any>) {
-            text.setTextColor(prefs.accentColor)
+            text.setTextColor(themeProvider.accentColor)
             text.text = item.text
-            text.setBackgroundColor(prefs.nativeBgColor)
+            text.setBackgroundColor(themeProvider.nativeBgColor)
         }
 
         override fun unbindView(item: HeaderIItem) {
@@ -108,14 +109,14 @@ open class TextIItem(
 
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView), KoinComponent {
 
-        private val prefs: Prefs by inject()
+        private val themeProvider: ThemeProvider by inject()
 
         val text: TextView by bindView(R.id.item_text_view)
 
         override fun bindView(item: TextIItem, payloads: List<Any>) {
-            text.setTextColor(prefs.textColor)
+            text.setTextColor(themeProvider.textColor)
             text.text = item.text
-            text.background = createSimpleRippleDrawable(prefs.bgColor, prefs.nativeBgColor)
+            text.background = createSimpleRippleDrawable(themeProvider.bgColor, themeProvider.nativeBgColor)
         }
 
         override fun unbindView(item: TextIItem) {

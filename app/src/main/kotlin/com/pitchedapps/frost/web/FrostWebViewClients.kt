@@ -144,7 +144,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         web.setBackgroundColor(
             when {
                 isMain -> Color.TRANSPARENT
-                web.url.isFacebookUrl -> prefs.bgColor.withAlpha(255)
+                web.url.isFacebookUrl -> themeProvider.bgColor.withAlpha(255)
                 else -> Color.WHITE
             }
         )

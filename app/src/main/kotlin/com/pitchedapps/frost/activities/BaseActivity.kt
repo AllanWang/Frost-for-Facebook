@@ -22,9 +22,11 @@ import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.searchview.SearchViewHolder
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.setFrostTheme
 import org.koin.android.ext.android.inject
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-06-12.
@@ -33,6 +35,7 @@ abstract class BaseActivity : KauBaseActivity() {
 
     val fbCookie: FbCookie by inject()
     val prefs: Prefs by inject()
+    val themeProvider: ThemeProvider by inject()
 
     /**
      * Inherited consumer to customize back press
@@ -48,7 +51,7 @@ abstract class BaseActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (this !is WebOverlayActivityBase) setFrostTheme(prefs)
+        if (this !is WebOverlayActivityBase) setFrostTheme(themeProvider)
     }
 
     override fun onStop() {

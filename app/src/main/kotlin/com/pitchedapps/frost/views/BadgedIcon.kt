@@ -29,6 +29,7 @@ import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.databinding.ViewBadgedIconBinding
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -43,6 +44,7 @@ class BadgedIcon @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     private val binding: ViewBadgedIconBinding =
         ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -52,7 +54,7 @@ class BadgedIcon @JvmOverloads constructor(
 
     private fun ViewBadgedIconBinding.init() {
         val badgeColor =
-            prefs.mainActivityLayout.backgroundColor(prefs).withAlpha(255).colorToForeground(0.2f)
+            prefs.mainActivityLayout.backgroundColor(themeProvider).withAlpha(255).colorToForeground(0.2f)
         val badgeBackground =
             GradientDrawable(
                 GradientDrawable.Orientation.BOTTOM_TOP,
@@ -60,7 +62,7 @@ class BadgedIcon @JvmOverloads constructor(
             )
         badgeBackground.cornerRadius = 13.dpToPx.toFloat()
         badgeText.background = badgeBackground
-        badgeText.setTextColor(prefs.mainActivityLayout.iconColor(prefs))
+        badgeText.setTextColor(prefs.mainActivityLayout.iconColor(themeProvider))
     }
 
     var iicon: IIcon? = null
@@ -70,13 +72,13 @@ class BadgedIcon @JvmOverloads constructor(
                 value?.toDrawable(
                     context,
                     sizeDp = 20,
-                    color = prefs.mainActivityLayout.iconColor(prefs)
+                    color = prefs.mainActivityLayout.iconColor(themeProvider)
                 )
             )
         }
 
     fun setAllAlpha(alpha: Float) {
-        // badgeTextView.setTextColor(prefs.textColor.withAlpha(alpha.toInt()))
+        // badgeTextView.setTextColor(themeProvider.textColor.withAlpha(alpha.toInt()))
         binding.badgeImage.drawable.alpha = alpha.toInt()
     }
 

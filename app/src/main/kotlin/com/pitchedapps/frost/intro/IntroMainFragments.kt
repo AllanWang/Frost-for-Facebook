@@ -33,9 +33,11 @@ import ca.allanwang.kau.utils.bindViewResettable
 import ca.allanwang.kau.utils.setOnSingleTapListener
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import kotlin.math.abs
 import org.koin.android.ext.android.inject
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -49,6 +51,7 @@ import org.koin.android.ext.android.inject
 abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
 
     protected val prefs: Prefs by inject()
+    protected val themeProvider: ThemeProvider by inject()
 
     val screenWidth
         get() = resources.displayMetrics.widthPixels
@@ -105,7 +108,7 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     }
 
     protected open fun themeFragmentImpl() {
-        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(prefs.textColor) }
+        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(themeProvider.textColor) }
     }
 
     protected val viewArray: Array<Array<out View>> by lazyResettableRegistered { viewArray() }
@@ -134,7 +137,7 @@ class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(prefs.textColor)
+        image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
     }
 }
 
@@ -146,7 +149,7 @@ class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(prefs.textColor)
+        image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -39,6 +39,7 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
@@ -80,6 +81,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     FrostContentParent, KoinComponent where T : View, T : FrostContentCore {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
@@ -156,9 +158,9 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun reloadThemeSelf() {
-        progress.tint(prefs.textColor.withAlpha(180))
-        refresh.setColorSchemeColors(prefs.iconColor)
-        refresh.setProgressBackgroundColorSchemeColor(prefs.headerColor.withAlpha(255))
+        progress.tint(themeProvider.textColor.withAlpha(180))
+        refresh.setColorSchemeColors(themeProvider.iconColor)
+        refresh.setProgressBackgroundColorSchemeColor(themeProvider.headerColor.withAlpha(255))
     }
 
     override fun reloadTextSizeSelf() {

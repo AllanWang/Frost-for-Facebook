@@ -100,21 +100,21 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
             else finish(next.x + next.pivotX, next.y + next.pivotY)
         }
         skip.setOnClickListener { finish() }
-        ripple.set(prefs.bgColor)
+        ripple.set(themeProvider.bgColor)
         theme()
     }
 
     fun theme() {
-        statusBarColor = prefs.headerColor
-        navigationBarColor = prefs.headerColor
+        statusBarColor = themeProvider.headerColor
+        navigationBarColor = themeProvider.headerColor
         with(binding) {
-            skip.setTextColor(prefs.textColor)
-            next.imageTintList = ColorStateList.valueOf(prefs.textColor)
-            indicator.setColour(prefs.textColor)
+            skip.setTextColor(themeProvider.textColor)
+            next.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
+            indicator.setColour(themeProvider.textColor)
             indicator.invalidate()
         }
         fragments.forEach { it.themeFragment() }
-        setFrostTheme(prefs, true)
+        setFrostTheme(themeProvider, true)
     }
 
     /**
@@ -152,21 +152,21 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
         ).forEach {
             it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
-        if (prefs.textColor != Color.WHITE) {
+        if (themeProvider.textColor != Color.WHITE) {
             val f = lastView?.findViewById<ImageView>(R.id.intro_image)?.drawable
             if (f != null)
                 ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
-                        f.setTint(prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                        f.setTint(themeProvider.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
                     }
                     duration = 600
                     start()
                 }
         }
-        if (prefs.headerColor != blue) {
+        if (themeProvider.headerColor != blue) {
             ValueAnimator.ofFloat(0f, 1f).apply {
                 addUpdateListener {
-                    val c = prefs.headerColor.blendWith(blue, it.animatedValue as Float)
+                    val c = themeProvider.headerColor.blendWith(blue, it.animatedValue as Float)
                     statusBarColor = c
                     navigationBarColor = c
                 }
@@ -209,7 +209,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
         binding.next.fadeScaleTransition {
             setIcon(
                 if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done,
-                color = prefs.textColor
+                color = themeProvider.textColor
             )
         }
         binding.skip.animate().scaleXY(if (barHasNext) 1f else 0f)

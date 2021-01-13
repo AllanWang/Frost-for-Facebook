@@ -69,15 +69,15 @@ class TabCustomizerActivity : BaseActivity() {
     }
 
     fun ActivityTabCustomizerBinding.init() {
-        pseudoToolbar.setBackgroundColor(prefs.headerColor)
+        pseudoToolbar.setBackgroundColor(themeProvider.headerColor)
 
         tabRecycler.layoutManager =
             GridLayoutManager(this@TabCustomizerActivity, TAB_COUNT, RecyclerView.VERTICAL, false)
         tabRecycler.adapter = adapter
         tabRecycler.setHasFixedSize(true)
 
-        divider.setBackgroundColor(prefs.textColor.withAlpha(30))
-        instructions.setTextColor(prefs.textColor)
+        divider.setBackgroundColor(themeProvider.textColor.withAlpha(30))
+        instructions.setTextColor(themeProvider.textColor)
 
         launch {
             val tabs = genericDao.getTabs().toMutableList()
@@ -94,8 +94,8 @@ class TabCustomizerActivity : BaseActivity() {
 
         setResult(Activity.RESULT_CANCELED)
 
-        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, prefs.iconColor)
-        fabSave.backgroundTintList = ColorStateList.valueOf(prefs.accentColor)
+        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, themeProvider.iconColor)
+        fabSave.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
         fabSave.setOnClickListener {
             launchMain(NonCancellable) {
                 val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
@@ -104,8 +104,8 @@ class TabCustomizerActivity : BaseActivity() {
                 finish()
             }
         }
-        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, prefs.iconColor)
-        fabCancel.backgroundTintList = ColorStateList.valueOf(prefs.accentColor)
+        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, themeProvider.iconColor)
+        fabCancel.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
         fabCancel.setOnClickListener { finish() }
         setFrostColors {
             themeWindow = true

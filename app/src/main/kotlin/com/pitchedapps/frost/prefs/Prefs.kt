@@ -28,7 +28,7 @@ import com.pitchedapps.frost.prefs.sections.ShowcasePrefs
 import com.pitchedapps.frost.prefs.sections.ShowcasePrefsImpl
 import com.pitchedapps.frost.prefs.sections.ThemePrefs
 import com.pitchedapps.frost.prefs.sections.ThemePrefsImpl
-import org.koin.core.context.KoinContextHandler
+import org.koin.core.context.GlobalContext
 import org.koin.dsl.module
 
 /**
@@ -48,7 +48,7 @@ interface Prefs :
     ShowcasePrefs,
     PrefsBase {
     companion object {
-        fun get(): Prefs = KoinContextHandler.get().get()
+        fun get(): Prefs = GlobalContext.get().get()
 
         fun module() = module {
             single<BehaviourPrefs> { BehaviourPrefsImpl(factory = get()) }

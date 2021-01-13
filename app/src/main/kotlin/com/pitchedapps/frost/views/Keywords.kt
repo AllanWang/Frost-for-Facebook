@@ -37,6 +37,7 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -51,6 +52,7 @@ class Keywords @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     val editText: AppCompatEditText by bindView(R.id.edit_text)
     val addIcon: ImageView by bindView(R.id.add_icon)
     val recycler: RecyclerView by bindView(R.id.recycler)
@@ -58,8 +60,8 @@ class Keywords @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_keywords, this)
-        editText.tint(prefs.textColor)
-        addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context, prefs))
+        editText.tint(themeProvider.textColor)
+        addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context, themeProvider))
         addIcon.setOnClickListener {
             if (editText.text.isNullOrEmpty()) editText.error =
                 context.string(R.string.empty_keyword)
@@ -91,8 +93,8 @@ class Keywords @JvmOverloads constructor(
     }
 }
 
-private fun IIcon.keywordDrawable(context: Context, prefs: Prefs): Drawable =
-    toDrawable(context, 20, prefs.textColor)
+private fun IIcon.keywordDrawable(context: Context, themeProvider: ThemeProvider): Drawable =
+    toDrawable(context, 20, themeProvider.textColor)
 
 class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() {
 
@@ -116,16 +118,16 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() 
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v), KoinComponent {
 
-        private val prefs: Prefs by inject()
+        private val themeProvider: ThemeProvider by inject()
         val text: AppCompatTextView by bindView(R.id.keyword_text)
         val delete: ImageView by bindView(R.id.keyword_delete)
 
         init {
-            text.setTextColor(prefs.textColor)
+            text.setTextColor(themeProvider.textColor)
             delete.setImageDrawable(
                 GoogleMaterial.Icon.gmd_delete.keywordDrawable(
                     itemView.context,
-                    prefs
+                    themeProvider
                 )
             )
         }

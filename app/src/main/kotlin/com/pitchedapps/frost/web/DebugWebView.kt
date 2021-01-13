@@ -100,7 +100,7 @@ class DebugWebView @JvmOverloads constructor(
 
         private fun injectBackgroundColor() {
             setBackgroundColor(
-                if (url.isFacebookUrl) prefs.bgColor.withAlpha(255)
+                if (url.isFacebookUrl) themeProvider.bgColor.withAlpha(255)
                 else Color.WHITE
             )
         }

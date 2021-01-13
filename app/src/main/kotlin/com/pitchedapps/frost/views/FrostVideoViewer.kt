@@ -43,6 +43,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ViewVideoBinding
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.ctxCoroutine
@@ -88,6 +89,7 @@ class FrostVideoViewer @JvmOverloads constructor(
     }
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     private val cookieDao: CookieDao by inject()
 
     private val binding: ViewVideoBinding =
@@ -100,8 +102,8 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun ViewVideoBinding.init() {
         alpha = 0f
         videoBackground.setBackgroundColor(
-            if (!prefs.blackMediaBg && prefs.bgColor.isColorDark)
-                prefs.bgColor.withMinAlpha(200)
+            if (!prefs.blackMediaBg && themeProvider.bgColor.isColorDark)
+                themeProvider.bgColor.withMinAlpha(200)
             else
                 Color.BLACK
         )
@@ -109,7 +111,7 @@ class FrostVideoViewer @JvmOverloads constructor(
         video.pause()
         videoToolbar.inflateMenu(R.menu.menu_video)
         context.setMenuIcons(
-            videoToolbar.menu, prefs.iconColor,
+            videoToolbar.menu, themeProvider.iconColor,
             R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
             R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )
