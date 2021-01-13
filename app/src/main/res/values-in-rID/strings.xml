@@ -24,7 +24,6 @@
     <string name="account_not_found">Akun saat ini tidak ada dalam database</string>
     <string name="frost_notifications">Pemberitahuan Frost</string>
     <string name="requires_custom_theme">Memerlukan tema kustom</string>
-    <string name="subject">Perihal</string>
     <string name="share">Bagikan</string>
     <string name="web_overlay_swipe_hint">Geser ke kanan untuk kembali ke jendela sebelumnya.</string>
     <string name="profile_picture">Foto Profil</string>
