@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.0
+* Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails
+* Added initial support for messenger.com
+
 ## v2.4.7
 * Fix theme not always sticking on refresh
 * Disable long press menu from appearing immediately after scrolling
