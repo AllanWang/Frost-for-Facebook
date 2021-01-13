@@ -25,7 +25,6 @@
     <string name="account_not_found">الحساب الحالي غير موجود في قاعدة البيانات</string>
     <string name="frost_notifications">إشعارات Frost</string>
     <string name="requires_custom_theme">يتطلب ثيم مخصص</string>
-    <string name="subject">الموضوع</string>
     <string name="share">مشاركة</string>
     <string name="web_overlay_swipe_hint">قم بالسحب لليمين للعودة للنافذة السابقة.</string>
     <string name="profile_picture">صورة الملف الشخصي</string>
