@@ -23,15 +23,17 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.CssAsset
+import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
@@ -70,6 +72,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     private val fbCookie: FbCookie get() = web.fbCookie
     private val prefs: Prefs get() = web.prefs
+    private val themeProvider: ThemeProvider get() = web.themeProvider
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val isMain = web.parent.baseEnum != null
 
@@ -110,7 +113,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             CssHider.STORIES.maybe(!prefs.showStories),
             CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
             CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
-            prefs.themeInjector,
+            themeProvider.injector(ThemeCategory.FACEBOOK),
             CssHider.NON_RECENT.maybe(
                 (web.url?.contains("?sk=h_chr") ?: false) &&
                     prefs.aggressiveRecents

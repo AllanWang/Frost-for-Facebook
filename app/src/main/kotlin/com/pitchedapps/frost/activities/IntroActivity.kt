@@ -39,6 +39,7 @@ import ca.allanwang.kau.utils.statusBarColor
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityIntroBinding
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
 import com.pitchedapps.frost.intro.IntroFragmentEnd
@@ -66,6 +67,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
     ViewPager.OnPageChangeListener {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     lateinit var binding: ActivityIntroBinding
     private var barHasNext = true
 
@@ -176,7 +178,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
 
     override fun finish() {
         launch(NonCancellable) {
-            loadAssets(prefs)
+            loadAssets(themeProvider)
             NotificationWidget.forceUpdate(this@IntroActivity)
             launchNewTask<MainActivity>(cookies(), false)
             super.finish()

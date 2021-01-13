@@ -236,7 +236,7 @@ class SettingsActivity : KPrefActivity() {
         if (!super.backPress()) {
             setResult(resultFlag)
             launch(NonCancellable) {
-                loadAssets(prefs)
+                loadAssets(themeProvider)
                 finishSlideOut()
             }
         }

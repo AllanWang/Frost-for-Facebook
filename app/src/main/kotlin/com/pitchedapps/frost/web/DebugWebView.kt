@@ -24,9 +24,11 @@ import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.USER_AGENT
-import com.pitchedapps.frost.injectors.CssHider
 import com.pitchedapps.frost.injectors.CssAsset
+import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
@@ -50,6 +52,7 @@ class DebugWebView @JvmOverloads constructor(
 ) : WebView(context, attrs, defStyleAttr), KoinComponent {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     var onPageFinished: (String?) -> Unit = {}
 
     init {
@@ -112,7 +115,7 @@ class DebugWebView @JvmOverloads constructor(
                     CssHider.STORIES.maybe(!prefs.showStories),
                     CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
                     CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
-                    prefs.themeInjector,
+                    themeProvider.injector(ThemeCategory.FACEBOOK),
                     CssHider.NON_RECENT.maybe(
                         (url?.contains("?sk=h_chr") ?: false) &&
                             prefs.aggressiveRecents

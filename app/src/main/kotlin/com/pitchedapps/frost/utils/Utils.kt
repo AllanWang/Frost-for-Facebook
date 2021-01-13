@@ -67,8 +67,8 @@ import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.JsAssets
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import java.io.File
 import java.io.IOException
@@ -222,21 +222,21 @@ class ActivityThemeUtils : KoinComponent {
 
     fun theme(activity: Activity) {
         with(activity) {
-            statusBarColor = prefs.headerColor.darken(0.1f).withAlpha(255)
-            if (prefs.tintNavBar) navigationBarColor = prefs.headerColor
-            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(prefs.bgColor))
-            toolbar?.setBackgroundColor(prefs.headerColor)
-            toolbar?.setTitleTextColor(prefs.iconColor)
-            toolbar?.overflowIcon?.setTint(prefs.iconColor)
-            texts.forEach { it.setTextColor(prefs.textColor) }
-            headers.forEach { it.setBackgroundColor(prefs.headerColor) }
-            backgrounds.forEach { it.setBackgroundColor(prefs.bgColor) }
+            statusBarColor = themeProvider.headerColor.darken(0.1f).withAlpha(255)
+            if (prefs.tintNavBar) navigationBarColor = themeProvider.headerColor
+            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(themeProvider.bgColor))
+            toolbar?.setBackgroundColor(themeProvider.headerColor)
+            toolbar?.setTitleTextColor(themeProvider.iconColor)
+            toolbar?.overflowIcon?.setTint(themeProvider.iconColor)
+            texts.forEach { it.setTextColor(themeProvider.textColor) }
+            headers.forEach { it.setBackgroundColor(themeProvider.headerColor) }
+            backgrounds.forEach { it.setBackgroundColor(themeProvider.bgColor) }
         }
     }
 }
 
-inline fun Activity.setFrostColors(prefs: Prefs, builder: ActivityThemeUtils.() -> Unit) {
-    val themer = ActivityThemeUtils(prefs)
+inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
+    val themer = ActivityThemeUtils()
     themer.builder()
     themer.theme(this)
 }
@@ -458,7 +458,7 @@ fun String.unescapeHtml(): String =
         .replace("\\u003C", "<")
         .replace("\\\"", "\"")
 
-suspend fun Context.loadAssets(prefs: Prefs): Unit = coroutineScope {
-    ThemeProvider.load(this@loadAssets, prefs)
+suspend fun Context.loadAssets(themeProvider: ThemeProvider): Unit = coroutineScope {
+    themeProvider.preload()
     JsAssets.load(this@loadAssets)
 }

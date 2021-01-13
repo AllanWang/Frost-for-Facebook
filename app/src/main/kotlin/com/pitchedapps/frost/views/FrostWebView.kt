@@ -34,6 +34,7 @@ import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.ctxCoroutine
@@ -62,6 +63,7 @@ class FrostWebView @JvmOverloads constructor(
 
     val fbCookie: FbCookie by inject()
     val prefs: Prefs by inject()
+    val themeProvider: ThemeProvider by inject()
     val cookieDao: CookieDao by inject()
 
     override fun reload(animate: Boolean) {

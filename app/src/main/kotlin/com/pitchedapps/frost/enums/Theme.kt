@@ -88,7 +88,7 @@ enum class Theme(
         { it.customIconColor });
 
     @VisibleForTesting
-    internal val file = file?.let { "${it}.css" }
+    internal val file = file?.let { "$it.css" }
 
     companion object {
         val values = values() // save one instance

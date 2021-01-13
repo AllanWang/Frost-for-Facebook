@@ -49,33 +49,33 @@ class ThemeProvider(private val context: Context, private val prefs: Prefs) {
     val textColor: Int
         get() = theme.textColorGetter(prefs)
 
-     val accentColor: Int
+    val accentColor: Int
         get() = theme.accentColorGetter(prefs)
 
-     val accentColorForWhite: Int
+    val accentColorForWhite: Int
         get() = when {
             accentColor.isColorVisibleOn(Color.WHITE) -> accentColor
             textColor.isColorVisibleOn(Color.WHITE) -> textColor
             else -> FACEBOOK_BLUE
         }
 
-     val nativeBgColor: Int
+    val nativeBgColor: Int
         get() = bgColor.withAlpha(30)
 
-     fun nativeBgColor(unread: Boolean) = bgColor
+    fun nativeBgColor(unread: Boolean) = bgColor
         .colorToForeground(if (unread) 0.7f else 0.0f)
         .withAlpha(30)
 
-     val bgColor: Int
+    val bgColor: Int
         get() = theme.backgroundColorGetter(prefs)
 
-     val headerColor: Int
+    val headerColor: Int
         get() = theme.headerColorGetter(prefs)
 
-     val iconColor: Int
+    val iconColor: Int
         get() = theme.iconColorGetter(prefs)
 
-     val isCustomTheme: Boolean
+    val isCustomTheme: Boolean
         get() = theme == Theme.CUSTOM
 
     /**
@@ -91,7 +91,7 @@ class ThemeProvider(private val context: Context, private val prefs: Prefs) {
         val file = theme.file ?: return JsActions.EMPTY
         try {
             var content =
-                context.assets.open("css/${category.folder}/theme/${file}").bufferedReader()
+                context.assets.open("css/${category.folder}/themes/$file").bufferedReader()
                     .use(BufferedReader::readText)
             if (theme == Theme.CUSTOM) {
                 val bt = if (Color.alpha(prefs.bgColor) == 255)

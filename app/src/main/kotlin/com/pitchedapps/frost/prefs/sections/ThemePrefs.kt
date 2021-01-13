@@ -26,7 +26,6 @@ import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.FACEBOOK_BLUE
 import com.pitchedapps.frost.enums.Theme
-import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.component.KoinComponent
@@ -60,8 +59,6 @@ interface ThemePrefs : PrefsBase {
     val headerColor: Int
 
     val iconColor: Int
-
-    val themeInjector: InjectorContract
 
     val isCustomTheme: Boolean
 
@@ -136,9 +133,6 @@ class ThemePrefsImpl(
 
     override val iconColor: Int
         get() = t.iconColorGetter(this)
-
-    override val themeInjector: InjectorContract
-        get() = t.injector
 
     override val isCustomTheme: Boolean
         get() = t == Theme.CUSTOM
