@@ -25,7 +25,6 @@
     <string name="account_not_found">El compte actual no es troba a la base de dades</string>
     <string name="frost_notifications">Notificacions del Frost</string>
     <string name="requires_custom_theme">Cal un tema personalitzat</string>
-    <string name="subject">Assumpte</string>
     <string name="share">Comparteix</string>
     <string name="web_overlay_swipe_hint">Llisqueu cap a la dreta per tornar a la finestra anterior.</string>
     <string name="profile_picture">Foto del perfil</string>
