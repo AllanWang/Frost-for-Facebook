@@ -25,7 +25,6 @@
     <string name="account_not_found">Der aktuelle Account besteht nicht in der Datenbank</string>
     <string name="frost_notifications">Frost Benachrichtigungen</string>
     <string name="requires_custom_theme">Erfordert benutzerdefiniertes Thema</string>
-    <string name="subject">Betreff</string>
     <string name="share">Teilen</string>
     <string name="web_overlay_swipe_hint">Nach rechts wischen, um zum letzten Fenster zu gelangen.</string>
     <string name="profile_picture">Profilbild</string>
