@@ -24,7 +24,6 @@
     <string name="account_not_found">บัญชีปัจจุบันไม่ได้อยู่ในฐานข้อมูล</string>
     <string name="frost_notifications">การแจ้งเตือน Frost</string>
     <string name="requires_custom_theme">ขอชุดรูปแบบที่กำหนดเอง</string>
-    <string name="subject">เรื่อง</string>
     <string name="share">แชร์</string>
     <string name="web_overlay_swipe_hint">ปัดไปทางขวาเพื่อกลับไปหน้าต่างก่อนหน้า</string>
     <string name="profile_picture">รูปโปรไฟล์</string>
