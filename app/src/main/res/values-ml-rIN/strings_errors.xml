@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="null_url_overlay">ശൂന്യമായ URL ഓവേർലയിൽ നൽകപ്പെട്ടു; പുറത്ത്കടക്കുന്നു</string>
-    <string name="bad_image_overlay">URL ശരിയായി ലോഡുചെയ്യാനായില്ല. ഡീബഗ്ഗിംഗിനായി അയയ്‌ക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുണ്ടോ?</string>
     <string name="invalid_share_url">അസാധുവാ URL പങ്കിടൽ</string>
     <string name="invalid_share_url_desc">ഒരു URL അല്ലാത്ത വാചകത്തിന്റെ ഒരു ബ്ലോക്ക് നിങ്ങൾ പങ്കിട്ടു.  വാചകം നിങ്ങളുടെ ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തി, അതിനാൽ നിങ്ങൾക്ക് ഇത് സ്വമേധയാ പങ്കിടാം.</string>
     <string name="no_download_manager">ഡൗൺലോഡ് മാനേജർ ഇല്ല</string>
