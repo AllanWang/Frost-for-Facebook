@@ -5,3 +5,7 @@
 @import "core_bg";
 @import "core_border";
 @import "core_hider";
+
+@include placeholder {
+  color: $text_disabled !important;
+}
