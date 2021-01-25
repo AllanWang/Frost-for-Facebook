@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.gone
@@ -46,7 +47,6 @@ import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

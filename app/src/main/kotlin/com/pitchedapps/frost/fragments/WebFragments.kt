@@ -26,6 +26,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
+import com.pitchedapps.frost.web.FrostWebViewClientMessenger
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -41,6 +42,7 @@ class WebFragment : BaseFragment() {
      * Given a webview, output a client
      */
     fun client(web: FrostWebView) = when (baseEnum) {
+        FbItem.MESSENGER -> FrostWebViewClientMessenger(web)
         FbItem.MENU -> FrostWebViewClientMenu(web)
         else -> FrostWebViewClient(web)
     }

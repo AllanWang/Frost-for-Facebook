@@ -44,7 +44,8 @@ data class CookieEntity(
 ) : Parcelable {
     override fun toString(): String = "CookieEntity(${hashCode()})"
 
-    fun toSensitiveString(): String = "CookieEntity(id=$id, name=$name, cookie=$cookie)"
+    fun toSensitiveString(): String =
+        "CookieEntity(id=$id, name=$name, cookie=$cookie cookieMessenger=$cookieMessenger)"
 }
 
 @Dao

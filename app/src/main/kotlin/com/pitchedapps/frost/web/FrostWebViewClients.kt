@@ -22,11 +22,17 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.db.updateMessengerCookie
 import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.HTTPS_MESSENGER_COM
+import com.pitchedapps.frost.facebook.MESSENGER_THREAD_PREFIX
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAsset
@@ -39,6 +45,7 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isExplicitIntent
 import com.pitchedapps.frost.utils.isFacebookUrl
+import com.pitchedapps.frost.utils.isFbCookie
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.isMessengerUrl
@@ -46,6 +53,7 @@ import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -71,11 +79,11 @@ open class BaseWebViewClient : WebViewClient() {
  */
 open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
-    private val fbCookie: FbCookie get() = web.fbCookie
-    private val prefs: Prefs get() = web.prefs
-    private val themeProvider: ThemeProvider get() = web.themeProvider
-    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val isMain = web.parent.baseEnum != null
+    protected val fbCookie: FbCookie get() = web.fbCookie
+    protected val prefs: Prefs get() = web.prefs
+    protected val themeProvider: ThemeProvider get() = web.themeProvider
+    protected val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+    protected val isMain = web.parent.baseEnum != null
 
     /**
      * True if current url supports refresh. See [doUpdateVisitedHistory] for updates
@@ -279,8 +287,6 @@ private const val EMIT_FINISH = 0
  */
 class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
-    private val prefs: Prefs get() = web.prefs
-
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
         if (url == null) {
@@ -300,5 +306,40 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     override fun onPageFinishedActions(url: String) {
         // Skip
+    }
+}
+
+class FrostWebViewClientMessenger(web: FrostWebView) : FrostWebViewClient(web) {
+
+    override fun onPageFinished(view: WebView, url: String?) {
+        super.onPageFinished(view, url)
+        messengerCookieCheck(url!!)
+    }
+
+    private val cookieDao: CookieDao get() = web.cookieDao
+    private var hasCookie = fbCookie.messengerCookie.isFbCookie
+
+    /**
+     * Check cookie changes. Unlike fb checks, we will continuously poll for cookie changes during loading.
+     * There is no lifecycle association between messenger login and facebook login,
+     * so we'll try to be smart about when to check for state changes.
+     *
+     * From testing, it looks like this is called after redirects.
+     * We can therefore classify no login as pointing to messenger.com,
+     * and login as pointing to messenger.com/t/[thread id]
+     */
+    private fun messengerCookieCheck(url: String?) {
+        if (url?.startsWith(HTTPS_MESSENGER_COM) != true) return
+        val shouldHaveCookie = url.startsWith(MESSENGER_THREAD_PREFIX)
+        L._d { "Messenger client: $url $shouldHaveCookie" }
+        if (shouldHaveCookie == hasCookie) return
+        hasCookie = shouldHaveCookie
+        web.context.ctxCoroutine.launch {
+            cookieDao.updateMessengerCookie(
+                prefs.userId,
+                if (shouldHaveCookie) fbCookie.messengerCookie else null
+            )
+            L._d { "New cookie ${cookieDao.currentCookie(prefs)?.toSensitiveString()}" }
+        }
     }
 }

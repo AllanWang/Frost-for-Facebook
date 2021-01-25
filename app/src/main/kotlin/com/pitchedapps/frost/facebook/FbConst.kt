@@ -34,6 +34,7 @@ const val FB_URL_MBASIC_BASE = "https://$FACEBOOK_MBASIC_COM/"
 fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
 const val FB_HOME_URL = "${FB_URL_BASE}home.php"
+const val MESSENGER_THREAD_PREFIX = "$HTTPS_MESSENGER_COM/t/"
 
 /*
  * User agent candidates.

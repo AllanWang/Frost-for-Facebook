@@ -24,6 +24,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.AnimHolder
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
@@ -37,7 +38,6 @@ import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI

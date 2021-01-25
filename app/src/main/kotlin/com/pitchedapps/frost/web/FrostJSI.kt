@@ -18,6 +18,7 @@ package com.pitchedapps.frost.web
 
 import android.content.Context
 import android.webkit.JavascriptInterface
+import ca.allanwang.kau.utils.ctxCoroutine
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.MainActivityContract
@@ -28,7 +29,6 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.WebContext
 import com.pitchedapps.frost.utils.cookies
-import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu

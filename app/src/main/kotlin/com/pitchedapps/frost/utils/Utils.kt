@@ -35,6 +35,7 @@ import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.darken
 import ca.allanwang.kau.utils.isColorDark
 import ca.allanwang.kau.utils.navigationBarColor
@@ -77,8 +78,6 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.Locale
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
@@ -97,14 +96,6 @@ const val ARG_USER_ID = "arg_user_id"
 const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
 const val ARG_COOKIE = "arg_cookie"
-
-/**
- * Most context items implement [CoroutineScope] by default.
- * We will add a fallback just in case.
- * It is expected that the scope returned always has the Android main dispatcher as part of the context.
- */
-internal inline val Context.ctxCoroutine: CoroutineScope
-    get() = this as? CoroutineScope ?: GlobalScope
 
 inline fun <reified T : Activity> Context.launchNewTask(
     cookieList: ArrayList<CookieEntity> = arrayListOf(),
@@ -186,7 +177,9 @@ fun WebOverlayActivity.url(): String {
 
 fun Activity.setFrostTheme(themeProvider: ThemeProvider, forceTransparent: Boolean = false) {
     val isTransparent =
-        forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (Color.alpha(themeProvider.headerColor) != 255)
+        forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (Color.alpha(
+            themeProvider.headerColor
+        ) != 255)
     if (themeProvider.bgColor.isColorDark) {
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     } else {
@@ -313,7 +306,10 @@ inline val String?.isFacebookUrl
     get() = this != null && (contains(FACEBOOK_COM) || contains(FBCDN_NET))
 
 inline val String?.isMessengerUrl
-get() = this != null && contains(MESSENGER_COM)
+    get() = this != null && contains(MESSENGER_COM)
+
+inline val String?.isFbCookie
+    get() = this != null && contains("c_user")
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer
