@@ -4,6 +4,7 @@
 @import "core_bg";
 @import "core_border";
 @import "core_messages";
+@import "core_hider";
 
 //GLOBAL overrides; use with caution
 *, *::after, *::before {
@@ -14,11 +15,6 @@
 // .touch .btnS, button, ._94v, ._590n {
 //   box-shadow: none !important;
 // }
-
-[data-sigil=m_login_upsell],
-[data-sigil="m-loading-indicator-animate m-loading-indicator-root"] {
-  display: none !important;
-}
 
 @include placeholder {
   color: $text !important;

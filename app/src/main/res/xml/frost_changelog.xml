@@ -9,15 +9,14 @@
     <version title="v3.0.0" />
     <item text="Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails" />
     <item text="Added initial support for messenger.com" />
+    <item text="Fix swipe to refresh not disabling for certain pages" />
+    <item text="" />
     <item text="" />
     <item text="" />
 
     <version title="v2.4.7" />
     <item text="Fix theme not always sticking on refresh" />
     <item text="Disable long press menu from appearing immediately after scrolling" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
 
     <version title="v2.4.6" />
     <item text="Add option to hide likes and action bar in newsfeed" />

@@ -40,7 +40,7 @@ enum class Theme(
 ) {
 
     DEFAULT(R.string.kau_default,
-        null,
+        "default",
         { 0xde000000.toInt() },
         { FACEBOOK_BLUE },
         { 0xfffafafa.toInt() },

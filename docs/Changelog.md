@@ -3,6 +3,7 @@
 ## v3.0.0
 * Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails
 * Added initial support for messenger.com
+* Fix swipe to refresh not disabling for certain pages
 
 ## v2.4.7
 * Fix theme not always sticking on refresh
