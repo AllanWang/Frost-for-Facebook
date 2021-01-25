@@ -29,14 +29,14 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchLogin
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.koin.dsl.module
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-05-30.
@@ -64,7 +64,10 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
     val messengerCookie: String?
         get() = CookieManager.getInstance().getCookie(HTTPS_MESSENGER_COM)
 
-    private suspend fun CookieManager.suspendSetWebCookie(domain: String, cookie: String?): Boolean {
+    private suspend fun CookieManager.suspendSetWebCookie(
+        domain: String,
+        cookie: String?
+    ): Boolean {
         cookie ?: return true
         return withContext(NonCancellable) {
             // Save all cookies regardless of result, then check if all succeeded
@@ -100,9 +103,11 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
 
     suspend fun reset() {
         prefs.userId = -1L
-        with(CookieManager.getInstance()) {
-            removeAllCookies()
-            flush()
+        withContext(Dispatchers.Main + NonCancellable) {
+            with(CookieManager.getInstance()) {
+                removeAllCookies()
+                flush()
+            }
         }
     }
 
@@ -117,7 +122,7 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
             return
         }
         val currentId = prefs.userId
-        withContext(Dispatchers.IO + NonCancellable) {
+        withContext(Dispatchers.Main + NonCancellable) {
             L.d { "Switching User" }
             // Save current messenger cookie state.
             cookieDao.updateMessengerCookie(currentId, messengerCookie)
