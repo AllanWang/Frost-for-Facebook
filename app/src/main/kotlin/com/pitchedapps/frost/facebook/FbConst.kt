@@ -21,8 +21,12 @@ package com.pitchedapps.frost.facebook
  */
 
 const val FACEBOOK_COM = "facebook.com"
+const val MESSENGER_COM = "messenger.com"
 const val FBCDN_NET = "fbcdn.net"
 const val WWW_FACEBOOK_COM = "www.$FACEBOOK_COM"
+const val WWW_MESSENGER_COM = "www.$MESSENGER_COM"
+const val HTTPS_FACEBOOK_COM = "https://$WWW_FACEBOOK_COM"
+const val HTTPS_MESSENGER_COM = "https://$WWW_MESSENGER_COM"
 const val FACEBOOK_BASE_COM = "m.$FACEBOOK_COM"
 const val FB_URL_BASE = "https://$FACEBOOK_BASE_COM/"
 const val FACEBOOK_MBASIC_COM = "mbasic.$FACEBOOK_COM"
@@ -30,6 +34,7 @@ const val FB_URL_MBASIC_BASE = "https://$FACEBOOK_MBASIC_COM/"
 fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
 const val FB_HOME_URL = "${FB_URL_BASE}home.php"
+const val MESSENGER_THREAD_PREFIX = "$HTTPS_MESSENGER_COM/t/"
 
 /*
  * User agent candidates.

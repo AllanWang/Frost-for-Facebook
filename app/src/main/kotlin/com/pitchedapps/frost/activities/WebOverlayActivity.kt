@@ -202,14 +202,14 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, prefs.iconColor)
+        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, themeProvider.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
 
-        setFrostColors(prefs) {
+        setFrostColors {
             toolbar(toolbar)
             themeWindow = false
         }
-        coordinator.setBackgroundColor(prefs.bgColor.withAlpha(255))
+        coordinator.setBackgroundColor(themeProvider.bgColor.withAlpha(255))
 
         content.bind(this)
 
@@ -268,13 +268,13 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
      * Our theme for the overlay should be fully opaque
      */
     fun theme() {
-        val opaqueAccent = prefs.headerColor.withAlpha(255)
+        val opaqueAccent = themeProvider.headerColor.withAlpha(255)
         statusBarColor = opaqueAccent.darken()
         navigationBarColor = opaqueAccent
         toolbar.setBackgroundColor(opaqueAccent)
-        toolbar.setTitleTextColor(prefs.iconColor)
-        coordinator.setBackgroundColor(prefs.bgColor.withAlpha(255))
-        toolbar.overflowIcon?.setTint(prefs.iconColor)
+        toolbar.setTitleTextColor(themeProvider.iconColor)
+        coordinator.setBackgroundColor(themeProvider.bgColor.withAlpha(255))
+        toolbar.overflowIcon?.setTint(themeProvider.iconColor)
     }
 
     override fun onResume() {
@@ -309,7 +309,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_web, menu)
         overlayContext?.onMenuCreate(this, menu)
-        toolbar.tint(prefs.iconColor)
+        toolbar.tint(themeProvider.iconColor)
         return true
     }
 

@@ -30,7 +30,7 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityDebugBinding
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
-import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
@@ -39,6 +39,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.koin.android.ext.android.inject
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 05/01/18.
@@ -52,7 +53,7 @@ class DebugActivity : KauBaseActivity() {
         fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
     }
 
-    private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
 
     lateinit var binding: ActivityDebugBinding
 
@@ -71,7 +72,7 @@ class DebugActivity : KauBaseActivity() {
         }
         setTitle(R.string.debug_frost)
 
-        setFrostColors(prefs) {
+        setFrostColors {
             toolbar(toolbar)
         }
         debugWebview.loadUrl(FbItem.FEED.url)
@@ -79,8 +80,8 @@ class DebugActivity : KauBaseActivity() {
 
         swipeRefresh.setOnRefreshListener(debugWebview::reload)
 
-        fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, prefs.iconColor)
-        fab.backgroundTintList = ColorStateList.valueOf(prefs.accentColor)
+        fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, themeProvider.iconColor)
+        fab.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
         fab.setOnClickListener { _ ->
             fab.hide()
 

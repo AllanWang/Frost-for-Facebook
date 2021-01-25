@@ -36,6 +36,7 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
@@ -103,7 +104,7 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
     class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView),
         KoinComponent {
 
-        private val prefs: Prefs by inject()
+        private val themeProvider: ThemeProvider by inject()
 
         private val frame: ViewGroup by bindView(R.id.item_frame)
         private val avatar: ImageView by bindView(R.id.item_avatar)
@@ -117,11 +118,11 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         override fun bindView(item: NotificationIItem, payloads: List<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(
-                prefs.textColor,
-                prefs.nativeBgColor(notif.unread)
+                themeProvider.textColor,
+                themeProvider.nativeBgColor(notif.unread)
             )
-            content.setTextColor(prefs.textColor)
-            date.setTextColor(prefs.textColor.withAlpha(150))
+            content.setTextColor(themeProvider.textColor)
+            date.setTextColor(themeProvider.textColor.withAlpha(150))
 
             val glide = glide
             glide.load(notif.img)

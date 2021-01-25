@@ -16,17 +16,10 @@
  */
 package com.pitchedapps.frost.prefs.sections
 
-import android.graphics.Color
-import ca.allanwang.kau.kotlin.lazyResettable
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
-import ca.allanwang.kau.utils.colorToForeground
-import ca.allanwang.kau.utils.isColorVisibleOn
-import ca.allanwang.kau.utils.withAlpha
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.enums.FACEBOOK_BLUE
-import com.pitchedapps.frost.enums.Theme
-import com.pitchedapps.frost.injectors.InjectorContract
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
 import org.koin.core.component.KoinComponent
@@ -45,26 +38,6 @@ interface ThemePrefs : PrefsBase {
 
     var customIconColor: Int
 
-    val textColor: Int
-
-    val accentColor: Int
-
-    val accentColorForWhite: Int
-
-    val nativeBgColor: Int
-
-    fun nativeBgColor(unread: Boolean): Int
-
-    val bgColor: Int
-
-    val headerColor: Int
-
-    val iconColor: Int
-
-    val themeInjector: InjectorContract
-
-    val isCustomTheme: Boolean
-
     var tintNavBar: Boolean
 }
 
@@ -74,9 +47,10 @@ class ThemePrefsImpl(
     ThemePrefs, KoinComponent {
 
     private val oldPrefs: OldPrefs by inject()
+    private val themeProvider: ThemeProvider by inject()
 
-    override var theme: Int by kpref("theme", oldPrefs.theme /* 0 */) { _: Int ->
-        loader.invalidate()
+    override var theme: Int by kpref("theme", oldPrefs.theme /* 0 */) {
+        themeProvider.setTheme(it)
     }
 
     override var customTextColor: Int by kpref(
@@ -103,45 +77,6 @@ class ThemePrefsImpl(
         "color_icons",
         oldPrefs.customIconColor /* 0xffeceff1.toInt() */
     )
-
-    private val loader = lazyResettable { Theme.values[theme] }
-
-    private val t: Theme by loader
-
-    override val textColor: Int
-        get() = t.textColorGetter(this)
-
-    override val accentColor: Int
-        get() = t.accentColorGetter(this)
-
-    override val accentColorForWhite: Int
-        get() = when {
-            accentColor.isColorVisibleOn(Color.WHITE) -> accentColor
-            textColor.isColorVisibleOn(Color.WHITE) -> textColor
-            else -> FACEBOOK_BLUE
-        }
-
-    override val nativeBgColor: Int
-        get() = bgColor.withAlpha(30)
-
-    override fun nativeBgColor(unread: Boolean) = bgColor
-        .colorToForeground(if (unread) 0.7f else 0.0f)
-        .withAlpha(30)
-
-    override val bgColor: Int
-        get() = t.backgroundColorGetter(this)
-
-    override val headerColor: Int
-        get() = t.headerColorGetter(this)
-
-    override val iconColor: Int
-        get() = t.iconColorGetter(this)
-
-    override val themeInjector: InjectorContract
-        get() = t.injector
-
-    override val isCustomTheme: Boolean
-        get() = t == Theme.CUSTOM
 
     override var tintNavBar: Boolean by kpref("tint_nav_bar", oldPrefs.tintNavBar /* true */)
 }

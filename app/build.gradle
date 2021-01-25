@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
@@ -204,11 +204,6 @@ android {
         }
     }
 
-    androidExtensions {
-        experimental = true
-        features = ["parcelize"]
-    }
-
 }
 
 node {
@@ -314,7 +309,7 @@ dependencies {
     implementation "androidx.room:room-ktx:${Versions.room}"
     implementation "androidx.room:room-runtime:${Versions.room}"
     kapt "androidx.room:room-compiler:${Versions.room}"
-    testImplementation "androidx.room:room-testing:${Versions.room}"
+    androidTestImplementation "androidx.room:room-testing:${Versions.room}"
 
 }
 

@@ -34,6 +34,7 @@ import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.enums.FeedSort
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.L
@@ -49,6 +50,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -84,6 +86,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
 
     protected val fbCookie: FbCookie by inject()
     protected val prefs: Prefs by inject()
+    protected val themeProvider: ThemeProvider by inject()
     open lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
@@ -201,10 +204,10 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
     protected fun FloatingActionButton.update(iicon: IIcon, click: () -> Unit) {
         if (isShown) {
             fadeScaleTransition {
-                setIcon(iicon, prefs.iconColor)
+                setIcon(iicon, themeProvider.iconColor)
             }
         } else {
-            setIcon(iicon, prefs.iconColor)
+            setIcon(iicon, themeProvider.iconColor)
             show()
         }
         setOnClickListener { click() }

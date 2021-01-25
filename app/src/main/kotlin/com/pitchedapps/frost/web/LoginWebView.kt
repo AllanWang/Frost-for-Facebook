@@ -30,12 +30,14 @@ import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
@@ -56,6 +58,7 @@ class LoginWebView @JvmOverloads constructor(
 
     private val fbCookie: FbCookie by inject()
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
 
@@ -105,7 +108,7 @@ class LoginWebView @JvmOverloads constructor(
             if (url.isFacebookUrl)
                 view.jsInject(
                     CssHider.CORE,
-                    prefs.themeInjector,
+                    themeProvider.injector(ThemeCategory.FACEBOOK),
                     prefs = prefs
                 )
         }

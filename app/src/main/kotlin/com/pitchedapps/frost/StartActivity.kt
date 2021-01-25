@@ -37,6 +37,7 @@ import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
@@ -54,6 +55,7 @@ class StartActivity : KauBaseActivity() {
 
     private val fbCookie: FbCookie by inject()
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     private val cookieDao: CookieDao by inject()
     private val genericDao: GenericDao by inject()
 
@@ -85,7 +87,7 @@ class StartActivity : KauBaseActivity() {
                         transform = CookieEntity::toSensitiveString
                     )}"
                 }
-                loadAssets(prefs)
+                loadAssets(themeProvider)
                 authDefer.await()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()

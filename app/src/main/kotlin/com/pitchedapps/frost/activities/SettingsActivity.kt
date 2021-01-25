@@ -39,6 +39,7 @@ import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.settings.getAppearancePrefs
 import com.pitchedapps.frost.settings.getBehaviourPrefs
@@ -69,6 +70,7 @@ class SettingsActivity : KPrefActivity() {
     val fbCookie: FbCookie by inject()
     val notifDao: NotificationDao by inject()
     val prefs: Prefs by inject()
+    val themeProvider: ThemeProvider by inject()
 
     private var resultFlag = Activity.RESULT_CANCELED
 
@@ -132,8 +134,8 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
-        textColor = { prefs.textColor }
-        accentColor = { prefs.accentColor }
+        textColor = { themeProvider.textColor }
+        accentColor = { themeProvider.accentColor }
     }
 
     override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
@@ -216,25 +218,25 @@ class SettingsActivity : KPrefActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFrostTheme(prefs, true)
+        setFrostTheme(themeProvider, true)
         super.onCreate(savedInstanceState)
         animate = prefs.animate
         themeExterior(false)
     }
 
     fun themeExterior(animate: Boolean = true) {
-        if (animate) bgCanvas.fade(prefs.bgColor)
-        else bgCanvas.set(prefs.bgColor)
-        if (animate) toolbarCanvas.ripple(prefs.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
-        else toolbarCanvas.set(prefs.headerColor)
-        frostNavigationBar(prefs)
+        if (animate) bgCanvas.fade(themeProvider.bgColor)
+        else bgCanvas.set(themeProvider.bgColor)
+        if (animate) toolbarCanvas.ripple(themeProvider.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
+        else toolbarCanvas.set(themeProvider.headerColor)
+        frostNavigationBar(prefs, themeProvider)
     }
 
     override fun onBackPressed() {
         if (!super.backPress()) {
             setResult(resultFlag)
             launch(NonCancellable) {
-                loadAssets(prefs)
+                loadAssets(themeProvider)
                 finishSlideOut()
             }
         }
@@ -242,9 +244,9 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
-        toolbar.tint(prefs.iconColor)
+        toolbar.tint(themeProvider.iconColor)
         setMenuIcons(
-            menu, prefs.iconColor,
+            menu, themeProvider.iconColor,
             R.id.action_github to CommunityMaterial.Icon2.cmd_github,
             R.id.action_changelog to GoogleMaterial.Icon.gmd_info
         )

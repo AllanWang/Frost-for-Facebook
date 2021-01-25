@@ -4,6 +4,7 @@ $bg_transparent: rgba(#f0f, 0.02) !default;
 //Our default colors are test colors; production files should always import the actual colors
 
 $text: #d7b0d7 !default;
+$text_disabled: rgba($text, 0.6) !default;
 // must be visible with accent as the background
 $accent_text: #76d7c2 !default;
 $link: #9266d5 !default;

@@ -23,6 +23,8 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.pitchedapps.frost.prefs.Prefs
 import kotlinx.android.parcel.Parcelize
 
@@ -37,11 +39,13 @@ data class CookieEntity(
     @ColumnInfo(name = "cookie_id")
     val id: Long,
     val name: String?,
-    val cookie: String?
+    val cookie: String?,
+    val cookieMessenger: String? = null // Version 2
 ) : Parcelable {
     override fun toString(): String = "CookieEntity(${hashCode()})"
 
-    fun toSensitiveString(): String = "CookieEntity(id=$id, name=$name, cookie=$cookie)"
+    fun toSensitiveString(): String =
+        "CookieEntity(id=$id, name=$name, cookie=$cookie cookieMessenger=$cookieMessenger)"
 }
 
 @Dao
@@ -61,6 +65,9 @@ interface CookieDao {
 
     @Query("DELETE FROM cookies WHERE cookie_id = :id")
     fun _deleteById(id: Long)
+
+    @Query("UPDATE cookies SET cookieMessenger = :cookie WHERE cookie_id = :id")
+    fun _updateMessengerCookie(id: Long, cookie: String?)
 }
 
 suspend fun CookieDao.selectAll() = dao { _selectAll() }
@@ -69,3 +76,11 @@ suspend fun CookieDao.save(cookie: CookieEntity) = dao { _save(cookie) }
 suspend fun CookieDao.save(cookies: List<CookieEntity>) = dao { _save(cookies) }
 suspend fun CookieDao.deleteById(id: Long) = dao { _deleteById(id) }
 suspend fun CookieDao.currentCookie(prefs: Prefs) = selectById(prefs.userId)
+suspend fun CookieDao.updateMessengerCookie(id: Long, cookie: String?) =
+    dao { _updateMessengerCookie(id, cookie) }
+
+val COOKIES_MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE cookies ADD COLUMN cookieMessenger TEXT")
+    }
+}

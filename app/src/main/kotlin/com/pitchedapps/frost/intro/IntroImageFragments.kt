@@ -57,10 +57,10 @@ abstract class BaseImageIntroFragment(
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        title.setTextColor(prefs.textColor)
-        desc.setTextColor(prefs.textColor)
-        phone.tint(prefs.textColor)
-        screen.tint(prefs.bgColor)
+        title.setTextColor(themeProvider.textColor)
+        desc.setTextColor(themeProvider.textColor)
+        phone.tint(themeProvider.textColor)
+        screen.tint(themeProvider.bgColor)
     }
 
     fun themeImageComponent(color: Int, vararg id: Int) {
@@ -96,9 +96,9 @@ class IntroAccountFragment : BaseImageIntroFragment(
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        themeImageComponent(prefs.iconColor, R.id.intro_phone_avatar_1, R.id.intro_phone_avatar_2)
-        themeImageComponent(prefs.bgColor.colorToForeground(), R.id.intro_phone_nav)
-        themeImageComponent(prefs.headerColor, R.id.intro_phone_header)
+        themeImageComponent(themeProvider.iconColor, R.id.intro_phone_avatar_1, R.id.intro_phone_avatar_2)
+        themeImageComponent(themeProvider.bgColor.colorToForeground(), R.id.intro_phone_nav)
+        themeImageComponent(themeProvider.headerColor, R.id.intro_phone_header)
     }
 
     override fun onPageScrolledImpl(positionOffset: Float) {
@@ -122,14 +122,14 @@ class IntroTabTouchFragment : BaseImageIntroFragment(
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
         themeImageComponent(
-            prefs.iconColor,
+            themeProvider.iconColor,
             R.id.intro_phone_icon_1,
             R.id.intro_phone_icon_2,
             R.id.intro_phone_icon_3,
             R.id.intro_phone_icon_4
         )
-        themeImageComponent(prefs.headerColor, R.id.intro_phone_tab)
-        themeImageComponent(prefs.textColor.withAlpha(80), R.id.intro_phone_icon_ripple)
+        themeImageComponent(themeProvider.headerColor, R.id.intro_phone_tab)
+        themeImageComponent(themeProvider.textColor.withAlpha(80), R.id.intro_phone_icon_ripple)
     }
 }
 
@@ -141,21 +141,21 @@ class IntroTabContextFragment : BaseImageIntroFragment(
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        themeImageComponent(prefs.headerColor, R.id.intro_phone_toolbar)
-        themeImageComponent(prefs.bgColor.colorToForeground(0.1f), R.id.intro_phone_image)
+        themeImageComponent(themeProvider.headerColor, R.id.intro_phone_toolbar)
+        themeImageComponent(themeProvider.bgColor.colorToForeground(0.1f), R.id.intro_phone_image)
         themeImageComponent(
-            prefs.bgColor.colorToForeground(0.2f),
+            themeProvider.bgColor.colorToForeground(0.2f),
             R.id.intro_phone_like,
             R.id.intro_phone_share
         )
-        themeImageComponent(prefs.bgColor.colorToForeground(0.3f), R.id.intro_phone_comment)
+        themeImageComponent(themeProvider.bgColor.colorToForeground(0.3f), R.id.intro_phone_comment)
         themeImageComponent(
-            prefs.bgColor.colorToForeground(0.1f),
+            themeProvider.bgColor.colorToForeground(0.1f),
             R.id.intro_phone_card_1,
             R.id.intro_phone_card_2
         )
         themeImageComponent(
-            prefs.textColor,
+            themeProvider.textColor,
             R.id.intro_phone_image_indicator,
             R.id.intro_phone_comment_indicator,
             R.id.intro_phone_card_indicator

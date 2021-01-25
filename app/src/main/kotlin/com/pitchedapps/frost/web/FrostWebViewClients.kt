@@ -22,27 +22,38 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.db.updateMessengerCookie
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.HTTPS_MESSENGER_COM
+import com.pitchedapps.frost.facebook.MESSENGER_THREAD_PREFIX
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.injectors.CssAsset
 import com.pitchedapps.frost.injectors.CssHider
-import com.pitchedapps.frost.injectors.CssSmallAssets
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isExplicitIntent
 import com.pitchedapps.frost.utils.isFacebookUrl
+import com.pitchedapps.frost.utils.isFbCookie
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndirectImageUrl
+import com.pitchedapps.frost.utils.isMessengerUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.resolveActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -68,10 +79,11 @@ open class BaseWebViewClient : WebViewClient() {
  */
 open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
-    private val fbCookie: FbCookie get() = web.fbCookie
-    private val prefs: Prefs get() = web.prefs
-    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val isMain = web.parent.baseEnum != null
+    protected val fbCookie: FbCookie get() = web.fbCookie
+    protected val prefs: Prefs get() = web.prefs
+    protected val themeProvider: ThemeProvider get() = web.themeProvider
+    protected val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+    protected val isMain = web.parent.baseEnum != null
 
     /**
      * True if current url supports refresh. See [doUpdateVisitedHistory] for updates
@@ -81,7 +93,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
         super.doUpdateVisitedHistory(view, url, isReload)
         urlSupportsRefresh = urlSupportsRefresh(url)
-        web.parent.swipeEnabled = urlSupportsRefresh
+        web.parent.swipeAllowedByPage = urlSupportsRefresh
         view.jsInject(
             JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
             prefs = prefs
@@ -91,6 +103,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
 
     private fun urlSupportsRefresh(url: String?): Boolean {
         if (url == null) return false
+        if (url.isMessengerUrl) return false
         if (!url.isFacebookUrl) return true
         if (url.contains("soft=composer")) return false
         if (url.contains("sharer.php") || url.contains("sharer-dialog.php")) return false
@@ -110,7 +123,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             CssHider.STORIES.maybe(!prefs.showStories),
             CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
             CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
-            prefs.themeInjector,
+            themeProvider.injector(ThemeCategory.FACEBOOK),
             CssHider.NON_RECENT.maybe(
                 (web.url?.contains("?sk=h_chr") ?: false) &&
                     prefs.aggressiveRecents
@@ -118,7 +131,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             CssHider.ADS.maybe(!prefs.showFacebookAds),
             CssHider.POST_ACTIONS.maybe(!prefs.showPostActions),
             CssHider.POST_REACTIONS.maybe(!prefs.showPostReactions),
-            CssSmallAssets.FullSizeImage.maybe(prefs.fullSizeImage),
+            CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),
             JsAssets.DOCUMENT_WATCHER,
             JsAssets.HORIZONTAL_SCROLLING,
             JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
@@ -126,6 +139,13 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
             JsAssets.CONTEXT_A,
             JsAssets.MEDIA,
             JsAssets.SCROLL_STOP,
+            prefs = prefs
+        )
+    }
+
+    private fun WebView.messengerJsInject() {
+        jsInject(
+            themeProvider.injector(ThemeCategory.MESSENGER),
             prefs = prefs
         )
     }
@@ -141,7 +161,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         web.setBackgroundColor(
             when {
                 isMain -> Color.TRANSPARENT
-                web.url.isFacebookUrl -> prefs.bgColor.withAlpha(255)
+                web.url.isFacebookUrl -> themeProvider.bgColor.withAlpha(255)
                 else -> Color.WHITE
             }
         )
@@ -150,18 +170,25 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     override fun onPageCommitVisible(view: WebView, url: String?) {
         super.onPageCommitVisible(view, url)
         injectBackgroundColor()
-        if (url.isFacebookUrl) {
-            v { "Page commit visible" }
-            view.facebookJsInject()
-        } else {
-            refresh.offer(false)
+        when {
+            url.isFacebookUrl -> {
+                v { "FB Page commit visible" }
+                view.facebookJsInject()
+            }
+            url.isMessengerUrl -> {
+                v { "Messenger Page commit visible" }
+                view.messengerJsInject()
+            }
+            else -> {
+                refresh.offer(false)
+            }
         }
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
         url ?: return
         v { "finished $url" }
-        if (!url.isFacebookUrl) {
+        if (!url.isFacebookUrl && !url.isMessengerUrl) {
             refresh.offer(false)
             return
         }
@@ -179,13 +206,20 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         v { "page finished reveal" }
         refresh.offer(false)
         injectBackgroundColor()
-        web.jsInject(
-            JsActions.LOGIN_CHECK,
-            JsAssets.TEXTAREA_LISTENER,
-            JsAssets.HEADER_BADGES.maybe(isMain),
-            prefs = prefs
-        )
-        web.facebookJsInject()
+        when {
+            web.url.isFacebookUrl -> {
+                web.jsInject(
+                    JsActions.LOGIN_CHECK,
+                    JsAssets.TEXTAREA_LISTENER,
+                    JsAssets.HEADER_BADGES.maybe(isMain),
+                    prefs = prefs
+                )
+                web.facebookJsInject()
+            }
+            web.url.isMessengerUrl -> {
+                web.messengerJsInject()
+            }
+        }
     }
 
     open fun handleHtml(html: String?) {
@@ -253,8 +287,6 @@ private const val EMIT_FINISH = 0
  */
 class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
-    private val prefs: Prefs get() = web.prefs
-
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
         if (url == null) {
@@ -274,5 +306,40 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
 
     override fun onPageFinishedActions(url: String) {
         // Skip
+    }
+}
+
+class FrostWebViewClientMessenger(web: FrostWebView) : FrostWebViewClient(web) {
+
+    override fun onPageFinished(view: WebView, url: String?) {
+        super.onPageFinished(view, url)
+        messengerCookieCheck(url!!)
+    }
+
+    private val cookieDao: CookieDao get() = web.cookieDao
+    private var hasCookie = fbCookie.messengerCookie.isFbCookie
+
+    /**
+     * Check cookie changes. Unlike fb checks, we will continuously poll for cookie changes during loading.
+     * There is no lifecycle association between messenger login and facebook login,
+     * so we'll try to be smart about when to check for state changes.
+     *
+     * From testing, it looks like this is called after redirects.
+     * We can therefore classify no login as pointing to messenger.com,
+     * and login as pointing to messenger.com/t/[thread id]
+     */
+    private fun messengerCookieCheck(url: String?) {
+        if (url?.startsWith(HTTPS_MESSENGER_COM) != true) return
+        val shouldHaveCookie = url.startsWith(MESSENGER_THREAD_PREFIX)
+        L._d { "Messenger client: $url $shouldHaveCookie" }
+        if (shouldHaveCookie == hasCookie) return
+        hasCookie = shouldHaveCookie
+        web.context.ctxCoroutine.launch {
+            cookieDao.updateMessengerCookie(
+                prefs.userId,
+                if (shouldHaveCookie) fbCookie.messengerCookie else null
+            )
+            L._d { "New cookie ${cookieDao.currentCookie(prefs)?.toSensitiveString()}" }
+        }
     }
 }

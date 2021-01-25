@@ -55,6 +55,7 @@ import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
 import com.pitchedapps.frost.facebook.requests.requestBuilder
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
@@ -78,6 +79,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-07-15.
@@ -85,6 +87,7 @@ import org.koin.android.ext.android.inject
 class ImageActivity : KauBaseActivity() {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
 
     @Volatile
     internal var errorRef: Throwable? = null
@@ -128,7 +131,7 @@ class ImageActivity : KauBaseActivity() {
     private var bottomBehavior: BottomSheetBehavior<View>? = null
 
     private val baseBackgroundColor = if (prefs.blackMediaBg) Color.BLACK
-    else prefs.bgColor.withMinAlpha(235)
+    else themeProvider.bgColor.withMinAlpha(235)
 
     private fun loadError(e: Throwable) {
         if (e.message?.contains("<!DOCTYPE html>") == true) {
@@ -178,7 +181,7 @@ class ImageActivity : KauBaseActivity() {
             if (text.isNullOrBlank()) {
                 imageText.gone()
             } else {
-                imageText.setTextColor(if (prefs.blackMediaBg) Color.WHITE else prefs.textColor)
+                imageText.setTextColor(if (prefs.blackMediaBg) Color.WHITE else themeProvider.textColor)
                 imageText.setBackgroundColor(
                     baseBackgroundColor.colorToForeground(0.2f).withAlpha(255)
                 )
@@ -197,7 +200,7 @@ class ImageActivity : KauBaseActivity() {
                 imageText.bringToFront()
             }
         }
-        val foregroundTint = if (prefs.blackMediaBg) Color.WHITE else prefs.accentColor
+        val foregroundTint = if (prefs.blackMediaBg) Color.WHITE else themeProvider.accentColor
 
         fun ImageView.setState(state: FabStates) {
             setIcon(state.iicon, color = foregroundTint, sizeDp = 24)
@@ -221,7 +224,7 @@ class ImageActivity : KauBaseActivity() {
                 loadError(e)
             }
         })
-        setFrostColors(prefs) {
+        setFrostColors {
             themeWindow = false
         }
         dragHelper = ViewDragHelper.create(imageDrag, ViewDragCallback()).apply {
@@ -352,7 +355,7 @@ class ImageActivity : KauBaseActivity() {
 
 internal enum class FabStates(
     val iicon: IIcon,
-    val iconColorProvider: (Prefs) -> Int = { it.iconColor },
+    val iconColorProvider: (ThemeProvider) -> Int = { it.iconColor },
     val backgroundTint: Int = Int.MAX_VALUE
 ) {
     ERROR(GoogleMaterial.Icon.gmd_error, { Color.WHITE }, Color.RED) {
@@ -405,9 +408,9 @@ internal enum class FabStates(
      * https://github.com/AllanWang/KAU/issues/184
      *
      */
-    fun update(fab: FloatingActionButton, prefs: Prefs) {
-        val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else prefs.accentColor
-        val iconColor = iconColorProvider(prefs)
+    fun update(fab: FloatingActionButton, themeProvider: ThemeProvider) {
+        val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else themeProvider.accentColor
+        val iconColor = iconColorProvider(themeProvider)
         if (fab.isHidden) {
             fab.setIcon(iicon, color = iconColor)
             fab.backgroundTintList = ColorStateList.valueOf(tint)

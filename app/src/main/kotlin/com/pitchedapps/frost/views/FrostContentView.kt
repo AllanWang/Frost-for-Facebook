@@ -22,7 +22,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.circularReveal
@@ -39,6 +38,7 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
@@ -80,6 +80,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     FrostContentParent, KoinComponent where T : View, T : FrostContentCore {
 
     private val prefs: Prefs by inject()
+    private val themeProvider: ThemeProvider by inject()
     private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
@@ -102,13 +103,25 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     protected abstract val layoutRes: Int
 
-    override var swipeEnabled = true
+    @Volatile
+    override var swipeDisabledByAction = false
         set(value) {
-            if (field == value)
-                return
             field = value
-            refresh.post { refresh.isEnabled = value }
+            updateSwipeEnabler()
         }
+
+    @Volatile
+    override var swipeAllowedByPage: Boolean = true
+        set(value) {
+            field = value
+            updateSwipeEnabler()
+        }
+
+    private fun updateSwipeEnabler() {
+        val swipeEnabled = swipeAllowedByPage && !swipeDisabledByAction
+        if (refresh.isEnabled == swipeEnabled) return
+        refresh.post { refresh.isEnabled = swipeEnabled }
+    }
 
     /**
      * Sets up everything
@@ -134,7 +147,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
         refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
             refresh.isRefreshing = r
-            refresh.isEnabled = true
         }
 
         progressChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { p ->
@@ -156,9 +168,9 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     }
 
     override fun reloadThemeSelf() {
-        progress.tint(prefs.textColor.withAlpha(180))
-        refresh.setColorSchemeColors(prefs.iconColor)
-        refresh.setProgressBackgroundColorSchemeColor(prefs.headerColor.withAlpha(255))
+        progress.tint(themeProvider.textColor.withAlpha(180))
+        refresh.setColorSchemeColors(themeProvider.iconColor)
+        refresh.setProgressBackgroundColorSchemeColor(themeProvider.headerColor.withAlpha(255))
     }
 
     override fun reloadTextSizeSelf() {

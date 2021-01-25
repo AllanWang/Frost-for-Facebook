@@ -1,5 +1,6 @@
 $bg_transparent: unquote('$BT$');
 $text: unquote('$T$');
+$text_disabled: unquote('$TD$');
 $link: unquote('$TT$');
 $accent: unquote('$A$');
 $accent_text: unquote('$AT$');
@@ -10,5 +11,3 @@ $bg_opaque2: unquote('$OO$');
 $divider: unquote('$D$');
 $card: unquote('$C$');
 $tint: unquote('$TI$');
-
-@import "../core/main";

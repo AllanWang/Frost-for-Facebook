@@ -18,11 +18,10 @@ package com.pitchedapps.frost.enums
 
 import android.graphics.Color
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.injectors.CssAssets
-import com.pitchedapps.frost.injectors.InjectorContract
-import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.prefs.sections.ThemePrefs
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -32,7 +31,7 @@ const val BLUE_LIGHT = 0xff5d86dd.toInt()
 
 enum class Theme(
     @StringRes val textRes: Int,
-    val injector: InjectorContract,
+    file: String?,
     val textColorGetter: (ThemePrefs) -> Int,
     val accentColorGetter: (ThemePrefs) -> Int,
     val backgroundColorGetter: (ThemePrefs) -> Int,
@@ -41,7 +40,7 @@ enum class Theme(
 ) {
 
     DEFAULT(R.string.kau_default,
-        JsActions.EMPTY,
+        "default",
         { 0xde000000.toInt() },
         { FACEBOOK_BLUE },
         { 0xfffafafa.toInt() },
@@ -49,7 +48,7 @@ enum class Theme(
         { Color.WHITE }),
 
     LIGHT(R.string.kau_light,
-        CssAssets.MATERIAL_LIGHT,
+        "material_light",
         { 0xde000000.toInt() },
         { FACEBOOK_BLUE },
         { 0xfffafafa.toInt() },
@@ -57,7 +56,7 @@ enum class Theme(
         { Color.WHITE }),
 
     DARK(R.string.kau_dark,
-        CssAssets.MATERIAL_DARK,
+        "material_dark",
         { Color.WHITE },
         { BLUE_LIGHT },
         { 0xff303030.toInt() },
@@ -65,7 +64,7 @@ enum class Theme(
         { Color.WHITE }),
 
     AMOLED(R.string.kau_amoled,
-        CssAssets.MATERIAL_AMOLED,
+        "material_amoled",
         { Color.WHITE },
         { BLUE_LIGHT },
         { Color.BLACK },
@@ -73,7 +72,7 @@ enum class Theme(
         { Color.WHITE }),
 
     GLASS(R.string.kau_glass,
-        CssAssets.MATERIAL_GLASS,
+        "material_glass",
         { Color.WHITE },
         { BLUE_LIGHT },
         { 0x80000000.toInt() },
@@ -81,15 +80,26 @@ enum class Theme(
         { Color.WHITE }),
 
     CUSTOM(R.string.kau_custom,
-        CssAssets.CUSTOM,
+        "custom",
         { it.customTextColor },
         { it.customAccentColor },
         { it.customBackgroundColor },
         { it.customHeaderColor },
         { it.customIconColor });
 
+    @VisibleForTesting
+    internal val file = file?.let { "$it.css" }
+
     companion object {
         val values = values() // save one instance
         operator fun invoke(index: Int) = values[index]
     }
+}
+
+enum class ThemeCategory {
+    FACEBOOK, MESSENGER
+    ;
+
+    @VisibleForTesting
+    internal val folder = name.toLowerCase(Locale.CANADA)
 }

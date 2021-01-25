@@ -17,15 +17,15 @@
 package com.pitchedapps.frost.enums
 
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.injectors.ThemeProvider
 
 /**
  * Created by Allan Wang on 2017-08-19.
  */
 enum class MainActivityLayout(
     val titleRes: Int,
-    val backgroundColor: (Prefs) -> Int,
-    val iconColor: (Prefs) -> Int
+    val backgroundColor: (ThemeProvider) -> Int,
+    val iconColor: (ThemeProvider) -> Int
 ) {
 
     TOP_BAR(R.string.top_bar,

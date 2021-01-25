@@ -1,4 +1,8 @@
 @mixin placeholder {
+  ::placeholder {
+    @content;
+  }
+  
   ::-webkit-input-placeholder {
     @content;
   }
@@ -14,6 +18,17 @@
   :-ms-input-placeholder {
     @content;
   }
+
+  ::-ms-input-placeholder {
+    @content;
+  }
+}
+
+@mixin fill-available {
+  width: 100%;
+  max-width: -webkit-fill-available;
+  max-width: -moz-available;
+  max-width: fill-available;
 }
 
 @mixin keyframes($name) {
@@ -38,7 +53,12 @@
 @function str-replace($string, $search, $replace: "") {
   $index: str-index($string, $search);
 
-  @return if($index, str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace), $string);
+  @return if(
+    $index,
+    str-slice($string, 1, $index - 1) + $replace +
+      str-replace(str-slice($string, $index + str-length($search)), $search, $replace),
+    $string
+  );
 }
 
 //  https://css-tricks.com/probably-dont-base64-svg/

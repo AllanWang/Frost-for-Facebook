@@ -1,0 +1,4 @@
+html, body, :root, #root,
+[style*="background-color: #FFFFFF"], [style*="background-color: #E4E6EB"] {
+  background: $bg_transparent !important;
+}

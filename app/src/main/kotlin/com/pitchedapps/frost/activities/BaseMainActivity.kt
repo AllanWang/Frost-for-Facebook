@@ -202,7 +202,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         drawerWrapperBinding.mainContainer.addView(contentBinding.root)
         with(contentBinding) {
-            setFrostColors(prefs) {
+            setFrostColors {
                 toolbar(toolbar)
                 themeWindow = false
                 header(appbar)
@@ -210,7 +210,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             setSupportActionBar(toolbar)
             viewpager.adapter = adapter
-            tabs.setBackgroundColor(prefs.mainActivityLayout.backgroundColor(prefs))
+            tabs.setBackgroundColor(prefs.mainActivityLayout.backgroundColor(themeProvider))
         }
         onNestedCreate(savedInstanceState)
         L.i { "Main finished loading UI in ${System.currentTimeMillis() - start} ms" }
@@ -288,7 +288,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        val foregroundColor = ColorStateList.valueOf(prefs.textColor)
+        val foregroundColor = ColorStateList.valueOf(themeProvider.textColor)
 
         with(navigation) {
             FrostMenuBuilder(this@BaseMainActivity, menu).apply {
@@ -317,9 +317,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 launchWebOverlay(item.url, fbCookie, prefs)
                 false
             }
-            val navBg = prefs.bgColor.withMinAlpha(200)
+            val navBg = themeProvider.bgColor.withMinAlpha(200)
             setBackgroundColor(navBg)
-            itemBackground = createNavDrawable(prefs.accentColor, navBg)
+            itemBackground = createNavDrawable(themeProvider.accentColor, navBg)
             itemTextColor = foregroundColor
             itemIconTintList = foregroundColor
 
@@ -331,7 +331,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     private fun ActivityMainContentBinding.initFab() {
         hasFab = false
         shouldShow = false
-        fab.backgroundTintList = ColorStateList.valueOf(prefs.headerColor.withMinAlpha(200))
+        fab.backgroundTintList = ColorStateList.valueOf(themeProvider.headerColor.withMinAlpha(200))
         fab.hide()
         appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             if (!hasFab) return@OnOffsetChangedListener
@@ -351,12 +351,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             if (shouldShow) {
                 if (fab.isShown) {
                     fab.fadeScaleTransition {
-                        setIcon(iicon, color = prefs.iconColor)
+                        setIcon(iicon, color = themeProvider.iconColor)
                     }
                     return
                 }
             }
-            fab.setIcon(iicon, color = prefs.iconColor)
+            fab.setIcon(iicon, color = themeProvider.iconColor)
             fab.showIf(shouldShow)
         }
     }
@@ -383,7 +383,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         private var pendingUpdate: Boolean = false
         private val binding = ViewNavHeaderBinding.inflate(layoutInflater)
         val root: View get() = binding.root
-        private val optionsBackground = prefs.bgColor.withMinAlpha(200).colorToForeground(
+        private val optionsBackground = themeProvider.bgColor.withMinAlpha(200).colorToForeground(
             0.1f
         )
 
@@ -448,7 +448,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     animator.start()
                 }
 
-                val textColor = prefs.textColor
+                val textColor = themeProvider.textColor
 
                 fun TextView.setOptionsIcon(iicon: IIcon) {
                     setCompoundDrawablesRelativeWithIntrinsicBounds(
@@ -458,7 +458,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         null
                     )
                     setTextColor(textColor)
-                    background = createNavDrawable(prefs.accentColor, optionsBackground)
+                    background = createNavDrawable(themeProvider.accentColor, optionsBackground)
                 }
 
                 with(optionsLogout) {
@@ -506,7 +506,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 arrow.setImageDrawable(
                     GoogleMaterial.Icon.gmd_arrow_drop_down.toDrawable(
                         this@BaseMainActivity,
-                        color = prefs.textColor
+                        color = themeProvider.textColor
                     )
                 )
             }
@@ -531,10 +531,10 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             avatarTertiary.setAccount(orderedAccounts.getOrNull(2), false)
             optionsAccountsContainer.removeAllViews()
             name.text = orderedAccounts.getOrNull(0)?.name
-            name.setTextColor(prefs.textColor)
+            name.setTextColor(themeProvider.textColor)
             val glide = Glide.with(root)
             val accountSize = dimenPixelSize(R.dimen.drawer_account_avatar_size)
-            val textColor = prefs.textColor
+            val textColor = themeProvider.textColor
             orderedAccounts.forEach { cookie ->
                 val tv =
                     TextView(
@@ -568,7 +568,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                     })
                 tv.text = cookie.name
                 tv.setTextColor(textColor)
-                tv.background = createNavDrawable(prefs.accentColor, optionsBackground)
+                tv.background = createNavDrawable(themeProvider.accentColor, optionsBackground)
                 tv.setOnClickListener {
                     switchAccount(cookie.id)
                 }
@@ -626,9 +626,9 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        contentBinding.toolbar.tint(prefs.iconColor)
+        contentBinding.toolbar.tint(themeProvider.iconColor)
         setMenuIcons(
-            menu, prefs.iconColor,
+            menu, themeProvider.iconColor,
             R.id.action_settings to GoogleMaterial.Icon.gmd_settings,
             R.id.action_search to GoogleMaterial.Icon.gmd_search
         )
@@ -638,7 +638,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
 
     private fun bindSearchView(menu: Menu) {
         searchViewBindIfNull {
-            bindSearchView(menu, R.id.action_search, prefs.iconColor) {
+            bindSearchView(menu, R.id.action_search, themeProvider.iconColor) {
                 textCallback = { query, searchView ->
                     val results = searchViewCache[query]
                     if (results != null)
@@ -671,8 +671,8 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         ); true
                     }
                 closeListener = { _ -> searchViewCache.clear() }
-                foregroundColor = prefs.textColor
-                backgroundColor = prefs.bgColor.withMinAlpha(200)
+                foregroundColor = themeProvider.textColor
+                backgroundColor = themeProvider.bgColor.withMinAlpha(200)
                 onItemClick = { _, key, _, _ -> launchWebOverlay(key, fbCookie, prefs) }
             }
         }
@@ -731,7 +731,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 fragmentChannel.offer(REQUEST_REFRESH)
             }
             if (hasRequest(REQUEST_NAV)) {
-                frostNavigationBar(prefs)
+                frostNavigationBar(prefs, themeProvider)
             }
             if (hasRequest(REQUEST_TEXT_ZOOM)) {
                 fragmentChannel.offer(REQUEST_TEXT_ZOOM)

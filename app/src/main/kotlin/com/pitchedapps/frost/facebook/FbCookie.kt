@@ -30,6 +30,7 @@ import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchLogin
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -44,7 +45,8 @@ import org.koin.dsl.module
 class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
 
     companion object {
-        private const val COOKIE_DOMAIN = FB_URL_BASE
+        private const val FB_COOKIE_DOMAIN = HTTPS_FACEBOOK_COM
+        private const val MESSENGER_COOKIE_DOMAIN = HTTPS_MESSENGER_COM
 
         fun module() = module {
             single { FbCookie(get(), get()) }
@@ -56,35 +58,39 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
      * Note that this is a synchronized call
      */
     val webCookie: String?
-        get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
+        get() = CookieManager.getInstance().getCookie(FB_COOKIE_DOMAIN)
 
-    private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
+    val messengerCookie: String?
+        get() = CookieManager.getInstance().getCookie(HTTPS_MESSENGER_COM)
+
+    private suspend fun CookieManager.suspendSetWebCookie(
+        domain: String,
+        cookie: String?
+    ): Boolean {
         cookie ?: return true
         return withContext(NonCancellable) {
-            removeAllCookies()
             // Save all cookies regardless of result, then check if all succeeded
             val result = cookie.split(";")
-                .map { async { setSingleWebCookie(it) } }
+                .map { async { setSingleWebCookie(domain, it) } }
                 .awaitAll().all { it }
-            flush()
             L.d { "Cookies set" }
             L._d { "Set $cookie\n\tResult $webCookie" }
             result
         }
     }
 
+    private suspend fun CookieManager.setSingleWebCookie(domain: String, cookie: String): Boolean =
+        suspendCoroutine { cont ->
+            setCookie(domain, cookie.trim()) {
+                cont.resume(it)
+            }
+        }
+
     private suspend fun CookieManager.removeAllCookies(): Boolean = suspendCoroutine { cont ->
         removeAllCookies {
             cont.resume(it)
         }
     }
-
-    private suspend fun CookieManager.setSingleWebCookie(cookie: String): Boolean =
-        suspendCoroutine { cont ->
-            setCookie(COOKIE_DOMAIN, cookie.trim()) {
-                cont.resume(it)
-            }
-        }
 
     suspend fun save(id: Long) {
         L.d { "New cookie found" }
@@ -96,9 +102,11 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
 
     suspend fun reset() {
         prefs.userId = -1L
-        with(CookieManager.getInstance()) {
-            removeAllCookies()
-            flush()
+        withContext(Dispatchers.Main + NonCancellable) {
+            with(CookieManager.getInstance()) {
+                removeAllCookies()
+                flush()
+            }
         }
     }
 
@@ -108,14 +116,19 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
     }
 
     suspend fun switchUser(cookie: CookieEntity?) {
-        if (cookie == null) {
+        if (cookie?.cookie == null) {
             L.d { "Switching User; null cookie" }
             return
         }
-        withContext(NonCancellable) {
+        withContext(Dispatchers.Main + NonCancellable) {
             L.d { "Switching User" }
             prefs.userId = cookie.id
-            CookieManager.getInstance().suspendSetWebCookie(cookie.cookie)
+            CookieManager.getInstance().apply {
+                removeAllCookies()
+                suspendSetWebCookie(FB_COOKIE_DOMAIN, cookie.cookie)
+                suspendSetWebCookie(MESSENGER_COOKIE_DOMAIN, cookie.cookieMessenger)
+                flush()
+            }
         }
     }
 

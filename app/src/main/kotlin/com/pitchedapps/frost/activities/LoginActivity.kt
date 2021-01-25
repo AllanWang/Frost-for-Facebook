@@ -80,15 +80,13 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors(prefs) {
+        setFrostColors {
             toolbar(toolbar)
         }
         profileLoader = GlideApp.with(profile)
         launch {
             for (refreshing in refreshChannel.uniqueOnly(this)) {
-                if (refreshing) swipeRefresh.isEnabled = true
                 swipeRefresh.isRefreshing = refreshing
-                if (!refreshing) swipeRefresh.isEnabled = false
             }
         }
         launch {
