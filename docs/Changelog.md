@@ -2,7 +2,7 @@
 
 ## v3.0.0
 * Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails
-* Added initial support for messenger.com
+* Added initial support for messenger.com (settings > appearance > main activity tabs)
 * Fix swipe to refresh not disabling for certain pages
 
 ## v2.4.7
