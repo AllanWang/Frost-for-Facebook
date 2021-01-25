@@ -24,6 +24,7 @@ import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.deleteById
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectById
+import com.pitchedapps.frost.db.updateMessengerCookie
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cookies
@@ -115,14 +116,16 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
             L.d { "Switching User; null cookie" }
             return
         }
+        val currentId = prefs.userId
         withContext(Dispatchers.IO + NonCancellable) {
             L.d { "Switching User" }
-            // TODO save old messenger cookie
+            // Save current messenger cookie state.
+            cookieDao.updateMessengerCookie(currentId, messengerCookie)
             prefs.userId = cookie.id
             CookieManager.getInstance().apply {
                 removeAllCookies()
                 suspendSetWebCookie(FB_COOKIE_DOMAIN, cookie.cookie)
-                // TODO set messenger cookie
+                suspendSetWebCookie(MESSENGER_COOKIE_DOMAIN, cookie.cookieMessenger)
                 flush()
             }
         }

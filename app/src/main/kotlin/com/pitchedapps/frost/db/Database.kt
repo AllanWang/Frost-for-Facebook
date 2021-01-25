@@ -31,7 +31,7 @@ interface FrostPrivateDao {
 
 @Database(
     entities = [CookieEntity::class, NotificationEntity::class, CacheEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class FrostPrivateDatabase : RoomDatabase(), FrostPrivateDao {
@@ -84,7 +84,7 @@ class FrostDatabase(
             val privateDb = Room.databaseBuilder(
                 context, FrostPrivateDatabase::class.java,
                 FrostPrivateDatabase.DATABASE_NAME
-            ).frostBuild()
+            ).addMigrations(COOKIES_MIGRATION_1_2).frostBuild()
             val publicDb = Room.databaseBuilder(
                 context, FrostPublicDatabase::class.java,
                 FrostPublicDatabase.DATABASE_NAME
