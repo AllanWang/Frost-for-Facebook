@@ -96,6 +96,8 @@ interface FragmentContract : FrostContentContainer {
     fun onBackPressed(): Boolean
 
     fun onTabClick()
+
+    fun onTabLongClick()
 }
 
 interface RecyclerContentContract {

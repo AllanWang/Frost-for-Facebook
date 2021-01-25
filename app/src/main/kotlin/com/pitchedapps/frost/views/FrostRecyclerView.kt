@@ -26,6 +26,9 @@ import ca.allanwang.kau.utils.fadeOut
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.contracts.onTabLongClicked
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.prefs.Prefs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,6 +50,8 @@ class FrostRecyclerView @JvmOverloads constructor(
     FrostContentCore {
 
     private val prefs: Prefs by inject()
+    private val fbCookie: FbCookie by inject()
+    private val cookieDao: CookieDao by inject()
 
     override fun reload(animate: Boolean) = reloadBase(animate)
 
@@ -105,6 +110,10 @@ class FrostRecyclerView @JvmOverloads constructor(
             (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
         if (firstPosition == 0) reloadBase(true)
         else scrollToTop()
+    }
+
+    override fun onTabLongClicked() {
+        onTabLongClicked(context, prefs, fbCookie, cookieDao)
     }
 
     private fun scrollToTop() {

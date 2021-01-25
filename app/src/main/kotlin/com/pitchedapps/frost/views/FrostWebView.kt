@@ -29,6 +29,7 @@ import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.contracts.onTabLongClicked
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
@@ -195,6 +196,10 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     private fun smoothScrollBy(y: Int) = smoothScrollTo(max(0, scrollY + y))
+
+    override fun onTabLongClicked() {
+        onTabLongClicked(context, prefs, fbCookie, cookieDao)
+    }
 
     override var active: Boolean = true
         set(value) {

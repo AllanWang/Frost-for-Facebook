@@ -16,11 +16,19 @@
  */
 package com.pitchedapps.frost.contracts
 
+import android.content.Context
 import android.view.View
+import ca.allanwang.kau.utils.materialDialog
+import com.pitchedapps.frost.R
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.updateMessengerCookie
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.prefs.Prefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -172,7 +180,36 @@ interface FrostContentCore : DynamicUiContract {
     fun onTabClicked()
 
     /**
+     * Triggered when view is within viewpager
+     * and tab is long clicked
+     */
+    fun onTabLongClicked()
+
+    /**
      * Signal destruction to release some content manually
      */
     fun destroy()
+}
+
+internal fun FrostContentCore.onTabLongClicked(
+    context: Context,
+    prefs: Prefs,
+    fbCookie: FbCookie,
+    cookieDao: CookieDao
+) {
+    when (parent.baseEnum) {
+        FbItem.MESSENGER -> {
+            context.materialDialog {
+                message(R.string.messenger_logout)
+                positiveButton(R.string.kau_logout) {
+                    scope.launch {
+                        fbCookie.removeMessengerCookie()
+                        cookieDao.updateMessengerCookie(prefs.userId, null)
+                        reloadBase(true)
+                    }
+                }
+                negativeButton(R.string.kau_cancel)
+            }
+        }
+    }
 }
