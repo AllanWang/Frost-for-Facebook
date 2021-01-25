@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 //apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
@@ -202,11 +202,6 @@ android {
                 events 'skipped', 'failed', 'standardError'
             }
         }
-    }
-
-    androidExtensions {
-        experimental = true
-        features = ["parcelize"]
     }
 
 }
