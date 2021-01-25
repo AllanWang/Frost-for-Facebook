@@ -251,6 +251,4 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
     override fun onBackPressed(): Boolean = content?.core?.onBackPressed() ?: false
 
     override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
-
-    override fun onTabLongClick(): Unit = content?.core?.onTabLongClicked() ?: Unit
 }

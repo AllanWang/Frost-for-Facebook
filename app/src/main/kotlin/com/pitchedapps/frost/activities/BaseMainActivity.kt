@@ -846,7 +846,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                             .setCustomView(BadgedIcon(this@BaseMainActivity).apply {
                                 iicon = fbItem.icon
                             }.also {
-                                it.init(index, fbItem)
+                                it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
                             })
                     )
                 }
@@ -858,15 +858,6 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                         fragmentChannel.offer(0)
                     }
                 } // trigger hook so title is set
-            }
-        }
-
-        private fun BadgedIcon.init(index: Int, fbItem: FbItem) {
-            setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
-            setOnLongClickListener {
-                if (index != contentBinding.viewpager.currentItem) return@setOnLongClickListener false
-                currentFragment?.onTabLongClick()
-                true
             }
         }
 

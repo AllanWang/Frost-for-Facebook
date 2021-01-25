@@ -110,22 +110,6 @@ class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
         }
     }
 
-    /**
-     * As far as I'm aware there is no way to remove a specific cookie.
-     * As we only care about fb and messenger cookies, this is a workaround
-     * in which we remove all cookies then add back the fb one.
-     */
-    suspend fun removeMessengerCookie() {
-        withContext(Dispatchers.Main + NonCancellable) {
-            val fbCookie = webCookie
-            with(CookieManager.getInstance()) {
-                removeAllCookies()
-                suspendSetWebCookie(FB_COOKIE_DOMAIN, fbCookie)
-                flush()
-            }
-        }
-    }
-
     suspend fun switchUser(id: Long) {
         val cookie = cookieDao.selectById(id) ?: return L.e { "No cookie for id" }
         switchUser(cookie)
