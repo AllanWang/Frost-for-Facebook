@@ -3,7 +3,7 @@ object Versions {
     const val targetSdk = 29
 
     // https://developer.android.com/jetpack/androidx/releases/biometric
-    const val andxBiometric = "1.0.1"
+    const val andxBiometric = "1.1.0"
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     // Updates blocked due to javax.script dependency
@@ -22,5 +22,5 @@ object Versions {
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
     const val scaleImageView = "3.10.0"
     // https://github.com/node-gradle/gradle-node-plugin/releases
-    const val nodeGradle = "2.2.4"
+    const val nodeGradle = "3.0.1"
 }
