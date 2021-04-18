@@ -56,7 +56,6 @@ import com.pitchedapps.frost.widgets.NotificationWidget
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import javax.inject.Inject
 
 /**
@@ -71,8 +70,11 @@ class IntroActivity :
     ViewPager.PageTransformer,
     ViewPager.OnPageChangeListener {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     @Inject
     lateinit var activityThemer: ActivityThemer

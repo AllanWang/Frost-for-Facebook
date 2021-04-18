@@ -36,7 +36,6 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createFreshDir
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
-import org.koin.android.ext.android.inject
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -58,7 +57,8 @@ class DebugActivity : KauBaseActivity() {
     @Inject
     lateinit var activityThemer: ActivityThemer
 
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     lateinit var binding: ActivityDebugBinding
 
