@@ -58,19 +58,28 @@ import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
 import com.pitchedapps.frost.utils.setFrostTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
+@AndroidEntryPoint
 class SettingsActivity : KPrefActivity() {
 
-    val fbCookie: FbCookie by inject()
-    val notifDao: NotificationDao by inject()
-    val prefs: Prefs by inject()
-    val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var notifDao: NotificationDao
 
     private var resultFlag = Activity.RESULT_CANCELED
 
@@ -230,7 +239,11 @@ class SettingsActivity : KPrefActivity() {
     fun themeExterior(animate: Boolean = true) {
         if (animate) bgCanvas.fade(themeProvider.bgColor)
         else bgCanvas.set(themeProvider.bgColor)
-        if (animate) toolbarCanvas.ripple(themeProvider.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
+        if (animate) toolbarCanvas.ripple(
+            themeProvider.headerColor,
+            RippleCanvas.MIDDLE,
+            RippleCanvas.END
+        )
         else toolbarCanvas.set(themeProvider.headerColor)
         frostNavigationBar(prefs, themeProvider)
     }
