@@ -20,14 +20,10 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.util.Log
-import ca.allanwang.kau.kpref.KPrefFactory
-import ca.allanwang.kau.kpref.KPrefFactoryAndroid
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
 import com.pitchedapps.frost.db.CookieDao
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.NotificationDao
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
@@ -35,12 +31,6 @@ import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
 import dagger.hilt.android.HiltAndroidApp
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.component.KoinComponent
-import org.koin.core.context.startKoin
-import org.koin.core.module.Module
-import org.koin.dsl.module
 import java.util.Random
 import javax.inject.Inject
 
@@ -48,7 +38,7 @@ import javax.inject.Inject
  * Created by Allan Wang on 2017-05-28.
  */
 @HiltAndroidApp
-class FrostApp : Application(), KoinComponent {
+class FrostApp : Application() {
 
     @Inject
     lateinit var prefs: Prefs
@@ -63,28 +53,10 @@ class FrostApp : Application(), KoinComponent {
     lateinit var notifDao: NotificationDao
 
     override fun onCreate() {
-        startKoin {
-            if (BuildConfig.DEBUG) {
-                androidLogger()
-            }
-            androidContext(this@FrostApp)
-            modules(
-                listOf(
-                    FrostDatabase.module(),
-                    prefFactoryModule(),
-                    Prefs.module(),
-                    FbCookie.module(),
-                    ThemeProvider.module()
-                )
-            )
-        }
-
         super.onCreate()
 
         if (!buildIsLollipopAndUp) return // not supported
 
-//        prefs = get()
-//        themeProvider = get()
         initPrefs()
 
         L.i { "Begin Frost for Facebook" }
@@ -133,13 +105,5 @@ class FrostApp : Application(), KoinComponent {
             prefs.identifier = Random().nextInt(Int.MAX_VALUE)
         }
         prefs.lastLaunch = System.currentTimeMillis()
-    }
-
-    companion object {
-        fun prefFactoryModule(): Module = module {
-            single<KPrefFactory> {
-                KPrefFactoryAndroid(get())
-            }
-        }
     }
 }

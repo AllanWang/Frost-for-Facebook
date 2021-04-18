@@ -37,7 +37,6 @@ import com.pitchedapps.frost.utils.isFacebookUrl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
 import java.io.File
 import javax.inject.Inject
 
@@ -51,7 +50,7 @@ class DebugWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr), KoinComponent {
+) : WebView(context, attrs, defStyleAttr) {
 
     @Inject
     lateinit var prefs: Prefs

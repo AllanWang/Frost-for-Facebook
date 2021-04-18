@@ -401,7 +401,7 @@ internal enum class FabStates(
             } catch (e: Exception) {
                 activity.errorRef = e
                 e.logFrostEvent("Image share failed")
-                activity.frostSnackbar(R.string.image_share_failed)
+                activity.frostSnackbar(R.string.image_share_failed, activity.themeProvider)
             }
         }
     };

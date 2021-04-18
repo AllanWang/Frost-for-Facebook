@@ -266,15 +266,23 @@ fun Throwable?.logFrostEvent(text: String) {
     frostEvent("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
-    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun Activity.frostSnackbar(
+    @StringRes text: Int,
+    themeProvider: ThemeProvider,
+    builder: Snackbar.() -> Unit = {}
+) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(themeProvider, builder))
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
-    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun View.frostSnackbar(
+    @StringRes text: Int,
+    themeProvider: ThemeProvider,
+    builder: Snackbar.() -> Unit = {}
+) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(themeProvider, builder))
 
 @SuppressLint("RestrictedApi")
-private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
-    val themeProvider = ThemeProvider.get()
+private inline fun frostSnackbar(
+    themeProvider: ThemeProvider,
+    crossinline builder: Snackbar.() -> Unit
+): Snackbar.() -> Unit = {
     builder()
     // hacky workaround, but it has proper checks and shouldn't crash
     ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
@@ -421,18 +429,20 @@ fun Context.frostUri(entry: String): Uri {
 
 inline fun Context.sendFrostEmail(
     @StringRes subjectId: Int,
+    prefs: Prefs,
     crossinline builder: EmailBuilder.() -> Unit
-) =
-    sendFrostEmail(string(subjectId), builder)
+) = sendFrostEmail(string(subjectId), prefs, builder)
 
-inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =
-    sendEmail("", subjectId) {
-        builder()
-        addFrostDetails()
-    }
+inline fun Context.sendFrostEmail(
+    subjectId: String,
+    prefs: Prefs,
+    crossinline builder: EmailBuilder.() -> Unit
+) = sendEmail("", subjectId) {
+    builder()
+    addFrostDetails(prefs)
+}
 
-fun EmailBuilder.addFrostDetails() {
-    val prefs = Prefs.get()
+fun EmailBuilder.addFrostDetails(prefs: Prefs) {
     addItem("Prev version", prefs.prevVersionCode.toString())
     val proTag = "FO"
     addItem("Random Frost ID", "${prefs.frostId}-$proTag")

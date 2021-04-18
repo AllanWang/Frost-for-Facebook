@@ -29,7 +29,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.pitchedapps.frost.facebook.FbCookie
 import okhttp3.Interceptor
 import okhttp3.Response
-import org.koin.core.component.KoinComponent
 import javax.inject.Inject
 
 /**
@@ -66,7 +65,7 @@ class FrostGlideModule : AppGlideModule() {
 
 class FrostCookieInterceptor @Inject internal constructor(
     private val fbCookie: FbCookie
-) : Interceptor, KoinComponent {
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val origRequest = chain.request()

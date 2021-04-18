@@ -26,7 +26,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.koin.dsl.module
 import javax.inject.Singleton
 
 interface FrostPrivateDao {
@@ -96,14 +95,6 @@ class FrostDatabase(
                 FrostPublicDatabase.DATABASE_NAME
             ).frostBuild()
             return FrostDatabase(privateDb, publicDb)
-        }
-
-        fun module() = module {
-            single { create(get()) }
-            single { get<FrostDatabase>().cookieDao() }
-            single { get<FrostDatabase>().cacheDao() }
-            single { get<FrostDatabase>().notifDao() }
-            single { get<FrostDatabase>().genericDao() }
         }
     }
 }

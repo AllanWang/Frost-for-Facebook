@@ -37,7 +37,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.core.context.GlobalContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import javax.inject.Inject
@@ -72,15 +71,6 @@ interface ThemeProvider {
     fun reset()
 
     suspend fun preload()
-
-    companion object {
-
-        fun get(): ThemeProvider = GlobalContext.get().get()
-
-        fun module() = org.koin.dsl.module {
-            single<ThemeProvider> { ThemeProviderImpl(get(), get()) }
-        }
-    }
 }
 
 /**

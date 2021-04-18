@@ -32,6 +32,7 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.input.input
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityContract
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostWebView
@@ -46,7 +47,10 @@ import kotlinx.coroutines.channels.SendChannel
 /**
  * The default chrome client
  */
-class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
+class FrostChromeClient(
+    web: FrostWebView,
+    private val themeProvider: ThemeProvider
+) : WebChromeClient() {
 
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val progress: SendChannel<Int> = web.parent.progressChannel
@@ -80,7 +84,7 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
         fileChooserParams: FileChooserParams
     ): Boolean {
         activity?.openFileChooser(filePathCallback, fileChooserParams)
-            ?: webView.frostSnackbar(R.string.file_chooser_not_found)
+            ?: webView.frostSnackbar(R.string.file_chooser_not_found, themeProvider)
         return activity != null
     }
 

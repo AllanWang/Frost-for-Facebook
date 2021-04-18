@@ -37,8 +37,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.koin.core.context.GlobalContext
-import org.koin.dsl.module
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,32 +55,7 @@ interface Prefs :
     NotifPrefs,
     ThemePrefs,
     ShowcasePrefs,
-    PrefsBase {
-    companion object {
-        fun get(): Prefs = GlobalContext.get().get()
-
-        fun module() = module {
-            single<BehaviourPrefs> { BehaviourPrefsImpl(get(), get()) }
-            single<CorePrefs> { CorePrefsImpl(get(), get()) }
-            single<FeedPrefs> { FeedPrefsImpl(get(), get()) }
-            single<NotifPrefs> { NotifPrefsImpl(get(), get()) }
-            single<ThemePrefs> { ThemePrefsImpl(get(), get()) }
-            single<ShowcasePrefs> { ShowcasePrefsImpl(get()) }
-            single<Prefs> {
-                PrefsImpl(
-                    behaviourPrefs = get(),
-                    corePrefs = get(),
-                    feedPrefs = get(),
-                    notifPrefs = get(),
-                    themePrefs = get(),
-                    showcasePrefs = get()
-                )
-            }
-            // Needed for migration
-            single<OldPrefs> { OldPrefs(factory = get()) }
-        }
-    }
-}
+    PrefsBase
 
 class PrefsImpl @Inject internal constructor(
     private val behaviourPrefs: BehaviourPrefs,

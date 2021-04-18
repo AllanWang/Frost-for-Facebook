@@ -69,7 +69,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     fun KPrefColorPicker.KPrefColorContract.dependsOnCustom() {
         enabler = themeProvider::isCustomTheme
-        onDisabledClick = { frostSnackbar(R.string.requires_custom_theme) }
+        onDisabledClick = { frostSnackbar(R.string.requires_custom_theme, themeProvider) }
         allowCustom = true
     }
 

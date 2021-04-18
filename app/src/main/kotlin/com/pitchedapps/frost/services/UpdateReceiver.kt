@@ -22,7 +22,6 @@ import android.content.Intent
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.core.component.KoinComponent
 import javax.inject.Inject
 
 /**
@@ -31,7 +30,7 @@ import javax.inject.Inject
  * Receiver that is triggered whenever the app updates so it can bind the notifications again
  */
 @AndroidEntryPoint
-class UpdateReceiver : BroadcastReceiver(), KoinComponent {
+class UpdateReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var prefs: Prefs

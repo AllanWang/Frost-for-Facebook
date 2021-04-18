@@ -215,7 +215,7 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             val text =
                 if (fetchNotifications()) R.string.notification_fetch_success
                 else R.string.notification_fetch_fail
-            frostSnackbar(text)
+            frostSnackbar(text, themeProvider)
         }
     }
 }

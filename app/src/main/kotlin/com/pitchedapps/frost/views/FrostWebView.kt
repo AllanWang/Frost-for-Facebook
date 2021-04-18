@@ -98,7 +98,7 @@ class FrostWebView @JvmOverloads constructor(
         // attempt to get custom client; otherwise fallback to original
         frostWebClient = (container as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
-        webChromeClient = FrostChromeClient(this)
+        webChromeClient = FrostChromeClient(this, themeProvider)
         addJavascriptInterface(FrostJSI(this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->

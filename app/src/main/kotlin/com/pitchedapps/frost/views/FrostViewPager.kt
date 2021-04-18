@@ -23,7 +23,6 @@ import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 import com.pitchedapps.frost.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.core.component.KoinComponent
 import javax.inject.Inject
 
 /**
@@ -32,8 +31,10 @@ import javax.inject.Inject
  * Basic override to allow us to control swiping
  */
 @AndroidEntryPoint
-class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-    ViewPager(context, attrs), KoinComponent {
+class FrostViewPager @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : ViewPager(context, attrs) {
 
     @Inject
     lateinit var prefs: Prefs

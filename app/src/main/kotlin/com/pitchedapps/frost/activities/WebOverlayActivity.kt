@@ -231,7 +231,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
                 authDefer.await()
                 reloadBase(true)
                 if (prefs.firstWebOverlay) {
-                    coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                    coordinator.frostSnackbar(R.string.web_overlay_swipe_hint, themeProvider) {
                         duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                         setAction(R.string.kau_got_it) { dismiss() }
                     }

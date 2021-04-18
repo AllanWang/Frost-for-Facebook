@@ -33,7 +33,6 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import org.koin.dsl.module
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -51,10 +50,6 @@ class FbCookie @Inject internal constructor(
     companion object {
         private const val FB_COOKIE_DOMAIN = HTTPS_FACEBOOK_COM
         private const val MESSENGER_COOKIE_DOMAIN = HTTPS_MESSENGER_COM
-
-        fun module() = module {
-            single { FbCookie(get(), get()) }
-        }
     }
 
     /**

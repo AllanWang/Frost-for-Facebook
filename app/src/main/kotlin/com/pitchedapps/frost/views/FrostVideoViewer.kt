@@ -49,7 +49,6 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostDownload
 import dagger.hilt.android.AndroidEntryPoint
-import org.koin.core.component.KoinComponent
 import javax.inject.Inject
 
 /**
@@ -60,7 +59,7 @@ class FrostVideoViewer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract, KoinComponent {
+) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
 
     companion object {
         /**
