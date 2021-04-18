@@ -31,8 +31,6 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 30/12/17.
@@ -74,14 +72,18 @@ interface ClickableIItemContract {
  */
 open class HeaderIItem(
     val text: String?,
-    itemId: Int = R.layout.iitem_header
-) : KauIItem<HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
+    itemId: Int = R.layout.iitem_header,
+    private val themeProvider: ThemeProvider
+) : KauIItem<HeaderIItem.ViewHolder>(
+    R.layout.iitem_header,
+    { ViewHolder(it, themeProvider) },
+    itemId
+) {
 
-    class ViewHolder(itemView: View) :
-        FastAdapter.ViewHolder<HeaderIItem>(itemView),
-        KoinComponent {
-
-        private val themeProvider: ThemeProvider by inject()
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<HeaderIItem>(itemView) {
 
         val text: TextView by bindView(R.id.item_header_text)
 
@@ -104,20 +106,23 @@ open class HeaderIItem(
 open class TextIItem(
     val text: String?,
     override val url: String?,
-    itemId: Int = R.layout.iitem_text
-) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
+    itemId: Int = R.layout.iitem_text,
+    private val themeProvider: ThemeProvider
+) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, { ViewHolder(it, themeProvider) }, itemId),
     ClickableIItemContract {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView), KoinComponent {
-
-        private val themeProvider: ThemeProvider by inject()
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<TextIItem>(itemView) {
 
         val text: TextView by bindView(R.id.item_text_view)
 
         override fun bindView(item: TextIItem, payloads: List<Any>) {
             text.setTextColor(themeProvider.textColor)
             text.text = item.text
-            text.background = createSimpleRippleDrawable(themeProvider.bgColor, themeProvider.nativeBgColor)
+            text.background =
+                createSimpleRippleDrawable(themeProvider.bgColor, themeProvider.nativeBgColor)
         }
 
         override fun unbindView(item: TextIItem) {
