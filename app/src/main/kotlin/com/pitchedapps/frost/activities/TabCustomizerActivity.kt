@@ -85,7 +85,7 @@ class TabCustomizerActivity : BaseActivity() {
             val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
             remaining.removeAll(tabs)
             tabs.addAll(remaining)
-            adapter.set(tabs.map(::TabIItem))
+            adapter.set(tabs.map { TabIItem(it, themeProvider) })
 
             bindSwapper(adapter, tabRecycler)
 

@@ -48,12 +48,14 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostDownload
+import dagger.hilt.android.AndroidEntryPoint
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-10-13.
  */
+@AndroidEntryPoint
 class FrostVideoViewer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -88,9 +90,14 @@ class FrostVideoViewer @JvmOverloads constructor(
         }
     }
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
-    private val cookieDao: CookieDao by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     private val binding: ViewVideoBinding =
         ViewVideoBinding.inflate(LayoutInflater.from(context), this, true)

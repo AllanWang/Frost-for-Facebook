@@ -49,7 +49,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -90,11 +89,17 @@ abstract class BaseFragment :
     }
 
     @Inject
-    lateinit var mainContract: MainActivityContract
+    protected lateinit var mainContract: MainActivityContract
 
-    protected val fbCookie: FbCookie by inject()
-    protected val prefs: Prefs by inject()
-    protected val themeProvider: ThemeProvider by inject()
+    @Inject
+    protected lateinit var fbCookie: FbCookie
+
+    @Inject
+    protected lateinit var prefs: Prefs
+
+    @Inject
+    protected lateinit var themeProvider: ThemeProvider
+
     open lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
