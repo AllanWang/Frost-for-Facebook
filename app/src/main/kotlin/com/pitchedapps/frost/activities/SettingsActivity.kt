@@ -49,6 +49,7 @@ import com.pitchedapps.frost.settings.getFeedPrefs
 import com.pitchedapps.frost.settings.getNotificationPrefs
 import com.pitchedapps.frost.settings.getSecurityPrefs
 import com.pitchedapps.frost.settings.sendDebug
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
@@ -57,7 +58,6 @@ import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.pitchedapps.frost.utils.setFrostTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -80,6 +80,9 @@ class SettingsActivity : KPrefActivity() {
 
     @Inject
     lateinit var notifDao: NotificationDao
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
 
     private var resultFlag = Activity.RESULT_CANCELED
 
@@ -230,7 +233,7 @@ class SettingsActivity : KPrefActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFrostTheme(themeProvider, true)
+        activityThemer.setFrostTheme(forceTransparent = true)
         super.onCreate(savedInstanceState)
         animate = prefs.animate
         themeExterior(false)

@@ -24,7 +24,7 @@ import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import com.pitchedapps.frost.utils.setFrostTheme
+import com.pitchedapps.frost.utils.ActivityThemer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -43,6 +43,9 @@ abstract class BaseActivity : KauBaseActivity() {
     @Inject
     lateinit var themeProvider: ThemeProvider
 
+    @Inject
+    lateinit var activityThemer: ActivityThemer
+
     /**
      * Inherited consumer to customize back press
      */
@@ -57,7 +60,7 @@ abstract class BaseActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (this !is WebOverlayActivityBase) setFrostTheme(themeProvider)
+        if (this !is WebOverlayActivityBase) activityThemer.setFrostTheme()
     }
 
     override fun onStop() {

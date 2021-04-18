@@ -45,7 +45,6 @@ import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.logFrostEvent
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.web.LoginWebView
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +79,7 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors {
+        activityThemer.setFrostColors {
             toolbar(toolbar)
         }
         profileLoader = GlideApp.with(profile)

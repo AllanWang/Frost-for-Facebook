@@ -48,14 +48,16 @@ import com.pitchedapps.frost.intro.IntroFragmentWelcome
 import com.pitchedapps.frost.intro.IntroTabContextFragment
 import com.pitchedapps.frost.intro.IntroTabTouchFragment
 import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.widgets.NotificationWidget
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -63,6 +65,7 @@ import org.koin.android.ext.android.inject
  * A beautiful intro activity
  * Phone showcases are drawn via layers
  */
+@AndroidEntryPoint
 class IntroActivity :
     KauBaseActivity(),
     ViewPager.PageTransformer,
@@ -70,6 +73,10 @@ class IntroActivity :
 
     private val prefs: Prefs by inject()
     private val themeProvider: ThemeProvider by inject()
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
+
     lateinit var binding: ActivityIntroBinding
     private var barHasNext = true
 
@@ -116,7 +123,7 @@ class IntroActivity :
             indicator.invalidate()
         }
         fragments.forEach { it.themeFragment() }
-        setFrostTheme(themeProvider, true)
+        activityThemer.setFrostTheme(forceTransparent = true)
     }
 
     /**
@@ -159,7 +166,12 @@ class IntroActivity :
             if (f != null)
                 ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
-                        f.setTint(themeProvider.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                        f.setTint(
+                            themeProvider.textColor.blendWith(
+                                Color.WHITE,
+                                it.animatedValue as Float
+                            )
+                        )
                     }
                     duration = 600
                     start()

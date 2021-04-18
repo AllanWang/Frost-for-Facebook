@@ -122,7 +122,6 @@ import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchLogin
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.urlEncode
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
@@ -219,7 +218,7 @@ abstract class BaseMainActivity :
         }
         drawerWrapperBinding.mainContainer.addView(contentBinding.root)
         with(contentBinding) {
-            setFrostColors {
+            activityThemer.setFrostColors {
                 toolbar(toolbar)
                 themeWindow = false
                 header(appbar)

@@ -31,19 +31,21 @@ import com.pitchedapps.frost.databinding.ActivityDebugBinding
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createFreshDir
-import com.pitchedapps.frost.utils.setFrostColors
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
 import java.io.File
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 05/01/18.
  */
+@AndroidEntryPoint
 class DebugActivity : KauBaseActivity() {
 
     companion object {
@@ -52,6 +54,9 @@ class DebugActivity : KauBaseActivity() {
         const val RESULT_BODY = "extra_result_body"
         fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
     }
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
 
     private val themeProvider: ThemeProvider by inject()
 
@@ -72,7 +77,7 @@ class DebugActivity : KauBaseActivity() {
         }
         setTitle(R.string.debug_frost)
 
-        setFrostColors {
+        activityThemer.setFrostColors {
             toolbar(toolbar)
         }
         debugWebview.loadUrl(FbItem.FEED.url)

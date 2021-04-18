@@ -33,7 +33,6 @@ import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.launchTabCustomizerActivity
-import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.views.KPrefTextSeekbar
 
 /**
@@ -55,7 +54,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
                         item.pref = index
                         shouldRestartMain()
                         reload()
-                        setFrostTheme(themeProvider, true)
+                        activityThemer.setFrostTheme(forceTransparent = true)
                         themeExterior()
                         invalidateOptionsMenu()
                         frostEvent("Theme", "Count" to Theme(index).name)
@@ -110,7 +109,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
             prefs.customBackgroundColor = it
             bgCanvas.ripple(it, duration = 500L)
             invalidateCustomTheme()
-            setFrostTheme(themeProvider, true)
+            activityThemer.setFrostTheme(forceTransparent = true)
             shouldRestartMain()
         }
     ) {

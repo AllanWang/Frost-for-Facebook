@@ -42,18 +42,20 @@ import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.setFrostColors
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import java.util.Collections
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 26/11/17.
  */
+@AndroidEntryPoint
 class TabCustomizerActivity : BaseActivity() {
 
-    private val genericDao: GenericDao by inject()
+    @Inject
+    lateinit var genericDao: GenericDao
 
     private val adapter = FastItemAdapter<TabIItem>()
 
@@ -107,7 +109,7 @@ class TabCustomizerActivity : BaseActivity() {
         fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, themeProvider.iconColor)
         fabCancel.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
         fabCancel.setOnClickListener { finish() }
-        setFrostColors {
+        activityThemer.setFrostColors {
             themeWindow = true
         }
     }

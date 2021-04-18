@@ -29,7 +29,6 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.AccountItem
 import kotlinx.coroutines.launch
 
@@ -67,7 +66,7 @@ class SelectorActivity : BaseActivity() {
                 }
             }
         })
-        setFrostColors {
+        activityThemer.setFrostColors {
             text(text)
             background(container)
         }

@@ -67,7 +67,6 @@ import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostSnackbar
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
@@ -205,10 +204,11 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, themeProvider.iconColor)
+        toolbar.navigationIcon =
+            GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, themeProvider.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
 
-        setFrostColors {
+        activityThemer.setFrostColors {
             toolbar(toolbar)
             themeWindow = false
         }
