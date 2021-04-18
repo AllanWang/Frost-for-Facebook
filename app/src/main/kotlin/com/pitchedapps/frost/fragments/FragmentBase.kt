@@ -41,6 +41,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -49,7 +50,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -59,6 +60,7 @@ import kotlin.coroutines.CoroutineContext
  * Must be attached to activities implementing [MainActivityContract]
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
+@AndroidEntryPoint
 abstract class BaseFragment :
     Fragment(),
     CoroutineScope,
@@ -87,6 +89,9 @@ abstract class BaseFragment :
         }
     }
 
+    @Inject
+    lateinit var mainContract: MainActivityContract
+
     protected val fbCookie: FbCookie by inject()
     protected val prefs: Prefs by inject()
     protected val themeProvider: ThemeProvider by inject()
@@ -107,7 +112,7 @@ abstract class BaseFragment :
                 "Native Fallback",
                 "Item" to baseEnum.name
             )
-            (context as MainActivityContract).reloadFragment(this)
+            mainContract.reloadFragment(this)
         }
 
     override var firstLoad: Boolean = true
@@ -122,8 +127,6 @@ abstract class BaseFragment :
         super.onCreate(savedInstanceState)
         job = SupervisorJob()
         firstLoad = true
-        if (context !is MainActivityContract)
-            throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
     }
 
     final override fun onCreateView(
@@ -145,9 +148,7 @@ abstract class BaseFragment :
         onCreateRunnable = null
         firstLoadRequest()
         detachMainObservable()
-        (context as? MainActivityContract)?.let {
-            activityReceiver = attachMainObservable(it)
-        }
+        activityReceiver = attachMainObservable(mainContract)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -168,7 +169,7 @@ abstract class BaseFragment :
     }
 
     override fun setTitle(title: String) {
-        (context as? MainActivityContract)?.setTitle(title)
+        mainContract.setTitle(title)
     }
 
     override fun attachMainObservable(contract: MainActivityContract): ReceiveChannel<Int> {

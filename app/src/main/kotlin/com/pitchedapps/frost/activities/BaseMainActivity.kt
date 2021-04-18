@@ -128,7 +128,13 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -935,4 +941,14 @@ abstract class BaseMainActivity :
         const val SELECTED_TAB_ALPHA = 255f
         const val UNSELECTED_TAB_ALPHA = 128f
     }
+}
+
+@Module
+@InstallIn(ActivityComponent::class)
+object MainActivityModule {
+    @Provides
+    @ActivityScoped
+    fun contract(@ActivityContext context: Context): MainActivityContract =
+        (context as? BaseMainActivity)
+            ?: throw IllegalArgumentException("${context::class.java.simpleName} does not implement MainActivityContract")
 }

@@ -52,10 +52,10 @@ import kotlin.math.abs
 abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
 
     @Inject
-    lateinit var prefs: Prefs
+    protected lateinit var prefs: Prefs
 
     @Inject
-    lateinit var themeProvider: ThemeProvider
+    protected lateinit var themeProvider: ThemeProvider
 
     val screenWidth
         get() = resources.displayMetrics.widthPixels
