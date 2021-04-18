@@ -175,9 +175,12 @@ class SettingsActivity : KPrefActivity() {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = {
-                startActivityForResult<AboutActivity>(9, bundleBuilder = {
-                    withSceneTransitionAnimation(this@SettingsActivity)
-                })
+                startActivityForResult<AboutActivity>(
+                    9,
+                    bundleBuilder = {
+                        withSceneTransitionAnimation(this@SettingsActivity)
+                    }
+                )
             }
         }
 

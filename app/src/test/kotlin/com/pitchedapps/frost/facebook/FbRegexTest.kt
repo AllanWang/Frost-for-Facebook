@@ -16,9 +16,9 @@
  */
 package com.pitchedapps.frost.facebook
 
-import kotlin.test.assertEquals
 import org.apache.commons.text.StringEscapeUtils
 import org.junit.Test
+import kotlin.test.assertEquals
 
 /**
  * Created by Allan Wang on 24/12/17.

@@ -77,7 +77,8 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-    FrostContentParent, KoinComponent where T : View, T : FrostContentCore {
+    FrostContentParent,
+    KoinComponent where T : View, T : FrostContentCore {
 
     private val prefs: Prefs by inject()
     private val themeProvider: ThemeProvider by inject()

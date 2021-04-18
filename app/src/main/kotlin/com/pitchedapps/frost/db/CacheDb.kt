@@ -36,12 +36,14 @@ import kotlinx.android.parcel.Parcelize
 @Entity(
     tableName = "frost_cache",
     primaryKeys = ["id", "type"],
-    foreignKeys = [ForeignKey(
-        entity = CookieEntity::class,
-        parentColumns = ["cookie_id"],
-        childColumns = ["id"],
-        onDelete = ForeignKey.CASCADE
-    )]
+    foreignKeys = [
+        ForeignKey(
+            entity = CookieEntity::class,
+            parentColumns = ["cookie_id"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 @Parcelize
 data class CacheEntity(

@@ -20,6 +20,7 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.FeedSort
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -29,7 +30,8 @@ import com.pitchedapps.frost.enums.FeedSort
  * As of 2020-07-18, prefs have been split up into multiple folders
  */
 @Deprecated(level = DeprecationLevel.WARNING, message = "Use pref segments")
-class OldPrefs(factory: KPrefFactory) : KPref("${BuildConfig.APPLICATION_ID}.prefs", factory) {
+class OldPrefs @Inject internal constructor(factory: KPrefFactory) :
+    KPref("${BuildConfig.APPLICATION_ID}.prefs", factory) {
 
     var lastLaunch: Long by kpref("last_launch", -1L)
 

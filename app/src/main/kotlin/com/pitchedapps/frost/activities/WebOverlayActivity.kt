@@ -156,9 +156,12 @@ class WebOverlayDesktopActivity : WebOverlayActivityBase(USER_AGENT_DESKTOP_CONS
 class WebOverlayActivity : WebOverlayActivityBase()
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) : BaseActivity(),
-    ActivityContract, FrostContentContainer,
-    VideoViewHolder, FileChooserContract by FileChooserDelegate() {
+abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) :
+    BaseActivity(),
+    ActivityContract,
+    FrostContentContainer,
+    VideoViewHolder,
+    FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)

@@ -30,63 +30,109 @@ import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.BufferedReader
-import java.io.FileNotFoundException
-import javax.inject.Inject
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.context.GlobalContext
+import java.io.BufferedReader
+import java.io.FileNotFoundException
+import javax.inject.Inject
+import javax.inject.Singleton
+
+interface ThemeProvider {
+    val textColor: Int
+
+    val accentColor: Int
+
+    val accentColorForWhite: Int
+
+    val nativeBgColor: Int
+
+    fun nativeBgColor(unread: Boolean): Int
+
+    val bgColor: Int
+
+    val headerColor: Int
+
+    val iconColor: Int
+
+    val isCustomTheme: Boolean
+
+    /**
+     * Note that while this can be loaded from any thread, it is typically done through [preload]]
+     */
+    fun injector(category: ThemeCategory): InjectorContract
+
+    fun setTheme(id: Int)
+
+    fun reset()
+
+    suspend fun preload()
+
+    companion object {
+
+        fun get(): ThemeProvider = GlobalContext.get().get()
+
+        fun module() = org.koin.dsl.module {
+            single<ThemeProvider> { ThemeProviderImpl(get(), get()) }
+        }
+    }
+}
 
 /**
  * Provides [InjectorContract] for each [ThemeCategory].
  * Can be reloaded to take in changes from [Prefs]
  */
-class ThemeProvider @Inject internal constructor(
+class ThemeProviderImpl @Inject internal constructor(
     @ApplicationContext private val context: Context,
     private val prefs: Prefs
-) {
+) : ThemeProvider {
 
     private var theme: Theme = Theme.values[prefs.theme]
+        set(value) {
+            field = value
+            prefs.theme = value.ordinal
+        }
 
     private val injectors: MutableMap<ThemeCategory, InjectorContract> = mutableMapOf()
 
-    val textColor: Int
+    override val textColor: Int
         get() = theme.textColorGetter(prefs)
 
-    val accentColor: Int
+    override val accentColor: Int
         get() = theme.accentColorGetter(prefs)
 
-    val accentColorForWhite: Int
+    override val accentColorForWhite: Int
         get() = when {
             accentColor.isColorVisibleOn(Color.WHITE) -> accentColor
             textColor.isColorVisibleOn(Color.WHITE) -> textColor
             else -> FACEBOOK_BLUE
         }
 
-    val nativeBgColor: Int
+    override val nativeBgColor: Int
         get() = bgColor.withAlpha(30)
 
-    fun nativeBgColor(unread: Boolean) = bgColor
+    override fun nativeBgColor(unread: Boolean) = bgColor
         .colorToForeground(if (unread) 0.7f else 0.0f)
         .withAlpha(30)
 
-    val bgColor: Int
+    override val bgColor: Int
         get() = theme.backgroundColorGetter(prefs)
 
-    val headerColor: Int
+    override val headerColor: Int
         get() = theme.headerColorGetter(prefs)
 
-    val iconColor: Int
+    override val iconColor: Int
         get() = theme.iconColorGetter(prefs)
 
-    val isCustomTheme: Boolean
+    override val isCustomTheme: Boolean
         get() = theme == Theme.CUSTOM
 
-    /**
-     * Note that while this can be loaded from any thread, it is typically done through [preload]]
-     */
-    fun injector(category: ThemeCategory): InjectorContract =
+    override fun injector(category: ThemeCategory): InjectorContract =
         injectors.getOrPut(category) { createInjector(category) }
 
     /**
@@ -128,28 +174,28 @@ class ThemeProvider @Inject internal constructor(
         }
     }
 
-    fun setTheme(id: Int) {
+    override fun setTheme(id: Int) {
+        if (theme.ordinal == id) return
         theme = Theme.values[id]
         reset()
     }
 
-    fun reset() {
+    override fun reset() {
         injectors.clear()
     }
 
-    suspend fun preload() {
+    override suspend fun preload() {
         withContext(Dispatchers.IO) {
             reset()
             ThemeCategory.values().forEach { injector(it) }
         }
     }
+}
 
-    companion object {
-
-        fun get(): ThemeProvider = GlobalContext.get().get()
-
-        fun module() = org.koin.dsl.module {
-            single { ThemeProvider(get(), get()) }
-        }
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+interface ThemeProviderModule {
+    @Binds
+    @Singleton
+    fun themeProvider(to: ThemeProviderImpl): ThemeProvider
 }

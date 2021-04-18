@@ -38,8 +38,7 @@ interface ShowcasePrefs : PrefsBase {
  */
 class ShowcasePrefsImpl @Inject internal constructor(
     factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory),
-    ShowcasePrefs {
+) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory), ShowcasePrefs {
 
     override val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
 

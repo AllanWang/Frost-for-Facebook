@@ -18,9 +18,9 @@ package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.internal.authDependent
 import com.pitchedapps.frost.internal.testJsoup
-import kotlin.test.assertNotNull
 import org.junit.BeforeClass
 import org.junit.Test
+import kotlin.test.assertNotNull
 
 class FbDomTest {
 

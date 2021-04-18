@@ -36,10 +36,12 @@ import org.koin.core.component.inject
 /**
  * Created by Allan Wang on 26/11/17.
  */
-class TabIItem(val item: FbItem) : KauIItem<TabIItem.ViewHolder>(
-    R.layout.iitem_tab_preview,
-    { ViewHolder(it) }
-), IDraggable {
+class TabIItem(val item: FbItem) :
+    KauIItem<TabIItem.ViewHolder>(
+        R.layout.iitem_tab_preview,
+        { ViewHolder(it) }
+    ),
+    IDraggable {
 
     override val isDraggable: Boolean = true
 

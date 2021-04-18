@@ -34,12 +34,12 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createFreshDir
 import com.pitchedapps.frost.utils.setFrostColors
-import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CoroutineExceptionHandler
 import org.koin.android.ext.android.inject
 import org.koin.core.component.inject
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 05/01/18.

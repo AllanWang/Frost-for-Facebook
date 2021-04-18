@@ -43,7 +43,7 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
 
     header(R.string.theme_customization)
 
-    text(R.string.theme, prefs::theme, { prefs.theme = it }) {
+    text(R.string.theme, prefs::theme, { themeProvider.setTheme(it) }) {
         onClick = {
             materialDialog {
                 title(R.string.theme)
@@ -78,53 +78,68 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         themeProvider.reset()
     }
 
-    colorPicker(R.string.text_color, prefs::customTextColor, {
-        prefs.customTextColor = it
-        reload()
-        invalidateCustomTheme()
-        shouldRestartMain()
-    }) {
+    colorPicker(
+        R.string.text_color, prefs::customTextColor,
+        {
+            prefs.customTextColor = it
+            reload()
+            invalidateCustomTheme()
+            shouldRestartMain()
+        }
+    ) {
         dependsOnCustom()
         allowCustomAlpha = false
     }
 
-    colorPicker(R.string.accent_color, prefs::customAccentColor, {
-        prefs.customAccentColor = it
-        reload()
-        invalidateCustomTheme()
-        shouldRestartMain()
-    }) {
+    colorPicker(
+        R.string.accent_color, prefs::customAccentColor,
+        {
+            prefs.customAccentColor = it
+            reload()
+            invalidateCustomTheme()
+            shouldRestartMain()
+        }
+    ) {
         dependsOnCustom()
         allowCustomAlpha = false
     }
 
-    colorPicker(R.string.background_color, prefs::customBackgroundColor, {
-        prefs.customBackgroundColor = it
-        bgCanvas.ripple(it, duration = 500L)
-        invalidateCustomTheme()
-        setFrostTheme(themeProvider, true)
-        shouldRestartMain()
-    }) {
+    colorPicker(
+        R.string.background_color, prefs::customBackgroundColor,
+        {
+            prefs.customBackgroundColor = it
+            bgCanvas.ripple(it, duration = 500L)
+            invalidateCustomTheme()
+            setFrostTheme(themeProvider, true)
+            shouldRestartMain()
+        }
+    ) {
         dependsOnCustom()
         allowCustomAlpha = true
     }
 
-    colorPicker(R.string.header_color, prefs::customHeaderColor, {
-        prefs.customHeaderColor = it
-        frostNavigationBar(prefs, themeProvider)
-        toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
-        reload()
-        shouldRestartMain()
-    }) {
+    colorPicker(
+        R.string.header_color, prefs::customHeaderColor,
+        {
+            prefs.customHeaderColor = it
+            frostNavigationBar(prefs, themeProvider)
+            toolbarCanvas.ripple(it, RippleCanvas.MIDDLE, RippleCanvas.END, duration = 500L)
+            reload()
+            shouldRestartMain()
+        }
+    ) {
         dependsOnCustom()
         allowCustomAlpha = true
     }
 
-    colorPicker(R.string.icon_color, prefs::customIconColor, {
-        prefs.customIconColor = it
-        invalidateOptionsMenu()
-        shouldRestartMain()
-    }) {
+    colorPicker(
+        R.string.icon_color, prefs::customIconColor,
+        {
+            prefs.customIconColor = it
+            invalidateOptionsMenu()
+            shouldRestartMain()
+        }
+    ) {
         dependsOnCustom()
         allowCustomAlpha = false
     }
@@ -134,7 +149,8 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
     text(
         R.string.main_activity_layout,
         prefs::mainActivityLayoutType,
-        { prefs.mainActivityLayoutType = it }) {
+        { prefs.mainActivityLayoutType = it }
+    ) {
         textGetter = { string(prefs.mainActivityLayout.titleRes) }
         onClick = {
             materialDialog {
@@ -158,11 +174,14 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
         onClick = { launchTabCustomizerActivity() }
     }
 
-    checkbox(R.string.tint_nav, prefs::tintNavBar, {
-        prefs.tintNavBar = it
-        frostNavigationBar(prefs, themeProvider)
-        setFrostResult(REQUEST_NAV)
-    }) {
+    checkbox(
+        R.string.tint_nav, prefs::tintNavBar,
+        {
+            prefs.tintNavBar = it
+            frostNavigationBar(prefs, themeProvider)
+            setFrostResult(REQUEST_NAV)
+        }
+    ) {
         descRes = R.string.tint_nav_desc
     }
 
@@ -174,12 +193,16 @@ fun SettingsActivity.getAppearancePrefs(): KPrefAdapterBuilder.() -> Unit = {
             ) {
                 prefs.webTextScaling = it
                 setFrostResult(REQUEST_TEXT_ZOOM)
-            })
+            }
+        )
     )
 
-    checkbox(R.string.enforce_black_media_bg, prefs::blackMediaBg, {
-        prefs.blackMediaBg = it
-    }) {
+    checkbox(
+        R.string.enforce_black_media_bg, prefs::blackMediaBg,
+        {
+            prefs.blackMediaBg = it
+        }
+    ) {
         descRes = R.string.enforce_black_media_bg_desc
     }
 }

@@ -63,7 +63,9 @@ import org.koin.android.ext.android.inject
  * A beautiful intro activity
  * Phone showcases are drawn via layers
  */
-class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer,
+class IntroActivity :
+    KauBaseActivity(),
+    ViewPager.PageTransformer,
     ViewPager.OnPageChangeListener {
 
     private val prefs: Prefs by inject()

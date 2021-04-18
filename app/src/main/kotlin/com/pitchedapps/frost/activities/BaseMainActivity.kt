@@ -129,10 +129,10 @@ import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -141,9 +141,12 @@ import kotlinx.coroutines.launch
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
-abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
+abstract class BaseMainActivity :
+    BaseActivity(),
+    MainActivityContract,
     FileChooserContract by FileChooserDelegate(),
-    VideoViewHolder, SearchViewHolder {
+    VideoViewHolder,
+    SearchViewHolder {
 
     /**
      * Note that tabs themselves are initialized through a coroutine during onCreate
@@ -341,15 +344,17 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         shouldShow = false
         fab.backgroundTintList = ColorStateList.valueOf(themeProvider.headerColor.withMinAlpha(200))
         fab.hide()
-        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            if (!hasFab) return@OnOffsetChangedListener
-            val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
-            val shouldShow = percent < 0.2
-            if (this@BaseMainActivity.shouldShow != shouldShow) {
-                this@BaseMainActivity.shouldShow = shouldShow
-                fab.showIf(shouldShow)
+        appbar.addOnOffsetChangedListener(
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                if (!hasFab) return@OnOffsetChangedListener
+                val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
+                val shouldShow = percent < 0.2
+                if (this@BaseMainActivity.shouldShow != shouldShow) {
+                    this@BaseMainActivity.shouldShow = shouldShow
+                    fab.showIf(shouldShow)
+                }
             }
-        })
+        )
     }
 
     override fun showFab(iicon: IIcon, clickEvent: () -> Unit) {
@@ -851,11 +856,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 this@SectionsPagerAdapter.pages.forEachIndexed { index, fbItem ->
                     tabs.addTab(
                         tabs.newTab()
-                            .setCustomView(BadgedIcon(this@BaseMainActivity).apply {
-                                iicon = fbItem.icon
-                            }.also {
-                                it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
-                            })
+                            .setCustomView(
+                                BadgedIcon(this@BaseMainActivity).apply {
+                                    iicon = fbItem.icon
+                                }.also {
+                                    it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
+                                }
+                            )
                     )
                 }
                 lastPosition = 0

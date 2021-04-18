@@ -72,12 +72,6 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import java.io.File
-import java.io.IOException
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-import java.util.ArrayList
-import java.util.Locale
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
@@ -86,6 +80,12 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.io.File
+import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.util.ArrayList
+import java.util.Locale
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -101,9 +101,12 @@ inline fun <reified T : Activity> Context.launchNewTask(
     cookieList: ArrayList<CookieEntity> = arrayListOf(),
     clearStack: Boolean = false
 ) {
-    startActivity<T>(clearStack, intentBuilder = {
-        putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
-    })
+    startActivity<T>(
+        clearStack,
+        intentBuilder = {
+            putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
+        }
+    )
 }
 
 fun Context.launchLogin(cookieList: ArrayList<CookieEntity>, clearStack: Boolean = true) {
@@ -133,9 +136,12 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
             fbCookie.logout(this@launchWebOverlayImpl)
         }
     } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
-        startActivity<T>(false, intentBuilder = {
-            putExtra(ARG_URL, argUrl)
-        })
+        startActivity<T>(
+            false,
+            intentBuilder = {
+                putExtra(ARG_URL, argUrl)
+            }
+        )
     }
 }
 
@@ -155,12 +161,14 @@ private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
 ).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String? = null, cookie: String? = null) {
-    startActivity<ImageActivity>(intentBuilder = {
-        putExtras(fadeBundle())
-        putExtra(ARG_IMAGE_URL, imageUrl)
-        putExtra(ARG_TEXT, text)
-        putExtra(ARG_COOKIE, cookie)
-    })
+    startActivity<ImageActivity>(
+        intentBuilder = {
+            putExtras(fadeBundle())
+            putExtra(ARG_IMAGE_URL, imageUrl)
+            putExtra(ARG_TEXT, text)
+            putExtra(ARG_COOKIE, cookie)
+        }
+    )
 }
 
 fun Activity.launchTabCustomizerActivity() {
@@ -168,7 +176,8 @@ fun Activity.launchTabCustomizerActivity() {
         SettingsActivity.ACTIVITY_REQUEST_TABS,
         bundleBuilder = {
             with(fadeBundle())
-        })
+        }
+    )
 }
 
 fun WebOverlayActivity.url(): String {
@@ -177,9 +186,11 @@ fun WebOverlayActivity.url(): String {
 
 fun Activity.setFrostTheme(themeProvider: ThemeProvider, forceTransparent: Boolean = false) {
     val isTransparent =
-        forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (Color.alpha(
-            themeProvider.headerColor
-        ) != 255)
+        forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (
+            Color.alpha(
+                themeProvider.headerColor
+            ) != 255
+            )
     if (themeProvider.bgColor.isColorDark) {
         setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
     } else {

@@ -17,8 +17,8 @@
 package com.pitchedapps.frost.facebook
 
 import android.webkit.CookieManager
-import kotlin.test.assertTrue
 import org.junit.Test
+import kotlin.test.assertTrue
 
 class FbCookieTest {
 

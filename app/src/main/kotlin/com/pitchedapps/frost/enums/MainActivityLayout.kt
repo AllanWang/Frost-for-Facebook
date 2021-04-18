@@ -28,13 +28,17 @@ enum class MainActivityLayout(
     val iconColor: (ThemeProvider) -> Int
 ) {
 
-    TOP_BAR(R.string.top_bar,
+    TOP_BAR(
+        R.string.top_bar,
         { it.headerColor },
-        { it.iconColor }),
+        { it.iconColor }
+    ),
 
-    BOTTOM_BAR(R.string.bottom_bar,
+    BOTTOM_BAR(
+        R.string.bottom_bar,
         { it.bgColor },
-        { it.textColor });
+        { it.textColor }
+    );
 
     companion object {
         val values = values() // save one instance

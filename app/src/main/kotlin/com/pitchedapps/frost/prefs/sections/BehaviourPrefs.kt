@@ -22,8 +22,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 interface BehaviourPrefs : PrefsBase {
     var biometricsEnabled: Boolean
@@ -52,11 +50,9 @@ interface BehaviourPrefs : PrefsBase {
 }
 
 class BehaviourPrefsImpl @Inject internal constructor(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.prefs.behaviour", factory),
-    BehaviourPrefs, KoinComponent {
-
-    private val oldPrefs: OldPrefs by inject()
+    factory: KPrefFactory,
+    oldPrefs: OldPrefs,
+) : KPref("${BuildConfig.APPLICATION_ID}.prefs.behaviour", factory), BehaviourPrefs {
 
     override var biometricsEnabled: Boolean by kpref(
         "biometrics_enabled",

@@ -77,7 +77,8 @@ open class HeaderIItem(
     itemId: Int = R.layout.iitem_header
 ) : KauIItem<HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView),
+    class ViewHolder(itemView: View) :
+        FastAdapter.ViewHolder<HeaderIItem>(itemView),
         KoinComponent {
 
         private val themeProvider: ThemeProvider by inject()

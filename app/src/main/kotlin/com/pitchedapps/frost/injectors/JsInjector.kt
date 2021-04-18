@@ -21,8 +21,8 @@ import androidx.annotation.VisibleForTesting
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostWebViewClient
-import kotlin.random.Random
 import org.apache.commons.text.StringEscapeUtils
+import kotlin.random.Random
 
 class JsBuilder {
     private val css = StringBuilder()

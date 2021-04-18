@@ -17,13 +17,6 @@
 package com.pitchedapps.frost.utils
 
 import com.pitchedapps.frost.kotlin.Flyweight
-import java.util.concurrent.Executors
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.test.Ignore
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -39,6 +32,13 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.concurrent.Executors
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.test.Ignore
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * Collection of tests around coroutines

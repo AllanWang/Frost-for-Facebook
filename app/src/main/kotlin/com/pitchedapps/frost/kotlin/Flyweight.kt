@@ -17,7 +17,6 @@
 package com.pitchedapps.frost.kotlin
 
 import com.pitchedapps.frost.utils.L
-import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -29,6 +28,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Flyweight to keep track of values so long as they are valid.

@@ -54,7 +54,8 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
     text(
         R.string.notification_frequency,
         prefs::notificationFreq,
-        { prefs.notificationFreq = it }) {
+        { prefs.notificationFreq = it }
+    ) {
         val options = longArrayOf(15, 30, 60, 120, 180, 300, 1440, 2880)
         val texts =
             options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
@@ -87,34 +88,42 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
         }
     }
 
-    checkbox(R.string.notification_general, prefs::notificationsGeneral,
+    checkbox(
+        R.string.notification_general, prefs::notificationsGeneral,
         {
             prefs.notificationsGeneral = it
             reloadByTitle(R.string.notification_general_all_accounts)
             if (!prefs.notificationsInstantMessages)
                 reloadByTitle(R.string.notification_frequency)
-        }) {
+        }
+    ) {
         descRes = R.string.notification_general_desc
     }
 
-    checkbox(R.string.notification_general_all_accounts, prefs::notificationAllAccounts,
-        { prefs.notificationAllAccounts = it }) {
+    checkbox(
+        R.string.notification_general_all_accounts, prefs::notificationAllAccounts,
+        { prefs.notificationAllAccounts = it }
+    ) {
         descRes = R.string.notification_general_all_accounts_desc
         enabler = { prefs.notificationsGeneral }
     }
 
-    checkbox(R.string.notification_messages, prefs::notificationsInstantMessages,
+    checkbox(
+        R.string.notification_messages, prefs::notificationsInstantMessages,
         {
             prefs.notificationsInstantMessages = it
             reloadByTitle(R.string.notification_messages_all_accounts)
             if (!prefs.notificationsGeneral)
                 reloadByTitle(R.string.notification_frequency)
-        }) {
+        }
+    ) {
         descRes = R.string.notification_messages_desc
     }
 
-    checkbox(R.string.notification_messages_all_accounts, prefs::notificationsImAllAccounts,
-        { prefs.notificationsImAllAccounts = it }) {
+    checkbox(
+        R.string.notification_messages_all_accounts, prefs::notificationsImAllAccounts,
+        { prefs.notificationsImAllAccounts = it }
+    ) {
         descRes = R.string.notification_messages_all_accounts_desc
         enabler = { prefs.notificationsInstantMessages }
     }
@@ -129,13 +138,16 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             }
         }
     } else {
-        checkbox(R.string.notification_sound, prefs::notificationSound, {
-            prefs.notificationSound = it
-            reloadByTitle(
-                R.string.notification_ringtone,
-                R.string.message_ringtone
-            )
-        })
+        checkbox(
+            R.string.notification_sound, prefs::notificationSound,
+            {
+                prefs.notificationSound = it
+                reloadByTitle(
+                    R.string.notification_ringtone,
+                    R.string.message_ringtone
+                )
+            }
+        )
 
         fun KPrefText.KPrefTextContract<String>.ringtone(code: Int) {
             enabler = prefs::notificationSound
@@ -162,21 +174,29 @@ fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
             }
         }
 
-        text(R.string.notification_ringtone, prefs::notificationRingtone,
-            { prefs.notificationRingtone = it }) {
+        text(
+            R.string.notification_ringtone, prefs::notificationRingtone,
+            { prefs.notificationRingtone = it }
+        ) {
             ringtone(SettingsActivity.REQUEST_NOTIFICATION_RINGTONE)
         }
 
-        text(R.string.message_ringtone, prefs::messageRingtone,
-            { prefs.messageRingtone = it }) {
+        text(
+            R.string.message_ringtone, prefs::messageRingtone,
+            { prefs.messageRingtone = it }
+        ) {
             ringtone(SettingsActivity.REQUEST_MESSAGE_RINGTONE)
         }
 
-        checkbox(R.string.notification_vibrate, prefs::notificationVibrate,
-            { prefs.notificationVibrate = it })
+        checkbox(
+            R.string.notification_vibrate, prefs::notificationVibrate,
+            { prefs.notificationVibrate = it }
+        )
 
-        checkbox(R.string.notification_lights, prefs::notificationLights,
-            { prefs.notificationLights = it })
+        checkbox(
+            R.string.notification_lights, prefs::notificationLights,
+            { prefs.notificationLights = it }
+        )
     }
 
     if (BuildConfig.DEBUG) {

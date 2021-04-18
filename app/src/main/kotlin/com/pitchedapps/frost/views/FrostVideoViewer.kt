@@ -192,12 +192,12 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun updateLocation() {
         with(binding) {
             viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    video.updateLocation()
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        video.updateLocation()
+                        viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
         }
     }
 
@@ -206,7 +206,8 @@ class FrostVideoViewer @JvmOverloads constructor(
             if (video.isExpanded)
                 videoToolbar.fadeIn(
                     duration = CONTROL_ANIMATION_DURATION,
-                    onStart = { videoToolbar.visible() })
+                    onStart = { videoToolbar.visible() }
+                )
         }
     }
 

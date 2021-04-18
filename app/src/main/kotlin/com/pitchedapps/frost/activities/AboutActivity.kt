@@ -144,7 +144,8 @@ class AboutActivity : AboutActivityBase(null) {
         }
     }
 
-    class AboutLinks : AbstractItem<AboutLinks.ViewHolder>(),
+    class AboutLinks :
+        AbstractItem<AboutLinks.ViewHolder>(),
         ThemableIItem by ThemableIItemDelegate() {
         override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
@@ -186,12 +187,14 @@ class AboutActivity : AboutActivityBase(null) {
                 )
 
                 images =
-                    (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
-                        icon.toDrawable(
-                            c,
-                            32
-                        ) to onClick
-                    }).mapIndexed { i, (icon, onClick) ->
+                    (
+                        icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
+                            icon.toDrawable(
+                                c,
+                                32
+                            ) to onClick
+                        }
+                        ).mapIndexed { i, (icon, onClick) ->
                         ImageView(c).apply {
                             layoutParams = ViewGroup.LayoutParams(size, size)
                             id = 109389 + i

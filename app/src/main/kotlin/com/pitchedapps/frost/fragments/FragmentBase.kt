@@ -41,7 +41,6 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -51,6 +50,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.component.inject
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -59,7 +59,10 @@ import org.koin.core.component.inject
  * Must be attached to activities implementing [MainActivityContract]
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
+abstract class BaseFragment :
+    Fragment(),
+    CoroutineScope,
+    FragmentContract,
     DynamicUiContract {
 
     companion object {

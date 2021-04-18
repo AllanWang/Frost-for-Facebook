@@ -22,8 +22,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 interface CorePrefs : PrefsBase {
     var lastLaunch: Long
@@ -58,11 +56,9 @@ interface CorePrefs : PrefsBase {
 }
 
 class CorePrefsImpl @Inject internal constructor(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.prefs.core", factory),
-    CorePrefs, KoinComponent {
-
-    private val oldPrefs: OldPrefs by inject()
+    factory: KPrefFactory,
+    oldPrefs: OldPrefs,
+) : KPref("${BuildConfig.APPLICATION_ID}.prefs.core", factory), CorePrefs {
 
     override var lastLaunch: Long by kpref("last_launch", oldPrefs.lastLaunch /* -1L */)
 

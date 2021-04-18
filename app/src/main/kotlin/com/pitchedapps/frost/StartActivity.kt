@@ -45,9 +45,9 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 import javax.inject.Inject
-import kotlinx.coroutines.launch
 
 /**
  * Created by Allan Wang on 2017-05-28.
@@ -94,10 +94,10 @@ class StartActivity : KauBaseActivity() {
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d {
                     "Cookies: ${
-                        cookies.joinToString(
-                            "\t",
-                            transform = CookieEntity::toSensitiveString
-                        )
+                    cookies.joinToString(
+                        "\t",
+                        transform = CookieEntity::toSensitiveString
+                    )
                     }"
                 }
                 loadAssets(themeProvider)
@@ -106,11 +106,13 @@ class StartActivity : KauBaseActivity() {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account
                     prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
-                    else -> startActivity<MainActivity>(intentBuilder = {
-                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    })
+                    else -> startActivity<MainActivity>(
+                        intentBuilder = {
+                            putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                    )
                 }
             } catch (e: Exception) {
                 L._e(e) { "Load start failed" }

@@ -32,12 +32,14 @@ import com.pitchedapps.frost.utils.L
 @Entity(
     tableName = "notifications",
     primaryKeys = ["notif_id", "userId"],
-    foreignKeys = [ForeignKey(
-        entity = CookieEntity::class,
-        parentColumns = ["cookie_id"],
-        childColumns = ["userId"],
-        onDelete = ForeignKey.CASCADE
-    )],
+    foreignKeys = [
+        ForeignKey(
+            entity = CookieEntity::class,
+            parentColumns = ["cookie_id"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [Index("notif_id"), Index("userId")]
 )
 data class NotificationEntity(

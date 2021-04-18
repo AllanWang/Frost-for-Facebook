@@ -37,10 +37,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Inject
-import javax.inject.Singleton
 import org.koin.core.context.GlobalContext
 import org.koin.dsl.module
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * [Prefs] is no longer an actual pref, but we will expose the reset function as it is used elsewhere
@@ -62,12 +62,12 @@ interface Prefs :
         fun get(): Prefs = GlobalContext.get().get()
 
         fun module() = module {
-            single<BehaviourPrefs> { BehaviourPrefsImpl(factory = get()) }
-            single<CorePrefs> { CorePrefsImpl(factory = get()) }
-            single<FeedPrefs> { FeedPrefsImpl(factory = get()) }
-            single<NotifPrefs> { NotifPrefsImpl(factory = get()) }
-            single<ThemePrefs> { ThemePrefsImpl(factory = get()) }
-            single<ShowcasePrefs> { ShowcasePrefsImpl(factory = get()) }
+            single<BehaviourPrefs> { BehaviourPrefsImpl(get(), get()) }
+            single<CorePrefs> { CorePrefsImpl(get(), get()) }
+            single<FeedPrefs> { FeedPrefsImpl(get(), get()) }
+            single<NotifPrefs> { NotifPrefsImpl(get(), get()) }
+            single<ThemePrefs> { ThemePrefsImpl(get(), get()) }
+            single<ShowcasePrefs> { ShowcasePrefsImpl(get()) }
             single<Prefs> {
                 PrefsImpl(
                     behaviourPrefs = get(),

@@ -101,7 +101,8 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         }
     }
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView),
+    class ViewHolder(itemView: View) :
+        FastAdapter.ViewHolder<NotificationIItem>(itemView),
         KoinComponent {
 
         private val themeProvider: ThemeProvider by inject()

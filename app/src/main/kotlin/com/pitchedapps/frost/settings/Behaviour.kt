@@ -36,21 +36,24 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(
         R.string.overlay_swipe,
         prefs::overlayEnabled,
-        { prefs.overlayEnabled = it; shouldRefreshMain() }) {
+        { prefs.overlayEnabled = it; shouldRefreshMain() }
+    ) {
         descRes = R.string.overlay_swipe_desc
     }
 
     checkbox(
         R.string.overlay_full_screen_swipe,
         prefs::overlayFullScreenSwipe,
-        { prefs.overlayFullScreenSwipe = it }) {
+        { prefs.overlayFullScreenSwipe = it }
+    ) {
         descRes = R.string.overlay_full_screen_swipe_desc
     }
 
     checkbox(
         R.string.open_links_in_default,
         prefs::linksInDefaultApp,
-        { prefs.linksInDefaultApp = it }) {
+        { prefs.linksInDefaultApp = it }
+    ) {
         descRes = R.string.open_links_in_default_desc
     }
 
@@ -61,14 +64,16 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(
         R.string.force_message_bottom,
         prefs::messageScrollToBottom,
-        { prefs.messageScrollToBottom = it }) {
+        { prefs.messageScrollToBottom = it }
+    ) {
         descRes = R.string.force_message_bottom_desc
     }
 
     checkbox(
         R.string.auto_expand_text_box,
         prefs::autoExpandTextBox,
-        { prefs.autoExpandTextBox = it; shouldRefreshMain() }) {
+        { prefs.autoExpandTextBox = it; shouldRefreshMain() }
+    ) {
         descRes = R.string.auto_expand_text_box_desc
     }
 

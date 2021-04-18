@@ -35,9 +35,9 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import kotlin.math.abs
 import org.koin.android.ext.android.inject
 import org.koin.core.component.inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 2017-07-28.
