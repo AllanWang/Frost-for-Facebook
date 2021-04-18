@@ -128,10 +128,11 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -139,6 +140,7 @@ import org.koin.android.ext.android.inject
  * Most of the logic that is unrelated to handling fragments
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
+@AndroidEntryPoint
 abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     FileChooserContract by FileChooserDelegate(),
     VideoViewHolder, SearchViewHolder {
@@ -150,8 +152,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override val frameWrapper: FrameLayout get() = drawerWrapperBinding.mainContainer
     lateinit var drawerWrapperBinding: ActivityMainDrawerWrapperBinding
     lateinit var contentBinding: ActivityMainContentBinding
-    val cookieDao: CookieDao by inject()
-    val genericDao: GenericDao by inject()
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var genericDao: GenericDao
 
     interface ActivityMainContentBinding {
         val root: View
