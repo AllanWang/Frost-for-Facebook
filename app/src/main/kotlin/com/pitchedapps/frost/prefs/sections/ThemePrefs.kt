@@ -22,6 +22,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
+import javax.inject.Inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -41,7 +42,7 @@ interface ThemePrefs : PrefsBase {
     var tintNavBar: Boolean
 }
 
-class ThemePrefsImpl(
+class ThemePrefsImpl @Inject internal constructor(
     factory: KPrefFactory
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.theme", factory),
     ThemePrefs, KoinComponent {

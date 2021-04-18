@@ -22,6 +22,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
+import javax.inject.Inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -51,7 +52,7 @@ interface FeedPrefs : PrefsBase {
     var showPostReactions: Boolean
 }
 
-class FeedPrefsImpl(
+class FeedPrefsImpl @Inject internal constructor(
     factory: KPrefFactory
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.feed", factory),
     FeedPrefs, KoinComponent {

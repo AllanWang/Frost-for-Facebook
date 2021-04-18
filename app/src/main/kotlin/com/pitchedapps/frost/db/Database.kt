@@ -21,6 +21,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.pitchedapps.frost.BuildConfig
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import org.koin.dsl.module
 
 interface FrostPrivateDao {
@@ -100,4 +106,30 @@ class FrostDatabase(
             single { get<FrostDatabase>().genericDao() }
         }
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
+
+    @Provides
+    @Singleton
+    fun frostDatabase(@ApplicationContext context: Context): FrostDatabase =
+        FrostDatabase.create(context)
+
+    @Provides
+    @Singleton
+    fun cookieDao(frostDatabase: FrostDatabase): CookieDao = frostDatabase.cookieDao()
+
+    @Provides
+    @Singleton
+    fun cacheDao(frostDatabase: FrostDatabase): CacheDao = frostDatabase.cacheDao()
+
+    @Provides
+    @Singleton
+    fun notifDao(frostDatabase: FrostDatabase): NotificationDao = frostDatabase.notifDao()
+
+    @Provides
+    @Singleton
+    fun genericDao(frostDatabase: FrostDatabase): GenericDao = frostDatabase.genericDao()
 }

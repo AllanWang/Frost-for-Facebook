@@ -179,6 +179,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         contentBinding = when (prefs.mainActivityLayout) {
             MainActivityLayout.TOP_BAR -> {
                 val binding = ActivityMainBinding.inflate(layoutInflater)
+                @SuppressLint("StaticFieldLeak")
                 object : ActivityMainContentBinding {
                     override val root: View = binding.root
                     override val toolbar: Toolbar = binding.toolbar
@@ -190,6 +191,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             MainActivityLayout.BOTTOM_BAR -> {
                 val binding = ActivityMainBottomTabsBinding.inflate(layoutInflater)
+                @SuppressLint("StaticFieldLeak")
                 object : ActivityMainContentBinding {
                     override val root: View = binding.root
                     override val toolbar: Toolbar = binding.toolbar

@@ -16,6 +16,9 @@
  */
 package com.pitchedapps.frost.prefs
 
+import android.content.Context
+import ca.allanwang.kau.kpref.KPrefFactory
+import ca.allanwang.kau.kpref.KPrefFactoryAndroid
 import com.pitchedapps.frost.prefs.sections.BehaviourPrefs
 import com.pitchedapps.frost.prefs.sections.BehaviourPrefsImpl
 import com.pitchedapps.frost.prefs.sections.CorePrefs
@@ -28,6 +31,14 @@ import com.pitchedapps.frost.prefs.sections.ShowcasePrefs
 import com.pitchedapps.frost.prefs.sections.ShowcasePrefsImpl
 import com.pitchedapps.frost.prefs.sections.ThemePrefs
 import com.pitchedapps.frost.prefs.sections.ThemePrefsImpl
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Inject
+import javax.inject.Singleton
 import org.koin.core.context.GlobalContext
 import org.koin.dsl.module
 
@@ -73,7 +84,7 @@ interface Prefs :
     }
 }
 
-class PrefsImpl(
+class PrefsImpl @Inject internal constructor(
     private val behaviourPrefs: BehaviourPrefs,
     private val corePrefs: CorePrefs,
     private val feedPrefs: FeedPrefs,
@@ -105,4 +116,44 @@ class PrefsImpl(
         themePrefs.deleteKeys()
         showcasePrefs.deleteKeys()
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+interface PrefModule {
+    @Binds
+    @Singleton
+    fun behaviour(to: BehaviourPrefsImpl): BehaviourPrefs
+
+    @Binds
+    @Singleton
+    fun core(to: CorePrefsImpl): CorePrefs
+
+    @Binds
+    @Singleton
+    fun feed(to: FeedPrefsImpl): FeedPrefs
+
+    @Binds
+    @Singleton
+    fun notif(to: NotifPrefsImpl): NotifPrefs
+
+    @Binds
+    @Singleton
+    fun theme(to: ThemePrefsImpl): ThemePrefs
+
+    @Binds
+    @Singleton
+    fun showcase(to: ShowcasePrefsImpl): ShowcasePrefs
+
+    @Binds
+    @Singleton
+    fun prefs(to: PrefsImpl): Prefs
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object PrefFactoryModule {
+    @Provides
+    @Singleton
+    fun factory(@ApplicationContext context: Context): KPrefFactory = KPrefFactoryAndroid(context)
 }

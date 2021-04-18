@@ -20,6 +20,7 @@ import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.PrefsBase
+import javax.inject.Inject
 
 interface ShowcasePrefs : PrefsBase {
     /**
@@ -35,7 +36,7 @@ interface ShowcasePrefs : PrefsBase {
  *
  * Showcase prefs that offer one time helpers to guide new users
  */
-class ShowcasePrefsImpl(
+class ShowcasePrefsImpl @Inject internal constructor(
     factory: KPrefFactory
 ) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory),
     ShowcasePrefs {

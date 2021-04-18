@@ -28,6 +28,7 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchLogin
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,10 @@ import org.koin.dsl.module
  *
  * The following component manages all cookie transfers.
  */
-class FbCookie(private val prefs: Prefs, private val cookieDao: CookieDao) {
+class FbCookie @Inject internal constructor(
+    private val prefs: Prefs,
+    private val cookieDao: CookieDao
+) {
 
     companion object {
         private const val FB_COOKIE_DOMAIN = HTTPS_FACEBOOK_COM

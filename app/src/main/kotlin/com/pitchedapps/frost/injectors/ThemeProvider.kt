@@ -30,8 +30,10 @@ import com.pitchedapps.frost.enums.Theme
 import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.context.GlobalContext
@@ -40,7 +42,10 @@ import org.koin.core.context.GlobalContext
  * Provides [InjectorContract] for each [ThemeCategory].
  * Can be reloaded to take in changes from [Prefs]
  */
-class ThemeProvider(private val context: Context, private val prefs: Prefs) {
+class ThemeProvider @Inject internal constructor(
+    @ApplicationContext private val context: Context,
+    private val prefs: Prefs
+) {
 
     private var theme: Theme = Theme.values[prefs.theme]
 

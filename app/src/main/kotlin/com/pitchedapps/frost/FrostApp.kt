@@ -24,7 +24,9 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import ca.allanwang.kau.kpref.KPrefFactoryAndroid
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
+import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
@@ -32,11 +34,12 @@ import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
+import dagger.hilt.android.HiltAndroidApp
 import java.util.Random
+import javax.inject.Inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -44,10 +47,20 @@ import org.koin.dsl.module
 /**
  * Created by Allan Wang on 2017-05-28.
  */
+@HiltAndroidApp
 class FrostApp : Application(), KoinComponent {
 
-    private lateinit var prefs: Prefs
-    private lateinit var themeProvider: ThemeProvider
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var notifDao: NotificationDao
 
     override fun onCreate() {
         startKoin {
@@ -65,18 +78,17 @@ class FrostApp : Application(), KoinComponent {
                 )
             )
         }
-        if (!buildIsLollipopAndUp) { // not supported
-            super.onCreate()
-            return
-        }
-        prefs = get()
-        themeProvider = get()
+
+        super.onCreate()
+
+        if (!buildIsLollipopAndUp) return // not supported
+
+//        prefs = get()
+//        themeProvider = get()
         initPrefs()
 
         L.i { "Begin Frost for Facebook" }
         FrostPglAdBlock.init(this)
-
-        super.onCreate()
 
         setupNotificationChannels(this, themeProvider)
 

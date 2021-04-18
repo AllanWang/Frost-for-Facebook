@@ -21,6 +21,7 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
+import javax.inject.Inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -56,7 +57,7 @@ interface CorePrefs : PrefsBase {
     var messageScrollToBottom: Boolean
 }
 
-class CorePrefsImpl(
+class CorePrefsImpl @Inject internal constructor(
     factory: KPrefFactory
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.core", factory),
     CorePrefs, KoinComponent {

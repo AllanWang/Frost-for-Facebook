@@ -44,20 +44,31 @@ import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
+import javax.inject.Inject
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
+@AndroidEntryPoint
 class StartActivity : KauBaseActivity() {
 
-    private val fbCookie: FbCookie by inject()
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
-    private val cookieDao: CookieDao by inject()
-    private val genericDao: GenericDao by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var genericDao: GenericDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,10 +93,12 @@ class StartActivity : KauBaseActivity() {
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d {
-                    "Cookies: ${cookies.joinToString(
-                        "\t",
-                        transform = CookieEntity::toSensitiveString
-                    )}"
+                    "Cookies: ${
+                        cookies.joinToString(
+                            "\t",
+                            transform = CookieEntity::toSensitiveString
+                        )
+                    }"
                 }
                 loadAssets(themeProvider)
                 authDefer.await()

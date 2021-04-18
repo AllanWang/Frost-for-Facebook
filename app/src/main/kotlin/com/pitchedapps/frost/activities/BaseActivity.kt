@@ -26,7 +26,6 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.setFrostTheme
 import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-06-12.
