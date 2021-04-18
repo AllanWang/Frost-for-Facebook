@@ -37,9 +37,9 @@ class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>
     override fun getDoc(cookie: String?) = frostJsoup(cookie, "${FbItem.NOTIFICATIONS.url}?more")
 
     override fun toItems(response: ParseResponse<FrostNotifs>): List<NotificationIItem> =
-        response.data.notifs.map { NotificationIItem(it, response.cookie) }
+        response.data.notifs.map { NotificationIItem(it, response.cookie, themeProvider) }
 
     override fun bindImpl(recyclerView: FrostRecyclerView) {
-        NotificationIItem.bindEvents(adapter, fbCookie, prefs)
+        NotificationIItem.bindEvents(adapter, fbCookie, prefs, themeProvider)
     }
 }

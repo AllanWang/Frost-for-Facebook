@@ -47,6 +47,7 @@ import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.logFrostEvent
 import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.web.LoginWebView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -55,21 +56,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import org.koin.android.ext.android.inject
 import java.net.UnknownHostException
+import javax.inject.Inject
 import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
+@AndroidEntryPoint
 class LoginActivity : BaseActivity() {
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val web: LoginWebView by bindView(R.id.login_webview)
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
-    private val cookieDao: CookieDao by inject()
 
     private lateinit var profileLoader: RequestManager
     private val refreshChannel = Channel<Boolean>(10)

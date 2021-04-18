@@ -40,19 +40,25 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 27/12/17.
  */
-class NotificationIItem(val notification: FrostNotif, val cookie: String) :
-    KauIItem<NotificationIItem.ViewHolder>(
-        R.layout.iitem_notification, ::ViewHolder
-    ) {
+class NotificationIItem(
+    val notification: FrostNotif,
+    val cookie: String,
+    private val themeProvider: ThemeProvider
+) : KauIItem<NotificationIItem.ViewHolder>(
+    R.layout.iitem_notification, { ViewHolder(it, themeProvider) }
+) {
 
     companion object {
-        fun bindEvents(adapter: ItemAdapter<NotificationIItem>, fbCookie: FbCookie, prefs: Prefs) {
+        fun bindEvents(
+            adapter: ItemAdapter<NotificationIItem>,
+            fbCookie: FbCookie,
+            prefs: Prefs,
+            themeProvider: ThemeProvider
+        ) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
@@ -62,7 +68,11 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                     if (notif.unread) {
                         adapter.set(
                             position,
-                            NotificationIItem(notif.copy(unread = false), item.cookie)
+                            NotificationIItem(
+                                notif.copy(unread = false),
+                                item.cookie,
+                                themeProvider
+                            )
                         )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
@@ -101,11 +111,10 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         }
     }
 
-    class ViewHolder(itemView: View) :
-        FastAdapter.ViewHolder<NotificationIItem>(itemView),
-        KoinComponent {
-
-        private val themeProvider: ThemeProvider by inject()
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
 
         private val frame: ViewGroup by bindView(R.id.item_frame)
         private val avatar: ImageView by bindView(R.id.item_avatar)
