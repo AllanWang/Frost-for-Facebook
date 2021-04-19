@@ -147,10 +147,14 @@ private fun RemoteViews.setIcon(
 }
 
 @AndroidEntryPoint
-class NotificationWidgetService @Inject internal constructor(
-    private val themeProvider: ThemeProvider,
-    private val notifDao: NotificationDao
-) : RemoteViewsService() {
+class NotificationWidgetService : RemoteViewsService() {
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
         NotificationWidgetDataProvider(this, intent, themeProvider, notifDao)
 
