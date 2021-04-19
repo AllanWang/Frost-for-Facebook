@@ -22,4 +22,6 @@
     <string name="autoplay_settings_desc">Otwórz ustawienia automatycznego odtwarzania na Facebooku. Pamiętaj, że musi być ono wyłączone, aby PIP działał.</string>
     <string name="exit_confirmation">Potwierdzenie wyjścia</string>
     <string name="exit_confirmation_desc">Pokaż okno dialogowe przed zamknięciem aplikacji</string>
+    <string name="auto_expand_text_box">Automatycznie rozwijaj pole tekstowe</string>
+    <string name="auto_expand_text_box_desc">Zwiększ wysokość pola tekstowego podczas pisania. Wyłącz jeśli występują problemy z przewijaniem.</string>
 </resources>
