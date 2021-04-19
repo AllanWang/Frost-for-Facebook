@@ -11,6 +11,7 @@ buildscript {
         classpath kau.Plugins.kotlin
         classpath kau.Plugins.spotless
         classpath kau.Plugins.dexCount
+        classpath kau.Plugins.hilt
         classpath kau.Plugins.gitVersion
     }
 

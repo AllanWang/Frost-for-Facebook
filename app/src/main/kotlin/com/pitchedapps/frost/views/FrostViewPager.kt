@@ -22,18 +22,23 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 import com.pitchedapps.frost.prefs.Prefs
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-07-07.
  *
  * Basic override to allow us to control swiping
  */
-class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-    ViewPager(context, attrs), KoinComponent {
+@AndroidEntryPoint
+class FrostViewPager @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : ViewPager(context, attrs) {
 
-    private val prefs: Prefs by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
     var enableSwipe = true
 
     override fun onInterceptTouchEvent(ev: MotionEvent?) =

@@ -30,11 +30,16 @@ import androidx.core.view.ViewCompat
  *
  * Webview extension that handles nested scrolls
  */
-open class NestedWebView @JvmOverloads constructor(
+open class NestedWebView(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    attrs: AttributeSet?,
+    defStyleAttr: Int
 ) : WebView(context, attrs, defStyleAttr), NestedScrollingChild {
+
+    // No JvmOverloads due to hilt
+    constructor(context: Context) : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     private lateinit var childHelper: NestedScrollingChildHelper
     private var lastY: Int = 0

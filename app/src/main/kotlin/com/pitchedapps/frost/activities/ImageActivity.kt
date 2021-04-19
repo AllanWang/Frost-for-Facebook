@@ -61,33 +61,40 @@ import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.logFrostEvent
-import com.pitchedapps.frost.utils.setFrostColors
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.IOException
-import kotlin.math.abs
-import kotlin.math.max
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * Created by Allan Wang on 2017-07-15.
  */
+@AndroidEntryPoint
 class ImageActivity : KauBaseActivity() {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var activityThemer: ActivityThemer
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     @Volatile
     internal var errorRef: Throwable? = null
@@ -219,12 +226,12 @@ class ImageActivity : KauBaseActivity() {
             setState(FabStates.SHARE)
         }
         imagePhoto.setOnImageEventListener(object :
-            SubsamplingScaleImageView.DefaultOnImageEventListener() {
-            override fun onImageLoadError(e: Exception) {
-                loadError(e)
-            }
-        })
-        setFrostColors {
+                SubsamplingScaleImageView.DefaultOnImageEventListener() {
+                override fun onImageLoadError(e: Exception) {
+                    loadError(e)
+                }
+            })
+        activityThemer.setFrostColors {
             themeWindow = false
         }
         dragHelper = ViewDragHelper.create(imageDrag, ViewDragCallback()).apply {
@@ -394,7 +401,7 @@ internal enum class FabStates(
             } catch (e: Exception) {
                 activity.errorRef = e
                 e.logFrostEvent("Image share failed")
-                activity.frostSnackbar(R.string.image_share_failed)
+                activity.frostSnackbar(R.string.image_share_failed, activity.themeProvider)
             }
         }
     };
@@ -409,7 +416,8 @@ internal enum class FabStates(
      *
      */
     fun update(fab: FloatingActionButton, themeProvider: ThemeProvider) {
-        val tint = if (backgroundTint != Int.MAX_VALUE) backgroundTint else themeProvider.accentColor
+        val tint =
+            if (backgroundTint != Int.MAX_VALUE) backgroundTint else themeProvider.accentColor
         val iconColor = iconColorProvider(themeProvider)
         if (fab.isHidden) {
             fab.setIcon(iicon, color = iconColor)

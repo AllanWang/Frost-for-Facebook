@@ -48,17 +48,18 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostDownload
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-10-13.
  */
+@AndroidEntryPoint
 class FrostVideoViewer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract, KoinComponent {
+) : FrameLayout(context, attrs, defStyleAttr), FrostVideoViewerContract {
 
     companion object {
         /**
@@ -88,9 +89,14 @@ class FrostVideoViewer @JvmOverloads constructor(
         }
     }
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
-    private val cookieDao: CookieDao by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     private val binding: ViewVideoBinding =
         ViewVideoBinding.inflate(LayoutInflater.from(context), this, true)
@@ -192,12 +198,12 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun updateLocation() {
         with(binding) {
             viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    video.updateLocation()
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        video.updateLocation()
+                        viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
         }
     }
 
@@ -206,7 +212,8 @@ class FrostVideoViewer @JvmOverloads constructor(
             if (video.isExpanded)
                 videoToolbar.fadeIn(
                     duration = CONTROL_ANIMATION_DURATION,
-                    onStart = { videoToolbar.visible() })
+                    onStart = { videoToolbar.visible() }
+                )
         }
     }
 

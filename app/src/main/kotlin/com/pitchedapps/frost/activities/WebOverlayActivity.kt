@@ -67,7 +67,6 @@ import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostSnackbar
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
@@ -156,9 +155,12 @@ class WebOverlayDesktopActivity : WebOverlayActivityBase(USER_AGENT_DESKTOP_CONS
 class WebOverlayActivity : WebOverlayActivityBase()
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) : BaseActivity(),
-    ActivityContract, FrostContentContainer,
-    VideoViewHolder, FileChooserContract by FileChooserDelegate() {
+abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) :
+    BaseActivity(),
+    ActivityContract,
+    FrostContentContainer,
+    VideoViewHolder,
+    FileChooserContract by FileChooserDelegate() {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -202,10 +204,11 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.navigationIcon = GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, themeProvider.iconColor)
+        toolbar.navigationIcon =
+            GoogleMaterial.Icon.gmd_close.toDrawable(this, 16, themeProvider.iconColor)
         toolbar.setNavigationOnClickListener { finishSlideOut() }
 
-        setFrostColors {
+        activityThemer.setFrostColors {
             toolbar(toolbar)
             themeWindow = false
         }
@@ -228,7 +231,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
                 authDefer.await()
                 reloadBase(true)
                 if (prefs.firstWebOverlay) {
-                    coordinator.frostSnackbar(R.string.web_overlay_swipe_hint) {
+                    coordinator.frostSnackbar(R.string.web_overlay_swipe_hint, themeProvider) {
                         duration = BaseTransientBottomBar.LENGTH_INDEFINITE
                         setAction(R.string.kau_got_it) { dismiss() }
                     }

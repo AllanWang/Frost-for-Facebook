@@ -29,7 +29,6 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.views.AccountItem
 import kotlinx.coroutines.launch
 
@@ -48,8 +47,8 @@ class SelectorActivity : BaseActivity() {
         setContentView(R.layout.activity_selector)
         recycler.layoutManager = GridLayoutManager(this, 2)
         recycler.adapter = adapter
-        adapter.add(cookies().map { AccountItem(it) })
-        adapter.add(AccountItem(null)) // add account
+        adapter.add(cookies().map { AccountItem(it, themeProvider) })
+        adapter.add(AccountItem(null, themeProvider)) // add account
         adapter.addEventHook(object : ClickEventHook<AccountItem>() {
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
                 (viewHolder as? AccountItem.ViewHolder)?.itemView
@@ -67,7 +66,7 @@ class SelectorActivity : BaseActivity() {
                 }
             }
         })
-        setFrostColors {
+        activityThemer.setFrostColors {
             text(text)
             background(container)
         }

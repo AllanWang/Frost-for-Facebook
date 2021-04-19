@@ -49,6 +49,7 @@ import com.pitchedapps.frost.settings.getFeedPrefs
 import com.pitchedapps.frost.settings.getNotificationPrefs
 import com.pitchedapps.frost.settings.getSecurityPrefs
 import com.pitchedapps.frost.settings.sendDebug
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
@@ -57,20 +58,31 @@ import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.pitchedapps.frost.utils.setFrostTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
+@AndroidEntryPoint
 class SettingsActivity : KPrefActivity() {
 
-    val fbCookie: FbCookie by inject()
-    val notifDao: NotificationDao by inject()
-    val prefs: Prefs by inject()
-    val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
 
     private var resultFlag = Activity.RESULT_CANCELED
 
@@ -175,9 +187,12 @@ class SettingsActivity : KPrefActivity() {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = {
-                startActivityForResult<AboutActivity>(9, bundleBuilder = {
-                    withSceneTransitionAnimation(this@SettingsActivity)
-                })
+                startActivityForResult<AboutActivity>(
+                    9,
+                    bundleBuilder = {
+                        withSceneTransitionAnimation(this@SettingsActivity)
+                    }
+                )
             }
         }
 
@@ -218,7 +233,7 @@ class SettingsActivity : KPrefActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFrostTheme(themeProvider, true)
+        activityThemer.setFrostTheme(forceTransparent = true)
         super.onCreate(savedInstanceState)
         animate = prefs.animate
         themeExterior(false)
@@ -227,7 +242,11 @@ class SettingsActivity : KPrefActivity() {
     fun themeExterior(animate: Boolean = true) {
         if (animate) bgCanvas.fade(themeProvider.bgColor)
         else bgCanvas.set(themeProvider.bgColor)
-        if (animate) toolbarCanvas.ripple(themeProvider.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
+        if (animate) toolbarCanvas.ripple(
+            themeProvider.headerColor,
+            RippleCanvas.MIDDLE,
+            RippleCanvas.END
+        )
         else toolbarCanvas.set(themeProvider.headerColor)
         frostNavigationBar(prefs, themeProvider)
     }

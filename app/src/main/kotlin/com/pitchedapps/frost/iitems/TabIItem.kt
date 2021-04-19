@@ -30,22 +30,23 @@ import com.mikepenz.fastadapter.drag.IDraggable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.ThemeProvider
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 26/11/17.
  */
-class TabIItem(val item: FbItem) : KauIItem<TabIItem.ViewHolder>(
-    R.layout.iitem_tab_preview,
-    { ViewHolder(it) }
-), IDraggable {
+class TabIItem(val item: FbItem, private val themeProvider: ThemeProvider) :
+    KauIItem<TabIItem.ViewHolder>(
+        R.layout.iitem_tab_preview,
+        { ViewHolder(it, themeProvider) }
+    ),
+    IDraggable {
 
     override val isDraggable: Boolean = true
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TabIItem>(itemView), KoinComponent {
-
-        private val themeProvider: ThemeProvider by inject()
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<TabIItem>(itemView) {
 
         val image: ImageView by bindView(R.id.image)
         val text: TextView by bindView(R.id.text)

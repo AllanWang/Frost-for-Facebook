@@ -72,20 +72,20 @@ import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import java.io.File
-import java.io.IOException
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-import java.util.ArrayList
-import java.util.Locale
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import java.io.File
+import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.util.ArrayList
+import java.util.Locale
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -101,9 +101,12 @@ inline fun <reified T : Activity> Context.launchNewTask(
     cookieList: ArrayList<CookieEntity> = arrayListOf(),
     clearStack: Boolean = false
 ) {
-    startActivity<T>(clearStack, intentBuilder = {
-        putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
-    })
+    startActivity<T>(
+        clearStack,
+        intentBuilder = {
+            putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
+        }
+    )
 }
 
 fun Context.launchLogin(cookieList: ArrayList<CookieEntity>, clearStack: Boolean = true) {
@@ -133,9 +136,12 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
             fbCookie.logout(this@launchWebOverlayImpl)
         }
     } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
-        startActivity<T>(false, intentBuilder = {
-            putExtra(ARG_URL, argUrl)
-        })
+        startActivity<T>(
+            false,
+            intentBuilder = {
+                putExtra(ARG_URL, argUrl)
+            }
+        )
     }
 }
 
@@ -155,12 +161,14 @@ private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
 ).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String? = null, cookie: String? = null) {
-    startActivity<ImageActivity>(intentBuilder = {
-        putExtras(fadeBundle())
-        putExtra(ARG_IMAGE_URL, imageUrl)
-        putExtra(ARG_TEXT, text)
-        putExtra(ARG_COOKIE, cookie)
-    })
+    startActivity<ImageActivity>(
+        intentBuilder = {
+            putExtras(fadeBundle())
+            putExtra(ARG_IMAGE_URL, imageUrl)
+            putExtra(ARG_TEXT, text)
+            putExtra(ARG_COOKIE, cookie)
+        }
+    )
 }
 
 fun Activity.launchTabCustomizerActivity() {
@@ -168,30 +176,45 @@ fun Activity.launchTabCustomizerActivity() {
         SettingsActivity.ACTIVITY_REQUEST_TABS,
         bundleBuilder = {
             with(fadeBundle())
-        })
+        }
+    )
 }
 
 fun WebOverlayActivity.url(): String {
     return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
-fun Activity.setFrostTheme(themeProvider: ThemeProvider, forceTransparent: Boolean = false) {
-    val isTransparent =
-        forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (Color.alpha(
-            themeProvider.headerColor
-        ) != 255)
-    if (themeProvider.bgColor.isColorDark) {
-        setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
-    } else {
-        setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
+@ActivityScoped
+class ActivityThemer @Inject constructor(
+    private val activity: Activity,
+    private val prefs: Prefs,
+    private val themeProvider: ThemeProvider
+) {
+    fun setFrostTheme(forceTransparent: Boolean = false) {
+        val isTransparent =
+            forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (
+                Color.alpha(
+                    themeProvider.headerColor
+                ) != 255
+                )
+        if (themeProvider.bgColor.isColorDark) {
+            activity.setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
+        } else {
+            activity.setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
+        }
+    }
+
+    fun setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
+        val themer = ActivityThemeUtils(prefs = prefs, themeProvider = themeProvider)
+        themer.builder()
+        themer.theme(activity)
     }
 }
 
-class ActivityThemeUtils : KoinComponent {
-
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
-
+class ActivityThemeUtils(
+    private val prefs: Prefs,
+    private val themeProvider: ThemeProvider
+) {
     private var toolbar: Toolbar? = null
     var themeWindow = true
     private var texts = mutableListOf<TextView>()
@@ -229,12 +252,6 @@ class ActivityThemeUtils : KoinComponent {
     }
 }
 
-inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
-    val themer = ActivityThemeUtils()
-    themer.builder()
-    themer.theme(this)
-}
-
 fun frostEvent(name: String, vararg events: Pair<String, Any>) {
     // todo bind
     L.v { "Event: $name ${events.joinToString(", ")}" }
@@ -249,15 +266,23 @@ fun Throwable?.logFrostEvent(text: String) {
     frostEvent("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
-    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun Activity.frostSnackbar(
+    @StringRes text: Int,
+    themeProvider: ThemeProvider,
+    builder: Snackbar.() -> Unit = {}
+) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(themeProvider, builder))
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
-    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun View.frostSnackbar(
+    @StringRes text: Int,
+    themeProvider: ThemeProvider,
+    builder: Snackbar.() -> Unit = {}
+) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(themeProvider, builder))
 
 @SuppressLint("RestrictedApi")
-private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
-    val themeProvider = ThemeProvider.get()
+private inline fun frostSnackbar(
+    themeProvider: ThemeProvider,
+    crossinline builder: Snackbar.() -> Unit
+): Snackbar.() -> Unit = {
     builder()
     // hacky workaround, but it has proper checks and shouldn't crash
     ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
@@ -404,18 +429,20 @@ fun Context.frostUri(entry: String): Uri {
 
 inline fun Context.sendFrostEmail(
     @StringRes subjectId: Int,
+    prefs: Prefs,
     crossinline builder: EmailBuilder.() -> Unit
-) =
-    sendFrostEmail(string(subjectId), builder)
+) = sendFrostEmail(string(subjectId), prefs, builder)
 
-inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =
-    sendEmail("", subjectId) {
-        builder()
-        addFrostDetails()
-    }
+inline fun Context.sendFrostEmail(
+    subjectId: String,
+    prefs: Prefs,
+    crossinline builder: EmailBuilder.() -> Unit
+) = sendEmail("", subjectId) {
+    builder()
+    addFrostDetails(prefs)
+}
 
-fun EmailBuilder.addFrostDetails() {
-    val prefs = Prefs.get()
+fun EmailBuilder.addFrostDetails(prefs: Prefs) {
     addItem("Prev version", prefs.prevVersionCode.toString())
     val proTag = "FO"
     addItem("Random Frost ID", "${prefs.frostId}-$proTag")

@@ -39,53 +39,65 @@ enum class Theme(
     val iconColorGetter: (ThemePrefs) -> Int
 ) {
 
-    DEFAULT(R.string.kau_default,
+    DEFAULT(
+        R.string.kau_default,
         "default",
         { 0xde000000.toInt() },
         { FACEBOOK_BLUE },
         { 0xfffafafa.toInt() },
         { FACEBOOK_BLUE },
-        { Color.WHITE }),
+        { Color.WHITE }
+    ),
 
-    LIGHT(R.string.kau_light,
+    LIGHT(
+        R.string.kau_light,
         "material_light",
         { 0xde000000.toInt() },
         { FACEBOOK_BLUE },
         { 0xfffafafa.toInt() },
         { FACEBOOK_BLUE },
-        { Color.WHITE }),
+        { Color.WHITE }
+    ),
 
-    DARK(R.string.kau_dark,
+    DARK(
+        R.string.kau_dark,
         "material_dark",
         { Color.WHITE },
         { BLUE_LIGHT },
         { 0xff303030.toInt() },
         { 0xff2e4b86.toInt() },
-        { Color.WHITE }),
+        { Color.WHITE }
+    ),
 
-    AMOLED(R.string.kau_amoled,
+    AMOLED(
+        R.string.kau_amoled,
         "material_amoled",
         { Color.WHITE },
         { BLUE_LIGHT },
         { Color.BLACK },
         { Color.BLACK },
-        { Color.WHITE }),
+        { Color.WHITE }
+    ),
 
-    GLASS(R.string.kau_glass,
+    GLASS(
+        R.string.kau_glass,
         "material_glass",
         { Color.WHITE },
         { BLUE_LIGHT },
         { 0x80000000.toInt() },
         { 0xb3000000.toInt() },
-        { Color.WHITE }),
+        { Color.WHITE }
+    ),
 
-    CUSTOM(R.string.kau_custom,
+    CUSTOM(
+        R.string.kau_custom,
         "custom",
         { it.customTextColor },
         { it.customAccentColor },
         { it.customBackgroundColor },
         { it.customHeaderColor },
-        { it.customIconColor });
+        { it.customIconColor }
+    );
 
     @VisibleForTesting
     internal val file = file?.let { "$it.css" }

@@ -19,11 +19,9 @@ package com.pitchedapps.frost.prefs.sections
 import ca.allanwang.kau.kpref.KPref
 import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
-import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 interface ThemePrefs : PrefsBase {
     var theme: Int
@@ -41,17 +39,16 @@ interface ThemePrefs : PrefsBase {
     var tintNavBar: Boolean
 }
 
-class ThemePrefsImpl(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.prefs.theme", factory),
-    ThemePrefs, KoinComponent {
+class ThemePrefsImpl @Inject internal constructor(
+    factory: KPrefFactory,
+    oldPrefs: OldPrefs,
+) : KPref("${BuildConfig.APPLICATION_ID}.prefs.theme", factory), ThemePrefs {
 
-    private val oldPrefs: OldPrefs by inject()
-    private val themeProvider: ThemeProvider by inject()
-
-    override var theme: Int by kpref("theme", oldPrefs.theme /* 0 */) {
-        themeProvider.setTheme(it)
-    }
+    /**
+     * Note that this is purely for the pref storage. Updating themes should use
+     * ThemeProvider
+     */
+    override var theme: Int by kpref("theme", oldPrefs.theme /* 0 */)
 
     override var customTextColor: Int by kpref(
         "color_text",

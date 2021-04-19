@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 //apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
 
@@ -52,7 +53,7 @@ android {
         testInstrumentationRunner "com.pitchedapps.frost.FrostTestRunner"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/src/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/src/schemas".toString()]
             }
         }
     }
@@ -270,9 +271,15 @@ dependencies {
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    implementation kau.Dependencies.koin
     testImplementation kau.Dependencies.koinTest
     androidTestImplementation kau.Dependencies.koinTest
+
+    implementation kau.Dependencies.hilt
+    kapt kau.Dependencies.hiltCompiler
+    testImplementation kau.Dependencies.hiltTest
+    kaptTest kau.Dependencies.hiltCompiler
+    androidTestImplementation kau.Dependencies.hiltTest
+    kaptAndroidTest kau.Dependencies.hiltCompiler
 
     implementation kau.Dependencies.coroutines
 
@@ -311,6 +318,10 @@ dependencies {
     kapt "androidx.room:room-compiler:${Versions.room}"
     androidTestImplementation "androidx.room:room-testing:${Versions.room}"
 
+}
+
+kapt {
+    correctErrorTypes true
 }
 
 def kotlinResolutions = ['kotlin-reflect',

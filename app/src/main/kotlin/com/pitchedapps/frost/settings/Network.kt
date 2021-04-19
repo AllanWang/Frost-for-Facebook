@@ -28,7 +28,8 @@ fun SettingsActivity.getNetworkPrefs(): KPrefAdapterBuilder.() -> Unit = {
     checkbox(
         R.string.network_media_on_metered,
         { !prefs.loadMediaOnMeteredNetwork },
-        { prefs.loadMediaOnMeteredNetwork = !it }) {
+        { prefs.loadMediaOnMeteredNetwork = !it }
+    ) {
         descRes = R.string.network_media_on_metered_desc
     }
 }

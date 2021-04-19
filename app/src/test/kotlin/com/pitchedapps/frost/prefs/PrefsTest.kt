@@ -16,9 +16,9 @@
  */
 package com.pitchedapps.frost.prefs
 
-import kotlin.test.assertEquals
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertEquals
 
 /**
  * Created by Allan Wang on 2017-05-31.

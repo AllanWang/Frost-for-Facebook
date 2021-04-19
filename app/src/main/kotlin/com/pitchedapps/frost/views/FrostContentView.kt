@@ -42,13 +42,13 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
@@ -76,17 +76,48 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
-    FrostContentParent, KoinComponent where T : View, T : FrostContentCore {
+) : FrostContentViewBase(context, attrs, defStyleAttr, defStyleRes),
+    FrostContentParent where T : View, T : FrostContentCore {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
-    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
-    private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
 
     override val core: FrostContentCore
         get() = coreView
+}
+
+/**
+ * Subsection of [FrostContentView] that is [AndroidEntryPoint] friendly (no generics)
+ */
+@UseExperimental(ExperimentalCoroutinesApi::class)
+@AndroidEntryPoint
+abstract class FrostContentViewBase(
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int,
+    defStyleRes: Int
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
+    FrostContentParent {
+
+    // No JvmOverloads due to hilt
+    constructor(context: Context) : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
+    private val progress: ProgressBar by bindView(R.id.content_progress)
 
     /**
      * While this can be conflated, there exist situations where we wish to watch refresh cycles.
@@ -129,7 +160,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
      */
     protected fun init() {
         inflate(context, layoutRes, this)
-        coreView.parent = this
+        core.parent = this
         reloadThemeSelf()
     }
 
@@ -140,9 +171,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         scope = container
         core.bind(container)
         refresh.setOnRefreshListener {
-            with(coreView) {
-                reload(true)
-            }
+            core.reload(true)
         }
 
         refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
@@ -160,11 +189,11 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     override fun reloadTheme() {
         reloadThemeSelf()
-        coreView.reloadTheme()
+        core.reloadTheme()
     }
 
     override fun reloadTextSize() {
-        coreView.reloadTextSize()
+        core.reloadTextSize()
     }
 
     override fun reloadThemeSelf() {
@@ -195,7 +224,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             return false // still in progress; do not bother with load
         }
         L.v { "Registered transition" }
-        with(coreView) {
+        with(core) {
             refreshReceiver = refreshChannel.openSubscription().also { receiver ->
                 scope.launchMain {
                     var loading = false

@@ -43,28 +43,34 @@ import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
  *
  */
+@AndroidEntryPoint
 class FrostWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : NestedWebView(context, attrs, defStyleAttr),
-    FrostContentCore,
-    KoinComponent {
+) : NestedWebView(context, attrs, defStyleAttr), FrostContentCore {
 
-    val fbCookie: FbCookie by inject()
-    val prefs: Prefs by inject()
-    val themeProvider: ThemeProvider by inject()
-    val cookieDao: CookieDao by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -92,7 +98,7 @@ class FrostWebView @JvmOverloads constructor(
         // attempt to get custom client; otherwise fallback to original
         frostWebClient = (container as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
-        webChromeClient = FrostChromeClient(this)
+        webChromeClient = FrostChromeClient(this, themeProvider)
         addJavascriptInterface(FrostJSI(this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->

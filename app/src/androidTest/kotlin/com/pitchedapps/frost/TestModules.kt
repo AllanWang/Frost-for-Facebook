@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Allan Wang
+ * Copyright 2021 Allan Wang
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.facebook
+package com.pitchedapps.frost
 
-import android.webkit.CookieManager
-import org.junit.Test
-import kotlin.test.assertTrue
+import ca.allanwang.kau.kpref.KPrefFactory
+import ca.allanwang.kau.kpref.KPrefFactoryInMemory
+import com.pitchedapps.frost.prefs.PrefFactoryModule
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 
-class FbCookieTest {
-
-    @Test
-    fun managerAcceptsCookie() {
-        assertTrue(
-            CookieManager.getInstance().acceptCookie(),
-            "Cookie manager should accept cookie by default"
-        )
-    }
+@Module
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [PrefFactoryModule::class]
+)
+object PrefFactoryTestModule {
+    @Provides
+    fun factory(): KPrefFactory = KPrefFactoryInMemory
 }

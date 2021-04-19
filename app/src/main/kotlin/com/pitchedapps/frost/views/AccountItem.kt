@@ -38,17 +38,14 @@ import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.injectors.ThemeProvider
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-06-05.
  */
-class AccountItem(val cookie: CookieEntity?) :
-    KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account),
-    KoinComponent {
-
-    private val themeProvider: ThemeProvider by inject()
+class AccountItem(
+    val cookie: CookieEntity?,
+    private val themeProvider: ThemeProvider
+) : KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
 
     override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)

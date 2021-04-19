@@ -84,7 +84,8 @@ class FrostJSI(val web: FrostWebView) {
         web.post {
             context.showWebContextMenu(
                 WebContext(url.takeIf { it.isIndependent }, text),
-                fbCookie
+                fbCookie,
+                prefs
             )
         }
     }

@@ -48,13 +48,17 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
 import com.pitchedapps.frost.utils.toReadableTime
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class NotificationWidget : AppWidgetProvider(), KoinComponent {
+@AndroidEntryPoint
+class NotificationWidget : AppWidgetProvider() {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     override fun onUpdate(
         context: Context,
@@ -142,9 +146,17 @@ private fun RemoteViews.setIcon(
     }
 }
 
+@AndroidEntryPoint
 class NotificationWidgetService : RemoteViewsService() {
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
-        NotificationWidgetDataProvider(this, intent)
+        NotificationWidgetDataProvider(this, intent, themeProvider, notifDao)
 
     companion object {
         fun createIntent(context: Context, type: NotificationType, userId: Long): Intent =
@@ -154,13 +166,12 @@ class NotificationWidgetService : RemoteViewsService() {
     }
 }
 
-class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
-    RemoteViewsService.RemoteViewsFactory,
-    KoinComponent {
-
-    private val themeProvider: ThemeProvider by inject()
-
-    private val notifDao: NotificationDao by inject()
+class NotificationWidgetDataProvider(
+    private val context: Context,
+    private val intent: Intent,
+    private val themeProvider: ThemeProvider,
+    private val notifDao: NotificationDao
+) : RemoteViewsService.RemoteViewsFactory {
 
     @Volatile
     private var content: List<NotificationContent> = emptyList()

@@ -18,10 +18,10 @@ package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.authDependent
-import kotlin.test.assertNotNull
 import kotlinx.coroutines.runBlocking
 import org.junit.BeforeClass
 import org.junit.Test
+import kotlin.test.assertNotNull
 
 /**
  * Created by Allan Wang on 12/04/18.

@@ -39,20 +39,25 @@ import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-19.
  */
+@AndroidEntryPoint
 class Keywords @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
     val editText: AppCompatEditText by bindView(R.id.edit_text)
     val addIcon: ImageView by bindView(R.id.add_icon)
     val recycler: RecyclerView by bindView(R.id.recycler)
@@ -61,16 +66,21 @@ class Keywords @JvmOverloads constructor(
     init {
         inflate(context, R.layout.view_keywords, this)
         editText.tint(themeProvider.textColor)
-        addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context, themeProvider))
+        addIcon.setImageDrawable(
+            GoogleMaterial.Icon.gmd_add.keywordDrawable(
+                context,
+                themeProvider
+            )
+        )
         addIcon.setOnClickListener {
             if (editText.text.isNullOrEmpty()) editText.error =
                 context.string(R.string.empty_keyword)
             else {
-                adapter.add(0, KeywordItem(editText.text.toString()))
+                adapter.add(0, KeywordItem(editText.text.toString(), themeProvider))
                 editText.text?.clear()
             }
         }
-        adapter.add(prefs.notificationKeywords.map { KeywordItem(it) })
+        adapter.add(prefs.notificationKeywords.map { KeywordItem(it, themeProvider) })
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = adapter
         adapter.addEventHook(object : ClickEventHook<KeywordItem>() {
@@ -96,9 +106,12 @@ class Keywords @JvmOverloads constructor(
 private fun IIcon.keywordDrawable(context: Context, themeProvider: ThemeProvider): Drawable =
     toDrawable(context, 20, themeProvider.textColor)
 
-class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() {
+class KeywordItem(
+    val keyword: String,
+    private val themeProvider: ThemeProvider
+) : AbstractItem<KeywordItem.ViewHolder>() {
 
-    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v, themeProvider)
 
     override val layoutRes: Int
         get() = R.layout.item_keyword
@@ -116,9 +129,11 @@ class KeywordItem(val keyword: String) : AbstractItem<KeywordItem.ViewHolder>() 
         holder.text.text = null
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v), KoinComponent {
+    class ViewHolder(
+        v: View,
+        themeProvider: ThemeProvider
+    ) : RecyclerView.ViewHolder(v) {
 
-        private val themeProvider: ThemeProvider by inject()
         val text: AppCompatTextView by bindView(R.id.keyword_text)
         val delete: ImageView by bindView(R.id.keyword_delete)
 

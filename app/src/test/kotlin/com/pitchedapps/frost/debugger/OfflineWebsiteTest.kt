@@ -18,6 +18,12 @@ package com.pitchedapps.frost.debugger
 
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.internal.COOKIE
+import kotlinx.coroutines.runBlocking
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
+import org.junit.Assume.assumeTrue
 import java.io.File
 import java.util.zip.ZipFile
 import kotlin.test.AfterTest
@@ -27,12 +33,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.Dispatcher
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
-import org.junit.Assume.assumeTrue
 
 /**
  * Created by Allan Wang on 05/01/18.
@@ -46,8 +46,9 @@ class OfflineWebsiteTest {
     fun before() {
         val buildPath =
             if (File("").absoluteFile.name == "app") "build/offline_test" else "app/build/offline_test"
-        baseDir = File(buildPath)
-        assertTrue(baseDir.deleteRecursively(), "Failed to clean base dir")
+        val rootDir = File(buildPath)
+        rootDir.deleteRecursively()
+        baseDir = rootDir.resolve(System.currentTimeMillis().toString())
         server = MockWebServer()
         server.start()
     }
@@ -61,7 +62,7 @@ class OfflineWebsiteTest {
         url: String = server.url("/").toString(),
         cookie: String = ""
     ): ZipFile {
-        val name = "test${System.currentTimeMillis()}"
+        val name = "test"
         runBlocking {
             val success = OfflineWebsite(url, cookie, baseDir = baseDir)
                 .loadAndZip(name)
@@ -247,7 +248,8 @@ class OfflineWebsiteTest {
 
         assertEquals(5, zip.size(), "2 files expected")
         zip.assertContentEquals(
-            "index.html", content
+            "index.html",
+            content
                 .replace(css1Url.toString(), "assets/a0_1.css")
                 .replace(css2Url.toString(), "assets/a1_2.css")
                 .replace(js1Url.toString(), "assets/a2_1.js.txt")

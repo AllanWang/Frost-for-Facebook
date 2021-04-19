@@ -24,18 +24,27 @@ import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import com.pitchedapps.frost.utils.setFrostTheme
-import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
+import com.pitchedapps.frost.utils.ActivityThemer
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-12.
  */
+@AndroidEntryPoint
 abstract class BaseActivity : KauBaseActivity() {
 
-    val fbCookie: FbCookie by inject()
-    val prefs: Prefs by inject()
-    val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
 
     /**
      * Inherited consumer to customize back press
@@ -51,7 +60,7 @@ abstract class BaseActivity : KauBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (this !is WebOverlayActivityBase) setFrostTheme(themeProvider)
+        if (this !is WebOverlayActivityBase) activityThemer.setFrostTheme()
     }
 
     override fun onStop() {

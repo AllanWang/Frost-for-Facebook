@@ -122,16 +122,22 @@ import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchLogin
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.launchWebOverlay
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.urlEncode
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostViewPager
 import com.pitchedapps.frost.widgets.NotificationWidget
-import kotlin.math.abs
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
+import kotlin.math.abs
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -139,9 +145,13 @@ import org.koin.android.ext.android.inject
  * Most of the logic that is unrelated to handling fragments
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
+@AndroidEntryPoint
+abstract class BaseMainActivity :
+    BaseActivity(),
+    MainActivityContract,
     FileChooserContract by FileChooserDelegate(),
-    VideoViewHolder, SearchViewHolder {
+    VideoViewHolder,
+    SearchViewHolder {
 
     /**
      * Note that tabs themselves are initialized through a coroutine during onCreate
@@ -150,8 +160,12 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
     override val frameWrapper: FrameLayout get() = drawerWrapperBinding.mainContainer
     lateinit var drawerWrapperBinding: ActivityMainDrawerWrapperBinding
     lateinit var contentBinding: ActivityMainContentBinding
-    val cookieDao: CookieDao by inject()
-    val genericDao: GenericDao by inject()
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var genericDao: GenericDao
 
     interface ActivityMainContentBinding {
         val root: View
@@ -179,6 +193,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         contentBinding = when (prefs.mainActivityLayout) {
             MainActivityLayout.TOP_BAR -> {
                 val binding = ActivityMainBinding.inflate(layoutInflater)
+                @SuppressLint("StaticFieldLeak")
                 object : ActivityMainContentBinding {
                     override val root: View = binding.root
                     override val toolbar: Toolbar = binding.toolbar
@@ -190,6 +205,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
             }
             MainActivityLayout.BOTTOM_BAR -> {
                 val binding = ActivityMainBottomTabsBinding.inflate(layoutInflater)
+                @SuppressLint("StaticFieldLeak")
                 object : ActivityMainContentBinding {
                     override val root: View = binding.root
                     override val toolbar: Toolbar = binding.toolbar
@@ -202,7 +218,7 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         }
         drawerWrapperBinding.mainContainer.addView(contentBinding.root)
         with(contentBinding) {
-            setFrostColors {
+            activityThemer.setFrostColors {
                 toolbar(toolbar)
                 themeWindow = false
                 header(appbar)
@@ -333,15 +349,17 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         shouldShow = false
         fab.backgroundTintList = ColorStateList.valueOf(themeProvider.headerColor.withMinAlpha(200))
         fab.hide()
-        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            if (!hasFab) return@OnOffsetChangedListener
-            val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
-            val shouldShow = percent < 0.2
-            if (this@BaseMainActivity.shouldShow != shouldShow) {
-                this@BaseMainActivity.shouldShow = shouldShow
-                fab.showIf(shouldShow)
+        appbar.addOnOffsetChangedListener(
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                if (!hasFab) return@OnOffsetChangedListener
+                val percent = abs(verticalOffset.toFloat() / appBarLayout.totalScrollRange)
+                val shouldShow = percent < 0.2
+                if (this@BaseMainActivity.shouldShow != shouldShow) {
+                    this@BaseMainActivity.shouldShow = shouldShow
+                    fab.showIf(shouldShow)
+                }
             }
-        })
+        )
     }
 
     override fun showFab(iicon: IIcon, clickEvent: () -> Unit) {
@@ -843,11 +861,13 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
                 this@SectionsPagerAdapter.pages.forEachIndexed { index, fbItem ->
                     tabs.addTab(
                         tabs.newTab()
-                            .setCustomView(BadgedIcon(this@BaseMainActivity).apply {
-                                iicon = fbItem.icon
-                            }.also {
-                                it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
-                            })
+                            .setCustomView(
+                                BadgedIcon(this@BaseMainActivity).apply {
+                                    iicon = fbItem.icon
+                                }.also {
+                                    it.setAllAlpha(if (index == 0) SELECTED_TAB_ALPHA else UNSELECTED_TAB_ALPHA)
+                                }
+                            )
                     )
                 }
                 lastPosition = 0
@@ -920,4 +940,14 @@ abstract class BaseMainActivity : BaseActivity(), MainActivityContract,
         const val SELECTED_TAB_ALPHA = 255f
         const val UNSELECTED_TAB_ALPHA = 128f
     }
+}
+
+@Module
+@InstallIn(ActivityComponent::class)
+object MainActivityModule {
+    @Provides
+    @ActivityScoped
+    fun contract(@ActivityContext context: Context): MainActivityContract =
+        (context as? BaseMainActivity)
+            ?: throw IllegalArgumentException("${context::class.java.simpleName} does not implement MainActivityContract")
 }

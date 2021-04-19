@@ -21,8 +21,7 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 interface NotifPrefs : PrefsBase {
     var notificationKeywords: Set<String>
@@ -48,12 +47,10 @@ interface NotifPrefs : PrefsBase {
     var notificationFreq: Long
 }
 
-class NotifPrefsImpl(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.prefs.notif", factory),
-    NotifPrefs, KoinComponent {
-
-    private val oldPrefs: OldPrefs by inject()
+class NotifPrefsImpl @Inject internal constructor(
+    factory: KPrefFactory,
+    oldPrefs: OldPrefs,
+) : KPref("${BuildConfig.APPLICATION_ID}.prefs.notif", factory), NotifPrefs {
 
     override var notificationKeywords: Set<String> by kpref(
         "notification_keywords",

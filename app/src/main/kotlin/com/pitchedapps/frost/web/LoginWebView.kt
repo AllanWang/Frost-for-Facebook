@@ -42,23 +42,30 @@ import com.pitchedapps.frost.injectors.jsInject
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isFacebookUrl
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
  */
+@AndroidEntryPoint
 class LoginWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr), KoinComponent {
+) : WebView(context, attrs, defStyleAttr) {
 
-    private val fbCookie: FbCookie by inject()
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
     private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
 

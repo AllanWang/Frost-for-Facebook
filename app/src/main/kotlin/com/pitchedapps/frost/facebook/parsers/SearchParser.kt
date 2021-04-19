@@ -90,31 +90,33 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
             ?: doc.getElementById("root")
             ?: return null
 
-        return FrostSearches(container.select("table[role=presentation]").mapNotNull { el ->
-            // Our assumption is that search entries start with an image, followed by general info
-            // There may be other <td />s, but we will not be parsing them
-            // Furthermore, the <td /> entry wraps a link, containing all the necessary info
-            val a = el.select("td")
-                .getOrNull(1)
-                ?.selectFirst("a")
-                ?: return@mapNotNull null
-            val url =
-                a.attr("href").takeIf { it.isNotEmpty() }
-                    ?.formattedFbUrl?.formattedSearchUrl
+        return FrostSearches(
+            container.select("table[role=presentation]").mapNotNull { el ->
+                // Our assumption is that search entries start with an image, followed by general info
+                // There may be other <td />s, but we will not be parsing them
+                // Furthermore, the <td /> entry wraps a link, containing all the necessary info
+                val a = el.select("td")
+                    .getOrNull(1)
+                    ?.selectFirst("a")
                     ?: return@mapNotNull null
-            // Currently, children should all be <div /> elements, where the first entry is the name/title
-            // And the other entries are additional info.
-            // There are also cases of nested tables, eg for the "join" button in groups.
-            // Those elements have <span /> texts, so we will filter by div to ignore those
-            val texts = a.children().filter { it.tagName() == "div" && it.hasText() }
-            val title = texts.firstOrNull()?.text() ?: return@mapNotNull null
-            val info = texts.takeIf { it.size > 1 }?.last()?.text()
-            L.e { a }
-            create(
-                href = url,
-                title = title,
-                description = info
-            ).also { L.e { it } }
-        })
+                val url =
+                    a.attr("href").takeIf { it.isNotEmpty() }
+                        ?.formattedFbUrl?.formattedSearchUrl
+                        ?: return@mapNotNull null
+                // Currently, children should all be <div /> elements, where the first entry is the name/title
+                // And the other entries are additional info.
+                // There are also cases of nested tables, eg for the "join" button in groups.
+                // Those elements have <span /> texts, so we will filter by div to ignore those
+                val texts = a.children().filter { it.tagName() == "div" && it.hasText() }
+                val title = texts.firstOrNull()?.text() ?: return@mapNotNull null
+                val info = texts.takeIf { it.size > 1 }?.last()?.text()
+                L.e { a }
+                create(
+                    href = url,
+                    title = title,
+                    description = info
+                ).also { L.e { it } }
+            }
+        )
     }
 }

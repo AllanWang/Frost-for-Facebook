@@ -35,9 +35,9 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
-import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -48,10 +48,14 @@ import org.koin.core.component.inject
 /**
  * The core intro fragment for all other fragments
  */
+@AndroidEntryPoint
 abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
 
-    protected val prefs: Prefs by inject()
-    protected val themeProvider: ThemeProvider by inject()
+    @Inject
+    protected lateinit var prefs: Prefs
+
+    @Inject
+    protected lateinit var themeProvider: ThemeProvider
 
     val screenWidth
         get() = resources.displayMetrics.widthPixels

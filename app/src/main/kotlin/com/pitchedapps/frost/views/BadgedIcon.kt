@@ -31,20 +31,25 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.databinding.ViewBadgedIconBinding
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-19.
  */
+@AndroidEntryPoint
 class BadgedIcon @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
     private val binding: ViewBadgedIconBinding =
         ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -54,7 +59,8 @@ class BadgedIcon @JvmOverloads constructor(
 
     private fun ViewBadgedIconBinding.init() {
         val badgeColor =
-            prefs.mainActivityLayout.backgroundColor(themeProvider).withAlpha(255).colorToForeground(0.2f)
+            prefs.mainActivityLayout.backgroundColor(themeProvider).withAlpha(255)
+                .colorToForeground(0.2f)
         val badgeBackground =
             GradientDrawable(
                 GradientDrawable.Orientation.BOTTOM_TOP,

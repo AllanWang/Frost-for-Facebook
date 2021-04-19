@@ -50,16 +50,20 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-26.
  */
+@AndroidEntryPoint
 class AboutActivity : AboutActivityBase(null) {
 
-    private val prefs: Prefs by inject()
-    private val themeProvider: ThemeProvider by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     override fun Configs.buildConfigs() {
         textColor = themeProvider.textColor
@@ -144,7 +148,8 @@ class AboutActivity : AboutActivityBase(null) {
         }
     }
 
-    class AboutLinks : AbstractItem<AboutLinks.ViewHolder>(),
+    class AboutLinks :
+        AbstractItem<AboutLinks.ViewHolder>(),
         ThemableIItem by ThemableIItemDelegate() {
         override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
@@ -186,12 +191,14 @@ class AboutActivity : AboutActivityBase(null) {
                 )
 
                 images =
-                    (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
-                        icon.toDrawable(
-                            c,
-                            32
-                        ) to onClick
-                    }).mapIndexed { i, (icon, onClick) ->
+                    (
+                        icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
+                            icon.toDrawable(
+                                c,
+                                32
+                            ) to onClick
+                        }
+                        ).mapIndexed { i, (icon, onClick) ->
                         ImageView(c).apply {
                             layoutParams = ViewGroup.LayoutParams(size, size)
                             id = 109389 + i

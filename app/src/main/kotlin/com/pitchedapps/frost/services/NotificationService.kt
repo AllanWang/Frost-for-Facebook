@@ -29,12 +29,13 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.widgets.NotificationWidget
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -44,11 +45,17 @@ import org.koin.android.ext.android.inject
  *
  * All fetching is done through parsers
  */
+@AndroidEntryPoint
 class NotificationService : BaseJobService() {
 
-    private val prefs: Prefs by inject()
-    private val notifDao: NotificationDao by inject()
-    private val cookieDao: CookieDao by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     override fun onStopJob(params: JobParameters?): Boolean {
         super.onStopJob(params)

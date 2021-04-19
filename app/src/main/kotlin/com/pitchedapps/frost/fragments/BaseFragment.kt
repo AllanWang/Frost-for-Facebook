@@ -41,7 +41,7 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
-import kotlin.coroutines.CoroutineContext
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -49,8 +49,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.core.component.inject
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -59,7 +59,11 @@ import org.koin.core.component.inject
  * Must be attached to activities implementing [MainActivityContract]
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
-abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
+@AndroidEntryPoint
+abstract class BaseFragment :
+    Fragment(),
+    CoroutineScope,
+    FragmentContract,
     DynamicUiContract {
 
     companion object {
@@ -79,32 +83,41 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
                 ARG_URL to d.url,
                 ARG_POSITION to position
             )
-            d.put(fragment.arguments!!)
+            d.put(fragment.requireArguments())
             return fragment
         }
     }
 
-    protected val fbCookie: FbCookie by inject()
-    protected val prefs: Prefs by inject()
-    protected val themeProvider: ThemeProvider by inject()
+    @Inject
+    protected lateinit var mainContract: MainActivityContract
+
+    @Inject
+    protected lateinit var fbCookie: FbCookie
+
+    @Inject
+    protected lateinit var prefs: Prefs
+
+    @Inject
+    protected lateinit var themeProvider: ThemeProvider
+
     open lateinit var job: Job
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
 
-    override val baseUrl: String by lazy { arguments!!.getString(ARG_URL)!! }
+    override val baseUrl: String by lazy { requireArguments().getString(ARG_URL)!! }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
-    override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
+    override val position: Int by lazy { requireArguments().getInt(ARG_POSITION) }
 
     override var valid: Boolean
-        get() = arguments!!.getBoolean(ARG_VALID, true)
+        get() = requireArguments().getBoolean(ARG_VALID, true)
         set(value) {
             if (!isActive || value || this is WebFragment) return
-            arguments!!.putBoolean(ARG_VALID, value)
+            requireArguments().putBoolean(ARG_VALID, value)
             frostEvent(
                 "Native Fallback",
                 "Item" to baseEnum.name
             )
-            (context as MainActivityContract).reloadFragment(this)
+            mainContract.reloadFragment(this)
         }
 
     override var firstLoad: Boolean = true
@@ -119,8 +132,6 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
         super.onCreate(savedInstanceState)
         job = SupervisorJob()
         firstLoad = true
-        if (context !is MainActivityContract)
-            throw IllegalArgumentException("${this::class.java.simpleName} is not attached to a context implementing MainActivityContract")
     }
 
     final override fun onCreateView(
@@ -142,9 +153,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
         onCreateRunnable = null
         firstLoadRequest()
         detachMainObservable()
-        (context as? MainActivityContract)?.let {
-            activityReceiver = attachMainObservable(it)
-        }
+        activityReceiver = attachMainObservable(mainContract)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -165,7 +174,7 @@ abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract,
     }
 
     override fun setTitle(title: String) {
-        (context as? MainActivityContract)?.setTitle(title)
+        mainContract.setTitle(title)
     }
 
     override fun attachMainObservable(contract: MainActivityContract): ReceiveChannel<Int> {

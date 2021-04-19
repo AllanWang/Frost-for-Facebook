@@ -17,13 +17,13 @@
 package com.pitchedapps.frost.db
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.runner.RunWith
+import org.koin.core.error.NoBeanDefFoundException
+import org.koin.test.KoinTest
 import kotlin.reflect.KClass
 import kotlin.reflect.full.functions
 import kotlin.test.Test
 import kotlin.test.assertTrue
-import org.junit.runner.RunWith
-import org.koin.core.error.NoBeanDefFoundException
-import org.koin.test.KoinTest
 
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest : KoinTest {

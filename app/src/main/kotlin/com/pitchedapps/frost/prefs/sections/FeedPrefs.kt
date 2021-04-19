@@ -22,8 +22,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.enums.MainActivityLayout
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 interface FeedPrefs : PrefsBase {
     var webTextScaling: Int
@@ -51,12 +50,10 @@ interface FeedPrefs : PrefsBase {
     var showPostReactions: Boolean
 }
 
-class FeedPrefsImpl(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.prefs.feed", factory),
-    FeedPrefs, KoinComponent {
-
-    private val oldPrefs: OldPrefs by inject()
+class FeedPrefsImpl @Inject internal constructor(
+    factory: KPrefFactory,
+    oldPrefs: OldPrefs
+) : KPref("${BuildConfig.APPLICATION_ID}.prefs.feed", factory), FeedPrefs {
 
     override var webTextScaling: Int by kpref("web_text_scaling", oldPrefs.webTextScaling /* 100 */)
 

@@ -21,8 +21,7 @@ import ca.allanwang.kau.kpref.KPrefFactory
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.prefs.OldPrefs
 import com.pitchedapps.frost.prefs.PrefsBase
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 interface BehaviourPrefs : PrefsBase {
     var biometricsEnabled: Boolean
@@ -50,12 +49,10 @@ interface BehaviourPrefs : PrefsBase {
     var autoExpandTextBox: Boolean
 }
 
-class BehaviourPrefsImpl(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.prefs.behaviour", factory),
-    BehaviourPrefs, KoinComponent {
-
-    private val oldPrefs: OldPrefs by inject()
+class BehaviourPrefsImpl @Inject internal constructor(
+    factory: KPrefFactory,
+    oldPrefs: OldPrefs,
+) : KPref("${BuildConfig.APPLICATION_ID}.prefs.behaviour", factory), BehaviourPrefs {
 
     override var biometricsEnabled: Boolean by kpref(
         "biometrics_enabled",
