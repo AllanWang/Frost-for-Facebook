@@ -83,7 +83,7 @@ abstract class BaseFragment :
                 ARG_URL to d.url,
                 ARG_POSITION to position
             )
-            d.put(fragment.arguments!!)
+            d.put(fragment.requireArguments())
             return fragment
         }
     }
@@ -104,15 +104,15 @@ abstract class BaseFragment :
     override val coroutineContext: CoroutineContext
         get() = ContextHelper.dispatcher + job
 
-    override val baseUrl: String by lazy { arguments!!.getString(ARG_URL)!! }
+    override val baseUrl: String by lazy { requireArguments().getString(ARG_URL)!! }
     override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
-    override val position: Int by lazy { arguments!!.getInt(ARG_POSITION) }
+    override val position: Int by lazy { requireArguments().getInt(ARG_POSITION) }
 
     override var valid: Boolean
-        get() = arguments!!.getBoolean(ARG_VALID, true)
+        get() = requireArguments().getBoolean(ARG_VALID, true)
         set(value) {
             if (!isActive || value || this is WebFragment) return
-            arguments!!.putBoolean(ARG_VALID, value)
+            requireArguments().putBoolean(ARG_VALID, value)
             frostEvent(
                 "Native Fallback",
                 "Item" to baseEnum.name
