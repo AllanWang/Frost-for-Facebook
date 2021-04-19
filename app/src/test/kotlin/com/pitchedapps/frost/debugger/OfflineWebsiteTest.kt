@@ -46,8 +46,9 @@ class OfflineWebsiteTest {
     fun before() {
         val buildPath =
             if (File("").absoluteFile.name == "app") "build/offline_test" else "app/build/offline_test"
-        baseDir = File(buildPath)
-        assertTrue(baseDir.deleteRecursively(), "Failed to clean base dir")
+        val rootDir =  File(buildPath)
+        rootDir.deleteRecursively()
+        baseDir = rootDir.resolve(System.currentTimeMillis().toString())
         server = MockWebServer()
         server.start()
     }
@@ -61,7 +62,7 @@ class OfflineWebsiteTest {
         url: String = server.url("/").toString(),
         cookie: String = ""
     ): ZipFile {
-        val name = "test${System.currentTimeMillis()}"
+        val name = "test"
         runBlocking {
             val success = OfflineWebsite(url, cookie, baseDir = baseDir)
                 .loadAndZip(name)

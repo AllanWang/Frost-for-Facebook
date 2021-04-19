@@ -19,22 +19,13 @@ package com.pitchedapps.frost
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
-import ca.allanwang.kau.kpref.KPrefFactory
-import ca.allanwang.kau.kpref.KPrefFactoryInMemory
-import com.pitchedapps.frost.db.FrostDatabase
-import com.pitchedapps.frost.facebook.FbCookie
-import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.context.startKoin
-import org.koin.core.module.Module
-import org.koin.dsl.module
 
 class FrostTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
@@ -42,7 +33,7 @@ class FrostTestRunner : AndroidJUnitRunner() {
         className: String?,
         context: Context?
     ): Application {
-        return super.newApplication(cl, FrostTestApp::class.java.name, context)
+        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
     }
 }
 
@@ -57,32 +48,4 @@ class FrostTestRule : TestRule {
                 base.evaluate()
             }
         }
-}
-
-class FrostTestApp : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        startKoin {
-            androidLogger()
-            androidContext(this@FrostTestApp)
-            modules(
-                listOf(
-                    FrostDatabase.module(),
-                    prefFactoryModule(),
-                    Prefs.module(),
-                    FbCookie.module(),
-                    ThemeProvider.module()
-                )
-            )
-        }
-    }
-
-    companion object {
-        fun prefFactoryModule(): Module = module {
-            single<KPrefFactory> {
-                KPrefFactoryInMemory
-            }
-        }
-    }
 }

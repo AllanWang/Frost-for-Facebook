@@ -276,9 +276,9 @@ dependencies {
 
     implementation kau.Dependencies.hilt
     kapt kau.Dependencies.hiltCompiler
-    testImplementation kau.Dependencies.hilt
+    testImplementation kau.Dependencies.hiltTest
     kaptTest kau.Dependencies.hiltCompiler
-    androidTestImplementation kau.Dependencies.hilt
+    androidTestImplementation kau.Dependencies.hiltTest
     kaptAndroidTest kau.Dependencies.hiltCompiler
 
     implementation kau.Dependencies.coroutines
