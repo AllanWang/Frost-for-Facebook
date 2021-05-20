@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_download_manager">Geen download manager</string>
     <string name="no_download_manager_desc">De download manager is niet ingeschakeld, downloaden is niet mogelijk. Nu inschakelen?</string>
     <string name="error_generic">Fout opgetreden.</string>
     <string name="video_load_failed">Video laden mislukt</string>
