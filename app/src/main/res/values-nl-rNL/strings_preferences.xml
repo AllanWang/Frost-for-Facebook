@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance">Uiterlijk</string>
     <string name="appearance_desc">Thema, te tonen items, etc</string>
-    <string name="notifications_desc">Interval, filters, geluiden, etc</string>
     <string name="newsfeed">Nieuwsfeed</string>
     <string name="newsfeed_desc">Bepaal welke berichten in de nieuwsfeed verschijnen</string>
     <string name="behaviour">Werking</string>
