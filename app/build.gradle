@@ -81,6 +81,7 @@ android {
                 'GoogleAppIndexingApiWarning',
                 'SelectableText'
 
+        abortOnError false
         xmlReport false
         textReport true
         textOutput 'stdout'
