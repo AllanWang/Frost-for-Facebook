@@ -65,7 +65,7 @@ android {
     }
 
     lintOptions {
-        warningsAsErrors true
+        warningsAsErrors false
         disable 'TrustAllX509TrustManager',
                 'UnusedResources',
                 'ContentDescription',
@@ -81,7 +81,7 @@ android {
                 'GoogleAppIndexingApiWarning',
                 'SelectableText'
 
-        abortOnError false
+        abortOnError true
         xmlReport false
         textReport true
         textOutput 'stdout'
