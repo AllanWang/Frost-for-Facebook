@@ -32,12 +32,6 @@ if (isRoot) {
     println("Using kau $kau")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
-}
-
 dependencies {
     implementation("ca.allanwang.kau:gradle-plugin:$kau")
 }
