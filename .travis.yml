@@ -1,6 +1,6 @@
 language: android
 jdk:
-  - oraclejdk8
+  - openjdk11
 env:
   global:
     - ANDROID_API=30
