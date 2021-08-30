@@ -230,6 +230,8 @@ preBuild.dependsOn(frostWebGen)
 
 repositories {
     google()
+    // Required for exomedia
+    jcenter()
     mavenCentral()
     maven { url "https://jitpack.io" }
 }
@@ -299,6 +301,9 @@ dependencies {
     debugImplementation kau.Dependencies.leakCanary
 
     //Icons
+    implementation kau.Dependencies.iconics
+
+    implementation kau.Dependencies.iconicsGoogle
     implementation kau.Dependencies.iconicsMaterial
     implementation kau.Dependencies.iconicsCommunity
 

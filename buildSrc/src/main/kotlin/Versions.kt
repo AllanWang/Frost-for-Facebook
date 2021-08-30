@@ -1,6 +1,6 @@
 object Versions {
 
-    const val targetSdk = 29
+    const val targetSdk = 30
 
     // https://developer.android.com/jetpack/androidx/releases/biometric
     const val andxBiometric = "1.1.0"
