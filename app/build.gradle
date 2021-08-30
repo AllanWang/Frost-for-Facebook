@@ -338,10 +338,16 @@ def kotlinResolutions = ['kotlin-reflect',
                          'kotlin-test-junit5']
 
 configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
-            details.useVersion kau.Versions.kotlin
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
+                details.useVersion kau.Versions.kotlin
+            }
+        }
+
+        dependencySubstitution {
+            substitute module('com.mikepenz:library-typeface-api') using module("com.mikepenz:iconics-typeface-api:${kau.Versions.iconics}")
         }
     }
 }

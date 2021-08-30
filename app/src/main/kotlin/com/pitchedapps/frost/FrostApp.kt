@@ -76,7 +76,7 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} destroyed" }
                 }
 
-                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
                 override fun onActivityStopped(activity: Activity) {}
 
