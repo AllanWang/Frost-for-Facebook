@@ -9,7 +9,7 @@ apply plugin: 'com.gladed.androidgitversion'
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
@@ -184,12 +184,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility kau.Versions.java
+        targetCompatibility kau.Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = kau.Versions.java.toString()
     }
 
     testOptions.unitTests {
@@ -230,7 +230,7 @@ preBuild.dependsOn(frostWebGen)
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
     maven { url "https://jitpack.io" }
 }
 
