@@ -12,11 +12,11 @@ object Versions {
     const val exoMedia = "4.3.0"
 
     // https://github.com/jhy/jsoup/releases
-    const val jsoup = "1.13.1"
+    const val jsoup = "1.14.2"
     // https://square.github.io/okhttp/changelog/
-    const val okhttp = "4.9.0"
+    const val okhttp = "4.9.1"
     // https://developer.android.com/jetpack/androidx/releases/room
-    const val room = "2.2.6"
+    const val room = "2.3.0"
     // http://robolectric.org/getting-started/
     const val roboelectric = "4.4"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
