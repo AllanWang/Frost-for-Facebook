@@ -1,29 +1,29 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'dagger.hilt.android.plugin'
+//apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.gladed.androidgitversion'
 
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.moowork.gradle:gradle-node-plugin:${Versions.nodeGradle}"
+        classpath "com.github.node-gradle:gradle-node-plugin:${Versions.nodeGradle}"
     }
 }
 
-apply plugin: com.moowork.gradle.node.NodePlugin
+apply plugin: 'com.github.node-gradle.node'
 
 apply from: '../spotless.gradle'
 group = APP_GROUP
 
 android {
     compileSdkVersion Versions.targetSdk
-    buildToolsVersion kau.Versions.buildTools
 
     androidGitVersion {
         codeFormat = 'MMNNPPXX'
@@ -35,13 +35,25 @@ android {
         applicationId "${project.APP_GROUP}.${project.APP_ID.toLowerCase(Locale.CANADA)}"
         minSdkVersion kau.Versions.minSdk
         targetSdkVersion Versions.targetSdk
+//        versionCode 3000000
         versionCode androidGitVersion.code()
+//        versionName '3.0.0'
         versionName androidGitVersion.name()
+
+        if (System.getenv('TRAVIS') != 'true') {
+            // Verification for F-Droid builds
+            if (versionCode != androidGitVersion.code()) {
+                throw new GradleException("Version code mismatch, expected ${androidGitVersion.code()}, got $versionCode")
+            }
+            if (versionName != androidGitVersion.name()) {
+                throw new GradleException("Version name mismatch, expected ${androidGitVersion.name()}, got $versionName")
+            }
+        }
         multiDexEnabled true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.pitchedapps.frost.FrostTestRunner"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/src/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/src/schemas".toString()]
             }
         }
     }
@@ -53,20 +65,30 @@ android {
     }
 
     lintOptions {
-        warningsAsErrors true
+        warningsAsErrors false
         disable 'TrustAllX509TrustManager',
                 'UnusedResources',
                 'ContentDescription',
                 'RtlSymmetry',
-                'MissingTranslation'
+                'MissingTranslation',
+                'TypographyQuotes',
+                'DuplicateStrings',
+                'UnusedIds',
+                'SyntheticAccessor',
+                'Recycle',
+                'AppLinksAutoVerifyWarning',
+                'AppLinksAutoVerifyError',
+                'GoogleAppIndexingApiWarning',
+                'SelectableText'
 
+        abortOnError true
         xmlReport false
         textReport true
         textOutput 'stdout'
     }
 
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding = true
     }
 
     def testKeystoreFile = file('../files/test.keystore')
@@ -112,7 +134,11 @@ android {
 
     }
 
-    def compilerArgs = ["-Xuse-experimental=kotlin.Experimental" /*, "-XXLanguage:+InlineClasses"*/]
+    def compilerArgs = [
+            "-Xuse-experimental=kotlin.Experimental",
+            // "-XXLanguage:+InlineClasses",
+            "-Xopt-in=kotlin.RequiresOptIn",
+    ]
 
     buildTypes {
         debug {
@@ -123,7 +149,6 @@ android {
             signingConfig signingConfigs.debug
             resValue "string", "frost_name", "Frost Debug"
             resValue "string", "frost_web", "Frost Web Debug"
-            ext.enableBugsnag = false
 
             kotlinOptions.freeCompilerArgs += compilerArgs
         }
@@ -160,12 +185,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility kau.Versions.java
+        targetCompatibility kau.Versions.java
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = kau.Versions.java.toString()
     }
 
     testOptions.unitTests {
@@ -176,20 +201,16 @@ android {
         // Always show the result of every unit test, even if it passes.
         all {
             testLogging {
-                events 'passed', 'skipped', 'failed', 'standardError'
+                events 'skipped', 'failed', 'standardError'
             }
         }
-    }
-
-    androidExtensions {
-        experimental = true
     }
 
 }
 
 node {
-    version = '12.4.0'
-    npmVersion = '6.9.0'
+    version = '13.8.0'
+    npmVersion = '6.13.7'
     download = true
     nodeModulesDir = file("${project.projectDir}/src/web")
 }
@@ -210,13 +231,13 @@ preBuild.dependsOn(frostWebGen)
 
 repositories {
     google()
+    // Required for exomedia
     jcenter()
+    mavenCentral()
     maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
-
     androidTestImplementation kau.Dependencies.kotlinTest
     androidTestImplementation kau.Dependencies.espresso
     androidTestImplementation kau.Dependencies.testRules
@@ -253,11 +274,15 @@ dependencies {
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    implementation "org.koin:koin-android:${Versions.koin}"
-    testImplementation "org.koin:koin-test:${Versions.koin}"
-    androidTestImplementation "org.koin:koin-test:${Versions.koin}"
+    testImplementation kau.Dependencies.koinTest
+    androidTestImplementation kau.Dependencies.koinTest
 
-//    androidTestImplementation "io.mockk:mockk:${Versions.mockk}"
+    implementation kau.Dependencies.hilt
+    kapt kau.Dependencies.hiltCompiler
+    testImplementation kau.Dependencies.hiltTest
+    kaptTest kau.Dependencies.hiltCompiler
+    androidTestImplementation kau.Dependencies.hiltTest
+    kaptAndroidTest kau.Dependencies.hiltCompiler
 
     implementation kau.Dependencies.coroutines
 
@@ -274,15 +299,12 @@ dependencies {
     //noinspection GradleDependency
     kapt kau.Dependencies.glideKapt
 
-    //noinspection GradleDependency
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
-    //noinspection GradleDependency
-    releaseTestImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
-    //noinspection GradleDependency
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${Versions.leakCanary}"
-//    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${Versions.leakCanary}"
+    debugImplementation kau.Dependencies.leakCanary
 
     //Icons
+    implementation kau.Dependencies.iconics
+
+    implementation kau.Dependencies.iconicsGoogle
     implementation kau.Dependencies.iconicsMaterial
     implementation kau.Dependencies.iconicsCommunity
 
@@ -295,24 +317,17 @@ dependencies {
     testImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
 
-    implementation kau.Dependencies.bugsnag
-
     implementation "com.davemorrissey.labs:subsampling-scale-image-view:${Versions.scaleImageView}"
 
     implementation "androidx.room:room-ktx:${Versions.room}"
     implementation "androidx.room:room-runtime:${Versions.room}"
     kapt "androidx.room:room-compiler:${Versions.room}"
-    testImplementation "androidx.room:room-testing:${Versions.room}"
+    androidTestImplementation "androidx.room:room-testing:${Versions.room}"
 
 }
 
-// Validates code and generates apk
-task createGithubReleaseApk(type: GradleBuild) {
-    tasks = ['spotlessCheck',
-             'lintRelease',
-             'testReleaseUnitTest',
-             'connectedAndroidTest',
-             'assembleRelease']
+kapt {
+    correctErrorTypes true
 }
 
 def kotlinResolutions = ['kotlin-reflect',
@@ -324,12 +339,41 @@ def kotlinResolutions = ['kotlin-reflect',
                          'kotlin-test-junit5']
 
 configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
-            details.useVersion kau.Versions.kotlin
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'org.jetbrains.kotlin' && requested.name in kotlinResolutions) {
+                details.useVersion kau.Versions.kotlin
+            }
+        }
+
+        dependencySubstitution {
+            substitute module('com.mikepenz:library-typeface-api') using module("com.mikepenz:iconics-typeface-api:${kau.Versions.iconics}")
         }
     }
 }
 
-apply plugin: 'com.bugsnag.android.gradle'
+task lintGithubReleaseApk {
+    dependsOn 'spotlessCheck'
+    dependsOn 'lintRelease'
+}
+
+task testGithubReleaseApk {
+    dependsOn 'testReleaseUnitTest'
+    dependsOn 'connectedAndroidTest'
+}
+
+task assembleGithubReleaseApk {
+    dependsOn 'assembleRelease'
+}
+
+// Validates code and generates apk
+// TODO order tasks; though technically it doesn't matter
+task createGithubReleaseApk {
+    dependsOn 'lintGithubReleaseApk'
+    dependsOn 'testGithubReleaseApk'
+    dependsOn 'assembleGithubReleaseApk'
+
+    tasks.findByName('testGithubReleaseApk').mustRunAfter 'lintGithubReleaseApk'
+    tasks.findByName('assembleGithubReleaseApk').mustRunAfter 'testGithubReleaseApk'
+}

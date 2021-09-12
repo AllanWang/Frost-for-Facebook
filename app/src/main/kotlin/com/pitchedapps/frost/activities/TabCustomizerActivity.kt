@@ -42,19 +42,20 @@ import com.pitchedapps.frost.db.saveTabs
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.setFrostColors
-import java.util.Collections
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import java.util.Collections
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 26/11/17.
  */
+@AndroidEntryPoint
 class TabCustomizerActivity : BaseActivity() {
 
-    private val genericDao: GenericDao by inject()
+    @Inject
+    lateinit var genericDao: GenericDao
 
     private val adapter = FastItemAdapter<TabIItem>()
 
@@ -70,15 +71,15 @@ class TabCustomizerActivity : BaseActivity() {
     }
 
     fun ActivityTabCustomizerBinding.init() {
-        pseudoToolbar.setBackgroundColor(Prefs.headerColor)
+        pseudoToolbar.setBackgroundColor(themeProvider.headerColor)
 
         tabRecycler.layoutManager =
             GridLayoutManager(this@TabCustomizerActivity, TAB_COUNT, RecyclerView.VERTICAL, false)
         tabRecycler.adapter = adapter
         tabRecycler.setHasFixedSize(true)
 
-        divider.setBackgroundColor(Prefs.textColor.withAlpha(30))
-        instructions.setTextColor(Prefs.textColor)
+        divider.setBackgroundColor(themeProvider.textColor.withAlpha(30))
+        instructions.setTextColor(themeProvider.textColor)
 
         launch {
             val tabs = genericDao.getTabs().toMutableList()
@@ -86,7 +87,7 @@ class TabCustomizerActivity : BaseActivity() {
             val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
             remaining.removeAll(tabs)
             tabs.addAll(remaining)
-            adapter.set(tabs.map(::TabIItem))
+            adapter.set(tabs.map { TabIItem(it, themeProvider) })
 
             bindSwapper(adapter, tabRecycler)
 
@@ -95,8 +96,8 @@ class TabCustomizerActivity : BaseActivity() {
 
         setResult(Activity.RESULT_CANCELED)
 
-        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, Prefs.iconColor)
-        fabSave.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, themeProvider.iconColor)
+        fabSave.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
         fabSave.setOnClickListener {
             launchMain(NonCancellable) {
                 val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
@@ -105,10 +106,10 @@ class TabCustomizerActivity : BaseActivity() {
                 finish()
             }
         }
-        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, Prefs.iconColor)
-        fabCancel.backgroundTintList = ColorStateList.valueOf(Prefs.accentColor)
+        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, themeProvider.iconColor)
+        fabCancel.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
         fabCancel.setOnClickListener { finish() }
-        setFrostColors {
+        activityThemer.setFrostColors {
             themeWindow = true
         }
     }

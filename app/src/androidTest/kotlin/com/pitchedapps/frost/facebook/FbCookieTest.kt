@@ -17,13 +17,16 @@
 package com.pitchedapps.frost.facebook
 
 import android.webkit.CookieManager
-import kotlin.test.assertTrue
 import org.junit.Test
+import kotlin.test.assertTrue
 
 class FbCookieTest {
 
     @Test
     fun managerAcceptsCookie() {
-        assertTrue(CookieManager.getInstance().acceptCookie(), "Cookie manager should accept cookie by default")
+        assertTrue(
+            CookieManager.getInstance().acceptCookie(),
+            "Cookie manager should accept cookie by default"
+        )
     }
 }

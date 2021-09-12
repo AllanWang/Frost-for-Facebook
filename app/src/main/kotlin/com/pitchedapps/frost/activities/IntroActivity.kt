@@ -22,17 +22,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.internal.KauBaseActivity
-import ca.allanwang.kau.ui.views.RippleCanvas
-import ca.allanwang.kau.ui.widgets.InkPageIndicator
-import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.blendWith
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.fadeScaleTransition
@@ -43,22 +38,25 @@ import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.statusBarColor
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.databinding.ActivityIntroBinding
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.intro.BaseIntroFragment
 import com.pitchedapps.frost.intro.IntroAccountFragment
-import com.pitchedapps.frost.intro.IntroFragmentAnalytics
 import com.pitchedapps.frost.intro.IntroFragmentEnd
 import com.pitchedapps.frost.intro.IntroFragmentTheme
 import com.pitchedapps.frost.intro.IntroFragmentWelcome
 import com.pitchedapps.frost.intro.IntroTabContextFragment
 import com.pitchedapps.frost.intro.IntroTabTouchFragment
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.pitchedapps.frost.utils.setFrostTheme
 import com.pitchedapps.frost.widgets.NotificationWidget
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-07-25.
@@ -66,14 +64,22 @@ import kotlinx.coroutines.launch
  * A beautiful intro activity
  * Phone showcases are drawn via layers
  */
-class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.OnPageChangeListener {
+@AndroidEntryPoint
+class IntroActivity :
+    KauBaseActivity(),
+    ViewPager.PageTransformer,
+    ViewPager.OnPageChangeListener {
 
-    val ripple: RippleCanvas by bindView(R.id.intro_ripple)
-    val viewpager: ViewPager by bindView(R.id.intro_viewpager)
-    lateinit var adapter: IntroPageAdapter
-    val indicator: InkPageIndicator by bindView(R.id.intro_indicator)
-    val skip: Button by bindView(R.id.intro_skip)
-    val next: ImageButton by bindView(R.id.intro_next)
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
+
+    lateinit var binding: ActivityIntroBinding
     private var barHasNext = true
 
     val fragments = listOf(
@@ -82,18 +88,21 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         IntroAccountFragment(),
         IntroTabTouchFragment(),
         IntroTabContextFragment(),
-        IntroFragmentAnalytics(),
         IntroFragmentEnd()
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
-        adapter = IntroPageAdapter(supportFragmentManager, fragments)
+        binding = ActivityIntroBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.init()
+    }
+
+    private fun ActivityIntroBinding.init() {
         viewpager.apply {
             setPageTransformer(true, this@IntroActivity)
             addOnPageChangeListener(this@IntroActivity)
-            adapter = this@IntroActivity.adapter
+            adapter = IntroPageAdapter(supportFragmentManager, fragments)
         }
         indicator.setViewPager(viewpager)
         next.setIcon(GoogleMaterial.Icon.gmd_navigate_next)
@@ -102,19 +111,21 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             else finish(next.x + next.pivotX, next.y + next.pivotY)
         }
         skip.setOnClickListener { finish() }
-        ripple.set(Prefs.bgColor)
+        ripple.set(themeProvider.bgColor)
         theme()
     }
 
     fun theme() {
-        statusBarColor = Prefs.headerColor
-        navigationBarColor = Prefs.headerColor
-        skip.setTextColor(Prefs.textColor)
-        next.imageTintList = ColorStateList.valueOf(Prefs.textColor)
-        indicator.setColour(Prefs.textColor)
-        indicator.invalidate()
+        statusBarColor = themeProvider.headerColor
+        navigationBarColor = themeProvider.headerColor
+        with(binding) {
+            skip.setTextColor(themeProvider.textColor)
+            next.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
+            indicator.setColour(themeProvider.textColor)
+            indicator.invalidate()
+        }
         fragments.forEach { it.themeFragment() }
-        setFrostTheme(true)
+        activityThemer.setFrostTheme(forceTransparent = true)
     }
 
     /**
@@ -141,32 +152,37 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         )
-        ripple.ripple(blue, x, y, 600) {
+        binding.ripple.ripple(blue, x, y, 600) {
             postDelayed(1000) { finish() }
         }
         val lastView: View? = fragments.last().view
         arrayOf<View?>(
-            skip, indicator, next,
+            binding.skip, binding.indicator, binding.next,
             lastView?.findViewById(R.id.intro_title),
             lastView?.findViewById(R.id.intro_desc)
         ).forEach {
             it?.animate()?.alpha(0f)?.setDuration(600)?.start()
         }
-        if (Prefs.textColor != Color.WHITE) {
+        if (themeProvider.textColor != Color.WHITE) {
             val f = lastView?.findViewById<ImageView>(R.id.intro_image)?.drawable
             if (f != null)
                 ValueAnimator.ofFloat(0f, 1f).apply {
                     addUpdateListener {
-                        f.setTint(Prefs.textColor.blendWith(Color.WHITE, it.animatedValue as Float))
+                        f.setTint(
+                            themeProvider.textColor.blendWith(
+                                Color.WHITE,
+                                it.animatedValue as Float
+                            )
+                        )
                     }
                     duration = 600
                     start()
                 }
         }
-        if (Prefs.headerColor != blue) {
+        if (themeProvider.headerColor != blue) {
             ValueAnimator.ofFloat(0f, 1f).apply {
                 addUpdateListener {
-                    val c = Prefs.headerColor.blendWith(blue, it.animatedValue as Float)
+                    val c = themeProvider.headerColor.blendWith(blue, it.animatedValue as Float)
                     statusBarColor = c
                     navigationBarColor = c
                 }
@@ -178,7 +194,7 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
 
     override fun finish() {
         launch(NonCancellable) {
-            loadAssets()
+            loadAssets(themeProvider)
             NotificationWidget.forceUpdate(this@IntroActivity)
             launchNewTask<MainActivity>(cookies(), false)
             super.finish()
@@ -186,8 +202,10 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
     }
 
     override fun onBackPressed() {
-        if (viewpager.currentItem > 0) viewpager.setCurrentItem(viewpager.currentItem - 1, true)
-        else finish()
+        with(binding) {
+            if (viewpager.currentItem > 0) viewpager.setCurrentItem(viewpager.currentItem - 1, true)
+            else finish()
+        }
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -204,13 +222,13 @@ class IntroActivity : KauBaseActivity(), ViewPager.PageTransformer, ViewPager.On
         val hasNext = position != fragments.size - 1
         if (barHasNext == hasNext) return
         barHasNext = hasNext
-        next.fadeScaleTransition {
+        binding.next.fadeScaleTransition {
             setIcon(
                 if (barHasNext) GoogleMaterial.Icon.gmd_navigate_next else GoogleMaterial.Icon.gmd_done,
-                color = Prefs.textColor
+                color = themeProvider.textColor
             )
         }
-        skip.animate().scaleXY(if (barHasNext) 1f else 0f)
+        binding.skip.animate().scaleXY(if (barHasNext) 1f else 0f)
     }
 
     class IntroPageAdapter(fm: FragmentManager, private val fragments: List<BaseIntroFragment>) :

@@ -32,7 +32,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.FrostWebActivity
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.latestEpoch
 import com.pitchedapps.frost.db.saveNotifications
 import com.pitchedapps.frost.enums.OverlayContext
@@ -43,10 +43,10 @@ import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.ParseNotification
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.settings.hasNotifications
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.isIndependent
 import java.util.Locale
@@ -67,7 +67,7 @@ enum class NotificationType(
     private val overlayContext: OverlayContext,
     private val fbItem: FbItem,
     private val parser: FrostParser<ParseNotification>,
-    private val ringtone: () -> String
+    private val ringtoneProvider: (Prefs) -> String
 ) {
 
     GENERAL(
@@ -75,7 +75,7 @@ enum class NotificationType(
         OverlayContext.NOTIFICATION,
         FbItem.NOTIFICATIONS,
         NotifParser,
-        Prefs::notificationRingtone
+        { it.notificationRingtone }
     ),
 
     MESSAGE(
@@ -83,7 +83,7 @@ enum class NotificationType(
         OverlayContext.MESSAGE,
         FbItem.MESSAGES,
         MessageParser,
-        Prefs::messageRingtone
+        { it.messageRingtone }
     );
 
     private val groupPrefix = "frost_${name.toLowerCase(Locale.CANADA)}"
@@ -112,8 +112,12 @@ enum class NotificationType(
      * Returns the number of notifications generated,
      * or -1 if an error occurred
      */
-    suspend fun fetch(context: Context, data: CookieEntity): Int {
-        val notifDao = FrostDatabase.get().notifDao()
+    suspend fun fetch(
+        context: Context,
+        data: CookieEntity,
+        prefs: Prefs,
+        notifDao: NotificationDao
+    ): Int {
         val response = try {
             parser.parse(data.cookie)
         } catch (ignored: Exception) {
@@ -129,7 +133,7 @@ enum class NotificationType(
          */
         fun validText(text: String?): Boolean {
             val t = text ?: return true
-            return Prefs.notificationKeywords.none {
+            return prefs.notificationKeywords.none {
                 t.contains(it, true)
             }
         }
@@ -167,10 +171,10 @@ enum class NotificationType(
         frostEvent("Notifications", "Type" to name, "Count" to notifs.size)
         if (notifs.size > 1)
             summaryNotification(context, userId, notifs.size).notify(context)
-        val ringtone = ringtone()
+        val ringtone = ringtoneProvider(prefs)
         notifs.forEachIndexed { i, notif ->
             // Ring at most twice
-            notif.withAlert(context, i < 2, ringtone).notify(context)
+            notif.withAlert(context, i < 2, ringtone, prefs).notify(context)
         }
         return notifs.size
     }
@@ -307,8 +311,13 @@ data class FrostNotification(
     val notif: NotificationCompat.Builder
 ) {
 
-    fun withAlert(context: Context, enable: Boolean, ringtone: String): FrostNotification {
-        notif.setFrostAlert(context, enable, ringtone)
+    fun withAlert(
+        context: Context,
+        enable: Boolean,
+        ringtone: String,
+        prefs: Prefs
+    ): FrostNotification {
+        notif.setFrostAlert(context, enable, ringtone, prefs)
         return this
     }
 
@@ -316,9 +325,9 @@ data class FrostNotification(
         NotificationManagerCompat.from(context).notify(tag, id, notif.build())
 }
 
-fun Context.scheduleNotificationsFromPrefs(): Boolean {
-    val shouldSchedule = Prefs.hasNotifications
-    return if (shouldSchedule) scheduleNotifications(Prefs.notificationFreq)
+fun Context.scheduleNotificationsFromPrefs(prefs: Prefs): Boolean {
+    val shouldSchedule = prefs.hasNotifications
+    return if (shouldSchedule) scheduleNotifications(prefs.notificationFreq)
     else scheduleNotifications(-1)
 }
 

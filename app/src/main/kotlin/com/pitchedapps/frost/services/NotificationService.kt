@@ -23,17 +23,19 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.selectAll
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.widgets.NotificationWidget
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-14.
@@ -43,9 +45,17 @@ import org.koin.android.ext.android.inject
  *
  * All fetching is done through parsers
  */
+@AndroidEntryPoint
 class NotificationService : BaseJobService() {
 
-    val cookieDao: CookieDao by inject()
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     override fun onStopJob(params: JobParameters?): Boolean {
         super.onStopJob(params)
@@ -64,7 +74,7 @@ class NotificationService : BaseJobService() {
         frostEvent(
             "NotificationTime",
             "Type" to (if (abrupt) "Service force stop" else "Service"),
-            "IM Included" to Prefs.notificationsInstantMessages,
+            "IM Included" to prefs.notificationsInstantMessages,
             "Duration" to time
         )
     }
@@ -86,7 +96,7 @@ class NotificationService : BaseJobService() {
 
     private suspend fun sendNotifications(params: JobParameters?): Unit =
         withContext(Dispatchers.Default) {
-            val currentId = Prefs.userId
+            val currentId = prefs.userId
             val cookies = cookieDao.selectAll()
             yield()
             val jobId = params?.extras?.getInt(NOTIFICATION_PARAM_ID, -1) ?: -1
@@ -94,12 +104,12 @@ class NotificationService : BaseJobService() {
             for (cookie in cookies) {
                 yield()
                 val current = cookie.id == currentId
-                if (Prefs.notificationsGeneral &&
-                    (current || Prefs.notificationAllAccounts)
+                if (prefs.notificationsGeneral &&
+                    (current || prefs.notificationAllAccounts)
                 )
                     notifCount += fetch(jobId, NotificationType.GENERAL, cookie)
-                if (Prefs.notificationsInstantMessages &&
-                    (current || Prefs.notificationsImAllAccounts)
+                if (prefs.notificationsInstantMessages &&
+                    (current || prefs.notificationsImAllAccounts)
                 )
                     notifCount += fetch(jobId, NotificationType.MESSAGE, cookie)
             }
@@ -117,7 +127,7 @@ class NotificationService : BaseJobService() {
      * Also normalized the output to return the number of notifications received
      */
     private suspend fun fetch(jobId: Int, type: NotificationType, cookie: CookieEntity): Int {
-        val count = type.fetch(this, cookie)
+        val count = type.fetch(this, cookie, prefs, notifDao)
         if (count < 0) {
             if (jobId == NOTIFICATION_JOB_NOW)
                 generalNotification(666, R.string.error_notification, BuildConfig.DEBUG)
@@ -133,7 +143,7 @@ class NotificationService : BaseJobService() {
 
     private fun generalNotification(id: Int, textRes: Int, withDefaults: Boolean) {
         val notifBuilder = frostNotification(NOTIF_CHANNEL_GENERAL)
-            .setFrostAlert(this, withDefaults, Prefs.notificationRingtone)
+            .setFrostAlert(this, withDefaults, prefs.notificationRingtone, prefs)
             .setContentTitle(string(R.string.frost_name))
             .setContentText(string(textRes))
         NotificationManagerCompat.from(this).notify(id, notifBuilder.build())

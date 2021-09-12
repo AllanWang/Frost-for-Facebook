@@ -23,10 +23,10 @@ import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.FrostWebViewClientMenu
+import com.pitchedapps.frost.web.FrostWebViewClientMessenger
 
 /**
  * Created by Allan Wang on 27/12/17.
@@ -42,6 +42,7 @@ class WebFragment : BaseFragment() {
      * Given a webview, output a client
      */
     fun client(web: FrostWebView) = when (baseEnum) {
+        FbItem.MESSENGER -> FrostWebViewClientMessenger(web)
         FbItem.MENU -> FrostWebViewClientMenu(web)
         else -> FrostWebViewClient(web)
     }
@@ -52,9 +53,9 @@ class WebFragment : BaseFragment() {
             L.e { "Webview not found in fragment $baseEnum" }
             return super.updateFab(contract)
         }
-        if (baseEnum.isFeed && Prefs.showCreateFab) {
+        if (baseEnum.isFeed && prefs.showCreateFab) {
             contract.showFab(GoogleMaterial.Icon.gmd_edit) {
-                JsActions.CREATE_POST.inject(web)
+                JsActions.CREATE_POST.inject(web, prefs)
             }
             return
         }

@@ -17,7 +17,6 @@
 package com.pitchedapps.frost.kotlin
 
 import com.pitchedapps.frost.utils.L
-import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -29,6 +28,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Flyweight to keep track of values so long as they are valid.
@@ -45,15 +45,19 @@ class Flyweight<K, V>(
 
     // Receives a key and a pending request
     private val actionChannel = Channel<Pair<K, CompletableDeferred<V>>>(Channel.UNLIMITED)
+
     // Receives a key to invalidate the associated value
     private val invalidatorChannel = Channel<K>(Channel.UNLIMITED)
+
     // Receives a key and the resulting value
     private val receiverChannel = Channel<Pair<K, Result<V>>>(Channel.UNLIMITED)
 
     // Keeps track of keys and associated update times
     private val conditionMap: MutableMap<K, Long> = mutableMapOf()
+
     // Keeps track of keys and associated values
     private val resultMap: MutableMap<K, Result<V>> = mutableMapOf()
+
     // Keeps track of unfulfilled actions
     // Note that the explicit type is very important here. See https://youtrack.jetbrains.net/issue/KT-18053
     private val pendingMap: MutableMap<K, MutableList<CompletableDeferred<V>>> = ConcurrentHashMap()

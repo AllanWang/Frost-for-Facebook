@@ -16,10 +16,8 @@
  */
 package com.pitchedapps.frost.utils
 
-import android.util.Log
 import ca.allanwang.kau.logging.KauLogger
 import ca.allanwang.kau.logging.KauLoggerExtension
-import com.bugsnag.android.Bugsnag
 import com.pitchedapps.frost.BuildConfig
 
 /**
@@ -27,13 +25,7 @@ import com.pitchedapps.frost.BuildConfig
  *
  * Logging for frost
  */
-object L : KauLogger("Frost", {
-    when (it) {
-        Log.VERBOSE -> BuildConfig.DEBUG
-        Log.INFO, Log.ERROR -> true
-        else -> BuildConfig.DEBUG || Prefs.verboseLogging
-    }
-}) {
+object L : KauLogger("Frost") {
 
     inline fun test(message: () -> Any?) {
         _d {
@@ -56,26 +48,6 @@ object L : KauLogger("Frost", {
     inline fun _e(e: Throwable?, message: () -> Any?) {
         if (BuildConfig.DEBUG) {
             e(e, message)
-        }
-    }
-
-    var bugsnagInit = false
-
-    override fun logImpl(priority: Int, message: String?, t: Throwable?) {
-        /*
-         * Debug flag is constant and should help with optimization
-         * bugsnagInit is changed per application and helps prevent crashes (if calling pre init)
-         * analytics is changed by the user, and may be toggled throughout the app
-         */
-        if (BuildConfig.DEBUG || !bugsnagInit || !Prefs.analytics) {
-            super.logImpl(priority, message, t)
-        } else {
-            if (message != null) {
-                Bugsnag.leaveBreadcrumb(message)
-            }
-            if (t != null) {
-                Bugsnag.notify(t)
-            }
         }
     }
 }

@@ -31,24 +31,34 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.diff.DiffCallback
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.FrostNotif
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**
  * Created by Allan Wang on 27/12/17.
  */
-class NotificationIItem(val notification: FrostNotif, val cookie: String) :
-    KauIItem<NotificationIItem.ViewHolder>(
-        R.layout.iitem_notification, ::ViewHolder
-    ) {
+class NotificationIItem(
+    val notification: FrostNotif,
+    val cookie: String,
+    private val themeProvider: ThemeProvider
+) : KauIItem<NotificationIItem.ViewHolder>(
+    R.layout.iitem_notification, { ViewHolder(it, themeProvider) }
+) {
 
     companion object {
-        fun bindEvents(adapter: ItemAdapter<NotificationIItem>) {
+        fun bindEvents(
+            adapter: ItemAdapter<NotificationIItem>,
+            fbCookie: FbCookie,
+            prefs: Prefs,
+            themeProvider: ThemeProvider
+        ) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
@@ -58,11 +68,19 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
                     if (notif.unread) {
                         adapter.set(
                             position,
-                            NotificationIItem(notif.copy(unread = false), item.cookie)
+                            NotificationIItem(
+                                notif.copy(unread = false),
+                                item.cookie,
+                                themeProvider
+                            )
                         )
                     }
                     // TODO temp fix. If url is dependent, we cannot load it directly
-                    v!!.context.launchWebOverlay(if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url)
+                    v!!.context.launchWebOverlay(
+                        if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url,
+                        fbCookie,
+                        prefs
+                    )
                     true
                 }
             }
@@ -93,7 +111,10 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         }
     }
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
 
         private val frame: ViewGroup by bindView(R.id.item_frame)
         private val avatar: ImageView by bindView(R.id.item_avatar)
@@ -104,14 +125,14 @@ class NotificationIItem(val notification: FrostNotif, val cookie: String) :
         private val glide
             get() = GlideApp.with(itemView)
 
-        override fun bindView(item: NotificationIItem, payloads: MutableList<Any>) {
+        override fun bindView(item: NotificationIItem, payloads: List<Any>) {
             val notif = item.notification
             frame.background = createSimpleRippleDrawable(
-                Prefs.textColor,
-                Prefs.nativeBgColor(notif.unread)
+                themeProvider.textColor,
+                themeProvider.nativeBgColor(notif.unread)
             )
-            content.setTextColor(Prefs.textColor)
-            date.setTextColor(Prefs.textColor.withAlpha(150))
+            content.setTextColor(themeProvider.textColor)
+            date.setTextColor(themeProvider.textColor.withAlpha(150))
 
             val glide = glide
             glide.load(notif.img)

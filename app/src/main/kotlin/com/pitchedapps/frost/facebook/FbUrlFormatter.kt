@@ -18,6 +18,7 @@ package com.pitchedapps.frost.facebook
 
 import android.net.Uri
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.urlEncode
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
@@ -89,21 +90,19 @@ class FbUrlFormatter(url: String) {
         return cleanedUrl
     }
 
-    override fun toString(): String {
-        val builder = StringBuilder()
-        builder.append(cleaned)
+    override fun toString(): String = buildString {
+        append(cleaned)
         if (queries.isNotEmpty()) {
-            builder.append("?")
+            append("?")
             queries.forEach { (k, v) ->
                 if (v.isEmpty()) {
-                    builder.append("$k&")
+                    append("${k.urlEncode()}&")
                 } else {
-                    builder.append("$k=$v&")
+                    append("${k.urlEncode()}=${v.urlEncode()}&")
                 }
             }
         }
-        return builder.removeSuffix("&").toString()
-    }
+    }.removeSuffix("&")
 
     fun toLogList(): List<String> {
         val list = mutableListOf(cleaned)
@@ -115,6 +114,7 @@ class FbUrlFormatter(url: String) {
     companion object {
 
         const val VIDEO_REDIRECT = "/video_redirect/?src="
+
         /**
          * Items here are explicitly removed from the url
          * Taken from FaceSlim

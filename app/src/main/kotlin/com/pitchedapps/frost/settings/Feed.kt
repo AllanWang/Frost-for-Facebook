@@ -23,7 +23,6 @@ import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.enums.FeedSort
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_FAB
 
 /**
@@ -31,7 +30,7 @@ import com.pitchedapps.frost.utils.REQUEST_FAB
  */
 fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
-    text(R.string.newsfeed_sort, Prefs::feedSort, { Prefs.feedSort = it }) {
+    text(R.string.newsfeed_sort, prefs::feedSort, { prefs.feedSort = it }) {
         descRes = R.string.newsfeed_sort_desc
         onClick = {
             materialDialog {
@@ -50,52 +49,93 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         textGetter = { string(FeedSort(it).textRes) }
     }
 
-    checkbox(R.string.aggressive_recents, Prefs::aggressiveRecents, {
-        Prefs.aggressiveRecents = it
-        shouldRefreshMain()
-    }) {
+    checkbox(
+        R.string.aggressive_recents, prefs::aggressiveRecents,
+        {
+            prefs.aggressiveRecents = it
+            shouldRefreshMain()
+        }
+    ) {
         descRes = R.string.aggressive_recents_desc
     }
 
-    checkbox(R.string.composer, Prefs::showComposer, {
-        Prefs.showComposer = it
-        shouldRefreshMain()
-    }) {
+    checkbox(
+        R.string.composer, prefs::showComposer,
+        {
+            prefs.showComposer = it
+            shouldRefreshMain()
+        }
+    ) {
         descRes = R.string.composer_desc
     }
 
-    checkbox(R.string.create_fab, Prefs::showCreateFab, {
-        Prefs.showCreateFab = it
-        setFrostResult(REQUEST_FAB)
-    }) {
+    checkbox(
+        R.string.create_fab, prefs::showCreateFab,
+        {
+            prefs.showCreateFab = it
+            setFrostResult(REQUEST_FAB)
+        }
+    ) {
         descRes = R.string.create_fab_desc
     }
 
-    checkbox(R.string.suggested_friends, Prefs::showSuggestedFriends, {
-        Prefs.showSuggestedFriends = it
-        shouldRefreshMain()
-    }) {
+    checkbox(
+        R.string.suggested_friends, prefs::showSuggestedFriends,
+        {
+            prefs.showSuggestedFriends = it
+            shouldRefreshMain()
+        }
+    ) {
         descRes = R.string.suggested_friends_desc
     }
 
-    checkbox(R.string.suggested_groups, Prefs::showSuggestedGroups, {
-        Prefs.showSuggestedGroups = it
-        shouldRefreshMain()
-    }) {
+    checkbox(
+        R.string.suggested_groups, prefs::showSuggestedGroups,
+        {
+            prefs.showSuggestedGroups = it
+            shouldRefreshMain()
+        }
+    ) {
         descRes = R.string.suggested_groups_desc
     }
 
-    checkbox(R.string.show_stories, Prefs::showStories, {
-        Prefs.showStories = it
-        shouldRefreshMain()
-    }) {
+    checkbox(
+        R.string.show_stories, prefs::showStories,
+        {
+            prefs.showStories = it
+            shouldRefreshMain()
+        }
+    ) {
         descRes = R.string.show_stories_desc
     }
 
-    checkbox(R.string.facebook_ads, Prefs::showFacebookAds, {
-        Prefs.showFacebookAds = it
-        shouldRefreshMain()
-    }) {
-        descRes = R.string.facebook_ads_desc
+    checkbox(
+        R.string.show_post_actions, prefs::showPostActions,
+        {
+            prefs.showPostActions = it
+            shouldRefreshMain()
+        }
+    ) {
+        descRes = R.string.show_post_actions_desc
+    }
+
+    checkbox(
+        R.string.show_post_reactions, prefs::showPostReactions,
+        {
+            prefs.showPostReactions = it
+            shouldRefreshMain()
+        }
+    ) {
+        descRes = R.string.show_post_reactions_desc
+    }
+
+    checkbox(
+        R.string.full_size_image, prefs::fullSizeImage,
+        {
+            prefs.fullSizeImage = it
+            shouldRefreshMain()
+        }
+    ) {
+        descRes = R.string.full_size_image_desc
     }
 }

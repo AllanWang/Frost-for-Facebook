@@ -24,23 +24,27 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import ca.allanwang.kau.utils.AnimHolder
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
-import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.fragments.WebFragment
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -49,12 +53,24 @@ import kotlin.math.min
  * Created by Allan Wang on 2017-05-29.
  *
  */
+@AndroidEntryPoint
 class FrostWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : NestedWebView(context, attrs, defStyleAttr),
-    FrostContentCore {
+) : NestedWebView(context, attrs, defStyleAttr), FrostContentCore {
+
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -75,21 +91,21 @@ class FrostWebView @JvmOverloads constructor(
             javaScriptEnabled = true
             mediaPlaybackRequiresUserGesture = false // TODO check if we need this
             allowFileAccess = true
-            textZoom = Prefs.webTextScaling
+            textZoom = prefs.webTextScaling
+            domStorageEnabled = true
         }
         setLayerType(LAYER_TYPE_HARDWARE, null)
         // attempt to get custom client; otherwise fallback to original
         frostWebClient = (container as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
-        webChromeClient = FrostChromeClient(this)
+        webChromeClient = FrostChromeClient(this, themeProvider)
         addJavascriptInterface(FrostJSI(this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
-        val db = FrostDatabase.get()
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
             context.ctxCoroutine.launchMain {
-                val cookie = db.cookieDao().currentCookie() ?: return@launchMain
+                val cookie = cookieDao.currentCookie(prefs) ?: return@launchMain
                 context.frostDownload(
-                    cookie,
+                    cookie.cookie,
                     url,
                     userAgent,
                     contentDisposition,
@@ -207,7 +223,7 @@ class FrostWebView @JvmOverloads constructor(
     }
 
     override fun reloadTextSizeSelf() {
-        settings.textZoom = Prefs.webTextScaling
+        settings.textZoom = prefs.webTextScaling
     }
 
     override fun destroy() {

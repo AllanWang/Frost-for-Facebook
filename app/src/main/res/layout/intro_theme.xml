@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <TextView
         android:id="@+id/intro_theme_light"
         style="@style/IntroButton"
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0.33"
         tools:layout_editor_absoluteX="112dp" />
 
-    <Button
+    <TextView
         android:id="@+id/intro_theme_dark"
         style="@style/IntroButton"
         android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
         app:layout_constraintVertical_bias="0.33"
         tools:layout_editor_absoluteX="112dp" />
 
-    <Button
+    <TextView
         android:id="@+id/intro_theme_amoled"
         style="@style/IntroButton"
         android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
         app:layout_constraintVertical_bias="0.66"
         tools:layout_editor_absoluteX="112dp" />
 
-    <Button
+    <TextView
         android:id="@+id/intro_theme_glass"
         style="@style/IntroButton"
         android:layout_width="wrap_content"

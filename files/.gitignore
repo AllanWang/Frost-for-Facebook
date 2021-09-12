@@ -3,3 +3,6 @@ release.properties
 test.keystore
 test.properties
 update-dev.sh
+
+frost.tar
+frost_github.tar

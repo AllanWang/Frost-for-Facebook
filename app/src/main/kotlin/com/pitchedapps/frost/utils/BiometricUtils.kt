@@ -26,10 +26,11 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.prefs.Prefs
+import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlinx.coroutines.CompletableDeferred
 
 typealias BiometricDeferred = CompletableDeferred<BiometricPrompt.CryptoObject?>
 
@@ -64,8 +65,8 @@ object BiometricUtils {
     private fun getOrCreatePoolSync(): Executor =
         pool ?: Executors.newSingleThreadExecutor().also { pool = it }
 
-    private fun shouldPrompt(context: Context): Boolean {
-        return Prefs.biometricsEnabled && System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
+    private fun shouldPrompt(context: Context, prefs: Prefs): Boolean {
+        return prefs.biometricsEnabled && System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
     }
 
     /**
@@ -73,9 +74,13 @@ object BiometricUtils {
      * Note that the underlying request will call [androidx.fragment.app.FragmentTransaction.commit],
      * so this cannot happen after onSaveInstanceState.
      */
-    fun authenticate(activity: FragmentActivity, force: Boolean = false): BiometricDeferred {
+    fun authenticate(
+        activity: FragmentActivity,
+        prefs: Prefs,
+        force: Boolean = false
+    ): BiometricDeferred {
         val deferred: BiometricDeferred = CompletableDeferred()
-        if (!force && !shouldPrompt(activity)) {
+        if (!force && !shouldPrompt(activity, prefs)) {
             deferred.complete(null)
             return deferred
         }

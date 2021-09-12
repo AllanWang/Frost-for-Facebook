@@ -16,8 +16,8 @@
  */
 package com.pitchedapps.frost.utils
 
-import kotlin.test.assertEquals
 import org.junit.Test
+import kotlin.test.assertEquals
 
 /**
  * Created by Allan Wang on 11/03/18.

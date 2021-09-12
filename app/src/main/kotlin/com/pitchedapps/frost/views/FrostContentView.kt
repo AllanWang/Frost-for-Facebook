@@ -22,7 +22,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.circularReveal
@@ -39,14 +38,17 @@ import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
+import javax.inject.Inject
 
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
@@ -74,15 +76,48 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
+) : FrostContentViewBase(context, attrs, defStyleAttr, defStyleRes),
     FrostContentParent where T : View, T : FrostContentCore {
 
-    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
-    private val progress: ProgressBar by bindView(R.id.content_progress)
     val coreView: T by bindView(R.id.content_core)
 
     override val core: FrostContentCore
         get() = coreView
+}
+
+/**
+ * Subsection of [FrostContentView] that is [AndroidEntryPoint] friendly (no generics)
+ */
+@UseExperimental(ExperimentalCoroutinesApi::class)
+@AndroidEntryPoint
+abstract class FrostContentViewBase(
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int,
+    defStyleRes: Int
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes),
+    FrostContentParent {
+
+    // No JvmOverloads due to hilt
+    constructor(context: Context) : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
+    private val progress: ProgressBar by bindView(R.id.content_progress)
 
     /**
      * While this can be conflated, there exist situations where we wish to watch refresh cycles.
@@ -99,13 +134,25 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     protected abstract val layoutRes: Int
 
-    override var swipeEnabled = true
+    @Volatile
+    override var swipeDisabledByAction = false
         set(value) {
-            if (field == value)
-                return
             field = value
-            refresh.post { refresh.isEnabled = value }
+            updateSwipeEnabler()
         }
+
+    @Volatile
+    override var swipeAllowedByPage: Boolean = true
+        set(value) {
+            field = value
+            updateSwipeEnabler()
+        }
+
+    private fun updateSwipeEnabler() {
+        val swipeEnabled = swipeAllowedByPage && !swipeDisabledByAction
+        if (refresh.isEnabled == swipeEnabled) return
+        refresh.post { refresh.isEnabled = swipeEnabled }
+    }
 
     /**
      * Sets up everything
@@ -113,7 +160,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
      */
     protected fun init() {
         inflate(context, layoutRes, this)
-        coreView.parent = this
+        core.parent = this
         reloadThemeSelf()
     }
 
@@ -124,14 +171,11 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
         scope = container
         core.bind(container)
         refresh.setOnRefreshListener {
-            with(coreView) {
-                reload(true)
-            }
+            core.reload(true)
         }
 
         refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
             refresh.isRefreshing = r
-            refresh.isEnabled = true
         }
 
         progressChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { p ->
@@ -145,17 +189,17 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 
     override fun reloadTheme() {
         reloadThemeSelf()
-        coreView.reloadTheme()
+        core.reloadTheme()
     }
 
     override fun reloadTextSize() {
-        coreView.reloadTextSize()
+        core.reloadTextSize()
     }
 
     override fun reloadThemeSelf() {
-        progress.tint(Prefs.textColor.withAlpha(180))
-        refresh.setColorSchemeColors(Prefs.iconColor)
-        refresh.setProgressBackgroundColorSchemeColor(Prefs.headerColor.withAlpha(255))
+        progress.tint(themeProvider.textColor.withAlpha(180))
+        refresh.setColorSchemeColors(themeProvider.iconColor)
+        refresh.setProgressBackgroundColorSchemeColor(themeProvider.headerColor.withAlpha(255))
     }
 
     override fun reloadTextSizeSelf() {
@@ -180,7 +224,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
             return false // still in progress; do not bother with load
         }
         L.v { "Registered transition" }
-        with(coreView) {
+        with(core) {
             refreshReceiver = refreshChannel.openSubscription().also { receiver ->
                 scope.launchMain {
                     var loading = false
@@ -192,7 +236,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
                             if (isVisible)
                                 fadeOut(duration = 200L)
                         } else if (loading) {
-                            if (animate && Prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                            if (animate && prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
                             else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
                             L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
                             receiver.cancel()

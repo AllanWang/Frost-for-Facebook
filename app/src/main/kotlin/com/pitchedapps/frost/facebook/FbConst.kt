@@ -21,14 +21,20 @@ package com.pitchedapps.frost.facebook
  */
 
 const val FACEBOOK_COM = "facebook.com"
+const val MESSENGER_COM = "messenger.com"
 const val FBCDN_NET = "fbcdn.net"
 const val WWW_FACEBOOK_COM = "www.$FACEBOOK_COM"
+const val WWW_MESSENGER_COM = "www.$MESSENGER_COM"
+const val HTTPS_FACEBOOK_COM = "https://$WWW_FACEBOOK_COM"
+const val HTTPS_MESSENGER_COM = "https://$WWW_MESSENGER_COM"
 const val FACEBOOK_BASE_COM = "m.$FACEBOOK_COM"
 const val FB_URL_BASE = "https://$FACEBOOK_BASE_COM/"
-const val FB_URL_MBASIC_BASE = "https://mbasic.$FACEBOOK_COM/"
+const val FACEBOOK_MBASIC_COM = "mbasic.$FACEBOOK_COM"
+const val FB_URL_MBASIC_BASE = "https://$FACEBOOK_MBASIC_COM/"
 fun profilePictureUrl(id: Long) = "https://graph.facebook.com/$id/picture?type=large"
 const val FB_LOGIN_URL = "${FB_URL_BASE}login"
 const val FB_HOME_URL = "${FB_URL_BASE}home.php"
+const val MESSENGER_THREAD_PREFIX = "$HTTPS_MESSENGER_COM/t/"
 
 /*
  * User agent candidates.
@@ -40,6 +46,7 @@ const val FB_HOME_URL = "${FB_URL_BASE}home.php"
 // Default user agent
 const val USER_AGENT_MOBILE_CONST =
     "Mozilla/5.0 (Linux; Android 8.0.0; ONEPLUS A3000) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Mobile Safari/537.36"
+
 // Desktop agent, for pages like messages
 const val USER_AGENT_DESKTOP_CONST =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Safari/537.36"
@@ -51,6 +58,7 @@ const val USER_AGENT = USER_AGENT_DESKTOP_CONST
  * have properly set in
  */
 const val WEB_LOAD_DELAY = 50L
+
 /**
  * Additional delay for transition when called from commit.
  * Note that transitions are also called from onFinish, so this value

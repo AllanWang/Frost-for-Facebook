@@ -2,6 +2,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
@@ -9,17 +10,13 @@ buildscript {
     dependencies {
         classpath kau.Plugins.android
         classpath kau.Plugins.kotlin
-        classpath kau.Plugins.bugsnag
         classpath kau.Plugins.spotless
         classpath kau.Plugins.dexCount
+        classpath kau.Plugins.hilt
         classpath kau.Plugins.gitVersion
     }
 
     wrapper.setDistributionType(Wrapper.DistributionType.ALL)
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
 
 task generateChangelogMd() {
@@ -38,8 +35,4 @@ task generateChangelogMd() {
             writer.write("\n* ${it}")
         }
     }
-}
-
-task fullRelease(type: GradleBuild) {
-    tasks = ['clean', 'lintRelease', 'test', 'assembleRelease']
 }

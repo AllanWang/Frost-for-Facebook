@@ -32,19 +32,19 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.activities.SettingsActivity.Companion.ACTIVITY_REQUEST_DEBUG
 import com.pitchedapps.frost.debugger.OfflineWebsite
 import com.pitchedapps.frost.facebook.FB_URL_BASE
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.parsers.FrostParser
 import com.pitchedapps.frost.facebook.parsers.MessageParser
 import com.pitchedapps.frost.facebook.parsers.NotifParser
 import com.pitchedapps.frost.facebook.parsers.SearchParser
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
-import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * Created by Allan Wang on 2017-06-30.
@@ -87,13 +87,13 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
 
                     attempt = launch(Dispatchers.IO) {
                         try {
-                            val data = parser.parse(FbCookie.webCookie)
+                            val data = parser.parse(fbCookie.webCookie)
                             withMainContext {
                                 loading.dismiss()
-                                createEmail(parser, data?.data)
+                                createEmail(parser, data?.data, prefs)
                             }
                         } catch (e: Exception) {
-                            createEmail(parser, "Error: ${e.message}")
+                            createEmail(parser, "Error: ${e.message}", prefs)
                         }
                     }
                 }
@@ -102,8 +102,11 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
     }
 }
 
-private fun Context.createEmail(parser: FrostParser<*>, content: Any?) =
-    sendFrostEmail("${string(R.string.debug_report)}: ${parser::class.java.simpleName}") {
+private fun Context.createEmail(parser: FrostParser<*>, content: Any?, prefs: Prefs) =
+    sendFrostEmail(
+        "${string(R.string.debug_report)}: ${parser::class.java.simpleName}",
+        prefs = prefs
+    ) {
         addItem("Url", parser.url)
         addItem("Contents", "$content")
     }
@@ -113,7 +116,8 @@ private const val ZIP_NAME = "debug"
 fun SettingsActivity.sendDebug(url: String, html: String?) {
 
     val downloader = OfflineWebsite(
-        url, FbCookie.webCookie ?: "",
+        url,
+        cookie = fbCookie.webCookie ?: "",
         baseUrl = FB_URL_BASE,
         html = html,
         baseDir = DebugActivity.baseDir(this)
@@ -148,7 +152,7 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
                 File(downloader.baseDir, "$ZIP_NAME.zip")
             )
             L.i { "Sending debug zip with uri $zipUri" }
-            sendFrostEmail(R.string.debug_report_email_title) {
+            sendFrostEmail(R.string.debug_report_email_title, prefs = prefs) {
                 addItem("Url", url)
                 addAttachment(zipUri)
                 extras = {

@@ -27,21 +27,26 @@ import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
  *
  */
 @UseExperimental(ExperimentalCoroutinesApi::class)
+@AndroidEntryPoint
 class FrostRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr),
-    FrostContentCore {
+) : RecyclerView(context, attrs, defStyleAttr), FrostContentCore {
+
+    @Inject
+    lateinit var prefs: Prefs
 
     override fun reload(animate: Boolean) = reloadBase(animate)
 
@@ -71,13 +76,13 @@ class FrostRecyclerView @JvmOverloads constructor(
     var onReloadClear: () -> Unit = {}
 
     override fun reloadBase(animate: Boolean) {
-        if (Prefs.animate) fadeOut(onFinish = onReloadClear)
+        if (prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
             parent.refreshChannel.offer(true)
             recyclerContract.reload { parent.progressChannel.offer(it) }
             parent.progressChannel.offer(100)
             parent.refreshChannel.offer(false)
-            if (Prefs.animate) circularReveal()
+            if (prefs.animate) circularReveal()
         }
     }
 

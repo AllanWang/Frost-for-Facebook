@@ -1,5 +1,34 @@
 # Changelog
 
+## v3.0.0
+* Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails
+* Added initial support for messenger.com (settings > appearance > main activity tabs)
+* Fix swipe to refresh not disabling for certain pages
+
+## v2.4.7
+* Fix theme not always sticking on refresh
+* Disable long press menu from appearing immediately after scrolling
+
+## v2.4.6
+* Add option to hide likes and action bar in newsfeed
+* Fix textbox scroll position when typing multiple lines
+* Add option to disable textbox auto resize (settings > behaviour)
+
+## v2.4.5
+* Fix url query encoding
+* Add option to make images full screen (settings > news feed)
+* Auto expand text area when typing
+
+## v2.4.4
+* Lots of under the hood fixes
+* Fixed sharing
+* Fix photo downloads for Android Q+
+
+## v2.4.3
+* Fix Android theme
+* Fix nav header expansion when animations are disabled
+* Fix search page UI
+
 ## v2.4.2
 * Fix townhall loading
 * Fix search suggestions

@@ -43,14 +43,22 @@ import com.pitchedapps.frost.db.NotificationDao
 import com.pitchedapps.frost.db.selectNotificationsSync
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.services.NotificationType
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.toReadableTime
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationWidget : AppWidgetProvider() {
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     override fun onUpdate(
         context: Context,
@@ -59,19 +67,19 @@ class NotificationWidget : AppWidgetProvider() {
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         val type = NotificationType.GENERAL
-        val userId = Prefs.userId
+        val userId = prefs.userId
         val intent = NotificationWidgetService.createIntent(context, type, userId)
         for (id in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.widget_notifications)
 
-            views.setBackgroundColor(R.id.widget_layout_toolbar, Prefs.headerColor)
-            views.setIcon(R.id.img_frost, context, R.drawable.frost_f_24, Prefs.iconColor)
+            views.setBackgroundColor(R.id.widget_layout_toolbar, themeProvider.headerColor)
+            views.setIcon(R.id.img_frost, context, R.drawable.frost_f_24, themeProvider.iconColor)
             views.setOnClickPendingIntent(
                 R.id.img_frost,
                 PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
             )
 
-            views.setBackgroundColor(R.id.widget_notification_list, Prefs.bgColor)
+            views.setBackgroundColor(R.id.widget_notification_list, themeProvider.bgColor)
             views.setRemoteAdapter(R.id.widget_notification_list, intent)
 
             val pendingIntentTemplate = PendingIntent.getActivity(
@@ -112,7 +120,12 @@ private fun RemoteViews.setBackgroundColor(@IdRes viewId: Int, @ColorInt color: 
 /**
  * Adds backward compatibility to setting tinted icons
  */
-private fun RemoteViews.setIcon(@IdRes viewId: Int, context: Context, @DrawableRes res: Int, @ColorInt color: Int) {
+private fun RemoteViews.setIcon(
+    @IdRes viewId: Int,
+    context: Context,
+    @DrawableRes res: Int,
+    @ColorInt color: Int
+) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val icon =
             Icon.createWithResource(context, res).setTint(color).setTintMode(PorterDuff.Mode.SRC_IN)
@@ -133,9 +146,17 @@ private fun RemoteViews.setIcon(@IdRes viewId: Int, context: Context, @DrawableR
     }
 }
 
+@AndroidEntryPoint
 class NotificationWidgetService : RemoteViewsService() {
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
-        NotificationWidgetDataProvider(this, intent)
+        NotificationWidgetDataProvider(this, intent, themeProvider, notifDao)
 
     companion object {
         fun createIntent(context: Context, type: NotificationType, userId: Long): Intent =
@@ -145,15 +166,17 @@ class NotificationWidgetService : RemoteViewsService() {
     }
 }
 
-class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
-    RemoteViewsService.RemoteViewsFactory,
-    KoinComponent {
+class NotificationWidgetDataProvider(
+    private val context: Context,
+    private val intent: Intent,
+    private val themeProvider: ThemeProvider,
+    private val notifDao: NotificationDao
+) : RemoteViewsService.RemoteViewsFactory {
 
-    private val notifDao: NotificationDao by inject()
     @Volatile
     private var content: List<NotificationContent> = emptyList()
 
-    private val type = NotificationType.valueOf(intent.getStringExtra(NOTIF_WIDGET_TYPE))
+    private val type = NotificationType.valueOf(intent.getStringExtra(NOTIF_WIDGET_TYPE)!!)
 
     private val userId = intent.getLongExtra(NOTIF_WIDGET_USER_ID, -1)
 
@@ -182,10 +205,10 @@ class NotificationWidgetDataProvider(val context: Context, val intent: Intent) :
         val views = RemoteViews(context.packageName, R.layout.widget_notification_item)
         try {
             val notif = content[position]
-            views.setBackgroundColor(R.id.item_frame, Prefs.nativeBgColor(notif.unread))
-            views.setTextColor(R.id.item_content, Prefs.textColor)
+            views.setBackgroundColor(R.id.item_frame, themeProvider.nativeBgColor(notif.unread))
+            views.setTextColor(R.id.item_content, themeProvider.textColor)
             views.setTextViewText(R.id.item_content, notif.text)
-            views.setTextColor(R.id.item_date, Prefs.textColor.withAlpha(150))
+            views.setTextColor(R.id.item_date, themeProvider.textColor.withAlpha(150))
             views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
 
             val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop)

@@ -35,6 +35,7 @@ import ca.allanwang.kau.email.sendEmail
 import ca.allanwang.kau.mediapicker.createMediaFile
 import ca.allanwang.kau.mediapicker.createPrivateMediaFile
 import ca.allanwang.kau.utils.colorToForeground
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.darken
 import ca.allanwang.kau.utils.isColorDark
 import ca.allanwang.kau.utils.navigationBarColor
@@ -64,23 +65,27 @@ import com.pitchedapps.frost.facebook.FBCDN_NET
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.FbUrlFormatter.Companion.VIDEO_REDIRECT
+import com.pitchedapps.frost.facebook.MESSENGER_COM
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.formattedFbUri
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.injectors.CssAssets
 import com.pitchedapps.frost.injectors.JsAssets
-import java.io.File
-import java.io.IOException
-import java.util.ArrayList
-import java.util.Locale
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.io.File
+import java.io.IOException
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+import java.util.ArrayList
+import java.util.Locale
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-03.
@@ -92,21 +97,16 @@ const val ARG_IMAGE_URL = "arg_image_url"
 const val ARG_TEXT = "arg_text"
 const val ARG_COOKIE = "arg_cookie"
 
-/**
- * Most context items implement [CoroutineScope] by default.
- * We will add a fallback just in case.
- * It is expected that the scope returned always has the Android main dispatcher as part of the context.
- */
-internal inline val Context.ctxCoroutine: CoroutineScope
-    get() = this as? CoroutineScope ?: GlobalScope
-
 inline fun <reified T : Activity> Context.launchNewTask(
     cookieList: ArrayList<CookieEntity> = arrayListOf(),
     clearStack: Boolean = false
 ) {
-    startActivity<T>(clearStack, intentBuilder = {
-        putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
-    })
+    startActivity<T>(
+        clearStack,
+        intentBuilder = {
+            putParcelableArrayListExtra(EXTRA_COOKIES, cookieList)
+        }
+    )
 }
 
 fun Context.launchLogin(cookieList: ArrayList<CookieEntity>, clearStack: Boolean = true) {
@@ -123,27 +123,37 @@ fun Activity.cookies(): ArrayList<CookieEntity> {
  * Note that most requests may need to first check if the url can be launched as an overlay
  * See [requestWebOverlay] to verify the launch
  */
-private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(url: String) {
+private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlayImpl(
+    url: String,
+    fbCookie: FbCookie,
+    prefs: Prefs
+) {
     val argUrl = url.formattedFbUrl
     L.v { "Launch received: $url\nLaunch web overlay: $argUrl" }
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
         L.d { "Logout php found" }
         ctxCoroutine.launch {
-            FbCookie.logout(this@launchWebOverlayImpl)
+            fbCookie.logout(this@launchWebOverlayImpl)
         }
-    } else if (!(Prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl))))
-        startActivity<T>(false, intentBuilder = {
-            putExtra(ARG_URL, argUrl)
-        })
+    } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
+        startActivity<T>(
+            false,
+            intentBuilder = {
+                putExtra(ARG_URL, argUrl)
+            }
+        )
+    }
 }
 
-fun Context.launchWebOverlay(url: String) = launchWebOverlayImpl<WebOverlayActivity>(url)
+fun Context.launchWebOverlay(url: String, fbCookie: FbCookie, prefs: Prefs) =
+    launchWebOverlayImpl<WebOverlayActivity>(url, fbCookie, prefs)
 
 // TODO Currently, default is overlay. Switch this if default changes
-fun Context.launchWebOverlayDesktop(url: String) = launchWebOverlay(url)
+fun Context.launchWebOverlayDesktop(url: String, fbCookie: FbCookie, prefs: Prefs) =
+    launchWebOverlay(url, fbCookie, prefs)
 
-fun Context.launchWebOverlayMobile(url: String) =
-    launchWebOverlayImpl<WebOverlayMobileActivity>(url)
+fun Context.launchWebOverlayMobile(url: String, fbCookie: FbCookie, prefs: Prefs) =
+    launchWebOverlayImpl<WebOverlayMobileActivity>(url, fbCookie, prefs)
 
 private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
     this,
@@ -151,12 +161,14 @@ private fun Context.fadeBundle() = ActivityOptions.makeCustomAnimation(
 ).toBundle()
 
 fun Context.launchImageActivity(imageUrl: String, text: String? = null, cookie: String? = null) {
-    startActivity<ImageActivity>(intentBuilder = {
-        putExtras(fadeBundle())
-        putExtra(ARG_IMAGE_URL, imageUrl)
-        putExtra(ARG_TEXT, text)
-        putExtra(ARG_COOKIE, cookie)
-    })
+    startActivity<ImageActivity>(
+        intentBuilder = {
+            putExtras(fadeBundle())
+            putExtra(ARG_IMAGE_URL, imageUrl)
+            putExtra(ARG_TEXT, text)
+            putExtra(ARG_COOKIE, cookie)
+        }
+    )
 }
 
 fun Activity.launchTabCustomizerActivity() {
@@ -164,25 +176,45 @@ fun Activity.launchTabCustomizerActivity() {
         SettingsActivity.ACTIVITY_REQUEST_TABS,
         bundleBuilder = {
             with(fadeBundle())
-        })
+        }
+    )
 }
 
 fun WebOverlayActivity.url(): String {
     return intent.getStringExtra(ARG_URL) ?: FbItem.FEED.url
 }
 
-fun Activity.setFrostTheme(forceTransparent: Boolean = false) {
-    val isTransparent =
-        forceTransparent || (Color.alpha(Prefs.bgColor) != 255) || (Color.alpha(Prefs.headerColor) != 255)
-    if (Prefs.bgColor.isColorDark) {
-        setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
-    } else {
-        setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
+@ActivityScoped
+class ActivityThemer @Inject constructor(
+    private val activity: Activity,
+    private val prefs: Prefs,
+    private val themeProvider: ThemeProvider
+) {
+    fun setFrostTheme(forceTransparent: Boolean = false) {
+        val isTransparent =
+            forceTransparent || (Color.alpha(themeProvider.bgColor) != 255) || (
+                Color.alpha(
+                    themeProvider.headerColor
+                ) != 255
+                )
+        if (themeProvider.bgColor.isColorDark) {
+            activity.setTheme(if (isTransparent) R.style.FrostTheme_Transparent else R.style.FrostTheme)
+        } else {
+            activity.setTheme(if (isTransparent) R.style.FrostTheme_Light_Transparent else R.style.FrostTheme_Light)
+        }
+    }
+
+    fun setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
+        val themer = ActivityThemeUtils(prefs = prefs, themeProvider = themeProvider)
+        themer.builder()
+        themer.theme(activity)
     }
 }
 
-class ActivityThemeUtils {
-
+class ActivityThemeUtils(
+    private val prefs: Prefs,
+    private val themeProvider: ThemeProvider
+) {
     private var toolbar: Toolbar? = null
     var themeWindow = true
     private var texts = mutableListOf<TextView>()
@@ -207,23 +239,17 @@ class ActivityThemeUtils {
 
     fun theme(activity: Activity) {
         with(activity) {
-            statusBarColor = Prefs.headerColor.darken(0.1f).withAlpha(255)
-            if (Prefs.tintNavBar) navigationBarColor = Prefs.headerColor
-            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(Prefs.bgColor))
-            toolbar?.setBackgroundColor(Prefs.headerColor)
-            toolbar?.setTitleTextColor(Prefs.iconColor)
-            toolbar?.overflowIcon?.setTint(Prefs.iconColor)
-            texts.forEach { it.setTextColor(Prefs.textColor) }
-            headers.forEach { it.setBackgroundColor(Prefs.headerColor) }
-            backgrounds.forEach { it.setBackgroundColor(Prefs.bgColor) }
+            statusBarColor = themeProvider.headerColor.darken(0.1f).withAlpha(255)
+            if (prefs.tintNavBar) navigationBarColor = themeProvider.headerColor
+            if (themeWindow) window.setBackgroundDrawable(ColorDrawable(themeProvider.bgColor))
+            toolbar?.setBackgroundColor(themeProvider.headerColor)
+            toolbar?.setTitleTextColor(themeProvider.iconColor)
+            toolbar?.overflowIcon?.setTint(themeProvider.iconColor)
+            texts.forEach { it.setTextColor(themeProvider.textColor) }
+            headers.forEach { it.setBackgroundColor(themeProvider.headerColor) }
+            backgrounds.forEach { it.setBackgroundColor(themeProvider.bgColor) }
         }
     }
-}
-
-inline fun Activity.setFrostColors(builder: ActivityThemeUtils.() -> Unit) {
-    val themer = ActivityThemeUtils()
-    themer.builder()
-    themer.theme(this)
 }
 
 fun frostEvent(name: String, vararg events: Pair<String, Any>) {
@@ -240,26 +266,35 @@ fun Throwable?.logFrostEvent(text: String) {
     frostEvent("Errors", "text" to text, "message" to (this?.message ?: "NA"))
 }
 
-fun Activity.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
-    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun Activity.frostSnackbar(
+    @StringRes text: Int,
+    themeProvider: ThemeProvider,
+    builder: Snackbar.() -> Unit = {}
+) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(themeProvider, builder))
 
-fun View.frostSnackbar(@StringRes text: Int, builder: Snackbar.() -> Unit = {}) =
-    snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(builder))
+fun View.frostSnackbar(
+    @StringRes text: Int,
+    themeProvider: ThemeProvider,
+    builder: Snackbar.() -> Unit = {}
+) = snackbar(text, Snackbar.LENGTH_LONG, frostSnackbar(themeProvider, builder))
 
 @SuppressLint("RestrictedApi")
-private inline fun frostSnackbar(crossinline builder: Snackbar.() -> Unit): Snackbar.() -> Unit = {
+private inline fun frostSnackbar(
+    themeProvider: ThemeProvider,
+    crossinline builder: Snackbar.() -> Unit
+): Snackbar.() -> Unit = {
     builder()
     // hacky workaround, but it has proper checks and shouldn't crash
     ((view as? FrameLayout)?.getChildAt(0) as? SnackbarContentLayout)?.apply {
-        messageView.setTextColor(Prefs.textColor)
-        actionView.setTextColor(Prefs.accentColor)
+        messageView.setTextColor(themeProvider.textColor)
+        actionView.setTextColor(themeProvider.accentColor)
         // only set if previous text colors are set
-        view.setBackgroundColor(Prefs.bgColor.withAlpha(255).colorToForeground(0.1f))
+        view.setBackgroundColor(themeProvider.bgColor.withAlpha(255).colorToForeground(0.1f))
     }
 }
 
-fun Activity.frostNavigationBar() {
-    navigationBarColor = if (Prefs.tintNavBar) Prefs.headerColor else Color.BLACK
+fun Activity.frostNavigationBar(prefs: Prefs, themeProvider: ThemeProvider) {
+    navigationBarColor = if (prefs.tintNavBar) themeProvider.headerColor else Color.BLACK
 }
 
 @Throws(IOException::class)
@@ -294,6 +329,12 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
  */
 inline val String?.isFacebookUrl
     get() = this != null && (contains(FACEBOOK_COM) || contains(FBCDN_NET))
+
+inline val String?.isMessengerUrl
+    get() = this != null && contains(MESSENGER_COM)
+
+inline val String?.isFbCookie
+    get() = this != null && contains("c_user")
 
 /**
  * [true] if url is a video and can be accepted by VideoViewer
@@ -362,6 +403,9 @@ val dependentSegments = arrayOf(
 inline val String?.isExplicitIntent
     get() = this != null && (startsWith("intent://") || startsWith("market://"))
 
+fun String.urlEncode(): String =
+    URLEncoder.encode(this, StandardCharsets.UTF_8.name())
+
 fun Context.frostChangelog() = showChangelog(R.xml.frost_changelog)
 
 fun Context.frostUriFromFile(file: File): Uri =
@@ -383,24 +427,27 @@ fun Context.frostUri(entry: String): Uri {
     return uri
 }
 
-inline fun Context.sendFrostEmail(@StringRes subjectId: Int, crossinline builder: EmailBuilder.() -> Unit) =
-    sendFrostEmail(string(subjectId), builder)
+inline fun Context.sendFrostEmail(
+    @StringRes subjectId: Int,
+    prefs: Prefs,
+    crossinline builder: EmailBuilder.() -> Unit
+) = sendFrostEmail(string(subjectId), prefs, builder)
 
-inline fun Context.sendFrostEmail(subjectId: String, crossinline builder: EmailBuilder.() -> Unit) =
-    sendEmail(string(R.string.dev_email), subjectId) {
-        builder()
-        addFrostDetails()
-    }
-
-fun EmailBuilder.addFrostDetails() {
-    addItem("Prev version", Prefs.prevVersionCode.toString())
-    val proTag = "FO"
-//    if (IS_FROST_PRO) "TY" else "FP"
-    addItem("Random Frost ID", "${Prefs.frostId}-$proTag")
-    addItem("Locale", Locale.getDefault().displayName)
+inline fun Context.sendFrostEmail(
+    subjectId: String,
+    prefs: Prefs,
+    crossinline builder: EmailBuilder.() -> Unit
+) = sendEmail("", subjectId) {
+    builder()
+    addFrostDetails(prefs)
 }
 
-fun frostJsoup(url: String): Document = frostJsoup(FbCookie.webCookie, url)
+fun EmailBuilder.addFrostDetails(prefs: Prefs) {
+    addItem("Prev version", prefs.prevVersionCode.toString())
+    val proTag = "FO"
+    addItem("Random Frost ID", "${prefs.frostId}-$proTag")
+    addItem("Locale", Locale.getDefault().displayName)
+}
 
 fun frostJsoup(cookie: String?, url: String): Document =
     Jsoup.connect(url).run {
@@ -438,7 +485,7 @@ fun String.unescapeHtml(): String =
         .replace("\\u003C", "<")
         .replace("\\\"", "\"")
 
-suspend fun Context.loadAssets(): Unit = coroutineScope {
-    CssAssets.load(this@loadAssets)
+suspend fun Context.loadAssets(themeProvider: ThemeProvider): Unit = coroutineScope {
+    themeProvider.preload()
     JsAssets.load(this@loadAssets)
 }

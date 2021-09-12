@@ -47,22 +47,34 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-26.
  */
-class AboutActivity : AboutActivityBase(null, {
-    textColor = Prefs.textColor
-    accentColor = Prefs.accentColor
-    backgroundColor = Prefs.bgColor.withMinAlpha(200)
-    cutoutForeground = Prefs.accentColor
-    cutoutDrawableRes = R.drawable.frost_f_200
-    faqPageTitleRes = R.string.faq_title
-    faqXmlRes = R.xml.frost_faq
-    faqParseNewLine = false
-}) {
+@AndroidEntryPoint
+class AboutActivity : AboutActivityBase(null) {
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    override fun Configs.buildConfigs() {
+        textColor = themeProvider.textColor
+        accentColor = themeProvider.accentColor
+        backgroundColor = themeProvider.bgColor.withMinAlpha(200)
+        cutoutForeground = themeProvider.accentColor
+        cutoutDrawableRes = R.drawable.frost_f_200
+        faqPageTitleRes = R.string.faq_title
+        faqXmlRes = R.xml.frost_faq
+        faqParseNewLine = false
+    }
 
     override fun getLibraries(libs: Libs): List<Library> {
         val include = arrayOf(
@@ -103,12 +115,14 @@ class AboutActivity : AboutActivityBase(null, {
             isOpenSource = true,
             libraryDescription = string(R.string.frost_description),
             libraryVersion = BuildConfig.VERSION_NAME,
-            license = License(
-                definedName = "gplv3",
-                licenseName = "GNU GPL v3",
-                licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
-                licenseDescription = "",
-                licenseShortDescription = ""
+            licenses = setOf(
+                License(
+                    definedName = "gplv3",
+                    licenseName = "GNU GPL v3",
+                    licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
+                    licenseDescription = "",
+                    licenseShortDescription = ""
+                )
             )
         )
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
@@ -121,8 +135,8 @@ class AboutActivity : AboutActivityBase(null, {
                     clickCount++
                 lastClick = now
                 if (clickCount == 8) {
-                    if (!Prefs.debugSettings) {
-                        Prefs.debugSettings = true
+                    if (!prefs.debugSettings) {
+                        prefs.debugSettings = true
                         L.d { "Debugging section enabled" }
                         toast(R.string.debug_toast_enabled)
                     } else {
@@ -134,7 +148,8 @@ class AboutActivity : AboutActivityBase(null, {
         }
     }
 
-    class AboutLinks : AbstractItem<AboutLinks.ViewHolder>(),
+    class AboutLinks :
+        AbstractItem<AboutLinks.ViewHolder>(),
         ThemableIItem by ThemableIItemDelegate() {
         override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
@@ -144,7 +159,7 @@ class AboutActivity : AboutActivityBase(null, {
         override val type: Int
             get() = R.id.item_about_links
 
-        override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+        override fun bindView(holder: ViewHolder, payloads: List<Any>) {
             super.bindView(holder, payloads)
             with(holder) {
                 bindIconColor(*images.toTypedArray())
@@ -171,18 +186,19 @@ class AboutActivity : AboutActivityBase(null, {
                     arrayOf(R.drawable.ic_fdroid_24 to { c.startLink(R.string.fdroid_url) })
                 val iicons: Array<Pair<IIcon, () -> Unit>> = arrayOf(
                     GoogleMaterial.Icon.gmd_file_download to { c.startLink(R.string.github_downloads_url) },
-                    CommunityMaterial.Icon2.cmd_reddit to { c.startLink(R.string.reddit_url) },
-                    CommunityMaterial.Icon.cmd_github_circle to { c.startLink(R.string.github_url) },
-                    CommunityMaterial.Icon2.cmd_slack to { c.startLink(R.string.slack_url) },
-                    CommunityMaterial.Icon2.cmd_xda to { c.startLink(R.string.xda_url) })
+                    CommunityMaterial.Icon3.cmd_reddit to { c.startLink(R.string.reddit_url) },
+                    CommunityMaterial.Icon2.cmd_github to { c.startLink(R.string.github_url) }
+                )
 
                 images =
-                    (icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
-                        icon.toDrawable(
-                            c,
-                            32
-                        ) to onClick
-                    }).mapIndexed { i, (icon, onClick) ->
+                    (
+                        icons.map { (icon, onClick) -> c.drawable(icon) to onClick } + iicons.map { (icon, onClick) ->
+                            icon.toDrawable(
+                                c,
+                                32
+                            ) to onClick
+                        }
+                        ).mapIndexed { i, (icon, onClick) ->
                         ImageView(c).apply {
                             layoutParams = ViewGroup.LayoutParams(size, size)
                             id = 109389 + i

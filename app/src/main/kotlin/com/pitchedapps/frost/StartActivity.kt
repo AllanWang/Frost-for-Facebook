@@ -37,23 +37,38 @@ import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.GenericDao
 import com.pitchedapps.frost.db.selectAll
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.BiometricUtils
 import com.pitchedapps.frost.utils.EXTRA_COOKIES
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import java.util.ArrayList
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import java.util.ArrayList
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
+@AndroidEntryPoint
 class StartActivity : KauBaseActivity() {
 
-    private val cookieDao: CookieDao by inject()
-    private val genericDao: GenericDao by inject()
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var genericDao: GenericDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,32 +82,37 @@ class StartActivity : KauBaseActivity() {
             // TODO add better descriptions
             CookieManager.getInstance()
         } catch (e: Exception) {
+            L.e(e) { "No cookiemanager instance" }
             showInvalidWebView()
         }
 
         launch {
             try {
-                val authDefer = BiometricUtils.authenticate(this@StartActivity)
-                FbCookie.switchBackUser()
+                val authDefer = BiometricUtils.authenticate(this@StartActivity, prefs)
+                fbCookie.switchBackUser()
                 val cookies = ArrayList(cookieDao.selectAll())
                 L.i { "Cookies loaded at time ${System.currentTimeMillis()}" }
                 L._d {
-                    "Cookies: ${cookies.joinToString(
+                    "Cookies: ${
+                    cookies.joinToString(
                         "\t",
                         transform = CookieEntity::toSensitiveString
-                    )}"
+                    )
+                    }"
                 }
-                loadAssets()
+                loadAssets(themeProvider)
                 authDefer.await()
                 when {
                     cookies.isEmpty() -> launchNewTask<LoginActivity>()
                     // Has cookies but no selected account
-                    Prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
-                    else -> startActivity<MainActivity>(intentBuilder = {
-                        putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    })
+                    prefs.userId == -1L -> launchNewTask<SelectorActivity>(cookies)
+                    else -> startActivity<MainActivity>(
+                        intentBuilder = {
+                            putParcelableArrayListExtra(EXTRA_COOKIES, cookies)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        }
+                    )
                 }
             } catch (e: Exception) {
                 L._e(e) { "Load start failed" }

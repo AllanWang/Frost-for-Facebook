@@ -24,6 +24,10 @@ declare interface FrostJSI {
   handleHeader(html: string | null)
 
   allowHorizontalScrolling(enable: boolean)
+
+  setScrolling(scrolling: boolean)
+
+  isScrolling(): boolean
 }
 
 declare var Frost: FrostJSI;

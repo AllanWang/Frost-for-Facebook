@@ -17,13 +17,14 @@
 package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-05-31.
  *
  * List of elements to hide
  */
-enum class CssHider(vararg val items: String) : InjectorContract {
+enum class CssHider(private vararg val items: String) : InjectorContract {
     CORE("[data-sigil=m_login_upsell]", "[role=progressbar]"),
     HEADER(
         "#header:not(.mFuturePageHeader):not(.titled)",
@@ -45,14 +46,20 @@ enum class CssHider(vararg val items: String) : InjectorContract {
         "#MStoriesTray",
         // Sub element with just the tray; title is not a part of this
         "[data-testid=story_tray]"
+    ),
+    POST_ACTIONS(
+        "footer [data-sigil=\"ufi-inline-actions\"]"
+    ),
+    POST_REACTIONS(
+        "footer [data-sigil=\"reactions-bling-bar\"]"
     )
     ;
 
     val injector: JsInjector by lazy {
         JsBuilder().css("${items.joinToString(separator = ",")}{display:none !important}")
-            .single(name).build()
+            .single("css-hider-$name").build()
     }
 
-    override fun inject(webView: WebView) =
-        injector.inject(webView)
+    override fun inject(webView: WebView, prefs: Prefs) =
+        injector.inject(webView, prefs)
 }

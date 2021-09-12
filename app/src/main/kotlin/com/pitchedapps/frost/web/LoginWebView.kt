@@ -30,27 +30,41 @@ import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.isVisible
 import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.db.CookieEntity
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.FB_LOGIN_URL
 import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.jsInject
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-29.
  */
+@AndroidEntryPoint
 class LoginWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
+
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
     private lateinit var progressCallback: (Int) -> Unit
@@ -69,7 +83,7 @@ class LoginWebView @JvmOverloads constructor(
             this@LoginWebView.progressCallback = progressCallback
             L.d { "Begin loading login" }
             launchMain {
-                FbCookie.reset()
+                fbCookie.reset()
                 setupWebview()
                 loadUrl(FB_LOGIN_URL)
             }
@@ -101,7 +115,8 @@ class LoginWebView @JvmOverloads constructor(
             if (url.isFacebookUrl)
                 view.jsInject(
                     CssHider.CORE,
-                    Prefs.themeInjector
+                    themeProvider.injector(ThemeCategory.FACEBOOK),
+                    prefs = prefs
                 )
         }
 

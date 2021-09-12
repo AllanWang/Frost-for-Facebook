@@ -29,16 +29,26 @@ import ca.allanwang.kau.utils.visible
 import ca.allanwang.kau.utils.withAlpha
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.databinding.ViewBadgedIconBinding
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-19.
  */
+@AndroidEntryPoint
 class BadgedIcon @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     private val binding: ViewBadgedIconBinding =
         ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)
@@ -47,9 +57,10 @@ class BadgedIcon @JvmOverloads constructor(
         binding.init()
     }
 
-    fun ViewBadgedIconBinding.init() {
+    private fun ViewBadgedIconBinding.init() {
         val badgeColor =
-            Prefs.mainActivityLayout.backgroundColor().withAlpha(255).colorToForeground(0.2f)
+            prefs.mainActivityLayout.backgroundColor(themeProvider).withAlpha(255)
+                .colorToForeground(0.2f)
         val badgeBackground =
             GradientDrawable(
                 GradientDrawable.Orientation.BOTTOM_TOP,
@@ -57,7 +68,7 @@ class BadgedIcon @JvmOverloads constructor(
             )
         badgeBackground.cornerRadius = 13.dpToPx.toFloat()
         badgeText.background = badgeBackground
-        badgeText.setTextColor(Prefs.mainActivityLayout.iconColor())
+        badgeText.setTextColor(prefs.mainActivityLayout.iconColor(themeProvider))
     }
 
     var iicon: IIcon? = null
@@ -67,13 +78,13 @@ class BadgedIcon @JvmOverloads constructor(
                 value?.toDrawable(
                     context,
                     sizeDp = 20,
-                    color = Prefs.mainActivityLayout.iconColor()
+                    color = prefs.mainActivityLayout.iconColor(themeProvider)
                 )
             )
         }
 
     fun setAllAlpha(alpha: Float) {
-        // badgeTextView.setTextColor(Prefs.textColor.withAlpha(alpha.toInt()))
+        // badgeTextView.setTextColor(themeProvider.textColor.withAlpha(alpha.toInt()))
         binding.badgeImage.drawable.alpha = alpha.toInt()
     }
 

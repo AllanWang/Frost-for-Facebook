@@ -31,8 +31,9 @@ import androidx.core.app.NotificationCompat
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.frostUri
 
 /**
@@ -41,13 +42,13 @@ import com.pitchedapps.frost.utils.frostUri
 const val NOTIF_CHANNEL_GENERAL = "general"
 const val NOTIF_CHANNEL_MESSAGES = "messages"
 
-fun setupNotificationChannels(c: Context) {
+fun setupNotificationChannels(c: Context, themeProvider: ThemeProvider) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
     val manager = c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val appName = c.string(R.string.frost_name)
     val msg = c.string(R.string.messages)
-    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName)
-    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg")
+    manager.createNotificationChannel(NOTIF_CHANNEL_GENERAL, appName, themeProvider)
+    manager.createNotificationChannel(NOTIF_CHANNEL_MESSAGES, "$appName: $msg", themeProvider)
     manager.notificationChannels
         .filter {
             it.id != NOTIF_CHANNEL_GENERAL &&
@@ -60,14 +61,15 @@ fun setupNotificationChannels(c: Context) {
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NotificationManager.createNotificationChannel(
     id: String,
-    name: String
+    name: String,
+    themeProvider: ThemeProvider
 ): NotificationChannel {
     val channel = NotificationChannel(
         id,
         name, NotificationManager.IMPORTANCE_DEFAULT
     )
     channel.enableLights(true)
-    channel.lightColor = Prefs.accentColor
+    channel.lightColor = themeProvider.accentColor
     channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
     createNotificationChannel(channel)
     return channel
@@ -91,7 +93,8 @@ fun Context.frostNotification(id: String) =
 fun NotificationCompat.Builder.setFrostAlert(
     context: Context,
     enable: Boolean,
-    ringtone: String
+    ringtone: String,
+    prefs: Prefs
 ): NotificationCompat.Builder {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         setGroupAlertBehavior(
@@ -102,12 +105,12 @@ fun NotificationCompat.Builder.setFrostAlert(
         setDefaults(0)
     } else {
         var defaults = 0
-        if (Prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
-        if (Prefs.notificationSound) {
+        if (prefs.notificationVibrate) defaults = defaults or Notification.DEFAULT_VIBRATE
+        if (prefs.notificationSound) {
             if (ringtone.isNotBlank()) setSound(context.frostUri(ringtone))
             else defaults = defaults or Notification.DEFAULT_SOUND
         }
-        if (Prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
+        if (prefs.notificationLights) defaults = defaults or Notification.DEFAULT_LIGHTS
         setDefaults(defaults)
     }
     return this

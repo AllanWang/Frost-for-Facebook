@@ -17,10 +17,10 @@
 package com.pitchedapps.frost.utils
 
 import com.pitchedapps.frost.facebook.FACEBOOK_COM
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import org.junit.Test
 
 /**
  * Created by Allan Wang on 2017-11-15.
@@ -55,5 +55,10 @@ class UrlTests {
     fun isFacebook() {
         assertFalse(GOOGLE.isFacebookUrl, "google")
         assertTrue(FACEBOOK_COM.isFacebookUrl, "facebook")
+    }
+
+    @Test
+    fun queryEncoding() {
+        assertEquals("%23foo", "#foo".urlEncode())
     }
 }

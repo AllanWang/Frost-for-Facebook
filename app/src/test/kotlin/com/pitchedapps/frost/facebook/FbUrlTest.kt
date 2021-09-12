@@ -18,10 +18,10 @@ package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndirectImageUrl
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import org.junit.Test
 
 /**
  * Created by Allan Wang on 2017-07-07.
@@ -160,6 +160,13 @@ class FbUrlTest {
     fun queryH() {
         val url = "${FB_URL_BASE}sample/?h=asdfasdf"
         val expected = "${FB_URL_BASE}sample/"
+        assertFbFormat(expected, url)
+    }
+
+    @Test
+    fun queryUrlEncode() {
+        val url = "${ FB_URL_BASE}sample/?q=#foo"
+        val expected = "${ FB_URL_BASE}sample/?q=%23foo"
         assertFbFormat(expected, url)
     }
 

@@ -36,22 +36,18 @@ import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectAll
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.profilePictureUrl
 import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Showcase
 import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.logFrostEvent
-import com.pitchedapps.frost.utils.setFrostColors
 import com.pitchedapps.frost.utils.uniqueOnly
 import com.pitchedapps.frost.web.LoginWebView
-import java.net.UnknownHostException
-import kotlin.coroutines.resume
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -60,19 +56,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import org.koin.android.ext.android.inject
+import java.net.UnknownHostException
+import javax.inject.Inject
+import kotlin.coroutines.resume
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
+@AndroidEntryPoint
 class LoginActivity : BaseActivity() {
+
+    @Inject
+    lateinit var cookieDao: CookieDao
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val web: LoginWebView by bindView(R.id.login_webview)
     private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
     private val textview: AppCompatTextView by bindView(R.id.textview)
     private val profile: ImageView by bindView(R.id.profile)
-    private val cookieDao: CookieDao by inject()
 
     private lateinit var profileLoader: RequestManager
     private val refreshChannel = Channel<Boolean>(10)
@@ -82,21 +83,19 @@ class LoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         setSupportActionBar(toolbar)
         setTitle(R.string.kau_login)
-        setFrostColors {
+        activityThemer.setFrostColors {
             toolbar(toolbar)
         }
         profileLoader = GlideApp.with(profile)
         launch {
             for (refreshing in refreshChannel.uniqueOnly(this)) {
-                if (refreshing) swipeRefresh.isEnabled = true
                 swipeRefresh.isRefreshing = refreshing
-                if (!refreshing) swipeRefresh.isEnabled = false
             }
         }
         launch {
             val cookie = web.loadLogin { refresh(it != 100) }.await()
             L.d { "Login found" }
-            FbCookie.save(cookie.id)
+            fbCookie.save(cookie.id)
             webFadeOut()
             profile.fadeIn()
             loadInfo(cookie)
@@ -138,7 +137,7 @@ class LoginActivity : BaseActivity() {
          */
         val cookies = ArrayList(cookieDao.selectAll())
         delay(1000)
-        if (Showcase.intro)
+        if (prefs.intro)
             launchNewTask<IntroActivity>(cookies, true)
         else
             launchNewTask<MainActivity>(cookies, true)

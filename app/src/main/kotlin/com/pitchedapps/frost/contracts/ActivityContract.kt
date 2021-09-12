@@ -33,6 +33,7 @@ interface MainActivityContract : ActivityContract, MainFabContract {
     val headerBadgeChannel: BroadcastChannel<String>
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
+
     /**
      * Available on all threads
      */

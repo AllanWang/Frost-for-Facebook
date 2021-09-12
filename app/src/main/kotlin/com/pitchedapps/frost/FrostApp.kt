@@ -19,53 +19,52 @@ package com.pitchedapps.frost
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
-import com.bugsnag.android.Bugsnag
-import com.bugsnag.android.Configuration
-import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.CookieDao
+import com.pitchedapps.frost.db.NotificationDao
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
 import com.pitchedapps.frost.services.setupNotificationChannels
-import com.pitchedapps.frost.utils.BuildUtils
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.Showcase
+import dagger.hilt.android.HiltAndroidApp
 import java.util.Random
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-28.
  */
+@HiltAndroidApp
 class FrostApp : Application() {
 
-//    companion object {
-//        fun refWatcher(c: Context) = (c.applicationContext as FrostApp).refWatcher
-//    }
+    @Inject
+    lateinit var prefs: Prefs
 
-//    lateinit var refWatcher: RefWatcher
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var notifDao: NotificationDao
 
     override fun onCreate() {
-        if (!buildIsLollipopAndUp) { // not supported
-            super.onCreate()
-            return
-        }
+        super.onCreate()
 
-//        if (LeakCanary.isInAnalyzerProcess(this)) return
-//        refWatcher = LeakCanary.install(this)
+        if (!buildIsLollipopAndUp) return // not supported
+
         initPrefs()
-        initBugsnag()
 
         L.i { "Begin Frost for Facebook" }
         FrostPglAdBlock.init(this)
 
-        super.onCreate()
+        setupNotificationChannels(this, themeProvider)
 
-        setupNotificationChannels(applicationContext)
-
-        scheduleNotificationsFromPrefs()
+        scheduleNotificationsFromPrefs(prefs)
 
         if (BuildConfig.DEBUG) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
@@ -77,7 +76,7 @@ class FrostApp : Application() {
                     L.d { "Activity ${activity.localClassName} destroyed" }
                 }
 
-                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
                 override fun onActivityStopped(activity: Activity) {}
 
@@ -86,56 +85,25 @@ class FrostApp : Application() {
                 }
             })
         }
-        startKoin {
-            if (BuildConfig.DEBUG) {
-                androidLogger()
-            }
-            androidContext(this@FrostApp)
-            modules(FrostDatabase.module(this@FrostApp))
-        }
     }
 
     private fun initPrefs() {
-        Showcase.initialize(this, "${BuildConfig.APPLICATION_ID}.showcase")
-        Prefs.initialize(this, "${BuildConfig.APPLICATION_ID}.prefs")
+        prefs.deleteKeys("search_bar", "shown_release", "experimental_by_default")
         KL.shouldLog = { BuildConfig.DEBUG }
-        Prefs.verboseLogging = false
-        if (Prefs.installDate == -1L) {
-            Prefs.installDate = System.currentTimeMillis()
-        }
-        if (Prefs.identifier == -1) {
-            Prefs.identifier = Random().nextInt(Int.MAX_VALUE)
-        }
-        Prefs.lastLaunch = System.currentTimeMillis()
-    }
-
-    private fun initBugsnag() {
-        if (BuildConfig.DEBUG) {
-            return
-        }
-        if (!BuildConfig.APPLICATION_ID.startsWith("com.pitchedapps.frost")) {
-            return
-        }
-        val version = BuildUtils.match(BuildConfig.VERSION_NAME)
-            ?: return L.d { "Bugsnag disabled for ${BuildConfig.VERSION_NAME}" }
-        val config = Configuration("83cf680ed01a6fda10fe497d1c0962bb").apply {
-            appVersion = version.versionName
-            releaseStage = BuildUtils.getStage(BuildConfig.BUILD_TYPE)
-            notifyReleaseStages = BuildUtils.getAllStages()
-            autoCaptureSessions = Prefs.analytics
-            enableExceptionHandler = Prefs.analytics
-        }
-        Bugsnag.init(this, config)
-        L.bugsnagInit = true
-        Bugsnag.setUserId(Prefs.frostId)
-        Bugsnag.addToTab("Build", "Application", BuildConfig.APPLICATION_ID)
-        Bugsnag.addToTab("Build", "Version", BuildConfig.VERSION_NAME)
-
-        Bugsnag.beforeNotify { error ->
-            when {
-                error.exception.stackTrace.any { it.className.contains("XposedBridge") } -> false
-                else -> true
+        L.shouldLog = {
+            when (it) {
+                Log.VERBOSE -> BuildConfig.DEBUG
+                Log.INFO, Log.ERROR -> true
+                else -> BuildConfig.DEBUG || prefs.verboseLogging
             }
         }
+        prefs.verboseLogging = false
+        if (prefs.installDate == -1L) {
+            prefs.installDate = System.currentTimeMillis()
+        }
+        if (prefs.identifier == -1) {
+            prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+        }
+        prefs.lastLaunch = System.currentTimeMillis()
     }
 }

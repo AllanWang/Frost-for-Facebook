@@ -1,15 +1,11 @@
 <resources>
     <string name="dev_name" translatable="false">Pitched Apps</string>
-    <string name="dev_email" translatable="false">pitchedapps@gmail.com</string>
-    <string name="dev_paypal" translatable="false">https://www.paypal.me/Allanw9</string>
-    <string name="paypal" translatable="false">PayPal</string>
     <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
+    <string name="github" translatable="false">GitHub</string>
     <string name="github_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook</string>
     <string name="github_downloads_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook/releases</string>
     <string name="fdroid_url" translatable="false">https://f-droid.org/en/packages/com.pitchedapps.frost</string>
     <string name="reddit_url" translatable="false">https://www.reddit.com/r/FrostForFacebook</string>
-    <string name="slack_url" translatable="false">https://frost-slack.allanwang.ca</string>
-    <string name="xda_url" translatable="false">https://forum.xda-developers.com/android/apps-games/app-frost-facebook-t3685896</string>
     <string name="frost_prefix" translatable="false">Frost for Facebook:</string>
     <string name="feedback" translatable="false">Feedback</string>
     <string name="bug_report" translatable="false">Bug Report</string>

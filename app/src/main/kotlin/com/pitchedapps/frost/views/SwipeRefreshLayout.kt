@@ -101,9 +101,4 @@ class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: Attr
             super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed)
         }
     }
-
-    /**
-     * Alias for adding on refresh listener
-     */
-    interface OnRefreshListener : SwipeRefreshLayout.OnRefreshListener
 }

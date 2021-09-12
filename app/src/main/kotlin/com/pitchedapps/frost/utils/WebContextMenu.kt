@@ -25,12 +25,14 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.list.listItems
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.MainActivity
+import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.formattedFbUrl
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-07-07.
  */
-fun Context.showWebContextMenu(wc: WebContext) {
+fun Context.showWebContextMenu(wc: WebContext, fbCookie: FbCookie, prefs: Prefs) {
     if (wc.isEmpty) return
     var title = wc.url ?: string(R.string.menu)
     title =
@@ -43,7 +45,7 @@ fun Context.showWebContextMenu(wc: WebContext) {
     materialDialog {
         title(text = title)
         listItems(items = menuItems.map { string(it.textId) }) { _, position, _ ->
-            menuItems[position].onClick(this@showWebContextMenu, wc)
+            menuItems[position].onClick(this@showWebContextMenu, wc, fbCookie, prefs)
         }
         onDismiss {
             // showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
@@ -65,28 +67,16 @@ class WebContext(val unformattedUrl: String?, val text: String?) {
 enum class WebContextType(
     val textId: Int,
     val constraint: (wc: WebContext) -> Boolean,
-    val onClick: (c: Context, wc: WebContext) -> Unit
+    val onClick: (c: Context, wc: WebContext, fc: FbCookie, prefs: Prefs) -> Unit
 ) {
     OPEN_LINK(
         R.string.open_link,
         { it.hasUrl },
-        { c, wc -> c.launchWebOverlay(wc.url!!) }),
-    COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc -> c.copyToClipboard(wc.url) }),
-    COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc -> c.copyToClipboard(wc.text) }),
-    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc -> c.shareText(wc.url) }),
-    DEBUG_LINK(R.string.debug_link, { it.hasUrl }, { c, wc ->
-        c.materialDialog {
-            title(R.string.debug_link)
-            message(R.string.debug_link_desc)
-            positiveButton(R.string.kau_ok) {
-                c.sendFrostEmail(R.string.debug_link_subject) {
-                    message = c.string(R.string.debug_link_content)
-                    addItem("Unformatted url", wc.unformattedUrl!!)
-                    addItem("Formatted url", wc.url!!)
-                }
-            }
-        }
-    })
+        { c, wc, fc, prefs -> c.launchWebOverlay(wc.url!!, fc, prefs) }
+    ),
+    COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, _, _ -> c.copyToClipboard(wc.url) }),
+    COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, _, _ -> c.copyToClipboard(wc.text) }),
+    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _, _ -> c.shareText(wc.url) })
     ;
 
     companion object {

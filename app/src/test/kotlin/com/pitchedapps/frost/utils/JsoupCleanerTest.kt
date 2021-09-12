@@ -16,8 +16,8 @@
  */
 package com.pitchedapps.frost.utils
 
-import kotlin.test.assertEquals
 import org.junit.Test
+import kotlin.test.assertEquals
 
 /**
  * Created by Allan Wang on 2017-08-10.
@@ -26,7 +26,8 @@ class JsoupCleanerTest {
 
     val whitespaceRegex = Regex("\\s+")
 
-    fun String.cleanWhitespace() = replace("\n", "").replace(whitespaceRegex, " ").replace("> <", "><")
+    fun String.cleanWhitespace() =
+        replace("\n", "").replace(whitespaceRegex, " ").replace("> <", "><")
 
     private fun String.assertCleanHtml(expected: String) {
         assertEquals(expected.cleanWhitespace(), cleanHtml().cleanWhitespace())

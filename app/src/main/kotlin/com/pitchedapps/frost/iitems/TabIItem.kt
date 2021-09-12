@@ -29,26 +29,31 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.injectors.ThemeProvider
 
 /**
  * Created by Allan Wang on 26/11/17.
  */
-class TabIItem(val item: FbItem) : KauIItem<TabIItem.ViewHolder>(
-    R.layout.iitem_tab_preview,
-    { ViewHolder(it) }
-), IDraggable {
+class TabIItem(val item: FbItem, private val themeProvider: ThemeProvider) :
+    KauIItem<TabIItem.ViewHolder>(
+        R.layout.iitem_tab_preview,
+        { ViewHolder(it, themeProvider) }
+    ),
+    IDraggable {
 
     override val isDraggable: Boolean = true
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TabIItem>(itemView) {
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<TabIItem>(itemView) {
 
         val image: ImageView by bindView(R.id.image)
         val text: TextView by bindView(R.id.text)
 
-        override fun bindView(item: TabIItem, payloads: MutableList<Any>) {
+        override fun bindView(item: TabIItem, payloads: List<Any>) {
             val isInToolbar = adapterPosition < 4
-            val color = if (isInToolbar) Prefs.iconColor else Prefs.textColor
+            val color = if (isInToolbar) themeProvider.iconColor else themeProvider.textColor
             image.setIcon(item.item.icon, 20, color)
             if (isInToolbar)
                 text.invisible()

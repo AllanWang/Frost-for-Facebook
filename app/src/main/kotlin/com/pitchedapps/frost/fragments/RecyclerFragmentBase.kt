@@ -23,7 +23,6 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.parsers.FrostParser
 import com.pitchedapps.frost.facebook.parsers.ParseData
 import com.pitchedapps.frost.facebook.parsers.ParseResponse
@@ -130,7 +129,7 @@ abstract class FrostParserFragment<T : ParseData, Item : GenericItem> :
     override suspend fun reloadImpl(progress: (Int) -> Unit): List<Item>? =
         withContext(Dispatchers.IO) {
             progress(10)
-            val cookie = FbCookie.webCookie
+            val cookie = fbCookie.webCookie
             val doc = getDoc(cookie)
             progress(60)
             val response = try {

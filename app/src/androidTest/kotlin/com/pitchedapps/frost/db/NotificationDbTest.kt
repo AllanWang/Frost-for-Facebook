@@ -19,11 +19,11 @@ package com.pitchedapps.frost.db
 import com.pitchedapps.frost.services.NOTIF_CHANNEL_GENERAL
 import com.pitchedapps.frost.services.NOTIF_CHANNEL_MESSAGES
 import com.pitchedapps.frost.services.NotificationContent
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import kotlinx.coroutines.runBlocking
 
 class NotificationDbTest : BaseDbTest() {
 
@@ -51,7 +51,11 @@ class NotificationDbTest : BaseDbTest() {
             db.cookieDao().save(cookie)
             dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs)
             val dbNotifs = dao.selectNotifications(cookie.id, NOTIF_CHANNEL_GENERAL)
-            assertEquals(notifs.sortedByDescending { it.timestamp }, dbNotifs, "Incorrect notification list received")
+            assertEquals(
+                notifs.sortedByDescending { it.timestamp },
+                dbNotifs,
+                "Incorrect notification list received"
+            )
         }
     }
 
@@ -126,10 +130,18 @@ class NotificationDbTest : BaseDbTest() {
         // Unique unsorted ids
         val notifs = listOf(0L, 4L, 2L, 6L, 99L, 3L).map { notifContent(it, cookie) }
         runBlocking {
-            assertEquals(-1L, dao.latestEpoch(cookie.id, NOTIF_CHANNEL_GENERAL), "Default epoch failed")
+            assertEquals(
+                -1L,
+                dao.latestEpoch(cookie.id, NOTIF_CHANNEL_GENERAL),
+                "Default epoch failed"
+            )
             db.cookieDao().save(cookie)
             dao.saveNotifications(NOTIF_CHANNEL_GENERAL, notifs)
-            assertEquals(99L, dao.latestEpoch(cookie.id, NOTIF_CHANNEL_GENERAL), "Latest epoch failed")
+            assertEquals(
+                99L,
+                dao.latestEpoch(cookie.id, NOTIF_CHANNEL_GENERAL),
+                "Latest epoch failed"
+            )
         }
     }
 

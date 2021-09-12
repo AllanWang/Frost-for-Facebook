@@ -21,55 +21,69 @@ import android.content.Context
 import android.webkit.CookieManager
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.CookieEntity
-import com.pitchedapps.frost.db.FrostDatabase
 import com.pitchedapps.frost.db.deleteById
 import com.pitchedapps.frost.db.save
 import com.pitchedapps.frost.db.selectById
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.cookies
 import com.pitchedapps.frost.utils.launchLogin
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Allan Wang on 2017-05-30.
  *
  * The following component manages all cookie transfers.
  */
-object FbCookie {
+class FbCookie @Inject internal constructor(
+    private val prefs: Prefs,
+    private val cookieDao: CookieDao
+) {
 
-    const val COOKIE_DOMAIN = FB_URL_BASE
+    companion object {
+        private const val FB_COOKIE_DOMAIN = HTTPS_FACEBOOK_COM
+        private const val MESSENGER_COOKIE_DOMAIN = HTTPS_MESSENGER_COM
+    }
 
     /**
      * Retrieves the facebook cookie if it exists
      * Note that this is a synchronized call
      */
-    inline val webCookie: String?
-        get() = CookieManager.getInstance().getCookie(COOKIE_DOMAIN)
+    val webCookie: String?
+        get() = CookieManager.getInstance().getCookie(FB_COOKIE_DOMAIN)
 
-    private val cookieDao: CookieDao by lazy {
-        FrostDatabase.get().cookieDao()
-    }
+    val messengerCookie: String?
+        get() = CookieManager.getInstance().getCookie(HTTPS_MESSENGER_COM)
 
-    private suspend fun CookieManager.suspendSetWebCookie(cookie: String?): Boolean {
+    private suspend fun CookieManager.suspendSetWebCookie(
+        domain: String,
+        cookie: String?
+    ): Boolean {
         cookie ?: return true
         return withContext(NonCancellable) {
-            removeAllCookies()
             // Save all cookies regardless of result, then check if all succeeded
             val result = cookie.split(";")
-                .map { async { setSingleWebCookie(it) } }
+                .map { async { setSingleWebCookie(domain, it) } }
                 .awaitAll().all { it }
-            flush()
             L.d { "Cookies set" }
             L._d { "Set $cookie\n\tResult $webCookie" }
             result
         }
     }
+
+    private suspend fun CookieManager.setSingleWebCookie(domain: String, cookie: String): Boolean =
+        suspendCoroutine { cont ->
+            setCookie(domain, cookie.trim()) {
+                cont.resume(it)
+            }
+        }
 
     private suspend fun CookieManager.removeAllCookies(): Boolean = suspendCoroutine { cont ->
         removeAllCookies {
@@ -77,26 +91,21 @@ object FbCookie {
         }
     }
 
-    private suspend fun CookieManager.setSingleWebCookie(cookie: String): Boolean =
-        suspendCoroutine { cont ->
-            setCookie(COOKIE_DOMAIN, cookie.trim()) {
-                cont.resume(it)
-            }
-        }
-
     suspend fun save(id: Long) {
         L.d { "New cookie found" }
-        Prefs.userId = id
+        prefs.userId = id
         CookieManager.getInstance().flush()
-        val cookie = CookieEntity(Prefs.userId, null, webCookie)
+        val cookie = CookieEntity(prefs.userId, null, webCookie)
         cookieDao.save(cookie)
     }
 
     suspend fun reset() {
-        Prefs.userId = -1L
-        with(CookieManager.getInstance()) {
-            removeAllCookies()
-            flush()
+        prefs.userId = -1L
+        withContext(Dispatchers.Main + NonCancellable) {
+            with(CookieManager.getInstance()) {
+                removeAllCookies()
+                flush()
+            }
         }
     }
 
@@ -106,14 +115,19 @@ object FbCookie {
     }
 
     suspend fun switchUser(cookie: CookieEntity?) {
-        if (cookie == null) {
+        if (cookie?.cookie == null) {
             L.d { "Switching User; null cookie" }
             return
         }
-        withContext(NonCancellable) {
+        withContext(Dispatchers.Main + NonCancellable) {
             L.d { "Switching User" }
-            Prefs.userId = cookie.id
-            CookieManager.getInstance().suspendSetWebCookie(cookie.cookie)
+            prefs.userId = cookie.id
+            CookieManager.getInstance().apply {
+                removeAllCookies()
+                suspendSetWebCookie(FB_COOKIE_DOMAIN, cookie.cookie)
+                suspendSetWebCookie(MESSENGER_COOKIE_DOMAIN, cookie.cookieMessenger)
+                flush()
+            }
         }
     }
 
@@ -124,8 +138,8 @@ object FbCookie {
     suspend fun logout(context: Context) {
         val cookies = arrayListOf<CookieEntity>()
         if (context is Activity)
-            cookies.addAll(context.cookies().filter { it.id != Prefs.userId })
-        logout(Prefs.userId)
+            cookies.addAll(context.cookies().filter { it.id != prefs.userId })
+        logout(prefs.userId)
         context.launchLogin(cookies, true)
     }
 
@@ -145,13 +159,13 @@ object FbCookie {
      * When coming back to the main app, switch back to our original account before continuing
      */
     suspend fun switchBackUser() {
-        if (Prefs.prevId == -1L) return
-        val prevId = Prefs.prevId
-        Prefs.prevId = -1L
-        if (prevId != Prefs.userId) {
+        if (prefs.prevId == -1L) return
+        val prevId = prefs.prevId
+        prefs.prevId = -1L
+        if (prevId != prefs.userId) {
             switchUser(prevId)
             L.d { "Switch back user" }
-            L._d { "${Prefs.userId} to $prevId" }
+            L._d { "${prefs.userId} to $prevId" }
         }
     }
 }

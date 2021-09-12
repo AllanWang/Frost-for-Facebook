@@ -20,12 +20,10 @@ import ca.allanwang.kau.utils.runOnUiThread
 import com.pitchedapps.frost.activities.WebOverlayActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
 import com.pitchedapps.frost.contracts.VideoViewHolder
-import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndependent
@@ -69,32 +67,32 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     }
     if (url.isIndirectImageUrl) {
         L.d { "Found indirect fb image" }
-        context.launchImageActivity(url, cookie = FbCookie.webCookie)
+        context.launchImageActivity(url, cookie = fbCookie.webCookie)
         return true
     }
     if (!url.isIndependent) {
         L.d { "Forbid overlay switch" }
         return false
     }
-    if (!Prefs.overlayEnabled) return false
+    if (!prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
         val shouldUseDesktop = url.isFacebookUrl
         // already overlay; manage user agent
         if (userAgentString != USER_AGENT_DESKTOP_CONST && shouldUseDesktop) {
             L._i { "Switch to desktop agent overlay" }
-            context.launchWebOverlayDesktop(url)
+            context.launchWebOverlayDesktop(url, fbCookie, prefs)
             return true
         }
         if (userAgentString == USER_AGENT_DESKTOP_CONST && !shouldUseDesktop) {
             L._i { "Switch from desktop agent" }
-            context.launchWebOverlayMobile(url)
+            context.launchWebOverlayMobile(url, fbCookie, prefs)
             return true
         }
         L._i { "return false switch" }
         return false
     }
     L.v { "Request web overlay passed" }
-    context.launchWebOverlay(url)
+    context.launchWebOverlay(url, fbCookie, prefs)
     return true
 }
 

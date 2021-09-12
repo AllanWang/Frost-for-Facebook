@@ -24,27 +24,39 @@ import android.util.AttributeSet
 import android.view.View
 import android.webkit.WebView
 import ca.allanwang.kau.utils.withAlpha
+import com.pitchedapps.frost.enums.ThemeCategory
 import com.pitchedapps.frost.facebook.USER_AGENT
+import com.pitchedapps.frost.injectors.CssAsset
 import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.injectors.jsInject
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.isFacebookUrl
-import java.io.File
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2018-01-05.
  *
  * A barebone webview with a refresh listener
  */
+@AndroidEntryPoint
 class DebugWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
 
     var onPageFinished: (String?) -> Unit = {}
 
@@ -93,7 +105,7 @@ class DebugWebView @JvmOverloads constructor(
 
         private fun injectBackgroundColor() {
             setBackgroundColor(
-                if (url.isFacebookUrl) Prefs.bgColor.withAlpha(255)
+                if (url.isFacebookUrl) themeProvider.bgColor.withAlpha(255)
                 else Color.WHITE
             )
         }
@@ -104,15 +116,17 @@ class DebugWebView @JvmOverloads constructor(
             if (url.isFacebookUrl)
                 view.jsInject(
 //                        CssHider.CORE,
-                    CssHider.COMPOSER.maybe(!Prefs.showComposer),
-                    CssHider.STORIES.maybe(!Prefs.showStories),
-                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!Prefs.showSuggestedFriends),
-                    CssHider.SUGGESTED_GROUPS.maybe(!Prefs.showSuggestedGroups),
-                    Prefs.themeInjector,
+                    CssHider.COMPOSER.maybe(!prefs.showComposer),
+                    CssHider.STORIES.maybe(!prefs.showStories),
+                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
+                    CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+                    themeProvider.injector(ThemeCategory.FACEBOOK),
                     CssHider.NON_RECENT.maybe(
                         (url?.contains("?sk=h_chr") ?: false) &&
-                            Prefs.aggressiveRecents
-                    )
+                            prefs.aggressiveRecents
+                    ),
+                    CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),
+                    prefs = prefs
                 )
         }
     }

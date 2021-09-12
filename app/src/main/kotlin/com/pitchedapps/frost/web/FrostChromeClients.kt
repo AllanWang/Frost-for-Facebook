@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.web
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.webkit.ConsoleMessage
 import android.webkit.GeolocationPermissions
@@ -31,6 +32,7 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.input.input
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.contracts.ActivityContract
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostWebView
@@ -45,12 +47,20 @@ import kotlinx.coroutines.channels.SendChannel
 /**
  * The default chrome client
  */
-class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
+class FrostChromeClient(
+    web: FrostWebView,
+    private val themeProvider: ThemeProvider
+) : WebChromeClient() {
 
+    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val progress: SendChannel<Int> = web.parent.progressChannel
     private val title: SendChannel<String> = web.parent.titleChannel
     private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
+
+    override fun getDefaultVideoPoster(): Bitmap? =
+        super.getDefaultVideoPoster()
+            ?: Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
 
     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
         L.v { "Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
@@ -74,8 +84,14 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
         fileChooserParams: FileChooserParams
     ): Boolean {
         activity?.openFileChooser(filePathCallback, fileChooserParams)
-            ?: webView.frostSnackbar(R.string.file_chooser_not_found)
+            ?: webView.frostSnackbar(R.string.file_chooser_not_found, themeProvider)
         return activity != null
+    }
+
+    private fun JsResult.frostCancel() {
+        cancel()
+        refresh.offer(false)
+        progress.offer(100)
     }
 
     override fun onJsAlert(
@@ -88,7 +104,7 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             title(text = url)
             message(text = message)
             positiveButton { result.confirm() }
-            onDismiss { result.cancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }
@@ -103,8 +119,8 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             title(text = url)
             message(text = message)
             positiveButton { result.confirm() }
-            negativeButton { result.cancel() }
-            onDismiss { result.cancel() }
+            negativeButton { result.frostCancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }
@@ -119,8 +135,8 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
             title(text = url)
             message(text = message)
             positiveButton { result.confirm() }
-            negativeButton { result.cancel() }
-            onDismiss { result.cancel() }
+            negativeButton { result.frostCancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }
@@ -139,8 +155,8 @@ class FrostChromeClient(web: FrostWebView) : WebChromeClient() {
                 result.confirm(charSequence.toString())
             }
             // positive button added through input
-            negativeButton { result.cancel() }
-            onDismiss { result.cancel() }
+            negativeButton { result.frostCancel() }
+            onDismiss { result.frostCancel() }
         }
         return true
     }

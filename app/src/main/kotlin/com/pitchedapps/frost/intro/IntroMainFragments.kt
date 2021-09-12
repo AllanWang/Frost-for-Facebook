@@ -30,14 +30,14 @@ import androidx.fragment.app.Fragment
 import ca.allanwang.kau.kotlin.LazyResettableRegistry
 import ca.allanwang.kau.utils.Kotterknife
 import ca.allanwang.kau.utils.bindViewResettable
-import ca.allanwang.kau.utils.setIcon
 import ca.allanwang.kau.utils.setOnSingleTapListener
-import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.IntroActivity
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.abs
-import kotlinx.android.synthetic.main.intro_analytics.*
 
 /**
  * Created by Allan Wang on 2017-07-28.
@@ -48,7 +48,14 @@ import kotlinx.android.synthetic.main.intro_analytics.*
 /**
  * The core intro fragment for all other fragments
  */
+@AndroidEntryPoint
 abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
+
+    @Inject
+    protected lateinit var prefs: Prefs
+
+    @Inject
+    protected lateinit var themeProvider: ThemeProvider
 
     val screenWidth
         get() = resources.displayMetrics.widthPixels
@@ -105,7 +112,7 @@ abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
     }
 
     protected open fun themeFragmentImpl() {
-        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(Prefs.textColor) }
+        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(themeProvider.textColor) }
     }
 
     protected val viewArray: Array<Array<out View>> by lazyResettableRegistered { viewArray() }
@@ -134,32 +141,7 @@ class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
-    }
-}
-
-class IntroFragmentAnalytics : BaseIntroFragment(R.layout.intro_analytics) {
-
-    val container: ConstraintLayout by bindViewResettable(R.id.intro_analytics_container)
-
-    override fun viewArray(): Array<Array<out View>> = arrayOf(
-        arrayOf(title), arrayOf(image),
-        arrayOf(intro_switch), arrayOf(desc)
-    )
-
-    override fun themeFragmentImpl() {
-        super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        image.setIcon(GoogleMaterial.Icon.gmd_bug_report, 120)
-        intro_switch.isSelected = Prefs.analytics
-        intro_switch.setOnCheckedChangeListener { _, isChecked ->
-            Prefs.analytics = isChecked
-        }
+        image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
     }
 }
 
@@ -171,7 +153,7 @@ class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
 
     override fun themeFragmentImpl() {
         super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(Prefs.textColor)
+        image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
     }
 
     @SuppressLint("ClickableViewAccessibility")

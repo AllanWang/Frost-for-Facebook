@@ -20,6 +20,7 @@ import com.pitchedapps.frost.facebook.FB_USER_MATCHER
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.utils.frostJsoup
+import org.junit.Assume
 import java.io.File
 import java.io.FileInputStream
 import java.util.Properties
@@ -27,7 +28,6 @@ import kotlin.reflect.full.starProjectedType
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
-import org.junit.Assume
 
 /**
  * Created by Allan Wang on 21/12/17.
@@ -79,7 +79,10 @@ fun Any.assertComponentsNotEmpty() {
                 val result = it.call(this) as String
                 assertTrue(result.isNotEmpty(), "${it.name} returned empty string")
                 if (result.startsWith("https"))
-                    assertTrue(result.startsWith("https://"), "${it.name} has poorly formatted output $result")
+                    assertTrue(
+                        result.startsWith("https://"),
+                        "${it.name} has poorly formatted output $result"
+                    )
             }
         }
     }

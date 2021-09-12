@@ -27,7 +27,9 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.select.selectExtension
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.launchWebOverlay
 
 /**
@@ -41,20 +43,20 @@ interface ClickableIItemContract {
 
     val url: String?
 
-    fun click(context: Context) {
+    fun click(context: Context, fbCookie: FbCookie, prefs: Prefs) {
         val url = url ?: return
-        context.launchWebOverlay(url)
+        context.launchWebOverlay(url, fbCookie, prefs)
     }
 
     companion object {
-        fun bindEvents(adapter: IAdapter<GenericItem>) {
+        fun bindEvents(adapter: IAdapter<GenericItem>, fbCookie: FbCookie, prefs: Prefs) {
             adapter.fastAdapter?.apply {
                 selectExtension {
                     isSelectable = false
                 }
                 onClickListener = { v, _, item, _ ->
                     if (item is ClickableIItemContract) {
-                        item.click(v!!.context)
+                        item.click(v!!.context, fbCookie, prefs)
                         true
                     } else
                         false
@@ -70,17 +72,25 @@ interface ClickableIItemContract {
  */
 open class HeaderIItem(
     val text: String?,
-    itemId: Int = R.layout.iitem_header
-) : KauIItem<HeaderIItem.ViewHolder>(R.layout.iitem_header, ::ViewHolder, itemId) {
+    itemId: Int = R.layout.iitem_header,
+    private val themeProvider: ThemeProvider
+) : KauIItem<HeaderIItem.ViewHolder>(
+    R.layout.iitem_header,
+    { ViewHolder(it, themeProvider) },
+    itemId
+) {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<HeaderIItem>(itemView) {
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<HeaderIItem>(itemView) {
 
         val text: TextView by bindView(R.id.item_header_text)
 
-        override fun bindView(item: HeaderIItem, payloads: MutableList<Any>) {
-            text.setTextColor(Prefs.accentColor)
+        override fun bindView(item: HeaderIItem, payloads: List<Any>) {
+            text.setTextColor(themeProvider.accentColor)
             text.text = item.text
-            text.setBackgroundColor(Prefs.nativeBgColor)
+            text.setBackgroundColor(themeProvider.nativeBgColor)
         }
 
         override fun unbindView(item: HeaderIItem) {
@@ -96,18 +106,23 @@ open class HeaderIItem(
 open class TextIItem(
     val text: String?,
     override val url: String?,
-    itemId: Int = R.layout.iitem_text
-) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, ::ViewHolder, itemId),
+    itemId: Int = R.layout.iitem_text,
+    private val themeProvider: ThemeProvider
+) : KauIItem<TextIItem.ViewHolder>(R.layout.iitem_text, { ViewHolder(it, themeProvider) }, itemId),
     ClickableIItemContract {
 
-    class ViewHolder(itemView: View) : FastAdapter.ViewHolder<TextIItem>(itemView) {
+    class ViewHolder(
+        itemView: View,
+        private val themeProvider: ThemeProvider
+    ) : FastAdapter.ViewHolder<TextIItem>(itemView) {
 
         val text: TextView by bindView(R.id.item_text_view)
 
-        override fun bindView(item: TextIItem, payloads: MutableList<Any>) {
-            text.setTextColor(Prefs.textColor)
+        override fun bindView(item: TextIItem, payloads: List<Any>) {
+            text.setTextColor(themeProvider.textColor)
             text.text = item.text
-            text.background = createSimpleRippleDrawable(Prefs.bgColor, Prefs.nativeBgColor)
+            text.background =
+                createSimpleRippleDrawable(themeProvider.bgColor, themeProvider.nativeBgColor)
         }
 
         override fun unbindView(item: TextIItem) {

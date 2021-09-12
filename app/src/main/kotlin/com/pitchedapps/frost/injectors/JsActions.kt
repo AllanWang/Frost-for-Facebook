@@ -18,6 +18,7 @@ package com.pitchedapps.frost.injectors
 
 import android.webkit.WebView
 import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.prefs.Prefs
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -42,8 +43,8 @@ enum class JsActions(body: String) : InjectorContract {
 
     val function = "(function(){$body})();"
 
-    override fun inject(webView: WebView) =
-        JsInjector(function).inject(webView)
+    override fun inject(webView: WebView, prefs: Prefs) =
+        JsInjector(function).inject(webView, prefs)
 }
 
 @Suppress("NOTHING_TO_INLINE")

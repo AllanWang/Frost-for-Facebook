@@ -19,19 +19,25 @@ package com.pitchedapps.frost.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-31.
  *
  * Receiver that is triggered whenever the app updates so it can bind the notifications again
  */
+@AndroidEntryPoint
 class UpdateReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var prefs: Prefs
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
         L.d { "Frost has updated" }
-        context.scheduleNotifications(Prefs.notificationFreq) // Update notifications
+        context.scheduleNotifications(prefs.notificationFreq) // Update notifications
     }
 }

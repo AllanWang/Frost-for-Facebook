@@ -29,18 +29,18 @@ import ca.allanwang.kau.kpref.activity.KPrefActivity
 import ca.allanwang.kau.kpref.activity.KPrefAdapterBuilder
 import ca.allanwang.kau.ui.views.RippleCanvas
 import ca.allanwang.kau.utils.finishSlideOut
-import ca.allanwang.kau.utils.materialDialog
 import ca.allanwang.kau.utils.setMenuIcons
 import ca.allanwang.kau.utils.startActivityForResult
 import ca.allanwang.kau.utils.startLink
-import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.withSceneTransitionAnimation
-import com.afollestad.materialdialogs.list.listItems
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.enums.Support
+import com.pitchedapps.frost.db.NotificationDao
+import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.settings.getAppearancePrefs
 import com.pitchedapps.frost.settings.getBehaviourPrefs
 import com.pitchedapps.frost.settings.getDebugPrefs
@@ -49,8 +49,8 @@ import com.pitchedapps.frost.settings.getFeedPrefs
 import com.pitchedapps.frost.settings.getNotificationPrefs
 import com.pitchedapps.frost.settings.getSecurityPrefs
 import com.pitchedapps.frost.settings.sendDebug
+import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
 import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_RESTART
 import com.pitchedapps.frost.utils.cookies
@@ -58,14 +58,31 @@ import com.pitchedapps.frost.utils.frostChangelog
 import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
-import com.pitchedapps.frost.utils.setFrostTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-06.
  */
+@AndroidEntryPoint
 class SettingsActivity : KPrefActivity() {
+
+    @Inject
+    lateinit var fbCookie: FbCookie
+
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var notifDao: NotificationDao
+
+    @Inject
+    lateinit var activityThemer: ActivityThemer
 
     private var resultFlag = Activity.RESULT_CANCELED
 
@@ -117,11 +134,11 @@ class SettingsActivity : KPrefActivity() {
         }
         when (requestCode) {
             REQUEST_NOTIFICATION_RINGTONE -> {
-                Prefs.notificationRingtone = uriString
+                prefs.notificationRingtone = uriString
                 reloadByTitle(R.string.notification_ringtone)
             }
             REQUEST_MESSAGE_RINGTONE -> {
-                Prefs.messageRingtone = uriString
+                prefs.messageRingtone = uriString
                 reloadByTitle(R.string.message_ringtone)
             }
         }
@@ -129,8 +146,8 @@ class SettingsActivity : KPrefActivity() {
     }
 
     override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
-        textColor = { Prefs.textColor }
-        accentColor = { Prefs.accentColor }
+        textColor = { themeProvider.textColor }
+        accentColor = { themeProvider.accentColor }
     }
 
     override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
@@ -146,7 +163,7 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.newsfeed, getFeedPrefs()) {
             descRes = R.string.newsfeed_desc
-            iicon = CommunityMaterial.Icon2.cmd_newspaper
+            iicon = CommunityMaterial.Icon3.cmd_newspaper
         }
 
         subItems(R.string.notifications, getNotificationPrefs()) {
@@ -170,9 +187,12 @@ class SettingsActivity : KPrefActivity() {
             descRes = R.string.about_frost_desc
             iicon = GoogleMaterial.Icon.gmd_info
             onClick = {
-                startActivityForResult<AboutActivity>(9, bundleBuilder = {
-                    withSceneTransitionAnimation(this@SettingsActivity)
-                })
+                startActivityForResult<AboutActivity>(
+                    9,
+                    bundleBuilder = {
+                        withSceneTransitionAnimation(this@SettingsActivity)
+                    }
+                )
             }
         }
 
@@ -189,13 +209,13 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.experimental, getExperimentalPrefs()) {
             descRes = R.string.experimental_desc
-            iicon = CommunityMaterial.Icon.cmd_flask_outline
+            iicon = CommunityMaterial.Icon2.cmd_flask_outline
         }
 
         subItems(R.string.debug_frost, getDebugPrefs()) {
             descRes = R.string.debug_frost_desc
             iicon = CommunityMaterial.Icon.cmd_android_debug_bridge
-            visible = { Prefs.debugSettings }
+            visible = { prefs.debugSettings }
         }
     }
 
@@ -213,25 +233,29 @@ class SettingsActivity : KPrefActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        setFrostTheme(true)
+        activityThemer.setFrostTheme(forceTransparent = true)
         super.onCreate(savedInstanceState)
-        animate = Prefs.animate
+        animate = prefs.animate
         themeExterior(false)
     }
 
     fun themeExterior(animate: Boolean = true) {
-        if (animate) bgCanvas.fade(Prefs.bgColor)
-        else bgCanvas.set(Prefs.bgColor)
-        if (animate) toolbarCanvas.ripple(Prefs.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
-        else toolbarCanvas.set(Prefs.headerColor)
-        frostNavigationBar()
+        if (animate) bgCanvas.fade(themeProvider.bgColor)
+        else bgCanvas.set(themeProvider.bgColor)
+        if (animate) toolbarCanvas.ripple(
+            themeProvider.headerColor,
+            RippleCanvas.MIDDLE,
+            RippleCanvas.END
+        )
+        else toolbarCanvas.set(themeProvider.headerColor)
+        frostNavigationBar(prefs, themeProvider)
     }
 
     override fun onBackPressed() {
         if (!super.backPress()) {
             setResult(resultFlag)
             launch(NonCancellable) {
-                loadAssets()
+                loadAssets(themeProvider)
                 finishSlideOut()
             }
         }
@@ -239,10 +263,10 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_settings, menu)
-        toolbar.tint(Prefs.iconColor)
+        toolbar.tint(themeProvider.iconColor)
         setMenuIcons(
-            menu, Prefs.iconColor,
-            R.id.action_email to GoogleMaterial.Icon.gmd_email,
+            menu, themeProvider.iconColor,
+            R.id.action_github to CommunityMaterial.Icon2.cmd_github,
             R.id.action_changelog to GoogleMaterial.Icon.gmd_info
         )
         return true
@@ -250,12 +274,7 @@ class SettingsActivity : KPrefActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_email -> materialDialog {
-                title(R.string.subject)
-                listItems(items = Support.values().map { string(it.title) }) { _, index, _ ->
-                    Support.values()[index].sendEmail(this@SettingsActivity)
-                }
-            }
+            R.id.action_github -> startLink(R.string.github_url)
             R.id.action_changelog -> frostChangelog()
             else -> return super.onOptionsItemSelected(item)
         }

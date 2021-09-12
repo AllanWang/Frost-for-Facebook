@@ -1,0 +1,11 @@
+@import "../../core/colors";
+@import "../../core/base";
+@import "core_vars";
+@import "core_text";
+@import "core_bg";
+@import "core_border";
+@import "core_hider";
+
+@include placeholder {
+  color: $text_disabled !important;
+}

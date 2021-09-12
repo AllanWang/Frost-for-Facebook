@@ -21,8 +21,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.pitchedapps.frost.BuildConfig
-import org.koin.core.context.GlobalContext
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 interface FrostPrivateDao {
     fun cookieDao(): CookieDao
@@ -32,7 +36,7 @@ interface FrostPrivateDao {
 
 @Database(
     entities = [CookieEntity::class, NotificationEntity::class, CacheEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class FrostPrivateDatabase : RoomDatabase(), FrostPrivateDao {
@@ -85,26 +89,38 @@ class FrostDatabase(
             val privateDb = Room.databaseBuilder(
                 context, FrostPrivateDatabase::class.java,
                 FrostPrivateDatabase.DATABASE_NAME
-            ).frostBuild()
+            ).addMigrations(COOKIES_MIGRATION_1_2).frostBuild()
             val publicDb = Room.databaseBuilder(
                 context, FrostPublicDatabase::class.java,
                 FrostPublicDatabase.DATABASE_NAME
             ).frostBuild()
             return FrostDatabase(privateDb, publicDb)
         }
-
-        fun module(context: Context) = module {
-            single { create(context) }
-            single { get<FrostDatabase>().cookieDao() }
-            single { get<FrostDatabase>().cacheDao() }
-            single { get<FrostDatabase>().notifDao() }
-            single { get<FrostDatabase>().genericDao() }
-        }
-
-        /**
-         * Get from koin
-         * For the most part, you can retrieve directly from other koin components
-         */
-        fun get(): FrostDatabase = GlobalContext.get().koin.get()
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
+
+    @Provides
+    @Singleton
+    fun frostDatabase(@ApplicationContext context: Context): FrostDatabase =
+        FrostDatabase.create(context)
+
+    @Provides
+    @Singleton
+    fun cookieDao(frostDatabase: FrostDatabase): CookieDao = frostDatabase.cookieDao()
+
+    @Provides
+    @Singleton
+    fun cacheDao(frostDatabase: FrostDatabase): CacheDao = frostDatabase.cacheDao()
+
+    @Provides
+    @Singleton
+    fun notifDao(frostDatabase: FrostDatabase): NotificationDao = frostDatabase.notifDao()
+
+    @Provides
+    @Singleton
+    fun genericDao(frostDatabase: FrostDatabase): GenericDao = frostDatabase.genericDao()
 }

@@ -36,7 +36,7 @@ suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): Stri
         try {
             withTimeout(timeout) {
                 val redirect = requestBuilder().url(url).get().call()
-                                .execute().body?.string() ?: return@withTimeout null
+                    .execute().body?.string() ?: return@withTimeout null
                 FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
             }
         } catch (e: Exception) {

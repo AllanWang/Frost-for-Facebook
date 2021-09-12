@@ -21,8 +21,8 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import com.pitchedapps.frost.utils.FrostPglAdBlock
 import com.pitchedapps.frost.utils.L
-import java.io.ByteArrayInputStream
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import java.io.ByteArrayInputStream
 
 /**
  * Created by Allan Wang on 2017-07-13.

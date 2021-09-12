@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import ca.allanwang.kau.utils.ctxCoroutine
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.gone
@@ -41,16 +42,19 @@ import com.devbrackets.android.exomedia.listener.VideoControlsVisibilityListener
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ViewVideoBinding
-import com.pitchedapps.frost.db.FrostDatabase
+import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
+import com.pitchedapps.frost.injectors.ThemeProvider
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.Prefs
-import com.pitchedapps.frost.utils.ctxCoroutine
 import com.pitchedapps.frost.utils.frostDownload
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-10-13.
  */
+@AndroidEntryPoint
 class FrostVideoViewer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -85,6 +89,15 @@ class FrostVideoViewer @JvmOverloads constructor(
         }
     }
 
+    @Inject
+    lateinit var prefs: Prefs
+
+    @Inject
+    lateinit var themeProvider: ThemeProvider
+
+    @Inject
+    lateinit var cookieDao: CookieDao
+
     private val binding: ViewVideoBinding =
         ViewVideoBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -95,8 +108,8 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun ViewVideoBinding.init() {
         alpha = 0f
         videoBackground.setBackgroundColor(
-            if (!Prefs.blackMediaBg && Prefs.bgColor.isColorDark)
-                Prefs.bgColor.withMinAlpha(200)
+            if (!prefs.blackMediaBg && themeProvider.bgColor.isColorDark)
+                themeProvider.bgColor.withMinAlpha(200)
             else
                 Color.BLACK
         )
@@ -104,7 +117,7 @@ class FrostVideoViewer @JvmOverloads constructor(
         video.pause()
         videoToolbar.inflateMenu(R.menu.menu_video)
         context.setMenuIcons(
-            videoToolbar.menu, Prefs.iconColor,
+            videoToolbar.menu, themeProvider.iconColor,
             R.id.action_pip to GoogleMaterial.Icon.gmd_picture_in_picture_alt,
             R.id.action_download to GoogleMaterial.Icon.gmd_file_download
         )
@@ -112,9 +125,8 @@ class FrostVideoViewer @JvmOverloads constructor(
             when (it.itemId) {
                 R.id.action_pip -> video.isExpanded = false
                 R.id.action_download -> context.ctxCoroutine.launchMain {
-                    val cookie =
-                        FrostDatabase.get().cookieDao().currentCookie() ?: return@launchMain
-                    context.frostDownload(cookie, video.videoUri)
+                    val cookie = cookieDao.currentCookie(prefs) ?: return@launchMain
+                    context.frostDownload(cookie.cookie, video.videoUri)
                 }
             }
             true
@@ -186,12 +198,12 @@ class FrostVideoViewer @JvmOverloads constructor(
     fun updateLocation() {
         with(binding) {
             viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    video.updateLocation()
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        video.updateLocation()
+                        viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
         }
     }
 
@@ -200,7 +212,8 @@ class FrostVideoViewer @JvmOverloads constructor(
             if (video.isExpanded)
                 videoToolbar.fadeIn(
                     duration = CONTROL_ANIMATION_DURATION,
-                    onStart = { videoToolbar.visible() })
+                    onStart = { videoToolbar.visible() }
+                )
         }
     }
 
@@ -214,6 +227,7 @@ class FrostVideoViewer @JvmOverloads constructor(
 
 interface FrostVideoViewerContract : VideoControlsVisibilityListener {
     fun onSingleTapConfirmed(event: MotionEvent): Boolean
+
     /**
      * Process of expansion
      * 1f represents an expanded view, 0f represents a minimized view

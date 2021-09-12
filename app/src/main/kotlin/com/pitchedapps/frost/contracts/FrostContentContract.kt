@@ -73,11 +73,17 @@ interface FrostContentParent : DynamicUiContract {
 
     var baseEnum: FbItem?
 
+    val swipeEnabled: Boolean get() = swipeAllowedByPage && !swipeDisabledByAction
+
     /**
-     * Toggle state for allowing swipes
-     * Allowed on any thread
+     * Temporary disable swiping based on action
      */
-    var swipeEnabled: Boolean
+    var swipeDisabledByAction: Boolean
+
+    /**
+     * Decides if swipe should be allowed for the current page
+     */
+    var swipeAllowedByPage: Boolean
 
     /**
      * Binds the container to self

@@ -21,20 +21,29 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
-import com.pitchedapps.frost.utils.Prefs
+import com.pitchedapps.frost.prefs.Prefs
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-07-07.
  *
  * Basic override to allow us to control swiping
  */
-class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-    ViewPager(context, attrs) {
+@AndroidEntryPoint
+class FrostViewPager @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : ViewPager(context, attrs) {
+
+    @Inject
+    lateinit var prefs: Prefs
+
     var enableSwipe = true
 
     override fun onInterceptTouchEvent(ev: MotionEvent?) =
         try {
-            Prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
+            prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
         } catch (e: IllegalArgumentException) {
             false
         }
@@ -42,7 +51,7 @@ class FrostViewPager @JvmOverloads constructor(context: Context, attrs: Attribut
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent?): Boolean =
         try {
-            Prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
+            prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
         } catch (e: IllegalArgumentException) {
             false
         }

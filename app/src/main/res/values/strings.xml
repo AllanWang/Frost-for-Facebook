@@ -7,6 +7,7 @@
     <string name="events">Events</string>
     <string name="friends">Friends</string>
     <string name="messages">Messages</string>
+    <string name="messenger">Messenger</string>
     <string name="notifications">Notifications</string>
     <string name="activity_log">Activity Log</string>
     <string name="pages">Pages</string>
@@ -29,7 +30,6 @@
     <string name="frost_notifications">Frost Notifications</string>
     <string name="requires_custom_theme">Requires custom theme</string>
 
-    <string name="subject">Subject</string>
     <string name="share">Share</string>
 
     <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
