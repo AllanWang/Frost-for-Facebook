@@ -83,13 +83,13 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.TEST_RELEASE_GITHUB_API_TOKEN }}
       OWNER: AllanWang
-      REPOSITORY: AllanWang/Frost-for-Facebook-APK-Builder
+      REPO: Frost-for-Facebook-APK-Builder
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        repository: ${{ env.REPOSITORY }}
+        repository: "${{ env.OWNER }}/${{ env.REPO }}"
         token: ${{ env.GITHUB_TOKEN }}
 
     # Contiguous to release IDs from Travis builds
@@ -123,16 +123,17 @@ jobs:
 
     - name: Create Release
       if: ${{ env.SHOULD_RELEASE && steps.create_commit.outputs.pushed }}
-      uses: AllanWang/release-action@v1
+      uses: ncipollo/release-action@v1
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        repo: Frost-for-Facebook-APK-Builder
         owner: ${{ env.OWNER }}
-#        artifacts: "Frost.txt"
-        body: "Simple body"
+        repo: ${{ env.REPO }}
+        artifacts: "Frost.txt"
+        body: |
+          Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
+          https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
         allowUpdates: false
-#        commit: ${{ steps.create_commit.outputs.commit_sha }}
 
 
 
