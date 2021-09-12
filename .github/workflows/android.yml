@@ -113,19 +113,21 @@ jobs:
       with:
         message: 'Github Action ${{ env.RELEASE_ID_NUMBER }} [skip ci]'
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
-        author_name: Pitched Apps
-        author_email: pitchedapp@gmail.com
+        author_name: asdfasdfvful
+        author_email: asdfasdfvful@gmail.com
         branch: master
 
     - name: Create Release
       if: ${{ env.SHOULD_RELEASE }}
       uses: ncipollo/release-action@v1
       with:
+        token: ${{ env.GITHUB_TOKEN }}
         artifacts: "Frost.txt"
         body: |
           Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
           https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-        token: ${{ env.GITHUB_TOKEN }}
+        tag: 'v${{ env.RELEASE_ID_NUMBER }}'
+
 
 
 
