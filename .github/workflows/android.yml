@@ -122,11 +122,11 @@ jobs:
         echo "SHOULD_RELEASE=${SHOULD_RELEASE}" >> $GITHUB_ENV
 
     - name: Update File
-      if: ${{ env.SHOULD_RELEASE === true }}
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
       run: echo "Frost v${{ env.RELEASE_ID_NUMBER }}" > Frost.txt
 
     - name: Create Commit
-      if: ${{ env.SHOULD_RELEASE === true }}
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
       id: create_commit
       uses: EndBug/add-and-commit@v7
       with:
@@ -139,19 +139,19 @@ jobs:
 
     # After commit
     - name: Download APK
-      if: ${{ env.SHOULD_RELEASE === true }}
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
       uses: actions/download-artifact@v2
       with:
         name: Frost-releaseTest.apk
 
     - name: Rename APK
-      if: ${{ env.SHOULD_RELEASE === true }}
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
       run: |
         mv Frost-releaseTest.apk Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk
         ls -l
 
     - name: Create Release
-      if: ${{ (env.SHOULD_RELEASE === true) && steps.create_commit.outputs.pushed }}
+      if: ${{ (env.SHOULD_RELEASE == 'true') && steps.create_commit.outputs.pushed }}
       uses: ncipollo/release-action@v1
       with:
         token: ${{ env.GITHUB_TOKEN }}
