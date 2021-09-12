@@ -61,12 +61,14 @@ jobs:
       run: ./gradlew assembleReleaseTest
 
     - name: Rename Test APK
-      run: mv app/build/outputs/apk/releaseTest/Frost-releaseTest.apk app/build/outputs/apk/releaseTest/Frost-releaseTest-${GITHUB_RUN_NUMBER}.apk
+      run: |
+        mv app/build/outputs/apk/releaseTest/Frost-releaseTest.apk app/build/outputs/apk/releaseTest/Frost-releaseTest-${{ github.run_number }}.apk
+        echo "Produced Frost-releaseTest-${{ github.run_number}}.apk"
 
     - name: Upload Test APK
       uses: actions/upload-artifact@v2.2.4
       with:
         name: Frost ReleaseTest v${GITHUB_RUN_NUMBER}
-        path: app/build/outputs/apk/releaseTest/Frost-releaseTest-${GITHUB_RUN_NUMBER}.apk
+        path: app/build/outputs/apk/releaseTest/Frost-releaseTest-${{ github.run_number }}.apk
         if-no-files-found: error
 
