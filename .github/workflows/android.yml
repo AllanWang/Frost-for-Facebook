@@ -96,10 +96,10 @@ jobs:
         CURR_ID=$(( ${{ github.run_number }} + 2914 ))
         echo "RELEASE_ID_NUMBER=${CURR_ID}" >> $GITHUB_ENV
 
-#    - name: Prev Version
-#      run: |
-#        PREV_ID=$(cat Frost.txt | grep -o -E '[0-9]'+)
-#        SHOULD_RELEASE=$(( ${{ env.RELEASE_ID_NUMBER }} > $PREV_ID ))
+    - name: Prev Version
+      run: |
+        PREV_ID=$(cat Frost.txt | grep -o -E '[0-9]'+)
+        SHOULD_RELEASE=$(( ${{ env.RELEASE_ID_NUMBER }} > $PREV_ID ))
 
 #    - name: Should Release
 #      run: |
