@@ -116,7 +116,6 @@ jobs:
     - name: Should Release
       run: |
         PREV_ID=$(cat Frost.txt | grep -o -E '[0-9]'+)
-        PREV_ID=99999
         SHOULD_RELEASE=$( if [[ ${{ env.RELEASE_ID_NUMBER }} -gt $PREV_ID ]]; then echo true; else echo false; fi )
         echo "Prev $PREV_ID Now ${{ env.RELEASE_ID_NUMBER }} Should Release $SHOULD_RELEASE"
         echo "SHOULD_RELEASE=${SHOULD_RELEASE}" >> $GITHUB_ENV
@@ -167,6 +166,7 @@ jobs:
         allowUpdates: false
 
     - name: Echo Result
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
       run: echo "Created release at https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
 
 
