@@ -28,8 +28,8 @@ jobs:
 
     needs: pre_job
 
-    if: ${{ false }}
-#    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+#    if: ${{ false }}
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
 
     runs-on: ubuntu-latest
 
@@ -116,7 +116,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-#    needs: build
+    needs: build
 
     env:
       GITHUB_TOKEN: ${{ secrets.TEST_RELEASE_GITHUB_API_TOKEN }}
@@ -143,50 +143,50 @@ jobs:
         echo "Prev $PREV_ID Now ${{ env.RELEASE_ID_NUMBER }} Should Release $SHOULD_RELEASE"
         echo "SHOULD_RELEASE=${SHOULD_RELEASE}" >> $GITHUB_ENV
 
-#    - name: Update File
-#      if: ${{ env.SHOULD_RELEASE == 'true' }}
-#      run: echo "Frost v${{ env.RELEASE_ID_NUMBER }}" > Frost.txt
-#
-#    - name: Create Commit
-#      if: ${{ env.SHOULD_RELEASE == 'true' }}
-#      id: create_commit
-#      uses: EndBug/add-and-commit@v7
-#      with:
-#        message: 'Github Action ${{ env.RELEASE_ID_NUMBER }} [skip ci]'
-#        tag: 'v${{ env.RELEASE_ID_NUMBER }}'
-#        author_name: Pitched Apps CI
-#        author_email: pitchedapps@gmail.com
-#        branch: master
-#        push: true
-#
-#    # After commit
-#    - name: Download APK
-#      if: ${{ env.SHOULD_RELEASE == 'true' }}
-#      uses: actions/download-artifact@v2
-#      with:
-#        name: Frost-releaseTest.apk
-#
-#    - name: Rename APK
-#      if: ${{ env.SHOULD_RELEASE == 'true' }}
-#      run: |
-#        mv Frost-releaseTest.apk Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk
-#        ls -l
-#
-#    - name: Create Release
-#      if: ${{ (env.SHOULD_RELEASE == 'true') && steps.create_commit.outputs.pushed }}
-#      uses: ncipollo/release-action@v1
-#      with:
-#        token: ${{ env.GITHUB_TOKEN }}
-#        owner: ${{ env.OWNER }}
-#        repo: ${{ env.REPO }}
-#        artifactErrorsFailBuild: true
-#        artifacts: "Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk"
-#        artifactContentType: "application/zip"
-#        body: |
-#          Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
-#          https://github.com/${{ github.repository }}/commit/${{ github.sha }}
-#        tag: 'v${{ env.RELEASE_ID_NUMBER }}'
-#        allowUpdates: false
+    - name: Update File
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
+      run: echo "Frost v${{ env.RELEASE_ID_NUMBER }}" > Frost.txt
+
+    - name: Create Commit
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
+      id: create_commit
+      uses: EndBug/add-and-commit@v7
+      with:
+        message: 'Github Action ${{ env.RELEASE_ID_NUMBER }} [skip ci]'
+        tag: 'v${{ env.RELEASE_ID_NUMBER }}'
+        author_name: Pitched Apps CI
+        author_email: pitchedapps@gmail.com
+        branch: master
+        push: true
+
+    # After commit
+    - name: Download APK
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
+      uses: actions/download-artifact@v2
+      with:
+        name: Frost-releaseTest.apk
+
+    - name: Rename APK
+      if: ${{ env.SHOULD_RELEASE == 'true' }}
+      run: |
+        mv Frost-releaseTest.apk Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk
+        ls -l
+
+    - name: Create Release
+      if: ${{ (env.SHOULD_RELEASE == 'true') && steps.create_commit.outputs.pushed }}
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ env.GITHUB_TOKEN }}
+        owner: ${{ env.OWNER }}
+        repo: ${{ env.REPO }}
+        artifactErrorsFailBuild: true
+        artifacts: "Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk"
+        artifactContentType: "application/zip"
+        body: |
+          Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
+          https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+        tag: 'v${{ env.RELEASE_ID_NUMBER }}'
+        allowUpdates: false
 
     - name: Echo Result
       if: ${{ env.SHOULD_RELEASE == 'true' }}
