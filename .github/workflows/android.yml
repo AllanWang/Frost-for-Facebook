@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    if: ${{ false }}
+#    if: ${{ false }}
 
     runs-on: ubuntu-latest
 
@@ -62,23 +62,18 @@ jobs:
     - name: Assemble
       run: ./gradlew assembleReleaseTest
 
-    - name: Rename Test APK
-      run: |
-        mv app/build/outputs/apk/releaseTest/Frost-releaseTest.apk app/build/outputs/apk/releaseTest/Frost-releaseTest-${{ github.run_number }}.apk
-        echo "Produced Frost-releaseTest-${{ github.run_number}}.apk"
-
     - name: Upload Test APK
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: Frost ReleaseTest v${{ github.run_number }}
-        path: app/build/outputs/apk/releaseTest/Frost-releaseTest-${{ github.run_number }}.apk
+        name: Frost-releaseTest.apk
+        path: app/build/outputs/apk/releaseTest/Frost-releaseTest.apk
         if-no-files-found: error
 
   release-test:
 
     runs-on: ubuntu-latest
 
-#    needs: build
+    needs: build
 
     env:
       GITHUB_TOKEN: ${{ secrets.TEST_RELEASE_GITHUB_API_TOKEN }}
@@ -121,6 +116,17 @@ jobs:
         branch: master
         push: true
 
+    # After commit
+    - name: Download APK
+      uses: actions/download-artifact@v2
+      with:
+        name: Frost-releaseTest.apk
+
+    - name: Rename APK
+      run: |
+        mv Frost-releaseTest.apk Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk
+        ls -l
+
     - name: Create Release
       if: ${{ env.SHOULD_RELEASE && steps.create_commit.outputs.pushed }}
       uses: ncipollo/release-action@v1
@@ -128,7 +134,7 @@ jobs:
         token: ${{ env.GITHUB_TOKEN }}
         owner: ${{ env.OWNER }}
         repo: ${{ env.REPO }}
-        artifacts: "Frost.txt"
+        artifacts: "Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk"
         body: |
           Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
           https://github.com/${{ github.repository }}/commit/${{ github.sha }}
