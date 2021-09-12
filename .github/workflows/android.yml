@@ -201,7 +201,7 @@ jobs:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
         message: Test
         # Frost Blue: 0xff3b5998 / 4282079640
-        embed: '{"title":"Frost v{{ env.RELEASE_ID_NUMBER }}","color":"#3b5998"}'
+        embed: '{"title":"Frost v{{ env.RELEASE_ID_NUMBER }}","color":3889560}'
 #        embed: '{"title":"Frost v{{ env.RELEASE_ID_NUMBER }}","color":-12887656,"url":"{{ commit.url }}","author":{"name":"{{ github.context.payload.repository.owner.login }}","icon_url":"{{ github.context.payload.repository.owner.avatar_url }}"},"fields":[{"name":"Test Release","value":"{{ env.TEST_RELEASE_URL }}"},{"name":"CI","value":"https://github.com/{{ github.context.payload.repository.name }}/actions/runs/{{ env.RUN_ID }}"}]}'
         last-commit-only: false
       env:
