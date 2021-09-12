@@ -113,6 +113,9 @@ jobs:
       with:
         message: 'Github Action ${{ env.RELEASE_ID_NUMBER }} [skip ci]'
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
+        author_name: Pitched Apps
+        author_email: pitchedapp@gmail.com
+        branch: master
 
     - name: Create Release
       if: ${{ env.SHOULD_RELEASE }}
