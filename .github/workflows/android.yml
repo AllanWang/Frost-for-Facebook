@@ -125,9 +125,7 @@ jobs:
       with:
         token: ${{ env.GITHUB_TOKEN }}
 #        artifacts: "Frost.txt"
-        body: |
-          Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
-          https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+        body: "Simple body"
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
         commit: ${{ steps.create_commit.outputs.commit_sha }}
 
