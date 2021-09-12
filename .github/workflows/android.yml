@@ -126,7 +126,7 @@ jobs:
       uses: AllanWang/release-action@v1
       with:
         token: ${{ env.GITHUB_TOKEN }}
-        repo: ${{ env.REPOSITORY }}
+        repo: Frost-for-Facebook-APK-Builder
         owner: ${{ env.OWNER }}
 #        artifacts: "Frost.txt"
         body: "Simple body"
