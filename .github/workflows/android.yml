@@ -131,7 +131,8 @@ jobs:
 #        artifacts: "Frost.txt"
         body: "Simple body"
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
-#        commit: ${{ steps.create_commit.outputs.commit_sha }}
+        allowUpdates: false
+        commit: ${{ steps.create_commit.outputs.commit_sha }}
 
 
 
