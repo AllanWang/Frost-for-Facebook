@@ -190,7 +190,20 @@ jobs:
 
     - name: Echo Result
       if: ${{ env.SHOULD_RELEASE == 'true' }}
-      run: echo "Created release at https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
+      run: |
+        TEST_RELEASE_URL="https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
+        echo "Created release at $TEST_RELEASE_URL"
+        echo "TEST_RELEASE_URL=${TEST_RELEASE_URL}" >> $GITHUB_ENV
+
+    - name: Discord Ping
+      uses: Sniddl/discord-commits@v1.3
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        # Frost Blue: 0xff3b5998 / 3889560
+        embed: '{"title":"Frost v{{ env.RELEASE_ID_NUMBER }}","color":3889560,"url":"{{ commit.url }}","author":{"name":"{{ github.context.payload.repository.owner.login }}","icon_url":"{{ github.context.payload.repository.owner.avatar_url }}"},"fields":[{"name":"Test Release","value":"{{ env.TEST_RELEASE_URL }}"},{"name":"Action CI","value":"https://github.com/{{ github.context.payload.repository.full_name }}/actions/runs/{{ env.RUN_ID }}"}]}'
+        last-commit-only: false
+      env:
+        RUN_ID: ${{ github.RUN_ID }}
 
 
 
