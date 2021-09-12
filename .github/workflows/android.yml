@@ -75,13 +75,14 @@ jobs:
     steps:
       - name: Create
         run: |
-          touch Frost-releaseTest.apk
+          mkdir apk
+          echo "apk test" > apk/Frost-releaseTest.apk
 
       - name: Upload Test APK
         uses: actions/upload-artifact@v2.2.4
         with:
           name: Frost-releaseTest.apk
-          path: Frost-releaseTest.apk
+          path: apk/Frost-releaseTest.apk
           if-no-files-found: error
 
   release-test:
@@ -150,6 +151,7 @@ jobs:
         owner: ${{ env.OWNER }}
         repo: ${{ env.REPO }}
         artifacts: "Frost-releaseTest-v${{ env.RELEASE_ID_NUMBER }}.apk"
+        artifactContentType: "application/zip"
         body: |
           Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
           https://github.com/${{ github.repository }}/commit/${{ github.sha }}
