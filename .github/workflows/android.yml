@@ -64,4 +64,5 @@ jobs:
       with:
         name: Frost-releaseTest.apk
         path: app/build/outputs/apk/releaseTest/Frost-releaseTest.apk
+        if-no-files-found: error
 
