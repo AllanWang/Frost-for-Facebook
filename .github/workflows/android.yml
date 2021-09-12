@@ -109,6 +109,7 @@ jobs:
 
     - name: Create Commit
       if: ${{ env.SHOULD_RELEASE }}
+      id: create_commit
       uses: EndBug/add-and-commit@v7
       with:
         message: 'Github Action ${{ env.RELEASE_ID_NUMBER }} [skip ci]'
@@ -116,9 +117,10 @@ jobs:
         author_name: asdfasdfvful
         author_email: asdfasdfvful@gmail.com
         branch: master
+        push: true
 
     - name: Create Release
-      if: ${{ env.SHOULD_RELEASE }}
+      if: ${{ env.SHOULD_RELEASE && steps.create_commit.outputs.pushed }}
       uses: ncipollo/release-action@v1
       with:
         token: ${{ env.GITHUB_TOKEN }}
@@ -127,6 +129,7 @@ jobs:
           Automatic Release v${{ env.RELEASE_ID_NUMBER }} for branch `${{ github.ref }}`
           https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
+        commit: ${{ steps.create_commit.outputs.commit_sha }}
 
 
 
