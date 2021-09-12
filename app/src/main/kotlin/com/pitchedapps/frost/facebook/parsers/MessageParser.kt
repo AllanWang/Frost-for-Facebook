@@ -128,8 +128,8 @@ private class MessageParserImpl : FrostParserBase<FrostMessages>(true) {
             )
                 .mapNotNull(this::parseMessage)
         val seeMore = parseLink(doc.getElementById("see_older_threads"))
-        val extraLinks = threadList.nextElementSibling().select("a")
-            .mapNotNull(this::parseLink)
+        val extraLinks = threadList.nextElementSibling()?.select("a")
+            ?.mapNotNull(this::parseLink) ?: emptyList()
         return FrostMessages(threads, seeMore, extraLinks)
     }
 

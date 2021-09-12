@@ -176,7 +176,7 @@ class NotificationWidgetDataProvider(
     @Volatile
     private var content: List<NotificationContent> = emptyList()
 
-    private val type = NotificationType.valueOf(intent.getStringExtra(NOTIF_WIDGET_TYPE))
+    private val type = NotificationType.valueOf(intent.getStringExtra(NOTIF_WIDGET_TYPE)!!)
 
     private val userId = intent.getLongExtra(NOTIF_WIDGET_USER_ID, -1)
 
