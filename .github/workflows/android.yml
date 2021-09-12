@@ -193,7 +193,7 @@ jobs:
       run: |
         TEST_RELEASE_URL="https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
         echo "Created release at $TEST_RELEASE_URL"
-        echo "$TEST_RELEASE_URL=${$TEST_RELEASE_URL}" >> $GITHUB_ENV
+        echo "TEST_RELEASE_URL=${$TEST_RELEASE_URL}" >> $GITHUB_ENV
 
     - name: Discord Ping
       uses: Sniddl/discord-commits@v1.3
