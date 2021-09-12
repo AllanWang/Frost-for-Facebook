@@ -1,0 +1,67 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ '*' ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 100
+
+    - name: Fetch all tags
+      run: git fetch origin +refs/tags/*:refs/tags/*
+        
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        java-package: jdk
+        distribution: 'adopt'
+        cache: gradle
+
+    - name: Validate gradle wrapper
+      uses: gradle/wrapper-validation-action@v1
+
+    - name: Decrypt secret
+      if: ${{ false }}
+      run: |
+        gpg -d --passphrase "${{ secrets.FROST_TAR_SECRET }}" --batch "files/frost_github.tar.gpg" > "files/frost_github.tar"
+        tar xvf files/frost_github.tar -C files
+
+    - name: Checkout Gradle Build Cache
+      if: ${{ steps.self_hosted.outputs.FLAG != 'self-hosted' }}
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+          !~/.gradle/wrapper/dists/**/gradle*.zip
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+          
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Android Git Version
+      run: ./gradlew --quiet androidGitVersion
+
+    - name: Check and Test
+      run: ./gradlew spotlessCheck lintReleaseTest testReleaseUnitTest
+
+    - name: Assemble
+      run: ./gradlew assembleReleaseTest
+
+    - name: Upload Test APK
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: Frost-releaseTest-${{ process.env.GITHUB_RUN_NUMBER }}.apk
+        path: app/build/outputs/apk/releaseTest/Frost-releaseTest.apk
+
