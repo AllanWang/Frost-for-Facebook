@@ -100,7 +100,7 @@ jobs:
       run: |
         PREV_ID=$(cat Frost.txt | grep -o -E '[0-9]'+)
         SHOULD_RELEASE=$(( ${{ env.RELEASE_ID_NUMBER }} > $PREV_ID ))
-        echo "Prev $PREV_ID Now ${{ RELEASE_ID_NUMBER }} Should Release SHOULD_RELEASE"
+        echo "Prev $PREV_ID"
 #        echo "SHOULD_RELEASE=${SHOULD_RELEASE}" >> $GITHUB_ENV
 
 #    - name: Update File
