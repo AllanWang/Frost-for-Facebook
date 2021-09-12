@@ -62,6 +62,6 @@ jobs:
     - name: Upload Test APK
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: Frost-releaseTest-${{ process.env.GITHUB_RUN_NUMBER }}.apk
+        name: Frost-releaseTest.apk
         path: app/build/outputs/apk/releaseTest/Frost-releaseTest.apk
 
