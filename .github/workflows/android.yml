@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-#    if: ${{ false }}
+    if: ${{ false }}
 
     runs-on: ubuntu-latest
 
@@ -69,11 +69,26 @@ jobs:
         path: app/build/outputs/apk/releaseTest/Frost-releaseTest.apk
         if-no-files-found: error
 
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create
+        run: |
+          touch Frost-releaseTest.apk
+
+      - name: Upload Test APK
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: Frost-releaseTest.apk
+          path: Frost-releaseTest.apk
+          if-no-files-found: error
+
   release-test:
 
     runs-on: ubuntu-latest
 
-    needs: build
+    needs: build-test
 
     env:
       GITHUB_TOKEN: ${{ secrets.TEST_RELEASE_GITHUB_API_TOKEN }}
