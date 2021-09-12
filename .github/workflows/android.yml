@@ -30,7 +30,6 @@ jobs:
       uses: gradle/wrapper-validation-action@v1
 
     - name: Decrypt secret
-      if: ${{ false }}
       run: |
         gpg -d --passphrase "${{ secrets.FROST_TAR_SECRET }}" --batch "files/frost_github.tar.gpg" > "files/frost_github.tar"
         tar xvf files/frost_github.tar -C files
@@ -62,7 +61,7 @@ jobs:
     - name: Upload Test APK
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: Frost-releaseTest.apk
+        name: Test Name Here
         path: app/build/outputs/apk/releaseTest/Frost-releaseTest.apk
         if-no-files-found: error
 
