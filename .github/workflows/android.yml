@@ -2,7 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ '*' ]
+    branches:
+      - '*'
+      - '!l10n_dev'
 
 jobs:
   build:
