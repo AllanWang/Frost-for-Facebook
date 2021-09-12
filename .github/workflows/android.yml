@@ -190,7 +190,18 @@ jobs:
 
     - name: Echo Result
       if: ${{ env.SHOULD_RELEASE == 'true' }}
-      run: echo "Created release at https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
+      run: |
+        TEST_RELEASE_URL="https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
+        echo "Created release at $TEST_RELEASE_URL"
+        echo "$TEST_RELEASE_URL=${$TEST_RELEASE_URL}" >> $GITHUB_ENV
+
+    - name: Discord Ping
+      uses: Sniddl/discord-commits@v1.3
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        message: "Frost Build **{{ github.context.payload.repository.owner.name }}/{{ github.context.payload.repository.name}}**.\nTest Release: {{ env.TEST_RELEASE_URL }}"
+        embed: '{ "title": "{{ commit.title }}", "description": "{{ commit.description }}", "url": "{{ commit.url }}", "author": { "name": "{{ commit.author.name }} ({{ commit.author.username }})", "icon_url": "https://avatars.io/gravatar/{{ commit.author.email }}"} }'
+        last-commit-only: false
 
 
 
