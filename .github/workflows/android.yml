@@ -131,8 +131,8 @@ jobs:
       with:
         message: 'Github Action ${{ env.RELEASE_ID_NUMBER }} [skip ci]'
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
-        author_name: asdfasdfvful
-        author_email: asdfasdfvful@gmail.com
+        author_name: Pitched Apps CI
+        author_email: pitchedapps@gmail.com
         branch: master
         push: true
 
