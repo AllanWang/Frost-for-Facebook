@@ -83,7 +83,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.TEST_RELEASE_GITHUB_API_TOKEN }}
       # Contiguous to release IDs from Travis builds
-      RELEASE_ID_NUMBER: $(( ${{ github.run_number }} + 2914 ))
+      RELEASE_ID_NUMBER: ${{ $(( ${{ github.run_number }} + 2914 )) }}
 
     steps:
     - name: Checkout
