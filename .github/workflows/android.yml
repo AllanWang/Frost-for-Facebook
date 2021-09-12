@@ -92,16 +92,16 @@ jobs:
         repository: AllanWang/Frost-for-Facebook-APK-Builder
         token: ${{ env.GITHUB_TOKEN }}
 
-#    - name: Prev Version
-#      run: |
-#        PREV_ID=$(cat Frost.txt | grep -o -E '[0-9]'+)
-#        SHOULD_RELEASE=$(( ${{ env.RELEASE_ID_NUMBER }} > $PREV_ID ))
-#        echo "Prev $PREV_ID Now ${{ RELEASE_ID_NUMBER }} Should Release $SHOULD_RELEASE"
-#        echo "SHOULD_RELEASE=${SHOULD_RELEASE}" >> $GITHUB_ENV
-#
-#    - name: Update File
-#      if: ${{ env.SHOULD_RELEASE }}
-#      run: echo "Frost v${{ env.RELEASE_ID_NUMBER }}" > Frost.txt
+    - name: Prev Version
+      run: |
+        PREV_ID=$(cat Frost.txt | grep -o -E '[0-9]'+)
+        SHOULD_RELEASE=$(( ${{ env.RELEASE_ID_NUMBER }} > $PREV_ID ))
+        echo "Prev $PREV_ID Now ${{ RELEASE_ID_NUMBER }} Should Release $SHOULD_RELEASE"
+        echo "SHOULD_RELEASE=${SHOULD_RELEASE}" >> $GITHUB_ENV
+
+    - name: Update File
+      if: ${{ env.SHOULD_RELEASE }}
+      run: echo "Frost v${{ env.RELEASE_ID_NUMBER }}" > Frost.txt
 #
 #    - name: Create Commit
 #      if: ${{ env.SHOULD_RELEASE }}
