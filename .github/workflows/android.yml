@@ -163,6 +163,9 @@ jobs:
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
         allowUpdates: false
 
+    - name: Echo Result
+      run: echo "Created release at https://github.com/${{ env.OWNER }}/${{ env.REPO }}/releases/tag/v${{ env.RELEASE_ID_NUMBER }}"
+
 
 
 
