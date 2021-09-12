@@ -132,7 +132,7 @@ jobs:
         body: "Simple body"
         tag: 'v${{ env.RELEASE_ID_NUMBER }}'
         allowUpdates: false
-        commit: ${{ steps.create_commit.outputs.commit_sha }}
+#        commit: ${{ steps.create_commit.outputs.commit_sha }}
 
 
 
