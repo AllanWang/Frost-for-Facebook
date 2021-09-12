@@ -7,9 +7,29 @@ on:
       - '!l10n_dev'
 
 jobs:
+
+  pre_job:
+    # continue-on-error: true # Uncomment once integration is finished
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          # All of these options are optional, so you can remove them if you are happy with the defaults
+          concurrent_skipping: 'outdated_runs'
+          skip_after_successful_duplicate: 'true'
+          paths_ignore: '["**/*.md", "**/docs/**"]'
+          do_not_skip: '["workflow_dispatch", "schedule"]'
+
   build:
 
-    if: ${{ false }}
+    needs: pre_job
+
+#    if: ${{ false }}
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
 
     runs-on: ubuntu-latest
 
@@ -72,7 +92,10 @@ jobs:
   # Tests artifact upload
   build-test:
 
-#    if: ${{ false }}
+    needs: pre_job
+
+    if: ${{ false }}
+#    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
 
     runs-on: ubuntu-latest
 
@@ -93,7 +116,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    needs: build-test
+    needs: build
 
     env:
       GITHUB_TOKEN: ${{ secrets.TEST_RELEASE_GITHUB_API_TOKEN }}
