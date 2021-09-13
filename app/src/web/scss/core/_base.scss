@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @mixin placeholder {
   ::placeholder {
     @content;
@@ -80,7 +82,7 @@
   $encoded: "";
   $slice: 2000;
   $index: 0;
-  $loops: ceil(str-length($svg) / $slice);
+  $loops: ceil(math.div(str-length($svg), $slice));
 
   @for $i from 1 through $loops {
     $chunk: str-slice($svg, $index, $index + $slice - 1);

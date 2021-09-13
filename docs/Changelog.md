@@ -1,8 +1,9 @@
 # Changelog
 
 ## v3.1.0
-* Fix multi account signin
+* Fix multi account sign in
 * Only clear out cookies on explicit logout; Facebook logout redirects no longer erase cookies
+* Update themes
 
 ## v3.0.0
 * Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails
