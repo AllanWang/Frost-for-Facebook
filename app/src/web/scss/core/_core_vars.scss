@@ -1,11 +1,11 @@
 :root, .__fb-light-mode {
   --accent: #{$accent} !important;
-  --attachment-footer-background: #{$background} !important;
+  --attachment-footer-background: #{$bg_opaque} !important;
   --background-deemphasized: #{$background} !important;
-  --card-background: #{$card} !important;
-  --card-background-flat: #{$card} !important;
-  --comment-background: #{$background} !important;
-  --comment-footer-background: #{$background} !important;
+  --card-background: #{$bg_opaque} !important;
+  --card-background-flat: #{$bg_opaque} !important;
+  --comment-background: #{$bg_opaque2} !important;
+  --comment-footer-background: #{$bg_opaque} !important;
   --darkreader-bg--fds-white: #{$bg_opaque} !important;
   --darkreader-text--primary-text: #{$text} !important;
   --darkreader-text--secondary-text: #{$text} !important;
@@ -17,14 +17,13 @@
   --event-date: #{$accent} !important;
   --glimmer-spinner-icon: #{$accent} !important;
   --hero-banner-background: #{$bg_opaque2} !important;
-  --highlight-bg: #{$background2} !important;
+  --highlight-bg: #{$bg_opaque2} !important;
   --media-outer-border: #{$divider} !important;
-  --messenger-card-background: #{$card} !important;
-  --messenger-reply-background: #{$card} !important;
+  --messenger-card-background: #{$bg_opaque} !important; // Main background; needs to be opaque to hide gradient used for sender card
+  --messenger-reply-background: #{$bg_opaque2} !important;
   --nav-bar-background: #{$bg_opaque} !important;
   --new-notification-background: #{$background2} !important;
   --placeholder-icon: #{$text} !important;
-  --placeholder-text: #{$text} !important;
   --popover-background: #{$bg_opaque2} !important;
   --primary-icon: #{$text} !important;
   --primary-text: #{$text} !important;
@@ -35,5 +34,15 @@
   --secondary-icon: #{$text} !important;
   --secondary-text: #{$text} !important;
   --section-header-text: #{$text} !important;
-  --surface-background: #{$background} !important;
+  --nav-bar-background-gradient-wash: #{$bg_opaque} !important;
+  --nav-bar-background-gradient: #{$bg_opaque} !important;
+  --placeholder-text: #{$text} !important; // Date
+  --surface-background: #{$bg_opaque2} !important; // Emoji background
+  --toggle-active-background: #{$bg_opaque2} !important;
+  --wash: #{$bg_opaque2} !important;
+  --web-wash: #{$bg_opaque2} !important;
+
+  [role="navigation"] {
+    --surface-background: #{$bg_opaque} !important; // Nav background
+  }
 }
