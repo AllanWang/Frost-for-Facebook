@@ -48,8 +48,11 @@ class FbCookie @Inject internal constructor(
 ) {
 
     companion object {
-        private const val FB_COOKIE_DOMAIN = HTTPS_FACEBOOK_COM
-        private const val MESSENGER_COOKIE_DOMAIN = HTTPS_MESSENGER_COM
+        /**
+         * Domain information. Dot prefix still matters for Android browsers.
+         */
+        private const val FB_COOKIE_DOMAIN = ".$FACEBOOK_COM"
+        private const val MESSENGER_COOKIE_DOMAIN = ".$MESSENGER_COM"
     }
 
     /**
@@ -135,22 +138,24 @@ class FbCookie @Inject internal constructor(
      * Helper function to remove the current cookies
      * and launch the proper login page
      */
-    suspend fun logout(context: Context) {
+    suspend fun logout(context: Context, deleteCookie: Boolean = true) {
         val cookies = arrayListOf<CookieEntity>()
         if (context is Activity)
             cookies.addAll(context.cookies().filter { it.id != prefs.userId })
-        logout(prefs.userId)
+        logout(prefs.userId, deleteCookie)
         context.launchLogin(cookies, true)
     }
 
     /**
      * Clear the cookies of the given id
      */
-    suspend fun logout(id: Long) {
+    suspend fun logout(id: Long, deleteCookie: Boolean = true) {
         L.d { "Logging out user" }
-        cookieDao.deleteById(id)
-        L.d { "Fb cookie deleted" }
-        L._d { id }
+        if (deleteCookie) {
+            cookieDao.deleteById(id)
+            L.d { "Fb cookie deleted" }
+            L._d { id }
+        }
         reset()
     }
 

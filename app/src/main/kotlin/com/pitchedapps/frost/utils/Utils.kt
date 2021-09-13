@@ -133,7 +133,7 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
     if (argUrl.isFacebookUrl && argUrl.contains("/logout.php")) {
         L.d { "Logout php found" }
         ctxCoroutine.launch {
-            fbCookie.logout(this@launchWebOverlayImpl)
+            fbCookie.logout(this@launchWebOverlayImpl, deleteCookie = false)
         }
     } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
         startActivity<T>(

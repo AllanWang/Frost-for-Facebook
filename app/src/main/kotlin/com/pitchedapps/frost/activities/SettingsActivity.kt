@@ -233,8 +233,8 @@ class SettingsActivity : KPrefActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        activityThemer.setFrostTheme(forceTransparent = true)
         super.onCreate(savedInstanceState)
+        activityThemer.setFrostTheme(forceTransparent = true)
         animate = prefs.animate
         themeExterior(false)
     }
