@@ -49,7 +49,7 @@
 
     <style name="FrostTheme.Video" parent="FrostTheme.Overlay.Fade" />
 
-    <style name="FrostTheme.Settings" parent="FrostTheme">
+    <style name="FrostTheme.Settings" parent="FrostTheme.Transparent">
         <item name="android:windowAnimationStyle">@style/KauSlideInFadeOut</item>
     </style>
 

@@ -121,7 +121,7 @@ class FrostJSI(val web: FrostWebView) {
     fun loadLogin() {
         L.d { "Sign up button found; load login" }
         context.ctxCoroutine.launch {
-            fbCookie.logout(context)
+            fbCookie.logout(context, deleteCookie = false)
         }
     }
 

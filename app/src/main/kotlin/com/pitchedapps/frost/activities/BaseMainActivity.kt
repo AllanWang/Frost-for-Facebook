@@ -500,7 +500,7 @@ abstract class BaseMainActivity :
                                     )
                                     positiveButton(R.string.kau_yes) {
                                         this@BaseMainActivity.launch {
-                                            fbCookie.logout(this@BaseMainActivity)
+                                            fbCookie.logout(this@BaseMainActivity, deleteCookie = true)
                                         }
                                     }
                                     negativeButton(R.string.kau_no)
