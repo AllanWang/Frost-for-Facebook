@@ -40,7 +40,7 @@ android {
         versionName '3.1.0'
 //        versionName androidGitVersion.name()
 
-        if (System.getenv('TRAVIS') != 'true') {
+        if (System.getenv('CI') != 'true') {
             // Verification for F-Droid builds
             if (versionCode != androidGitVersion.code()) {
                 throw new GradleException("Version code mismatch, expected ${androidGitVersion.code()}, got $versionCode")
