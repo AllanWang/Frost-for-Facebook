@@ -16,7 +16,12 @@
  */
 package com.pitchedapps.frost.helper
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.InputStream
 
@@ -30,3 +35,14 @@ private class Helper
 
 fun getResource(resource: String): InputStream =
     Helper::class.java.classLoader!!.getResource(resource).openStream()
+
+inline fun <reified A : Activity> activityRule(
+    intentAction: Intent.() -> Unit = {},
+    activityOptions: Bundle? = null
+): ActivityScenarioRule<A> {
+    val intent =
+        Intent(ApplicationProvider.getApplicationContext(), A::class.java).also(intentAction)
+    return ActivityScenarioRule(intent, activityOptions)
+}
+
+const val TEST_FORMATTED_URL = "https://www.google.com"
