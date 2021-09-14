@@ -10,6 +10,7 @@
     <item text="Fix multi account sign in" />
     <item text="Only clear out cookies on explicit logout; Facebook logout redirects no longer erase cookies" />
     <item text="Update themes" />
+    <item text="Big infra changes (please file bugs for new crashes)" />
 
     <version title="v3.0.0" />
     <item text="Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails" />

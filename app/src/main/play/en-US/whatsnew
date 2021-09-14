@@ -3,3 +3,4 @@ v3.1.0
 * Fix multi account sign in
 * Only clear out cookies on explicit logout; Facebook logout redirects no longer erase cookies
 * Update themes
+* Big infra changes (please file bugs for new crashes)

@@ -4,6 +4,7 @@
 * Fix multi account sign in
 * Only clear out cookies on explicit logout; Facebook logout redirects no longer erase cookies
 * Update themes
+* Big infra changes (please file bugs for new crashes)
 
 ## v3.0.0
 * Removed email support. Please use GitHub for all inquiries as I no longer have time to look through all emails

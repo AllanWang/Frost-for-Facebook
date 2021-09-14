@@ -59,6 +59,10 @@ import kotlin.math.abs
  */
 private val _40_DP = 40.dpToPx
 
+private val pendingIntentFlagUpdateCurrent: Int
+    get() = PendingIntent.FLAG_UPDATE_CURRENT or
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+
 /**
  * Enum to handle notification creations
  */
@@ -227,7 +231,7 @@ enum class NotificationType(
             putContentExtra(intent, content)
             val group = "${groupPrefix}_${data.id}"
             val pendingIntent =
-                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.getActivity(context, 0, intent, pendingIntentFlagUpdateCurrent)
             val notifBuilder = context.frostNotification(channelId)
                 .setContentTitle(title ?: context.string(R.string.frost_name))
                 .setContentText(text)
@@ -266,7 +270,7 @@ enum class NotificationType(
         intent.data = Uri.parse(fbItem.url)
         val group = "${groupPrefix}_$userId"
         val pendingIntent =
-            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(context, 0, intent, pendingIntentFlagUpdateCurrent)
         val notifBuilder = context.frostNotification(channelId)
             .setContentTitle(context.string(R.string.frost_name))
             .setContentText("$count ${context.string(fbItem.titleId)}")

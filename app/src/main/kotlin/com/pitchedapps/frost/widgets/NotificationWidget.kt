@@ -86,7 +86,7 @@ class NotificationWidget : AppWidgetProvider() {
                 context,
                 0,
                 type.createCommonIntent(context, userId),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlagUpdateCurrent
             )
 
             views.setPendingIntentTemplate(R.id.widget_notification_list, pendingIntentTemplate)
@@ -95,6 +95,10 @@ class NotificationWidget : AppWidgetProvider() {
         }
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_notification_list)
     }
+
+    private val pendingIntentFlagUpdateCurrent: Int
+        get() = PendingIntent.FLAG_UPDATE_CURRENT or
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
 
     companion object {
         fun forceUpdate(context: Context) {
