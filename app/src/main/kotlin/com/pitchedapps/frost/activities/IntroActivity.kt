@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import ca.allanwang.kau.internal.KauBaseActivity
+import ca.allanwang.kau.kotlin.lazyUi
 import ca.allanwang.kau.utils.blendWith
 import ca.allanwang.kau.utils.color
 import ca.allanwang.kau.utils.fadeScaleTransition
@@ -82,14 +83,16 @@ class IntroActivity :
     lateinit var binding: ActivityIntroBinding
     private var barHasNext = true
 
-    val fragments = listOf(
-        IntroFragmentWelcome(),
-        IntroFragmentTheme(),
-        IntroAccountFragment(),
-        IntroTabTouchFragment(),
-        IntroTabContextFragment(),
-        IntroFragmentEnd()
-    )
+    private val fragments by lazyUi {
+        listOf(
+            IntroFragmentWelcome(),
+            IntroFragmentTheme(),
+            IntroAccountFragment(),
+            IntroTabTouchFragment(),
+            IntroTabContextFragment(),
+            IntroFragmentEnd()
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,7 +133,7 @@ class IntroActivity :
 
     /**
      * Transformations are mainly handled on a per view basis
-     * This sifies it by making the first fragment fade out as the second fragment comes in
+     * This makes the first fragment fade out as the second fragment comes in
      * All fragments are locked in position
      */
     override fun transformPage(page: View, position: Float) {
