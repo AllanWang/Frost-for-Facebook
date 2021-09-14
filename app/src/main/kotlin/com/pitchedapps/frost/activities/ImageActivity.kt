@@ -227,11 +227,11 @@ class ImageActivity : KauBaseActivity() {
             setState(FabStates.SHARE)
         }
         imagePhoto.setOnImageEventListener(object :
-            SubsamplingScaleImageView.DefaultOnImageEventListener() {
-            override fun onImageLoadError(e: Exception) {
-                loadError(e)
-            }
-        })
+                SubsamplingScaleImageView.DefaultOnImageEventListener() {
+                override fun onImageLoadError(e: Exception) {
+                    loadError(e)
+                }
+            })
         activityThemer.setFrostColors {
             themeWindow = false
         }
