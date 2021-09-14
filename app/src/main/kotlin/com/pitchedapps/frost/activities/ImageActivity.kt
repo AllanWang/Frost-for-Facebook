@@ -137,8 +137,9 @@ class ImageActivity : KauBaseActivity() {
     lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
 
-    private val baseBackgroundColor = if (prefs.blackMediaBg) Color.BLACK
-    else themeProvider.bgColor.withMinAlpha(235)
+    private val baseBackgroundColor: Int
+        get() = if (prefs.blackMediaBg) Color.BLACK
+        else themeProvider.bgColor.withMinAlpha(235)
 
     private fun loadError(e: Throwable) {
         if (e.message?.contains("<!DOCTYPE html>") == true) {
@@ -226,11 +227,11 @@ class ImageActivity : KauBaseActivity() {
             setState(FabStates.SHARE)
         }
         imagePhoto.setOnImageEventListener(object :
-                SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                override fun onImageLoadError(e: Exception) {
-                    loadError(e)
-                }
-            })
+            SubsamplingScaleImageView.DefaultOnImageEventListener() {
+            override fun onImageLoadError(e: Exception) {
+                loadError(e)
+            }
+        })
         activityThemer.setFrostColors {
             themeWindow = false
         }
