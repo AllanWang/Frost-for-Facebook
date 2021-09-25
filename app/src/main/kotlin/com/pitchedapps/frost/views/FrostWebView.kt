@@ -18,6 +18,7 @@ package com.pitchedapps.frost.views
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -44,8 +45,15 @@ import com.pitchedapps.frost.web.FrostChromeClient
 import com.pitchedapps.frost.web.FrostJSI
 import com.pitchedapps.frost.web.FrostWebViewClient
 import com.pitchedapps.frost.web.NestedWebView
+import dagger.BindsInstance
+import dagger.hilt.DefineComponent
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.components.ViewComponent
 import javax.inject.Inject
+import javax.inject.Scope
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -62,6 +70,9 @@ class FrostWebView @JvmOverloads constructor(
 ) : NestedWebView(context, attrs, defStyleAttr), FrostContentCore {
 
     @Inject
+    lateinit var activity: Activity
+
+    @Inject
     lateinit var fbCookie: FbCookie
 
     @Inject
@@ -75,6 +86,9 @@ class FrostWebView @JvmOverloads constructor(
 
     @Inject
     lateinit var cookieDao: CookieDao
+
+    @Inject
+    lateinit var frostWebComponentBuilder: FrostWebComponentBuilder
 
     override fun reload(animate: Boolean) {
         if (parent.registerTransition(false, animate))
@@ -90,6 +104,8 @@ class FrostWebView @JvmOverloads constructor(
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun bind(container: FrostContentContainer): View {
+        val component = frostWebComponentBuilder.frostWebView(this).build()
+        val entryPoint = EntryPoints.get(component, FrostWebEntryPoint::class.java)
         userAgentString = USER_AGENT
         with(settings) {
             javaScriptEnabled = true
@@ -103,7 +119,7 @@ class FrostWebView @JvmOverloads constructor(
         frostWebClient = (container as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
         webChromeClient = FrostChromeClient(this, themeProvider, webFileChooser)
-        addJavascriptInterface(FrostJSI(this), "Frost")
+        addJavascriptInterface(entryPoint.frostJsi(), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
             context.ctxCoroutine.launchMain {
@@ -234,4 +250,30 @@ class FrostWebView @JvmOverloads constructor(
         (getParent() as? ViewGroup)?.removeView(this)
         super.destroy()
     }
+}
+
+@Scope
+@Retention(AnnotationRetention.BINARY)
+@Target(
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.CLASS
+)
+annotation class FrostWebScoped
+
+@FrostWebScoped
+@DefineComponent(parent = ViewComponent::class)
+interface FrostWebComponent
+
+@DefineComponent.Builder
+interface FrostWebComponentBuilder {
+    fun frostWebView(@BindsInstance web: FrostWebView): FrostWebComponentBuilder
+    fun build(): FrostWebComponent
+}
+
+@EntryPoint
+@InstallIn(FrostWebComponent::class)
+interface FrostWebEntryPoint {
+    @FrostWebScoped
+    fun frostJsi(): FrostJSI
 }

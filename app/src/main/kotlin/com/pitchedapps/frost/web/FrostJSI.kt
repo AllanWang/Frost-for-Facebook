@@ -16,12 +16,11 @@
  */
 package com.pitchedapps.frost.web
 
-import android.content.Context
+import android.app.Activity
 import android.webkit.JavascriptInterface
 import ca.allanwang.kau.utils.ctxCoroutine
 import com.pitchedapps.frost.activities.MainActivity
 import com.pitchedapps.frost.activities.WebOverlayActivityBase
-import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
 import com.pitchedapps.frost.db.CookieEntity
 import com.pitchedapps.frost.facebook.FbCookie
@@ -35,19 +34,23 @@ import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-01.
  */
-class FrostJSI(val web: FrostWebView) {
+class FrostJSI @Inject internal constructor(
+    val web: FrostWebView,
+    private val activity: Activity,
+    private val fbCookie: FbCookie,
+    private val prefs: Prefs
+) {
 
-    private val fbCookie: FbCookie get() = web.fbCookie
-    private val prefs: Prefs get() = web.prefs
-    private val context: Context = web.context
-    private val activity: MainActivity? = context as? MainActivity
-    private val header: SendChannel<String>? = activity?.headerBadgeChannel
+    private val mainActivity: MainActivity? = activity as? MainActivity
+    private val webActivity: WebOverlayActivityBase? = activity as? WebOverlayActivityBase
+    private val header: SendChannel<String>? = mainActivity?.headerBadgeChannel
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val cookies: List<CookieEntity> = activity?.cookies() ?: arrayListOf()
+    private val cookies: List<CookieEntity> = activity.cookies()
 
     /**
      * Attempts to load the url in an overlay
@@ -61,7 +64,7 @@ class FrostJSI(val web: FrostWebView) {
     fun loadVideo(url: String?, isGif: Boolean): Boolean =
         if (url != null && prefs.enablePip) {
             web.post {
-                (context as? VideoViewHolder)?.showVideo(url, isGif)
+                (activity as? VideoViewHolder)?.showVideo(url, isGif)
                     ?: L.e { "Could not load video; contract not implemented" }
             }
             true
@@ -82,7 +85,7 @@ class FrostJSI(val web: FrostWebView) {
     fun contextMenu(url: String?, text: String?) {
         // url will be formatted through webcontext
         web.post {
-            context.showWebContextMenu(
+            activity.showWebContextMenu(
                 WebContext(url.takeIf { it.isIndependent }, text),
                 fbCookie,
                 prefs
@@ -96,7 +99,7 @@ class FrostJSI(val web: FrostWebView) {
      */
     @JavascriptInterface
     fun longClick(start: Boolean) {
-        activity?.contentBinding?.viewpager?.enableSwipe = !start
+        mainActivity?.contentBinding?.viewpager?.enableSwipe = !start
         if (web.frostWebClient.urlSupportsRefresh) {
             web.parent.swipeDisabledByAction = start
         }
@@ -113,15 +116,15 @@ class FrostJSI(val web: FrostWebView) {
         web.parent.swipeDisabledByAction = disable
         if (disable) {
             // locked onto an input field; ensure content is visible
-            (context as? MainActivityContract)?.collapseAppBar()
+            mainActivity?.collapseAppBar()
         }
     }
 
     @JavascriptInterface
     fun loadLogin() {
         L.d { "Sign up button found; load login" }
-        context.ctxCoroutine.launch {
-            fbCookie.logout(context, deleteCookie = false)
+        activity.ctxCoroutine.launch {
+            fbCookie.logout(activity, deleteCookie = false)
         }
     }
 
@@ -130,7 +133,7 @@ class FrostJSI(val web: FrostWebView) {
      */
     @JavascriptInterface
     fun loadImage(imageUrl: String, text: String?) {
-        context.launchImageActivity(imageUrl, text)
+        activity.launchImageActivity(imageUrl, text)
     }
 
     @JavascriptInterface
@@ -159,8 +162,8 @@ class FrostJSI(val web: FrostWebView) {
 
     @JavascriptInterface
     fun allowHorizontalScrolling(enable: Boolean) {
-        activity?.contentBinding?.viewpager?.enableSwipe = enable
-        (context as? WebOverlayActivityBase)?.swipeBack?.disallowIntercept = !enable
+        mainActivity?.contentBinding?.viewpager?.enableSwipe = enable
+        webActivity?.swipeBack?.disallowIntercept = !enable
     }
 
     private var isScrolling = false
