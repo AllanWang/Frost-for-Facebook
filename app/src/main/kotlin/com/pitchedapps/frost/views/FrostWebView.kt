@@ -29,6 +29,7 @@ import ca.allanwang.kau.utils.launchMain
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.FrostContentCore
 import com.pitchedapps.frost.contracts.FrostContentParent
+import com.pitchedapps.frost.contracts.WebFileChooser
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
@@ -70,6 +71,9 @@ class FrostWebView @JvmOverloads constructor(
     lateinit var themeProvider: ThemeProvider
 
     @Inject
+    lateinit var webFileChooser: WebFileChooser
+
+    @Inject
     lateinit var cookieDao: CookieDao
 
     override fun reload(animate: Boolean) {
@@ -98,7 +102,7 @@ class FrostWebView @JvmOverloads constructor(
         // attempt to get custom client; otherwise fallback to original
         frostWebClient = (container as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
         webViewClient = frostWebClient
-        webChromeClient = FrostChromeClient(this, themeProvider)
+        webChromeClient = FrostChromeClient(this, themeProvider, webFileChooser)
         addJavascriptInterface(FrostJSI(this), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->

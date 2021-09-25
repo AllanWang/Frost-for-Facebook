@@ -30,11 +30,9 @@ import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.materialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.input.input
-import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.ActivityContract
+import com.pitchedapps.frost.contracts.WebFileChooser
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
-import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
 
@@ -49,13 +47,13 @@ import kotlinx.coroutines.channels.SendChannel
  */
 class FrostChromeClient(
     web: FrostWebView,
-    private val themeProvider: ThemeProvider
+    private val themeProvider: ThemeProvider,
+    private val webFileChooser: WebFileChooser,
 ) : WebChromeClient() {
 
     private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val progress: SendChannel<Int> = web.parent.progressChannel
     private val title: SendChannel<String> = web.parent.titleChannel
-    private val activity = (web.context as? ActivityContract)
     private val context = web.context!!
 
     override fun getDefaultVideoPoster(): Bitmap? =
@@ -83,9 +81,8 @@ class FrostChromeClient(
         filePathCallback: ValueCallback<Array<Uri>?>,
         fileChooserParams: FileChooserParams
     ): Boolean {
-        activity?.openFileChooser(filePathCallback, fileChooserParams)
-            ?: webView.frostSnackbar(R.string.file_chooser_not_found, themeProvider)
-        return activity != null
+        webFileChooser.openMediaPicker(filePathCallback, fileChooserParams)
+        return true
     }
 
     private fun JsResult.frostCancel() {

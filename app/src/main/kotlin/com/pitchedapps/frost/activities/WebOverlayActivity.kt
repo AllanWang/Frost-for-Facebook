@@ -18,12 +18,9 @@ package com.pitchedapps.frost.activities
 
 import android.content.Intent
 import android.graphics.PointF
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.webkit.ValueCallback
-import android.webkit.WebChromeClient
 import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -49,11 +46,9 @@ import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.ActivityContract
-import com.pitchedapps.frost.contracts.FileChooserContract
-import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.FrostContentContainer
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.contracts.WebFileChooser
 import com.pitchedapps.frost.enums.OverlayContext
 import com.pitchedapps.frost.facebook.FB_URL_BASE
 import com.pitchedapps.frost.facebook.FbItem
@@ -70,10 +65,12 @@ import com.pitchedapps.frost.utils.frostSnackbar
 import com.pitchedapps.frost.views.FrostContentWeb
 import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-06-01.
@@ -155,12 +152,11 @@ class WebOverlayDesktopActivity : WebOverlayActivityBase(USER_AGENT_DESKTOP_CONS
 class WebOverlayActivity : WebOverlayActivityBase()
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
+@AndroidEntryPoint
 abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) :
     BaseActivity(),
-    ActivityContract,
     FrostContentContainer,
-    VideoViewHolder,
-    FileChooserContract by FileChooserDelegate() {
+    VideoViewHolder {
 
     override val frameWrapper: FrameLayout by bindView(R.id.frame_wrapper)
     val toolbar: Toolbar by bindView(R.id.overlay_toolbar)
@@ -168,6 +164,9 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
     val web: FrostWebView
         get() = content.coreView
     private val coordinator: CoordinatorLayout by bindView(R.id.overlay_main_content)
+
+    @Inject
+    lateinit var webFileChooser: WebFileChooser
 
     private inline val urlTest: String?
         get() = intent.getStringExtra(ARG_URL) ?: intent.dataString
@@ -297,15 +296,8 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
         kauSwipeOnDestroy()
     }
 
-    override fun openFileChooser(
-        filePathCallback: ValueCallback<Array<Uri>?>,
-        fileChooserParams: WebChromeClient.FileChooserParams
-    ) {
-        openMediaPicker(filePathCallback, fileChooserParams)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (onActivityResultWeb(requestCode, resultCode, data)) return
+        if (webFileChooser.onActivityResultWeb(requestCode, resultCode, data)) return
         super.onActivityResult(requestCode, resultCode, data)
     }
 

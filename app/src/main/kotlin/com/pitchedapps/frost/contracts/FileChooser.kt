@@ -26,11 +26,77 @@ import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.utils.L
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-07-04.
  */
 const val MEDIA_CHOOSER_RESULT = 67
+
+interface WebFileChooser {
+    fun openMediaPicker(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    )
+
+    fun onActivityResultWeb(
+        requestCode: Int,
+        resultCode: Int,
+        intent: Intent?
+    ): Boolean
+}
+
+class WebFileChooserImpl @Inject internal constructor(private val activity: Activity) :
+    WebFileChooser {
+    private var filePathCallback: ValueCallback<Array<Uri>?>? = null
+
+    override fun openMediaPicker(
+        filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    ) {
+        activity.kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
+            if (!granted) {
+                L.d { "Failed to get write permissions" }
+                filePathCallback.onReceiveValue(null)
+                return@kauRequestPermissions
+            }
+            this.filePathCallback = filePathCallback
+            val intent = Intent()
+            intent.type = fileChooserParams.acceptTypes.firstOrNull()
+            intent.action = Intent.ACTION_GET_CONTENT
+            activity.startActivityForResult(
+                Intent.createChooser(intent, activity.string(R.string.pick_image)),
+                MEDIA_CHOOSER_RESULT
+            )
+        }
+    }
+
+    override fun onActivityResultWeb(
+        requestCode: Int,
+        resultCode: Int,
+        intent: Intent?
+    ): Boolean {
+        L.d { "FileChooser On activity results web $requestCode" }
+        if (requestCode != MEDIA_CHOOSER_RESULT) return false
+        val data = intent?.data
+        filePathCallback?.onReceiveValue(if (data != null) arrayOf(data) else null)
+        filePathCallback = null
+        return true
+    }
+}
+
+@Module
+@InstallIn(ActivityComponent::class)
+interface WebFileChooserModule {
+    @Binds
+    @ActivityScoped
+    fun webFileChooser(to: WebFileChooserImpl): WebFileChooser
+}
 
 interface FileChooserActivityContract {
     fun openFileChooser(
@@ -59,6 +125,7 @@ class FileChooserDelegate : FileChooserContract {
     ) {
         kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
             if (!granted) {
+                L.d { "Failed to get write permissions" }
                 filePathCallback.onReceiveValue(null)
                 return@kauRequestPermissions
             }
