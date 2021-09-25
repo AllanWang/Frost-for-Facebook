@@ -25,7 +25,9 @@ import ca.allanwang.kau.permissions.PERMISSION_WRITE_EXTERNAL_STORAGE
 import ca.allanwang.kau.permissions.kauRequestPermissions
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.utils.frostSnackbar
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,7 +38,7 @@ import javax.inject.Inject
 /**
  * Created by Allan Wang on 2017-07-04.
  */
-const val MEDIA_CHOOSER_RESULT = 67
+private const val MEDIA_CHOOSER_RESULT = 67
 
 interface WebFileChooser {
     fun openMediaPicker(
@@ -51,8 +53,10 @@ interface WebFileChooser {
     ): Boolean
 }
 
-class WebFileChooserImpl @Inject internal constructor(private val activity: Activity) :
-    WebFileChooser {
+class WebFileChooserImpl @Inject internal constructor(
+    private val activity: Activity,
+    private val themeProvider: ThemeProvider
+) : WebFileChooser {
     private var filePathCallback: ValueCallback<Array<Uri>?>? = null
 
     override fun openMediaPicker(
@@ -62,6 +66,7 @@ class WebFileChooserImpl @Inject internal constructor(private val activity: Acti
         activity.kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
             if (!granted) {
                 L.d { "Failed to get write permissions" }
+                activity.frostSnackbar(R.string.file_chooser_not_found, themeProvider)
                 filePathCallback.onReceiveValue(null)
                 return@kauRequestPermissions
             }
@@ -96,60 +101,4 @@ interface WebFileChooserModule {
     @Binds
     @ActivityScoped
     fun webFileChooser(to: WebFileChooserImpl): WebFileChooser
-}
-
-interface FileChooserActivityContract {
-    fun openFileChooser(
-        filePathCallback: ValueCallback<Array<Uri>?>,
-        fileChooserParams: WebChromeClient.FileChooserParams
-    )
-}
-
-interface FileChooserContract {
-    var filePathCallback: ValueCallback<Array<Uri>?>?
-    fun Activity.openMediaPicker(
-        filePathCallback: ValueCallback<Array<Uri>?>,
-        fileChooserParams: WebChromeClient.FileChooserParams
-    )
-
-    fun Activity.onActivityResultWeb(requestCode: Int, resultCode: Int, intent: Intent?): Boolean
-}
-
-class FileChooserDelegate : FileChooserContract {
-
-    override var filePathCallback: ValueCallback<Array<Uri>?>? = null
-
-    override fun Activity.openMediaPicker(
-        filePathCallback: ValueCallback<Array<Uri>?>,
-        fileChooserParams: WebChromeClient.FileChooserParams
-    ) {
-        kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
-            if (!granted) {
-                L.d { "Failed to get write permissions" }
-                filePathCallback.onReceiveValue(null)
-                return@kauRequestPermissions
-            }
-            this@FileChooserDelegate.filePathCallback = filePathCallback
-            val intent = Intent()
-            intent.type = fileChooserParams.acceptTypes.firstOrNull()
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(
-                Intent.createChooser(intent, string(R.string.pick_image)),
-                MEDIA_CHOOSER_RESULT
-            )
-        }
-    }
-
-    override fun Activity.onActivityResultWeb(
-        requestCode: Int,
-        resultCode: Int,
-        intent: Intent?
-    ): Boolean {
-        L.d { "FileChooser On activity results web $requestCode" }
-        if (requestCode != MEDIA_CHOOSER_RESULT) return false
-        val data = intent?.data
-        filePathCallback?.onReceiveValue(if (data != null) arrayOf(data) else null)
-        filePathCallback = null
-        return true
-    }
 }
