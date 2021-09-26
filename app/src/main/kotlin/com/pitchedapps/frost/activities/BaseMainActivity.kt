@@ -24,14 +24,11 @@ import android.content.res.ColorStateList
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.ValueCallback
-import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -79,10 +76,9 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.contracts.FileChooserContract
-import com.pitchedapps.frost.contracts.FileChooserDelegate
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.VideoViewHolder
+import com.pitchedapps.frost.contracts.WebFileChooser
 import com.pitchedapps.frost.databinding.ActivityMainBinding
 import com.pitchedapps.frost.databinding.ActivityMainBottomTabsBinding
 import com.pitchedapps.frost.databinding.ActivityMainDrawerWrapperBinding
@@ -149,7 +145,6 @@ import kotlin.math.abs
 abstract class BaseMainActivity :
     BaseActivity(),
     MainActivityContract,
-    FileChooserContract by FileChooserDelegate(),
     VideoViewHolder,
     SearchViewHolder {
 
@@ -166,6 +161,9 @@ abstract class BaseMainActivity :
 
     @Inject
     lateinit var genericDao: GenericDao
+
+    @Inject
+    lateinit var webFileChooser: WebFileChooser
 
     interface ActivityMainContentBinding {
         val root: View
@@ -715,16 +713,9 @@ abstract class BaseMainActivity :
         return true
     }
 
-    override fun openFileChooser(
-        filePathCallback: ValueCallback<Array<Uri>?>,
-        fileChooserParams: WebChromeClient.FileChooserParams
-    ) {
-        openMediaPicker(filePathCallback, fileChooserParams)
-    }
-
     @SuppressLint("NewApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (onActivityResultWeb(requestCode, resultCode, data)) return
+        if (webFileChooser.onActivityResultWeb(requestCode, resultCode, data)) return
         super.onActivityResult(requestCode, resultCode, data)
 
         fun hasRequest(flag: Int) = resultCode and flag > 0

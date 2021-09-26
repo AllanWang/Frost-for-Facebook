@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.1.1
+* Many internal fixes to address 3.1.0 issues
+
 ## v3.1.0
 * Fix multi account sign in
 * Only clear out cookies on explicit logout; Facebook logout redirects no longer erase cookies
