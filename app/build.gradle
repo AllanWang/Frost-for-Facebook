@@ -35,10 +35,10 @@ android {
         applicationId "${project.APP_GROUP}.${project.APP_ID.toLowerCase(Locale.CANADA)}"
         minSdkVersion kau.Versions.minSdk
         targetSdkVersion Versions.targetSdk
-//        versionCode 3010000
-        versionCode androidGitVersion.code()
-//        versionName '3.1.0'
-        versionName androidGitVersion.name()
+        versionCode 3010100
+//        versionCode androidGitVersion.code()
+        versionName '3.1.1'
+//        versionName androidGitVersion.name()
 
         if (System.getenv('CI') != 'true') {
             // Verification for F-Droid builds
