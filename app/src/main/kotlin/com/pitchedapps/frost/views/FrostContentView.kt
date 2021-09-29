@@ -175,6 +175,7 @@ abstract class FrostContentViewBase(
         }
 
         refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
+            L.v { "Refreshing $r" }
             refresh.isRefreshing = r
         }
 

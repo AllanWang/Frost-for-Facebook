@@ -19,6 +19,7 @@ package com.pitchedapps.frost.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -135,7 +136,7 @@ private inline fun <reified T : WebOverlayActivityBase> Context.launchWebOverlay
         ctxCoroutine.launch {
             fbCookie.logout(this@launchWebOverlayImpl, deleteCookie = false)
         }
-    } else if (!(prefs.linksInDefaultApp && resolveActivityForUri(Uri.parse(argUrl)))) {
+    } else if (!(prefs.linksInDefaultApp && startActivityForUri(Uri.parse(argUrl)))) {
         startActivity<T>(
             false,
             intentBuilder = {
@@ -308,7 +309,7 @@ fun Context.createPrivateMediaFile(extension: String) = createPrivateMediaFile("
  * returns [true] if activity is resolved, [false] otherwise
  * For safety, any uri that [isFacebookUrl] without [isExplicitIntent] will return [false]
  */
-fun Context.resolveActivityForUri(uri: Uri): Boolean {
+fun Context.startActivityForUri(uri: Uri): Boolean {
     val url = uri.toString()
     if (url.isFacebookUrl && !url.isExplicitIntent) {
         return false
@@ -317,11 +318,12 @@ fun Context.resolveActivityForUri(uri: Uri): Boolean {
         Intent.ACTION_VIEW,
         uri.formattedFbUri
     )
-    if (intent.resolveActivity(packageManager) == null) {
-        return false
+    return try {
+        startActivity(intent)
+        true
+    } catch (e: ActivityNotFoundException) {
+        false
     }
-    startActivity(intent)
-    return true
 }
 
 /**

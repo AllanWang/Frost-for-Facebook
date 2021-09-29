@@ -50,7 +50,7 @@ import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndirectImageUrl
 import com.pitchedapps.frost.utils.isMessengerUrl
 import com.pitchedapps.frost.utils.launchImageActivity
-import com.pitchedapps.frost.utils.resolveActivityForUri
+import com.pitchedapps.frost.utils.startActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
@@ -253,7 +253,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         v { "Url path $path" }
         val url = request.url.toString()
         if (url.isExplicitIntent) {
-            view.context.resolveActivityForUri(request.url)
+            view.context.startActivityForUri(request.url)
             return true
         }
         if (path.startsWith("/composer/")) {
@@ -265,7 +265,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         if (url.isImageUrl) {
             return launchImage(url.formattedFbUrl)
         }
-        if (prefs.linksInDefaultApp && view.context.resolveActivityForUri(request.url)) {
+        if (prefs.linksInDefaultApp && view.context.startActivityForUri(request.url)) {
             return true
         }
         // Convert desktop urls to mobile ones
