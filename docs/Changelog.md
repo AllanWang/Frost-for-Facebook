@@ -2,6 +2,7 @@
 
 ## v3.1.1
 * Many internal fixes to address 3.1.0 issues
+* Theme updates
 
 ## v3.1.0
 * Fix multi account sign in

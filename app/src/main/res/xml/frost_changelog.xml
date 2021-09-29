@@ -7,9 +7,7 @@
     -->
     <version title="v3.1.1" />
     <item text="Many internal fixes to address 3.1.0 issues" />
-    <item text="" />
-    <item text="" />
-    <item text="" />
+    <item text="Theme updates" />
 
     <version title="v3.1.0" />
     <item text="Fix multi account sign in" />
