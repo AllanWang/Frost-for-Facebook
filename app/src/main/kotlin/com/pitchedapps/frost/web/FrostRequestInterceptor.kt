@@ -30,13 +30,12 @@ import java.io.ByteArrayInputStream
  * Handler to decide when a request should be done by us
  * This is the crux of Frost's optimizations for the web browser
  */
-private val blankResource: WebResourceResponse by lazy {
+private val blankResource: WebResourceResponse =
     WebResourceResponse(
         "text/plain",
         "utf-8",
         ByteArrayInputStream("".toByteArray())
     )
-}
 
 fun WebView.shouldFrostInterceptRequest(request: WebResourceRequest): WebResourceResponse? {
     val requestUrl = request.url?.toString() ?: return null
