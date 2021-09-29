@@ -23,3 +23,7 @@ Steps to reproduce the behaviour:
  - App Version:
  - Device: 
  - Android Version:
+
+**Logs/Screenshots:**
+<!-- Logs are very useful for debugging problems. This is optional if it's widely reproducible. -->
+<!-- For screenshots, please also provide browser screenshots if the preview differs from your browser -->
