@@ -1,7 +1,8 @@
 {
   "scripts": {
     "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/css",
-    "scss-watch": "sass --no-source-map --style compressed --update scss:assets/css --watch"
+    "scss-watch": "sass --no-source-map --style compressed --update scss:assets/css --watch",
+    "http-server": "http-server ./assets"
   },
   "license": "GPL-3.0",
   "repository": {
@@ -9,6 +10,7 @@
   },
   "dependencies": {
     "compile": "0.0.2",
+    "http-server": "^13.0.2",
     "run": "^1.4.0",
     "sass": "^1.39.2",
     "typescript": "^3.9.10"
