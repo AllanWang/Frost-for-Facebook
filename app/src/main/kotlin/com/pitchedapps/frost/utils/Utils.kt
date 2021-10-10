@@ -314,6 +314,9 @@ fun Context.startActivityForUri(uri: Uri): Boolean {
     if (url.isFacebookUrl && !url.isExplicitIntent) {
         return false
     }
+    if (url.isMessengerUrl) {
+        return false
+    }
     val intent = Intent(
         Intent.ACTION_VIEW,
         uri.formattedFbUri

@@ -28,6 +28,7 @@ import com.pitchedapps.frost.utils.isFacebookUrl
 import com.pitchedapps.frost.utils.isImageUrl
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.isIndirectImageUrl
+import com.pitchedapps.frost.utils.isMessengerUrl
 import com.pitchedapps.frost.utils.isVideoUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.launchWebOverlay
@@ -76,7 +77,7 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
     }
     if (!prefs.overlayEnabled) return false
     if (context is WebOverlayActivityBase) {
-        val shouldUseDesktop = url.isFacebookUrl
+        val shouldUseDesktop = url.isFacebookUrl || url.isMessengerUrl
         // already overlay; manage user agent
         if (userAgentString != USER_AGENT_DESKTOP_CONST && shouldUseDesktop) {
             L._i { "Switch to desktop agent overlay" }
