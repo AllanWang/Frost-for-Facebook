@@ -19,13 +19,7 @@ package com.pitchedapps.frost
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
-import com.pitchedapps.frost.prefs.Prefs
 import dagger.hilt.android.testing.HiltTestApplication
-import org.junit.rules.TestRule
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 
 class FrostTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
@@ -35,17 +29,4 @@ class FrostTestRunner : AndroidJUnitRunner() {
     ): Application {
         return super.newApplication(cl, HiltTestApplication::class.java.name, context)
     }
-}
-
-class FrostTestRule : TestRule {
-    override fun apply(base: Statement, description: Description): Statement =
-        object : Statement(), KoinComponent {
-            override fun evaluate() {
-
-                // Reset prefs
-                get<Prefs>().reset()
-
-                base.evaluate()
-            }
-        }
 }
