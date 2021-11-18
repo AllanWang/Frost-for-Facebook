@@ -3,8 +3,7 @@ apply plugin: "com.diffplug.spotless"
 spotless {
     kotlin {
         target "**/*.kt"
-        // https://github.com/pinterest/ktlint/releases
-        ktlint("0.41.0").userData(["disabled_rules": "no-wildcard-imports"])
+        ktlint(kau.Versions.ktlint).userData(["disabled_rules": "no-wildcard-imports"])
         licenseHeaderFile '../spotless.license.kt'
         trimTrailingWhitespace()
         endWithNewline()

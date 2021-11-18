@@ -31,7 +31,7 @@
 
         <activity
             android:name=".StartActivity"
-            android:label="@string/frost_name"
+            android:exported="true"
             android:noHistory="true"
             android:theme="@style/FrostTheme.Splash">
             <intent-filter>
@@ -174,14 +174,17 @@
 
         <receiver
             android:name=".services.UpdateReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
         <!--Widgets-->
-        <receiver android:name=".widgets.NotificationWidget">
+        <receiver
+            android:name=".widgets.NotificationWidget"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

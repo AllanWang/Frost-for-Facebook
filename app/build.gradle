@@ -274,9 +274,6 @@ dependencies {
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    testImplementation kau.Dependencies.koinTest
-    androidTestImplementation kau.Dependencies.koinTest
-
     implementation kau.Dependencies.hilt
     kapt kau.Dependencies.hiltCompiler
     testImplementation kau.Dependencies.hiltTest
