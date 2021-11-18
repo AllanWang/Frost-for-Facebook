@@ -12,7 +12,7 @@ object Versions {
     const val exoMedia = "4.3.0"
 
     // https://github.com/jhy/jsoup/releases
-    const val jsoup = "1.14.2"
+    const val jsoup = "1.14.3"
     // https://square.github.io/okhttp/changelog/
     const val okhttp = "4.9.1"
     // https://developer.android.com/jetpack/androidx/releases/room
