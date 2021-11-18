@@ -1,6 +1,6 @@
 object Versions {
 
-    const val targetSdk = 30
+    const val targetSdk = 31
 
     // https://developer.android.com/jetpack/androidx/releases/biometric
     const val andxBiometric = "1.1.0"
@@ -18,9 +18,9 @@ object Versions {
     // https://developer.android.com/jetpack/androidx/releases/room
     const val room = "2.3.0"
     // http://robolectric.org/getting-started/
-    const val roboelectric = "4.4"
+    const val roboelectric = "4.6"
     // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
     const val scaleImageView = "3.10.0"
     // https://github.com/node-gradle/gradle-node-plugin/releases
-    const val nodeGradle = "3.0.1"
+    const val nodeGradle = "3.1.1"
 }
