@@ -39,28 +39,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
+        Config changes taken from Fenix with:
+        locale
+        addition
+
+        https://github.com/mozilla-mobile/fenix/blob/main/app/src/main/AndroidManifest.xml
+        -->
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="orientation|screenSize|locale"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_name" />
         <activity
             android:name=".activities.WebOverlayActivity"
-            android:configChanges="orientation|screenSize|locale"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_name"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
             android:name=".activities.WebOverlayDesktopActivity"
-            android:configChanges="orientation|screenSize|locale"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"
             android:launchMode="singleTop"
             android:theme="@style/FrostTheme.Overlay.Slide" />
         <activity
             android:name=".activities.WebOverlayMobileActivity"
-            android:configChanges="orientation|screenSize|locale"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"
             android:launchMode="singleTop"
@@ -68,7 +75,7 @@
         <activity
             android:name=".activities.FrostWebActivity"
             android:autoRemoveFromRecents="true"
-            android:configChanges="orientation|screenSize|locale"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:label="@string/frost_web"
