@@ -274,9 +274,9 @@ dependencies {
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"
 
-    implementation 'com.github.piasy:BigImageViewer:1.8.1'
-    implementation 'com.github.piasy:GlideImageLoader:1.8.1'
-    implementation 'com.github.piasy:GlideImageViewFactory:1.8.1'
+    implementation "com.github.piasy:BigImageViewer:${Versions.bigImageViewer}"
+    implementation "com.github.piasy:GlideImageLoader:${Versions.bigImageViewer}"
+    implementation "com.github.piasy:GlideImageViewFactory:${Versions.bigImageViewer}"
 
     implementation kau.Dependencies.hilt
     kapt kau.Dependencies.hiltCompiler
@@ -317,8 +317,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}"
     testImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${Versions.okhttp}"
-
-//    implementation "com.davemorrissey.labs:subsampling-scale-image-view:${Versions.scaleImageView}"
 
     implementation "androidx.room:room-ktx:${Versions.room}"
     implementation "androidx.room:room-runtime:${Versions.room}"

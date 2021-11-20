@@ -219,6 +219,18 @@ class ImageActivity : KauBaseActivity() {
             setOnClickListener { state.onClick(this@ImageActivity) }
         }
 
+        imageProgress.tint(foregroundTint)
+        error.apply {
+            invisible()
+            setState(FabStates.ERROR)
+        }
+        download.apply {
+            setState(FabStates.DOWNLOAD)
+        }
+        share.apply {
+            setState(FabStates.SHARE)
+        }
+
         imagePhoto.setImageLoaderCallback(object : ImageLoader.Callback {
             override fun onCacheHit(imageType: Int, image: File?) {}
 
@@ -237,17 +249,6 @@ class ImageActivity : KauBaseActivity() {
             }
         })
 
-        imageProgress.tint(foregroundTint)
-        error.apply {
-            invisible()
-            setState(FabStates.ERROR)
-        }
-        download.apply {
-            setState(FabStates.DOWNLOAD)
-        }
-        share.apply {
-            setState(FabStates.SHARE)
-        }
         activityThemer.setFrostColors {
             themeWindow = false
         }

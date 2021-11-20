@@ -19,8 +19,8 @@ object Versions {
     const val room = "2.3.0"
     // http://robolectric.org/getting-started/
     const val roboelectric = "4.6"
-    // https://github.com/davemorrissey/subsampling-scale-image-view#quick-start
-    const val scaleImageView = "3.10.0"
+    // https://github.com/Piasy/BigImageViewer#add-the-dependencies
+    const val bigImageViewer = "1.8.1"
     // https://github.com/node-gradle/gradle-node-plugin/releases
     const val nodeGradle = "3.1.1"
 }
