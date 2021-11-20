@@ -50,7 +50,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.databinding.ActivityImage2Binding
+import com.pitchedapps.frost.databinding.ActivityImageBinding
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
@@ -135,7 +135,7 @@ class ImageActivity : KauBaseActivity() {
         "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
     }
 
-    lateinit var binding: ActivityImage2Binding
+    lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
 
     private val baseBackgroundColor: Int
@@ -173,7 +173,7 @@ class ImageActivity : KauBaseActivity() {
                 L.v { "Launching image with url $result" }
             result
         }
-        binding = ActivityImage2Binding.inflate(layoutInflater)
+        binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.init()
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
@@ -183,7 +183,7 @@ class ImageActivity : KauBaseActivity() {
         }
     }
 
-    private fun ActivityImage2Binding.showImage(url: String) {
+    private fun ActivityImageBinding.showImage(url: String) {
         imagePhoto.showImage(Uri.parse(url))
         imagePhoto.setImageShownCallback(object : ImageShownCallback {
             override fun onThumbnailShown() {}
@@ -195,7 +195,7 @@ class ImageActivity : KauBaseActivity() {
         })
     }
 
-    private fun ActivityImage2Binding.init() {
+    private fun ActivityImageBinding.init() {
         imageContainer.setBackgroundColor(baseBackgroundColor)
         toolbar.setBackgroundColor(baseBackgroundColor)
         this@ImageActivity.imageText.also { text ->

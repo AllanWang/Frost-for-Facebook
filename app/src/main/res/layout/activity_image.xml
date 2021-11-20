@@ -19,7 +19,7 @@
 
         <!-- Alpha and scaling will be reset on load -->
 
-        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        <com.github.piasy.biv.view.BigImageView
             android:id="@+id/image_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
