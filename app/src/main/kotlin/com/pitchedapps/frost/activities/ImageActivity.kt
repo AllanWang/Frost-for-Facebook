@@ -16,10 +16,10 @@
  */
 package com.pitchedapps.frost.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -28,7 +28,6 @@ import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
-import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.gone
@@ -42,22 +41,17 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
-import com.davemorrissey.labs.subscaleview.ImageSource
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+import com.github.piasy.biv.loader.ImageLoader
+import com.github.piasy.biv.view.ImageShownCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
-import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
-import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
-import com.pitchedapps.frost.facebook.requests.requestBuilder
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
@@ -73,10 +67,8 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -102,24 +94,9 @@ class ImageActivity : KauBaseActivity() {
     /**
      * Reference to the temporary file path
      */
-    internal var tempFile: File? = null
+    internal val tempFile: File? get() = binding.imagePhoto.currentImageFile
 
     private lateinit var dragHelper: ViewDragHelper
-
-    companion object {
-        /**
-         * Cache folder to store images
-         * Linked to the uri provider
-         */
-        private const val IMAGE_FOLDER = "images"
-        private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
-        private const val IMG_TAG = "Frost"
-        const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
-        private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
-
-        fun cacheDir(context: Context): File =
-            File(context.cacheDir, IMAGE_FOLDER)
-    }
 
     private val cookie: String? by lazy { intent.getStringExtra(ARG_COOKIE) }
 
@@ -128,11 +105,6 @@ class ImageActivity : KauBaseActivity() {
     private lateinit var trueImageUrl: Deferred<String>
 
     private val imageText: String? by lazy { intent.getStringExtra(ARG_TEXT) }
-
-    // a unique image identifier based on the id (if it exists), and its hash
-    private val imageHash: String by lazy {
-        "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
-    }
 
     lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
@@ -167,19 +139,29 @@ class ImageActivity : KauBaseActivity() {
             val result = if (!imageUrl.isIndirectImageUrl) imageUrl
             else cookie?.getFullSizedImageUrl(imageUrl) ?: imageUrl
             if (result != imageUrl)
-                L.v { "Launching with true url $result" }
+                L.v { "Launching image with true url $result" }
+            else
+                L.v { "Launching image with url $result" }
             result
         }
         binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.init()
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
-            val tempFile = downloadTempImage()
-            this@ImageActivity.tempFile = tempFile
-            binding.imageProgress.fadeOut()
-            binding.imagePhoto.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
-            binding.imagePhoto.animate().alpha(1f).scaleXY(1f).start()
+            binding.showImage(trueImageUrl.await())
         }
+    }
+
+    private fun ActivityImageBinding.showImage(url: String) {
+        imagePhoto.showImage(Uri.parse(url))
+        imagePhoto.setImageShownCallback(object : ImageShownCallback {
+            override fun onThumbnailShown() {}
+
+            override fun onMainImageShown() {
+                imageProgress.fadeOut()
+                imagePhoto.animate().alpha(1f).scaleXY(1f).start()
+            }
+        })
     }
 
     private fun ActivityImageBinding.init() {
@@ -226,12 +208,25 @@ class ImageActivity : KauBaseActivity() {
         share.apply {
             setState(FabStates.SHARE)
         }
-        imagePhoto.setOnImageEventListener(object :
-                SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                override fun onImageLoadError(e: Exception) {
-                    loadError(e)
-                }
-            })
+
+        imagePhoto.setImageLoaderCallback(object : ImageLoader.Callback {
+            override fun onCacheHit(imageType: Int, image: File?) {}
+
+            override fun onCacheMiss(imageType: Int, image: File?) {}
+
+            override fun onStart() {}
+
+            override fun onProgress(progress: Int) {}
+
+            override fun onFinish() {}
+
+            override fun onSuccess(image: File) {}
+
+            override fun onFail(error: Exception) {
+                loadError(error)
+            }
+        })
+
         activityThemer.setFrostColors {
             themeWindow = false
         }
@@ -303,61 +298,12 @@ class ImageActivity : KauBaseActivity() {
         override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int = top
     }
 
-    private fun getImageExtension(type: String?): String? {
-        if (type?.startsWith("image/") != true) {
-            return null
-        }
-        return when (type.substring(6)) {
-            "jpeg" -> "jpg"
-            "png" -> "png"
-            "gif" -> "gif"
-            else -> null
-        }
-    }
-
-    @Throws(IOException::class)
-    private suspend fun downloadTempImage(): File = withContext(Dispatchers.IO) {
-
-        // We assume all images are jpg
-        // Activity launcher may be able to provide specifics, but this beats sending a request
-        // just to get the content header
-        val file = File(cacheDir(this@ImageActivity), "$imageHash.jpg")
-
-        if (!file.isFile) {
-            file.parentFile?.mkdirs()
-            file.createNewFile()
-        } else {
-            file.setLastModified(System.currentTimeMillis())
-        }
-
-        // Forbid overwrites
-        if (file.isFile && file.length() > 0) {
-            L.i { "Forbid image overwrite" }
-            return@withContext file
-        }
-
-        val response = cookie.requestBuilder()
-            .url(trueImageUrl.await())
-            .get()
-            .call()
-            .execute()
-
-        if (!response.isSuccessful) {
-            throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
-        }
-
-        val body = response.body ?: throw IOException("Failed to retrieve image body")
-        file.copyFromInputStream(body.byteStream())
-        file
-    }
-
     internal suspend fun saveImage() {
         frostDownload(cookie = cookie, url = trueImageUrl.await())
     }
 
-    override fun onDestroy() {
-        LocalService.schedule(this, LocalService.Flag.PURGE_IMAGE)
-        super.onDestroy()
+    companion object {
+        private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 }
 
