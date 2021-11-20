@@ -113,8 +113,6 @@ class ImageActivity : KauBaseActivity() {
          * Linked to the uri provider
          */
         private const val IMAGE_FOLDER = "images"
-        private const val TIME_FORMAT = "yyyyMMdd_HHmmss"
-        private const val IMG_TAG = "Frost"
         const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
         private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
 
@@ -129,11 +127,6 @@ class ImageActivity : KauBaseActivity() {
     private lateinit var trueImageUrl: Deferred<String>
 
     private val imageText: String? by lazy { intent.getStringExtra(ARG_TEXT) }
-
-    // a unique image identifier based on the id (if it exists), and its hash
-    private val imageHash: String by lazy {
-        "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
-    }
 
     lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
@@ -177,8 +170,6 @@ class ImageActivity : KauBaseActivity() {
         setContentView(binding.root)
         binding.init()
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
-//            val tempFile = downloadTempImage()
-//            this@ImageActivity.tempFile = tempFile
             binding.showImage(trueImageUrl.await())
         }
     }
@@ -326,54 +317,6 @@ class ImageActivity : KauBaseActivity() {
         override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int = 0
 
         override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int = top
-    }
-
-    private fun getImageExtension(type: String?): String? {
-        if (type?.startsWith("image/") != true) {
-            return null
-        }
-        return when (type.substring(6)) {
-            "jpeg" -> "jpg"
-            "png" -> "png"
-            "gif" -> "gif"
-            else -> null
-        }
-    }
-
-    @Throws(IOException::class)
-    private suspend fun downloadTempImage(): File = withContext(Dispatchers.IO) {
-
-        // We assume all images are jpg
-        // Activity launcher may be able to provide specifics, but this beats sending a request
-        // just to get the content header
-        val file = File(cacheDir(this@ImageActivity), "$imageHash.jpg")
-
-        if (!file.isFile) {
-            file.parentFile?.mkdirs()
-            file.createNewFile()
-        } else {
-            file.setLastModified(System.currentTimeMillis())
-        }
-
-        // Forbid overwrites
-        if (file.isFile && file.length() > 0) {
-            L.i { "Forbid image overwrite" }
-            return@withContext file
-        }
-
-        val response = cookie.requestBuilder()
-            .url(trueImageUrl.await())
-            .get()
-            .call()
-            .execute()
-
-        if (!response.isSuccessful) {
-            throw IOException("Unsuccessful response for image: ${response.peekBody(128).string()}")
-        }
-
-        val body = response.body ?: throw IOException("Failed to retrieve image body")
-        file.copyFromInputStream(body.byteStream())
-        file
     }
 
     internal suspend fun saveImage() {
