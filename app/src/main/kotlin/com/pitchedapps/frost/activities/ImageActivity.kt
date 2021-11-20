@@ -43,6 +43,7 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
+import com.github.piasy.biv.loader.ImageLoader
 import com.github.piasy.biv.view.ImageShownCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -102,7 +103,7 @@ class ImageActivity : KauBaseActivity() {
     /**
      * Reference to the temporary file path
      */
-    internal var tempFile: File? = null
+    internal val tempFile: File? get() = binding.imagePhoto.currentImageFile
 
     private lateinit var dragHelper: ViewDragHelper
 
@@ -176,19 +177,19 @@ class ImageActivity : KauBaseActivity() {
         setContentView(binding.root)
         binding.init()
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
-            val tempFile = downloadTempImage()
-            this@ImageActivity.tempFile = tempFile
+//            val tempFile = downloadTempImage()
+//            this@ImageActivity.tempFile = tempFile
             binding.showImage(trueImageUrl.await())
         }
     }
 
     private fun ActivityImage2Binding.showImage(url: String) {
-        imageProgress.fadeOut()
         imagePhoto.showImage(Uri.parse(url))
         imagePhoto.setImageShownCallback(object : ImageShownCallback {
             override fun onThumbnailShown() {}
 
             override fun onMainImageShown() {
+                imageProgress.fadeOut()
                 imagePhoto.animate().alpha(1f).scaleXY(1f).start()
             }
         })
@@ -226,6 +227,24 @@ class ImageActivity : KauBaseActivity() {
             setIcon(state.iicon, color = foregroundTint, sizeDp = 24)
             setOnClickListener { state.onClick(this@ImageActivity) }
         }
+
+        imagePhoto.setImageLoaderCallback(object : ImageLoader.Callback {
+            override fun onCacheHit(imageType: Int, image: File?) {}
+
+            override fun onCacheMiss(imageType: Int, image: File?) {}
+
+            override fun onStart() {}
+
+            override fun onProgress(progress: Int) {}
+
+            override fun onFinish() {}
+
+            override fun onSuccess(image: File) {}
+
+            override fun onFail(error: Exception) {
+                loadError(error)
+            }
+        })
 
         imageProgress.tint(foregroundTint)
         error.apply {
