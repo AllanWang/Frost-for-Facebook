@@ -9,11 +9,12 @@ buildscript {
 
     dependencies {
         classpath kau.Plugins.android
-        classpath kau.Plugins.kotlin
+//        classpath kau.Plugins.kotlin
         classpath kau.Plugins.spotless
         classpath kau.Plugins.dexCount
         classpath kau.Plugins.hilt
         classpath kau.Plugins.gitVersion
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31'
     }
 
     wrapper.setDistributionType(Wrapper.DistributionType.ALL)

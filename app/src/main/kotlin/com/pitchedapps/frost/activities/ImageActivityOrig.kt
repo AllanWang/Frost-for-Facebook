@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -43,12 +42,13 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
+import com.davemorrissey.labs.subscaleview.ImageSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
-import com.pitchedapps.frost.databinding.ActivityImage2Binding
+import com.pitchedapps.frost.databinding.ActivityImageBinding
 import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
 import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.call
@@ -84,7 +84,7 @@ import kotlin.math.max
  * Created by Allan Wang on 2017-07-15.
  */
 @AndroidEntryPoint
-class ImageActivity : KauBaseActivity() {
+class ImageActivityOrig : KauBaseActivity() {
 
     @Inject
     lateinit var activityThemer: ActivityThemer
@@ -133,7 +133,7 @@ class ImageActivity : KauBaseActivity() {
         "${abs(FB_IMAGE_ID_MATCHER.find(imageUrl)[1]?.hashCode() ?: 0)}_${abs(imageUrl.hashCode())}"
     }
 
-    lateinit var binding: ActivityImage2Binding
+    lateinit var binding: ActivityImageBinding
     private var bottomBehavior: BottomSheetBehavior<View>? = null
 
     private val baseBackgroundColor: Int
@@ -169,25 +169,23 @@ class ImageActivity : KauBaseActivity() {
                 L.v { "Launching with true url $result" }
             result
         }
-        binding = ActivityImage2Binding.inflate(layoutInflater)
+        binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.init()
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
             val tempFile = downloadTempImage()
-            this@ImageActivity.tempFile = tempFile
+            this@ImageActivityOrig.tempFile = tempFile
             binding.imageProgress.fadeOut()
 //            binding.imagePhoto.setImageURI(frostUriFromFile(tempFile))
-//            Glide.with(binding.imagePhoto).asFile().load(trueImageUrl)
-            binding.imagePhoto.showImage(Uri.parse(trueImageUrl.await()))
-//            binding.imagePhoto.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
+            binding.imagePhoto.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
             binding.imagePhoto.animate().alpha(1f).scaleXY(1f).start()
         }
     }
 
-    private fun ActivityImage2Binding.init() {
+    private fun ActivityImageBinding.init() {
         imageContainer.setBackgroundColor(baseBackgroundColor)
         toolbar.setBackgroundColor(baseBackgroundColor)
-        this@ImageActivity.imageText.also { text ->
+        this@ImageActivityOrig.imageText.also { text ->
             if (text.isNullOrBlank()) {
                 imageText.gone()
             } else {
@@ -212,21 +210,21 @@ class ImageActivity : KauBaseActivity() {
         }
         val foregroundTint = if (prefs.blackMediaBg) Color.WHITE else themeProvider.accentColor
 
-        fun ImageView.setState(state: FabStates) {
+        fun ImageView.setState(state: FabStatesOrig) {
             setIcon(state.iicon, color = foregroundTint, sizeDp = 24)
-            setOnClickListener { state.onClick(this@ImageActivity) }
+            setOnClickListener { state.onClick(this@ImageActivityOrig) }
         }
 
         imageProgress.tint(foregroundTint)
         error.apply {
             invisible()
-            setState(FabStates.ERROR)
+            setState(FabStatesOrig.ERROR)
         }
         download.apply {
-            setState(FabStates.DOWNLOAD)
+            setState(FabStatesOrig.DOWNLOAD)
         }
         share.apply {
-            setState(FabStates.SHARE)
+            setState(FabStatesOrig.SHARE)
         }
 //        imagePhoto.setOnImageEventListener(object :
 //                SubsamplingScaleImageView.DefaultOnImageEventListener() {
@@ -323,7 +321,7 @@ class ImageActivity : KauBaseActivity() {
         // We assume all images are jpg
         // Activity launcher may be able to provide specifics, but this beats sending a request
         // just to get the content header
-        val file = File(cacheDir(this@ImageActivity), "$imageHash.jpg")
+        val file = File(cacheDir(this@ImageActivityOrig), "$imageHash.jpg")
 
         if (!file.isFile) {
             file.parentFile?.mkdirs()
@@ -363,13 +361,13 @@ class ImageActivity : KauBaseActivity() {
     }
 }
 
-internal enum class FabStates(
+internal enum class FabStatesOrig(
     val iicon: IIcon,
     val iconColorProvider: (ThemeProvider) -> Int = { it.iconColor },
     val backgroundTint: Int = Int.MAX_VALUE
 ) {
     ERROR(GoogleMaterial.Icon.gmd_error, { Color.WHITE }, Color.RED) {
-        override fun onClick(activity: ImageActivity) {
+        override fun onClick(activity: ImageActivityOrig) {
             val err =
                 activity.errorRef?.takeIf { it !is FileNotFoundException && it.message != "Image failed to decode using JPEG decoder" }
                     ?: return
@@ -380,10 +378,10 @@ internal enum class FabStates(
         }
     },
     NOTHING(GoogleMaterial.Icon.gmd_adjust) {
-        override fun onClick(activity: ImageActivity) {}
+        override fun onClick(activity: ImageActivityOrig) {}
     },
     DOWNLOAD(GoogleMaterial.Icon.gmd_file_download) {
-        override fun onClick(activity: ImageActivity) {
+        override fun onClick(activity: ImageActivityOrig) {
             activity.launch {
                 activity.binding.download.fadeOut()
                 activity.saveImage()
@@ -391,7 +389,7 @@ internal enum class FabStates(
         }
     },
     SHARE(GoogleMaterial.Icon.gmd_share) {
-        override fun onClick(activity: ImageActivity) {
+        override fun onClick(activity: ImageActivityOrig) {
             val file = activity.tempFile ?: return
             try {
                 val photoURI = activity.frostUriFromFile(file)
@@ -436,5 +434,5 @@ internal enum class FabStates(
         }
     }
 
-    abstract fun onClick(activity: ImageActivity)
+    abstract fun onClick(activity: ImageActivityOrig)
 }

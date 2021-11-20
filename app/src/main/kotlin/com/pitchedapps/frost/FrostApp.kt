@@ -22,8 +22,11 @@ import android.os.Bundle
 import android.util.Log
 import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.buildIsLollipopAndUp
+import com.github.piasy.biv.BigImageViewer
+import com.github.piasy.biv.loader.glide.GlideImageLoader
 import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.NotificationDao
+import com.pitchedapps.frost.facebook.requests.httpClient
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.scheduleNotificationsFromPrefs
@@ -65,6 +68,8 @@ class FrostApp : Application() {
         setupNotificationChannels(this, themeProvider)
 
         scheduleNotificationsFromPrefs(prefs)
+
+        BigImageViewer.initialize(GlideImageLoader.with(this, httpClient))
 
         if (BuildConfig.DEBUG) {
             registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
