@@ -5,6 +5,12 @@
     <version title="v" />
     <item text="" />
     -->
+
+    <version title="v3.1.2" />
+    <item text="Fix loading full size images" />
+    <item text="" />
+    <item text="" />
+
     <version title="v3.1.1" />
     <item text="Many internal fixes to address 3.1.0 issues" />
     <item text="Theme updates" />

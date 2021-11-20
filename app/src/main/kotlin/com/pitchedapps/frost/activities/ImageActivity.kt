@@ -29,7 +29,6 @@ import ca.allanwang.kau.internal.KauBaseActivity
 import ca.allanwang.kau.logging.KauLoggerExtension
 import ca.allanwang.kau.utils.adjustAlpha
 import ca.allanwang.kau.utils.colorToForeground
-import ca.allanwang.kau.utils.copyFromInputStream
 import ca.allanwang.kau.utils.fadeIn
 import ca.allanwang.kau.utils.fadeOut
 import ca.allanwang.kau.utils.gone
@@ -51,11 +50,8 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
-import com.pitchedapps.frost.facebook.FB_IMAGE_ID_MATCHER
 import com.pitchedapps.frost.facebook.get
-import com.pitchedapps.frost.facebook.requests.call
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
-import com.pitchedapps.frost.facebook.requests.requestBuilder
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.services.LocalService
@@ -74,10 +70,8 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max

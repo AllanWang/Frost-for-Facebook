@@ -1,4 +1,3 @@
-v3.1.1
+v3.1.2
 
-* Many internal fixes to address 3.1.0 issues
-* Theme updates
+* Fix loading full size images
