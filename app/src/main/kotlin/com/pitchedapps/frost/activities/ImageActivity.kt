@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -50,11 +49,9 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.databinding.ActivityImageBinding
-import com.pitchedapps.frost.facebook.get
 import com.pitchedapps.frost.facebook.requests.getFullSizedImageUrl
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
-import com.pitchedapps.frost.services.LocalService
 import com.pitchedapps.frost.utils.ARG_COOKIE
 import com.pitchedapps.frost.utils.ARG_IMAGE_URL
 import com.pitchedapps.frost.utils.ARG_TEXT
@@ -100,19 +97,6 @@ class ImageActivity : KauBaseActivity() {
     internal val tempFile: File? get() = binding.imagePhoto.currentImageFile
 
     private lateinit var dragHelper: ViewDragHelper
-
-    companion object {
-        /**
-         * Cache folder to store images
-         * Linked to the uri provider
-         */
-        private const val IMAGE_FOLDER = "images"
-        const val PURGE_TIME: Long = 10 * 60 * 1000 // 10 min block
-        private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
-
-        fun cacheDir(context: Context): File =
-            File(context.cacheDir, IMAGE_FOLDER)
-    }
 
     private val cookie: String? by lazy { intent.getStringExtra(ARG_COOKIE) }
 
@@ -318,9 +302,8 @@ class ImageActivity : KauBaseActivity() {
         frostDownload(cookie = cookie, url = trueImageUrl.await())
     }
 
-    override fun onDestroy() {
-        LocalService.schedule(this, LocalService.Flag.PURGE_IMAGE)
-        super.onDestroy()
+    companion object {
+        private val L = KauLoggerExtension("Image", com.pitchedapps.frost.utils.L)
     }
 }
 
