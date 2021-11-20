@@ -60,7 +60,7 @@ class FbCookie @Inject internal constructor(
      * Note that this is a synchronized call
      */
     val webCookie: String?
-        get() = CookieManager.getInstance().getCookie(FB_COOKIE_DOMAIN)
+        get() = CookieManager.getInstance().getCookie(HTTPS_FACEBOOK_COM)
 
     val messengerCookie: String?
         get() = CookieManager.getInstance().getCookie(HTTPS_MESSENGER_COM)

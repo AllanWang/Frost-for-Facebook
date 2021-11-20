@@ -43,6 +43,7 @@ import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withAlpha
 import ca.allanwang.kau.utils.withMinAlpha
+import com.github.piasy.biv.view.ImageShownCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mikepenz.iconics.typeface.IIcon
@@ -166,7 +167,9 @@ class ImageActivity : KauBaseActivity() {
             val result = if (!imageUrl.isIndirectImageUrl) imageUrl
             else cookie?.getFullSizedImageUrl(imageUrl) ?: imageUrl
             if (result != imageUrl)
-                L.v { "Launching with true url $result" }
+                L.v { "Launching image with true url $result" }
+            else
+                L.v { "Launching image with url $result" }
             result
         }
         binding = ActivityImage2Binding.inflate(layoutInflater)
@@ -175,13 +178,20 @@ class ImageActivity : KauBaseActivity() {
         launch(CoroutineExceptionHandler { _, throwable -> loadError(throwable) }) {
             val tempFile = downloadTempImage()
             this@ImageActivity.tempFile = tempFile
-            binding.imageProgress.fadeOut()
-//            binding.imagePhoto.setImageURI(frostUriFromFile(tempFile))
-//            Glide.with(binding.imagePhoto).asFile().load(trueImageUrl)
-            binding.imagePhoto.showImage(Uri.parse(trueImageUrl.await()))
-//            binding.imagePhoto.setImage(ImageSource.uri(frostUriFromFile(tempFile)))
-            binding.imagePhoto.animate().alpha(1f).scaleXY(1f).start()
+            binding.showImage(trueImageUrl.await())
         }
+    }
+
+    private fun ActivityImage2Binding.showImage(url: String) {
+        imageProgress.fadeOut()
+        imagePhoto.showImage(Uri.parse(url))
+        imagePhoto.setImageShownCallback(object : ImageShownCallback {
+            override fun onThumbnailShown() {}
+
+            override fun onMainImageShown() {
+                imagePhoto.animate().alpha(1f).scaleXY(1f).start()
+            }
+        })
     }
 
     private fun ActivityImage2Binding.init() {
@@ -228,12 +238,6 @@ class ImageActivity : KauBaseActivity() {
         share.apply {
             setState(FabStates.SHARE)
         }
-//        imagePhoto.setOnImageEventListener(object :
-//                SubsamplingScaleImageView.DefaultOnImageEventListener() {
-//                override fun onImageLoadError(e: Exception) {
-//                    loadError(e)
-//                }
-//            })
         activityThemer.setFrostColors {
             themeWindow = false
         }

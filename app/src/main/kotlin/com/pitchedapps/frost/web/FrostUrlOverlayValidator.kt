@@ -61,14 +61,14 @@ fun FrostWebView.requestWebOverlay(url: String): Boolean {
         context.runOnUiThread { context.showVideo(url) }
         return true
     }
-    if (url.isImageUrl) {
-        L.d { "Found fb image" }
-        context.launchImageActivity(url)
-        return true
-    }
     if (url.isIndirectImageUrl) {
         L.d { "Found indirect fb image" }
         context.launchImageActivity(url, cookie = fbCookie.webCookie)
+        return true
+    }
+    if (url.isImageUrl) {
+        L.d { "Found fb image" }
+        context.launchImageActivity(url)
         return true
     }
     if (!url.isIndependent) {

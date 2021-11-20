@@ -31,12 +31,15 @@ import kotlinx.coroutines.withTimeout
 /**
  * Attempts to get the fbcdn url of the supplied image redirect url
  */
-suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): String? =
-    withContext(Dispatchers.IO) {
+suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): String? {
+    L.v { "Image full size 1 from $url" }
+    return withContext(Dispatchers.IO) {
         try {
             withTimeout(timeout) {
+                L.v { "Image full size from $url" }
                 val redirect = requestBuilder().url(url).get().call()
                     .execute().body?.string() ?: return@withTimeout null
+                L.v { "Image full size from redirect $redirect" }
                 FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
             }
         } catch (e: Exception) {
@@ -44,3 +47,4 @@ suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): Stri
             null
         }
     }
+}
