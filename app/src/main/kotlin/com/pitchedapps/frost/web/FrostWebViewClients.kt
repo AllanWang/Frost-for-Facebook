@@ -37,6 +37,7 @@ import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.injectors.CssAsset
 import com.pitchedapps.frost.injectors.CssHider
+import com.pitchedapps.frost.injectors.InjectorContract
 import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.injectors.JsAssets
 import com.pitchedapps.frost.injectors.ThemeProvider
@@ -115,32 +116,33 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     /**
      * Main injections for facebook content
      */
+    protected open val facebookJsInjectors: List<InjectorContract> = listOf(
+        //                    CssHider.CORE,
+        CssHider.HEADER,
+        CssHider.COMPOSER.maybe(!prefs.showComposer),
+        CssHider.STORIES.maybe(!prefs.showStories),
+        CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
+        CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+        themeProvider.injector(ThemeCategory.FACEBOOK),
+        CssHider.NON_RECENT.maybe(
+            (web.url?.contains("?sk=h_chr") ?: false) &&
+                prefs.aggressiveRecents
+        ),
+        CssHider.ADS.maybe(!prefs.showFacebookAds),
+        CssHider.POST_ACTIONS.maybe(!prefs.showPostActions),
+        CssHider.POST_REACTIONS.maybe(!prefs.showPostReactions),
+        CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),
+        JsAssets.DOCUMENT_WATCHER,
+        JsAssets.HORIZONTAL_SCROLLING,
+        JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
+//            JsAssets.CLICK_A,
+        JsAssets.CONTEXT_A,
+        JsAssets.MEDIA,
+        JsAssets.SCROLL_STOP,
+    )
+
     private fun WebView.facebookJsInject() {
-        jsInject(
-//                    CssHider.CORE,
-            CssHider.HEADER,
-            CssHider.COMPOSER.maybe(!prefs.showComposer),
-            CssHider.STORIES.maybe(!prefs.showStories),
-            CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
-            CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
-            themeProvider.injector(ThemeCategory.FACEBOOK),
-            CssHider.NON_RECENT.maybe(
-                (web.url?.contains("?sk=h_chr") ?: false) &&
-                    prefs.aggressiveRecents
-            ),
-            CssHider.ADS.maybe(!prefs.showFacebookAds),
-            CssHider.POST_ACTIONS.maybe(!prefs.showPostActions),
-            CssHider.POST_REACTIONS.maybe(!prefs.showPostReactions),
-            CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),
-            JsAssets.DOCUMENT_WATCHER,
-            JsAssets.HORIZONTAL_SCROLLING,
-            JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
-            JsAssets.CLICK_A,
-            JsAssets.CONTEXT_A,
-            JsAssets.MEDIA,
-            JsAssets.SCROLL_STOP,
-            prefs = prefs
-        )
+        jsInject(*facebookJsInjectors.toTypedArray(), prefs = prefs)
     }
 
     private fun WebView.messengerJsInject() {
@@ -294,6 +296,13 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
         }
         jsInject(JsAssets.MENU, prefs = prefs)
     }
+
+    /*
+     * We do not inject headers as they include the menu flyout.
+     * Instead, we remove the flyout margins within the js script so that it covers the header.
+     */
+    override val facebookJsInjectors: List<InjectorContract> =
+        super.facebookJsInjectors - CssHider.HEADER
 
     override fun emit(flag: Int) {
         super.emit(flag)

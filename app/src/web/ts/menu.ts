@@ -20,43 +20,19 @@
         return
     }
 
-    /*
-     * Required to remove height restrictions
-     */
-    const y = new MutationObserver(() => {
-        viewport.removeAttribute('style');
-        root.removeAttribute('style');
-    });
+    // menu container
+    const bookmarkFlyout = document.querySelector('#bookmarks_flyout');
+    if (bookmarkFlyout instanceof HTMLElement) {
+        bookmarkFlyout.style.marginTop = "0";
+    }
 
-    y.observe(viewport, {
-        attributes: true
-    });
-    y.observe(root, {
-        attributes: true
-    });
-
-    const x = new MutationObserver(() => {
-        const menu = document.querySelector('.mSideMenu');
-        if (menu) {
-            x.disconnect();
-            console.log("Found side menu");
-            // Transfer elements
-            while (root.firstChild) {
-                root.removeChild(root.firstChild);
-            }
-            while (menu.childNodes.length) {
-                viewport.appendChild(menu.childNodes[0]);
-            }
+    // Js handling is a bit slow so we need to wait 
+    setTimeout(() => {
+        menuA.click();
+        console.log("Menu setup clicked");
+        // Reaction is also slow so we need to wait
+        setTimeout(() => {
             Frost.emit(0);
-            setTimeout(() => {
-                y.disconnect();
-                console.log('Unhook styler');
-            }, 500);
-        }
-    });
-    x.observe(jewel, {
-        childList: true,
-        subtree: true
-    });
-    menuA.click();
+        }, 100);
+    }, 200);
 }).call(undefined);

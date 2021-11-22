@@ -97,7 +97,7 @@ interface InjectorContract {
  * Helper method to inject multiple functions simultaneously with a single callback
  */
 fun WebView.jsInject(vararg injectors: InjectorContract, prefs: Prefs) {
-    injectors.filter { it != JsActions.EMPTY }.forEach {
+    injectors.asSequence().filter { it != JsActions.EMPTY }.forEach {
         it.inject(this, prefs)
     }
 }
