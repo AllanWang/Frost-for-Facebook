@@ -1,4 +1,4 @@
-// Click menu after delay and notify
+// Copy of menu.ts without timeouts or notifications
 (function () {
     const viewport = document.querySelector("#viewport");
     const root = document.querySelector("#root");
@@ -20,13 +20,5 @@
         return
     }
 
-    // Js handling is a bit slow so we need to wait 
-    setTimeout(() => {
-        menuA.click();
-        console.log("Menu setup clicked");
-        // Reaction is also slow so we need to wait
-        setTimeout(() => {
-            Frost.emit(0);
-        }, 100);
-    }, 500);
+    menuA.click();
 }).call(undefined);

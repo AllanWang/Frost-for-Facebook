@@ -302,7 +302,7 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
      * Instead, we remove the flyout margins within the js script so that it covers the header.
      */
     override val facebookJsInjectors: List<InjectorContract> =
-        super.facebookJsInjectors - CssHider.HEADER
+        super.facebookJsInjectors - CssHider.HEADER + CssAsset.Menu
 
     override fun emit(flag: Int) {
         super.emit(flag)
@@ -310,6 +310,17 @@ class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
             EMIT_FINISH -> {
                 super.injectAndFinish()
             }
+        }
+    }
+
+    /*
+     * Facebook doesn't properly load back to the menu even in standard browsers.
+     * Instead, if we detect the base soft url, we will manually click the menu item
+     */
+    override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
+        super.doUpdateVisitedHistory(view, url, isReload)
+        if (url?.startsWith(FbItem.MENU.url) == true) {
+            jsInject(JsAssets.MENU_QUICK, prefs = prefs)
         }
     }
 

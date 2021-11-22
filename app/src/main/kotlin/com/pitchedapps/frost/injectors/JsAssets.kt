@@ -34,7 +34,7 @@ import java.util.Locale
  * The enum name must match the css file name
  */
 enum class JsAssets(private val singleLoad: Boolean = true) : InjectorContract {
-    MENU, CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
+    MENU, MENU_QUICK(singleLoad = false), CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
     DOCUMENT_WATCHER, HORIZONTAL_SCROLLING, AUTO_RESIZE_TEXTAREA(singleLoad = false), SCROLL_STOP,
     ;
 

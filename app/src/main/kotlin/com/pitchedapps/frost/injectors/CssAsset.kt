@@ -23,7 +23,12 @@ import com.pitchedapps.frost.prefs.Prefs
  * Small misc inline css assets
  */
 enum class CssAsset(private val content: String) : InjectorContract {
-    FullSizeImage("div._4prr[style*=\"max-width\"][style*=\"max-height\"]{max-width:none !important;max-height:none !important}")
+    FullSizeImage("div._4prr[style*=\"max-width\"][style*=\"max-height\"]{max-width:none !important;max-height:none !important}"),
+
+    /*
+     * Remove top margin and hide some contents from the top bar and notification page (as it's our base url)
+     */
+    Menu("#bookmarks_flyout{margin-top:0 !important}#notifications_list{display:none !important}")
     ;
 
     val injector: JsInjector by lazy {
