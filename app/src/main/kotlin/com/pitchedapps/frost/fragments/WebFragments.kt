@@ -61,20 +61,4 @@ class WebFragment : BaseFragment() {
         }
         super.updateFab(contract)
     }
-
-    override fun onBackPressed(): Boolean {
-        if (baseEnum == FbItem.MENU) {
-            val core = core
-            val web = core as? WebView
-            if (web != null && web.canGoBack() && !web.canGoBackOrForward(-2)) {
-                // If menu item + we are at the second last entry, reload the base
-                // To properly inflate the menu
-                // Related to https://github.com/AllanWang/Frost-for-Facebook/issues/1593
-                core.clearHistory()
-                core.reloadBase(true)
-                return true
-            }
-        }
-        return super.onBackPressed()
-    }
 }
