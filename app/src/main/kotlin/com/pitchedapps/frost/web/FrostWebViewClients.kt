@@ -135,7 +135,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         JsAssets.DOCUMENT_WATCHER,
         JsAssets.HORIZONTAL_SCROLLING,
         JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
-//            JsAssets.CLICK_A,
+        JsAssets.CLICK_A,
         JsAssets.CONTEXT_A,
         JsAssets.MEDIA,
         JsAssets.SCROLL_STOP,
