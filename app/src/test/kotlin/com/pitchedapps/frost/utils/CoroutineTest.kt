@@ -26,7 +26,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -41,7 +40,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -159,103 +157,6 @@ class CoroutineTest {
             flow.emit(null)
             val count = flow.takeUntilNull().count()
             assertEquals(4, count, "Not all events received")
-        }
-    }
-
-    /**
-     * Not a true throttle, but for things like fetching header badges, we want to avoid simultaneous fetches.
-     * As a result, I want to test that the usage of offer along with a conflated channel will work as I expect.
-     * Events should be consumed when there is no pending consumer on previous elements.
-     */
-    @Test
-    @Ignore("Move to flow")
-    fun throttledChannel() {
-        val channel = Channel<Int>(Channel.CONFLATED)
-        runBlocking {
-            val deferred = async {
-                listen(channel) {
-                    // Throttle consumer
-                    delay(10)
-                    return@listen false
-                }
-            }
-            (0..100).forEach {
-                channel.offer(it)
-                delay(1)
-            }
-            channel.close()
-            val received = deferred.await()
-            assertTrue(
-                received.size < 20,
-                "Received data should be throttled; expected that around 1/10th of all events are consumed, but received ${received.size}"
-            )
-            println(received)
-        }
-    }
-
-    @Test
-    fun uniqueOnly() {
-        val channel = BroadcastChannel<Int>(100)
-        runBlocking {
-            val fullReceiver = channel.openSubscription()
-            val uniqueReceiver = channel.openSubscription().uniqueOnly(this)
-
-            val fullDeferred = async { listen(fullReceiver) }
-            val uniqueDeferred = async { listen(uniqueReceiver) }
-
-            listOf(0, 1, 2, 3, 3, 3, 4, 3, 5, 5, 1).forEach {
-                channel.offer(it)
-            }
-            channel.close()
-
-            val fullData = fullDeferred.await()
-            val uniqueData = uniqueDeferred.await()
-
-            assertEquals(
-                listOf(0, 1, 2, 3, 3, 3, 4, 3, 5, 5, 1),
-                fullData,
-                "Full receiver should get all channel events"
-            )
-            assertEquals(
-                listOf(0, 1, 2, 3, 4, 3, 5, 1),
-                uniqueData,
-                "Unique receiver should not have two consecutive events that are equal"
-            )
-        }
-    }
-
-    /**
-     * When using [uniqueOnly] for channels with limited capacity,
-     * the duplicates should not count towards the actual capacity
-     */
-    @Ignore("Not yet working as unique only buffered removes the capacity limitation of the channel")
-    @Test
-    fun uniqueOnlyBuffer() {
-        val channel = Channel<Int>(3)
-        runBlocking {
-
-            val deferred = async {
-                listen(channel.uniqueOnly(GlobalScope)) {
-                    // Throttle consumer
-                    delay(50)
-                    return@listen false
-                }
-            }
-
-            listOf(0, 1, 1, 1, 1, 1, 2, 2, 2).forEach {
-                delay(10)
-                channel.offer(it)
-            }
-
-            channel.close()
-
-            val data = deferred.await()
-
-            assertEquals(
-                listOf(0, 1, 2),
-                data,
-                "Unique receiver should not have two consecutive events that are equal"
-            )
         }
     }
 

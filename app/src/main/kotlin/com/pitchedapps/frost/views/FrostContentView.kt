@@ -132,6 +132,9 @@ abstract class FrostContentViewBase(
     /**
      * While this can be conflated, there exist situations where we wish to watch refresh cycles.
      * Here, we'd need to make sure we don't skip events
+     *
+     * TODO ensure there is only one flow provider is this is still separated in login
+     * Use case for shared flow is to avoid emitting before subscribing; buffer can probably be size 1
      */
     private val refreshMutableFlow = MutableSharedFlow<Boolean>(
         extraBufferCapacity = 10,

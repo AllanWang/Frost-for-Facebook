@@ -45,13 +45,20 @@ import com.pitchedapps.frost.utils.frostEvent
 import com.pitchedapps.frost.utils.frostJsoup
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.logFrostEvent
-import com.pitchedapps.frost.utils.uniqueOnly
+import com.pitchedapps.frost.web.FrostEmitter
 import com.pitchedapps.frost.web.LoginWebView
+import com.pitchedapps.frost.web.asFrostEmitter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -76,7 +83,15 @@ class LoginActivity : BaseActivity() {
     private val profile: ImageView by bindView(R.id.profile)
 
     private lateinit var profileLoader: RequestManager
-    private val refreshChannel = Channel<Boolean>(10)
+
+    private val refreshMutableFlow = MutableSharedFlow<Boolean>(
+        extraBufferCapacity = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    private val refreshFlow: SharedFlow<Boolean> = refreshMutableFlow.asSharedFlow()
+
+    private val refreshEmit: FrostEmitter<Boolean> = refreshMutableFlow.asFrostEmitter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +102,12 @@ class LoginActivity : BaseActivity() {
             toolbar(toolbar)
         }
         profileLoader = GlideApp.with(profile)
-        launch {
-            for (refreshing in refreshChannel.uniqueOnly(this)) {
-                swipeRefresh.isRefreshing = refreshing
-            }
-        }
+
+        refreshFlow
+            .distinctUntilChanged()
+            .onEach { swipeRefresh.isRefreshing = it }
+            .launchIn(this)
+
         launch {
             val cookie = web.loadLogin { refresh(it != 100) }.await()
             L.d { "Login found" }
@@ -107,7 +123,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun refresh(refreshing: Boolean) {
-        refreshChannel.offer(refreshing)
+        refreshEmit(refreshing)
     }
 
     private suspend fun loadInfo(cookie: CookieEntity): Unit = withMainContext {
