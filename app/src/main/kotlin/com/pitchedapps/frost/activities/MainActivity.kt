@@ -24,9 +24,9 @@ import com.pitchedapps.frost.facebook.parsers.BadgeParser
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.web.FrostEmitter
+import com.pitchedapps.frost.web.asFrostEmitter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,14 +41,14 @@ import kotlinx.coroutines.flow.onEach
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
-    
+
     private val fragmentMutableFlow = MutableSharedFlow<Int>(extraBufferCapacity = 10, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     override val fragmentFlow: SharedFlow<Int> = fragmentMutableFlow.asSharedFlow()
-    override val fragmentEmit: FrostEmitter<Int> = FrostEmitter { fragmentMutableFlow.tryEmit(it) }
+    override val fragmentEmit: FrostEmitter<Int> = fragmentMutableFlow.asFrostEmitter()
 
     private val headerMutableFlow = MutableStateFlow("")
     override val headerFlow: SharedFlow<String> = headerMutableFlow.asSharedFlow()
-    override val headerEmit: FrostEmitter<String> = FrostEmitter { headerMutableFlow.tryEmit(it) }
+    override val headerEmit: FrostEmitter<String> = headerMutableFlow.asFrostEmitter()
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
         with(contentBinding) {

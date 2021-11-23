@@ -25,6 +25,7 @@ import dagger.hilt.DefineComponent
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewComponent
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Qualifier
 import javax.inject.Scope
@@ -61,6 +62,8 @@ interface FrostWebEntryPoint {
 }
 
 fun interface FrostEmitter<T> : (T) -> Unit
+
+fun <T> MutableSharedFlow<T>.asFrostEmitter(): FrostEmitter<T> = FrostEmitter { tryEmit(it) }
 
 @Module
 @InstallIn(FrostWebComponent::class)

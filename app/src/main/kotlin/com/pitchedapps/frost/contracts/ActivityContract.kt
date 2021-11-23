@@ -20,7 +20,6 @@ import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.fragments.BaseFragment
 import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.flow.SharedFlow
 
 @UseExperimental(ExperimentalCoroutinesApi::class)

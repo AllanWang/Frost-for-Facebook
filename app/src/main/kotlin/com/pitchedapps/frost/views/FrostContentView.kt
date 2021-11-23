@@ -41,6 +41,7 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostEmitter
+import com.pitchedapps.frost.web.asFrostEmitter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -139,22 +140,19 @@ abstract class FrostContentViewBase(
 
     override val refreshFlow: SharedFlow<Boolean> = refreshMutableFlow.asSharedFlow()
 
-    override val refreshEmit: FrostEmitter<Boolean> =
-        FrostEmitter { refreshMutableFlow.tryEmit(it) }
+    override val refreshEmit: FrostEmitter<Boolean> = refreshMutableFlow.asFrostEmitter()
 
     private val progressMutableFlow = MutableStateFlow(0)
 
     override val progressFlow: SharedFlow<Int> = progressMutableFlow.asSharedFlow()
 
-    override val progressEmit: FrostEmitter<Int> =
-        FrostEmitter { progressMutableFlow.tryEmit(it) }
+    override val progressEmit: FrostEmitter<Int> = progressMutableFlow.asFrostEmitter()
 
     private val titleMutableFlow = MutableStateFlow("")
 
     override val titleFlow: SharedFlow<String> = titleMutableFlow.asSharedFlow()
 
-    override val titleEmit: FrostEmitter<String> =
-        FrostEmitter { titleMutableFlow.tryEmit(it) }
+    override val titleEmit: FrostEmitter<String> = titleMutableFlow.asFrostEmitter()
 
     override lateinit var scope: CoroutineScope
 
