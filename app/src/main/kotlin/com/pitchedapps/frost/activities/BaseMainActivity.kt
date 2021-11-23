@@ -498,7 +498,10 @@ abstract class BaseMainActivity :
                                     )
                                     positiveButton(R.string.kau_yes) {
                                         this@BaseMainActivity.launch {
-                                            fbCookie.logout(this@BaseMainActivity, deleteCookie = true)
+                                            fbCookie.logout(
+                                                this@BaseMainActivity,
+                                                deleteCookie = true
+                                            )
                                         }
                                     }
                                     negativeButton(R.string.kau_no)
@@ -637,7 +640,7 @@ abstract class BaseMainActivity :
 
     private fun refreshAll() {
         L.d { "Refresh all" }
-        fragmentChannel.offer(REQUEST_REFRESH)
+        fragmentEmit(REQUEST_REFRESH)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -737,19 +740,19 @@ abstract class BaseMainActivity :
              * These results can be stacked
              */
             if (hasRequest(REQUEST_REFRESH)) {
-                fragmentChannel.offer(REQUEST_REFRESH)
+                fragmentEmit(REQUEST_REFRESH)
             }
             if (hasRequest(REQUEST_NAV)) {
                 frostNavigationBar(prefs, themeProvider)
             }
             if (hasRequest(REQUEST_TEXT_ZOOM)) {
-                fragmentChannel.offer(REQUEST_TEXT_ZOOM)
+                fragmentEmit(REQUEST_TEXT_ZOOM)
             }
             if (hasRequest(REQUEST_SEARCH)) {
                 invalidateOptionsMenu()
             }
             if (hasRequest(REQUEST_FAB)) {
-                fragmentChannel.offer(lastPosition)
+                fragmentEmit(lastPosition)
             }
             if (hasRequest(REQUEST_NOTIFICATION)) {
                 scheduleNotificationsFromPrefs(prefs)
@@ -792,7 +795,6 @@ abstract class BaseMainActivity :
     override fun onDestroy() {
         controlWebview?.destroy()
         super.onDestroy()
-        fragmentChannel.close()
     }
 
     override fun collapseAppBar() {
@@ -864,10 +866,9 @@ abstract class BaseMainActivity :
                 lastPosition = 0
                 viewpager.setCurrentItem(0, false)
                 viewpager.offscreenPageLimit = pages.size
+                // todo check if post is necessary
                 viewpager.post {
-                    if (!fragmentChannel.isClosedForSend) {
-                        fragmentChannel.offer(0)
-                    }
+                    fragmentEmit(0)
                 } // trigger hook so title is set
             }
         }

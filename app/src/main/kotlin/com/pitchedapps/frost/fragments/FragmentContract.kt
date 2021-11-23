@@ -22,7 +22,6 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.views.FrostRecyclerView
-import kotlinx.coroutines.channels.ReceiveChannel
 
 /**
  * Created by Allan Wang on 2017-11-07.
@@ -77,15 +76,8 @@ interface FragmentContract : FrostContentContainer {
     /**
      * Call whenever a fragment is attached so that it may listen
      * to activity emissions.
-     * Returns a means of closing the listener, which can be called from [detachMainObservable]
      */
-    fun attachMainObservable(contract: MainActivityContract): ReceiveChannel<Int>
-
-    /**
-     * Call when fragment is detached so that any existing
-     * observable is disposed
-     */
-    fun detachMainObservable()
+    fun attach(contract: MainActivityContract)
 
     /*
      * -----------------------------------------

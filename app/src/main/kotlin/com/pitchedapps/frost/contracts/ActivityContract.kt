@@ -25,7 +25,8 @@ import kotlinx.coroutines.flow.SharedFlow
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 interface MainActivityContract : MainFabContract {
-    val fragmentChannel: BroadcastChannel<Int>
+    val fragmentFlow: SharedFlow<Int>
+    val fragmentEmit: FrostEmitter<Int>
 
     val headerFlow: SharedFlow<String>
     val headerEmit: FrostEmitter<String>

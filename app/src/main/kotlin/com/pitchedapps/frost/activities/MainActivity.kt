@@ -27,6 +27,8 @@ import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -39,8 +41,10 @@ import kotlinx.coroutines.flow.onEach
 
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
-
-    override val fragmentChannel = BroadcastChannel<Int>(10)
+    
+    private val fragmentMutableFlow = MutableSharedFlow<Int>(extraBufferCapacity = 10, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    override val fragmentFlow: SharedFlow<Int> = fragmentMutableFlow.asSharedFlow()
+    override val fragmentEmit: FrostEmitter<Int> = FrostEmitter { fragmentMutableFlow.tryEmit(it) }
 
     private val headerMutableFlow = MutableStateFlow("")
     override val headerFlow: SharedFlow<String> = headerMutableFlow.asSharedFlow()
@@ -61,9 +65,9 @@ class MainActivity : BaseMainActivity() {
                     return
                 }
                 if (lastPosition != -1) {
-                    fragmentChannel.offer(-(lastPosition + 1))
+                    fragmentEmit(-(lastPosition + 1))
                 }
-                fragmentChannel.offer(position)
+                fragmentEmit(position)
                 lastPosition = position
             }
 
