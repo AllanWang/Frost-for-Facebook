@@ -32,7 +32,6 @@ import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,7 +49,7 @@ class FrostJSI @Inject internal constructor(
 
     private val mainActivity: MainActivity? = activity as? MainActivity
     private val webActivity: WebOverlayActivityBase? = activity as? WebOverlayActivityBase
-    private val header: SendChannel<String>? = mainActivity?.headerBadgeChannel
+    private val headerEmit: FrostEmitter<String>? = mainActivity?.headerEmit
     private val cookies: List<CookieEntity> = activity.cookies()
 
     /**
@@ -159,7 +158,7 @@ class FrostJSI @Inject internal constructor(
     @JavascriptInterface
     fun handleHeader(html: String?) {
         html ?: return
-        header?.offer(html)
+        headerEmit?.invoke(html)
     }
 
     @JavascriptInterface
