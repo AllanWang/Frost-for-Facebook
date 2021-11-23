@@ -80,7 +80,6 @@ class FrostContentRecycler @JvmOverloads constructor(
     override val layoutRes: Int = R.layout.view_content_base_recycler
 }
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
 abstract class FrostContentView<out T> @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -152,7 +151,12 @@ abstract class FrostContentViewBase(
     override val progressEmit: FrostEmitter<Int> =
         FrostEmitter { progressMutableFlow.tryEmit(it) }
 
-    override val titleChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
+    private val titleMutableFlow = MutableStateFlow("")
+
+    override val titleFlow: SharedFlow<String> = titleMutableFlow.asSharedFlow()
+
+    override val titleEmit: FrostEmitter<String> =
+        FrostEmitter { titleMutableFlow.tryEmit(it) }
 
     override lateinit var scope: CoroutineScope
 

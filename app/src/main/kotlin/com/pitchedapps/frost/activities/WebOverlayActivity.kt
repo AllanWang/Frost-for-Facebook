@@ -27,7 +27,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import ca.allanwang.kau.swipe.SwipeBackContract
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.darken
@@ -56,7 +55,6 @@ import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
 import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
@@ -69,6 +67,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -215,9 +215,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
 
         content.bind(this)
 
-        content.titleChannel.subscribeDuringJob(this, ContextHelper.coroutineContext) {
-            toolbar.title = it
-        }
+        content.titleFlow.onEach { toolbar.title = it }.launchIn(this)
 
         with(web) {
             userAgentString = userAgent

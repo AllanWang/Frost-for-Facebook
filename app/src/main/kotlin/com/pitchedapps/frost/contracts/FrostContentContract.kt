@@ -21,7 +21,6 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.flow.SharedFlow
 
 /**
@@ -72,8 +71,9 @@ interface FrostContentParent : DynamicUiContract {
     /**
      * Observable to get new title data (unique values only)
      */
-    // todo note that this should be like a behavior subject vs publish subject
-    val titleChannel: BroadcastChannel<String>
+    val titleFlow: SharedFlow<String>
+
+    val titleEmit: FrostEmitter<String>
 
     var baseUrl: String
 
