@@ -20,7 +20,6 @@ import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharedFlow
 
 /**
@@ -47,7 +46,6 @@ interface FrostContentContainer : CoroutineScope {
  * Contract for components shared among
  * all content providers
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 interface FrostContentParent : DynamicUiContract {
 
     val scope: CoroutineScope

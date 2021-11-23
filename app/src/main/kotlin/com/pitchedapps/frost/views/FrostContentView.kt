@@ -44,7 +44,6 @@ import com.pitchedapps.frost.web.FrostEmitter
 import com.pitchedapps.frost.web.asFrostEmitter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -96,7 +95,6 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
 /**
  * Subsection of [FrostContentView] that is [AndroidEntryPoint] friendly (no generics)
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 abstract class FrostContentViewBase(
     context: Context,

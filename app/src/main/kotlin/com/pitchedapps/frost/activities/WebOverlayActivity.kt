@@ -65,7 +65,6 @@ import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -87,7 +86,6 @@ import javax.inject.Inject
  * Used by notifications. Unlike the other overlays, this runs as a singleInstance
  * Going back will bring you back to the previous app
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 class FrostWebActivity : WebOverlayActivityBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,7 +149,6 @@ class WebOverlayDesktopActivity : WebOverlayActivityBase(USER_AGENT_DESKTOP_CONS
  */
 class WebOverlayActivity : WebOverlayActivityBase()
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) :
     BaseActivity(),

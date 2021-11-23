@@ -135,7 +135,6 @@ android {
     }
 
     def compilerArgs = [
-            "-Xuse-experimental=kotlin.Experimental",
             // "-XXLanguage:+InlineClasses",
             "-Xopt-in=kotlin.RequiresOptIn",
     ]
