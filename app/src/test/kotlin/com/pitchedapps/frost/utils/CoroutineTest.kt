@@ -17,22 +17,18 @@
 package com.pitchedapps.frost.utils
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.test.Test
@@ -43,38 +39,7 @@ import kotlin.test.assertTrue
 /**
  * Collection of tests around coroutines
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 class CoroutineTest {
-
-    /**
-     * Hooks onto the refresh channel for one true -> false cycle.
-     * Returns the list of event ids that were emitted
-     */
-    private suspend fun transition(channel: ReceiveChannel<Pair<Boolean, Int>>): List<Pair<Boolean, Int>> {
-        var refreshed = false
-        return listen(channel) { (refreshing, _) ->
-            if (refreshed && !refreshing)
-                return@listen true
-            if (refreshing)
-                refreshed = true
-            return@listen false
-        }
-    }
-
-    private suspend fun <T> listen(
-        channel: ReceiveChannel<T>,
-        shouldEnd: suspend (T) -> Boolean = { false }
-    ): List<T> =
-        withContext(Dispatchers.IO) {
-            val data = mutableListOf<T>()
-            channel.receiveAsFlow()
-            for (c in channel) {
-                data.add(c)
-                if (shouldEnd(c)) break
-            }
-            channel.cancel()
-            return@withContext data
-        }
 
     private fun <T : Any> SharedFlow<T?>.takeUntilNull(): Flow<T> =
         takeWhile { it != null }.filterNotNull()

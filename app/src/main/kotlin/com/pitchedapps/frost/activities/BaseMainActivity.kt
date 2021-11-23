@@ -130,7 +130,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
@@ -140,7 +139,6 @@ import kotlin.math.abs
  *
  * Most of the logic that is unrelated to handling fragments
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 abstract class BaseMainActivity :
     BaseActivity(),

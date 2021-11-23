@@ -26,7 +26,6 @@ import com.pitchedapps.frost.views.BadgedIcon
 import com.pitchedapps.frost.web.FrostEmitter
 import com.pitchedapps.frost.web.asFrostEmitter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,10 +38,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
 
-    private val fragmentMutableFlow = MutableSharedFlow<Int>(extraBufferCapacity = 10, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val fragmentMutableFlow = MutableSharedFlow<Int>(
+        extraBufferCapacity = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     override val fragmentFlow: SharedFlow<Int> = fragmentMutableFlow.asSharedFlow()
     override val fragmentEmit: FrostEmitter<Int> = fragmentMutableFlow.asFrostEmitter()
 
