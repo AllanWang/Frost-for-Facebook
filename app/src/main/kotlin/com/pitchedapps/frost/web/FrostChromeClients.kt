@@ -53,7 +53,7 @@ class FrostChromeClient(
 
 //    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val refreshEmit = web.parent.refreshEmit
-    private val progress: SendChannel<Int> = web.parent.progressChannel
+    private val progressEmit = web.parent.progressEmit
     private val title: SendChannel<String> = web.parent.titleChannel
     private val context = web.context!!
 
@@ -74,7 +74,7 @@ class FrostChromeClient(
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {
         super.onProgressChanged(view, newProgress)
-        progress.offer(newProgress)
+        progressEmit(newProgress)
     }
 
     override fun onShowFileChooser(
@@ -89,7 +89,7 @@ class FrostChromeClient(
     private fun JsResult.frostCancel() {
         cancel()
         refreshEmit(false)
-        progress.offer(100)
+        progressEmit(100)
     }
 
     override fun onJsAlert(

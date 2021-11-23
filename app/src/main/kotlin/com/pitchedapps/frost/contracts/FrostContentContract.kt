@@ -65,7 +65,9 @@ interface FrostContentParent : DynamicUiContract {
     /**
      * Observable to get data on refresh progress, with range [0, 100]
      */
-    val progressChannel: BroadcastChannel<Int>
+    val progressFlow: SharedFlow<Int>
+
+    val progressEmit: FrostEmitter<Int>
 
     /**
      * Observable to get new title data (unique values only)

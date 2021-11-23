@@ -22,7 +22,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.circularReveal
 import ca.allanwang.kau.utils.fadeIn
@@ -39,7 +38,6 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.WEB_LOAD_DELAY
 import com.pitchedapps.frost.injectors.ThemeProvider
-import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.web.FrostEmitter
@@ -51,6 +49,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collect
@@ -146,7 +145,13 @@ abstract class FrostContentViewBase(
     override val refreshEmit: FrostEmitter<Boolean> =
         FrostEmitter { refreshMutableFlow.tryEmit(it) }
 
-    override val progressChannel: BroadcastChannel<Int> = ConflatedBroadcastChannel()
+    private val progressMutableFlow = MutableStateFlow(0)
+
+    override val progressFlow: SharedFlow<Int> = progressMutableFlow.asSharedFlow()
+
+    override val progressEmit: FrostEmitter<Int> =
+        FrostEmitter { progressMutableFlow.tryEmit(it) }
+
     override val titleChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
 
     override lateinit var scope: CoroutineScope
@@ -200,13 +205,13 @@ abstract class FrostContentViewBase(
             refresh.isRefreshing = r
         }.launchIn(scope)
 
-        progressChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { p ->
+        progressFlow.onEach { p ->
             progress.invisibleIf(p == 100)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 progress.setProgress(p, true)
             else
                 progress.progress = p
-        }
+        }.launchIn(scope)
     }
 
     override fun reloadTheme() {

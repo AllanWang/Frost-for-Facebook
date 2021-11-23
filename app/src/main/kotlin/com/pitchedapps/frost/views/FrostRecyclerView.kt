@@ -80,8 +80,8 @@ class FrostRecyclerView @JvmOverloads constructor(
         if (prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
             parent.refreshEmit(true)
-            recyclerContract.reload { parent.progressChannel.offer(it) }
-            parent.progressChannel.offer(100)
+            recyclerContract.reload { parent.progressEmit(it) }
+            parent.progressEmit(100)
             parent.refreshEmit(false)
             if (prefs.animate) circularReveal()
         }
