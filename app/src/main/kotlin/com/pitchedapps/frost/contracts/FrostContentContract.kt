@@ -18,9 +18,11 @@ package com.pitchedapps.frost.contracts
 
 import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -56,7 +58,9 @@ interface FrostContentParent : DynamicUiContract {
     /**
      * Observable to get data on whether view is refreshing or not
      */
-    val refreshChannel: BroadcastChannel<Boolean>
+    val refreshFlow: SharedFlow<Boolean>
+
+    val refreshEmit: FrostEmitter<Boolean>
 
     /**
      * Observable to get data on refresh progress, with range [0, 100]
@@ -124,17 +128,15 @@ interface FrostContentCore : DynamicUiContract {
      * Reference to parent
      * Bound through calling [FrostContentParent.bind]
      */
-    var parent: FrostContentParent
+    val parent: FrostContentParent
 
     /**
      * Initializes view through given [container]
      *
      * The content may be free to extract other data from
      * the container if necessary
-     *
-     * [parent] must be bounded before calling this!
      */
-    fun bind(container: FrostContentContainer): View
+    fun bind(parent: FrostContentParent, container: FrostContentContainer): View
 
     /**
      * Call to reload wrapped data

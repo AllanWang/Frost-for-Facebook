@@ -42,12 +42,23 @@ import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
+import com.pitchedapps.frost.web.FrostEmitter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.runningFold
+import kotlinx.coroutines.flow.transformWhile
 import javax.inject.Inject
 
 class FrostContentWeb @JvmOverloads constructor(
@@ -119,11 +130,22 @@ abstract class FrostContentViewBase(
     private val refresh: SwipeRefreshLayout by bindView(R.id.content_refresh)
     private val progress: ProgressBar by bindView(R.id.content_progress)
 
+    private val coreView: View by bindView(R.id.content_core)
+
     /**
      * While this can be conflated, there exist situations where we wish to watch refresh cycles.
      * Here, we'd need to make sure we don't skip events
      */
-    override val refreshChannel: BroadcastChannel<Boolean> = BroadcastChannel(10)
+    private val refreshMutableFlow = MutableSharedFlow<Boolean>(
+        extraBufferCapacity = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    override val refreshFlow: SharedFlow<Boolean> = refreshMutableFlow.asSharedFlow()
+
+    override val refreshEmit: FrostEmitter<Boolean> =
+        FrostEmitter { refreshMutableFlow.tryEmit(it) }
+
     override val progressChannel: BroadcastChannel<Int> = ConflatedBroadcastChannel()
     override val titleChannel: BroadcastChannel<String> = ConflatedBroadcastChannel()
 
@@ -160,7 +182,6 @@ abstract class FrostContentViewBase(
      */
     protected fun init() {
         inflate(context, layoutRes, this)
-        core.parent = this
         reloadThemeSelf()
     }
 
@@ -169,15 +190,15 @@ abstract class FrostContentViewBase(
         baseEnum = container.baseEnum
         init()
         scope = container
-        core.bind(container)
+        core.bind(this, container)
         refresh.setOnRefreshListener {
             core.reload(true)
         }
 
-        refreshChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { r ->
+        refreshFlow.distinctUntilChanged().onEach { r ->
             L.v { "Refreshing $r" }
             refresh.isRefreshing = r
-        }
+        }.launchIn(scope)
 
         progressChannel.subscribeDuringJob(scope, ContextHelper.coroutineContext) { p ->
             progress.invisibleIf(p == 100)
@@ -220,33 +241,37 @@ abstract class FrostContentViewBase(
      * The cycle only starts on the first load since there may have been another process when this is registered
      */
     override fun registerTransition(urlChanged: Boolean, animate: Boolean): Boolean {
-        if (!urlChanged && refreshReceiver != null) {
+        if (!urlChanged && transitionStart != -1L) {
             L.v { "Consuming url load" }
             return false // still in progress; do not bother with load
         }
-        L.v { "Registered transition" }
-        with(core) {
-            refreshReceiver = refreshChannel.openSubscription().also { receiver ->
-                scope.launchMain {
-                    var loading = false
-                    for (r in receiver) {
-                        if (r) {
-                            loading = true
-                            transitionStart = System.currentTimeMillis()
-                            clearAnimation()
-                            if (isVisible)
-                                fadeOut(duration = 200L)
-                        } else if (loading) {
-                            if (animate && prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
-                            else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
-                            L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
-                            receiver.cancel()
-                            refreshReceiver = null
-                        }
-                    }
-                }
-            }
-        }
+        coreView.transition(animate)
         return true
+    }
+
+    private fun View.transition(animate: Boolean) {
+        L.v { "Registered transition" }
+        transitionStart = 0L // Marker for pending transition
+        scope.launchMain {
+            refreshFlow.distinctUntilChanged()
+                // Pseudo windowed mode
+                .runningFold(false to false) { (_, prev), curr -> prev to curr }
+                // Take until prev was loading and current is not loading
+                // Unlike takeWhile, we include the last state (first non matching)
+                .transformWhile { emit(it); it != (true to false) }
+                .onEach { (prev, curr) ->
+                    if (curr) {
+                        transitionStart = System.currentTimeMillis()
+                        clearAnimation()
+                        if (isVisible)
+                            fadeOut(duration = 200L)
+                    } else if (prev) { // prev && !curr
+                        if (animate && prefs.animate) circularReveal(offset = WEB_LOAD_DELAY)
+                        else fadeIn(duration = 200L, offset = WEB_LOAD_DELAY)
+                        L.v { "Transition loaded in ${System.currentTimeMillis() - transitionStart} ms" }
+                    }
+                }.collect()
+            transitionStart = -1L
+        }
     }
 }

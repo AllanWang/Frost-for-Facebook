@@ -68,6 +68,8 @@ import com.pitchedapps.frost.views.FrostWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
@@ -97,10 +99,8 @@ class FrostWebActivity : WebOverlayActivityBase() {
              * We will subscribe to the load cycle once,
              * and pop a dialog giving the user the option to copy the shared text
              */
-            val refreshReceiver = content.refreshChannel.openSubscription()
             content.scope.launch(Dispatchers.IO) {
-                refreshReceiver.receive()
-                refreshReceiver.cancel()
+                content.refreshFlow.take(1).collect()
                 withMainContext {
                     materialDialog {
                         title(R.string.invalid_share_url)

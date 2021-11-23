@@ -51,7 +51,8 @@ class FrostChromeClient(
     private val webFileChooser: WebFileChooser,
 ) : WebChromeClient() {
 
-    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+//    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+    private val refreshEmit = web.parent.refreshEmit
     private val progress: SendChannel<Int> = web.parent.progressChannel
     private val title: SendChannel<String> = web.parent.titleChannel
     private val context = web.context!!
@@ -87,7 +88,7 @@ class FrostChromeClient(
 
     private fun JsResult.frostCancel() {
         cancel()
-        refresh.offer(false)
+        refreshEmit(false)
         progress.offer(100)
     }
 

@@ -53,7 +53,6 @@ import com.pitchedapps.frost.utils.isMessengerUrl
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.startActivityForUri
 import com.pitchedapps.frost.views.FrostWebView
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.launch
 
 /**
@@ -83,7 +82,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
     protected val fbCookie: FbCookie get() = web.fbCookie
     protected val prefs: Prefs get() = web.prefs
     protected val themeProvider: ThemeProvider get() = web.themeProvider
-    protected val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+//    protected val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     protected val isMain = web.parent.baseEnum != null
 
     /**
@@ -156,7 +155,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         super.onPageStarted(view, url, favicon)
         if (url == null) return
         v { "loading $url ${web.settings.userAgentString}" }
-        refresh.offer(true)
+//        refresh.offer(true)
     }
 
     private fun injectBackgroundColor() {
@@ -182,7 +181,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
                 view.messengerJsInject()
             }
             else -> {
-                refresh.offer(false)
+//                refresh.offer(false)
             }
         }
     }
@@ -191,7 +190,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         url ?: return
         v { "finished $url" }
         if (!url.isFacebookUrl && !url.isMessengerUrl) {
-            refresh.offer(false)
+//            refresh.offer(false)
             return
         }
         onPageFinishedActions(url)
@@ -204,9 +203,10 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
         injectAndFinish()
     }
 
-    internal fun injectAndFinish() {
+    // Temp open
+    internal open fun injectAndFinish() {
         v { "page finished reveal" }
-        refresh.offer(false)
+//        refresh.offer(false)
         injectBackgroundColor()
         when {
             web.url.isFacebookUrl -> {

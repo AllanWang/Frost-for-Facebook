@@ -61,7 +61,8 @@ class FrostRecyclerView @JvmOverloads constructor(
         layoutManager = LinearLayoutManager(context)
     }
 
-    override fun bind(container: FrostContentContainer): View {
+    override fun bind(parent: FrostContentParent, container: FrostContentContainer): View {
+        this.parent = parent
         if (container !is RecyclerContentContract)
             throw IllegalStateException("FrostRecyclerView must bind to a container that is a RecyclerContentContract")
         this.recyclerContract = container
@@ -78,10 +79,10 @@ class FrostRecyclerView @JvmOverloads constructor(
     override fun reloadBase(animate: Boolean) {
         if (prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
-            parent.refreshChannel.offer(true)
+            parent.refreshEmit(true)
             recyclerContract.reload { parent.progressChannel.offer(it) }
             parent.progressChannel.offer(100)
-            parent.refreshChannel.offer(false)
+            parent.refreshEmit(false)
             if (prefs.animate) circularReveal()
         }
     }

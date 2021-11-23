@@ -39,17 +39,18 @@ import javax.inject.Inject
 /**
  * Created by Allan Wang on 2017-06-01.
  */
+@FrostWebScoped
 class FrostJSI @Inject internal constructor(
     val web: FrostWebView,
     private val activity: Activity,
     private val fbCookie: FbCookie,
-    private val prefs: Prefs
+    private val prefs: Prefs,
+    @FrostRefresh private val refreshEmit: FrostEmitter<Boolean>
 ) {
 
     private val mainActivity: MainActivity? = activity as? MainActivity
     private val webActivity: WebOverlayActivityBase? = activity as? WebOverlayActivityBase
     private val header: SendChannel<String>? = mainActivity?.headerBadgeChannel
-    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
     private val cookies: List<CookieEntity> = activity.cookies()
 
     /**
@@ -144,7 +145,8 @@ class FrostJSI @Inject internal constructor(
     @JavascriptInterface
     fun isReady() {
         if (web.frostWebClient !is FrostWebViewClientMenu) {
-            refresh.offer(false)
+            L.v { "JSI is ready" }
+            refreshEmit(false)
         }
     }
 
