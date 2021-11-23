@@ -16,15 +16,10 @@
  */
 package com.pitchedapps.frost.utils
 
-import com.pitchedapps.frost.kotlin.Flyweight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -81,49 +76,6 @@ class CoroutineTest {
             return@withContext data
         }
 
-    /**
-     * When refreshing, we have a temporary subscriber that hooks onto a single cycle.
-     * The refresh channel only contains booleans, but for the sake of identification,
-     * each boolean will have a unique integer attached.
-     *
-     * Things to note:
-     * Subscription should be opened outside of async, since we don't want to miss any events.
-     */
-    @Test
-    fun refreshSubscriptions() {
-        val refreshChannel = BroadcastChannel<Pair<Boolean, Int>>(100)
-        runBlocking {
-            // Listen to all events
-            val fullReceiver = refreshChannel.openSubscription()
-            val fullDeferred = async { listen(fullReceiver) }
-
-            refreshChannel.send(true to 1)
-            refreshChannel.send(false to 2)
-            refreshChannel.send(true to 3)
-
-            val partialReceiver = refreshChannel.openSubscription()
-            val partialDeferred = async { transition(partialReceiver) }
-            refreshChannel.send(false to 4)
-            refreshChannel.send(true to 5)
-            refreshChannel.send(false to 6)
-            refreshChannel.send(true to 7)
-            refreshChannel.close()
-            val fullStream = fullDeferred.await()
-            val partialStream = partialDeferred.await()
-
-            assertEquals(
-                7,
-                fullStream.size,
-                "Full stream should contain all events"
-            )
-            assertEquals(
-                listOf(false to 4, true to 5, false to 6),
-                partialStream,
-                "Partial stream should include up until first true false pair"
-            )
-        }
-    }
-
     private fun <T : Any> SharedFlow<T?>.takeUntilNull(): Flow<T> =
         takeWhile { it != null }.filterNotNull()
 
@@ -157,47 +109,6 @@ class CoroutineTest {
             flow.emit(null)
             val count = flow.takeUntilNull().count()
             assertEquals(4, count, "Not all events received")
-        }
-    }
-
-    class TestException(msg: String) : RuntimeException(msg)
-
-    @Test
-    fun exceptionChecks() {
-        val mainTag = "main-test"
-        val mainDispatcher = Executors.newSingleThreadExecutor { r ->
-            Thread(r, mainTag)
-        }.asCoroutineDispatcher()
-        val channel = Channel<Int>()
-
-        val job = SupervisorJob()
-
-        val flyweight = Flyweight<Int, Int>(GlobalScope, 200L) {
-            throw TestException("Flyweight exception")
-        }
-
-        suspend fun crash(): Boolean = withContext(Dispatchers.IO) {
-            try {
-                withContext(Dispatchers.Default) {
-                    flyweight.fetch(0).await()
-                }
-                true
-            } catch (e: TestException) {
-                false
-            }
-        }
-
-        runBlocking(mainDispatcher + job) {
-            launch {
-                val i = channel.receive()
-                println("Received $i")
-            }
-            launch {
-                println("A")
-                println(crash())
-                println("B")
-                channel.offer(1)
-            }
         }
     }
 }
