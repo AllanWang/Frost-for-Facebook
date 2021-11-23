@@ -9,7 +9,7 @@
     <version title="v3.1.2" />
     <item text="Fix loading full size images" />
     <item text="Fix menu tab" />
-    <item text="" />
+    <item text="Always load messenger internally" />
 
     <version title="v3.1.1" />
     <item text="Many internal fixes to address 3.1.0 issues" />

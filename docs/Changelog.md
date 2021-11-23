@@ -3,6 +3,7 @@
 ## v3.1.2
 * Fix loading full size images
 * Fix menu tab
+* Always load messenger internally
 
 ## v3.1.1
 * Many internal fixes to address 3.1.0 issues
