@@ -35,25 +35,23 @@ import com.pitchedapps.frost.db.CookieDao
 import com.pitchedapps.frost.db.currentCookie
 import com.pitchedapps.frost.facebook.FB_HOME_URL
 import com.pitchedapps.frost.facebook.FbCookie
+import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.USER_AGENT
-import com.pitchedapps.frost.fragments.WebFragment
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostDownload
 import com.pitchedapps.frost.web.FrostChromeClient
-import com.pitchedapps.frost.web.FrostJSI
+import com.pitchedapps.frost.web.FrostWebClientEntryPoint
+import com.pitchedapps.frost.web.FrostWebComponentBuilder
+import com.pitchedapps.frost.web.FrostWebEntryPoint
 import com.pitchedapps.frost.web.FrostWebViewClient
+import com.pitchedapps.frost.web.FrostWebViewClientMenu
+import com.pitchedapps.frost.web.FrostWebViewClientMessenger
 import com.pitchedapps.frost.web.NestedWebView
-import dagger.BindsInstance
-import dagger.hilt.DefineComponent
-import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.components.ViewComponent
 import javax.inject.Inject
-import javax.inject.Scope
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -103,9 +101,11 @@ class FrostWebView @JvmOverloads constructor(
         get() = url ?: ""
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun bind(container: FrostContentContainer): View {
-        val component = frostWebComponentBuilder.frostWebView(this).build()
-        val entryPoint = EntryPoints.get(component, FrostWebEntryPoint::class.java)
+    override fun bind(parent: FrostContentParent, container: FrostContentContainer): View {
+        this.parent = parent
+        val component = frostWebComponentBuilder.frostParent(parent).frostWebView(this).build()
+        val webEntryPoint = EntryPoints.get(component, FrostWebEntryPoint::class.java)
+        val clientEntryPoint = EntryPoints.get(component, FrostWebClientEntryPoint::class.java)
         userAgentString = USER_AGENT
         with(settings) {
             javaScriptEnabled = true
@@ -116,10 +116,14 @@ class FrostWebView @JvmOverloads constructor(
         }
         setLayerType(LAYER_TYPE_HARDWARE, null)
         // attempt to get custom client; otherwise fallback to original
-        frostWebClient = (container as? WebFragment)?.client(this) ?: FrostWebViewClient(this)
+        frostWebClient = when (parent.baseEnum) {
+            FbItem.MESSENGER -> FrostWebViewClientMessenger(this)
+            FbItem.MENU -> FrostWebViewClientMenu(this)
+            else -> clientEntryPoint.webClient()
+        }
         webViewClient = frostWebClient
         webChromeClient = FrostChromeClient(this, themeProvider, webFileChooser)
-        addJavascriptInterface(entryPoint.frostJsi(), "Frost")
+        addJavascriptInterface(webEntryPoint.frostJsi(), "Frost")
         setBackgroundColor(Color.TRANSPARENT)
         setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
             context.ctxCoroutine.launchMain {
@@ -250,30 +254,4 @@ class FrostWebView @JvmOverloads constructor(
         (getParent() as? ViewGroup)?.removeView(this)
         super.destroy()
     }
-}
-
-@Scope
-@Retention(AnnotationRetention.BINARY)
-@Target(
-    AnnotationTarget.FUNCTION,
-    AnnotationTarget.TYPE,
-    AnnotationTarget.CLASS
-)
-annotation class FrostWebScoped
-
-@FrostWebScoped
-@DefineComponent(parent = ViewComponent::class)
-interface FrostWebComponent
-
-@DefineComponent.Builder
-interface FrostWebComponentBuilder {
-    fun frostWebView(@BindsInstance web: FrostWebView): FrostWebComponentBuilder
-    fun build(): FrostWebComponent
-}
-
-@EntryPoint
-@InstallIn(FrostWebComponent::class)
-interface FrostWebEntryPoint {
-    @FrostWebScoped
-    fun frostJsi(): FrostJSI
 }

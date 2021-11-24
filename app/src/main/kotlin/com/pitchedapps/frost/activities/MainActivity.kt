@@ -18,23 +18,38 @@ package com.pitchedapps.frost.activities
 
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
-import ca.allanwang.kau.utils.withMainContext
 import com.google.android.material.tabs.TabLayout
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.parsers.BadgeParser
-import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.BadgedIcon
+import com.pitchedapps.frost.web.FrostEmitter
+import com.pitchedapps.frost.web.asFrostEmitter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseMainActivity() {
 
-    override val fragmentChannel = BroadcastChannel<Int>(10)
-    override val headerBadgeChannel = BroadcastChannel<String>(Channel.CONFLATED)
+    private val fragmentMutableFlow = MutableSharedFlow<Int>(
+        extraBufferCapacity = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    override val fragmentFlow: SharedFlow<Int> = fragmentMutableFlow.asSharedFlow()
+    override val fragmentEmit: FrostEmitter<Int> = fragmentMutableFlow.asFrostEmitter()
+
+    private val headerMutableFlow = MutableStateFlow("")
+    override val headerFlow: SharedFlow<String> = headerMutableFlow.asSharedFlow()
+    override val headerEmit: FrostEmitter<String> = headerMutableFlow.asFrostEmitter()
 
     override fun onNestedCreate(savedInstanceState: Bundle?) {
         with(contentBinding) {
@@ -51,9 +66,9 @@ class MainActivity : BaseMainActivity() {
                     return
                 }
                 if (lastPosition != -1) {
-                    fragmentChannel.offer(-(lastPosition + 1))
+                    fragmentEmit(-(lastPosition + 1))
                 }
-                fragmentChannel.offer(position)
+                fragmentEmit(position)
                 lastPosition = position
             }
 
@@ -90,12 +105,18 @@ class MainActivity : BaseMainActivity() {
                 (tab.customView as BadgedIcon).badgeText = null
             }
         })
-        headerBadgeChannel.subscribeDuringJob(this@MainActivity, Dispatchers.IO) { html ->
-            val data =
-                BadgeParser.parseFromData(cookie = fbCookie.webCookie, text = html)?.data
-                    ?: return@subscribeDuringJob
-            L.v { "Badges $data" }
-            withMainContext {
+        headerFlow
+            .filter { it.isNotBlank() }
+            .mapNotNull { html ->
+                BadgeParser.parseFromData(
+                    cookie = fbCookie.webCookie,
+                    text = html
+                )?.data
+            }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+            .onEach { data ->
+                L.v { "Badges $data" }
                 tabsForEachView { _, view ->
                     when (view.iicon) {
                         FbItem.FEED.icon -> view.badgeText = data.feed
@@ -105,6 +126,7 @@ class MainActivity : BaseMainActivity() {
                     }
                 }
             }
-        }
+            .flowOn(Dispatchers.Main)
+            .launchIn(this@MainActivity)
     }
 }

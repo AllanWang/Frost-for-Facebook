@@ -135,7 +135,6 @@ android {
     }
 
     def compilerArgs = [
-            "-Xuse-experimental=kotlin.Experimental",
             // "-XXLanguage:+InlineClasses",
             "-Xopt-in=kotlin.RequiresOptIn",
     ]
@@ -270,6 +269,8 @@ dependencies {
     implementation kau.Dependencies.kau('searchview', KAU)
 
     implementation kau.Dependencies.coreKtx
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+
     implementation kau.Dependencies.swipeRefreshLayout
 
     implementation "androidx.biometric:biometric:${Versions.andxBiometric}"

@@ -34,7 +34,6 @@ import com.pitchedapps.frost.contracts.WebFileChooser
 import com.pitchedapps.frost.injectors.ThemeProvider
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.FrostWebView
-import kotlinx.coroutines.channels.SendChannel
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -51,9 +50,10 @@ class FrostChromeClient(
     private val webFileChooser: WebFileChooser,
 ) : WebChromeClient() {
 
-    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val progress: SendChannel<Int> = web.parent.progressChannel
-    private val title: SendChannel<String> = web.parent.titleChannel
+//    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+    private val refreshEmit = web.parent.refreshEmit
+    private val progressEmit = web.parent.progressEmit
+    private val titleEmit = web.parent.titleEmit
     private val context = web.context!!
 
     override fun getDefaultVideoPoster(): Bitmap? =
@@ -68,12 +68,12 @@ class FrostChromeClient(
     override fun onReceivedTitle(view: WebView, title: String) {
         super.onReceivedTitle(view, title)
         if (title.startsWith("http")) return
-        this.title.offer(title)
+        titleEmit(title)
     }
 
     override fun onProgressChanged(view: WebView, newProgress: Int) {
         super.onProgressChanged(view, newProgress)
-        progress.offer(newProgress)
+        progressEmit(newProgress)
     }
 
     override fun onShowFileChooser(
@@ -87,8 +87,8 @@ class FrostChromeClient(
 
     private fun JsResult.frostCancel() {
         cancel()
-        refresh.offer(false)
-        progress.offer(100)
+        refreshEmit(false)
+        progressEmit(100)
     }
 
     override fun onJsAlert(

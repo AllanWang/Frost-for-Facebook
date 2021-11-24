@@ -27,7 +27,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import ca.allanwang.kau.swipe.SwipeBackContract
 import ca.allanwang.kau.swipe.kauSwipeOnCreate
 import ca.allanwang.kau.swipe.kauSwipeOnDestroy
-import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.copyToClipboard
 import ca.allanwang.kau.utils.darken
@@ -56,7 +55,6 @@ import com.pitchedapps.frost.facebook.USER_AGENT
 import com.pitchedapps.frost.facebook.USER_AGENT_DESKTOP_CONST
 import com.pitchedapps.frost.facebook.USER_AGENT_MOBILE_CONST
 import com.pitchedapps.frost.facebook.formattedFbUrl
-import com.pitchedapps.frost.kotlin.subscribeDuringJob
 import com.pitchedapps.frost.utils.ARG_URL
 import com.pitchedapps.frost.utils.ARG_USER_ID
 import com.pitchedapps.frost.utils.BiometricUtils
@@ -67,7 +65,10 @@ import com.pitchedapps.frost.views.FrostVideoViewer
 import com.pitchedapps.frost.views.FrostWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import javax.inject.Inject
@@ -85,7 +86,6 @@ import javax.inject.Inject
  * Used by notifications. Unlike the other overlays, this runs as a singleInstance
  * Going back will bring you back to the previous app
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 class FrostWebActivity : WebOverlayActivityBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,10 +97,8 @@ class FrostWebActivity : WebOverlayActivityBase() {
              * We will subscribe to the load cycle once,
              * and pop a dialog giving the user the option to copy the shared text
              */
-            val refreshReceiver = content.refreshChannel.openSubscription()
             content.scope.launch(Dispatchers.IO) {
-                refreshReceiver.receive()
-                refreshReceiver.cancel()
+                content.refreshFlow.take(1).collect()
                 withMainContext {
                     materialDialog {
                         title(R.string.invalid_share_url)
@@ -151,7 +149,6 @@ class WebOverlayDesktopActivity : WebOverlayActivityBase(USER_AGENT_DESKTOP_CONS
  */
 class WebOverlayActivity : WebOverlayActivityBase()
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT) :
     BaseActivity(),
@@ -215,9 +212,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
 
         content.bind(this)
 
-        content.titleChannel.subscribeDuringJob(this, ContextHelper.coroutineContext) {
-            toolbar.title = it
-        }
+        content.titleFlow.onEach { toolbar.title = it }.launchIn(this)
 
         with(web) {
             userAgentString = userAgent

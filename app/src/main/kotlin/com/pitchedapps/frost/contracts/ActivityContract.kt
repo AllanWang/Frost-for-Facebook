@@ -18,13 +18,16 @@ package com.pitchedapps.frost.contracts
 
 import com.mikepenz.iconics.typeface.IIcon
 import com.pitchedapps.frost.fragments.BaseFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
+import com.pitchedapps.frost.web.FrostEmitter
+import kotlinx.coroutines.flow.SharedFlow
 
-@UseExperimental(ExperimentalCoroutinesApi::class)
 interface MainActivityContract : MainFabContract {
-    val fragmentChannel: BroadcastChannel<Int>
-    val headerBadgeChannel: BroadcastChannel<String>
+    val fragmentFlow: SharedFlow<Int>
+    val fragmentEmit: FrostEmitter<Int>
+
+    val headerFlow: SharedFlow<String>
+    val headerEmit: FrostEmitter<String>
+
     fun setTitle(res: Int)
     fun setTitle(text: CharSequence)
 

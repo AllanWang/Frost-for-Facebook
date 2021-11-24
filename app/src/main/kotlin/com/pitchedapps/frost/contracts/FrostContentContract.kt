@@ -18,9 +18,9 @@ package com.pitchedapps.frost.contracts
 
 import android.view.View
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * Created by Allan Wang on 20/12/17.
@@ -46,7 +46,6 @@ interface FrostContentContainer : CoroutineScope {
  * Contract for components shared among
  * all content providers
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 interface FrostContentParent : DynamicUiContract {
 
     val scope: CoroutineScope
@@ -56,18 +55,23 @@ interface FrostContentParent : DynamicUiContract {
     /**
      * Observable to get data on whether view is refreshing or not
      */
-    val refreshChannel: BroadcastChannel<Boolean>
+    val refreshFlow: SharedFlow<Boolean>
+
+    val refreshEmit: FrostEmitter<Boolean>
 
     /**
      * Observable to get data on refresh progress, with range [0, 100]
      */
-    val progressChannel: BroadcastChannel<Int>
+    val progressFlow: SharedFlow<Int>
+
+    val progressEmit: FrostEmitter<Int>
 
     /**
      * Observable to get new title data (unique values only)
      */
-    // todo note that this should be like a behavior subject vs publish subject
-    val titleChannel: BroadcastChannel<String>
+    val titleFlow: SharedFlow<String>
+
+    val titleEmit: FrostEmitter<String>
 
     var baseUrl: String
 
@@ -124,17 +128,15 @@ interface FrostContentCore : DynamicUiContract {
      * Reference to parent
      * Bound through calling [FrostContentParent.bind]
      */
-    var parent: FrostContentParent
+    val parent: FrostContentParent
 
     /**
      * Initializes view through given [container]
      *
      * The content may be free to extract other data from
      * the container if necessary
-     *
-     * [parent] must be bounded before calling this!
      */
-    fun bind(container: FrostContentContainer): View
+    fun bind(parent: FrostContentParent, container: FrostContentContainer): View
 
     /**
      * Call to reload wrapped data

@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.2.0
+* Improve loading process
+
 ## v3.1.2
 * Fix loading full size images
 * Fix menu tab

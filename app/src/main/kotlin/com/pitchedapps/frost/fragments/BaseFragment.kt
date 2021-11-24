@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.flowWithLifecycle
 import ca.allanwang.kau.utils.ContextHelper
 import ca.allanwang.kau.utils.fadeScaleTransition
 import ca.allanwang.kau.utils.setIcon
@@ -43,12 +44,11 @@ import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -58,7 +58,6 @@ import kotlin.coroutines.CoroutineContext
  * All fragments pertaining to the main view
  * Must be attached to activities implementing [MainActivityContract]
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 abstract class BaseFragment :
     Fragment(),
@@ -121,7 +120,6 @@ abstract class BaseFragment :
         }
 
     override var firstLoad: Boolean = true
-    private var activityReceiver: ReceiveChannel<Int>? = null
     private var onCreateRunnable: ((FragmentContract) -> Unit)? = null
 
     override var content: FrostContentParent? = null
@@ -152,8 +150,7 @@ abstract class BaseFragment :
         onCreateRunnable?.invoke(this)
         onCreateRunnable = null
         firstLoadRequest()
-        detachMainObservable()
-        activityReceiver = attachMainObservable(mainContract)
+        attach(mainContract)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -177,10 +174,10 @@ abstract class BaseFragment :
         mainContract.setTitle(title)
     }
 
-    override fun attachMainObservable(contract: MainActivityContract): ReceiveChannel<Int> {
-        val receiver = contract.fragmentChannel.openSubscription()
-        launch {
-            for (flag in receiver) {
+    override fun attach(contract: MainActivityContract) {
+        contract.fragmentFlow
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { flag ->
                 when (flag) {
                     REQUEST_REFRESH -> {
                         core?.apply {
@@ -201,9 +198,7 @@ abstract class BaseFragment :
                         reloadTextSize()
                     }
                 }
-            }
-        }
-        return receiver
+            }.launchIn(this)
     }
 
     override fun updateFab(contract: MainFabContract) {
@@ -222,16 +217,11 @@ abstract class BaseFragment :
         setOnClickListener { click() }
     }
 
-    override fun detachMainObservable() {
-        activityReceiver?.cancel()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         L.i { "Fragment on destroy $position ${hashCode()}" }
         content?.destroy()
         content = null
-        detachMainObservable()
     }
 
     override fun onDestroy() {

@@ -29,7 +29,6 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,7 +36,6 @@ import javax.inject.Inject
  * Created by Allan Wang on 2017-05-29.
  *
  */
-@UseExperimental(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
 class FrostRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -61,7 +59,8 @@ class FrostRecyclerView @JvmOverloads constructor(
         layoutManager = LinearLayoutManager(context)
     }
 
-    override fun bind(container: FrostContentContainer): View {
+    override fun bind(parent: FrostContentParent, container: FrostContentContainer): View {
+        this.parent = parent
         if (container !is RecyclerContentContract)
             throw IllegalStateException("FrostRecyclerView must bind to a container that is a RecyclerContentContract")
         this.recyclerContract = container
@@ -78,10 +77,10 @@ class FrostRecyclerView @JvmOverloads constructor(
     override fun reloadBase(animate: Boolean) {
         if (prefs.animate) fadeOut(onFinish = onReloadClear)
         scope.launch {
-            parent.refreshChannel.offer(true)
-            recyclerContract.reload { parent.progressChannel.offer(it) }
-            parent.progressChannel.offer(100)
-            parent.refreshChannel.offer(false)
+            parent.refreshEmit(true)
+            recyclerContract.reload { parent.progressEmit(it) }
+            parent.progressEmit(100)
+            parent.refreshEmit(false)
             if (prefs.animate) circularReveal()
         }
     }
