@@ -44,8 +44,8 @@ import com.pitchedapps.frost.web.FrostEmitter
 import com.pitchedapps.frost.web.asFrostEmitter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -58,6 +58,7 @@ import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.transformWhile
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 class FrostContentWeb @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -68,6 +69,7 @@ class FrostContentWeb @JvmOverloads constructor(
     override val layoutRes: Int = R.layout.view_content_base_web
 }
 
+@ExperimentalCoroutinesApi
 class FrostContentRecycler @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -78,6 +80,7 @@ class FrostContentRecycler @JvmOverloads constructor(
     override val layoutRes: Int = R.layout.view_content_base_recycler
 }
 
+@ExperimentalCoroutinesApi
 abstract class FrostContentView<out T> @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -96,6 +99,7 @@ abstract class FrostContentView<out T> @JvmOverloads constructor(
  * Subsection of [FrostContentView] that is [AndroidEntryPoint] friendly (no generics)
  */
 @AndroidEntryPoint
+@ExperimentalCoroutinesApi
 abstract class FrostContentViewBase(
     context: Context,
     attrs: AttributeSet?,
@@ -239,7 +243,6 @@ abstract class FrostContentViewBase(
     }
 
     private var transitionStart: Long = -1
-    private var refreshReceiver: ReceiveChannel<Boolean>? = null
 
     /**
      * Hook onto the refresh observable for one cycle

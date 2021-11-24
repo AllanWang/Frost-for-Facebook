@@ -42,7 +42,7 @@ import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -71,6 +71,7 @@ fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
             val parsers = arrayOf(NotifParser, MessageParser, SearchParser)
 
             materialDialog {
+                // noinspection CheckResult
                 listItems(items = parsers.map { string(it.nameRes) }) { dialog, position, _ ->
                     dialog.dismiss()
                     val parser = parsers[position]
@@ -133,20 +134,15 @@ fun SettingsActivity.sendDebug(url: String, html: String?) {
         onDismiss { job.cancel() }
     }
 
-    val progressChannel = Channel<Int>(10)
+    val progressFlow = MutableStateFlow(0)
 
-    launchMain {
-        for (p in progressChannel) {
-//            md.setProgress(p)
-        }
-    }
+//    progressFlow.onEach { md.setProgress(it) }.launchIn(this)
 
     launchMain {
         val success = downloader.loadAndZip(ZIP_NAME) {
-            progressChannel.offer(it)
+            progressFlow.tryEmit(it)
         }
         md.dismiss()
-        progressChannel.close()
         if (success) {
             val zipUri = frostUriFromFile(
                 File(downloader.baseDir, "$ZIP_NAME.zip")

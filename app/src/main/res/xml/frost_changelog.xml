@@ -6,6 +6,11 @@
     <item text="" />
     -->
 
+    <version title="v3.2.0" />
+    <item text="Improve loading process" />
+    <item text="" />
+    <item text="" />
+
     <version title="v3.1.2" />
     <item text="Fix loading full size images" />
     <item text="Fix menu tab" />
