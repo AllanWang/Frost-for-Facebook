@@ -14,8 +14,12 @@
     <string name="suggested_groups_desc">Wyświetlaj \"Proponowane grupy\"</string>
     <string name="show_stories">Pokaż relacje</string>
     <string name="show_stories_desc">Pokaż relacje w kanale</string>
+    <string name="show_post_actions">Pokaż poprzednie działania</string>
     <string name="show_post_actions_desc">Pokaż opcje polubienia, skomentowania i udostępnienia</string>
+    <string name="show_post_reactions">Pokaż reakcje</string>
     <string name="show_post_reactions_desc">Pokaż liczbę reakcji posta</string>
     <string name="facebook_ads">Reklamy Facebooka</string>
     <string name="facebook_ads_desc">Wyświetlaj wbudowane reklamy Facebooka</string>
+    <string name="full_size_image">Zdjęcia o pełnym rozmiarze</string>
+    <string name="full_size_image_desc">Wymuś pełną szerokość obrazów na stronie głównej</string>
 </resources>
