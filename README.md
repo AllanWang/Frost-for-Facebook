@@ -10,6 +10,8 @@
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/com.pitchedapps.frost)
+    
+**This project is no longer actively maintained**. I still use it, but I've largely been off of Facebook for years. Bugs relating to logins are region dependent, and web wrappers don't have stable APIs, so please use at your own discretion.
 
 **Note** Some keystores are public for the sake of automatic builds and consistent signing across devices.
 This means that others can build apps with the same signature. The only valid download sources are through my github releases and F-Droid.
