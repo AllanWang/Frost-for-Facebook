@@ -24,86 +24,66 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
 
 interface NotifPrefs : PrefsBase {
-    var notificationKeywords: Set<String>
+  var notificationKeywords: Set<String>
 
-    var notificationsGeneral: Boolean
+  var notificationsGeneral: Boolean
 
-    var notificationAllAccounts: Boolean
+  var notificationAllAccounts: Boolean
 
-    var notificationsInstantMessages: Boolean
+  var notificationsInstantMessages: Boolean
 
-    var notificationsImAllAccounts: Boolean
+  var notificationsImAllAccounts: Boolean
 
-    var notificationVibrate: Boolean
+  var notificationVibrate: Boolean
 
-    var notificationSound: Boolean
+  var notificationSound: Boolean
 
-    var notificationRingtone: String
+  var notificationRingtone: String
 
-    var messageRingtone: String
+  var messageRingtone: String
 
-    var notificationLights: Boolean
+  var notificationLights: Boolean
 
-    var notificationFreq: Long
+  var notificationFreq: Long
 }
 
-class NotifPrefsImpl @Inject internal constructor(
-    factory: KPrefFactory,
-    oldPrefs: OldPrefs,
+class NotifPrefsImpl
+@Inject
+internal constructor(
+  factory: KPrefFactory,
+  oldPrefs: OldPrefs,
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.notif", factory), NotifPrefs {
 
-    override var notificationKeywords: Set<String> by kpref(
-        "notification_keywords",
-        oldPrefs.notificationKeywords /* mutableSetOf() */
-    )
+  override var notificationKeywords: Set<String> by
+    kpref("notification_keywords", oldPrefs.notificationKeywords /* mutableSetOf() */)
 
-    override var notificationsGeneral: Boolean by kpref(
-        "notification_general",
-        oldPrefs.notificationsGeneral /* true */
-    )
+  override var notificationsGeneral: Boolean by
+    kpref("notification_general", oldPrefs.notificationsGeneral /* true */)
 
-    override var notificationAllAccounts: Boolean by kpref(
-        "notification_all_accounts",
-        oldPrefs.notificationAllAccounts /* true */
-    )
+  override var notificationAllAccounts: Boolean by
+    kpref("notification_all_accounts", oldPrefs.notificationAllAccounts /* true */)
 
-    override var notificationsInstantMessages: Boolean by kpref(
-        "notification_im",
-        oldPrefs.notificationsInstantMessages /* true */
-    )
+  override var notificationsInstantMessages: Boolean by
+    kpref("notification_im", oldPrefs.notificationsInstantMessages /* true */)
 
-    override var notificationsImAllAccounts: Boolean by kpref(
-        "notification_im_all_accounts",
-        oldPrefs.notificationsImAllAccounts /* false */
-    )
+  override var notificationsImAllAccounts: Boolean by
+    kpref("notification_im_all_accounts", oldPrefs.notificationsImAllAccounts /* false */)
 
-    override var notificationVibrate: Boolean by kpref(
-        "notification_vibrate",
-        oldPrefs.notificationVibrate /* true */
-    )
+  override var notificationVibrate: Boolean by
+    kpref("notification_vibrate", oldPrefs.notificationVibrate /* true */)
 
-    override var notificationSound: Boolean by kpref(
-        "notification_sound",
-        oldPrefs.notificationSound /* true */
-    )
+  override var notificationSound: Boolean by
+    kpref("notification_sound", oldPrefs.notificationSound /* true */)
 
-    override var notificationRingtone: String by kpref(
-        "notification_ringtone",
-        oldPrefs.notificationRingtone /* "" */
-    )
+  override var notificationRingtone: String by
+    kpref("notification_ringtone", oldPrefs.notificationRingtone /* "" */)
 
-    override var messageRingtone: String by kpref(
-        "message_ringtone",
-        oldPrefs.messageRingtone /* "" */
-    )
+  override var messageRingtone: String by
+    kpref("message_ringtone", oldPrefs.messageRingtone /* "" */)
 
-    override var notificationLights: Boolean by kpref(
-        "notification_lights",
-        oldPrefs.notificationLights /* true */
-    )
+  override var notificationLights: Boolean by
+    kpref("notification_lights", oldPrefs.notificationLights /* true */)
 
-    override var notificationFreq: Long by kpref(
-        "notification_freq",
-        oldPrefs.notificationFreq /* 15L */
-    )
+  override var notificationFreq: Long by
+    kpref("notification_freq", oldPrefs.notificationFreq /* 15L */)
 }

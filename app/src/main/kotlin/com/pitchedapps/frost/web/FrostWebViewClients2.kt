@@ -42,152 +42,136 @@ import javax.inject.Qualifier
  *
  * Collection of webview clients
  */
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class FrostWebClient
+@Qualifier @Retention(AnnotationRetention.BINARY) annotation class FrostWebClient
 
 @EntryPoint
 @InstallIn(FrostWebComponent::class)
 interface FrostWebClientEntryPoint {
 
-    @FrostWebScoped
-    @FrostWebClient
-    fun webClient(): FrostWebViewClient
+  @FrostWebScoped @FrostWebClient fun webClient(): FrostWebViewClient
 }
 
 @Module
 @InstallIn(FrostWebComponent::class)
 interface FrostWebViewClientModule {
-    @Binds
-    @FrostWebClient
-    fun webClient(binds: FrostWebViewClient2): FrostWebViewClient
+  @Binds @FrostWebClient fun webClient(binds: FrostWebViewClient2): FrostWebViewClient
 }
 
-/**
- * The default webview client
- */
-open class FrostWebViewClient2 @Inject constructor(
-    web: FrostWebView,
-    @FrostRefresh private val refreshEmit: FrostEmitter<Boolean>
-) : FrostWebViewClient(web) {
+/** The default webview client */
+open class FrostWebViewClient2
+@Inject
+constructor(web: FrostWebView, @FrostRefresh private val refreshEmit: FrostEmitter<Boolean>) :
+  FrostWebViewClient(web) {
 
-    init {
-        L.i { "Refresh web client 2" }
-    }
+  init {
+    L.i { "Refresh web client 2" }
+  }
 
-    override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
-        super.doUpdateVisitedHistory(view, url, isReload)
-        urlSupportsRefresh = urlSupportsRefresh(url)
-        web.parent.swipeAllowedByPage = urlSupportsRefresh
-        view.jsInject(
-            JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox),
-            prefs = prefs
-        )
-        v { "History $url; refresh $urlSupportsRefresh" }
-    }
+  override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
+    super.doUpdateVisitedHistory(view, url, isReload)
+    urlSupportsRefresh = urlSupportsRefresh(url)
+    web.parent.swipeAllowedByPage = urlSupportsRefresh
+    view.jsInject(JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox), prefs = prefs)
+    v { "History $url; refresh $urlSupportsRefresh" }
+  }
 
-    private fun urlSupportsRefresh(url: String?): Boolean {
-        if (url == null) return false
-        if (url.isMessengerUrl) return false
-        if (!url.isFacebookUrl) return true
-        if (url.contains("soft=composer")) return false
-        if (url.contains("sharer.php") || url.contains("sharer-dialog.php")) return false
-        return true
-    }
+  private fun urlSupportsRefresh(url: String?): Boolean {
+    if (url == null) return false
+    if (url.isMessengerUrl) return false
+    if (!url.isFacebookUrl) return true
+    if (url.contains("soft=composer")) return false
+    if (url.contains("sharer.php") || url.contains("sharer-dialog.php")) return false
+    return true
+  }
 
-    private fun WebView.facebookJsInject() {
-        jsInject(*facebookJsInjectors.toTypedArray(), prefs = prefs)
-    }
+  private fun WebView.facebookJsInject() {
+    jsInject(*facebookJsInjectors.toTypedArray(), prefs = prefs)
+  }
 
-    private fun WebView.messengerJsInject() {
-        jsInject(
-            themeProvider.injector(ThemeCategory.MESSENGER),
-            prefs = prefs
-        )
-    }
+  private fun WebView.messengerJsInject() {
+    jsInject(themeProvider.injector(ThemeCategory.MESSENGER), prefs = prefs)
+  }
 
-    override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-        super.onPageStarted(view, url, favicon)
-        if (url == null) return
-        v { "loading $url ${web.settings.userAgentString}" }
-        refreshEmit(true)
-    }
+  override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
+    super.onPageStarted(view, url, favicon)
+    if (url == null) return
+    v { "loading $url ${web.settings.userAgentString}" }
+    refreshEmit(true)
+  }
 
-    private fun injectBackgroundColor() {
-        web.setBackgroundColor(
-            when {
-                isMain -> Color.TRANSPARENT
-                web.url.isFacebookUrl -> themeProvider.bgColor.withAlpha(255)
-                else -> Color.WHITE
-            }
-        )
-    }
+  private fun injectBackgroundColor() {
+    web.setBackgroundColor(
+      when {
+        isMain -> Color.TRANSPARENT
+        web.url.isFacebookUrl -> themeProvider.bgColor.withAlpha(255)
+        else -> Color.WHITE
+      }
+    )
+  }
 
-    override fun onPageCommitVisible(view: WebView, url: String?) {
-        super.onPageCommitVisible(view, url)
-        injectBackgroundColor()
-        when {
-            url.isFacebookUrl -> {
-                v { "FB Page commit visible" }
-                view.facebookJsInject()
-            }
-            url.isMessengerUrl -> {
-                v { "Messenger Page commit visible" }
-                view.messengerJsInject()
-            }
-            else -> {
-                refreshEmit(false)
-            }
-        }
-    }
-
-    override fun onPageFinished(view: WebView, url: String?) {
-        url ?: return
-        v { "finished $url" }
-        if (!url.isFacebookUrl && !url.isMessengerUrl) {
-            refreshEmit(false)
-            return
-        }
-        onPageFinishedActions(url)
-    }
-
-    internal override fun injectAndFinish() {
-        v { "page finished reveal" }
+  override fun onPageCommitVisible(view: WebView, url: String?) {
+    super.onPageCommitVisible(view, url)
+    injectBackgroundColor()
+    when {
+      url.isFacebookUrl -> {
+        v { "FB Page commit visible" }
+        view.facebookJsInject()
+      }
+      url.isMessengerUrl -> {
+        v { "Messenger Page commit visible" }
+        view.messengerJsInject()
+      }
+      else -> {
         refreshEmit(false)
-        injectBackgroundColor()
-        when {
-            web.url.isFacebookUrl -> {
-                web.jsInject(
-                    JsActions.LOGIN_CHECK,
-                    JsAssets.TEXTAREA_LISTENER,
-                    JsAssets.HEADER_BADGES.maybe(isMain),
-                    prefs = prefs
-                )
-                web.facebookJsInject()
-            }
-            web.url.isMessengerUrl -> {
-                web.messengerJsInject()
-            }
-        }
+      }
     }
+  }
 
-    /**
-     * Helper to format the request and launch it
-     * returns true to override the url
-     * returns false if we are already in an overlaying activity
-     */
-    private fun launchRequest(request: WebResourceRequest): Boolean {
-        v { "Launching url: ${request.url}" }
-        return web.requestWebOverlay(request.url.toString())
+  override fun onPageFinished(view: WebView, url: String?) {
+    url ?: return
+    v { "finished $url" }
+    if (!url.isFacebookUrl && !url.isMessengerUrl) {
+      refreshEmit(false)
+      return
     }
+    onPageFinishedActions(url)
+  }
 
-    private fun launchImage(url: String, text: String? = null, cookie: String? = null): Boolean {
-        v { "Launching image: $url" }
-        web.context.launchImageActivity(url, text, cookie)
-        if (web.canGoBack()) web.goBack()
-        return true
+  internal override fun injectAndFinish() {
+    v { "page finished reveal" }
+    refreshEmit(false)
+    injectBackgroundColor()
+    when {
+      web.url.isFacebookUrl -> {
+        web.jsInject(
+          JsActions.LOGIN_CHECK,
+          JsAssets.TEXTAREA_LISTENER,
+          JsAssets.HEADER_BADGES.maybe(isMain),
+          prefs = prefs
+        )
+        web.facebookJsInject()
+      }
+      web.url.isMessengerUrl -> {
+        web.messengerJsInject()
+      }
     }
+  }
+
+  /**
+   * Helper to format the request and launch it returns true to override the url returns false if we
+   * are already in an overlaying activity
+   */
+  private fun launchRequest(request: WebResourceRequest): Boolean {
+    v { "Launching url: ${request.url}" }
+    return web.requestWebOverlay(request.url.toString())
+  }
+
+  private fun launchImage(url: String, text: String? = null, cookie: String? = null): Boolean {
+    v { "Launching image: $url" }
+    web.context.launchImageActivity(url, text, cookie)
+    if (web.canGoBack()) web.goBack()
+    return true
+  }
 }
 
 private const val EMIT_THEME = 0b1

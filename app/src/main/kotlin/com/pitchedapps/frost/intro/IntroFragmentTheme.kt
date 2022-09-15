@@ -24,52 +24,48 @@ import com.pitchedapps.frost.activities.IntroActivity
 import com.pitchedapps.frost.databinding.IntroThemeBinding
 import com.pitchedapps.frost.enums.Theme
 
-/**
- * Created by Allan Wang on 2017-07-28.
- */
+/** Created by Allan Wang on 2017-07-28. */
 class IntroFragmentTheme : BaseIntroFragment(R.layout.intro_theme) {
 
-    private lateinit var binding: IntroThemeBinding
+  private lateinit var binding: IntroThemeBinding
 
-    val themeList
-        get() = with(binding) {
-            listOf(introThemeLight, introThemeDark, introThemeAmoled, introThemeGlass)
-        }
+  val themeList
+    get() =
+      with(binding) { listOf(introThemeLight, introThemeDark, introThemeAmoled, introThemeGlass) }
 
-    override fun viewArray(): Array<Array<out View>> = with(binding) {
-        arrayOf(
-            arrayOf(title),
-            arrayOf(introThemeLight, introThemeDark),
-            arrayOf(introThemeAmoled, introThemeGlass)
-        )
+  override fun viewArray(): Array<Array<out View>> =
+    with(binding) {
+      arrayOf(
+        arrayOf(title),
+        arrayOf(introThemeLight, introThemeDark),
+        arrayOf(introThemeAmoled, introThemeGlass)
+      )
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = IntroThemeBinding.bind(view)
-        binding.init()
-    }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    binding = IntroThemeBinding.bind(view)
+    binding.init()
+  }
 
-    private fun IntroThemeBinding.init() {
-        introThemeLight.setThemeClick(Theme.LIGHT)
-        introThemeDark.setThemeClick(Theme.DARK)
-        introThemeAmoled.setThemeClick(Theme.AMOLED)
-        introThemeGlass.setThemeClick(Theme.GLASS)
-        val currentTheme = prefs.theme - 1
-        if (currentTheme in 0..3)
-            themeList.forEachIndexed { index, v ->
-                v.scaleXY = if (index == currentTheme) 1.6f else 0.8f
-            }
-    }
+  private fun IntroThemeBinding.init() {
+    introThemeLight.setThemeClick(Theme.LIGHT)
+    introThemeDark.setThemeClick(Theme.DARK)
+    introThemeAmoled.setThemeClick(Theme.AMOLED)
+    introThemeGlass.setThemeClick(Theme.GLASS)
+    val currentTheme = prefs.theme - 1
+    if (currentTheme in 0..3)
+      themeList.forEachIndexed { index, v -> v.scaleXY = if (index == currentTheme) 1.6f else 0.8f }
+  }
 
-    private fun View.setThemeClick(theme: Theme) {
-        setOnClickListener { v ->
-            themeProvider.setTheme(theme.ordinal)
-            (activity as IntroActivity).apply {
-                binding.ripple.ripple(themeProvider.bgColor, v.x + v.pivotX, v.y + v.pivotY)
-                theme()
-            }
-            themeList.forEach { it.animate().scaleXY(if (it == this) 1.6f else 0.8f).start() }
-        }
+  private fun View.setThemeClick(theme: Theme) {
+    setOnClickListener { v ->
+      themeProvider.setTheme(theme.ordinal)
+      (activity as IntroActivity).apply {
+        binding.ripple.ripple(themeProvider.bgColor, v.x + v.pivotX, v.y + v.pivotY)
+        theme()
+      }
+      themeList.forEach { it.animate().scaleXY(if (it == this) 1.6f else 0.8f).start() }
     }
+  }
 }

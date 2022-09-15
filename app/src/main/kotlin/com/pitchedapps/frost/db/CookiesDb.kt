@@ -28,59 +28,57 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.pitchedapps.frost.prefs.Prefs
 import kotlinx.android.parcel.Parcelize
 
-/**
- * Created by Allan Wang on 2017-05-30.
- */
-
+/** Created by Allan Wang on 2017-05-30. */
 @Entity(tableName = "cookies")
 @Parcelize
 data class CookieEntity(
-    @androidx.room.PrimaryKey
-    @ColumnInfo(name = "cookie_id")
-    val id: Long,
-    val name: String?,
-    val cookie: String?,
-    val cookieMessenger: String? = null // Version 2
+  @androidx.room.PrimaryKey @ColumnInfo(name = "cookie_id") val id: Long,
+  val name: String?,
+  val cookie: String?,
+  val cookieMessenger: String? = null // Version 2
 ) : Parcelable {
-    override fun toString(): String = "CookieEntity(${hashCode()})"
+  override fun toString(): String = "CookieEntity(${hashCode()})"
 
-    fun toSensitiveString(): String =
-        "CookieEntity(id=$id, name=$name, cookie=$cookie cookieMessenger=$cookieMessenger)"
+  fun toSensitiveString(): String =
+    "CookieEntity(id=$id, name=$name, cookie=$cookie cookieMessenger=$cookieMessenger)"
 }
 
 @Dao
 interface CookieDao {
 
-    @Query("SELECT * FROM cookies")
-    fun _selectAll(): List<CookieEntity>
+  @Query("SELECT * FROM cookies") fun _selectAll(): List<CookieEntity>
 
-    @Query("SELECT * FROM cookies WHERE cookie_id = :id")
-    fun _selectById(id: Long): CookieEntity?
+  @Query("SELECT * FROM cookies WHERE cookie_id = :id") fun _selectById(id: Long): CookieEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun _save(cookie: CookieEntity)
+  @Insert(onConflict = OnConflictStrategy.REPLACE) fun _save(cookie: CookieEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun _save(cookies: List<CookieEntity>)
+  @Insert(onConflict = OnConflictStrategy.REPLACE) fun _save(cookies: List<CookieEntity>)
 
-    @Query("DELETE FROM cookies WHERE cookie_id = :id")
-    fun _deleteById(id: Long)
+  @Query("DELETE FROM cookies WHERE cookie_id = :id") fun _deleteById(id: Long)
 
-    @Query("UPDATE cookies SET cookieMessenger = :cookie WHERE cookie_id = :id")
-    fun _updateMessengerCookie(id: Long, cookie: String?)
+  @Query("UPDATE cookies SET cookieMessenger = :cookie WHERE cookie_id = :id")
+  fun _updateMessengerCookie(id: Long, cookie: String?)
 }
 
 suspend fun CookieDao.selectAll() = dao { _selectAll() }
-suspend fun CookieDao.selectById(id: Long) = dao { _selectById(id) }
-suspend fun CookieDao.save(cookie: CookieEntity) = dao { _save(cookie) }
-suspend fun CookieDao.save(cookies: List<CookieEntity>) = dao { _save(cookies) }
-suspend fun CookieDao.deleteById(id: Long) = dao { _deleteById(id) }
-suspend fun CookieDao.currentCookie(prefs: Prefs) = selectById(prefs.userId)
-suspend fun CookieDao.updateMessengerCookie(id: Long, cookie: String?) =
-    dao { _updateMessengerCookie(id, cookie) }
 
-val COOKIES_MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE cookies ADD COLUMN cookieMessenger TEXT")
-    }
+suspend fun CookieDao.selectById(id: Long) = dao { _selectById(id) }
+
+suspend fun CookieDao.save(cookie: CookieEntity) = dao { _save(cookie) }
+
+suspend fun CookieDao.save(cookies: List<CookieEntity>) = dao { _save(cookies) }
+
+suspend fun CookieDao.deleteById(id: Long) = dao { _deleteById(id) }
+
+suspend fun CookieDao.currentCookie(prefs: Prefs) = selectById(prefs.userId)
+
+suspend fun CookieDao.updateMessengerCookie(id: Long, cookie: String?) = dao {
+  _updateMessengerCookie(id, cookie)
 }
+
+val COOKIES_MIGRATION_1_2 =
+  object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.execSQL("ALTER TABLE cookies ADD COLUMN cookieMessenger TEXT")
+    }
+  }

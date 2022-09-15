@@ -41,131 +41,116 @@ import com.pitchedapps.frost.views.FrostWebView
  * Collection of chrome clients
  */
 
-/**
- * The default chrome client
- */
+/** The default chrome client */
 class FrostChromeClient(
-    web: FrostWebView,
-    private val themeProvider: ThemeProvider,
-    private val webFileChooser: WebFileChooser,
+  web: FrostWebView,
+  private val themeProvider: ThemeProvider,
+  private val webFileChooser: WebFileChooser,
 ) : WebChromeClient() {
 
-//    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
-    private val refreshEmit = web.parent.refreshEmit
-    private val progressEmit = web.parent.progressEmit
-    private val titleEmit = web.parent.titleEmit
-    private val context = web.context!!
+  //    private val refresh: SendChannel<Boolean> = web.parent.refreshChannel
+  private val refreshEmit = web.parent.refreshEmit
+  private val progressEmit = web.parent.progressEmit
+  private val titleEmit = web.parent.titleEmit
+  private val context = web.context!!
 
-    override fun getDefaultVideoPoster(): Bitmap? =
-        super.getDefaultVideoPoster()
-            ?: Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
+  override fun getDefaultVideoPoster(): Bitmap? =
+    super.getDefaultVideoPoster() ?: Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
 
-    override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-        L.v { "Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
-        return true
+  override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+    L.v { "Chrome Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
+    return true
+  }
+
+  override fun onReceivedTitle(view: WebView, title: String) {
+    super.onReceivedTitle(view, title)
+    if (title.startsWith("http")) return
+    titleEmit(title)
+  }
+
+  override fun onProgressChanged(view: WebView, newProgress: Int) {
+    super.onProgressChanged(view, newProgress)
+    progressEmit(newProgress)
+  }
+
+  override fun onShowFileChooser(
+    webView: WebView,
+    filePathCallback: ValueCallback<Array<Uri>?>,
+    fileChooserParams: FileChooserParams
+  ): Boolean {
+    webFileChooser.openMediaPicker(filePathCallback, fileChooserParams)
+    return true
+  }
+
+  private fun JsResult.frostCancel() {
+    cancel()
+    refreshEmit(false)
+    progressEmit(100)
+  }
+
+  override fun onJsAlert(view: WebView, url: String, message: String, result: JsResult): Boolean {
+    view.context.materialDialog {
+      title(text = url)
+      message(text = message)
+      positiveButton { result.confirm() }
+      onDismiss { result.frostCancel() }
     }
+    return true
+  }
 
-    override fun onReceivedTitle(view: WebView, title: String) {
-        super.onReceivedTitle(view, title)
-        if (title.startsWith("http")) return
-        titleEmit(title)
+  override fun onJsConfirm(view: WebView, url: String, message: String, result: JsResult): Boolean {
+    view.context.materialDialog {
+      title(text = url)
+      message(text = message)
+      positiveButton { result.confirm() }
+      negativeButton { result.frostCancel() }
+      onDismiss { result.frostCancel() }
     }
+    return true
+  }
 
-    override fun onProgressChanged(view: WebView, newProgress: Int) {
-        super.onProgressChanged(view, newProgress)
-        progressEmit(newProgress)
+  override fun onJsBeforeUnload(
+    view: WebView,
+    url: String,
+    message: String,
+    result: JsResult
+  ): Boolean {
+    view.context.materialDialog {
+      title(text = url)
+      message(text = message)
+      positiveButton { result.confirm() }
+      negativeButton { result.frostCancel() }
+      onDismiss { result.frostCancel() }
     }
+    return true
+  }
 
-    override fun onShowFileChooser(
-        webView: WebView,
-        filePathCallback: ValueCallback<Array<Uri>?>,
-        fileChooserParams: FileChooserParams
-    ): Boolean {
-        webFileChooser.openMediaPicker(filePathCallback, fileChooserParams)
-        return true
+  override fun onJsPrompt(
+    view: WebView,
+    url: String,
+    message: String,
+    defaultValue: String?,
+    result: JsPromptResult
+  ): Boolean {
+    view.context.materialDialog {
+      title(text = url)
+      message(text = message)
+      input(prefill = defaultValue) { _, charSequence -> result.confirm(charSequence.toString()) }
+      // positive button added through input
+      negativeButton { result.frostCancel() }
+      onDismiss { result.frostCancel() }
     }
+    return true
+  }
 
-    private fun JsResult.frostCancel() {
-        cancel()
-        refreshEmit(false)
-        progressEmit(100)
+  override fun onGeolocationPermissionsShowPrompt(
+    origin: String,
+    callback: GeolocationPermissions.Callback
+  ) {
+    L.i { "Requesting geolocation" }
+    context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) { granted, _ ->
+      L.i { "Geolocation response received; ${if (granted) "granted" else "denied"}" }
+      callback(origin, granted, true)
     }
-
-    override fun onJsAlert(
-        view: WebView,
-        url: String,
-        message: String,
-        result: JsResult
-    ): Boolean {
-        view.context.materialDialog {
-            title(text = url)
-            message(text = message)
-            positiveButton { result.confirm() }
-            onDismiss { result.frostCancel() }
-        }
-        return true
-    }
-
-    override fun onJsConfirm(
-        view: WebView,
-        url: String,
-        message: String,
-        result: JsResult
-    ): Boolean {
-        view.context.materialDialog {
-            title(text = url)
-            message(text = message)
-            positiveButton { result.confirm() }
-            negativeButton { result.frostCancel() }
-            onDismiss { result.frostCancel() }
-        }
-        return true
-    }
-
-    override fun onJsBeforeUnload(
-        view: WebView,
-        url: String,
-        message: String,
-        result: JsResult
-    ): Boolean {
-        view.context.materialDialog {
-            title(text = url)
-            message(text = message)
-            positiveButton { result.confirm() }
-            negativeButton { result.frostCancel() }
-            onDismiss { result.frostCancel() }
-        }
-        return true
-    }
-
-    override fun onJsPrompt(
-        view: WebView,
-        url: String,
-        message: String,
-        defaultValue: String?,
-        result: JsPromptResult
-    ): Boolean {
-        view.context.materialDialog {
-            title(text = url)
-            message(text = message)
-            input(prefill = defaultValue) { _, charSequence ->
-                result.confirm(charSequence.toString())
-            }
-            // positive button added through input
-            negativeButton { result.frostCancel() }
-            onDismiss { result.frostCancel() }
-        }
-        return true
-    }
-
-    override fun onGeolocationPermissionsShowPrompt(
-        origin: String,
-        callback: GeolocationPermissions.Callback
-    ) {
-        L.i { "Requesting geolocation" }
-        context.kauRequestPermissions(PERMISSION_ACCESS_FINE_LOCATION) { granted, _ ->
-            L.i { "Geolocation response received; ${if (granted) "granted" else "denied"}" }
-            callback(origin, granted, true)
-        }
-    }
+  }
 }

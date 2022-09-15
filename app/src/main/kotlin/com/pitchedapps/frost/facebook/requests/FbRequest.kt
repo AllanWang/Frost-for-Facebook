@@ -24,22 +24,17 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 
 val httpClient: OkHttpClient by lazy {
-    val builder = OkHttpClient.Builder()
-    if (BuildConfig.DEBUG)
-        builder.addInterceptor(
-            HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BASIC)
-        )
-    builder.build()
+  val builder = OkHttpClient.Builder()
+  if (BuildConfig.DEBUG)
+    builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+  builder.build()
 }
 
 internal fun String?.requestBuilder(): Request.Builder {
-    val builder = Request.Builder()
-        .header("User-Agent", USER_AGENT)
-    if (this != null)
-        builder.header("Cookie", this)
-//        .cacheControl(CacheControl.FORCE_NETWORK)
-    return builder
+  val builder = Request.Builder().header("User-Agent", USER_AGENT)
+  if (this != null) builder.header("Cookie", this)
+  //        .cacheControl(CacheControl.FORCE_NETWORK)
+  return builder
 }
 
 fun Request.Builder.call(): Call = httpClient.newCall(build())

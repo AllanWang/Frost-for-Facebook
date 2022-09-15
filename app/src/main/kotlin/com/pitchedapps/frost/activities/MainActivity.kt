@@ -40,93 +40,92 @@ import kotlinx.coroutines.flow.onEach
 
 class MainActivity : BaseMainActivity() {
 
-    private val fragmentMutableFlow = MutableSharedFlow<Int>(
-        extraBufferCapacity = 10,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-    override val fragmentFlow: SharedFlow<Int> = fragmentMutableFlow.asSharedFlow()
-    override val fragmentEmit: FrostEmitter<Int> = fragmentMutableFlow.asFrostEmitter()
+  private val fragmentMutableFlow =
+    MutableSharedFlow<Int>(extraBufferCapacity = 10, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  override val fragmentFlow: SharedFlow<Int> = fragmentMutableFlow.asSharedFlow()
+  override val fragmentEmit: FrostEmitter<Int> = fragmentMutableFlow.asFrostEmitter()
 
-    private val headerMutableFlow = MutableStateFlow("")
-    override val headerFlow: SharedFlow<String> = headerMutableFlow.asSharedFlow()
-    override val headerEmit: FrostEmitter<String> = headerMutableFlow.asFrostEmitter()
+  private val headerMutableFlow = MutableStateFlow("")
+  override val headerFlow: SharedFlow<String> = headerMutableFlow.asSharedFlow()
+  override val headerEmit: FrostEmitter<String> = headerMutableFlow.asFrostEmitter()
 
-    override fun onNestedCreate(savedInstanceState: Bundle?) {
-        with(contentBinding) {
-            setupTabs()
-            setupViewPager()
+  override fun onNestedCreate(savedInstanceState: Bundle?) {
+    with(contentBinding) {
+      setupTabs()
+      setupViewPager()
+    }
+  }
+
+  private fun ActivityMainContentBinding.setupViewPager() {
+    viewpager.addOnPageChangeListener(
+      object : ViewPager.SimpleOnPageChangeListener() {
+        override fun onPageSelected(position: Int) {
+          super.onPageSelected(position)
+          if (lastPosition == position) {
+            return
+          }
+          if (lastPosition != -1) {
+            fragmentEmit(-(lastPosition + 1))
+          }
+          fragmentEmit(position)
+          lastPosition = position
         }
-    }
 
-    private fun ActivityMainContentBinding.setupViewPager() {
-        viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                if (lastPosition == position) {
-                    return
-                }
-                if (lastPosition != -1) {
-                    fragmentEmit(-(lastPosition + 1))
-                }
-                fragmentEmit(position)
-                lastPosition = position
-            }
+        override fun onPageScrolled(
+          position: Int,
+          positionOffset: Float,
+          positionOffsetPixels: Int
+        ) {
+          super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+          val delta = positionOffset * (SELECTED_TAB_ALPHA - UNSELECTED_TAB_ALPHA)
+          tabsForEachView { tabPosition, view ->
+            view.setAllAlpha(
+              when (tabPosition) {
+                position -> SELECTED_TAB_ALPHA - delta
+                position + 1 -> UNSELECTED_TAB_ALPHA + delta
+                else -> UNSELECTED_TAB_ALPHA
+              }
+            )
+          }
+        }
+      }
+    )
+  }
 
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                val delta = positionOffset * (SELECTED_TAB_ALPHA - UNSELECTED_TAB_ALPHA)
-                tabsForEachView { tabPosition, view ->
-                    view.setAllAlpha(
-                        when (tabPosition) {
-                            position -> SELECTED_TAB_ALPHA - delta
-                            position + 1 -> UNSELECTED_TAB_ALPHA + delta
-                            else -> UNSELECTED_TAB_ALPHA
-                        }
-                    )
-                }
-            }
-        })
-    }
+  private fun ActivityMainContentBinding.setupTabs() {
+    viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+    tabs.addOnTabSelectedListener(
+      object : TabLayout.ViewPagerOnTabSelectedListener(viewpager) {
+        override fun onTabReselected(tab: TabLayout.Tab) {
+          super.onTabReselected(tab)
+          currentFragment?.onTabClick()
+        }
 
-    private fun ActivityMainContentBinding.setupTabs() {
-        viewpager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        tabs.addOnTabSelectedListener(object : TabLayout.ViewPagerOnTabSelectedListener(viewpager) {
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                super.onTabReselected(tab)
-                currentFragment?.onTabClick()
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                super.onTabSelected(tab)
-                (tab.customView as BadgedIcon).badgeText = null
-            }
-        })
-        headerFlow
-            .filter { it.isNotBlank() }
-            .mapNotNull { html ->
-                BadgeParser.parseFromData(
-                    cookie = fbCookie.webCookie,
-                    text = html
-                )?.data
-            }
-            .distinctUntilChanged()
-            .flowOn(Dispatchers.IO)
-            .onEach { data ->
-                L.v { "Badges $data" }
-                tabsForEachView { _, view ->
-                    when (view.iicon) {
-                        FbItem.FEED.icon -> view.badgeText = data.feed
-                        FbItem.FRIENDS.icon -> view.badgeText = data.friends
-                        FbItem.MESSAGES.icon -> view.badgeText = data.messages
-                        FbItem.NOTIFICATIONS.icon -> view.badgeText = data.notifications
-                    }
-                }
-            }
-            .flowOn(Dispatchers.Main)
-            .launchIn(this@MainActivity)
-    }
+        override fun onTabSelected(tab: TabLayout.Tab) {
+          super.onTabSelected(tab)
+          (tab.customView as BadgedIcon).badgeText = null
+        }
+      }
+    )
+    headerFlow
+      .filter { it.isNotBlank() }
+      .mapNotNull { html ->
+        BadgeParser.parseFromData(cookie = fbCookie.webCookie, text = html)?.data
+      }
+      .distinctUntilChanged()
+      .flowOn(Dispatchers.IO)
+      .onEach { data ->
+        L.v { "Badges $data" }
+        tabsForEachView { _, view ->
+          when (view.iicon) {
+            FbItem.FEED.icon -> view.badgeText = data.feed
+            FbItem.FRIENDS.icon -> view.badgeText = data.friends
+            FbItem.MESSAGES.icon -> view.badgeText = data.messages
+            FbItem.NOTIFICATIONS.icon -> view.badgeText = data.notifications
+          }
+        }
+      }
+      .flowOn(Dispatchers.Main)
+      .launchIn(this@MainActivity)
+  }
 }

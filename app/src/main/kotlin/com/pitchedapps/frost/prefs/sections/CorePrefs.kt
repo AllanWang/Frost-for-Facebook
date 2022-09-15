@@ -24,78 +24,71 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
 
 interface CorePrefs : PrefsBase {
-    var lastLaunch: Long
+  var lastLaunch: Long
 
-    var userId: Long
+  var userId: Long
 
-    var prevId: Long
+  var prevId: Long
 
-    val frostId: String
+  val frostId: String
 
-    var versionCode: Int
+  var versionCode: Int
 
-    var prevVersionCode: Int
+  var prevVersionCode: Int
 
-    var installDate: Long
+  var installDate: Long
 
-    var identifier: Int
+  var identifier: Int
 
-    /**
-     * Despite the naming, this toggle currently only enables debug logging.
-     * Verbose is never logged in release builds.
-     */
-    var verboseLogging: Boolean
+  /**
+   * Despite the naming, this toggle currently only enables debug logging. Verbose is never logged
+   * in release builds.
+   */
+  var verboseLogging: Boolean
 
-    var enablePip: Boolean
+  var enablePip: Boolean
 
-    var exitConfirmation: Boolean
+  var exitConfirmation: Boolean
 
-    var animate: Boolean
+  var animate: Boolean
 
-    var messageScrollToBottom: Boolean
+  var messageScrollToBottom: Boolean
 }
 
-class CorePrefsImpl @Inject internal constructor(
-    factory: KPrefFactory,
-    oldPrefs: OldPrefs,
+class CorePrefsImpl
+@Inject
+internal constructor(
+  factory: KPrefFactory,
+  oldPrefs: OldPrefs,
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.core", factory), CorePrefs {
 
-    override var lastLaunch: Long by kpref("last_launch", oldPrefs.lastLaunch /* -1L */)
+  override var lastLaunch: Long by kpref("last_launch", oldPrefs.lastLaunch /* -1L */)
 
-    override var userId: Long by kpref("user_id", oldPrefs.userId /* -1L */)
+  override var userId: Long by kpref("user_id", oldPrefs.userId /* -1L */)
 
-    override var prevId: Long by kpref("prev_id", oldPrefs.prevId /* -1L */)
+  override var prevId: Long by kpref("prev_id", oldPrefs.prevId /* -1L */)
 
-    override val frostId: String
-        get() = "$installDate-$identifier"
+  override val frostId: String
+    get() = "$installDate-$identifier"
 
-    override var versionCode: Int by kpref("version_code", oldPrefs.versionCode /* -1 */)
+  override var versionCode: Int by kpref("version_code", oldPrefs.versionCode /* -1 */)
 
-    override var prevVersionCode: Int by kpref(
-        "prev_version_code",
-        oldPrefs.prevVersionCode /* -1 */
-    )
+  override var prevVersionCode: Int by kpref("prev_version_code", oldPrefs.prevVersionCode /* -1 */)
 
-    override var installDate: Long by kpref("install_date", oldPrefs.installDate /* -1L */)
+  override var installDate: Long by kpref("install_date", oldPrefs.installDate /* -1L */)
 
-    override var identifier: Int by kpref("identifier", oldPrefs.identifier /* -1 */)
+  override var identifier: Int by kpref("identifier", oldPrefs.identifier /* -1 */)
 
-    override var verboseLogging: Boolean by kpref(
-        "verbose_logging",
-        oldPrefs.verboseLogging /* false */
-    )
+  override var verboseLogging: Boolean by
+    kpref("verbose_logging", oldPrefs.verboseLogging /* false */)
 
-    override var enablePip: Boolean by kpref("enable_pip", oldPrefs.enablePip /* true */)
+  override var enablePip: Boolean by kpref("enable_pip", oldPrefs.enablePip /* true */)
 
-    override var exitConfirmation: Boolean by kpref(
-        "exit_confirmation",
-        oldPrefs.exitConfirmation /* true */
-    )
+  override var exitConfirmation: Boolean by
+    kpref("exit_confirmation", oldPrefs.exitConfirmation /* true */)
 
-    override var animate: Boolean by kpref("fancy_animations", oldPrefs.animate /* true */)
+  override var animate: Boolean by kpref("fancy_animations", oldPrefs.animate /* true */)
 
-    override var messageScrollToBottom: Boolean by kpref(
-        "message_scroll_to_bottom",
-        oldPrefs.messageScrollToBottom /* false */
-    )
+  override var messageScrollToBottom: Boolean by
+    kpref("message_scroll_to_bottom", oldPrefs.messageScrollToBottom /* false */)
 }

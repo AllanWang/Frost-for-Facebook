@@ -26,27 +26,26 @@ import com.pitchedapps.frost.prefs.Prefs
  * Collection of short js functions that are embedded directly
  */
 enum class JsActions(body: String) : InjectorContract {
-    /**
-     * Redirects to login activity if create account is found
-     * see [com.pitchedapps.frost.web.FrostJSI.loadLogin]
-     */
-    LOGIN_CHECK("document.getElementById('signup-button')&&Frost.loadLogin();"),
-    BASE_HREF("""document.write("<base href='$FB_URL_BASE'/>");"""),
-    FETCH_BODY("""setTimeout(function(){var e=document.querySelector("main");e||(e=document.querySelector("body")),Frost.handleHtml(e.outerHTML)},1e2);"""),
-    RETURN_BODY("return(document.getElementsByTagName('html')[0].innerHTML);"),
-    CREATE_POST(clickBySelector("#MComposer [onclick]")),
-//    CREATE_MSG(clickBySelector("a[rel=dialog]")),
-    /**
-     * Used as a pseudoinjector for maybe functions
-     */
-    EMPTY("");
+  /**
+   * Redirects to login activity if create account is found see
+   * [com.pitchedapps.frost.web.FrostJSI.loadLogin]
+   */
+  LOGIN_CHECK("document.getElementById('signup-button')&&Frost.loadLogin();"),
+  BASE_HREF("""document.write("<base href='$FB_URL_BASE'/>");"""),
+  FETCH_BODY(
+    """setTimeout(function(){var e=document.querySelector("main");e||(e=document.querySelector("body")),Frost.handleHtml(e.outerHTML)},1e2);"""
+  ),
+  RETURN_BODY("return(document.getElementsByTagName('html')[0].innerHTML);"),
+  CREATE_POST(clickBySelector("#MComposer [onclick]")),
+  //    CREATE_MSG(clickBySelector("a[rel=dialog]")),
+  /** Used as a pseudoinjector for maybe functions */
+  EMPTY("");
 
-    val function = "(function(){$body})();"
+  val function = "(function(){$body})();"
 
-    override fun inject(webView: WebView, prefs: Prefs) =
-        JsInjector(function).inject(webView, prefs)
+  override fun inject(webView: WebView, prefs: Prefs) = JsInjector(function).inject(webView, prefs)
 }
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun clickBySelector(selector: String): String =
-    """document.querySelector("$selector").click()"""
+  """document.querySelector("$selector").click()"""

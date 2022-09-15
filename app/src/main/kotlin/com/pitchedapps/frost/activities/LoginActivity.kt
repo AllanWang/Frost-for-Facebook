@@ -49,6 +49,9 @@ import com.pitchedapps.frost.web.FrostEmitter
 import com.pitchedapps.frost.web.LoginWebView
 import com.pitchedapps.frost.web.asFrostEmitter
 import dagger.hilt.android.AndroidEntryPoint
+import java.net.UnknownHostException
+import javax.inject.Inject
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BufferOverflow
@@ -63,165 +66,157 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import java.net.UnknownHostException
-import javax.inject.Inject
-import kotlin.coroutines.resume
 
-/**
- * Created by Allan Wang on 2017-06-01.
- */
+/** Created by Allan Wang on 2017-06-01. */
 @AndroidEntryPoint
 class LoginActivity : BaseActivity() {
 
-    @Inject
-    lateinit var cookieDao: CookieDao
+  @Inject lateinit var cookieDao: CookieDao
 
-    private val toolbar: Toolbar by bindView(R.id.toolbar)
-    private val web: LoginWebView by bindView(R.id.login_webview)
-    private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
-    private val textview: AppCompatTextView by bindView(R.id.textview)
-    private val profile: ImageView by bindView(R.id.profile)
+  private val toolbar: Toolbar by bindView(R.id.toolbar)
+  private val web: LoginWebView by bindView(R.id.login_webview)
+  private val swipeRefresh: SwipeRefreshLayout by bindView(R.id.swipe_refresh)
+  private val textview: AppCompatTextView by bindView(R.id.textview)
+  private val profile: ImageView by bindView(R.id.profile)
 
-    private lateinit var profileLoader: RequestManager
+  private lateinit var profileLoader: RequestManager
 
-    private val refreshMutableFlow = MutableSharedFlow<Boolean>(
-        extraBufferCapacity = 10,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+  private val refreshMutableFlow =
+    MutableSharedFlow<Boolean>(
+      extraBufferCapacity = 10,
+      onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    private val refreshFlow: SharedFlow<Boolean> = refreshMutableFlow.asSharedFlow()
+  private val refreshFlow: SharedFlow<Boolean> = refreshMutableFlow.asSharedFlow()
 
-    private val refreshEmit: FrostEmitter<Boolean> = refreshMutableFlow.asFrostEmitter()
+  private val refreshEmit: FrostEmitter<Boolean> = refreshMutableFlow.asFrostEmitter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-        setSupportActionBar(toolbar)
-        setTitle(R.string.kau_login)
-        activityThemer.setFrostColors {
-            toolbar(toolbar)
-        }
-        profileLoader = GlideApp.with(profile)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_login)
+    setSupportActionBar(toolbar)
+    setTitle(R.string.kau_login)
+    activityThemer.setFrostColors { toolbar(toolbar) }
+    profileLoader = GlideApp.with(profile)
 
-        refreshFlow
-            .distinctUntilChanged()
-            .onEach { swipeRefresh.isRefreshing = it }
-            .launchIn(this)
+    refreshFlow.distinctUntilChanged().onEach { swipeRefresh.isRefreshing = it }.launchIn(this)
 
-        launch {
-            val cookie = web.loadLogin { refresh(it != 100) }.await()
-            L.d { "Login found" }
-            fbCookie.save(cookie.id)
-            webFadeOut()
-            profile.fadeIn()
-            loadInfo(cookie)
-        }
+    launch {
+      val cookie = web.loadLogin { refresh(it != 100) }.await()
+      L.d { "Login found" }
+      fbCookie.save(cookie.id)
+      webFadeOut()
+      profile.fadeIn()
+      loadInfo(cookie)
+    }
+  }
+
+  private suspend fun webFadeOut(): Unit = suspendCancellableCoroutine { cont ->
+    web.fadeOut { cont.resume(Unit) }
+  }
+
+  private fun refresh(refreshing: Boolean) {
+    refreshEmit(refreshing)
+  }
+
+  private suspend fun loadInfo(cookie: CookieEntity): Unit = withMainContext {
+    refresh(true)
+
+    val imageDeferred = async { loadProfile(cookie.id) }
+    val nameDeferred = async { loadUsername(cookie) }
+
+    val name: String? = nameDeferred.await()
+    val foundImage: Boolean = imageDeferred.await()
+
+    L._d { "Logged in and received data" }
+    refresh(false)
+
+    if (!foundImage) {
+      L.e { "Could not get profile photo; Invalid userId?" }
+      L._i { cookie }
     }
 
-    private suspend fun webFadeOut(): Unit = suspendCancellableCoroutine { cont ->
-        web.fadeOut { cont.resume(Unit) }
-    }
+    textview.text = String.format(getString(R.string.welcome), name ?: "")
+    textview.fadeIn()
+    frostEvent("Login", "success" to true)
 
-    private fun refresh(refreshing: Boolean) {
-        refreshEmit(refreshing)
-    }
+    /*
+     * The user may have logged into an account that is already in the database
+     * We will let the db handle duplicates and load it now after the new account has been saved
+     */
+    val cookies = ArrayList(cookieDao.selectAll())
+    delay(1000)
+    if (prefs.intro) launchNewTask<IntroActivity>(cookies, true)
+    else launchNewTask<MainActivity>(cookies, true)
+  }
 
-    private suspend fun loadInfo(cookie: CookieEntity): Unit = withMainContext {
-        refresh(true)
-
-        val imageDeferred = async { loadProfile(cookie.id) }
-        val nameDeferred = async { loadUsername(cookie) }
-
-        val name: String? = nameDeferred.await()
-        val foundImage: Boolean = imageDeferred.await()
-
-        L._d { "Logged in and received data" }
-        refresh(false)
-
-        if (!foundImage) {
-            L.e { "Could not get profile photo; Invalid userId?" }
-            L._i { cookie }
-        }
-
-        textview.text = String.format(getString(R.string.welcome), name ?: "")
-        textview.fadeIn()
-        frostEvent("Login", "success" to true)
-
-        /*
-         * The user may have logged into an account that is already in the database
-         * We will let the db handle duplicates and load it now after the new account has been saved
-         */
-        val cookies = ArrayList(cookieDao.selectAll())
-        delay(1000)
-        if (prefs.intro)
-            launchNewTask<IntroActivity>(cookies, true)
-        else
-            launchNewTask<MainActivity>(cookies, true)
-    }
-
-    private suspend fun loadProfile(id: Long): Boolean = withMainContext {
-        suspendCancellableCoroutine<Boolean> { cont ->
-            profileLoader.load(profilePictureUrl(id))
-                .transform(FrostGlide.circleCrop).listener(object : RequestListener<Drawable> {
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        cont.resume(true)
-                        return false
-                    }
-
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        e.logFrostEvent("Profile loading exception")
-                        cont.resume(false)
-                        return false
-                    }
-                }).into(profile)
-        }
-    }
-
-    private suspend fun loadUsername(cookie: CookieEntity): String? = withContext(Dispatchers.IO) {
-        val result: String? = try {
-            withTimeout(5000) {
-                frostJsoup(cookie.cookie, FbItem.PROFILE.url).title()
+  private suspend fun loadProfile(id: Long): Boolean = withMainContext {
+    suspendCancellableCoroutine<Boolean> { cont ->
+      profileLoader
+        .load(profilePictureUrl(id))
+        .transform(FrostGlide.circleCrop)
+        .listener(
+          object : RequestListener<Drawable> {
+            override fun onResourceReady(
+              resource: Drawable?,
+              model: Any?,
+              target: Target<Drawable>?,
+              dataSource: DataSource?,
+              isFirstResource: Boolean
+            ): Boolean {
+              cont.resume(true)
+              return false
             }
+
+            override fun onLoadFailed(
+              e: GlideException?,
+              model: Any?,
+              target: Target<Drawable>?,
+              isFirstResource: Boolean
+            ): Boolean {
+              e.logFrostEvent("Profile loading exception")
+              cont.resume(false)
+              return false
+            }
+          }
+        )
+        .into(profile)
+    }
+  }
+
+  private suspend fun loadUsername(cookie: CookieEntity): String? =
+    withContext(Dispatchers.IO) {
+      val result: String? =
+        try {
+          withTimeout(5000) { frostJsoup(cookie.cookie, FbItem.PROFILE.url).title() }
         } catch (e: Exception) {
-            if (e !is UnknownHostException)
-                e.logFrostEvent("Fetch username failed")
-            null
+          if (e !is UnknownHostException) e.logFrostEvent("Fetch username failed")
+          null
         }
 
-        if (result != null) {
-            cookieDao.save(cookie.copy(name = result))
-            return@withContext result
-        }
+      if (result != null) {
+        cookieDao.save(cookie.copy(name = result))
+        return@withContext result
+      }
 
-        return@withContext cookie.name
+      return@withContext cookie.name
     }
 
-    override fun backConsumer(): Boolean {
-        if (web.canGoBack()) {
-            web.goBack()
-            return true
-        }
-        return false
+  override fun backConsumer(): Boolean {
+    if (web.canGoBack()) {
+      web.goBack()
+      return true
     }
+    return false
+  }
 
-    override fun onResume() {
-        super.onResume()
-        web.resumeTimers()
-    }
+  override fun onResume() {
+    super.onResume()
+    web.resumeTimers()
+  }
 
-    override fun onPause() {
-        web.pauseTimers()
-        super.onPause()
-    }
+  override fun onPause() {
+    web.pauseTimers()
+    super.onPause()
+  }
 }

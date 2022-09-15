@@ -41,118 +41,107 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchWebOverlay
 
-/**
- * Created by Allan Wang on 27/12/17.
- */
+/** Created by Allan Wang on 27/12/17. */
 class NotificationIItem(
-    val notification: FrostNotif,
-    val cookie: String,
-    private val themeProvider: ThemeProvider
-) : KauIItem<NotificationIItem.ViewHolder>(
-    R.layout.iitem_notification, { ViewHolder(it, themeProvider) }
-) {
+  val notification: FrostNotif,
+  val cookie: String,
+  private val themeProvider: ThemeProvider
+) :
+  KauIItem<NotificationIItem.ViewHolder>(
+    R.layout.iitem_notification,
+    { ViewHolder(it, themeProvider) }
+  ) {
 
-    companion object {
-        fun bindEvents(
-            adapter: ItemAdapter<NotificationIItem>,
-            fbCookie: FbCookie,
-            prefs: Prefs,
-            themeProvider: ThemeProvider
-        ) {
-            adapter.fastAdapter?.apply {
-                selectExtension {
-                    isSelectable = false
-                }
-                onClickListener = { v, _, item, position ->
-                    val notif = item.notification
-                    if (notif.unread) {
-                        adapter.set(
-                            position,
-                            NotificationIItem(
-                                notif.copy(unread = false),
-                                item.cookie,
-                                themeProvider
-                            )
-                        )
-                    }
-                    // TODO temp fix. If url is dependent, we cannot load it directly
-                    v!!.context.launchWebOverlay(
-                        if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url,
-                        fbCookie,
-                        prefs
-                    )
-                    true
-                }
-            }
-        }
-
-        // todo see if necessary
-        val DIFF: DiffCallback<NotificationIItem> by lazy(::Diff)
-    }
-
-    private class Diff : DiffCallback<NotificationIItem> {
-
-        override fun areItemsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
-            oldItem.notification.id == newItem.notification.id
-
-        override fun areContentsTheSame(
-            oldItem: NotificationIItem,
-            newItem: NotificationIItem
-        ) =
-            oldItem.notification == newItem.notification
-
-        override fun getChangePayload(
-            oldItem: NotificationIItem,
-            oldItemPosition: Int,
-            newItem: NotificationIItem,
-            newItemPosition: Int
-        ): Any? {
-            return newItem
-        }
-    }
-
-    class ViewHolder(
-        itemView: View,
-        private val themeProvider: ThemeProvider
-    ) : FastAdapter.ViewHolder<NotificationIItem>(itemView) {
-
-        private val frame: ViewGroup by bindView(R.id.item_frame)
-        private val avatar: ImageView by bindView(R.id.item_avatar)
-        private val content: TextView by bindView(R.id.item_content)
-        private val date: TextView by bindView(R.id.item_date)
-        private val thumbnail: ImageView by bindView(R.id.item_thumbnail)
-
-        private val glide
-            get() = GlideApp.with(itemView)
-
-        override fun bindView(item: NotificationIItem, payloads: List<Any>) {
-            val notif = item.notification
-            frame.background = createSimpleRippleDrawable(
-                themeProvider.textColor,
-                themeProvider.nativeBgColor(notif.unread)
+  companion object {
+    fun bindEvents(
+      adapter: ItemAdapter<NotificationIItem>,
+      fbCookie: FbCookie,
+      prefs: Prefs,
+      themeProvider: ThemeProvider
+    ) {
+      adapter.fastAdapter?.apply {
+        selectExtension { isSelectable = false }
+        onClickListener = { v, _, item, position ->
+          val notif = item.notification
+          if (notif.unread) {
+            adapter.set(
+              position,
+              NotificationIItem(notif.copy(unread = false), item.cookie, themeProvider)
             )
-            content.setTextColor(themeProvider.textColor)
-            date.setTextColor(themeProvider.textColor.withAlpha(150))
-
-            val glide = glide
-            glide.load(notif.img)
-                .transform(FrostGlide.circleCrop)
-                .into(avatar)
-            if (notif.thumbnailUrl != null)
-                glide.load(notif.thumbnailUrl).into(thumbnail.visible())
-
-            content.text = notif.content
-            date.text = notif.timeString
+          }
+          // TODO temp fix. If url is dependent, we cannot load it directly
+          v!!
+            .context
+            .launchWebOverlay(
+              if (notif.url.isIndependent) notif.url else FbItem.NOTIFICATIONS.url,
+              fbCookie,
+              prefs
+            )
+          true
         }
-
-        override fun unbindView(item: NotificationIItem) {
-            frame.background = null
-            val glide = glide
-            glide.clear(avatar)
-            glide.clear(thumbnail)
-            thumbnail.gone()
-            content.text = null
-            date.text = null
-        }
+      }
     }
+
+    // todo see if necessary
+    val DIFF: DiffCallback<NotificationIItem> by lazy(::Diff)
+  }
+
+  private class Diff : DiffCallback<NotificationIItem> {
+
+    override fun areItemsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
+      oldItem.notification.id == newItem.notification.id
+
+    override fun areContentsTheSame(oldItem: NotificationIItem, newItem: NotificationIItem) =
+      oldItem.notification == newItem.notification
+
+    override fun getChangePayload(
+      oldItem: NotificationIItem,
+      oldItemPosition: Int,
+      newItem: NotificationIItem,
+      newItemPosition: Int
+    ): Any? {
+      return newItem
+    }
+  }
+
+  class ViewHolder(itemView: View, private val themeProvider: ThemeProvider) :
+    FastAdapter.ViewHolder<NotificationIItem>(itemView) {
+
+    private val frame: ViewGroup by bindView(R.id.item_frame)
+    private val avatar: ImageView by bindView(R.id.item_avatar)
+    private val content: TextView by bindView(R.id.item_content)
+    private val date: TextView by bindView(R.id.item_date)
+    private val thumbnail: ImageView by bindView(R.id.item_thumbnail)
+
+    private val glide
+      get() = GlideApp.with(itemView)
+
+    override fun bindView(item: NotificationIItem, payloads: List<Any>) {
+      val notif = item.notification
+      frame.background =
+        createSimpleRippleDrawable(
+          themeProvider.textColor,
+          themeProvider.nativeBgColor(notif.unread)
+        )
+      content.setTextColor(themeProvider.textColor)
+      date.setTextColor(themeProvider.textColor.withAlpha(150))
+
+      val glide = glide
+      glide.load(notif.img).transform(FrostGlide.circleCrop).into(avatar)
+      if (notif.thumbnailUrl != null) glide.load(notif.thumbnailUrl).into(thumbnail.visible())
+
+      content.text = notif.content
+      date.text = notif.timeString
+    }
+
+    override fun unbindView(item: NotificationIItem) {
+      frame.background = null
+      val glide = glide
+      glide.clear(avatar)
+      glide.clear(thumbnail)
+      thumbnail.gone()
+      content.text = null
+      date.text = null
+    }
+  }
 }

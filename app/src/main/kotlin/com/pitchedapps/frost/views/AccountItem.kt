@@ -39,68 +39,69 @@ import com.pitchedapps.frost.glide.FrostGlide
 import com.pitchedapps.frost.glide.GlideApp
 import com.pitchedapps.frost.injectors.ThemeProvider
 
-/**
- * Created by Allan Wang on 2017-06-05.
- */
-class AccountItem(
-    val cookie: CookieEntity?,
-    private val themeProvider: ThemeProvider
-) : KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
+/** Created by Allan Wang on 2017-06-05. */
+class AccountItem(val cookie: CookieEntity?, private val themeProvider: ThemeProvider) :
+  KauIItem<AccountItem.ViewHolder>(R.layout.view_account, { ViewHolder(it) }, R.id.item_account) {
 
-    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
-        super.bindView(holder, payloads)
-        with(holder) {
-            text.invisible()
-            text.setTextColor(themeProvider.textColor)
-            if (cookie != null) {
-                text.text = cookie.name
-                GlideApp.with(itemView).load(profilePictureUrl(cookie.id))
-                    .transform(FrostGlide.circleCrop).listener(object : RequestListener<Drawable> {
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            text.fadeIn()
-                            return false
-                        }
+  override fun bindView(holder: ViewHolder, payloads: List<Any>) {
+    super.bindView(holder, payloads)
+    with(holder) {
+      text.invisible()
+      text.setTextColor(themeProvider.textColor)
+      if (cookie != null) {
+        text.text = cookie.name
+        GlideApp.with(itemView)
+          .load(profilePictureUrl(cookie.id))
+          .transform(FrostGlide.circleCrop)
+          .listener(
+            object : RequestListener<Drawable> {
+              override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+              ): Boolean {
+                text.fadeIn()
+                return false
+              }
 
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            text.fadeIn()
-                            return false
-                        }
-                    }).into(image)
-            } else {
-                text.visible()
-                image.setImageDrawable(
-                    GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(
-                        itemView.context,
-                        100,
-                        themeProvider.textColor
-                    )
-                )
-                text.text = itemView.context.getString(R.string.kau_add_account)
+              override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+              ): Boolean {
+                text.fadeIn()
+                return false
+              }
             }
-        }
+          )
+          .into(image)
+      } else {
+        text.visible()
+        image.setImageDrawable(
+          GoogleMaterial.Icon.gmd_add_circle_outline.toDrawable(
+            itemView.context,
+            100,
+            themeProvider.textColor
+          )
+        )
+        text.text = itemView.context.getString(R.string.kau_add_account)
+      }
     }
+  }
 
-    override fun unbindView(holder: ViewHolder) {
-        super.unbindView(holder)
-        with(holder) {
-            text.text = null
-            image.setImageDrawable(null)
-        }
+  override fun unbindView(holder: ViewHolder) {
+    super.unbindView(holder)
+    with(holder) {
+      text.text = null
+      image.setImageDrawable(null)
     }
+  }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView by bindView(R.id.account_image)
-        val text: AppCompatTextView by bindView(R.id.account_text)
-    }
+  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val image: ImageView by bindView(R.id.account_image)
+    val text: AppCompatTextView by bindView(R.id.account_text)
+  }
 }

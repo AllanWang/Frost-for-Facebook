@@ -269,7 +269,7 @@ dependencies {
     implementation kau.Dependencies.kau('searchview', KAU)
 
     implementation kau.Dependencies.coreKtx
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 
     implementation kau.Dependencies.swipeRefreshLayout
 

@@ -25,18 +25,16 @@ import org.junit.Test
 @HiltAndroidTest
 class MainActivityTest {
 
-    @get:Rule(order = 0)
-    val hildAndroidRule = HiltAndroidRule(this)
+  @get:Rule(order = 0) val hildAndroidRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 1)
-    val activityRule = activityRule<MainActivity>()
+  @get:Rule(order = 1) val activityRule = activityRule<MainActivity>()
 
-    @Test
-    fun initializesSuccessfully() {
-        activityRule.scenario.use {
-            it.onActivity {
-                // Verify no crash
-            }
-        }
+  @Test
+  fun initializesSuccessfully() {
+    activityRule.scenario.use {
+      it.onActivity {
+        // Verify no crash
+      }
     }
+  }
 }

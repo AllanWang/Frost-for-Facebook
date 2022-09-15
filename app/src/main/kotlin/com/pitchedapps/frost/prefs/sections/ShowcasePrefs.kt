@@ -23,12 +23,10 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
 
 interface ShowcasePrefs : PrefsBase {
-    /**
-     * Check if this is the first time launching the web overlay; show snackbar if true
-     */
-    val firstWebOverlay: Boolean
+  /** Check if this is the first time launching the web overlay; show snackbar if true */
+  val firstWebOverlay: Boolean
 
-    val intro: Boolean
+  val intro: Boolean
 }
 
 /**
@@ -36,11 +34,10 @@ interface ShowcasePrefs : PrefsBase {
  *
  * Showcase prefs that offer one time helpers to guide new users
  */
-class ShowcasePrefsImpl @Inject internal constructor(
-    factory: KPrefFactory
-) : KPref("${BuildConfig.APPLICATION_ID}.showcase", factory), ShowcasePrefs {
+class ShowcasePrefsImpl @Inject internal constructor(factory: KPrefFactory) :
+  KPref("${BuildConfig.APPLICATION_ID}.showcase", factory), ShowcasePrefs {
 
-    override val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
+  override val firstWebOverlay: Boolean by kprefSingle("first_web_overlay")
 
-    override val intro: Boolean by kprefSingle("intro_pages")
+  override val intro: Boolean by kprefSingle("intro_pages")
 }

@@ -24,87 +24,67 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
 
 interface BehaviourPrefs : PrefsBase {
-    var biometricsEnabled: Boolean
+  var biometricsEnabled: Boolean
 
-    var overlayEnabled: Boolean
+  var overlayEnabled: Boolean
 
-    var overlayFullScreenSwipe: Boolean
+  var overlayFullScreenSwipe: Boolean
 
-    var viewpagerSwipe: Boolean
+  var viewpagerSwipe: Boolean
 
-    var loadMediaOnMeteredNetwork: Boolean
+  var loadMediaOnMeteredNetwork: Boolean
 
-    var debugSettings: Boolean
+  var debugSettings: Boolean
 
-    var linksInDefaultApp: Boolean
+  var linksInDefaultApp: Boolean
 
-    var blackMediaBg: Boolean
+  var blackMediaBg: Boolean
 
-    var autoRefreshFeed: Boolean
+  var autoRefreshFeed: Boolean
 
-    var showCreateFab: Boolean
+  var showCreateFab: Boolean
 
-    var fullSizeImage: Boolean
+  var fullSizeImage: Boolean
 
-    var autoExpandTextBox: Boolean
+  var autoExpandTextBox: Boolean
 }
 
-class BehaviourPrefsImpl @Inject internal constructor(
-    factory: KPrefFactory,
-    oldPrefs: OldPrefs,
+class BehaviourPrefsImpl
+@Inject
+internal constructor(
+  factory: KPrefFactory,
+  oldPrefs: OldPrefs,
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.behaviour", factory), BehaviourPrefs {
 
-    override var biometricsEnabled: Boolean by kpref(
-        "biometrics_enabled",
-        oldPrefs.biometricsEnabled /* false */
-    )
+  override var biometricsEnabled: Boolean by
+    kpref("biometrics_enabled", oldPrefs.biometricsEnabled /* false */)
 
-    override var overlayEnabled: Boolean by kpref(
-        "overlay_enabled",
-        oldPrefs.overlayEnabled /* true */
-    )
+  override var overlayEnabled: Boolean by
+    kpref("overlay_enabled", oldPrefs.overlayEnabled /* true */)
 
-    override var overlayFullScreenSwipe: Boolean by kpref(
-        "overlay_full_screen_swipe",
-        oldPrefs.overlayFullScreenSwipe /* true */
-    )
+  override var overlayFullScreenSwipe: Boolean by
+    kpref("overlay_full_screen_swipe", oldPrefs.overlayFullScreenSwipe /* true */)
 
-    override var viewpagerSwipe: Boolean by kpref(
-        "viewpager_swipe",
-        oldPrefs.viewpagerSwipe /* true */
-    )
+  override var viewpagerSwipe: Boolean by
+    kpref("viewpager_swipe", oldPrefs.viewpagerSwipe /* true */)
 
-    override var loadMediaOnMeteredNetwork: Boolean by kpref(
-        "media_on_metered_network",
-        oldPrefs.loadMediaOnMeteredNetwork /* true */
-    )
+  override var loadMediaOnMeteredNetwork: Boolean by
+    kpref("media_on_metered_network", oldPrefs.loadMediaOnMeteredNetwork /* true */)
 
-    override var debugSettings: Boolean by kpref(
-        "debug_settings",
-        oldPrefs.debugSettings /* false */
-    )
+  override var debugSettings: Boolean by kpref("debug_settings", oldPrefs.debugSettings /* false */)
 
-    override var linksInDefaultApp: Boolean by kpref(
-        "link_in_default_app",
-        oldPrefs.linksInDefaultApp /* false */
-    )
+  override var linksInDefaultApp: Boolean by
+    kpref("link_in_default_app", oldPrefs.linksInDefaultApp /* false */)
 
-    override var blackMediaBg: Boolean by kpref("black_media_bg", oldPrefs.blackMediaBg /* false */)
+  override var blackMediaBg: Boolean by kpref("black_media_bg", oldPrefs.blackMediaBg /* false */)
 
-    override var autoRefreshFeed: Boolean by kpref(
-        "auto_refresh_feed",
-        oldPrefs.autoRefreshFeed /* false */
-    )
+  override var autoRefreshFeed: Boolean by
+    kpref("auto_refresh_feed", oldPrefs.autoRefreshFeed /* false */)
 
-    override var showCreateFab: Boolean by kpref(
-        "show_create_fab",
-        oldPrefs.showCreateFab /* true */
-    )
+  override var showCreateFab: Boolean by kpref("show_create_fab", oldPrefs.showCreateFab /* true */)
 
-    override var fullSizeImage: Boolean by kpref(
-        "full_size_image",
-        oldPrefs.fullSizeImage /* false */
-    )
+  override var fullSizeImage: Boolean by
+    kpref("full_size_image", oldPrefs.fullSizeImage /* false */)
 
-    override var autoExpandTextBox: Boolean by kpref("auto_expand_text_box", true)
+  override var autoExpandTextBox: Boolean by kpref("auto_expand_text_box", true)
 }

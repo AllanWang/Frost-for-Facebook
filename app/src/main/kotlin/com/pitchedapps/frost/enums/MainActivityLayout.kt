@@ -19,29 +19,17 @@ package com.pitchedapps.frost.enums
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.injectors.ThemeProvider
 
-/**
- * Created by Allan Wang on 2017-08-19.
- */
+/** Created by Allan Wang on 2017-08-19. */
 enum class MainActivityLayout(
-    val titleRes: Int,
-    val backgroundColor: (ThemeProvider) -> Int,
-    val iconColor: (ThemeProvider) -> Int
+  val titleRes: Int,
+  val backgroundColor: (ThemeProvider) -> Int,
+  val iconColor: (ThemeProvider) -> Int
 ) {
+  TOP_BAR(R.string.top_bar, { it.headerColor }, { it.iconColor }),
+  BOTTOM_BAR(R.string.bottom_bar, { it.bgColor }, { it.textColor });
 
-    TOP_BAR(
-        R.string.top_bar,
-        { it.headerColor },
-        { it.iconColor }
-    ),
-
-    BOTTOM_BAR(
-        R.string.bottom_bar,
-        { it.bgColor },
-        { it.textColor }
-    );
-
-    companion object {
-        val values = values() // save one instance
-        operator fun invoke(index: Int) = values.getOrElse(index) { TOP_BAR }
-    }
+  companion object {
+    val values = values() // save one instance
+    operator fun invoke(index: Int) = values.getOrElse(index) { TOP_BAR }
+  }
 }

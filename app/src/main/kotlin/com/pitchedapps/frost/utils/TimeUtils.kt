@@ -26,35 +26,26 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Converts time in millis to readable date,
- * eg Apr 24 at 7:32 PM
+ * Converts time in millis to readable date, eg Apr 24 at 7:32 PM
  *
- * With regards to date modifications in calendars,
- * it appears to respect calendar rules;
- * see https://stackoverflow.com/a/43227817/4407321
+ * With regards to date modifications in calendars, it appears to respect calendar rules; see
+ * https://stackoverflow.com/a/43227817/4407321
  */
 fun Long.toReadableTime(context: Context): String {
-    val cal = Calendar.getInstance()
-    cal.timeInMillis = this
-    val timeFormatter = SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
-    val time = timeFormatter.format(Date(this))
-    val day = when {
-        cal >= Calendar.getInstance().apply {
-            add(
-                Calendar.DAY_OF_MONTH,
-                -1
-            )
-        } -> context.string(R.string.today)
-        cal >= Calendar.getInstance().apply {
-            add(
-                Calendar.DAY_OF_MONTH,
-                -2
-            )
-        } -> context.string(R.string.yesterday)
-        else -> {
-            val dayFormatter = SimpleDateFormat("MMM dd", Locale.getDefault())
-            dayFormatter.format(Date(this))
-        }
+  val cal = Calendar.getInstance()
+  cal.timeInMillis = this
+  val timeFormatter = SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
+  val time = timeFormatter.format(Date(this))
+  val day =
+    when {
+      cal >= Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) } ->
+        context.string(R.string.today)
+      cal >= Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -2) } ->
+        context.string(R.string.yesterday)
+      else -> {
+        val dayFormatter = SimpleDateFormat("MMM dd", Locale.getDefault())
+        dayFormatter.format(Date(this))
+      }
     }
-    return context.getString(R.string.time_template, day, time)
+  return context.getString(R.string.time_template, day, time)
 }

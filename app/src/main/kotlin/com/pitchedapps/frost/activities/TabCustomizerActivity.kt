@@ -43,119 +43,116 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.iitems.TabIItem
 import com.pitchedapps.frost.utils.L
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.launch
 import java.util.Collections
 import javax.inject.Inject
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
 
-/**
- * Created by Allan Wang on 26/11/17.
- */
+/** Created by Allan Wang on 26/11/17. */
 @AndroidEntryPoint
 class TabCustomizerActivity : BaseActivity() {
 
-    @Inject
-    lateinit var genericDao: GenericDao
+  @Inject lateinit var genericDao: GenericDao
 
-    private val adapter = FastItemAdapter<TabIItem>()
+  private val adapter = FastItemAdapter<TabIItem>()
 
-    private val wobble = lazyContext { AnimationUtils.loadAnimation(it, R.anim.rotate_delta) }
+  private val wobble = lazyContext { AnimationUtils.loadAnimation(it, R.anim.rotate_delta) }
 
-    private lateinit var binding: ActivityTabCustomizerBinding
+  private lateinit var binding: ActivityTabCustomizerBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityTabCustomizerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.init()
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    binding = ActivityTabCustomizerBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    binding.init()
+  }
+
+  fun ActivityTabCustomizerBinding.init() {
+    pseudoToolbar.setBackgroundColor(themeProvider.headerColor)
+
+    tabRecycler.layoutManager =
+      GridLayoutManager(this@TabCustomizerActivity, TAB_COUNT, RecyclerView.VERTICAL, false)
+    tabRecycler.adapter = adapter
+    tabRecycler.setHasFixedSize(true)
+
+    divider.setBackgroundColor(themeProvider.textColor.withAlpha(30))
+    instructions.setTextColor(themeProvider.textColor)
+
+    launch {
+      val tabs = genericDao.getTabs().toMutableList()
+      L.d { "Tabs $tabs" }
+      val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
+      remaining.removeAll(tabs)
+      tabs.addAll(remaining)
+      adapter.set(tabs.map { TabIItem(it, themeProvider) })
+
+      bindSwapper(adapter, tabRecycler)
+
+      adapter.onClickListener = { view, _, _, _ ->
+        view!!.wobble()
+        true
+      }
     }
 
-    fun ActivityTabCustomizerBinding.init() {
-        pseudoToolbar.setBackgroundColor(themeProvider.headerColor)
+    setResult(Activity.RESULT_CANCELED)
 
-        tabRecycler.layoutManager =
-            GridLayoutManager(this@TabCustomizerActivity, TAB_COUNT, RecyclerView.VERTICAL, false)
-        tabRecycler.adapter = adapter
-        tabRecycler.setHasFixedSize(true)
+    fabSave.setIcon(GoogleMaterial.Icon.gmd_check, themeProvider.iconColor)
+    fabSave.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
+    fabSave.setOnClickListener {
+      launchMain(NonCancellable) {
+        val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
+        genericDao.saveTabs(tabs)
+        setResult(Activity.RESULT_OK)
+        finish()
+      }
+    }
+    fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, themeProvider.iconColor)
+    fabCancel.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
+    fabCancel.setOnClickListener { finish() }
+    activityThemer.setFrostColors { themeWindow = true }
+  }
 
-        divider.setBackgroundColor(themeProvider.textColor.withAlpha(30))
-        instructions.setTextColor(themeProvider.textColor)
+  private fun View.wobble() = startAnimation(wobble(context))
 
-        launch {
-            val tabs = genericDao.getTabs().toMutableList()
-            L.d { "Tabs $tabs" }
-            val remaining = FbItem.values().filter { it.name[0] != '_' }.toMutableList()
-            remaining.removeAll(tabs)
-            tabs.addAll(remaining)
-            adapter.set(tabs.map { TabIItem(it, themeProvider) })
+  private fun bindSwapper(adapter: FastItemAdapter<*>, recycler: RecyclerView) {
+    val dragCallback = TabDragCallback(SimpleDragCallback.ALL, swapper(adapter))
+    ItemTouchHelper(dragCallback).attachToRecyclerView(recycler)
+  }
 
-            bindSwapper(adapter, tabRecycler)
+  private fun swapper(adapter: FastItemAdapter<*>) =
+    object : ItemTouchCallback {
+      override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
+        Collections.swap(adapter.adapterItems, oldPosition, newPosition)
+        adapter.notifyAdapterDataSetChanged()
+        return true
+      }
 
-            adapter.onClickListener = { view, _, _, _ -> view!!.wobble(); true }
-        }
-
-        setResult(Activity.RESULT_CANCELED)
-
-        fabSave.setIcon(GoogleMaterial.Icon.gmd_check, themeProvider.iconColor)
-        fabSave.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
-        fabSave.setOnClickListener {
-            launchMain(NonCancellable) {
-                val tabs = adapter.adapterItems.subList(0, TAB_COUNT).map(TabIItem::item)
-                genericDao.saveTabs(tabs)
-                setResult(Activity.RESULT_OK)
-                finish()
-            }
-        }
-        fabCancel.setIcon(GoogleMaterial.Icon.gmd_close, themeProvider.iconColor)
-        fabCancel.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
-        fabCancel.setOnClickListener { finish() }
-        activityThemer.setFrostColors {
-            themeWindow = true
-        }
+      override fun itemTouchDropped(oldPosition: Int, newPosition: Int) = Unit
     }
 
-    private fun View.wobble() = startAnimation(wobble(context))
+  private class TabDragCallback(directions: Int, itemTouchCallback: ItemTouchCallback) :
+    SimpleDragCallback(directions, itemTouchCallback) {
 
-    private fun bindSwapper(adapter: FastItemAdapter<*>, recycler: RecyclerView) {
-        val dragCallback = TabDragCallback(SimpleDragCallback.ALL, swapper(adapter))
-        ItemTouchHelper(dragCallback).attachToRecyclerView(recycler)
-    }
+    private var draggingView: TabIItem.ViewHolder? = null
 
-    private fun swapper(adapter: FastItemAdapter<*>) = object : ItemTouchCallback {
-        override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-            Collections.swap(adapter.adapterItems, oldPosition, newPosition)
-            adapter.notifyAdapterDataSetChanged()
-            return true
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+      super.onSelectedChanged(viewHolder, actionState)
+      when (actionState) {
+        ItemTouchHelper.ACTION_STATE_DRAG -> {
+          (viewHolder as? TabIItem.ViewHolder)?.apply {
+            draggingView = this
+            itemView.animate().scaleXY(1.3f)
+            text.animate().alpha(0f)
+          }
         }
-
-        override fun itemTouchDropped(oldPosition: Int, newPosition: Int) = Unit
-    }
-
-    private class TabDragCallback(
-        directions: Int,
-        itemTouchCallback: ItemTouchCallback
-    ) : SimpleDragCallback(directions, itemTouchCallback) {
-
-        private var draggingView: TabIItem.ViewHolder? = null
-
-        override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-            super.onSelectedChanged(viewHolder, actionState)
-            when (actionState) {
-                ItemTouchHelper.ACTION_STATE_DRAG -> {
-                    (viewHolder as? TabIItem.ViewHolder)?.apply {
-                        draggingView = this
-                        itemView.animate().scaleXY(1.3f)
-                        text.animate().alpha(0f)
-                    }
-                }
-                ItemTouchHelper.ACTION_STATE_IDLE -> {
-                    draggingView?.apply {
-                        itemView.animate().scaleXY(1f)
-                        text.animate().alpha(1f)
-                    }
-                    draggingView = null
-                }
-            }
+        ItemTouchHelper.ACTION_STATE_IDLE -> {
+          draggingView?.apply {
+            itemView.animate().scaleXY(1f)
+            text.animate().alpha(1f)
+          }
+          draggingView = null
         }
+      }
     }
+  }
 }

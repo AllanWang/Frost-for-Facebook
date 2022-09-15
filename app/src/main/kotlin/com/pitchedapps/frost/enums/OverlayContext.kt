@@ -30,51 +30,45 @@ import com.pitchedapps.frost.views.FrostWebView
 /**
  * Created by Allan Wang on 2017-09-16.
  *
- * Options for [WebOverlayActivityBase] to give more info as to what kind of
- * overlay is present.
+ * Options for [WebOverlayActivityBase] to give more info as to what kind of overlay is present.
  *
  * For now, this is able to add new menu options upon first load
  */
 enum class OverlayContext(private val menuItem: FrostMenuItem?) : EnumBundle<OverlayContext> {
+  NOTIFICATION(FrostMenuItem(R.id.action_notification, FbItem.NOTIFICATIONS)),
+  MESSAGE(FrostMenuItem(R.id.action_messages, FbItem.MESSAGES));
 
-    NOTIFICATION(FrostMenuItem(R.id.action_notification, FbItem.NOTIFICATIONS)),
-    MESSAGE(FrostMenuItem(R.id.action_messages, FbItem.MESSAGES));
+  /** Inject the [menuItem] in the order that they are given at the front of the menu */
+  fun onMenuCreate(context: Context, menu: Menu) {
+    menuItem?.addToMenu(context, menu, 0)
+  }
+
+  override val bundleContract: EnumBundleCompanion<OverlayContext>
+    get() = Companion
+
+  companion object : EnumCompanion<OverlayContext>("frost_arg_overlay_context", values()) {
 
     /**
-     * Inject the [menuItem] in the order that they are given at the front of the menu
+     * Execute selection call for an item by id Returns [true] if selection was consumed, [false]
+     * otherwise
      */
-    fun onMenuCreate(context: Context, menu: Menu) {
-        menuItem?.addToMenu(context, menu, 0)
+    fun onOptionsItemSelected(web: FrostWebView, id: Int): Boolean {
+      val item = values.firstOrNull { id == it.menuItem?.id }?.menuItem ?: return false
+      web.loadUrl(item.fbItem.url, true)
+      return true
     }
-
-    override val bundleContract: EnumBundleCompanion<OverlayContext>
-        get() = Companion
-
-    companion object : EnumCompanion<OverlayContext>("frost_arg_overlay_context", values()) {
-
-        /**
-         * Execute selection call for an item by id
-         * Returns [true] if selection was consumed, [false] otherwise
-         */
-        fun onOptionsItemSelected(web: FrostWebView, id: Int): Boolean {
-            val item = values.firstOrNull { id == it.menuItem?.id }?.menuItem ?: return false
-            web.loadUrl(item.fbItem.url, true)
-            return true
-        }
-    }
+  }
 }
 
-/**
- * Frame for an injectable menu item
- */
+/** Frame for an injectable menu item */
 class FrostMenuItem(
-    val id: Int,
-    val fbItem: FbItem,
-    val showAsAction: Int = MenuItem.SHOW_AS_ACTION_IF_ROOM
+  val id: Int,
+  val fbItem: FbItem,
+  val showAsAction: Int = MenuItem.SHOW_AS_ACTION_IF_ROOM
 ) {
-    fun addToMenu(context: Context, menu: Menu, index: Int) {
-        val item = menu.add(Menu.NONE, id, index, fbItem.titleId)
-        item.icon = fbItem.icon.toDrawable(context, 18)
-        item.setShowAsAction(showAsAction)
-    }
+  fun addToMenu(context: Context, menu: Menu, index: Int) {
+    val item = menu.add(Menu.NONE, id, index, fbItem.titleId)
+    item.icon = fbItem.icon.toDrawable(context, 18)
+    item.setShowAsAction(showAsAction)
+  }
 }

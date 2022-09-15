@@ -39,76 +39,75 @@ import com.pitchedapps.frost.views.FrostWebView
 /**
  * Created by Allan Wang on 2017-08-15.
  *
- * Due to the nature of facebook href's, many links
- * cannot be resolved on a new window and must instead
- * by loaded in the current page
- * This helper method will collect all known cases and launch the overlay accordingly
- * Returns [true] (default) if action is consumed, [false] otherwise
+ * Due to the nature of facebook href's, many links cannot be resolved on a new window and must
+ * instead by loaded in the current page This helper method will collect all known cases and launch
+ * the overlay accordingly Returns [true] (default) if action is consumed, [false] otherwise
  *
- * Note that this is not always called on the main thread!
- * UI related methods should always be posted or they may not be properly executed.
+ * Note that this is not always called on the main thread! UI related methods should always be
+ * posted or they may not be properly executed.
  *
- * If the request already comes from an instance of [WebOverlayActivity], we will then judge
- * whether the user agent string should be changed. All propagated results will return false,
- * as we have no need of sending a new intent to the same activity
+ * If the request already comes from an instance of [WebOverlayActivity], we will then judge whether
+ * the user agent string should be changed. All propagated results will return false, as we have no
+ * need of sending a new intent to the same activity
  */
 fun FrostWebView.requestWebOverlay(url: String): Boolean {
-    @Suppress("NAME_SHADOWING") val url = url.formattedFbUrl
-    L.v { "Request web overlay: $url" }
-    val context = context // finalize reference
-    if (url.isVideoUrl && context is VideoViewHolder) {
-        L.d { "Found video through overlay" }
-        context.runOnUiThread { context.showVideo(url) }
-        return true
-    }
-    if (url.isIndirectImageUrl) {
-        L.d { "Found indirect fb image" }
-        context.launchImageActivity(url, cookie = fbCookie.webCookie)
-        return true
-    }
-    if (url.isImageUrl) {
-        L.d { "Found fb image" }
-        context.launchImageActivity(url)
-        return true
-    }
-    if (!url.isIndependent) {
-        L.d { "Forbid overlay switch" }
-        return false
-    }
-    if (!prefs.overlayEnabled) return false
-    if (context is WebOverlayActivityBase) {
-        val shouldUseDesktop = url.isFacebookUrl || url.isMessengerUrl
-        // already overlay; manage user agent
-        if (userAgentString != USER_AGENT_DESKTOP_CONST && shouldUseDesktop) {
-            L._i { "Switch to desktop agent overlay" }
-            context.launchWebOverlayDesktop(url, fbCookie, prefs)
-            return true
-        }
-        if (userAgentString == USER_AGENT_DESKTOP_CONST && !shouldUseDesktop) {
-            L._i { "Switch from desktop agent" }
-            context.launchWebOverlayMobile(url, fbCookie, prefs)
-            return true
-        }
-        L._i { "return false switch" }
-        return false
-    }
-    L.v { "Request web overlay passed" }
-    context.launchWebOverlay(url, fbCookie, prefs)
+  @Suppress("NAME_SHADOWING") val url = url.formattedFbUrl
+  L.v { "Request web overlay: $url" }
+  val context = context // finalize reference
+  if (url.isVideoUrl && context is VideoViewHolder) {
+    L.d { "Found video through overlay" }
+    context.runOnUiThread { context.showVideo(url) }
     return true
+  }
+  if (url.isIndirectImageUrl) {
+    L.d { "Found indirect fb image" }
+    context.launchImageActivity(url, cookie = fbCookie.webCookie)
+    return true
+  }
+  if (url.isImageUrl) {
+    L.d { "Found fb image" }
+    context.launchImageActivity(url)
+    return true
+  }
+  if (!url.isIndependent) {
+    L.d { "Forbid overlay switch" }
+    return false
+  }
+  if (!prefs.overlayEnabled) return false
+  if (context is WebOverlayActivityBase) {
+    val shouldUseDesktop = url.isFacebookUrl || url.isMessengerUrl
+    // already overlay; manage user agent
+    if (userAgentString != USER_AGENT_DESKTOP_CONST && shouldUseDesktop) {
+      L._i { "Switch to desktop agent overlay" }
+      context.launchWebOverlayDesktop(url, fbCookie, prefs)
+      return true
+    }
+    if (userAgentString == USER_AGENT_DESKTOP_CONST && !shouldUseDesktop) {
+      L._i { "Switch from desktop agent" }
+      context.launchWebOverlayMobile(url, fbCookie, prefs)
+      return true
+    }
+    L._i { "return false switch" }
+    return false
+  }
+  L.v { "Request web overlay passed" }
+  context.launchWebOverlay(url, fbCookie, prefs)
+  return true
 }
 
-/**
- * If the url contains any one of the whitelist segments, switch to the chat overlay
- */
+/** If the url contains any one of the whitelist segments, switch to the chat overlay */
 val messageWhitelist: Set<String> =
-    setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
-        .mapTo(mutableSetOf(), FbItem::url)
+  setOf(FbItem.MESSAGES, FbItem.CHAT, FbItem.FEED_MOST_RECENT, FbItem.FEED_TOP_STORIES)
+    .mapTo(mutableSetOf(), FbItem::url)
 
-@Deprecated(message = "Should not be used in production as we only support one user agent at a time.")
+@Deprecated(
+  message = "Should not be used in production as we only support one user agent at a time."
+)
 val String.shouldUseDesktopAgent: Boolean
-    get() = when {
-        contains("story.php") -> false // do not use desktop for comment section
-        contains("/events/") -> false // do not use for events (namely the map)
-        contains("/messages") -> true // must use for messages
-        else -> false // default to normal user agent
+  get() =
+    when {
+      contains("story.php") -> false // do not use desktop for comment section
+      contains("/events/") -> false // do not use for events (namely the map)
+      contains("/messages") -> true // must use for messages
+      else -> false // default to normal user agent
     }

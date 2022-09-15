@@ -43,100 +43,91 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.isFacebookUrl
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
-/**
- * Created by Allan Wang on 2017-05-29.
- */
+/** Created by Allan Wang on 2017-05-29. */
 @AndroidEntryPoint
-class LoginWebView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr) {
+class LoginWebView
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+  WebView(context, attrs, defStyleAttr) {
 
-    @Inject
-    lateinit var fbCookie: FbCookie
+  @Inject lateinit var fbCookie: FbCookie
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
-    private lateinit var progressCallback: (Int) -> Unit
+  private val completable: CompletableDeferred<CookieEntity> = CompletableDeferred()
+  private lateinit var progressCallback: (Int) -> Unit
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebview() {
-        settings.javaScriptEnabled = true
-        settings.userAgentString = USER_AGENT
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webViewClient = LoginClient()
-        webChromeClient = LoginChromeClient()
+  @SuppressLint("SetJavaScriptEnabled")
+  private fun setupWebview() {
+    settings.javaScriptEnabled = true
+    settings.userAgentString = USER_AGENT
+    setLayerType(View.LAYER_TYPE_HARDWARE, null)
+    webViewClient = LoginClient()
+    webChromeClient = LoginChromeClient()
+  }
+
+  suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieEntity> =
+    coroutineScope {
+      this@LoginWebView.progressCallback = progressCallback
+      L.d { "Begin loading login" }
+      launchMain {
+        fbCookie.reset()
+        setupWebview()
+        loadUrl(FB_LOGIN_URL)
+      }
+      completable
     }
 
-    suspend fun loadLogin(progressCallback: (Int) -> Unit): CompletableDeferred<CookieEntity> =
-        coroutineScope {
-            this@LoginWebView.progressCallback = progressCallback
-            L.d { "Begin loading login" }
-            launchMain {
-                fbCookie.reset()
-                setupWebview()
-                loadUrl(FB_LOGIN_URL)
-            }
-            completable
-        }
+  private inner class LoginClient : BaseWebViewClient() {
 
-    private inner class LoginClient : BaseWebViewClient() {
-
-        override fun onPageFinished(view: WebView, url: String?) {
-            super.onPageFinished(view, url)
-            val cookie = checkForLogin(url)
-            if (cookie != null)
-                completable.complete(cookie)
-            if (!view.isVisible) view.fadeIn()
-        }
-
-        fun checkForLogin(url: String?): CookieEntity? {
-            if (!url.isFacebookUrl) return null
-            val cookie = CookieManager.getInstance().getCookie(url) ?: return null
-            L.d { "Checking cookie for login" }
-            val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return null
-            return CookieEntity(id, null, cookie)
-        }
-
-        override fun onPageCommitVisible(view: WebView, url: String?) {
-            super.onPageCommitVisible(view, url)
-            L.d { "Login page commit visible" }
-            view.setBackgroundColor(Color.TRANSPARENT)
-            if (url.isFacebookUrl)
-                view.jsInject(
-                    CssHider.CORE,
-                    themeProvider.injector(ThemeCategory.FACEBOOK),
-                    prefs = prefs
-                )
-        }
-
-        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            // For now, we will ignore all attempts to launch external apps during login
-            if (request.url == null || request.url.scheme == "intent" || request.url.scheme == "android-app")
-                return true
-            return super.shouldOverrideUrlLoading(view, request)
-        }
+    override fun onPageFinished(view: WebView, url: String?) {
+      super.onPageFinished(view, url)
+      val cookie = checkForLogin(url)
+      if (cookie != null) completable.complete(cookie)
+      if (!view.isVisible) view.fadeIn()
     }
 
-    private inner class LoginChromeClient : WebChromeClient() {
-        override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-            L.v { "Login Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
-            return true
-        }
-
-        override fun onProgressChanged(view: WebView, newProgress: Int) {
-            super.onProgressChanged(view, newProgress)
-            progressCallback(newProgress)
-        }
+    fun checkForLogin(url: String?): CookieEntity? {
+      if (!url.isFacebookUrl) return null
+      val cookie = CookieManager.getInstance().getCookie(url) ?: return null
+      L.d { "Checking cookie for login" }
+      val id = FB_USER_MATCHER.find(cookie)[1]?.toLong() ?: return null
+      return CookieEntity(id, null, cookie)
     }
+
+    override fun onPageCommitVisible(view: WebView, url: String?) {
+      super.onPageCommitVisible(view, url)
+      L.d { "Login page commit visible" }
+      view.setBackgroundColor(Color.TRANSPARENT)
+      if (url.isFacebookUrl)
+        view.jsInject(CssHider.CORE, themeProvider.injector(ThemeCategory.FACEBOOK), prefs = prefs)
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+      // For now, we will ignore all attempts to launch external apps during login
+      if (
+        request.url == null || request.url.scheme == "intent" || request.url.scheme == "android-app"
+      )
+        return true
+      return super.shouldOverrideUrlLoading(view, request)
+    }
+  }
+
+  private inner class LoginChromeClient : WebChromeClient() {
+    override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+      L.v { "Login Console ${consoleMessage.lineNumber()}: ${consoleMessage.message()}" }
+      return true
+    }
+
+    override fun onProgressChanged(view: WebView, newProgress: Int) {
+      super.onProgressChanged(view, newProgress)
+      progressCallback(newProgress)
+    }
+  }
 }

@@ -35,67 +35,67 @@ import com.pitchedapps.frost.facebook.USER_AGENT
 /**
  * Created by Allan Wang on 2017-08-04.
  *
- * With reference to <a href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack Overflow</a>
+ * With reference to <a
+ * href="https://stackoverflow.com/questions/33434532/android-webview-download-files-like-browsers-do">Stack
+ * Overflow</a>
  */
 fun Context.frostDownload(
-    cookie: String?,
-    url: String?,
-    userAgent: String = USER_AGENT,
-    contentDisposition: String? = null,
-    mimeType: String? = null,
-    contentLength: Long = 0L
+  cookie: String?,
+  url: String?,
+  userAgent: String = USER_AGENT,
+  contentDisposition: String? = null,
+  mimeType: String? = null,
+  contentLength: Long = 0L
 ) {
-    url ?: return
-    frostDownload(cookie, Uri.parse(url), userAgent, contentDisposition, mimeType, contentLength)
+  url ?: return
+  frostDownload(cookie, Uri.parse(url), userAgent, contentDisposition, mimeType, contentLength)
 }
 
 fun Context.frostDownload(
-    cookie: String?,
-    uri: Uri?,
-    userAgent: String = USER_AGENT,
-    contentDisposition: String? = null,
-    mimeType: String? = null,
-    contentLength: Long = 0L
+  cookie: String?,
+  uri: Uri?,
+  userAgent: String = USER_AGENT,
+  contentDisposition: String? = null,
+  mimeType: String? = null,
+  contentLength: Long = 0L
 ) {
-    uri ?: return
-    L.d { "Received download request" }
-    if (uri.scheme != "http" && uri.scheme != "https") {
-        toast(R.string.error_invalid_download)
-        return L.e { "Invalid download $uri" }
+  uri ?: return
+  L.d { "Received download request" }
+  if (uri.scheme != "http" && uri.scheme != "https") {
+    toast(R.string.error_invalid_download)
+    return L.e { "Invalid download $uri" }
+  }
+  val dm = getSystemService<DownloadManager>()
+  if (dm == null || !isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
+    materialDialog {
+      title(R.string.no_download_manager)
+      message(R.string.no_download_manager_desc)
+      positiveButton(R.string.kau_yes) { showAppInfo(DOWNLOAD_MANAGER_PACKAGE) }
+      negativeButton(R.string.kau_no)
     }
-    val dm = getSystemService<DownloadManager>()
-    if (dm == null || !isAppEnabled(DOWNLOAD_MANAGER_PACKAGE)) {
-        materialDialog {
-            title(R.string.no_download_manager)
-            message(R.string.no_download_manager_desc)
-            positiveButton(R.string.kau_yes) {
-                showAppInfo(DOWNLOAD_MANAGER_PACKAGE)
-            }
-            negativeButton(R.string.kau_no)
-        }
-        return
+    return
+  }
+  kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
+    if (!granted) return@kauRequestPermissions
+    val request = DownloadManager.Request(uri)
+    request.setMimeType(mimeType)
+    val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
+    if (cookie != null) {
+      request.addRequestHeader("Cookie", cookie)
     }
-    kauRequestPermissions(PERMISSION_WRITE_EXTERNAL_STORAGE) { granted, _ ->
-        if (!granted) return@kauRequestPermissions
-        val request = DownloadManager.Request(uri)
-        request.setMimeType(mimeType)
-        val title = URLUtil.guessFileName(uri.toString(), contentDisposition, mimeType)
-        if (cookie != null) {
-            request.addRequestHeader("Cookie", cookie)
-        }
-        request.addRequestHeader("User-Agent", userAgent)
-        request.setDescription(string(R.string.downloading))
-        request.setTitle(title)
-        request.allowScanningByMediaScanner()
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Frost/$title")
-        try {
-            dm.enqueue(request)
-        } catch (e: Exception) {
-            toast(R.string.error_generic)
-            L.e(e) { "Download" }
-        }
+    request.addRequestHeader("User-Agent", userAgent)
+    request.setDescription(string(R.string.downloading))
+    request.setTitle(title)
+    request.allowScanningByMediaScanner()
+    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Frost/$title")
+    try {
+      dm.enqueue(request)
+    } catch (e: Exception) {
+      toast(R.string.error_generic)
+      L.e(e) { "Download" }
     }
+  }
 }
 
 private const val DOWNLOAD_MANAGER_PACKAGE = "com.android.providers.downloads"

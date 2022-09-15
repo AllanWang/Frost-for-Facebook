@@ -23,34 +23,30 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.REQUEST_RESTART_APPLICATION
 
-/**
- * Created by Allan Wang on 2017-06-29.
- */
+/** Created by Allan Wang on 2017-06-29. */
 fun SettingsActivity.getExperimentalPrefs(): KPrefAdapterBuilder.() -> Unit = {
+  plainText(R.string.disclaimer) { descRes = R.string.experimental_disclaimer_info }
 
-    plainText(R.string.disclaimer) {
-        descRes = R.string.experimental_disclaimer_info
+  // Experimental content starts here ------------------
+
+  // Experimental content ends here --------------------
+
+  checkbox(
+    R.string.verbose_logging,
+    prefs::verboseLogging,
+    {
+      prefs.verboseLogging = it
+      KL.shouldLog = { it != Log.VERBOSE }
     }
+  ) {
+    descRes = R.string.verbose_logging_desc
+  }
 
-    // Experimental content starts here ------------------
-
-    // Experimental content ends here --------------------
-
-    checkbox(
-        R.string.verbose_logging, prefs::verboseLogging,
-        {
-            prefs.verboseLogging = it
-            KL.shouldLog = { it != Log.VERBOSE }
-        }
-    ) {
-        descRes = R.string.verbose_logging_desc
+  plainText(R.string.restart_frost) {
+    descRes = R.string.restart_frost_desc
+    onClick = {
+      setFrostResult(REQUEST_RESTART_APPLICATION)
+      finish()
     }
-
-    plainText(R.string.restart_frost) {
-        descRes = R.string.restart_frost_desc
-        onClick = {
-            setFrostResult(REQUEST_RESTART_APPLICATION)
-            finish()
-        }
-    }
+  }
 }

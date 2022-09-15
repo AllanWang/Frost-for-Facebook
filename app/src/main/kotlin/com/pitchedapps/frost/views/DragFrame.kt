@@ -26,70 +26,69 @@ import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.customview.widget.ViewDragHelper
 
-class DragFrame @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+class DragFrame
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+  FrameLayout(context, attrs, defStyleAttr) {
 
-    var dragHelper: ViewDragHelper? = null
-    var viewToIgnore: View? = null
-    private val rect = Rect()
-    private val location = IntArray(2)
-    private var shouldIgnore: Boolean = false
+  var dragHelper: ViewDragHelper? = null
+  var viewToIgnore: View? = null
+  private val rect = Rect()
+  private val location = IntArray(2)
+  private var shouldIgnore: Boolean = false
 
-    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            shouldIgnore = shouldIgnore(event)
-        }
-        if (shouldIgnore) {
-            return false
-        }
-        return try {
-            dragHelper?.shouldInterceptTouchEvent(event) ?: false
-        } catch (e: Exception) {
-            false
-        }
+  override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+      shouldIgnore = shouldIgnore(event)
     }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            shouldIgnore = shouldIgnore(event)
-        }
-        if (shouldIgnore) {
-            return false
-        }
-        try {
-            dragHelper?.processTouchEvent(event) ?: return false
-        } catch (e: Exception) {
-            return false
-        }
-        return true
+    if (shouldIgnore) {
+      return false
     }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-            shouldIgnore = shouldIgnore(event)
-        }
-        if (shouldIgnore) {
-            return false
-        }
-        return super.dispatchTouchEvent(event)
+    return try {
+      dragHelper?.shouldInterceptTouchEvent(event) ?: false
+    } catch (e: Exception) {
+      false
     }
+  }
 
-    private fun shouldIgnore(event: MotionEvent): Boolean {
-        val v = viewToIgnore ?: return false
-        v.getDrawingRect(rect)
-        v.getLocationOnScreen(location)
-        rect.offset(location[0], location[1])
-        return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+  @SuppressLint("ClickableViewAccessibility")
+  override fun onTouchEvent(event: MotionEvent): Boolean {
+    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+      shouldIgnore = shouldIgnore(event)
     }
+    if (shouldIgnore) {
+      return false
+    }
+    try {
+      dragHelper?.processTouchEvent(event) ?: return false
+    } catch (e: Exception) {
+      return false
+    }
+    return true
+  }
 
-    override fun computeScroll() {
-        super.computeScroll()
-        if (dragHelper?.continueSettling(true) == true) {
-            ViewCompat.postInvalidateOnAnimation(this)
-        }
+  override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+      shouldIgnore = shouldIgnore(event)
     }
+    if (shouldIgnore) {
+      return false
+    }
+    return super.dispatchTouchEvent(event)
+  }
+
+  private fun shouldIgnore(event: MotionEvent): Boolean {
+    val v = viewToIgnore ?: return false
+    v.getDrawingRect(rect)
+    v.getLocationOnScreen(location)
+    rect.offset(location[0], location[1])
+    return rect.contains(event.rawX.toInt(), event.rawY.toInt())
+  }
+
+  override fun computeScroll() {
+    super.computeScroll()
+    if (dragHelper?.continueSettling(true) == true) {
+      ViewCompat.postInvalidateOnAnimation(this)
+    }
+  }
 }

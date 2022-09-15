@@ -40,123 +40,114 @@ import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.frostUriFromFile
 import com.pitchedapps.frost.utils.sendFrostEmail
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.io.File
 
 /**
  * Created by Allan Wang on 2017-06-30.
  *
- * A sub pref section that is enabled through a hidden preference
- * Each category will load a page, extract the contents, remove private info, and create a report
+ * A sub pref section that is enabled through a hidden preference Each category will load a page,
+ * extract the contents, remove private info, and create a report
  */
 fun SettingsActivity.getDebugPrefs(): KPrefAdapterBuilder.() -> Unit = {
+  plainText(R.string.disclaimer) { descRes = R.string.debug_disclaimer_info }
 
-    plainText(R.string.disclaimer) {
-        descRes = R.string.debug_disclaimer_info
-    }
+  plainText(R.string.debug_web) {
+    descRes = R.string.debug_web_desc
+    onClick = { this@getDebugPrefs.startActivityForResult<DebugActivity>(ACTIVITY_REQUEST_DEBUG) }
+  }
 
-    plainText(R.string.debug_web) {
-        descRes = R.string.debug_web_desc
-        onClick =
-            { this@getDebugPrefs.startActivityForResult<DebugActivity>(ACTIVITY_REQUEST_DEBUG) }
-    }
+  plainText(R.string.debug_parsers) {
+    descRes = R.string.debug_parsers_desc
+    onClick = {
+      val parsers = arrayOf(NotifParser, MessageParser, SearchParser)
 
-    plainText(R.string.debug_parsers) {
-        descRes = R.string.debug_parsers_desc
-        onClick = {
+      materialDialog {
+        // noinspection CheckResult
+        listItems(items = parsers.map { string(it.nameRes) }) { dialog, position, _ ->
+          dialog.dismiss()
+          val parser = parsers[position]
+          var attempt: Job? = null
+          val loading = materialDialog {
+            message(parser.nameRes)
+            // TODO change dialog? No more progress view
+            negativeButton(R.string.kau_cancel) {
+              attempt?.cancel()
+              it.dismiss()
+            }
+            cancelOnTouchOutside(false)
+          }
 
-            val parsers = arrayOf(NotifParser, MessageParser, SearchParser)
-
-            materialDialog {
-                // noinspection CheckResult
-                listItems(items = parsers.map { string(it.nameRes) }) { dialog, position, _ ->
-                    dialog.dismiss()
-                    val parser = parsers[position]
-                    var attempt: Job? = null
-                    val loading = materialDialog {
-                        message(parser.nameRes)
-                        // TODO change dialog? No more progress view
-                        negativeButton(R.string.kau_cancel) {
-                            attempt?.cancel()
-                            it.dismiss()
-                        }
-                        cancelOnTouchOutside(false)
-                    }
-
-                    attempt = launch(Dispatchers.IO) {
-                        try {
-                            val data = parser.parse(fbCookie.webCookie)
-                            withMainContext {
-                                loading.dismiss()
-                                createEmail(parser, data?.data, prefs)
-                            }
-                        } catch (e: Exception) {
-                            createEmail(parser, "Error: ${e.message}", prefs)
-                        }
-                    }
+          attempt =
+            launch(Dispatchers.IO) {
+              try {
+                val data = parser.parse(fbCookie.webCookie)
+                withMainContext {
+                  loading.dismiss()
+                  createEmail(parser, data?.data, prefs)
                 }
+              } catch (e: Exception) {
+                createEmail(parser, "Error: ${e.message}", prefs)
+              }
             }
         }
+      }
     }
+  }
 }
 
 private fun Context.createEmail(parser: FrostParser<*>, content: Any?, prefs: Prefs) =
-    sendFrostEmail(
-        "${string(R.string.debug_report)}: ${parser::class.java.simpleName}",
-        prefs = prefs
-    ) {
-        addItem("Url", parser.url)
-        addItem("Contents", "$content")
-    }
+  sendFrostEmail(
+    "${string(R.string.debug_report)}: ${parser::class.java.simpleName}",
+    prefs = prefs
+  ) {
+    addItem("Url", parser.url)
+    addItem("Contents", "$content")
+  }
 
 private const val ZIP_NAME = "debug"
 
 fun SettingsActivity.sendDebug(url: String, html: String?) {
 
-    val downloader = OfflineWebsite(
-        url,
-        cookie = fbCookie.webCookie ?: "",
-        baseUrl = FB_URL_BASE,
-        html = html,
-        baseDir = DebugActivity.baseDir(this)
+  val downloader =
+    OfflineWebsite(
+      url,
+      cookie = fbCookie.webCookie ?: "",
+      baseUrl = FB_URL_BASE,
+      html = html,
+      baseDir = DebugActivity.baseDir(this)
     )
 
-    val job = Job()
+  val job = Job()
 
-    val md = materialDialog {
-        title(R.string.parsing_data)
-        // TODO remove dialog? No progress ui
-        negativeButton(R.string.kau_cancel) { it.dismiss() }
-        cancelOnTouchOutside(false)
-        onDismiss { job.cancel() }
+  val md = materialDialog {
+    title(R.string.parsing_data)
+    // TODO remove dialog? No progress ui
+    negativeButton(R.string.kau_cancel) { it.dismiss() }
+    cancelOnTouchOutside(false)
+    onDismiss { job.cancel() }
+  }
+
+  val progressFlow = MutableStateFlow(0)
+
+  //    progressFlow.onEach { md.setProgress(it) }.launchIn(this)
+
+  launchMain {
+    val success = downloader.loadAndZip(ZIP_NAME) { progressFlow.tryEmit(it) }
+    md.dismiss()
+    if (success) {
+      val zipUri = frostUriFromFile(File(downloader.baseDir, "$ZIP_NAME.zip"))
+      L.i { "Sending debug zip with uri $zipUri" }
+      sendFrostEmail(R.string.debug_report_email_title, prefs = prefs) {
+        addItem("Url", url)
+        addAttachment(zipUri)
+        extras = { type = "application/zip" }
+      }
+    } else {
+      toast(R.string.error_generic)
     }
-
-    val progressFlow = MutableStateFlow(0)
-
-//    progressFlow.onEach { md.setProgress(it) }.launchIn(this)
-
-    launchMain {
-        val success = downloader.loadAndZip(ZIP_NAME) {
-            progressFlow.tryEmit(it)
-        }
-        md.dismiss()
-        if (success) {
-            val zipUri = frostUriFromFile(
-                File(downloader.baseDir, "$ZIP_NAME.zip")
-            )
-            L.i { "Sending debug zip with uri $zipUri" }
-            sendFrostEmail(R.string.debug_report_email_title, prefs = prefs) {
-                addItem("Url", url)
-                addAttachment(zipUri)
-                extras = {
-                    type = "application/zip"
-                }
-            }
-        } else {
-            toast(R.string.error_generic)
-        }
-    }
+  }
 }

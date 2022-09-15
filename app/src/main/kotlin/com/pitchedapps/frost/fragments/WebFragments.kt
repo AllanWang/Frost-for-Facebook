@@ -31,34 +31,30 @@ import com.pitchedapps.frost.web.FrostWebViewClientMessenger
 /**
  * Created by Allan Wang on 27/12/17.
  *
- * Basic webfragment
- * Do not extend as this is always a fallback
+ * Basic webfragment Do not extend as this is always a fallback
  */
 class WebFragment : BaseFragment() {
 
-    override val layoutRes: Int = R.layout.view_content_web
+  override val layoutRes: Int = R.layout.view_content_web
 
-    /**
-     * Given a webview, output a client
-     */
-    fun client(web: FrostWebView) = when (baseEnum) {
-        FbItem.MESSENGER -> FrostWebViewClientMessenger(web)
-        FbItem.MENU -> FrostWebViewClientMenu(web)
-        else -> FrostWebViewClient(web)
+  /** Given a webview, output a client */
+  fun client(web: FrostWebView) =
+    when (baseEnum) {
+      FbItem.MESSENGER -> FrostWebViewClientMessenger(web)
+      FbItem.MENU -> FrostWebViewClientMenu(web)
+      else -> FrostWebViewClient(web)
     }
 
-    override fun updateFab(contract: MainFabContract) {
-        val web = core as? WebView
-        if (web == null) {
-            L.e { "Webview not found in fragment $baseEnum" }
-            return super.updateFab(contract)
-        }
-        if (baseEnum.isFeed && prefs.showCreateFab) {
-            contract.showFab(GoogleMaterial.Icon.gmd_edit) {
-                JsActions.CREATE_POST.inject(web, prefs)
-            }
-            return
-        }
-        super.updateFab(contract)
+  override fun updateFab(contract: MainFabContract) {
+    val web = core as? WebView
+    if (web == null) {
+      L.e { "Webview not found in fragment $baseEnum" }
+      return super.updateFab(contract)
     }
+    if (baseEnum.isFeed && prefs.showCreateFab) {
+      contract.showFab(GoogleMaterial.Icon.gmd_edit) { JsActions.CREATE_POST.inject(web, prefs) }
+      return
+    }
+    super.updateFab(contract)
+  }
 }

@@ -24,13 +24,15 @@ import kotlin.test.assertTrue
 
 class ThemeProviderTest {
 
-    @Test
-    fun verifyAssetsExist() {
-        ThemeCategory.values().forEach { category ->
-            Theme.values.filter { it != Theme.DEFAULT }.forEach { theme ->
-                val file = File("src/web/assets/css/${category.folder}/themes/${theme.file}").absoluteFile
-                assertTrue(file.exists(), "${theme.name} not found at ${file.path}")
-            }
+  @Test
+  fun verifyAssetsExist() {
+    ThemeCategory.values().forEach { category ->
+      Theme.values
+        .filter { it != Theme.DEFAULT }
+        .forEach { theme ->
+          val file = File("src/web/assets/css/${category.folder}/themes/${theme.file}").absoluteFile
+          assertTrue(file.exists(), "${theme.name} not found at ${file.path}")
         }
     }
+  }
 }

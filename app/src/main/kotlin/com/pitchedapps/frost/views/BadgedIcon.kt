@@ -34,68 +34,58 @@ import com.pitchedapps.frost.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-/**
- * Created by Allan Wang on 2017-06-19.
- */
+/** Created by Allan Wang on 2017-06-19. */
 @AndroidEntryPoint
-class BadgedIcon @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+class BadgedIcon
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+  ConstraintLayout(context, attrs, defStyleAttr) {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    private val binding: ViewBadgedIconBinding =
-        ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)
+  private val binding: ViewBadgedIconBinding =
+    ViewBadgedIconBinding.inflate(LayoutInflater.from(context), this, true)
 
-    init {
-        binding.init()
+  init {
+    binding.init()
+  }
+
+  private fun ViewBadgedIconBinding.init() {
+    val badgeColor =
+      prefs.mainActivityLayout.backgroundColor(themeProvider).withAlpha(255).colorToForeground(0.2f)
+    val badgeBackground =
+      GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(badgeColor, badgeColor))
+    badgeBackground.cornerRadius = 13.dpToPx.toFloat()
+    badgeText.background = badgeBackground
+    badgeText.setTextColor(prefs.mainActivityLayout.iconColor(themeProvider))
+  }
+
+  var iicon: IIcon? = null
+    set(value) {
+      field = value
+      binding.badgeImage.setImageDrawable(
+        value?.toDrawable(
+          context,
+          sizeDp = 20,
+          color = prefs.mainActivityLayout.iconColor(themeProvider)
+        )
+      )
     }
 
-    private fun ViewBadgedIconBinding.init() {
-        val badgeColor =
-            prefs.mainActivityLayout.backgroundColor(themeProvider).withAlpha(255)
-                .colorToForeground(0.2f)
-        val badgeBackground =
-            GradientDrawable(
-                GradientDrawable.Orientation.BOTTOM_TOP,
-                intArrayOf(badgeColor, badgeColor)
-            )
-        badgeBackground.cornerRadius = 13.dpToPx.toFloat()
-        badgeText.background = badgeBackground
-        badgeText.setTextColor(prefs.mainActivityLayout.iconColor(themeProvider))
+  fun setAllAlpha(alpha: Float) {
+    // badgeTextView.setTextColor(themeProvider.textColor.withAlpha(alpha.toInt()))
+    binding.badgeImage.drawable.alpha = alpha.toInt()
+  }
+
+  var badgeText: String?
+    get() = binding.badgeText.text.toString()
+    set(value) {
+      with(binding) {
+        if (badgeText.text == value) return
+        badgeText.text = value
+        if (value != null && value != "0") badgeText.visible() else badgeText.gone()
+      }
     }
-
-    var iicon: IIcon? = null
-        set(value) {
-            field = value
-            binding.badgeImage.setImageDrawable(
-                value?.toDrawable(
-                    context,
-                    sizeDp = 20,
-                    color = prefs.mainActivityLayout.iconColor(themeProvider)
-                )
-            )
-        }
-
-    fun setAllAlpha(alpha: Float) {
-        // badgeTextView.setTextColor(themeProvider.textColor.withAlpha(alpha.toInt()))
-        binding.badgeImage.drawable.alpha = alpha.toInt()
-    }
-
-    var badgeText: String?
-        get() = binding.badgeText.text.toString()
-        set(value) {
-            with(binding) {
-                if (badgeText.text == value) return
-                badgeText.text = value
-                if (value != null && value != "0") badgeText.visible()
-                else badgeText.gone()
-            }
-        }
 }

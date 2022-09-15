@@ -42,109 +42,92 @@ import com.pitchedapps.frost.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-/**
- * Created by Allan Wang on 2017-06-19.
- */
+/** Created by Allan Wang on 2017-06-19. */
 @AndroidEntryPoint
-class Keywords @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+class Keywords
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+  ConstraintLayout(context, attrs, defStyleAttr) {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    val editText: AppCompatEditText by bindView(R.id.edit_text)
-    val addIcon: ImageView by bindView(R.id.add_icon)
-    val recycler: RecyclerView by bindView(R.id.recycler)
-    val adapter = FastItemAdapter<KeywordItem>()
+  val editText: AppCompatEditText by bindView(R.id.edit_text)
+  val addIcon: ImageView by bindView(R.id.add_icon)
+  val recycler: RecyclerView by bindView(R.id.recycler)
+  val adapter = FastItemAdapter<KeywordItem>()
 
-    init {
-        inflate(context, R.layout.view_keywords, this)
-        editText.tint(themeProvider.textColor)
-        addIcon.setImageDrawable(
-            GoogleMaterial.Icon.gmd_add.keywordDrawable(
-                context,
-                themeProvider
-            )
-        )
-        addIcon.setOnClickListener {
-            if (editText.text.isNullOrEmpty()) editText.error =
-                context.string(R.string.empty_keyword)
-            else {
-                adapter.add(0, KeywordItem(editText.text.toString(), themeProvider))
-                editText.text?.clear()
-            }
+  init {
+    inflate(context, R.layout.view_keywords, this)
+    editText.tint(themeProvider.textColor)
+    addIcon.setImageDrawable(GoogleMaterial.Icon.gmd_add.keywordDrawable(context, themeProvider))
+    addIcon.setOnClickListener {
+      if (editText.text.isNullOrEmpty()) editText.error = context.string(R.string.empty_keyword)
+      else {
+        adapter.add(0, KeywordItem(editText.text.toString(), themeProvider))
+        editText.text?.clear()
+      }
+    }
+    adapter.add(prefs.notificationKeywords.map { KeywordItem(it, themeProvider) })
+    recycler.layoutManager = LinearLayoutManager(context)
+    recycler.adapter = adapter
+    adapter.addEventHook(
+      object : ClickEventHook<KeywordItem>() {
+        override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
+          (viewHolder as? KeywordItem.ViewHolder)?.delete
+
+        override fun onClick(
+          v: View,
+          position: Int,
+          fastAdapter: FastAdapter<KeywordItem>,
+          item: KeywordItem
+        ) {
+          adapter.remove(position)
         }
-        adapter.add(prefs.notificationKeywords.map { KeywordItem(it, themeProvider) })
-        recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = adapter
-        adapter.addEventHook(object : ClickEventHook<KeywordItem>() {
-            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
-                (viewHolder as? KeywordItem.ViewHolder)?.delete
+      }
+    )
+  }
 
-            override fun onClick(
-                v: View,
-                position: Int,
-                fastAdapter: FastAdapter<KeywordItem>,
-                item: KeywordItem
-            ) {
-                adapter.remove(position)
-            }
-        })
-    }
-
-    fun save() {
-        prefs.notificationKeywords = adapter.adapterItems.mapTo(mutableSetOf()) { it.keyword }
-    }
+  fun save() {
+    prefs.notificationKeywords = adapter.adapterItems.mapTo(mutableSetOf()) { it.keyword }
+  }
 }
 
 private fun IIcon.keywordDrawable(context: Context, themeProvider: ThemeProvider): Drawable =
-    toDrawable(context, 20, themeProvider.textColor)
+  toDrawable(context, 20, themeProvider.textColor)
 
-class KeywordItem(
-    val keyword: String,
-    private val themeProvider: ThemeProvider
-) : AbstractItem<KeywordItem.ViewHolder>() {
+class KeywordItem(val keyword: String, private val themeProvider: ThemeProvider) :
+  AbstractItem<KeywordItem.ViewHolder>() {
 
-    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v, themeProvider)
+  override fun getViewHolder(v: View): ViewHolder = ViewHolder(v, themeProvider)
 
-    override val layoutRes: Int
-        get() = R.layout.item_keyword
+  override val layoutRes: Int
+    get() = R.layout.item_keyword
 
-    override val type: Int
-        get() = R.id.item_keyword
+  override val type: Int
+    get() = R.id.item_keyword
 
-    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
-        super.bindView(holder, payloads)
-        holder.text.text = keyword
+  override fun bindView(holder: ViewHolder, payloads: List<Any>) {
+    super.bindView(holder, payloads)
+    holder.text.text = keyword
+  }
+
+  override fun unbindView(holder: ViewHolder) {
+    super.unbindView(holder)
+    holder.text.text = null
+  }
+
+  class ViewHolder(v: View, themeProvider: ThemeProvider) : RecyclerView.ViewHolder(v) {
+
+    val text: AppCompatTextView by bindView(R.id.keyword_text)
+    val delete: ImageView by bindView(R.id.keyword_delete)
+
+    init {
+      text.setTextColor(themeProvider.textColor)
+      delete.setImageDrawable(
+        GoogleMaterial.Icon.gmd_delete.keywordDrawable(itemView.context, themeProvider)
+      )
     }
-
-    override fun unbindView(holder: ViewHolder) {
-        super.unbindView(holder)
-        holder.text.text = null
-    }
-
-    class ViewHolder(
-        v: View,
-        themeProvider: ThemeProvider
-    ) : RecyclerView.ViewHolder(v) {
-
-        val text: AppCompatTextView by bindView(R.id.keyword_text)
-        val delete: ImageView by bindView(R.id.keyword_delete)
-
-        init {
-            text.setTextColor(themeProvider.textColor)
-            delete.setImageDrawable(
-                GoogleMaterial.Icon.gmd_delete.keywordDrawable(
-                    itemView.context,
-                    themeProvider
-                )
-            )
-        }
-    }
+  }
 }

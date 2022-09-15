@@ -22,24 +22,22 @@ import com.pitchedapps.frost.web.FrostEmitter
 import kotlinx.coroutines.flow.SharedFlow
 
 interface MainActivityContract : MainFabContract {
-    val fragmentFlow: SharedFlow<Int>
-    val fragmentEmit: FrostEmitter<Int>
+  val fragmentFlow: SharedFlow<Int>
+  val fragmentEmit: FrostEmitter<Int>
 
-    val headerFlow: SharedFlow<String>
-    val headerEmit: FrostEmitter<String>
+  val headerFlow: SharedFlow<String>
+  val headerEmit: FrostEmitter<String>
 
-    fun setTitle(res: Int)
-    fun setTitle(text: CharSequence)
+  fun setTitle(res: Int)
+  fun setTitle(text: CharSequence)
 
-    /**
-     * Available on all threads
-     */
-    fun collapseAppBar()
+  /** Available on all threads */
+  fun collapseAppBar()
 
-    fun reloadFragment(fragment: BaseFragment)
+  fun reloadFragment(fragment: BaseFragment)
 }
 
 interface MainFabContract {
-    fun showFab(iicon: IIcon, clickEvent: () -> Unit)
-    fun hideFab()
+  fun showFab(iicon: IIcon, clickEvent: () -> Unit)
+  fun hideFab()
 }

@@ -24,56 +24,45 @@ import com.pitchedapps.frost.prefs.PrefsBase
 import javax.inject.Inject
 
 interface ThemePrefs : PrefsBase {
-    var theme: Int
+  var theme: Int
 
-    var customTextColor: Int
+  var customTextColor: Int
 
-    var customAccentColor: Int
+  var customAccentColor: Int
 
-    var customBackgroundColor: Int
+  var customBackgroundColor: Int
 
-    var customHeaderColor: Int
+  var customHeaderColor: Int
 
-    var customIconColor: Int
+  var customIconColor: Int
 
-    var tintNavBar: Boolean
+  var tintNavBar: Boolean
 }
 
-class ThemePrefsImpl @Inject internal constructor(
-    factory: KPrefFactory,
-    oldPrefs: OldPrefs,
+class ThemePrefsImpl
+@Inject
+internal constructor(
+  factory: KPrefFactory,
+  oldPrefs: OldPrefs,
 ) : KPref("${BuildConfig.APPLICATION_ID}.prefs.theme", factory), ThemePrefs {
 
-    /**
-     * Note that this is purely for the pref storage. Updating themes should use
-     * ThemeProvider
-     */
-    override var theme: Int by kpref("theme", oldPrefs.theme /* 0 */)
+  /** Note that this is purely for the pref storage. Updating themes should use ThemeProvider */
+  override var theme: Int by kpref("theme", oldPrefs.theme /* 0 */)
 
-    override var customTextColor: Int by kpref(
-        "color_text",
-        oldPrefs.customTextColor /* 0xffeceff1.toInt() */
-    )
+  override var customTextColor: Int by
+    kpref("color_text", oldPrefs.customTextColor /* 0xffeceff1.toInt() */)
 
-    override var customAccentColor: Int by kpref(
-        "color_accent",
-        oldPrefs.customAccentColor /* 0xff0288d1.toInt() */
-    )
+  override var customAccentColor: Int by
+    kpref("color_accent", oldPrefs.customAccentColor /* 0xff0288d1.toInt() */)
 
-    override var customBackgroundColor: Int by kpref(
-        "color_bg",
-        oldPrefs.customBackgroundColor /* 0xff212121.toInt() */
-    )
+  override var customBackgroundColor: Int by
+    kpref("color_bg", oldPrefs.customBackgroundColor /* 0xff212121.toInt() */)
 
-    override var customHeaderColor: Int by kpref(
-        "color_header",
-        oldPrefs.customHeaderColor /* 0xff01579b.toInt() */
-    )
+  override var customHeaderColor: Int by
+    kpref("color_header", oldPrefs.customHeaderColor /* 0xff01579b.toInt() */)
 
-    override var customIconColor: Int by kpref(
-        "color_icons",
-        oldPrefs.customIconColor /* 0xffeceff1.toInt() */
-    )
+  override var customIconColor: Int by
+    kpref("color_icons", oldPrefs.customIconColor /* 0xffeceff1.toInt() */)
 
-    override var tintNavBar: Boolean by kpref("tint_nav_bar", oldPrefs.tintNavBar /* true */)
+  override var tintNavBar: Boolean by kpref("tint_nav_bar", oldPrefs.tintNavBar /* true */)
 }

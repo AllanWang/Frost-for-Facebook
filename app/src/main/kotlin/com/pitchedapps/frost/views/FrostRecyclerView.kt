@@ -29,104 +29,97 @@ import com.pitchedapps.frost.contracts.FrostContentParent
 import com.pitchedapps.frost.fragments.RecyclerContentContract
 import com.pitchedapps.frost.prefs.Prefs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
-/**
- * Created by Allan Wang on 2017-05-29.
- *
- */
+/** Created by Allan Wang on 2017-05-29. */
 @AndroidEntryPoint
-class FrostRecyclerView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr), FrostContentCore {
+class FrostRecyclerView
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+  RecyclerView(context, attrs, defStyleAttr), FrostContentCore {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    override fun reload(animate: Boolean) = reloadBase(animate)
+  override fun reload(animate: Boolean) = reloadBase(animate)
 
-    override lateinit var parent: FrostContentParent
+  override lateinit var parent: FrostContentParent
 
-    override val currentUrl: String
-        get() = parent.baseUrl
+  override val currentUrl: String
+    get() = parent.baseUrl
 
-    lateinit var recyclerContract: RecyclerContentContract
+  lateinit var recyclerContract: RecyclerContentContract
 
-    init {
-        layoutManager = LinearLayoutManager(context)
+  init {
+    layoutManager = LinearLayoutManager(context)
+  }
+
+  override fun bind(parent: FrostContentParent, container: FrostContentContainer): View {
+    this.parent = parent
+    if (container !is RecyclerContentContract)
+      throw IllegalStateException(
+        "FrostRecyclerView must bind to a container that is a RecyclerContentContract"
+      )
+    this.recyclerContract = container
+    container.bind(this)
+    return this
+  }
+
+  init {
+    isNestedScrollingEnabled = true
+  }
+
+  var onReloadClear: () -> Unit = {}
+
+  override fun reloadBase(animate: Boolean) {
+    if (prefs.animate) fadeOut(onFinish = onReloadClear)
+    scope.launch {
+      parent.refreshEmit(true)
+      recyclerContract.reload { parent.progressEmit(it) }
+      parent.progressEmit(100)
+      parent.refreshEmit(false)
+      if (prefs.animate) circularReveal()
     }
+  }
 
-    override fun bind(parent: FrostContentParent, container: FrostContentContainer): View {
-        this.parent = parent
-        if (container !is RecyclerContentContract)
-            throw IllegalStateException("FrostRecyclerView must bind to a container that is a RecyclerContentContract")
-        this.recyclerContract = container
-        container.bind(this)
-        return this
-    }
+  override fun clearHistory() {
+    // intentionally blank
+  }
 
-    init {
-        isNestedScrollingEnabled = true
-    }
+  override fun destroy() {
+    // todo see if any
+  }
 
-    var onReloadClear: () -> Unit = {}
+  override fun onBackPressed() = false
 
-    override fun reloadBase(animate: Boolean) {
-        if (prefs.animate) fadeOut(onFinish = onReloadClear)
-        scope.launch {
-            parent.refreshEmit(true)
-            recyclerContract.reload { parent.progressEmit(it) }
-            parent.progressEmit(100)
-            parent.refreshEmit(false)
-            if (prefs.animate) circularReveal()
-        }
-    }
+  /** If recycler is already at the top, refresh Otherwise scroll to top */
+  override fun onTabClicked() {
+    val firstPosition =
+      (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+    if (firstPosition == 0) reloadBase(true) else scrollToTop()
+  }
 
-    override fun clearHistory() {
-        // intentionally blank
-    }
+  private fun scrollToTop() {
+    stopScroll()
+    smoothScrollToPosition(0)
+  }
 
-    override fun destroy() {
-        // todo see if any
-    }
+  // nothing running in background; no need to listen
+  override var active: Boolean = true
 
-    override fun onBackPressed() = false
+  override fun reloadTheme() {
+    reloadThemeSelf()
+  }
 
-    /**
-     * If recycler is already at the top, refresh
-     * Otherwise scroll to top
-     */
-    override fun onTabClicked() {
-        val firstPosition =
-            (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-        if (firstPosition == 0) reloadBase(true)
-        else scrollToTop()
-    }
+  override fun reloadThemeSelf() {
+    reload(false) // todo see if there's a better solution
+  }
 
-    private fun scrollToTop() {
-        stopScroll()
-        smoothScrollToPosition(0)
-    }
+  override fun reloadTextSize() {
+    reloadTextSizeSelf()
+  }
 
-    // nothing running in background; no need to listen
-    override var active: Boolean = true
-
-    override fun reloadTheme() {
-        reloadThemeSelf()
-    }
-
-    override fun reloadThemeSelf() {
-        reload(false) // todo see if there's a better solution
-    }
-
-    override fun reloadTextSize() {
-        reloadTextSizeSelf()
-    }
-
-    override fun reloadTextSizeSelf() {
-        // todo
-    }
+  override fun reloadTextSizeSelf() {
+    // todo
+  }
 }

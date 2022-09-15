@@ -25,11 +25,9 @@ import org.junit.Test
  */
 class InjectorTest {
 
-    @Test
-    fun printAll() {
-        println("CSS Hider Injectors")
-        CssHider.values().forEach {
-            println("${it.injector.function}\n")
-        }
-    }
+  @Test
+  fun printAll() {
+    println("CSS Hider Injectors")
+    CssHider.values().forEach { println("${it.injector.function}\n") }
+  }
 }

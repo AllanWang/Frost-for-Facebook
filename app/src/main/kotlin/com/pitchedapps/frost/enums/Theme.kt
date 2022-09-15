@@ -23,95 +23,85 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.prefs.sections.ThemePrefs
 import java.util.Locale
 
-/**
- * Created by Allan Wang on 2017-06-14.
- */
+/** Created by Allan Wang on 2017-06-14. */
 const val FACEBOOK_BLUE = 0xff3b5998.toInt()
 const val BLUE_LIGHT = 0xff5d86dd.toInt()
 
 enum class Theme(
-    @StringRes val textRes: Int,
-    file: String?,
-    val textColorGetter: (ThemePrefs) -> Int,
-    val accentColorGetter: (ThemePrefs) -> Int,
-    val backgroundColorGetter: (ThemePrefs) -> Int,
-    val headerColorGetter: (ThemePrefs) -> Int,
-    val iconColorGetter: (ThemePrefs) -> Int
+  @StringRes val textRes: Int,
+  file: String?,
+  val textColorGetter: (ThemePrefs) -> Int,
+  val accentColorGetter: (ThemePrefs) -> Int,
+  val backgroundColorGetter: (ThemePrefs) -> Int,
+  val headerColorGetter: (ThemePrefs) -> Int,
+  val iconColorGetter: (ThemePrefs) -> Int
 ) {
+  DEFAULT(
+    R.string.kau_default,
+    "default",
+    { 0xde000000.toInt() },
+    { FACEBOOK_BLUE },
+    { 0xfffafafa.toInt() },
+    { FACEBOOK_BLUE },
+    { Color.WHITE }
+  ),
+  LIGHT(
+    R.string.kau_light,
+    "material_light",
+    { 0xde000000.toInt() },
+    { FACEBOOK_BLUE },
+    { 0xfffafafa.toInt() },
+    { FACEBOOK_BLUE },
+    { Color.WHITE }
+  ),
+  DARK(
+    R.string.kau_dark,
+    "material_dark",
+    { Color.WHITE },
+    { BLUE_LIGHT },
+    { 0xff303030.toInt() },
+    { 0xff2e4b86.toInt() },
+    { Color.WHITE }
+  ),
+  AMOLED(
+    R.string.kau_amoled,
+    "material_amoled",
+    { Color.WHITE },
+    { BLUE_LIGHT },
+    { Color.BLACK },
+    { Color.BLACK },
+    { Color.WHITE }
+  ),
+  GLASS(
+    R.string.kau_glass,
+    "material_glass",
+    { Color.WHITE },
+    { BLUE_LIGHT },
+    { 0x80000000.toInt() },
+    { 0xb3000000.toInt() },
+    { Color.WHITE }
+  ),
+  CUSTOM(
+    R.string.kau_custom,
+    "custom",
+    { it.customTextColor },
+    { it.customAccentColor },
+    { it.customBackgroundColor },
+    { it.customHeaderColor },
+    { it.customIconColor }
+  );
 
-    DEFAULT(
-        R.string.kau_default,
-        "default",
-        { 0xde000000.toInt() },
-        { FACEBOOK_BLUE },
-        { 0xfffafafa.toInt() },
-        { FACEBOOK_BLUE },
-        { Color.WHITE }
-    ),
+  @VisibleForTesting internal val file = file?.let { "$it.css" }
 
-    LIGHT(
-        R.string.kau_light,
-        "material_light",
-        { 0xde000000.toInt() },
-        { FACEBOOK_BLUE },
-        { 0xfffafafa.toInt() },
-        { FACEBOOK_BLUE },
-        { Color.WHITE }
-    ),
-
-    DARK(
-        R.string.kau_dark,
-        "material_dark",
-        { Color.WHITE },
-        { BLUE_LIGHT },
-        { 0xff303030.toInt() },
-        { 0xff2e4b86.toInt() },
-        { Color.WHITE }
-    ),
-
-    AMOLED(
-        R.string.kau_amoled,
-        "material_amoled",
-        { Color.WHITE },
-        { BLUE_LIGHT },
-        { Color.BLACK },
-        { Color.BLACK },
-        { Color.WHITE }
-    ),
-
-    GLASS(
-        R.string.kau_glass,
-        "material_glass",
-        { Color.WHITE },
-        { BLUE_LIGHT },
-        { 0x80000000.toInt() },
-        { 0xb3000000.toInt() },
-        { Color.WHITE }
-    ),
-
-    CUSTOM(
-        R.string.kau_custom,
-        "custom",
-        { it.customTextColor },
-        { it.customAccentColor },
-        { it.customBackgroundColor },
-        { it.customHeaderColor },
-        { it.customIconColor }
-    );
-
-    @VisibleForTesting
-    internal val file = file?.let { "$it.css" }
-
-    companion object {
-        val values = values() // save one instance
-        operator fun invoke(index: Int) = values[index]
-    }
+  companion object {
+    val values = values() // save one instance
+    operator fun invoke(index: Int) = values[index]
+  }
 }
 
 enum class ThemeCategory {
-    FACEBOOK, MESSENGER
-    ;
+  FACEBOOK,
+  MESSENGER;
 
-    @VisibleForTesting
-    internal val folder = name.toLowerCase(Locale.CANADA)
+  @VisibleForTesting internal val folder = name.toLowerCase(Locale.CANADA)
 }

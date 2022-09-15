@@ -23,43 +23,38 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
-/**
- * Created by Allan Wang on 2017-09-24.
- */
+/** Created by Allan Wang on 2017-09-24. */
 object FrostAdBlock : AdBlocker("adblock.txt")
 
 object FrostPglAdBlock : AdBlocker("pgl.yoyo.org.txt")
 
-/**
- * Base implementation of an AdBlocker
- * Wrap this in a singleton and initialize it to use it
- */
+/** Base implementation of an AdBlocker Wrap this in a singleton and initialize it to use it */
 open class AdBlocker(val assetPath: String) {
 
-    val data: MutableSet<String> = mutableSetOf()
+  val data: MutableSet<String> = mutableSetOf()
 
-    fun init(context: Context) {
-        GlobalScope.launch {
-            val content = context.assets.open(assetPath).bufferedReader().use { f ->
-                f.readLines().filter { !it.startsWith("#") }
-            }
-            data.addAll(content)
-            L.i { "Initialized adblock for $assetPath with ${data.size} hosts" }
+  fun init(context: Context) {
+    GlobalScope.launch {
+      val content =
+        context.assets.open(assetPath).bufferedReader().use { f ->
+          f.readLines().filter { !it.startsWith("#") }
         }
+      data.addAll(content)
+      L.i { "Initialized adblock for $assetPath with ${data.size} hosts" }
     }
+  }
 
-    fun isAd(url: String?): Boolean {
-        url ?: return false
-        val httpUrl = url.toHttpUrlOrNull() ?: return false
-        return isAdHost(httpUrl.host)
-    }
+  fun isAd(url: String?): Boolean {
+    url ?: return false
+    val httpUrl = url.toHttpUrlOrNull() ?: return false
+    return isAdHost(httpUrl.host)
+  }
 
-    tailrec fun isAdHost(host: String): Boolean {
-        if (TextUtils.isEmpty(host))
-            return false
-        val index = host.indexOf(".")
-        if (index < 0 || index + 1 < host.length) return false
-        if (data.contains(host)) return true
-        return isAdHost(host.substring(index + 1))
-    }
+  tailrec fun isAdHost(host: String): Boolean {
+    if (TextUtils.isEmpty(host)) return false
+    val index = host.indexOf(".")
+    if (index < 0 || index + 1 < host.length) return false
+    if (data.contains(host)) return true
+    return isAdHost(host.substring(index + 1))
+  }
 }

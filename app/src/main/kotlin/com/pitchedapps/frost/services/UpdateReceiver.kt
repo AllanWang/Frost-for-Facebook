@@ -32,12 +32,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class UpdateReceiver : BroadcastReceiver() {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
-        L.d { "Frost has updated" }
-        context.scheduleNotifications(prefs.notificationFreq) // Update notifications
-    }
+  override fun onReceive(context: Context, intent: Intent) {
+    if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED) return
+    L.d { "Frost has updated" }
+    context.scheduleNotifications(prefs.notificationFreq) // Update notifications
+  }
 }

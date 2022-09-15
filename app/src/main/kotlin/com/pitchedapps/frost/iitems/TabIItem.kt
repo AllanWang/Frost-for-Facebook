@@ -31,41 +31,33 @@ import com.pitchedapps.frost.R
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.injectors.ThemeProvider
 
-/**
- * Created by Allan Wang on 26/11/17.
- */
+/** Created by Allan Wang on 26/11/17. */
 class TabIItem(val item: FbItem, private val themeProvider: ThemeProvider) :
-    KauIItem<TabIItem.ViewHolder>(
-        R.layout.iitem_tab_preview,
-        { ViewHolder(it, themeProvider) }
-    ),
-    IDraggable {
+  KauIItem<TabIItem.ViewHolder>(R.layout.iitem_tab_preview, { ViewHolder(it, themeProvider) }),
+  IDraggable {
 
-    override val isDraggable: Boolean = true
+  override val isDraggable: Boolean = true
 
-    class ViewHolder(
-        itemView: View,
-        private val themeProvider: ThemeProvider
-    ) : FastAdapter.ViewHolder<TabIItem>(itemView) {
+  class ViewHolder(itemView: View, private val themeProvider: ThemeProvider) :
+    FastAdapter.ViewHolder<TabIItem>(itemView) {
 
-        val image: ImageView by bindView(R.id.image)
-        val text: TextView by bindView(R.id.text)
+    val image: ImageView by bindView(R.id.image)
+    val text: TextView by bindView(R.id.text)
 
-        override fun bindView(item: TabIItem, payloads: List<Any>) {
-            val isInToolbar = adapterPosition < 4
-            val color = if (isInToolbar) themeProvider.iconColor else themeProvider.textColor
-            image.setIcon(item.item.icon, 20, color)
-            if (isInToolbar)
-                text.invisible()
-            else {
-                text.visible().setText(item.item.titleId)
-                text.setTextColor(color.withAlpha(200))
-            }
-        }
-
-        override fun unbindView(item: TabIItem) {
-            image.setImageDrawable(null)
-            text.visible().text = null
-        }
+    override fun bindView(item: TabIItem, payloads: List<Any>) {
+      val isInToolbar = adapterPosition < 4
+      val color = if (isInToolbar) themeProvider.iconColor else themeProvider.textColor
+      image.setIcon(item.item.icon, 20, color)
+      if (isInToolbar) text.invisible()
+      else {
+        text.visible().setText(item.item.titleId)
+        text.setTextColor(color.withAlpha(200))
+      }
     }
+
+    override fun unbindView(item: TabIItem) {
+      image.setImageDrawable(null)
+      text.visible().text = null
+    }
+  }
 }

@@ -41,92 +41,76 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * [Prefs] is no longer an actual pref, but we will expose the reset function as it is used elsewhere
+ * [Prefs] is no longer an actual pref, but we will expose the reset function as it is used
+ * elsewhere
  */
 interface PrefsBase {
-    fun reset()
-    fun deleteKeys(vararg keys: String)
+  fun reset()
+  fun deleteKeys(vararg keys: String)
 }
 
 interface Prefs :
-    BehaviourPrefs,
-    CorePrefs,
-    FeedPrefs,
-    NotifPrefs,
-    ThemePrefs,
-    ShowcasePrefs,
-    PrefsBase
+  BehaviourPrefs, CorePrefs, FeedPrefs, NotifPrefs, ThemePrefs, ShowcasePrefs, PrefsBase
 
-class PrefsImpl @Inject internal constructor(
-    private val behaviourPrefs: BehaviourPrefs,
-    private val corePrefs: CorePrefs,
-    private val feedPrefs: FeedPrefs,
-    private val notifPrefs: NotifPrefs,
-    private val themePrefs: ThemePrefs,
-    private val showcasePrefs: ShowcasePrefs
-) : Prefs,
-    BehaviourPrefs by behaviourPrefs,
-    CorePrefs by corePrefs,
-    FeedPrefs by feedPrefs,
-    NotifPrefs by notifPrefs,
-    ThemePrefs by themePrefs,
-    ShowcasePrefs by showcasePrefs {
+class PrefsImpl
+@Inject
+internal constructor(
+  private val behaviourPrefs: BehaviourPrefs,
+  private val corePrefs: CorePrefs,
+  private val feedPrefs: FeedPrefs,
+  private val notifPrefs: NotifPrefs,
+  private val themePrefs: ThemePrefs,
+  private val showcasePrefs: ShowcasePrefs
+) :
+  Prefs,
+  BehaviourPrefs by behaviourPrefs,
+  CorePrefs by corePrefs,
+  FeedPrefs by feedPrefs,
+  NotifPrefs by notifPrefs,
+  ThemePrefs by themePrefs,
+  ShowcasePrefs by showcasePrefs {
 
-    override fun reset() {
-        behaviourPrefs.reset()
-        corePrefs.reset()
-        feedPrefs.reset()
-        notifPrefs.reset()
-        themePrefs.reset()
-        showcasePrefs.reset()
-    }
+  override fun reset() {
+    behaviourPrefs.reset()
+    corePrefs.reset()
+    feedPrefs.reset()
+    notifPrefs.reset()
+    themePrefs.reset()
+    showcasePrefs.reset()
+  }
 
-    override fun deleteKeys(vararg keys: String) {
-        behaviourPrefs.deleteKeys()
-        corePrefs.deleteKeys()
-        feedPrefs.deleteKeys()
-        notifPrefs.deleteKeys()
-        themePrefs.deleteKeys()
-        showcasePrefs.deleteKeys()
-    }
+  override fun deleteKeys(vararg keys: String) {
+    behaviourPrefs.deleteKeys()
+    corePrefs.deleteKeys()
+    feedPrefs.deleteKeys()
+    notifPrefs.deleteKeys()
+    themePrefs.deleteKeys()
+    showcasePrefs.deleteKeys()
+  }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface PrefModule {
-    @Binds
-    @Singleton
-    fun behaviour(to: BehaviourPrefsImpl): BehaviourPrefs
+  @Binds @Singleton fun behaviour(to: BehaviourPrefsImpl): BehaviourPrefs
 
-    @Binds
-    @Singleton
-    fun core(to: CorePrefsImpl): CorePrefs
+  @Binds @Singleton fun core(to: CorePrefsImpl): CorePrefs
 
-    @Binds
-    @Singleton
-    fun feed(to: FeedPrefsImpl): FeedPrefs
+  @Binds @Singleton fun feed(to: FeedPrefsImpl): FeedPrefs
 
-    @Binds
-    @Singleton
-    fun notif(to: NotifPrefsImpl): NotifPrefs
+  @Binds @Singleton fun notif(to: NotifPrefsImpl): NotifPrefs
 
-    @Binds
-    @Singleton
-    fun theme(to: ThemePrefsImpl): ThemePrefs
+  @Binds @Singleton fun theme(to: ThemePrefsImpl): ThemePrefs
 
-    @Binds
-    @Singleton
-    fun showcase(to: ShowcasePrefsImpl): ShowcasePrefs
+  @Binds @Singleton fun showcase(to: ShowcasePrefsImpl): ShowcasePrefs
 
-    @Binds
-    @Singleton
-    fun prefs(to: PrefsImpl): Prefs
+  @Binds @Singleton fun prefs(to: PrefsImpl): Prefs
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 object PrefFactoryModule {
-    @Provides
-    @Singleton
-    fun factory(@ApplicationContext context: Context): KPrefFactory = KPrefFactoryAndroid(context)
+  @Provides
+  @Singleton
+  fun factory(@ApplicationContext context: Context): KPrefFactory = KPrefFactoryAndroid(context)
 }

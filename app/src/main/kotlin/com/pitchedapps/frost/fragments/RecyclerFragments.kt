@@ -27,19 +27,22 @@ import com.pitchedapps.frost.views.FrostRecyclerView
 /**
  * Created by Allan Wang on 27/12/17.
  *
- * Retained as an example. Deletion made at https://github.com/AllanWang/Frost-for-Facebook/pull/1542
+ * Retained as an example. Deletion made at
+ * https://github.com/AllanWang/Frost-for-Facebook/pull/1542
  */
-@Deprecated(message = "Retained as an example; currently does not support marking a notification as read")
+@Deprecated(
+  message = "Retained as an example; currently does not support marking a notification as read"
+)
 class NotificationFragment : FrostParserFragment<FrostNotifs, NotificationIItem>() {
 
-    override val parser = NotifParser
+  override val parser = NotifParser
 
-    override fun getDoc(cookie: String?) = frostJsoup(cookie, "${FbItem.NOTIFICATIONS.url}?more")
+  override fun getDoc(cookie: String?) = frostJsoup(cookie, "${FbItem.NOTIFICATIONS.url}?more")
 
-    override fun toItems(response: ParseResponse<FrostNotifs>): List<NotificationIItem> =
-        response.data.notifs.map { NotificationIItem(it, response.cookie, themeProvider) }
+  override fun toItems(response: ParseResponse<FrostNotifs>): List<NotificationIItem> =
+    response.data.notifs.map { NotificationIItem(it, response.cookie, themeProvider) }
 
-    override fun bindImpl(recyclerView: FrostRecyclerView) {
-        NotificationIItem.bindEvents(adapter, fbCookie, prefs, themeProvider)
-    }
+  override fun bindImpl(recyclerView: FrostRecyclerView) {
+    NotificationIItem.bindEvents(adapter, fbCookie, prefs, themeProvider)
+  }
 }

@@ -5,7 +5,7 @@ plugins {
 group = "com.pitchedapps"
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven("https://jitpack.io")
 }
 

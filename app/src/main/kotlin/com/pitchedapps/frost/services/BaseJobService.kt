@@ -20,32 +20,30 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import androidx.annotation.CallSuper
 import ca.allanwang.kau.utils.ContextHelper
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlin.coroutines.CoroutineContext
 
 abstract class BaseJobService : JobService(), CoroutineScope {
 
-    private lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = ContextHelper.dispatcher + job
+  private lateinit var job: Job
+  override val coroutineContext: CoroutineContext
+    get() = ContextHelper.dispatcher + job
 
-    protected val startTime = System.currentTimeMillis()
+  protected val startTime = System.currentTimeMillis()
 
-    /**
-     * Note that if a job plans on running asynchronously, it should return true
-     */
-    @CallSuper
-    override fun onStartJob(params: JobParameters?): Boolean {
-        job = Job()
-        return false
-    }
+  /** Note that if a job plans on running asynchronously, it should return true */
+  @CallSuper
+  override fun onStartJob(params: JobParameters?): Boolean {
+    job = Job()
+    return false
+  }
 
-    @CallSuper
-    override fun onStopJob(params: JobParameters?): Boolean {
-        job.cancel()
-        return false
-    }
+  @CallSuper
+  override fun onStopJob(params: JobParameters?): Boolean {
+    job.cancel()
+    return false
+  }
 }
 
 /*

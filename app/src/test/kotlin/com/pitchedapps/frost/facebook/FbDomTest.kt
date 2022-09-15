@@ -18,24 +18,24 @@ package com.pitchedapps.frost.facebook
 
 import com.pitchedapps.frost.internal.authDependent
 import com.pitchedapps.frost.internal.testJsoup
+import kotlin.test.assertNotNull
 import org.junit.BeforeClass
 import org.junit.Test
-import kotlin.test.assertNotNull
 
 class FbDomTest {
 
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        fun before() {
-            authDependent()
-        }
+  companion object {
+    @BeforeClass
+    @JvmStatic
+    fun before() {
+      authDependent()
     }
+  }
 
-    @Test
-    fun checkHeaders() {
-        val doc = testJsoup(FB_URL_BASE)
-        assertNotNull(doc.getElementById("header"))
-        assertNotNull(doc.getElementById("mJewelNav"))
-    }
+  @Test
+  fun checkHeaders() {
+    val doc = testJsoup(FB_URL_BASE)
+    assertNotNull(doc.getElementById("header"))
+    assertNotNull(doc.getElementById("mJewelNav"))
+  }
 }
