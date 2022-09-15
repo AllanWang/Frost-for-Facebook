@@ -214,7 +214,7 @@ class SettingsActivity : KPrefActivity() {
 
         subItems(R.string.debug_frost, getDebugPrefs()) {
             descRes = R.string.debug_frost_desc
-            iicon = CommunityMaterial.Icon.cmd_android_debug_bridge
+            iicon = CommunityMaterial.Icon.cmd_bug
             visible = { prefs.debugSettings }
         }
     }

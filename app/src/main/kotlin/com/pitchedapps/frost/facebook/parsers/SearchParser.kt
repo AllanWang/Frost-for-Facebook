@@ -107,7 +107,9 @@ private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
                 // And the other entries are additional info.
                 // There are also cases of nested tables, eg for the "join" button in groups.
                 // Those elements have <span /> texts, so we will filter by div to ignore those
-                val texts = a.children().filter { it.tagName() == "div" && it.hasText() }
+                val texts =
+                    a.children()
+                        .filter { childEl: Element -> childEl.tagName() == "div" && childEl.hasText() }
                 val title = texts.firstOrNull()?.text() ?: return@mapNotNull null
                 val info = texts.takeIf { it.size > 1 }?.last()?.text()
                 L.e { a }

@@ -27,7 +27,6 @@ import ca.allanwang.kau.about.LibraryIItem
 import ca.allanwang.kau.adapters.FastItemThemedAdapter
 import ca.allanwang.kau.adapters.ThemableIItem
 import ca.allanwang.kau.adapters.ThemableIItemDelegate
-import ca.allanwang.kau.logging.KL
 import ca.allanwang.kau.utils.bindView
 import ca.allanwang.kau.utils.dimenPixelSize
 import ca.allanwang.kau.utils.drawable
@@ -37,7 +36,7 @@ import ca.allanwang.kau.utils.string
 import ca.allanwang.kau.utils.toDrawable
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.withMinAlpha
-import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.entity.Developer
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.fastadapter.GenericItem
@@ -76,30 +75,6 @@ class AboutActivity : AboutActivityBase(null) {
         faqParseNewLine = false
     }
 
-    override fun getLibraries(libs: Libs): List<Library> {
-        val include = arrayOf(
-            "AboutLibraries",
-            "AndroidIconics",
-            "fastadapter",
-            "glide",
-            "Jsoup",
-            "kau",
-            "kotterknife",
-            "materialdialogs",
-            "subsamplingscaleimageview"
-        )
-
-        val l = libs.prepareLibraries(
-            this, include, emptyArray(),
-            autoDetect = false,
-            checkCachedDetection = true,
-            sort = true
-        )
-        if (BuildConfig.DEBUG)
-            l.forEach { KL.d { "Lib ${it.definedName}" } }
-        return l
-    }
-
     var lastClick = -1L
     var clickCount = 0
 
@@ -108,22 +83,24 @@ class AboutActivity : AboutActivityBase(null) {
          * Frost may not be a library but we're conveying the same info
          */
         val frost = Library(
-            definedName = "frost",
-            libraryName = string(R.string.frost_name),
-            author = string(R.string.dev_name),
-            libraryWebsite = string(R.string.github_url),
-            isOpenSource = true,
-            libraryDescription = string(R.string.frost_description),
-            libraryVersion = BuildConfig.VERSION_NAME,
+            uniqueId = "com.pitchedapps.frost",
+            name = string(R.string.frost_name),
+            developers = listOf(
+                Developer(name = string(R.string.dev_name), organisationUrl = null)
+            ),
+            website = string(R.string.github_url),
+            description = string(R.string.frost_description),
+            artifactVersion = BuildConfig.VERSION_NAME,
             licenses = setOf(
                 License(
-                    definedName = "gplv3",
-                    licenseName = "GNU GPL v3",
-                    licenseWebsite = "https://www.gnu.org/licenses/gpl-3.0.en.html",
-                    licenseDescription = "",
-                    licenseShortDescription = ""
+                    spdxId = "gplv3",
+                    name = "GNU GPL v3",
+                    url = "https://www.gnu.org/licenses/gpl-3.0.en.html",
+                    hash = "gplv3"
                 )
-            )
+            ),
+            scm = null,
+            organization = null,
         )
         adapter.add(LibraryIItem(frost)).add(AboutLinks())
         adapter.onClickListener = { _, _, item, _ ->
@@ -199,17 +176,17 @@ class AboutActivity : AboutActivityBase(null) {
                             ) to onClick
                         }
                         ).mapIndexed { i, (icon, onClick) ->
-                        ImageView(c).apply {
-                            layoutParams = ViewGroup.LayoutParams(size, size)
-                            id = 109389 + i
-                            setImageDrawable(icon)
-                            scaleType = ImageView.ScaleType.CENTER
-                            background =
-                                context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
-                            setOnClickListener { onClick() }
-                            container.addView(this)
+                            ImageView(c).apply {
+                                layoutParams = ViewGroup.LayoutParams(size, size)
+                                id = 109389 + i
+                                setImageDrawable(icon)
+                                scaleType = ImageView.ScaleType.CENTER
+                                background =
+                                    context.resolveDrawable(android.R.attr.selectableItemBackgroundBorderless)
+                                setOnClickListener { onClick() }
+                                container.addView(this)
+                            }
                         }
-                    }
                 val set = ConstraintSet()
                 set.clone(container)
                 set.createHorizontalChain(
