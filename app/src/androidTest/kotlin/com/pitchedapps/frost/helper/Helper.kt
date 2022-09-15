@@ -26,23 +26,21 @@ import androidx.test.platform.app.InstrumentationRegistry
 import java.io.InputStream
 
 val context: Context
-    get() = InstrumentationRegistry.getInstrumentation().targetContext
+  get() = InstrumentationRegistry.getInstrumentation().targetContext
 
-fun getAsset(asset: String): InputStream =
-    context.assets.open(asset)
+fun getAsset(asset: String): InputStream = context.assets.open(asset)
 
 private class Helper
 
 fun getResource(resource: String): InputStream =
-    Helper::class.java.classLoader!!.getResource(resource).openStream()
+  Helper::class.java.classLoader!!.getResource(resource).openStream()
 
 inline fun <reified A : Activity> activityRule(
-    intentAction: Intent.() -> Unit = {},
-    activityOptions: Bundle? = null
+  intentAction: Intent.() -> Unit = {},
+  activityOptions: Bundle? = null
 ): ActivityScenarioRule<A> {
-    val intent =
-        Intent(ApplicationProvider.getApplicationContext(), A::class.java).also(intentAction)
-    return ActivityScenarioRule(intent, activityOptions)
+  val intent = Intent(ApplicationProvider.getApplicationContext(), A::class.java).also(intentAction)
+  return ActivityScenarioRule(intent, activityOptions)
 }
 
 const val TEST_FORMATTED_URL = "https://www.google.com"

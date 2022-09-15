@@ -30,127 +30,120 @@ import com.pitchedapps.frost.services.NotificationContent
 import com.pitchedapps.frost.utils.L
 
 @Entity(
-    tableName = "notifications",
-    primaryKeys = ["notif_id", "userId"],
-    foreignKeys = [
-        ForeignKey(
-            entity = CookieEntity::class,
-            parentColumns = ["cookie_id"],
-            childColumns = ["userId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
-    indices = [Index("notif_id"), Index("userId")]
+  tableName = "notifications",
+  primaryKeys = ["notif_id", "userId"],
+  foreignKeys =
+    [
+      ForeignKey(
+        entity = CookieEntity::class,
+        parentColumns = ["cookie_id"],
+        childColumns = ["userId"],
+        onDelete = ForeignKey.CASCADE
+      )],
+  indices = [Index("notif_id"), Index("userId")]
 )
 data class NotificationEntity(
-    @ColumnInfo(name = "notif_id")
-    val id: Long,
-    val userId: Long,
-    val href: String,
-    val title: String?,
-    val text: String,
-    val timestamp: Long,
-    val profileUrl: String?,
-    // Type essentially refers to channel
-    val type: String,
-    val unread: Boolean
+  @ColumnInfo(name = "notif_id") val id: Long,
+  val userId: Long,
+  val href: String,
+  val title: String?,
+  val text: String,
+  val timestamp: Long,
+  val profileUrl: String?,
+  // Type essentially refers to channel
+  val type: String,
+  val unread: Boolean
 ) {
-    constructor(
-        type: String,
-        content: NotificationContent
-    ) : this(
-        content.id,
-        content.data.id,
-        content.href,
-        content.title,
-        content.text,
-        content.timestamp,
-        content.profileUrl,
-        type,
-        content.unread
-    )
+  constructor(
+    type: String,
+    content: NotificationContent
+  ) : this(
+    content.id,
+    content.data.id,
+    content.href,
+    content.title,
+    content.text,
+    content.timestamp,
+    content.profileUrl,
+    type,
+    content.unread
+  )
 }
 
 data class NotificationContentEntity(
-    @Embedded
-    val cookie: CookieEntity,
-    @Embedded
-    val notif: NotificationEntity
+  @Embedded val cookie: CookieEntity,
+  @Embedded val notif: NotificationEntity
 ) {
-    fun toNotifContent() = NotificationContent(
-        data = cookie,
-        id = notif.id,
-        href = notif.href,
-        title = notif.title,
-        text = notif.text,
-        timestamp = notif.timestamp,
-        profileUrl = notif.profileUrl,
-        unread = notif.unread
+  fun toNotifContent() =
+    NotificationContent(
+      data = cookie,
+      id = notif.id,
+      href = notif.href,
+      title = notif.title,
+      text = notif.text,
+      timestamp = notif.timestamp,
+      profileUrl = notif.profileUrl,
+      unread = notif.unread
     )
 }
 
 @Dao
 interface NotificationDao {
 
-    /**
-     * Note that notifications are guaranteed to be ordered by descending timestamp
-     */
-    @Transaction
-    @Query("SELECT * FROM cookies INNER JOIN notifications ON cookie_id = userId WHERE userId = :userId  AND type = :type ORDER BY timestamp DESC")
-    fun _selectNotifications(userId: Long, type: String): List<NotificationContentEntity>
+  /** Note that notifications are guaranteed to be ordered by descending timestamp */
+  @Transaction
+  @Query(
+    "SELECT * FROM cookies INNER JOIN notifications ON cookie_id = userId WHERE userId = :userId  AND type = :type ORDER BY timestamp DESC"
+  )
+  fun _selectNotifications(userId: Long, type: String): List<NotificationContentEntity>
 
-    @Query("SELECT timestamp FROM notifications WHERE userId = :userId AND type = :type ORDER BY timestamp DESC LIMIT 1")
-    fun _selectEpoch(userId: Long, type: String): Long?
+  @Query(
+    "SELECT timestamp FROM notifications WHERE userId = :userId AND type = :type ORDER BY timestamp DESC LIMIT 1"
+  )
+  fun _selectEpoch(userId: Long, type: String): Long?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun _insertNotifications(notifs: List<NotificationEntity>)
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  fun _insertNotifications(notifs: List<NotificationEntity>)
 
-    @Query("DELETE FROM notifications WHERE userId = :userId AND type = :type")
-    fun _deleteNotifications(userId: Long, type: String)
+  @Query("DELETE FROM notifications WHERE userId = :userId AND type = :type")
+  fun _deleteNotifications(userId: Long, type: String)
 
-    @Query("DELETE FROM notifications")
-    fun _deleteAll()
+  @Query("DELETE FROM notifications") fun _deleteAll()
 
-    /**
-     * It is assumed that the notification batch comes from the same user
-     */
-    @Transaction
-    fun _saveNotifications(type: String, notifs: List<NotificationContent>) {
-        val userId = notifs.firstOrNull()?.data?.id ?: return
-        val entities = notifs.map { NotificationEntity(type, it) }
-        _deleteNotifications(userId, type)
-        _insertNotifications(entities)
-    }
+  /** It is assumed that the notification batch comes from the same user */
+  @Transaction
+  fun _saveNotifications(type: String, notifs: List<NotificationContent>) {
+    val userId = notifs.firstOrNull()?.data?.id ?: return
+    val entities = notifs.map { NotificationEntity(type, it) }
+    _deleteNotifications(userId, type)
+    _insertNotifications(entities)
+  }
 }
 
 suspend fun NotificationDao.deleteAll() = dao { _deleteAll() }
 
 fun NotificationDao.selectNotificationsSync(userId: Long, type: String): List<NotificationContent> =
-    _selectNotifications(userId, type).map { it.toNotifContent() }
+  _selectNotifications(userId, type).map { it.toNotifContent() }
 
 suspend fun NotificationDao.selectNotifications(
-    userId: Long,
-    type: String
-): List<NotificationContent> = dao {
-    selectNotificationsSync(userId, type)
-}
+  userId: Long,
+  type: String
+): List<NotificationContent> = dao { selectNotificationsSync(userId, type) }
 
-/**
- * Returns true if successful, given that there are constraints to the insertion
- */
+/** Returns true if successful, given that there are constraints to the insertion */
 suspend fun NotificationDao.saveNotifications(
-    type: String,
-    notifs: List<NotificationContent>
+  type: String,
+  notifs: List<NotificationContent>
 ): Boolean = dao {
-    try {
-        _saveNotifications(type, notifs)
-        true
-    } catch (e: Exception) {
-        L.e(e) { "Notif save failed for $type" }
-        false
-    }
+  try {
+    _saveNotifications(type, notifs)
+    true
+  } catch (e: Exception) {
+    L.e(e) { "Notif save failed for $type" }
+    false
+  }
 }
 
 suspend fun NotificationDao.latestEpoch(userId: Long, type: String): Long = dao {
-    _selectEpoch(userId, type) ?: -1L
+  _selectEpoch(userId, type) ?: -1L
 }

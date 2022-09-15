@@ -19,21 +19,16 @@ package com.pitchedapps.frost.facebook
 /**
  * Created by Allan Wang on 21/12/17.
  *
- * Collection of regex matchers
- * Input text must be properly unescaped
+ * Collection of regex matchers Input text must be properly unescaped
  *
  * See [StringEscapeUtils]
  */
 
-/**
- * Matches the fb_dtsg component of a page containing it as a hidden value
- */
+/** Matches the fb_dtsg component of a page containing it as a hidden value */
 val FB_DTSG_MATCHER: Regex by lazy { Regex("name=\"fb_dtsg\" value=\"(.*?)\"") }
 val FB_REV_MATCHER: Regex by lazy { Regex("\"app_version\":\"(.*?)\"") }
 
-/**
- * Matches user id from cookie
- */
+/** Matches user id from cookie */
 val FB_USER_MATCHER: Regex = Regex("c_user=([0-9]*);")
 
 val FB_EPOCH_MATCHER: Regex = Regex(":([0-9]+)")

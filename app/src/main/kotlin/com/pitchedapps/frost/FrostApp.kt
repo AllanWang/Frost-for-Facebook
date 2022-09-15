@@ -37,78 +37,75 @@ import dagger.hilt.android.HiltAndroidApp
 import java.util.Random
 import javax.inject.Inject
 
-/**
- * Created by Allan Wang on 2017-05-28.
- */
+/** Created by Allan Wang on 2017-05-28. */
 @HiltAndroidApp
 class FrostApp : Application() {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    @Inject
-    lateinit var cookieDao: CookieDao
+  @Inject lateinit var cookieDao: CookieDao
 
-    @Inject
-    lateinit var notifDao: NotificationDao
+  @Inject lateinit var notifDao: NotificationDao
 
-    override fun onCreate() {
-        super.onCreate()
+  override fun onCreate() {
+    super.onCreate()
 
-        if (!buildIsLollipopAndUp) return // not supported
+    if (!buildIsLollipopAndUp) return // not supported
 
-        initPrefs()
+    initPrefs()
 
-        L.i { "Begin Frost for Facebook" }
-        FrostPglAdBlock.init(this)
+    L.i { "Begin Frost for Facebook" }
+    FrostPglAdBlock.init(this)
 
-        setupNotificationChannels(this, themeProvider)
+    setupNotificationChannels(this, themeProvider)
 
-        scheduleNotificationsFromPrefs(prefs)
+    scheduleNotificationsFromPrefs(prefs)
 
-        BigImageViewer.initialize(GlideImageLoader.with(this, httpClient))
+    BigImageViewer.initialize(GlideImageLoader.with(this, httpClient))
 
-        if (BuildConfig.DEBUG) {
-            registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-                override fun onActivityPaused(activity: Activity) {}
-                override fun onActivityResumed(activity: Activity) {}
-                override fun onActivityStarted(activity: Activity) {}
+    if (BuildConfig.DEBUG) {
+      registerActivityLifecycleCallbacks(
+        object : ActivityLifecycleCallbacks {
+          override fun onActivityPaused(activity: Activity) {}
+          override fun onActivityResumed(activity: Activity) {}
+          override fun onActivityStarted(activity: Activity) {}
 
-                override fun onActivityDestroyed(activity: Activity) {
-                    L.d { "Activity ${activity.localClassName} destroyed" }
-                }
+          override fun onActivityDestroyed(activity: Activity) {
+            L.d { "Activity ${activity.localClassName} destroyed" }
+          }
 
-                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+          override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 
-                override fun onActivityStopped(activity: Activity) {}
+          override fun onActivityStopped(activity: Activity) {}
 
-                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    L.d { "Activity ${activity.localClassName} created" }
-                }
-            })
+          override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+            L.d { "Activity ${activity.localClassName} created" }
+          }
         }
+      )
     }
+  }
 
-    private fun initPrefs() {
-        prefs.deleteKeys("search_bar", "shown_release", "experimental_by_default")
-        KL.shouldLog = { BuildConfig.DEBUG }
-        L.shouldLog = {
-            when (it) {
-                Log.VERBOSE -> BuildConfig.DEBUG
-                Log.INFO, Log.ERROR -> true
-                else -> BuildConfig.DEBUG || prefs.verboseLogging
-            }
-        }
-        prefs.verboseLogging = false
-        if (prefs.installDate == -1L) {
-            prefs.installDate = System.currentTimeMillis()
-        }
-        if (prefs.identifier == -1) {
-            prefs.identifier = Random().nextInt(Int.MAX_VALUE)
-        }
-        prefs.lastLaunch = System.currentTimeMillis()
+  private fun initPrefs() {
+    prefs.deleteKeys("search_bar", "shown_release", "experimental_by_default")
+    KL.shouldLog = { BuildConfig.DEBUG }
+    L.shouldLog = {
+      when (it) {
+        Log.VERBOSE -> BuildConfig.DEBUG
+        Log.INFO,
+        Log.ERROR -> true
+        else -> BuildConfig.DEBUG || prefs.verboseLogging
+      }
     }
+    prefs.verboseLogging = false
+    if (prefs.installDate == -1L) {
+      prefs.installDate = System.currentTimeMillis()
+    }
+    if (prefs.identifier == -1) {
+      prefs.identifier = Random().nextInt(Int.MAX_VALUE)
+    }
+    prefs.lastLaunch = System.currentTimeMillis()
+  }
 }

@@ -25,11 +25,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 
 @Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [PrefFactoryModule::class]
-)
+@TestInstallIn(components = [SingletonComponent::class], replaces = [PrefFactoryModule::class])
 object PrefFactoryTestModule {
-    @Provides
-    fun factory(): KPrefFactory = KPrefFactoryInMemory
+  @Provides fun factory(): KPrefFactory = KPrefFactoryInMemory
 }

@@ -27,110 +27,109 @@ import androidx.lifecycle.OnLifecycleEvent
 import ca.allanwang.kau.utils.string
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.prefs.Prefs
-import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlinx.coroutines.CompletableDeferred
 
 typealias BiometricDeferred = CompletableDeferred<BiometricPrompt.CryptoObject?>
 
-/**
- * Container for [BiometricPrompt]
- * Inspired by coroutine's CommonPool
- */
+/** Container for [BiometricPrompt] Inspired by coroutine's CommonPool */
 object BiometricUtils {
 
-    private val executor: Executor
-        get() = pool ?: getOrCreatePoolSync()
+  private val executor: Executor
+    get() = pool ?: getOrCreatePoolSync()
 
-    @Volatile
-    private var pool: ExecutorService? = null
+  @Volatile private var pool: ExecutorService? = null
 
-    private var lastUnlockTime = -1L
+  private var lastUnlockTime = -1L
 
-    private const val UNLOCK_TIME_INTERVAL = 15 * 60 * 1000
+  private const val UNLOCK_TIME_INTERVAL = 15 * 60 * 1000
 
-    /**
-     * Checks if biometric authentication is possible
-     * Currently, this means checking for enrolled fingerprints
-     */
-    @Suppress("DEPRECATION")
-    fun isSupported(context: Context): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return false
-        val fingerprintManager =
-            context.getSystemService(FingerprintManager::class.java) ?: return false
-        return fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()
+  /**
+   * Checks if biometric authentication is possible Currently, this means checking for enrolled
+   * fingerprints
+   */
+  @Suppress("DEPRECATION")
+  fun isSupported(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return false
+    val fingerprintManager =
+      context.getSystemService(FingerprintManager::class.java) ?: return false
+    return fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()
+  }
+
+  private fun getOrCreatePoolSync(): Executor =
+    pool ?: Executors.newSingleThreadExecutor().also { pool = it }
+
+  private fun shouldPrompt(context: Context, prefs: Prefs): Boolean {
+    return prefs.biometricsEnabled &&
+      System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
+  }
+
+  /**
+   * Generates a prompt dialog and attempt to return an auth object. Note that the underlying
+   * request will call [androidx.fragment.app.FragmentTransaction.commit], so this cannot happen
+   * after onSaveInstanceState.
+   */
+  fun authenticate(
+    activity: FragmentActivity,
+    prefs: Prefs,
+    force: Boolean = false
+  ): BiometricDeferred {
+    val deferred: BiometricDeferred = CompletableDeferred()
+    if (!force && !shouldPrompt(activity, prefs)) {
+      deferred.complete(null)
+      return deferred
     }
-
-    private fun getOrCreatePoolSync(): Executor =
-        pool ?: Executors.newSingleThreadExecutor().also { pool = it }
-
-    private fun shouldPrompt(context: Context, prefs: Prefs): Boolean {
-        return prefs.biometricsEnabled && System.currentTimeMillis() - lastUnlockTime > UNLOCK_TIME_INTERVAL
-    }
-
-    /**
-     * Generates a prompt dialog and attempt to return an auth object.
-     * Note that the underlying request will call [androidx.fragment.app.FragmentTransaction.commit],
-     * so this cannot happen after onSaveInstanceState.
-     */
-    fun authenticate(
-        activity: FragmentActivity,
-        prefs: Prefs,
-        force: Boolean = false
-    ): BiometricDeferred {
-        val deferred: BiometricDeferred = CompletableDeferred()
-        if (!force && !shouldPrompt(activity, prefs)) {
-            deferred.complete(null)
-            return deferred
-        }
-        val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle(activity.string(R.string.biometrics_prompt_title))
-            .setNegativeButtonText(activity.string(R.string.kau_cancel))
-            .build()
-        val prompt = BiometricPrompt(activity, executor, Callback(activity, deferred))
-        activity.lifecycle.addObserver(object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-            fun onPause() {
-                if (!deferred.isCompleted) {
-                    prompt.cancelAuthentication()
-                    deferred.cancel()
-                    activity.finish()
-                }
-                activity.lifecycle.removeObserver(this)
-            }
-        })
-        prompt.authenticate(info)
-        return deferred
-    }
-
-    private class Callback(val activity: FragmentActivity, val deferred: BiometricDeferred) :
-        BiometricPrompt.AuthenticationCallback() {
-        override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+    val info =
+      BiometricPrompt.PromptInfo.Builder()
+        .setTitle(activity.string(R.string.biometrics_prompt_title))
+        .setNegativeButtonText(activity.string(R.string.kau_cancel))
+        .build()
+    val prompt = BiometricPrompt(activity, executor, Callback(activity, deferred))
+    activity.lifecycle.addObserver(
+      object : LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        fun onPause() {
+          if (!deferred.isCompleted) {
+            prompt.cancelAuthentication()
             deferred.cancel()
             activity.finish()
+          }
+          activity.lifecycle.removeObserver(this)
         }
+      }
+    )
+    prompt.authenticate(info)
+    return deferred
+  }
 
-        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-            lastUnlockTime = System.currentTimeMillis()
-            deferred.complete(result.cryptoObject)
-        }
-
-        override fun onAuthenticationFailed() {
-            deferred.cancel()
-            activity.finish()
-        }
+  private class Callback(val activity: FragmentActivity, val deferred: BiometricDeferred) :
+    BiometricPrompt.AuthenticationCallback() {
+    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+      deferred.cancel()
+      activity.finish()
     }
 
-    /**
-     * For completeness we provide a shutdown function.
-     * In practice, we initialize the executor only when it is first used,
-     * and keep it alive throughout the app lifecycle, as it will be used an arbitrary number of times,
-     * with unknown frequency
-     */
-    @Synchronized
-    fun shutdown() {
-        pool?.shutdown()
-        pool = null
+    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+      lastUnlockTime = System.currentTimeMillis()
+      deferred.complete(result.cryptoObject)
     }
+
+    override fun onAuthenticationFailed() {
+      deferred.cancel()
+      activity.finish()
+    }
+  }
+
+  /**
+   * For completeness we provide a shutdown function. In practice, we initialize the executor only
+   * when it is first used, and keep it alive throughout the app lifecycle, as it will be used an
+   * arbitrary number of times, with unknown frequency
+   */
+  @Synchronized
+  fun shutdown() {
+    pool?.shutdown()
+    pool = null
+  }
 }

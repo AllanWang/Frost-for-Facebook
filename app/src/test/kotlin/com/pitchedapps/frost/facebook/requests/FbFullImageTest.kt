@@ -18,31 +18,27 @@ package com.pitchedapps.frost.facebook.requests
 
 import com.pitchedapps.frost.internal.COOKIE
 import com.pitchedapps.frost.internal.authDependent
+import kotlin.test.assertNotNull
 import kotlinx.coroutines.runBlocking
 import org.junit.BeforeClass
 import org.junit.Test
-import kotlin.test.assertNotNull
 
-/**
- * Created by Allan Wang on 12/04/18.
- */
+/** Created by Allan Wang on 12/04/18. */
 class FbFullImageTest {
 
-    companion object {
-        @BeforeClass
-        @JvmStatic
-        fun before() {
-            authDependent()
-        }
+  companion object {
+    @BeforeClass
+    @JvmStatic
+    fun before() {
+      authDependent()
     }
+  }
 
-    @Test
-    fun getFullImage() {
-        val url = "https://touch.facebook.com/photo/view_full_size/?fbid=107368839645039"
-        val result = runBlocking {
-            COOKIE.getFullSizedImageUrl(url)
-        }
-        assertNotNull(result)
-        println(result)
-    }
+  @Test
+  fun getFullImage() {
+    val url = "https://touch.facebook.com/photo/view_full_size/?fbid=107368839645039"
+    val result = runBlocking { COOKIE.getFullSizedImageUrl(url) }
+    assertNotNull(result)
+    println(result)
+  }
 }

@@ -21,38 +21,40 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.runner.RunWith
 import kotlin.test.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class CookieMigrationTest {
 
-    private val TEST_DB = "cookie_migration_test"
+  private val TEST_DB = "cookie_migration_test"
 
-    private val ALL_MIGRATIONS = arrayOf(COOKIES_MIGRATION_1_2)
+  private val ALL_MIGRATIONS = arrayOf(COOKIES_MIGRATION_1_2)
 
-    val helper: MigrationTestHelper = MigrationTestHelper(
-        InstrumentationRegistry.getInstrumentation(),
-        FrostPrivateDatabase::class.java.canonicalName,
-        FrameworkSQLiteOpenHelperFactory()
+  val helper: MigrationTestHelper =
+    MigrationTestHelper(
+      InstrumentationRegistry.getInstrumentation(),
+      FrostPrivateDatabase::class.java.canonicalName,
+      FrameworkSQLiteOpenHelperFactory()
     )
 
-    @Test
-    fun migrateAll() {
-        // Create earliest version of the database.
-        helper.createDatabase(TEST_DB, 1).apply {
-            close()
-        }
+  @Test
+  fun migrateAll() {
+    // Create earliest version of the database.
+    helper.createDatabase(TEST_DB, 1).apply { close() }
 
-        // Open latest version of the database. Room will validate the schema
-        // once all migrations execute.
-        Room.databaseBuilder(
-            InstrumentationRegistry.getInstrumentation().targetContext,
-            FrostPrivateDatabase::class.java,
-            TEST_DB
-        ).addMigrations(*ALL_MIGRATIONS).build().apply {
-            openHelper.writableDatabase
-            close()
-        }
-    }
+    // Open latest version of the database. Room will validate the schema
+    // once all migrations execute.
+    Room.databaseBuilder(
+        InstrumentationRegistry.getInstrumentation().targetContext,
+        FrostPrivateDatabase::class.java,
+        TEST_DB
+      )
+      .addMigrations(*ALL_MIGRATIONS)
+      .build()
+      .apply {
+        openHelper.writableDatabase
+        close()
+      }
+  }
 }

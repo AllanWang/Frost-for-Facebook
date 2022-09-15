@@ -22,31 +22,27 @@ import com.pitchedapps.frost.activities.SettingsActivity
 import com.pitchedapps.frost.utils.BiometricUtils
 import kotlinx.coroutines.launch
 
-/**
- * Created by Allan Wang on 20179-05-01.
- */
+/** Created by Allan Wang on 20179-05-01. */
 fun SettingsActivity.getSecurityPrefs(): KPrefAdapterBuilder.() -> Unit = {
+  plainText(R.string.disclaimer) { descRes = R.string.security_disclaimer_info }
 
-    plainText(R.string.disclaimer) {
-        descRes = R.string.security_disclaimer_info
+  checkbox(
+    R.string.enable_biometrics,
+    prefs::biometricsEnabled,
+    {
+      launch {
+        /*
+         * For security, we should request authentication when:
+         * - enabling to ensure that it is supported
+         * - disabling to ensure that it is permitted
+         */
+        BiometricUtils.authenticate(this@getSecurityPrefs, prefs, force = true).await()
+        prefs.biometricsEnabled = it
+        reloadByTitle(R.string.enable_biometrics)
+      }
     }
-
-    checkbox(
-        R.string.enable_biometrics, prefs::biometricsEnabled,
-        {
-            launch {
-            /*
-             * For security, we should request authentication when:
-             * - enabling to ensure that it is supported
-             * - disabling to ensure that it is permitted
-             */
-                BiometricUtils.authenticate(this@getSecurityPrefs, prefs, force = true).await()
-                prefs.biometricsEnabled = it
-                reloadByTitle(R.string.enable_biometrics)
-            }
-        }
-    ) {
-        descRes = R.string.enable_biometrics_desc
-        enabler = { BiometricUtils.isSupported(this@getSecurityPrefs) }
-    }
+  ) {
+    descRes = R.string.enable_biometrics_desc
+    enabler = { BiometricUtils.isSupported(this@getSecurityPrefs) }
+  }
 }

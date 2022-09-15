@@ -29,58 +29,55 @@ import com.pitchedapps.frost.facebook.FbCookie
 import com.pitchedapps.frost.facebook.formattedFbUrl
 import com.pitchedapps.frost.prefs.Prefs
 
-/**
- * Created by Allan Wang on 2017-07-07.
- */
+/** Created by Allan Wang on 2017-07-07. */
 fun Context.showWebContextMenu(wc: WebContext, fbCookie: FbCookie, prefs: Prefs) {
-    if (wc.isEmpty) return
-    var title = wc.url ?: string(R.string.menu)
-    title =
-        title.substring(title.indexOf("m/") + 1) // just so if defaults to 0 in case it's not .com/
-    if (title.length > 100) title = title.substring(0, 100) + '\u2026'
+  if (wc.isEmpty) return
+  var title = wc.url ?: string(R.string.menu)
+  title =
+    title.substring(title.indexOf("m/") + 1) // just so if defaults to 0 in case it's not .com/
+  if (title.length > 100) title = title.substring(0, 100) + '\u2026'
 
-    val menuItems = WebContextType.values
-        .filter { it.constraint(wc) }
+  val menuItems = WebContextType.values.filter { it.constraint(wc) }
 
-    materialDialog {
-        title(text = title)
-        listItems(items = menuItems.map { string(it.textId) }) { _, position, _ ->
-            menuItems[position].onClick(this@showWebContextMenu, wc, fbCookie, prefs)
-        }
-        onDismiss {
-            // showing the dialog interrupts the touch down event, so we must ensure that the viewpager's swipe is enabled
-            (this@showWebContextMenu as? MainActivity)
-                ?.contentBinding
-                ?.viewpager
-                ?.enableSwipe = true
-        }
+  materialDialog {
+    title(text = title)
+    listItems(items = menuItems.map { string(it.textId) }) { _, position, _ ->
+      menuItems[position].onClick(this@showWebContextMenu, wc, fbCookie, prefs)
     }
+    onDismiss {
+      // showing the dialog interrupts the touch down event, so we must ensure that the viewpager's
+      // swipe is enabled
+      (this@showWebContextMenu as? MainActivity)?.contentBinding?.viewpager?.enableSwipe = true
+    }
+  }
 }
 
 class WebContext(val unformattedUrl: String?, val text: String?) {
-    val url: String? = unformattedUrl?.formattedFbUrl
-    inline val hasUrl get() = unformattedUrl != null
-    inline val hasText get() = text != null
-    inline val isEmpty get() = !hasUrl && !hasText
+  val url: String? = unformattedUrl?.formattedFbUrl
+  inline val hasUrl
+    get() = unformattedUrl != null
+  inline val hasText
+    get() = text != null
+  inline val isEmpty
+    get() = !hasUrl && !hasText
 }
 
 enum class WebContextType(
-    val textId: Int,
-    val constraint: (wc: WebContext) -> Boolean,
-    val onClick: (c: Context, wc: WebContext, fc: FbCookie, prefs: Prefs) -> Unit
+  val textId: Int,
+  val constraint: (wc: WebContext) -> Boolean,
+  val onClick: (c: Context, wc: WebContext, fc: FbCookie, prefs: Prefs) -> Unit
 ) {
-    OPEN_LINK(
-        R.string.open_link,
-        { it.hasUrl },
-        { c, wc, fc, prefs -> c.launchWebOverlay(wc.url!!, fc, prefs) }
-    ),
-    COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, _, _ -> c.copyToClipboard(wc.url) }),
-    COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, _, _ -> c.copyToClipboard(wc.text) }),
-    SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _, _ -> c.shareText(wc.url) })
-    ;
+  OPEN_LINK(
+    R.string.open_link,
+    { it.hasUrl },
+    { c, wc, fc, prefs -> c.launchWebOverlay(wc.url!!, fc, prefs) }
+  ),
+  COPY_LINK(R.string.copy_link, { it.hasUrl }, { c, wc, _, _ -> c.copyToClipboard(wc.url) }),
+  COPY_TEXT(R.string.copy_text, { it.hasText }, { c, wc, _, _ -> c.copyToClipboard(wc.text) }),
+  SHARE_LINK(R.string.share_link, { it.hasUrl }, { c, wc, _, _ -> c.shareText(wc.url) });
 
-    companion object {
-        val values = values()
-        operator fun get(index: Int) = values[index]
-    }
+  companion object {
+    val values = values()
+    operator fun get(index: Int) = values[index]
+  }
 }

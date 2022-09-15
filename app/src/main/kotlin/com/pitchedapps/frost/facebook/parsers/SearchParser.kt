@@ -27,98 +27,91 @@ import com.pitchedapps.frost.utils.urlEncode
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-/**
- * Created by Allan Wang on 2017-10-09.
- */
+/** Created by Allan Wang on 2017-10-09. */
 object SearchParser : FrostParser<FrostSearches> by SearchParserImpl() {
-    fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
-        val url =
-            "${FbItem._SEARCH_PARSE.url}/?q=${if (input.isNotBlank()) input.urlEncode() else "a"}"
-        L._i { "Search Query $url" }
-        return parseFromUrl(cookie, url)
-    }
+  fun query(cookie: String?, input: String): ParseResponse<FrostSearches>? {
+    val url = "${FbItem._SEARCH_PARSE.url}/?q=${if (input.isNotBlank()) input.urlEncode() else "a"}"
+    L._i { "Search Query $url" }
+    return parseFromUrl(cookie, url)
+  }
 }
 
 enum class SearchKeys(val key: String) {
-    USERS("keywords_users"),
-    EVENTS("keywords_events")
+  USERS("keywords_users"),
+  EVENTS("keywords_events")
 }
 
 data class FrostSearches(val results: List<FrostSearch>) : ParseData {
 
-    override val isEmpty: Boolean
-        get() = results.isEmpty()
+  override val isEmpty: Boolean
+    get() = results.isEmpty()
 
-    override fun toString() = StringBuilder().apply {
+  override fun toString() =
+    StringBuilder()
+      .apply {
         append("FrostSearches {\n")
         append(results.toJsonString("results", 1))
         append("}")
-    }.toString()
+      }
+      .toString()
 }
 
 /**
- * As far as I'm aware, all links are independent, so the queries don't matter
- * A lot of it is tracking information, which I'll strip away
- * Other text items are formatted for safety
+ * As far as I'm aware, all links are independent, so the queries don't matter A lot of it is
+ * tracking information, which I'll strip away Other text items are formatted for safety
  *
  * Note that it's best to create search results from [create]
  */
 data class FrostSearch(val href: String, val title: String, val description: String?) {
 
-    fun toSearchItem() = SearchItem(href, title, description)
+  fun toSearchItem() = SearchItem(href, title, description)
 
-    companion object {
-        fun create(href: String, title: String, description: String?) = FrostSearch(
-            with(href.indexOf("?")) { if (this == -1) href else href.substring(0, this) },
-            title.format(),
-            description?.format()
-        )
-    }
+  companion object {
+    fun create(href: String, title: String, description: String?) =
+      FrostSearch(
+        with(href.indexOf("?")) { if (this == -1) href else href.substring(0, this) },
+        title.format(),
+        description?.format()
+      )
+  }
 }
 
 private class SearchParserImpl : FrostParserBase<FrostSearches>(false) {
 
-    override var nameRes = FbItem._SEARCH_PARSE.titleId
+  override var nameRes = FbItem._SEARCH_PARSE.titleId
 
-    override val url = "${FbItem._SEARCH_PARSE.url}?q=google"
+  override val url = "${FbItem._SEARCH_PARSE.url}?q=google"
 
-    private val String.formattedSearchUrl: String
-        get() = replace(FACEBOOK_MBASIC_COM, FACEBOOK_BASE_COM)
+  private val String.formattedSearchUrl: String
+    get() = replace(FACEBOOK_MBASIC_COM, FACEBOOK_BASE_COM)
 
-    override fun parseImpl(doc: Document): FrostSearches? {
-        val container: Element = doc.getElementById("BrowseResultsContainer")
-            ?: doc.getElementById("root")
-            ?: return null
+  override fun parseImpl(doc: Document): FrostSearches? {
+    val container: Element =
+      doc.getElementById("BrowseResultsContainer") ?: doc.getElementById("root") ?: return null
 
-        return FrostSearches(
-            container.select("table[role=presentation]").mapNotNull { el ->
-                // Our assumption is that search entries start with an image, followed by general info
-                // There may be other <td />s, but we will not be parsing them
-                // Furthermore, the <td /> entry wraps a link, containing all the necessary info
-                val a = el.select("td")
-                    .getOrNull(1)
-                    ?.selectFirst("a")
-                    ?: return@mapNotNull null
-                val url =
-                    a.attr("href").takeIf { it.isNotEmpty() }
-                        ?.formattedFbUrl?.formattedSearchUrl
-                        ?: return@mapNotNull null
-                // Currently, children should all be <div /> elements, where the first entry is the name/title
-                // And the other entries are additional info.
-                // There are also cases of nested tables, eg for the "join" button in groups.
-                // Those elements have <span /> texts, so we will filter by div to ignore those
-                val texts =
-                    a.children()
-                        .filter { childEl: Element -> childEl.tagName() == "div" && childEl.hasText() }
-                val title = texts.firstOrNull()?.text() ?: return@mapNotNull null
-                val info = texts.takeIf { it.size > 1 }?.last()?.text()
-                L.e { a }
-                create(
-                    href = url,
-                    title = title,
-                    description = info
-                ).also { L.e { it } }
-            }
-        )
-    }
+    return FrostSearches(
+      container.select("table[role=presentation]").mapNotNull { el ->
+        // Our assumption is that search entries start with an image, followed by general info
+        // There may be other <td />s, but we will not be parsing them
+        // Furthermore, the <td /> entry wraps a link, containing all the necessary info
+        val a = el.select("td").getOrNull(1)?.selectFirst("a") ?: return@mapNotNull null
+        val url =
+          a.attr("href").takeIf { it.isNotEmpty() }?.formattedFbUrl?.formattedSearchUrl
+            ?: return@mapNotNull null
+        // Currently, children should all be <div /> elements, where the first entry is the
+        // name/title
+        // And the other entries are additional info.
+        // There are also cases of nested tables, eg for the "join" button in groups.
+        // Those elements have <span /> texts, so we will filter by div to ignore those
+        val texts =
+          a.children().filter { childEl: Element ->
+            childEl.tagName() == "div" && childEl.hasText()
+          }
+        val title = texts.firstOrNull()?.text() ?: return@mapNotNull null
+        val info = texts.takeIf { it.size > 1 }?.last()?.text()
+        L.e { a }
+        create(href = url, title = title, description = info).also { L.e { it } }
+      }
+    )
+  }
 }

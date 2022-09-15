@@ -59,225 +59,206 @@ import com.pitchedapps.frost.utils.frostNavigationBar
 import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.utils.loadAssets
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-/**
- * Created by Allan Wang on 2017-06-06.
- */
+/** Created by Allan Wang on 2017-06-06. */
 @AndroidEntryPoint
 class SettingsActivity : KPrefActivity() {
 
-    @Inject
-    lateinit var fbCookie: FbCookie
+  @Inject lateinit var fbCookie: FbCookie
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    @Inject
-    lateinit var notifDao: NotificationDao
+  @Inject lateinit var notifDao: NotificationDao
 
-    @Inject
-    lateinit var activityThemer: ActivityThemer
+  @Inject lateinit var activityThemer: ActivityThemer
 
-    private var resultFlag = Activity.RESULT_CANCELED
+  private var resultFlag = Activity.RESULT_CANCELED
 
-    companion object {
-        private const val REQUEST_RINGTONE = 0b10111 shl 5
-        const val REQUEST_NOTIFICATION_RINGTONE = REQUEST_RINGTONE or 1
-        const val REQUEST_MESSAGE_RINGTONE = REQUEST_RINGTONE or 2
-        const val ACTIVITY_REQUEST_TABS = 29
-        const val ACTIVITY_REQUEST_DEBUG = 53
+  companion object {
+    private const val REQUEST_RINGTONE = 0b10111 shl 5
+    const val REQUEST_NOTIFICATION_RINGTONE = REQUEST_RINGTONE or 1
+    const val REQUEST_MESSAGE_RINGTONE = REQUEST_RINGTONE or 2
+    const val ACTIVITY_REQUEST_TABS = 29
+    const val ACTIVITY_REQUEST_DEBUG = 53
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (fetchRingtone(requestCode, resultCode, data)) return
+    when (requestCode) {
+      ACTIVITY_REQUEST_TABS -> {
+        if (resultCode == Activity.RESULT_OK) shouldRestartMain()
+        return
+      }
+      ACTIVITY_REQUEST_DEBUG -> {
+        val url = data?.extras?.getString(DebugActivity.RESULT_URL)
+        if (resultCode == Activity.RESULT_OK && url?.isNotBlank() == true)
+          sendDebug(url, data.getStringExtra(DebugActivity.RESULT_BODY))
+        return
+      }
+    }
+    reloadList()
+  }
+
+  /** Fetch ringtone and save uri Returns [true] if consumed, [false] otherwise */
+  private fun fetchRingtone(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+    if (requestCode and REQUEST_RINGTONE != REQUEST_RINGTONE || resultCode != Activity.RESULT_OK)
+      return false
+    val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+    val uriString: String = uri?.toString() ?: ""
+    if (uri != null) {
+      try {
+        grantUriPermission("com.android.systemui", uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+      } catch (e: Exception) {
+        L.e(e) { "grantUriPermission" }
+      }
+    }
+    when (requestCode) {
+      REQUEST_NOTIFICATION_RINGTONE -> {
+        prefs.notificationRingtone = uriString
+        reloadByTitle(R.string.notification_ringtone)
+      }
+      REQUEST_MESSAGE_RINGTONE -> {
+        prefs.messageRingtone = uriString
+        reloadByTitle(R.string.message_ringtone)
+      }
+    }
+    return true
+  }
+
+  override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
+    textColor = { themeProvider.textColor }
+    accentColor = { themeProvider.accentColor }
+  }
+
+  override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
+    subItems(R.string.appearance, getAppearancePrefs()) {
+      descRes = R.string.appearance_desc
+      iicon = GoogleMaterial.Icon.gmd_palette
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (fetchRingtone(requestCode, resultCode, data)) return
-        when (requestCode) {
-            ACTIVITY_REQUEST_TABS -> {
-                if (resultCode == Activity.RESULT_OK)
-                    shouldRestartMain()
-                return
-            }
-            ACTIVITY_REQUEST_DEBUG -> {
-                val url = data?.extras?.getString(DebugActivity.RESULT_URL)
-                if (resultCode == Activity.RESULT_OK && url?.isNotBlank() == true)
-                    sendDebug(url, data.getStringExtra(DebugActivity.RESULT_BODY))
-                return
-            }
-        }
-        reloadList()
+    subItems(R.string.behaviour, getBehaviourPrefs()) {
+      descRes = R.string.behaviour_desc
+      iicon = GoogleMaterial.Icon.gmd_trending_up
     }
 
-    /**
-     * Fetch ringtone and save uri
-     * Returns [true] if consumed, [false] otherwise
-     */
-    private fun fetchRingtone(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-        if (requestCode and REQUEST_RINGTONE != REQUEST_RINGTONE || resultCode != Activity.RESULT_OK) return false
-        val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
-        val uriString: String = uri?.toString() ?: ""
-        if (uri != null) {
-            try {
-                grantUriPermission(
-                    "com.android.systemui",
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-            } catch (e: Exception) {
-                L.e(e) { "grantUriPermission" }
-            }
-        }
-        when (requestCode) {
-            REQUEST_NOTIFICATION_RINGTONE -> {
-                prefs.notificationRingtone = uriString
-                reloadByTitle(R.string.notification_ringtone)
-            }
-            REQUEST_MESSAGE_RINGTONE -> {
-                prefs.messageRingtone = uriString
-                reloadByTitle(R.string.message_ringtone)
-            }
-        }
-        return true
+    subItems(R.string.newsfeed, getFeedPrefs()) {
+      descRes = R.string.newsfeed_desc
+      iicon = CommunityMaterial.Icon3.cmd_newspaper
     }
 
-    override fun kPrefCoreAttributes(): CoreAttributeContract.() -> Unit = {
-        textColor = { themeProvider.textColor }
-        accentColor = { themeProvider.accentColor }
+    subItems(R.string.notifications, getNotificationPrefs()) {
+      descRes = R.string.notifications_desc
+      iicon = GoogleMaterial.Icon.gmd_notifications
     }
 
-    override fun onCreateKPrefs(savedInstanceState: Bundle?): KPrefAdapterBuilder.() -> Unit = {
-        subItems(R.string.appearance, getAppearancePrefs()) {
-            descRes = R.string.appearance_desc
-            iicon = GoogleMaterial.Icon.gmd_palette
-        }
-
-        subItems(R.string.behaviour, getBehaviourPrefs()) {
-            descRes = R.string.behaviour_desc
-            iicon = GoogleMaterial.Icon.gmd_trending_up
-        }
-
-        subItems(R.string.newsfeed, getFeedPrefs()) {
-            descRes = R.string.newsfeed_desc
-            iicon = CommunityMaterial.Icon3.cmd_newspaper
-        }
-
-        subItems(R.string.notifications, getNotificationPrefs()) {
-            descRes = R.string.notifications_desc
-            iicon = GoogleMaterial.Icon.gmd_notifications
-        }
-
-        subItems(R.string.security, getSecurityPrefs()) {
-            descRes = R.string.security_desc
-            iicon = GoogleMaterial.Icon.gmd_lock
-        }
-
-//        subItems(R.string.network, getNetworkPrefs()) {
-//            descRes = R.string.network_desc
-//            iicon = GoogleMaterial.Icon.gmd_network_cell
-//        }
-
-        // todo add donation?
-
-        plainText(R.string.about_frost) {
-            descRes = R.string.about_frost_desc
-            iicon = GoogleMaterial.Icon.gmd_info
-            onClick = {
-                startActivityForResult<AboutActivity>(
-                    9,
-                    bundleBuilder = {
-                        withSceneTransitionAnimation(this@SettingsActivity)
-                    }
-                )
-            }
-        }
-
-        plainText(R.string.help_translate) {
-            descRes = R.string.help_translate_desc
-            iicon = GoogleMaterial.Icon.gmd_translate
-            onClick = { startLink(R.string.translation_url) }
-        }
-
-        plainText(R.string.replay_intro) {
-            iicon = GoogleMaterial.Icon.gmd_replay
-            onClick = { launchNewTask<IntroActivity>(cookies(), true) }
-        }
-
-        subItems(R.string.experimental, getExperimentalPrefs()) {
-            descRes = R.string.experimental_desc
-            iicon = CommunityMaterial.Icon2.cmd_flask_outline
-        }
-
-        subItems(R.string.debug_frost, getDebugPrefs()) {
-            descRes = R.string.debug_frost_desc
-            iicon = CommunityMaterial.Icon.cmd_bug
-            visible = { prefs.debugSettings }
-        }
+    subItems(R.string.security, getSecurityPrefs()) {
+      descRes = R.string.security_desc
+      iicon = GoogleMaterial.Icon.gmd_lock
     }
 
-    fun setFrostResult(flag: Int) {
-        resultFlag = resultFlag or flag
-    }
+    //        subItems(R.string.network, getNetworkPrefs()) {
+    //            descRes = R.string.network_desc
+    //            iicon = GoogleMaterial.Icon.gmd_network_cell
+    //        }
 
-    fun shouldRestartMain() {
-        setFrostResult(REQUEST_RESTART)
-    }
+    // todo add donation?
 
-    fun shouldRefreshMain() {
-        setFrostResult(REQUEST_REFRESH)
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activityThemer.setFrostTheme(forceTransparent = true)
-        animate = prefs.animate
-        themeExterior(false)
-    }
-
-    fun themeExterior(animate: Boolean = true) {
-        if (animate) bgCanvas.fade(themeProvider.bgColor)
-        else bgCanvas.set(themeProvider.bgColor)
-        if (animate) toolbarCanvas.ripple(
-            themeProvider.headerColor,
-            RippleCanvas.MIDDLE,
-            RippleCanvas.END
+    plainText(R.string.about_frost) {
+      descRes = R.string.about_frost_desc
+      iicon = GoogleMaterial.Icon.gmd_info
+      onClick = {
+        startActivityForResult<AboutActivity>(
+          9,
+          bundleBuilder = { withSceneTransitionAnimation(this@SettingsActivity) }
         )
-        else toolbarCanvas.set(themeProvider.headerColor)
-        frostNavigationBar(prefs, themeProvider)
+      }
     }
 
-    override fun onBackPressed() {
-        if (!super.backPress()) {
-            setResult(resultFlag)
-            launch(NonCancellable) {
-                loadAssets(themeProvider)
-                finishSlideOut()
-            }
-        }
+    plainText(R.string.help_translate) {
+      descRes = R.string.help_translate_desc
+      iicon = GoogleMaterial.Icon.gmd_translate
+      onClick = { startLink(R.string.translation_url) }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_settings, menu)
-        toolbar.tint(themeProvider.iconColor)
-        setMenuIcons(
-            menu, themeProvider.iconColor,
-            R.id.action_github to CommunityMaterial.Icon2.cmd_github,
-            R.id.action_changelog to GoogleMaterial.Icon.gmd_info
-        )
-        return true
+    plainText(R.string.replay_intro) {
+      iicon = GoogleMaterial.Icon.gmd_replay
+      onClick = { launchNewTask<IntroActivity>(cookies(), true) }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_github -> startLink(R.string.github_url)
-            R.id.action_changelog -> frostChangelog()
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
+    subItems(R.string.experimental, getExperimentalPrefs()) {
+      descRes = R.string.experimental_desc
+      iicon = CommunityMaterial.Icon2.cmd_flask_outline
     }
+
+    subItems(R.string.debug_frost, getDebugPrefs()) {
+      descRes = R.string.debug_frost_desc
+      iicon = CommunityMaterial.Icon.cmd_bug
+      visible = { prefs.debugSettings }
+    }
+  }
+
+  fun setFrostResult(flag: Int) {
+    resultFlag = resultFlag or flag
+  }
+
+  fun shouldRestartMain() {
+    setFrostResult(REQUEST_RESTART)
+  }
+
+  fun shouldRefreshMain() {
+    setFrostResult(REQUEST_REFRESH)
+  }
+
+  @SuppressLint("MissingSuperCall")
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    activityThemer.setFrostTheme(forceTransparent = true)
+    animate = prefs.animate
+    themeExterior(false)
+  }
+
+  fun themeExterior(animate: Boolean = true) {
+    if (animate) bgCanvas.fade(themeProvider.bgColor) else bgCanvas.set(themeProvider.bgColor)
+    if (animate)
+      toolbarCanvas.ripple(themeProvider.headerColor, RippleCanvas.MIDDLE, RippleCanvas.END)
+    else toolbarCanvas.set(themeProvider.headerColor)
+    frostNavigationBar(prefs, themeProvider)
+  }
+
+  override fun onBackPressed() {
+    if (!super.backPress()) {
+      setResult(resultFlag)
+      launch(NonCancellable) {
+        loadAssets(themeProvider)
+        finishSlideOut()
+      }
+    }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    menuInflater.inflate(R.menu.menu_settings, menu)
+    toolbar.tint(themeProvider.iconColor)
+    setMenuIcons(
+      menu,
+      themeProvider.iconColor,
+      R.id.action_github to CommunityMaterial.Icon2.cmd_github,
+      R.id.action_changelog to GoogleMaterial.Icon.gmd_info
+    )
+    return true
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.action_github -> startLink(R.string.github_url)
+      R.id.action_changelog -> frostChangelog()
+      else -> return super.onOptionsItemSelected(item)
+    }
+    return true
+  }
 }

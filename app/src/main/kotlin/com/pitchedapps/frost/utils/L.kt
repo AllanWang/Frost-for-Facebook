@@ -27,33 +27,31 @@ import com.pitchedapps.frost.BuildConfig
  */
 object L : KauLogger("Frost") {
 
-    inline fun test(message: () -> Any?) {
-        _d {
-            "Test1234 ${message()}"
-        }
-    }
+  inline fun test(message: () -> Any?) {
+    _d { "Test1234 ${message()}" }
+  }
 
-    inline fun _i(message: () -> Any?) {
-        if (BuildConfig.DEBUG) {
-            i(message)
-        }
+  inline fun _i(message: () -> Any?) {
+    if (BuildConfig.DEBUG) {
+      i(message)
     }
+  }
 
-    inline fun _d(message: () -> Any?) {
-        if (BuildConfig.DEBUG) {
-            d(message)
-        }
+  inline fun _d(message: () -> Any?) {
+    if (BuildConfig.DEBUG) {
+      d(message)
     }
+  }
 
-    inline fun _e(e: Throwable?, message: () -> Any?) {
-        if (BuildConfig.DEBUG) {
-            e(e, message)
-        }
+  inline fun _e(e: Throwable?, message: () -> Any?) {
+    if (BuildConfig.DEBUG) {
+      e(e, message)
     }
+  }
 }
 
 fun KauLoggerExtension.test(message: () -> Any?) {
-    if (BuildConfig.DEBUG) {
-        d { "Test1234 ${message()}" }
-    }
+  if (BuildConfig.DEBUG) {
+    d { "Test1234 ${message()}" }
+  }
 }

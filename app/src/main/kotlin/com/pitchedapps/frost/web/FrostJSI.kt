@@ -32,149 +32,141 @@ import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
-/**
- * Created by Allan Wang on 2017-06-01.
- */
+/** Created by Allan Wang on 2017-06-01. */
 @FrostWebScoped
-class FrostJSI @Inject internal constructor(
-    val web: FrostWebView,
-    private val activity: Activity,
-    private val fbCookie: FbCookie,
-    private val prefs: Prefs,
-    @FrostRefresh private val refreshEmit: FrostEmitter<Boolean>
+class FrostJSI
+@Inject
+internal constructor(
+  val web: FrostWebView,
+  private val activity: Activity,
+  private val fbCookie: FbCookie,
+  private val prefs: Prefs,
+  @FrostRefresh private val refreshEmit: FrostEmitter<Boolean>
 ) {
 
-    private val mainActivity: MainActivity? = activity as? MainActivity
-    private val webActivity: WebOverlayActivityBase? = activity as? WebOverlayActivityBase
-    private val headerEmit: FrostEmitter<String>? = mainActivity?.headerEmit
-    private val cookies: List<CookieEntity> = activity.cookies()
+  private val mainActivity: MainActivity? = activity as? MainActivity
+  private val webActivity: WebOverlayActivityBase? = activity as? WebOverlayActivityBase
+  private val headerEmit: FrostEmitter<String>? = mainActivity?.headerEmit
+  private val cookies: List<CookieEntity> = activity.cookies()
 
-    /**
-     * Attempts to load the url in an overlay
-     * Returns {@code true} if successful, meaning the event is consumed,
-     * or {@code false} otherwise, meaning the event should be propagated
-     */
-    @JavascriptInterface
-    fun loadUrl(url: String?): Boolean = if (url == null) false else web.requestWebOverlay(url)
+  /**
+   * Attempts to load the url in an overlay Returns {@code true} if successful, meaning the event is
+   * consumed, or {@code false} otherwise, meaning the event should be propagated
+   */
+  @JavascriptInterface
+  fun loadUrl(url: String?): Boolean = if (url == null) false else web.requestWebOverlay(url)
 
-    @JavascriptInterface
-    fun loadVideo(url: String?, isGif: Boolean): Boolean =
-        if (url != null && prefs.enablePip) {
-            web.post {
-                (activity as? VideoViewHolder)?.showVideo(url, isGif)
-                    ?: L.e { "Could not load video; contract not implemented" }
-            }
-            true
-        } else {
-            false
-        }
-
-    @JavascriptInterface
-    fun reloadBaseUrl(animate: Boolean) {
-        L.d { "FrostJSI reload" }
-        web.post {
-            web.stopLoading()
-            web.reloadBase(animate)
-        }
+  @JavascriptInterface
+  fun loadVideo(url: String?, isGif: Boolean): Boolean =
+    if (url != null && prefs.enablePip) {
+      web.post {
+        (activity as? VideoViewHolder)?.showVideo(url, isGif)
+          ?: L.e { "Could not load video; contract not implemented" }
+      }
+      true
+    } else {
+      false
     }
 
-    @JavascriptInterface
-    fun contextMenu(url: String?, text: String?) {
-        // url will be formatted through webcontext
-        web.post {
-            activity.showWebContextMenu(
-                WebContext(url.takeIf { it.isIndependent }, text),
-                fbCookie,
-                prefs
-            )
-        }
+  @JavascriptInterface
+  fun reloadBaseUrl(animate: Boolean) {
+    L.d { "FrostJSI reload" }
+    web.post {
+      web.stopLoading()
+      web.reloadBase(animate)
     }
+  }
 
-    /**
-     * Get notified when a stationary long click starts or ends
-     * This will be used to toggle the main activities viewpager swipe
-     */
-    @JavascriptInterface
-    fun longClick(start: Boolean) {
-        mainActivity?.contentBinding?.viewpager?.enableSwipe = !start
-        if (web.frostWebClient.urlSupportsRefresh) {
-            web.parent.swipeDisabledByAction = start
-        }
+  @JavascriptInterface
+  fun contextMenu(url: String?, text: String?) {
+    // url will be formatted through webcontext
+    web.post {
+      activity.showWebContextMenu(
+        WebContext(url.takeIf { it.isIndependent }, text),
+        fbCookie,
+        prefs
+      )
     }
+  }
 
-    /**
-     * Allow or disallow the pull down to refresh action
-     */
-    @JavascriptInterface
-    fun disableSwipeRefresh(disable: Boolean) {
-        if (!web.frostWebClient.urlSupportsRefresh) {
-            return
-        }
-        web.parent.swipeDisabledByAction = disable
-        if (disable) {
-            // locked onto an input field; ensure content is visible
-            mainActivity?.collapseAppBar()
-        }
+  /**
+   * Get notified when a stationary long click starts or ends This will be used to toggle the main
+   * activities viewpager swipe
+   */
+  @JavascriptInterface
+  fun longClick(start: Boolean) {
+    mainActivity?.contentBinding?.viewpager?.enableSwipe = !start
+    if (web.frostWebClient.urlSupportsRefresh) {
+      web.parent.swipeDisabledByAction = start
     }
+  }
 
-    @JavascriptInterface
-    fun loadLogin() {
-        L.d { "Sign up button found; load login" }
-        activity.ctxCoroutine.launch {
-            fbCookie.logout(activity, deleteCookie = false)
-        }
+  /** Allow or disallow the pull down to refresh action */
+  @JavascriptInterface
+  fun disableSwipeRefresh(disable: Boolean) {
+    if (!web.frostWebClient.urlSupportsRefresh) {
+      return
     }
-
-    /**
-     * Launch image overlay
-     */
-    @JavascriptInterface
-    fun loadImage(imageUrl: String, text: String?) {
-        activity.launchImageActivity(imageUrl, text)
+    web.parent.swipeDisabledByAction = disable
+    if (disable) {
+      // locked onto an input field; ensure content is visible
+      mainActivity?.collapseAppBar()
     }
+  }
 
-    @JavascriptInterface
-    fun emit(flag: Int) {
-        web.post { web.frostWebClient.emit(flag) }
+  @JavascriptInterface
+  fun loadLogin() {
+    L.d { "Sign up button found; load login" }
+    activity.ctxCoroutine.launch { fbCookie.logout(activity, deleteCookie = false) }
+  }
+
+  /** Launch image overlay */
+  @JavascriptInterface
+  fun loadImage(imageUrl: String, text: String?) {
+    activity.launchImageActivity(imageUrl, text)
+  }
+
+  @JavascriptInterface
+  fun emit(flag: Int) {
+    web.post { web.frostWebClient.emit(flag) }
+  }
+
+  @JavascriptInterface
+  fun isReady() {
+    if (web.frostWebClient !is FrostWebViewClientMenu) {
+      L.v { "JSI is ready" }
+      refreshEmit(false)
     }
+  }
 
-    @JavascriptInterface
-    fun isReady() {
-        if (web.frostWebClient !is FrostWebViewClientMenu) {
-            L.v { "JSI is ready" }
-            refreshEmit(false)
-        }
-    }
+  @JavascriptInterface
+  fun handleHtml(html: String?) {
+    html ?: return
+    web.post { web.frostWebClient.handleHtml(html) }
+  }
 
-    @JavascriptInterface
-    fun handleHtml(html: String?) {
-        html ?: return
-        web.post { web.frostWebClient.handleHtml(html) }
-    }
+  @JavascriptInterface
+  fun handleHeader(html: String?) {
+    html ?: return
+    headerEmit?.invoke(html)
+  }
 
-    @JavascriptInterface
-    fun handleHeader(html: String?) {
-        html ?: return
-        headerEmit?.invoke(html)
-    }
+  @JavascriptInterface
+  fun allowHorizontalScrolling(enable: Boolean) {
+    mainActivity?.contentBinding?.viewpager?.enableSwipe = enable
+    webActivity?.swipeBack?.disallowIntercept = !enable
+  }
 
-    @JavascriptInterface
-    fun allowHorizontalScrolling(enable: Boolean) {
-        mainActivity?.contentBinding?.viewpager?.enableSwipe = enable
-        webActivity?.swipeBack?.disallowIntercept = !enable
-    }
+  private var isScrolling = false
 
-    private var isScrolling = false
+  @JavascriptInterface
+  fun setScrolling(scrolling: Boolean) {
+    L.v { "Scrolling $scrolling" }
+    this.isScrolling = scrolling
+  }
 
-    @JavascriptInterface
-    fun setScrolling(scrolling: Boolean) {
-        L.v { "Scrolling $scrolling" }
-        this.isScrolling = scrolling
-    }
-
-    @JavascriptInterface
-    fun isScrolling(): Boolean = isScrolling
+  @JavascriptInterface fun isScrolling(): Boolean = isScrolling
 }

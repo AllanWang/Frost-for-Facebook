@@ -16,9 +16,7 @@
  */
 package com.pitchedapps.frost.utils
 
-/**
- * Created by Allan Wang on 20/12/17.
- */
+/** Created by Allan Wang on 20/12/17. */
 const val ACTIVITY_SETTINGS = 97
 
 /*

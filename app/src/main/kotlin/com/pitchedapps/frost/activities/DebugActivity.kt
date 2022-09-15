@@ -35,110 +35,97 @@ import com.pitchedapps.frost.utils.ActivityThemer
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createFreshDir
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CoroutineExceptionHandler
 
-/**
- * Created by Allan Wang on 05/01/18.
- */
+/** Created by Allan Wang on 05/01/18. */
 @AndroidEntryPoint
 class DebugActivity : KauBaseActivity() {
 
-    companion object {
-        const val RESULT_URL = "extra_result_url"
-        const val RESULT_SCREENSHOT = "extra_result_screenshot"
-        const val RESULT_BODY = "extra_result_body"
-        fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
+  companion object {
+    const val RESULT_URL = "extra_result_url"
+    const val RESULT_SCREENSHOT = "extra_result_screenshot"
+    const val RESULT_BODY = "extra_result_body"
+    fun baseDir(context: Context) = File(context.externalCacheDir, "offline_debug")
+  }
+
+  @Inject lateinit var activityThemer: ActivityThemer
+
+  @Inject lateinit var themeProvider: ThemeProvider
+
+  lateinit var binding: ActivityDebugBinding
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    binding = ActivityDebugBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    binding.init()
+  }
+
+  fun ActivityDebugBinding.init() {
+    setSupportActionBar(toolbar)
+    supportActionBar?.apply {
+      setDisplayHomeAsUpEnabled(true)
+      setDisplayShowHomeEnabled(true)
     }
+    setTitle(R.string.debug_frost)
 
-    @Inject
-    lateinit var activityThemer: ActivityThemer
+    activityThemer.setFrostColors { toolbar(toolbar) }
+    debugWebview.loadUrl(FbItem.FEED.url)
+    debugWebview.onPageFinished = { swipeRefresh.isRefreshing = false }
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+    swipeRefresh.setOnRefreshListener(debugWebview::reload)
 
-    lateinit var binding: ActivityDebugBinding
+    fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, themeProvider.iconColor)
+    fab.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
+    fab.setOnClickListener { _ ->
+      fab.hide()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDebugBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.init()
-    }
-
-    fun ActivityDebugBinding.init() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        setTitle(R.string.debug_frost)
-
-        activityThemer.setFrostColors {
-            toolbar(toolbar)
-        }
-        debugWebview.loadUrl(FbItem.FEED.url)
-        debugWebview.onPageFinished = { swipeRefresh.isRefreshing = false }
-
-        swipeRefresh.setOnRefreshListener(debugWebview::reload)
-
-        fab.visible().setIcon(GoogleMaterial.Icon.gmd_bug_report, themeProvider.iconColor)
-        fab.backgroundTintList = ColorStateList.valueOf(themeProvider.accentColor)
-        fab.setOnClickListener { _ ->
-            fab.hide()
-
-            val errorHandler = CoroutineExceptionHandler { _, throwable ->
-                L.e { "DebugActivity error ${throwable.message}" }
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-
-            launchMain(errorHandler) {
-                val parent = baseDir(this@DebugActivity)
-                parent.createFreshDir()
-
-                val body: String? = suspendCoroutine { cont ->
-                    debugWebview.evaluateJavascript(JsActions.RETURN_BODY.function) {
-                        cont.resume(it)
-                    }
-                }
-
-                val hasScreenshot: Boolean =
-                    debugWebview.getScreenshot(File(parent, "screenshot.png"))
-
-                val intent = Intent()
-                intent.putExtra(RESULT_URL, debugWebview.url)
-                intent.putExtra(RESULT_SCREENSHOT, hasScreenshot)
-                if (body != null)
-                    intent.putExtra(RESULT_BODY, body)
-                setResult(Activity.RESULT_OK, intent)
-                finish()
-            }
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
+      val errorHandler = CoroutineExceptionHandler { _, throwable ->
+        L.e { "DebugActivity error ${throwable.message}" }
+        setResult(Activity.RESULT_CANCELED)
         finish()
-        return true
-    }
+      }
 
-    override fun onResume() {
-        super.onResume()
-        binding.debugWebview.resumeTimers()
-    }
+      launchMain(errorHandler) {
+        val parent = baseDir(this@DebugActivity)
+        parent.createFreshDir()
 
-    override fun onPause() {
-        binding.debugWebview.pauseTimers()
-        super.onPause()
-    }
+        val body: String? = suspendCoroutine { cont ->
+          debugWebview.evaluateJavascript(JsActions.RETURN_BODY.function) { cont.resume(it) }
+        }
 
-    override fun onBackPressed() {
-        if (binding.debugWebview.canGoBack())
-            binding.debugWebview.goBack()
-        else
-            super.onBackPressed()
+        val hasScreenshot: Boolean = debugWebview.getScreenshot(File(parent, "screenshot.png"))
+
+        val intent = Intent()
+        intent.putExtra(RESULT_URL, debugWebview.url)
+        intent.putExtra(RESULT_SCREENSHOT, hasScreenshot)
+        if (body != null) intent.putExtra(RESULT_BODY, body)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+      }
     }
+  }
+
+  override fun onSupportNavigateUp(): Boolean {
+    finish()
+    return true
+  }
+
+  override fun onResume() {
+    super.onResume()
+    binding.debugWebview.resumeTimers()
+  }
+
+  override fun onPause() {
+    binding.debugWebview.pauseTimers()
+    super.onPause()
+  }
+
+  override fun onBackPressed() {
+    if (binding.debugWebview.canGoBack()) binding.debugWebview.goBack() else super.onBackPressed()
+  }
 }

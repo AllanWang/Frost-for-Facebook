@@ -26,63 +26,52 @@ import androidx.room.Query
 import com.pitchedapps.frost.utils.L
 import kotlinx.android.parcel.Parcelize
 
-/**
- * Created by Allan Wang on 2017-05-30.
- */
+/** Created by Allan Wang on 2017-05-30. */
 
-/**
- * Generic cache to store serialized content
- */
+/** Generic cache to store serialized content */
 @Entity(
-    tableName = "frost_cache",
-    primaryKeys = ["id", "type"],
-    foreignKeys = [
-        ForeignKey(
-            entity = CookieEntity::class,
-            parentColumns = ["cookie_id"],
-            childColumns = ["id"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+  tableName = "frost_cache",
+  primaryKeys = ["id", "type"],
+  foreignKeys =
+    [
+      ForeignKey(
+        entity = CookieEntity::class,
+        parentColumns = ["cookie_id"],
+        childColumns = ["id"],
+        onDelete = ForeignKey.CASCADE
+      )]
 )
 @Parcelize
 data class CacheEntity(
-    val id: Long,
-    val type: String,
-    val lastUpdated: Long,
-    val contents: String
+  val id: Long,
+  val type: String,
+  val lastUpdated: Long,
+  val contents: String
 ) : Parcelable
 
 @Dao
 interface CacheDao {
 
-    @Query("SELECT * FROM frost_cache WHERE id = :id AND type = :type")
-    fun _select(id: Long, type: String): CacheEntity?
+  @Query("SELECT * FROM frost_cache WHERE id = :id AND type = :type")
+  fun _select(id: Long, type: String): CacheEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun _insertCache(cache: CacheEntity)
+  @Insert(onConflict = OnConflictStrategy.REPLACE) fun _insertCache(cache: CacheEntity)
 
-    @Query("DELETE FROM frost_cache WHERE id = :id AND type = :type")
-    fun _delete(id: Long, type: String)
+  @Query("DELETE FROM frost_cache WHERE id = :id AND type = :type")
+  fun _delete(id: Long, type: String)
 }
 
-suspend fun CacheDao.select(id: Long, type: String) = dao {
-    _select(id, type)
-}
+suspend fun CacheDao.select(id: Long, type: String) = dao { _select(id, type) }
 
-suspend fun CacheDao.delete(id: Long, type: String) = dao {
-    _delete(id, type)
-}
+suspend fun CacheDao.delete(id: Long, type: String) = dao { _delete(id, type) }
 
-/**
- * Returns true if successful, given that there are constraints to the insertion
- */
+/** Returns true if successful, given that there are constraints to the insertion */
 suspend fun CacheDao.save(id: Long, type: String, contents: String): Boolean = dao {
-    try {
-        _insertCache(CacheEntity(id, type, System.currentTimeMillis(), contents))
-        true
-    } catch (e: Exception) {
-        L.e(e) { "Cache save failed for $type" }
-        false
-    }
+  try {
+    _insertCache(CacheEntity(id, type, System.currentTimeMillis(), contents))
+    true
+  } catch (e: Exception) {
+    L.e(e) { "Cache save failed for $type" }
+    false
+  }
 }

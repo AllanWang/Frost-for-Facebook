@@ -25,10 +25,10 @@ import dagger.hilt.DefineComponent
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewComponent
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Qualifier
 import javax.inject.Scope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * Defines a new scope for Frost web related content.
@@ -37,28 +37,22 @@ import javax.inject.Scope
  */
 @Scope
 @Retention(AnnotationRetention.BINARY)
-@Target(
-    AnnotationTarget.FUNCTION,
-    AnnotationTarget.TYPE,
-    AnnotationTarget.CLASS
-)
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 annotation class FrostWebScoped
 
-@FrostWebScoped
-@DefineComponent(parent = ViewComponent::class)
-interface FrostWebComponent
+@FrostWebScoped @DefineComponent(parent = ViewComponent::class) interface FrostWebComponent
 
 @DefineComponent.Builder
 interface FrostWebComponentBuilder {
-    fun frostParent(@BindsInstance parent: FrostContentParent): FrostWebComponentBuilder
-    fun frostWebView(@BindsInstance web: FrostWebView): FrostWebComponentBuilder
-    fun build(): FrostWebComponent
+  fun frostParent(@BindsInstance parent: FrostContentParent): FrostWebComponentBuilder
+  fun frostWebView(@BindsInstance web: FrostWebView): FrostWebComponentBuilder
+  fun build(): FrostWebComponent
 }
 
 @EntryPoint
 @InstallIn(FrostWebComponent::class)
 interface FrostWebEntryPoint {
-    fun frostJsi(): FrostJSI
+  fun frostJsi(): FrostJSI
 }
 
 fun interface FrostEmitter<T> : (T) -> Unit
@@ -68,20 +62,16 @@ fun <T> MutableSharedFlow<T>.asFrostEmitter(): FrostEmitter<T> = FrostEmitter { 
 @Module
 @InstallIn(FrostWebComponent::class)
 object FrostWebFlowModule {
-    @Provides
-    @FrostWebScoped
-    @FrostRefresh
-    fun refreshFlow(parent: FrostContentParent): SharedFlow<Boolean> = parent.refreshFlow
+  @Provides
+  @FrostWebScoped
+  @FrostRefresh
+  fun refreshFlow(parent: FrostContentParent): SharedFlow<Boolean> = parent.refreshFlow
 
-    @Provides
-    @FrostWebScoped
-    @FrostRefresh
-    fun refreshEmit(parent: FrostContentParent): FrostEmitter<Boolean> = parent.refreshEmit
+  @Provides
+  @FrostWebScoped
+  @FrostRefresh
+  fun refreshEmit(parent: FrostContentParent): FrostEmitter<Boolean> = parent.refreshEmit
 }
 
-/**
- * Observable to get data on whether view is refreshing or not
- */
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class FrostRefresh
+/** Observable to get data on whether view is refreshing or not */
+@Qualifier @Retention(AnnotationRetention.BINARY) annotation class FrostRefresh

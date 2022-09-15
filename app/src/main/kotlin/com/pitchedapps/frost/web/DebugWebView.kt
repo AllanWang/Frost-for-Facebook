@@ -35,10 +35,10 @@ import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.utils.createFreshFile
 import com.pitchedapps.frost.utils.isFacebookUrl
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2018-01-05.
@@ -46,88 +46,80 @@ import javax.inject.Inject
  * A barebone webview with a refresh listener
  */
 @AndroidEntryPoint
-class DebugWebView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr) {
+class DebugWebView
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+  WebView(context, attrs, defStyleAttr) {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    var onPageFinished: (String?) -> Unit = {}
+  var onPageFinished: (String?) -> Unit = {}
 
-    init {
-        setupWebview()
+  init {
+    setupWebview()
+  }
+
+  @SuppressLint("SetJavaScriptEnabled")
+  private fun setupWebview() {
+    settings.javaScriptEnabled = true
+    settings.userAgentString = USER_AGENT
+    setLayerType(View.LAYER_TYPE_HARDWARE, null)
+    webViewClient = DebugClient()
+    @Suppress("DEPRECATION")
+    isDrawingCacheEnabled = true
+  }
+
+  /** Fetches a screenshot of the current webview, returning true if successful, false otherwise. */
+  suspend fun getScreenshot(output: File): Boolean =
+    withContext(Dispatchers.IO) {
+      if (!output.createFreshFile()) {
+        L.e { "Failed to create ${output.absolutePath} for debug screenshot" }
+        return@withContext false
+      }
+      try {
+        output.outputStream().use {
+          @Suppress("DEPRECATION") drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+        L.d { "Created screenshot at ${output.absolutePath}" }
+        true
+      } catch (e: Exception) {
+        L.e { "An error occurred ${e.message}" }
+        false
+      }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebview() {
-        settings.javaScriptEnabled = true
-        settings.userAgentString = USER_AGENT
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webViewClient = DebugClient()
-        @Suppress("DEPRECATION")
-        isDrawingCacheEnabled = true
+  private inner class DebugClient : BaseWebViewClient() {
+
+    override fun onPageFinished(view: WebView, url: String?) {
+      super.onPageFinished(view, url)
+      onPageFinished(url)
     }
 
-    /**
-     * Fetches a screenshot of the current webview, returning true if successful, false otherwise.
-     */
-    suspend fun getScreenshot(output: File): Boolean = withContext(Dispatchers.IO) {
-
-        if (!output.createFreshFile()) {
-            L.e { "Failed to create ${output.absolutePath} for debug screenshot" }
-            return@withContext false
-        }
-        try {
-            output.outputStream().use {
-                @Suppress("DEPRECATION")
-                drawingCache.compress(Bitmap.CompressFormat.PNG, 100, it)
-            }
-            L.d { "Created screenshot at ${output.absolutePath}" }
-            true
-        } catch (e: Exception) {
-            L.e { "An error occurred ${e.message}" }
-            false
-        }
+    private fun injectBackgroundColor() {
+      setBackgroundColor(
+        if (url.isFacebookUrl) themeProvider.bgColor.withAlpha(255) else Color.WHITE
+      )
     }
 
-    private inner class DebugClient : BaseWebViewClient() {
-
-        override fun onPageFinished(view: WebView, url: String?) {
-            super.onPageFinished(view, url)
-            onPageFinished(url)
-        }
-
-        private fun injectBackgroundColor() {
-            setBackgroundColor(
-                if (url.isFacebookUrl) themeProvider.bgColor.withAlpha(255)
-                else Color.WHITE
-            )
-        }
-
-        override fun onPageCommitVisible(view: WebView, url: String?) {
-            super.onPageCommitVisible(view, url)
-            injectBackgroundColor()
-            if (url.isFacebookUrl)
-                view.jsInject(
-//                        CssHider.CORE,
-                    CssHider.COMPOSER.maybe(!prefs.showComposer),
-                    CssHider.STORIES.maybe(!prefs.showStories),
-                    CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
-                    CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
-                    themeProvider.injector(ThemeCategory.FACEBOOK),
-                    CssHider.NON_RECENT.maybe(
-                        (url?.contains("?sk=h_chr") ?: false) &&
-                            prefs.aggressiveRecents
-                    ),
-                    CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),
-                    prefs = prefs
-                )
-        }
+    override fun onPageCommitVisible(view: WebView, url: String?) {
+      super.onPageCommitVisible(view, url)
+      injectBackgroundColor()
+      if (url.isFacebookUrl)
+        view.jsInject(
+          //                        CssHider.CORE,
+          CssHider.COMPOSER.maybe(!prefs.showComposer),
+          CssHider.STORIES.maybe(!prefs.showStories),
+          CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
+          CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+          themeProvider.injector(ThemeCategory.FACEBOOK),
+          CssHider.NON_RECENT.maybe(
+            (url?.contains("?sk=h_chr") ?: false) && prefs.aggressiveRecents
+          ),
+          CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),
+          prefs = prefs
+        )
     }
+  }
 }

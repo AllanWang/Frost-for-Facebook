@@ -29,79 +29,73 @@ import com.pitchedapps.frost.utils.EnumBundleCompanion
 import com.pitchedapps.frost.utils.EnumCompanion
 
 enum class FbItem(
-    @StringRes val titleId: Int,
-    val icon: IIcon,
-    relativeUrl: String,
-    val fragmentCreator: () -> BaseFragment = ::WebFragment,
-    prefix: String = FB_URL_BASE
+  @StringRes val titleId: Int,
+  val icon: IIcon,
+  relativeUrl: String,
+  val fragmentCreator: () -> BaseFragment = ::WebFragment,
+  prefix: String = FB_URL_BASE
 ) : EnumBundle<FbItem> {
+  ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
+  BIRTHDAYS(R.string.birthdays, GoogleMaterial.Icon.gmd_cake, "events/birthdays"),
+  CHAT(R.string.chat, GoogleMaterial.Icon.gmd_chat, "buddylist"),
+  EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event_note, "events/upcoming"),
+  FEED(R.string.feed, CommunityMaterial.Icon3.cmd_newspaper, ""),
+  FEED_MOST_RECENT(R.string.most_recent, GoogleMaterial.Icon.gmd_history, "home.php?sk=h_chr"),
+  FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "home.php?sk=h_nor"),
+  FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
+  GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
+  MARKETPLACE(R.string.marketplace, GoogleMaterial.Icon.gmd_store, "marketplace"),
 
-    ACTIVITY_LOG(R.string.activity_log, GoogleMaterial.Icon.gmd_list, "me/allactivity"),
-    BIRTHDAYS(R.string.birthdays, GoogleMaterial.Icon.gmd_cake, "events/birthdays"),
-    CHAT(R.string.chat, GoogleMaterial.Icon.gmd_chat, "buddylist"),
-    EVENTS(R.string.events, GoogleMaterial.Icon.gmd_event_note, "events/upcoming"),
-    FEED(R.string.feed, CommunityMaterial.Icon3.cmd_newspaper, ""),
-    FEED_MOST_RECENT(R.string.most_recent, GoogleMaterial.Icon.gmd_history, "home.php?sk=h_chr"),
-    FEED_TOP_STORIES(R.string.top_stories, GoogleMaterial.Icon.gmd_star, "home.php?sk=h_nor"),
-    FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
-    GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
-    MARKETPLACE(R.string.marketplace, GoogleMaterial.Icon.gmd_store, "marketplace"),
+  /*
+   * Unlike other urls, menus cannot be linked directly as it is a soft reference. Instead, we can
+   * pick any url with the blue bar and manually click to enter the menu.
+   * We pick home.php as some back interactions default to home regardless of the base url.
+   */
+  MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "home.php"),
+  MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
+  MESSENGER(
+    R.string.messenger,
+    CommunityMaterial.Icon2.cmd_facebook_messenger,
+    "",
+    prefix = HTTPS_MESSENGER_COM
+  ),
+  NOTES(R.string.notes, CommunityMaterial.Icon3.cmd_note, "notes"),
+  NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
+  ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
+  PAGES(R.string.pages, GoogleMaterial.Icon.gmd_flag, "pages"),
+  PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
+  PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
+  SAVED(R.string.saved, GoogleMaterial.Icon.gmd_bookmark, "saved"),
 
-    /*
-     * Unlike other urls, menus cannot be linked directly as it is a soft reference. Instead, we can
-     * pick any url with the blue bar and manually click to enter the menu.
-     * We pick home.php as some back interactions default to home regardless of the base url.
-     */
-    MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "home.php"),
-    MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
-    MESSENGER(
-        R.string.messenger,
-        CommunityMaterial.Icon2.cmd_facebook_messenger,
-        "",
-        prefix = HTTPS_MESSENGER_COM
-    ),
-    NOTES(R.string.notes, CommunityMaterial.Icon3.cmd_note, "notes"),
-    NOTIFICATIONS(R.string.notifications, MaterialDesignIconic.Icon.gmi_globe, "notifications"),
-    ON_THIS_DAY(R.string.on_this_day, GoogleMaterial.Icon.gmd_today, "onthisday"),
-    PAGES(R.string.pages, GoogleMaterial.Icon.gmd_flag, "pages"),
-    PHOTOS(R.string.photos, GoogleMaterial.Icon.gmd_photo, "me/photos"),
-    PROFILE(R.string.profile, CommunityMaterial.Icon.cmd_account, "me"),
-    SAVED(R.string.saved, GoogleMaterial.Icon.gmd_bookmark, "saved"),
+  /** Note that this url only works if a query (?q=) is provided */
+  _SEARCH(R.string.kau_search, GoogleMaterial.Icon.gmd_search, "search/top"),
 
-    /**
-     * Note that this url only works if a query (?q=) is provided
-     */
-    _SEARCH(
-        R.string.kau_search,
-        GoogleMaterial.Icon.gmd_search,
-        "search/top"
-    ),
+  /** Non mbasic search cannot be parsed. */
+  _SEARCH_PARSE(
+    R.string.kau_search,
+    GoogleMaterial.Icon.gmd_search,
+    "search/top",
+    prefix = FB_URL_MBASIC_BASE
+  ),
+  SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
+  ;
 
-    /**
-     * Non mbasic search cannot be parsed.
-     */
-    _SEARCH_PARSE(
-        R.string.kau_search,
-        GoogleMaterial.Icon.gmd_search,
-        "search/top",
-        prefix = FB_URL_MBASIC_BASE
-    ),
-    SETTINGS(R.string.settings, GoogleMaterial.Icon.gmd_settings, "settings"),
-    ;
+  val url = "$prefix$relativeUrl"
 
-    val url = "$prefix$relativeUrl"
+  val isFeed: Boolean
+    get() =
+      when (this) {
+        FEED,
+        FEED_MOST_RECENT,
+        FEED_TOP_STORIES -> true
+        else -> false
+      }
 
-    val isFeed: Boolean
-        get() = when (this) {
-            FEED, FEED_MOST_RECENT, FEED_TOP_STORIES -> true
-            else -> false
-        }
+  override val bundleContract: EnumBundleCompanion<FbItem>
+    get() = Companion
 
-    override val bundleContract: EnumBundleCompanion<FbItem>
-        get() = Companion
-
-    companion object : EnumCompanion<FbItem>("frost_arg_fb_item", values())
+  companion object : EnumCompanion<FbItem>("frost_arg_fb_item", values())
 }
 
 fun defaultTabs(): List<FbItem> =
-    listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)
+  listOf(FbItem.FEED, FbItem.MESSAGES, FbItem.NOTIFICATIONS, FbItem.MENU)

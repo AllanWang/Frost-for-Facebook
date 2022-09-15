@@ -31,28 +31,25 @@ import javax.inject.Inject
  * Basic override to allow us to control swiping
  */
 @AndroidEntryPoint
-class FrostViewPager @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null
-) : ViewPager(context, attrs) {
+class FrostViewPager @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
+  ViewPager(context, attrs) {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    var enableSwipe = true
+  var enableSwipe = true
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?) =
-        try {
-            prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
-        } catch (e: IllegalArgumentException) {
-            false
-        }
+  override fun onInterceptTouchEvent(ev: MotionEvent?) =
+    try {
+      prefs.viewpagerSwipe && enableSwipe && super.onInterceptTouchEvent(ev)
+    } catch (e: IllegalArgumentException) {
+      false
+    }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(ev: MotionEvent?): Boolean =
-        try {
-            prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
-        } catch (e: IllegalArgumentException) {
-            false
-        }
+  @SuppressLint("ClickableViewAccessibility")
+  override fun onTouchEvent(ev: MotionEvent?): Boolean =
+    try {
+      prefs.viewpagerSwipe && enableSwipe && super.onTouchEvent(ev)
+    } catch (e: IllegalArgumentException) {
+      false
+    }
 }

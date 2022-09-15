@@ -25,41 +25,34 @@ import com.pitchedapps.frost.prefs.Prefs
  * List of elements to hide
  */
 enum class CssHider(private vararg val items: String) : InjectorContract {
-    CORE("[data-sigil=m_login_upsell]", "[role=progressbar]"),
-    HEADER(
-        "#header:not(.mFuturePageHeader):not(.titled)",
-        "#mJewelNav",
-        "[data-sigil=MTopBlueBarHeader]",
-        "#header-notices",
-        "[data-sigil*=m-promo-jewel-header]"
-    ),
-    ADS(
-        "article[data-xt*=sponsor]",
-        "article[data-store*=sponsor]"
-    ),
-    PEOPLE_YOU_MAY_KNOW("article._d2r"),
-    SUGGESTED_GROUPS("article[data-ft*=\"ei\":]"),
-    COMPOSER("#MComposer"),
-    MESSENGER("._s15", "[data-testid=info_panel]", "js_i"),
-    NON_RECENT("article:not([data-store*=actor_name])"),
-    STORIES(
-        "#MStoriesTray",
-        // Sub element with just the tray; title is not a part of this
-        "[data-testid=story_tray]"
-    ),
-    POST_ACTIONS(
-        "footer [data-sigil=\"ufi-inline-actions\"]"
-    ),
-    POST_REACTIONS(
-        "footer [data-sigil=\"reactions-bling-bar\"]"
-    )
-    ;
+  CORE("[data-sigil=m_login_upsell]", "[role=progressbar]"),
+  HEADER(
+    "#header:not(.mFuturePageHeader):not(.titled)",
+    "#mJewelNav",
+    "[data-sigil=MTopBlueBarHeader]",
+    "#header-notices",
+    "[data-sigil*=m-promo-jewel-header]"
+  ),
+  ADS("article[data-xt*=sponsor]", "article[data-store*=sponsor]"),
+  PEOPLE_YOU_MAY_KNOW("article._d2r"),
+  SUGGESTED_GROUPS("article[data-ft*=\"ei\":]"),
+  COMPOSER("#MComposer"),
+  MESSENGER("._s15", "[data-testid=info_panel]", "js_i"),
+  NON_RECENT("article:not([data-store*=actor_name])"),
+  STORIES(
+    "#MStoriesTray",
+    // Sub element with just the tray; title is not a part of this
+    "[data-testid=story_tray]"
+  ),
+  POST_ACTIONS("footer [data-sigil=\"ufi-inline-actions\"]"),
+  POST_REACTIONS("footer [data-sigil=\"reactions-bling-bar\"]");
 
-    val injector: JsInjector by lazy {
-        JsBuilder().css("${items.joinToString(separator = ",")}{display:none !important}")
-            .single("css-hider-$name").build()
-    }
+  val injector: JsInjector by lazy {
+    JsBuilder()
+      .css("${items.joinToString(separator = ",")}{display:none !important}")
+      .single("css-hider-$name")
+      .build()
+  }
 
-    override fun inject(webView: WebView, prefs: Prefs) =
-        injector.inject(webView, prefs)
+  override fun inject(webView: WebView, prefs: Prefs) = injector.inject(webView, prefs)
 }

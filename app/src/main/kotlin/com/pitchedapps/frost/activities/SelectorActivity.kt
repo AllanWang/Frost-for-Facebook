@@ -32,43 +32,44 @@ import com.pitchedapps.frost.utils.launchNewTask
 import com.pitchedapps.frost.views.AccountItem
 import kotlinx.coroutines.launch
 
-/**
- * Created by Allan Wang on 2017-06-04.
- */
+/** Created by Allan Wang on 2017-06-04. */
 class SelectorActivity : BaseActivity() {
 
-    val recycler: RecyclerView by bindView(R.id.selector_recycler)
-    val adapter = FastItemAdapter<AccountItem>()
-    val text: AppCompatTextView by bindView(R.id.text_select_account)
-    val container: ConstraintLayout by bindView(R.id.container)
+  val recycler: RecyclerView by bindView(R.id.selector_recycler)
+  val adapter = FastItemAdapter<AccountItem>()
+  val text: AppCompatTextView by bindView(R.id.text_select_account)
+  val container: ConstraintLayout by bindView(R.id.container)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_selector)
-        recycler.layoutManager = GridLayoutManager(this, 2)
-        recycler.adapter = adapter
-        adapter.add(cookies().map { AccountItem(it, themeProvider) })
-        adapter.add(AccountItem(null, themeProvider)) // add account
-        adapter.addEventHook(object : ClickEventHook<AccountItem>() {
-            override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
-                (viewHolder as? AccountItem.ViewHolder)?.itemView
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_selector)
+    recycler.layoutManager = GridLayoutManager(this, 2)
+    recycler.adapter = adapter
+    adapter.add(cookies().map { AccountItem(it, themeProvider) })
+    adapter.add(AccountItem(null, themeProvider)) // add account
+    adapter.addEventHook(
+      object : ClickEventHook<AccountItem>() {
+        override fun onBind(viewHolder: RecyclerView.ViewHolder): View? =
+          (viewHolder as? AccountItem.ViewHolder)?.itemView
 
-            override fun onClick(
-                v: View,
-                position: Int,
-                fastAdapter: FastAdapter<AccountItem>,
-                item: AccountItem
-            ) {
-                if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
-                else launch {
-                    fbCookie.switchUser(item.cookie)
-                    launchNewTask<MainActivity>(cookies())
-                }
+        override fun onClick(
+          v: View,
+          position: Int,
+          fastAdapter: FastAdapter<AccountItem>,
+          item: AccountItem
+        ) {
+          if (item.cookie == null) this@SelectorActivity.launchNewTask<LoginActivity>()
+          else
+            launch {
+              fbCookie.switchUser(item.cookie)
+              launchNewTask<MainActivity>(cookies())
             }
-        })
-        activityThemer.setFrostColors {
-            text(text)
-            background(container)
         }
+      }
+    )
+    activityThemer.setFrostColors {
+      text(text)
+      background(container)
     }
+  }
 }

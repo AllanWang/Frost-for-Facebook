@@ -54,181 +54,178 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class NotificationWidget : AppWidgetProvider() {
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        val type = NotificationType.GENERAL
-        val userId = prefs.userId
-        val intent = NotificationWidgetService.createIntent(context, type, userId)
-        for (id in appWidgetIds) {
-            val views = RemoteViews(context.packageName, R.layout.widget_notifications)
+  override fun onUpdate(
+    context: Context,
+    appWidgetManager: AppWidgetManager,
+    appWidgetIds: IntArray
+  ) {
+    super.onUpdate(context, appWidgetManager, appWidgetIds)
+    val type = NotificationType.GENERAL
+    val userId = prefs.userId
+    val intent = NotificationWidgetService.createIntent(context, type, userId)
+    for (id in appWidgetIds) {
+      val views = RemoteViews(context.packageName, R.layout.widget_notifications)
 
-            views.setBackgroundColor(R.id.widget_layout_toolbar, themeProvider.headerColor)
-            views.setIcon(R.id.img_frost, context, R.drawable.frost_f_24, themeProvider.iconColor)
-            views.setOnClickPendingIntent(
-                R.id.img_frost,
-                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
-            )
+      views.setBackgroundColor(R.id.widget_layout_toolbar, themeProvider.headerColor)
+      views.setIcon(R.id.img_frost, context, R.drawable.frost_f_24, themeProvider.iconColor)
+      views.setOnClickPendingIntent(
+        R.id.img_frost,
+        PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+      )
 
-            views.setBackgroundColor(R.id.widget_notification_list, themeProvider.bgColor)
-            views.setRemoteAdapter(R.id.widget_notification_list, intent)
+      views.setBackgroundColor(R.id.widget_notification_list, themeProvider.bgColor)
+      views.setRemoteAdapter(R.id.widget_notification_list, intent)
 
-            val pendingIntentTemplate = PendingIntent.getActivity(
-                context,
-                0,
-                type.createCommonIntent(context, userId),
-                pendingIntentFlagUpdateCurrent
-            )
+      val pendingIntentTemplate =
+        PendingIntent.getActivity(
+          context,
+          0,
+          type.createCommonIntent(context, userId),
+          pendingIntentFlagUpdateCurrent
+        )
 
-            views.setPendingIntentTemplate(R.id.widget_notification_list, pendingIntentTemplate)
+      views.setPendingIntentTemplate(R.id.widget_notification_list, pendingIntentTemplate)
 
-            appWidgetManager.updateAppWidget(id, views)
-        }
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_notification_list)
+      appWidgetManager.updateAppWidget(id, views)
     }
+    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_notification_list)
+  }
 
-    private val pendingIntentFlagUpdateCurrent: Int
-        get() = PendingIntent.FLAG_UPDATE_CURRENT or
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+  private val pendingIntentFlagUpdateCurrent: Int
+    get() =
+      PendingIntent.FLAG_UPDATE_CURRENT or
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
 
-    companion object {
-        fun forceUpdate(context: Context) {
-            val manager = AppWidgetManager.getInstance(context)
-            val ids =
-                manager.getAppWidgetIds(ComponentName(context, NotificationWidget::class.java))
-            val intent = Intent().apply {
-                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-            }
-            context.sendBroadcast(intent)
+  companion object {
+    fun forceUpdate(context: Context) {
+      val manager = AppWidgetManager.getInstance(context)
+      val ids = manager.getAppWidgetIds(ComponentName(context, NotificationWidget::class.java))
+      val intent =
+        Intent().apply {
+          action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+          putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
         }
+      context.sendBroadcast(intent)
     }
+  }
 }
 
 private const val NOTIF_WIDGET_TYPE = "notif_widget_type"
 private const val NOTIF_WIDGET_USER_ID = "notif_widget_user_id"
 
 private fun RemoteViews.setBackgroundColor(@IdRes viewId: Int, @ColorInt color: Int) {
-    setInt(viewId, "setBackgroundColor", color)
+  setInt(viewId, "setBackgroundColor", color)
 }
 
-/**
- * Adds backward compatibility to setting tinted icons
- */
+/** Adds backward compatibility to setting tinted icons */
 private fun RemoteViews.setIcon(
-    @IdRes viewId: Int,
-    context: Context,
-    @DrawableRes res: Int,
-    @ColorInt color: Int
+  @IdRes viewId: Int,
+  context: Context,
+  @DrawableRes res: Int,
+  @ColorInt color: Int
 ) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val icon =
-            Icon.createWithResource(context, res).setTint(color).setTintMode(PorterDuff.Mode.SRC_IN)
-        setImageViewIcon(viewId, icon)
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    val icon =
+      Icon.createWithResource(context, res).setTint(color).setTintMode(PorterDuff.Mode.SRC_IN)
+    setImageViewIcon(viewId, icon)
+  } else {
+    val bitmap = BitmapFactory.decodeResource(context.resources, res)
+    if (bitmap != null) {
+      val paint = Paint()
+      paint.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+      val result = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+      val canvas = Canvas(result)
+      canvas.drawBitmap(bitmap, 0f, 0f, paint)
+      setImageViewBitmap(viewId, result)
     } else {
-        val bitmap = BitmapFactory.decodeResource(context.resources, res)
-        if (bitmap != null) {
-            val paint = Paint()
-            paint.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-            val result = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(result)
-            canvas.drawBitmap(bitmap, 0f, 0f, paint)
-            setImageViewBitmap(viewId, result)
-        } else {
-            // Fallback to just icon
-            setImageViewResource(viewId, res)
-        }
+      // Fallback to just icon
+      setImageViewResource(viewId, res)
     }
+  }
 }
 
 @AndroidEntryPoint
 class NotificationWidgetService : RemoteViewsService() {
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    @Inject
-    lateinit var notifDao: NotificationDao
+  @Inject lateinit var notifDao: NotificationDao
 
-    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
-        NotificationWidgetDataProvider(this, intent, themeProvider, notifDao)
+  override fun onGetViewFactory(intent: Intent): RemoteViewsFactory =
+    NotificationWidgetDataProvider(this, intent, themeProvider, notifDao)
 
-    companion object {
-        fun createIntent(context: Context, type: NotificationType, userId: Long): Intent =
-            Intent(context, NotificationWidgetService::class.java)
-                .putExtra(NOTIF_WIDGET_TYPE, type.name)
-                .putExtra(NOTIF_WIDGET_USER_ID, userId)
-    }
+  companion object {
+    fun createIntent(context: Context, type: NotificationType, userId: Long): Intent =
+      Intent(context, NotificationWidgetService::class.java)
+        .putExtra(NOTIF_WIDGET_TYPE, type.name)
+        .putExtra(NOTIF_WIDGET_USER_ID, userId)
+  }
 }
 
 class NotificationWidgetDataProvider(
-    private val context: Context,
-    private val intent: Intent,
-    private val themeProvider: ThemeProvider,
-    private val notifDao: NotificationDao
+  private val context: Context,
+  private val intent: Intent,
+  private val themeProvider: ThemeProvider,
+  private val notifDao: NotificationDao
 ) : RemoteViewsService.RemoteViewsFactory {
 
-    @Volatile
-    private var content: List<NotificationContent> = emptyList()
+  @Volatile private var content: List<NotificationContent> = emptyList()
 
-    private val type = NotificationType.valueOf(intent.getStringExtra(NOTIF_WIDGET_TYPE)!!)
+  private val type = NotificationType.valueOf(intent.getStringExtra(NOTIF_WIDGET_TYPE)!!)
 
-    private val userId = intent.getLongExtra(NOTIF_WIDGET_USER_ID, -1)
+  private val userId = intent.getLongExtra(NOTIF_WIDGET_USER_ID, -1)
 
-    private val avatarSize = context.dimenPixelSize(R.dimen.avatar_image_size)
+  private val avatarSize = context.dimenPixelSize(R.dimen.avatar_image_size)
 
-    private val glide = GlideApp.with(context).asBitmap()
+  private val glide = GlideApp.with(context).asBitmap()
 
-    private fun loadNotifications() {
-        content = notifDao.selectNotificationsSync(userId, type.channelId)
+  private fun loadNotifications() {
+    content = notifDao.selectNotificationsSync(userId, type.channelId)
+  }
+
+  override fun onCreate() {}
+
+  override fun onDataSetChanged() {
+    loadNotifications()
+  }
+
+  override fun getLoadingView(): RemoteViews? = null
+
+  override fun getItemId(position: Int): Long = content[position].id
+
+  override fun hasStableIds(): Boolean = true
+
+  override fun getViewAt(position: Int): RemoteViews {
+    val views = RemoteViews(context.packageName, R.layout.widget_notification_item)
+    try {
+      val notif = content[position]
+      views.setBackgroundColor(R.id.item_frame, themeProvider.nativeBgColor(notif.unread))
+      views.setTextColor(R.id.item_content, themeProvider.textColor)
+      views.setTextViewText(R.id.item_content, notif.text)
+      views.setTextColor(R.id.item_date, themeProvider.textColor.withAlpha(150))
+      views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
+
+      val avatar =
+        glide
+          .load(notif.profileUrl)
+          .transform(FrostGlide.circleCrop)
+          .submit(avatarSize, avatarSize)
+          .get()
+      views.setImageViewBitmap(R.id.item_avatar, avatar)
+      views.setOnClickFillInIntent(R.id.item_frame, type.putContentExtra(Intent(), notif))
+    } catch (_: IndexOutOfBoundsException) {
+      // Ignored; seems like an Android bug
     }
+    return views
+  }
 
-    override fun onCreate() {
-    }
+  override fun getCount(): Int = content.size
 
-    override fun onDataSetChanged() {
-        loadNotifications()
-    }
+  override fun getViewTypeCount(): Int = 1
 
-    override fun getLoadingView(): RemoteViews? = null
-
-    override fun getItemId(position: Int): Long = content[position].id
-
-    override fun hasStableIds(): Boolean = true
-
-    override fun getViewAt(position: Int): RemoteViews {
-        val views = RemoteViews(context.packageName, R.layout.widget_notification_item)
-        try {
-            val notif = content[position]
-            views.setBackgroundColor(R.id.item_frame, themeProvider.nativeBgColor(notif.unread))
-            views.setTextColor(R.id.item_content, themeProvider.textColor)
-            views.setTextViewText(R.id.item_content, notif.text)
-            views.setTextColor(R.id.item_date, themeProvider.textColor.withAlpha(150))
-            views.setTextViewText(R.id.item_date, notif.timestamp.toReadableTime(context))
-
-            val avatar = glide.load(notif.profileUrl).transform(FrostGlide.circleCrop)
-                .submit(avatarSize, avatarSize).get()
-            views.setImageViewBitmap(R.id.item_avatar, avatar)
-            views.setOnClickFillInIntent(R.id.item_frame, type.putContentExtra(Intent(), notif))
-        } catch (_: IndexOutOfBoundsException) {
-            // Ignored; seems like an Android bug
-        }
-        return views
-    }
-
-    override fun getCount(): Int = content.size
-
-    override fun getViewTypeCount(): Int = 1
-
-    override fun onDestroy() {
-    }
+  override fun onDestroy() {}
 }

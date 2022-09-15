@@ -20,9 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Wraps dao calls to work with coroutines
- * Non transactional queries were supposed to be fixed in https://issuetracker.google.com/issues/69474692,
- * but it still requires dispatch from a non ui thread.
- * This avoids that constraint
+ * Wraps dao calls to work with coroutines Non transactional queries were supposed to be fixed in
+ * https://issuetracker.google.com/issues/69474692, but it still requires dispatch from a non ui
+ * thread. This avoids that constraint
  */
 suspend inline fun <T> dao(crossinline block: () -> T) = withContext(Dispatchers.IO) { block() }

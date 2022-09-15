@@ -43,211 +43,199 @@ import com.pitchedapps.frost.utils.REQUEST_REFRESH
 import com.pitchedapps.frost.utils.REQUEST_TEXT_ZOOM
 import com.pitchedapps.frost.utils.frostEvent
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
-import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Allan Wang on 2017-11-07.
  *
- * All fragments pertaining to the main view
- * Must be attached to activities implementing [MainActivityContract]
+ * All fragments pertaining to the main view Must be attached to activities implementing
+ * [MainActivityContract]
  */
 @AndroidEntryPoint
-abstract class BaseFragment :
-    Fragment(),
-    CoroutineScope,
-    FragmentContract,
-    DynamicUiContract {
+abstract class BaseFragment : Fragment(), CoroutineScope, FragmentContract, DynamicUiContract {
 
-    companion object {
-        private const val ARG_POSITION = "arg_position"
-        private const val ARG_VALID = "arg_valid"
+  companion object {
+    private const val ARG_POSITION = "arg_position"
+    private const val ARG_VALID = "arg_valid"
 
-        internal operator fun invoke(
-            base: () -> BaseFragment,
-            prefs: Prefs,
-            useFallback: Boolean,
-            data: FbItem,
-            position: Int
-        ): BaseFragment {
-            val fragment = if (useFallback) WebFragment() else base()
-            val d = if (data == FbItem.FEED) FeedSort(prefs.feedSort).item else data
-            fragment.withArguments(
-                ARG_URL to d.url,
-                ARG_POSITION to position
-            )
-            d.put(fragment.requireArguments())
-            return fragment
-        }
+    internal operator fun invoke(
+      base: () -> BaseFragment,
+      prefs: Prefs,
+      useFallback: Boolean,
+      data: FbItem,
+      position: Int
+    ): BaseFragment {
+      val fragment = if (useFallback) WebFragment() else base()
+      val d = if (data == FbItem.FEED) FeedSort(prefs.feedSort).item else data
+      fragment.withArguments(ARG_URL to d.url, ARG_POSITION to position)
+      d.put(fragment.requireArguments())
+      return fragment
+    }
+  }
+
+  @Inject protected lateinit var mainContract: MainActivityContract
+
+  @Inject protected lateinit var fbCookie: FbCookie
+
+  @Inject protected lateinit var prefs: Prefs
+
+  @Inject protected lateinit var themeProvider: ThemeProvider
+
+  open lateinit var job: Job
+  override val coroutineContext: CoroutineContext
+    get() = ContextHelper.dispatcher + job
+
+  override val baseUrl: String by lazy { requireArguments().getString(ARG_URL)!! }
+  override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
+  override val position: Int by lazy { requireArguments().getInt(ARG_POSITION) }
+
+  override var valid: Boolean
+    get() = requireArguments().getBoolean(ARG_VALID, true)
+    set(value) {
+      if (!isActive || value || this is WebFragment) return
+      requireArguments().putBoolean(ARG_VALID, value)
+      frostEvent("Native Fallback", "Item" to baseEnum.name)
+      mainContract.reloadFragment(this)
     }
 
-    @Inject
-    protected lateinit var mainContract: MainActivityContract
+  override var firstLoad: Boolean = true
+  private var onCreateRunnable: ((FragmentContract) -> Unit)? = null
 
-    @Inject
-    protected lateinit var fbCookie: FbCookie
+  override var content: FrostContentParent? = null
 
-    @Inject
-    protected lateinit var prefs: Prefs
+  protected abstract val layoutRes: Int
 
-    @Inject
-    protected lateinit var themeProvider: ThemeProvider
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    job = SupervisorJob()
+    firstLoad = true
+  }
 
-    open lateinit var job: Job
-    override val coroutineContext: CoroutineContext
-        get() = ContextHelper.dispatcher + job
+  final override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val view = inflater.inflate(layoutRes, container, false)
+    val content =
+      view as? FrostContentParent
+        ?: throw IllegalArgumentException(
+          "layoutRes for fragment must return view implementing FrostContentParent"
+        )
+    this.content = content
+    content.bind(this)
+    return view
+  }
 
-    override val baseUrl: String by lazy { requireArguments().getString(ARG_URL)!! }
-    override val baseEnum: FbItem by lazy { FbItem[arguments]!! }
-    override val position: Int by lazy { requireArguments().getInt(ARG_POSITION) }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    onCreateRunnable?.invoke(this)
+    onCreateRunnable = null
+    firstLoadRequest()
+    attach(mainContract)
+  }
 
-    override var valid: Boolean
-        get() = requireArguments().getBoolean(ARG_VALID, true)
-        set(value) {
-            if (!isActive || value || this is WebFragment) return
-            requireArguments().putBoolean(ARG_VALID, value)
-            frostEvent(
-                "Native Fallback",
-                "Item" to baseEnum.name
-            )
-            mainContract.reloadFragment(this)
-        }
+  override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+    super.setUserVisibleHint(isVisibleToUser)
+    firstLoadRequest()
+  }
 
-    override var firstLoad: Boolean = true
-    private var onCreateRunnable: ((FragmentContract) -> Unit)? = null
-
-    override var content: FrostContentParent? = null
-
-    protected abstract val layoutRes: Int
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        job = SupervisorJob()
-        firstLoad = true
+  override fun firstLoadRequest() {
+    val core = core ?: return
+    if (userVisibleHint && isVisible && firstLoad) {
+      core.reloadBase(true)
+      firstLoad = false
     }
+  }
 
-    final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(layoutRes, container, false)
-        val content = view as? FrostContentParent
-            ?: throw IllegalArgumentException("layoutRes for fragment must return view implementing FrostContentParent")
-        this.content = content
-        content.bind(this)
-        return view
-    }
+  override fun post(action: (fragment: FragmentContract) -> Unit) {
+    onCreateRunnable = action
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        onCreateRunnable?.invoke(this)
-        onCreateRunnable = null
-        firstLoadRequest()
-        attach(mainContract)
-    }
+  override fun setTitle(title: String) {
+    mainContract.setTitle(title)
+  }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        firstLoadRequest()
-    }
-
-    override fun firstLoadRequest() {
-        val core = core ?: return
-        if (userVisibleHint && isVisible && firstLoad) {
-            core.reloadBase(true)
-            firstLoad = false
-        }
-    }
-
-    override fun post(action: (fragment: FragmentContract) -> Unit) {
-        onCreateRunnable = action
-    }
-
-    override fun setTitle(title: String) {
-        mainContract.setTitle(title)
-    }
-
-    override fun attach(contract: MainActivityContract) {
-        contract.fragmentFlow
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { flag ->
-                when (flag) {
-                    REQUEST_REFRESH -> {
-                        core?.apply {
-                            clearHistory()
-                            firstLoad = true
-                            firstLoadRequest()
-                        }
-                    }
-                    position -> {
-                        contract.setTitle(baseEnum.titleId)
-                        updateFab(contract)
-                        core?.active = true
-                    }
-                    -(position + 1) -> {
-                        core?.active = false
-                    }
-                    REQUEST_TEXT_ZOOM -> {
-                        reloadTextSize()
-                    }
-                }
-            }.launchIn(this)
-    }
-
-    override fun updateFab(contract: MainFabContract) {
-        contract.hideFab() // default
-    }
-
-    protected fun FloatingActionButton.update(iicon: IIcon, click: () -> Unit) {
-        if (isShown) {
-            fadeScaleTransition {
-                setIcon(iicon, themeProvider.iconColor)
+  override fun attach(contract: MainActivityContract) {
+    contract.fragmentFlow
+      .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+      .onEach { flag ->
+        when (flag) {
+          REQUEST_REFRESH -> {
+            core?.apply {
+              clearHistory()
+              firstLoad = true
+              firstLoadRequest()
             }
-        } else {
-            setIcon(iicon, themeProvider.iconColor)
-            show()
+          }
+          position -> {
+            contract.setTitle(baseEnum.titleId)
+            updateFab(contract)
+            core?.active = true
+          }
+          -(position + 1) -> {
+            core?.active = false
+          }
+          REQUEST_TEXT_ZOOM -> {
+            reloadTextSize()
+          }
         }
-        setOnClickListener { click() }
+      }
+      .launchIn(this)
+  }
+
+  override fun updateFab(contract: MainFabContract) {
+    contract.hideFab() // default
+  }
+
+  protected fun FloatingActionButton.update(iicon: IIcon, click: () -> Unit) {
+    if (isShown) {
+      fadeScaleTransition { setIcon(iicon, themeProvider.iconColor) }
+    } else {
+      setIcon(iicon, themeProvider.iconColor)
+      show()
     }
+    setOnClickListener { click() }
+  }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        L.i { "Fragment on destroy $position ${hashCode()}" }
-        content?.destroy()
-        content = null
-    }
+  override fun onDestroyView() {
+    super.onDestroyView()
+    L.i { "Fragment on destroy $position ${hashCode()}" }
+    content?.destroy()
+    content = null
+  }
 
-    override fun onDestroy() {
-        job.cancel()
-        super.onDestroy()
-    }
+  override fun onDestroy() {
+    job.cancel()
+    super.onDestroy()
+  }
 
-    override fun reloadTheme() {
-        reloadThemeSelf()
-        content?.reloadTextSize()
-    }
+  override fun reloadTheme() {
+    reloadThemeSelf()
+    content?.reloadTextSize()
+  }
 
-    override fun reloadThemeSelf() {
-        // intentionally blank
-    }
+  override fun reloadThemeSelf() {
+    // intentionally blank
+  }
 
-    override fun reloadTextSize() {
-        reloadTextSizeSelf()
-        content?.reloadTextSize()
-    }
+  override fun reloadTextSize() {
+    reloadTextSizeSelf()
+    content?.reloadTextSize()
+  }
 
-    override fun reloadTextSizeSelf() {
-        // intentionally blank
-    }
+  override fun reloadTextSizeSelf() {
+    // intentionally blank
+  }
 
-    override fun onBackPressed(): Boolean = content?.core?.onBackPressed() ?: false
+  override fun onBackPressed(): Boolean = content?.core?.onBackPressed() ?: false
 
-    override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
+  override fun onTabClick(): Unit = content?.core?.onTabClicked() ?: Unit
 }

@@ -45,122 +45,118 @@ import kotlin.math.abs
  * Contains the base, start, and end fragments
  */
 
-/**
- * The core intro fragment for all other fragments
- */
+/** The core intro fragment for all other fragments */
 @AndroidEntryPoint
 abstract class BaseIntroFragment(val layoutRes: Int) : Fragment() {
 
-    @Inject
-    protected lateinit var prefs: Prefs
+  @Inject protected lateinit var prefs: Prefs
 
-    @Inject
-    protected lateinit var themeProvider: ThemeProvider
+  @Inject protected lateinit var themeProvider: ThemeProvider
 
-    val screenWidth
-        get() = resources.displayMetrics.widthPixels
+  val screenWidth
+    get() = resources.displayMetrics.widthPixels
 
-    val lazyRegistry = LazyResettableRegistry()
+  val lazyRegistry = LazyResettableRegistry()
 
-    protected fun translate(offset: Float, views: Array<Array<out View>>) {
-        val maxTranslation = offset * screenWidth
-        val increment = maxTranslation / views.size
-        views.forEachIndexed { i, group ->
-            group.forEach {
-                it.translationX =
-                    if (offset > 0) -maxTranslation + i * increment else -(i + 1) * increment
-                it.alpha = 1 - abs(offset)
-            }
-        }
+  protected fun translate(offset: Float, views: Array<Array<out View>>) {
+    val maxTranslation = offset * screenWidth
+    val increment = maxTranslation / views.size
+    views.forEachIndexed { i, group ->
+      group.forEach {
+        it.translationX = if (offset > 0) -maxTranslation + i * increment else -(i + 1) * increment
+        it.alpha = 1 - abs(offset)
+      }
     }
+  }
 
-    fun <T : Any> lazyResettableRegistered(initializer: () -> T) = lazyRegistry.lazy(initializer)
+  fun <T : Any> lazyResettableRegistered(initializer: () -> T) = lazyRegistry.lazy(initializer)
 
-    /*
-     * Note that these ids aren't actually inside all layouts
-     * However, they are in most of them, so they are added here
-     * for convenience
-     */
-    protected val title: TextView by bindViewResettable(R.id.intro_title)
-    protected val image: ImageView by bindViewResettable(R.id.intro_image)
-    protected val desc: TextView by bindViewResettable(R.id.intro_desc)
+  /*
+   * Note that these ids aren't actually inside all layouts
+   * However, they are in most of them, so they are added here
+   * for convenience
+   */
+  protected val title: TextView by bindViewResettable(R.id.intro_title)
+  protected val image: ImageView by bindViewResettable(R.id.intro_image)
+  protected val desc: TextView by bindViewResettable(R.id.intro_desc)
 
-    protected fun defaultViewArray(): Array<Array<out View>> =
-        arrayOf(arrayOf(title), arrayOf(image), arrayOf(desc))
+  protected fun defaultViewArray(): Array<Array<out View>> =
+    arrayOf(arrayOf(title), arrayOf(image), arrayOf(desc))
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(layoutRes, container, false)
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(layoutRes, container, false)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    themeFragment()
+  }
+
+  override fun onDestroyView() {
+    Kotterknife.reset(this)
+    lazyRegistry.invalidateAll()
+    super.onDestroyView()
+  }
+
+  fun themeFragment() {
+    if (view != null) themeFragmentImpl()
+  }
+
+  protected open fun themeFragmentImpl() {
+    (view as? ViewGroup)?.children?.forEach {
+      (it as? TextView)?.setTextColor(themeProvider.textColor)
     }
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        themeFragment()
-    }
+  protected val viewArray: Array<Array<out View>> by lazyResettableRegistered { viewArray() }
 
-    override fun onDestroyView() {
-        Kotterknife.reset(this)
-        lazyRegistry.invalidateAll()
-        super.onDestroyView()
-    }
+  protected abstract fun viewArray(): Array<Array<out View>>
 
-    fun themeFragment() {
-        if (view != null) themeFragmentImpl()
-    }
+  fun onPageScrolled(positionOffset: Float) {
+    if (view != null) onPageScrolledImpl(positionOffset)
+  }
 
-    protected open fun themeFragmentImpl() {
-        (view as? ViewGroup)?.children?.forEach { (it as? TextView)?.setTextColor(themeProvider.textColor) }
-    }
+  protected open fun onPageScrolledImpl(positionOffset: Float) {
+    translate(positionOffset, viewArray)
+  }
 
-    protected val viewArray: Array<Array<out View>> by lazyResettableRegistered { viewArray() }
+  fun onPageSelected() {
+    if (view != null) onPageSelectedImpl()
+  }
 
-    protected abstract fun viewArray(): Array<Array<out View>>
-
-    fun onPageScrolled(positionOffset: Float) {
-        if (view != null) onPageScrolledImpl(positionOffset)
-    }
-
-    protected open fun onPageScrolledImpl(positionOffset: Float) {
-        translate(positionOffset, viewArray)
-    }
-
-    fun onPageSelected() {
-        if (view != null) onPageSelectedImpl()
-    }
-
-    protected open fun onPageSelectedImpl() {
-    }
+  protected open fun onPageSelectedImpl() {}
 }
 
 class IntroFragmentWelcome : BaseIntroFragment(R.layout.intro_welcome) {
 
-    override fun viewArray(): Array<Array<out View>> = defaultViewArray()
+  override fun viewArray(): Array<Array<out View>> = defaultViewArray()
 
-    override fun themeFragmentImpl() {
-        super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
-    }
+  override fun themeFragmentImpl() {
+    super.themeFragmentImpl()
+    image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
+  }
 }
 
 class IntroFragmentEnd : BaseIntroFragment(R.layout.intro_end) {
 
-    val container: ConstraintLayout by bindViewResettable(R.id.intro_end_container)
+  val container: ConstraintLayout by bindViewResettable(R.id.intro_end_container)
 
-    override fun viewArray(): Array<Array<out View>> = defaultViewArray()
+  override fun viewArray(): Array<Array<out View>> = defaultViewArray()
 
-    override fun themeFragmentImpl() {
-        super.themeFragmentImpl()
-        image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
+  override fun themeFragmentImpl() {
+    super.themeFragmentImpl()
+    image.imageTintList = ColorStateList.valueOf(themeProvider.textColor)
+  }
+
+  @SuppressLint("ClickableViewAccessibility")
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    container.setOnSingleTapListener { _, event ->
+      (activity as IntroActivity).finish(event.x, event.y)
     }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        container.setOnSingleTapListener { _, event ->
-            (activity as IntroActivity).finish(event.x, event.y)
-        }
-    }
+  }
 }

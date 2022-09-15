@@ -23,82 +23,65 @@ import com.pitchedapps.frost.contracts.MainActivityContract
 import com.pitchedapps.frost.contracts.MainFabContract
 import com.pitchedapps.frost.views.FrostRecyclerView
 
-/**
- * Created by Allan Wang on 2017-11-07.
- */
-
+/** Created by Allan Wang on 2017-11-07. */
 interface FragmentContract : FrostContentContainer {
 
-    val content: FrostContentParent?
+  val content: FrostContentParent?
 
-    /**
-     * Defines whether the fragment is valid in the viewpager
-     * or if it needs to be recreated
-     * May be called from any thread to toggle status.
-     * Note that calls beyond the fragment lifecycle will be ignored
-     */
-    var valid: Boolean
+  /**
+   * Defines whether the fragment is valid in the viewpager or if it needs to be recreated May be
+   * called from any thread to toggle status. Note that calls beyond the fragment lifecycle will be
+   * ignored
+   */
+  var valid: Boolean
 
-    /**
-     * Helper to retrieve the core from [content]
-     */
-    val core: FrostContentCore?
-        get() = content?.core
+  /** Helper to retrieve the core from [content] */
+  val core: FrostContentCore?
+    get() = content?.core
 
-    /**
-     * Specifies position in Activity's viewpager
-     */
-    val position: Int
+  /** Specifies position in Activity's viewpager */
+  val position: Int
 
-    /**
-     * Specifies whether if current load
-     * will be fragment's first load
-     *
-     * Defaults to true
-     */
-    var firstLoad: Boolean
+  /**
+   * Specifies whether if current load will be fragment's first load
+   *
+   * Defaults to true
+   */
+  var firstLoad: Boolean
 
-    /**
-     * Called when the fragment is first visible
-     * Typically, if [firstLoad] is true,
-     * the fragment should call [reload] and make [firstLoad] false
-     */
-    fun firstLoadRequest()
+  /**
+   * Called when the fragment is first visible Typically, if [firstLoad] is true, the fragment
+   * should call [reload] and make [firstLoad] false
+   */
+  fun firstLoadRequest()
 
-    fun updateFab(contract: MainFabContract)
+  fun updateFab(contract: MainFabContract)
 
-    /**
-     * Single callable action to be executed upon creation
-     * Note that this call is not guaranteed
-     */
-    fun post(action: (fragment: FragmentContract) -> Unit)
+  /** Single callable action to be executed upon creation Note that this call is not guaranteed */
+  fun post(action: (fragment: FragmentContract) -> Unit)
 
-    /**
-     * Call whenever a fragment is attached so that it may listen
-     * to activity emissions.
-     */
-    fun attach(contract: MainActivityContract)
+  /** Call whenever a fragment is attached so that it may listen to activity emissions. */
+  fun attach(contract: MainActivityContract)
 
-    /*
-     * -----------------------------------------
-     * Delegates
-     * -----------------------------------------
-     */
+  /*
+   * -----------------------------------------
+   * Delegates
+   * -----------------------------------------
+   */
 
-    fun onBackPressed(): Boolean
+  fun onBackPressed(): Boolean
 
-    fun onTabClick()
+  fun onTabClick()
 }
 
 interface RecyclerContentContract {
 
-    fun bind(recyclerView: FrostRecyclerView)
+  fun bind(recyclerView: FrostRecyclerView)
 
-    /**
-     * Completely handle data reloading, within a non-ui thread
-     * The progress function allows optional emission of progress values (between 0 and 100)
-     * and can be called from any thread.
-     * Returns [true] for success, [false] otherwise
-     */
-    suspend fun reload(progress: (Int) -> Unit): Boolean
+  /**
+   * Completely handle data reloading, within a non-ui thread The progress function allows optional
+   * emission of progress values (between 0 and 100) and can be called from any thread. Returns
+   * [true] for success, [false] otherwise
+   */
+  suspend fun reload(progress: (Int) -> Unit): Boolean
 }

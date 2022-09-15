@@ -41,181 +41,166 @@ import com.pitchedapps.frost.utils.frostUri
 import com.pitchedapps.frost.views.Keywords
 import kotlinx.coroutines.launch
 
-/**
- * Created by Allan Wang on 2017-06-29.
- */
-
+/** Created by Allan Wang on 2017-06-29. */
 val Prefs.hasNotifications: Boolean
-    get() = notificationsGeneral || notificationsInstantMessages
+  get() = notificationsGeneral || notificationsInstantMessages
 
 @SuppressLint("InlinedApi")
 fun SettingsActivity.getNotificationPrefs(): KPrefAdapterBuilder.() -> Unit = {
+  text(R.string.notification_frequency, prefs::notificationFreq, { prefs.notificationFreq = it }) {
+    val options = longArrayOf(15, 30, 60, 120, 180, 300, 1440, 2880)
+    val texts = options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
+    onClick = {
+      materialDialog {
+        title(R.string.notification_frequency)
+        listItemsSingleChoice(items = texts, initialSelection = options.indexOf(item.pref)) {
+          _,
+          index,
+          _ ->
+          item.pref = options[index]
+          setFrostResult(REQUEST_NOTIFICATION)
+        }
+      }
+    }
+    enabler = { prefs.hasNotifications }
+    textGetter = { minuteToText(it) }
+  }
+
+  plainText(R.string.notification_keywords) {
+    descRes = R.string.notification_keywords_desc
+    onClick = {
+      val keywordView = Keywords(this@getNotificationPrefs)
+      materialDialog {
+        title(R.string.notification_keywords)
+        customView(view = keywordView)
+        positiveButton(R.string.kau_done)
+        onDismiss { keywordView.save() }
+      }
+    }
+  }
+
+  checkbox(
+    R.string.notification_general,
+    prefs::notificationsGeneral,
+    {
+      prefs.notificationsGeneral = it
+      reloadByTitle(R.string.notification_general_all_accounts)
+      if (!prefs.notificationsInstantMessages) reloadByTitle(R.string.notification_frequency)
+    }
+  ) {
+    descRes = R.string.notification_general_desc
+  }
+
+  checkbox(
+    R.string.notification_general_all_accounts,
+    prefs::notificationAllAccounts,
+    { prefs.notificationAllAccounts = it }
+  ) {
+    descRes = R.string.notification_general_all_accounts_desc
+    enabler = { prefs.notificationsGeneral }
+  }
+
+  checkbox(
+    R.string.notification_messages,
+    prefs::notificationsInstantMessages,
+    {
+      prefs.notificationsInstantMessages = it
+      reloadByTitle(R.string.notification_messages_all_accounts)
+      if (!prefs.notificationsGeneral) reloadByTitle(R.string.notification_frequency)
+    }
+  ) {
+    descRes = R.string.notification_messages_desc
+  }
+
+  checkbox(
+    R.string.notification_messages_all_accounts,
+    prefs::notificationsImAllAccounts,
+    { prefs.notificationsImAllAccounts = it }
+  ) {
+    descRes = R.string.notification_messages_all_accounts_desc
+    enabler = { prefs.notificationsInstantMessages }
+  }
+
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    plainText(R.string.notification_channel) {
+      descRes = R.string.notification_channel_desc
+      onClick = {
+        val intent =
+          Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+            .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        startActivity(intent)
+      }
+    }
+  } else {
+    checkbox(
+      R.string.notification_sound,
+      prefs::notificationSound,
+      {
+        prefs.notificationSound = it
+        reloadByTitle(R.string.notification_ringtone, R.string.message_ringtone)
+      }
+    )
+
+    fun KPrefText.KPrefTextContract<String>.ringtone(code: Int) {
+      enabler = prefs::notificationSound
+      textGetter = {
+        if (it.isBlank()) string(R.string.kau_default)
+        else
+          RingtoneManager.getRingtone(this@getNotificationPrefs, frostUri(it))
+            ?.getTitle(this@getNotificationPrefs)
+            ?: "---" // todo figure out why this happens
+      }
+      onClick = {
+        val intent =
+          Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+            putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, string(R.string.select_ringtone))
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
+            if (item.pref.isNotBlank()) {
+              putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, frostUri(item.pref))
+            }
+          }
+        startActivityForResult(intent, code)
+      }
+    }
 
     text(
-        R.string.notification_frequency,
-        prefs::notificationFreq,
-        { prefs.notificationFreq = it }
+      R.string.notification_ringtone,
+      prefs::notificationRingtone,
+      { prefs.notificationRingtone = it }
     ) {
-        val options = longArrayOf(15, 30, 60, 120, 180, 300, 1440, 2880)
-        val texts =
-            options.map { if (it <= 0) string(R.string.no_notifications) else minuteToText(it) }
-        onClick = {
-            materialDialog {
-                title(R.string.notification_frequency)
-                listItemsSingleChoice(
-                    items = texts,
-                    initialSelection = options.indexOf(item.pref)
-                ) { _, index, _ ->
-                    item.pref = options[index]
-                    setFrostResult(REQUEST_NOTIFICATION)
-                }
-            }
-        }
-        enabler = { prefs.hasNotifications }
-        textGetter = { minuteToText(it) }
+      ringtone(SettingsActivity.REQUEST_NOTIFICATION_RINGTONE)
     }
 
-    plainText(R.string.notification_keywords) {
-        descRes = R.string.notification_keywords_desc
-        onClick = {
-            val keywordView = Keywords(this@getNotificationPrefs)
-            materialDialog {
-                title(R.string.notification_keywords)
-                customView(view = keywordView)
-                positiveButton(R.string.kau_done)
-                onDismiss { keywordView.save() }
-            }
-        }
+    text(R.string.message_ringtone, prefs::messageRingtone, { prefs.messageRingtone = it }) {
+      ringtone(SettingsActivity.REQUEST_MESSAGE_RINGTONE)
     }
 
     checkbox(
-        R.string.notification_general, prefs::notificationsGeneral,
-        {
-            prefs.notificationsGeneral = it
-            reloadByTitle(R.string.notification_general_all_accounts)
-            if (!prefs.notificationsInstantMessages)
-                reloadByTitle(R.string.notification_frequency)
-        }
-    ) {
-        descRes = R.string.notification_general_desc
-    }
+      R.string.notification_vibrate,
+      prefs::notificationVibrate,
+      { prefs.notificationVibrate = it }
+    )
 
     checkbox(
-        R.string.notification_general_all_accounts, prefs::notificationAllAccounts,
-        { prefs.notificationAllAccounts = it }
-    ) {
-        descRes = R.string.notification_general_all_accounts_desc
-        enabler = { prefs.notificationsGeneral }
+      R.string.notification_lights,
+      prefs::notificationLights,
+      { prefs.notificationLights = it }
+    )
+  }
+
+  if (BuildConfig.DEBUG) {
+    plainText(R.string.reset_notif_epoch) { onClick = { launch { notifDao.deleteAll() } } }
+  }
+
+  plainText(R.string.notification_fetch_now) {
+    descRes = R.string.notification_fetch_now_desc
+    onClick = {
+      val text =
+        if (fetchNotifications()) R.string.notification_fetch_success
+        else R.string.notification_fetch_fail
+      frostSnackbar(text, themeProvider)
     }
-
-    checkbox(
-        R.string.notification_messages, prefs::notificationsInstantMessages,
-        {
-            prefs.notificationsInstantMessages = it
-            reloadByTitle(R.string.notification_messages_all_accounts)
-            if (!prefs.notificationsGeneral)
-                reloadByTitle(R.string.notification_frequency)
-        }
-    ) {
-        descRes = R.string.notification_messages_desc
-    }
-
-    checkbox(
-        R.string.notification_messages_all_accounts, prefs::notificationsImAllAccounts,
-        { prefs.notificationsImAllAccounts = it }
-    ) {
-        descRes = R.string.notification_messages_all_accounts_desc
-        enabler = { prefs.notificationsInstantMessages }
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        plainText(R.string.notification_channel) {
-            descRes = R.string.notification_channel_desc
-            onClick = {
-                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                    .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                startActivity(intent)
-            }
-        }
-    } else {
-        checkbox(
-            R.string.notification_sound, prefs::notificationSound,
-            {
-                prefs.notificationSound = it
-                reloadByTitle(
-                    R.string.notification_ringtone,
-                    R.string.message_ringtone
-                )
-            }
-        )
-
-        fun KPrefText.KPrefTextContract<String>.ringtone(code: Int) {
-            enabler = prefs::notificationSound
-            textGetter = {
-                if (it.isBlank()) string(R.string.kau_default)
-                else RingtoneManager.getRingtone(this@getNotificationPrefs, frostUri(it))
-                    ?.getTitle(this@getNotificationPrefs)
-                    ?: "---" // todo figure out why this happens
-            }
-            onClick = {
-                val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
-                    putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, string(R.string.select_ringtone))
-                    putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
-                    putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-                    putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
-                    if (item.pref.isNotBlank()) {
-                        putExtra(
-                            RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-                            frostUri(item.pref)
-                        )
-                    }
-                }
-                startActivityForResult(intent, code)
-            }
-        }
-
-        text(
-            R.string.notification_ringtone, prefs::notificationRingtone,
-            { prefs.notificationRingtone = it }
-        ) {
-            ringtone(SettingsActivity.REQUEST_NOTIFICATION_RINGTONE)
-        }
-
-        text(
-            R.string.message_ringtone, prefs::messageRingtone,
-            { prefs.messageRingtone = it }
-        ) {
-            ringtone(SettingsActivity.REQUEST_MESSAGE_RINGTONE)
-        }
-
-        checkbox(
-            R.string.notification_vibrate, prefs::notificationVibrate,
-            { prefs.notificationVibrate = it }
-        )
-
-        checkbox(
-            R.string.notification_lights, prefs::notificationLights,
-            { prefs.notificationLights = it }
-        )
-    }
-
-    if (BuildConfig.DEBUG) {
-        plainText(R.string.reset_notif_epoch) {
-            onClick = {
-                launch {
-                    notifDao.deleteAll()
-                }
-            }
-        }
-    }
-
-    plainText(R.string.notification_fetch_now) {
-        descRes = R.string.notification_fetch_now_desc
-        onClick = {
-            val text =
-                if (fetchNotifications()) R.string.notification_fetch_success
-                else R.string.notification_fetch_fail
-            frostSnackbar(text, themeProvider)
-        }
-    }
+  }
 }

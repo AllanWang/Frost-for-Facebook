@@ -22,11 +22,11 @@ import kotlin.test.assertTrue
 
 class JsAssetsTest {
 
-    @Test
-    fun verifyAssetsExist() {
-        JsAssets.values().forEach { asset ->
-            val file = File("src/web/assets/js/${asset.file}").absoluteFile
-            assertTrue(file.exists(), "${asset.name} not found at ${file.path}")
-        }
+  @Test
+  fun verifyAssetsExist() {
+    JsAssets.values().forEach { asset ->
+      val file = File("src/web/assets/js/${asset.file}").absoluteFile
+      assertTrue(file.exists(), "${asset.name} not found at ${file.path}")
     }
+  }
 }

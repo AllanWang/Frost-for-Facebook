@@ -22,43 +22,49 @@ import androidx.annotation.VisibleForTesting
 import ca.allanwang.kau.kotlin.lazyContext
 import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
- * Created by Allan Wang on 2017-05-31.
- * Mapping of the available assets
- * The enum name must match the css file name
+ * Created by Allan Wang on 2017-05-31. Mapping of the available assets The enum name must match the
+ * css file name
  */
 enum class JsAssets(private val singleLoad: Boolean = true) : InjectorContract {
-    MENU, MENU_QUICK(singleLoad = false), CLICK_A, CONTEXT_A, MEDIA, HEADER_BADGES, TEXTAREA_LISTENER, NOTIF_MSG,
-    DOCUMENT_WATCHER, HORIZONTAL_SCROLLING, AUTO_RESIZE_TEXTAREA(singleLoad = false), SCROLL_STOP,
-    ;
+  MENU,
+  MENU_QUICK(singleLoad = false),
+  CLICK_A,
+  CONTEXT_A,
+  MEDIA,
+  HEADER_BADGES,
+  TEXTAREA_LISTENER,
+  NOTIF_MSG,
+  DOCUMENT_WATCHER,
+  HORIZONTAL_SCROLLING,
+  AUTO_RESIZE_TEXTAREA(singleLoad = false),
+  SCROLL_STOP,
+  ;
 
-    @VisibleForTesting
-    internal val file = "${name.toLowerCase(Locale.CANADA)}.js"
-    private val injector = lazyContext {
-        try {
-            val content = it.assets.open("js/$file").bufferedReader().use(BufferedReader::readText)
-            JsBuilder().js(content).run { if (singleLoad) single(name) else this }.build()
-        } catch (e: FileNotFoundException) {
-            L.e(e) { "JsAssets file not found" }
-            JsInjector(JsActions.EMPTY.function)
-        }
+  @VisibleForTesting internal val file = "${name.toLowerCase(Locale.CANADA)}.js"
+  private val injector = lazyContext {
+    try {
+      val content = it.assets.open("js/$file").bufferedReader().use(BufferedReader::readText)
+      JsBuilder().js(content).run { if (singleLoad) single(name) else this }.build()
+    } catch (e: FileNotFoundException) {
+      L.e(e) { "JsAssets file not found" }
+      JsInjector(JsActions.EMPTY.function)
     }
+  }
 
-    override fun inject(webView: WebView, prefs: Prefs) =
-        injector(webView.context).inject(webView, prefs)
+  override fun inject(webView: WebView, prefs: Prefs) =
+    injector(webView.context).inject(webView, prefs)
 
-    companion object {
-        // Ensures that all non themes and the selected theme are loaded
-        suspend fun load(context: Context) {
-            withContext(Dispatchers.IO) {
-                values().forEach { it.injector.invoke(context) }
-            }
-        }
+  companion object {
+    // Ensures that all non themes and the selected theme are loaded
+    suspend fun load(context: Context) {
+      withContext(Dispatchers.IO) { values().forEach { it.injector.invoke(context) } }
     }
+  }
 }

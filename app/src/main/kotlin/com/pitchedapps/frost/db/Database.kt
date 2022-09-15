@@ -29,98 +29,100 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 interface FrostPrivateDao {
-    fun cookieDao(): CookieDao
-    fun notifDao(): NotificationDao
-    fun cacheDao(): CacheDao
+  fun cookieDao(): CookieDao
+  fun notifDao(): NotificationDao
+  fun cacheDao(): CacheDao
 }
 
 @Database(
-    entities = [CookieEntity::class, NotificationEntity::class, CacheEntity::class],
-    version = 2,
-    exportSchema = true
+  entities = [CookieEntity::class, NotificationEntity::class, CacheEntity::class],
+  version = 2,
+  exportSchema = true
 )
 abstract class FrostPrivateDatabase : RoomDatabase(), FrostPrivateDao {
-    companion object {
-        const val DATABASE_NAME = "frost-priv-db"
-    }
+  companion object {
+    const val DATABASE_NAME = "frost-priv-db"
+  }
 }
 
 interface FrostPublicDao {
-    fun genericDao(): GenericDao
+  fun genericDao(): GenericDao
 }
 
 @Database(entities = [GenericEntity::class], version = 1, exportSchema = true)
 abstract class FrostPublicDatabase : RoomDatabase(), FrostPublicDao {
-    companion object {
-        const val DATABASE_NAME = "frost-db"
-    }
+  companion object {
+    const val DATABASE_NAME = "frost-db"
+  }
 }
 
 interface FrostDao : FrostPrivateDao, FrostPublicDao {
-    fun close()
+  fun close()
 }
 
-/**
- * Composition of all database interfaces
- */
+/** Composition of all database interfaces */
 class FrostDatabase(
-    private val privateDb: FrostPrivateDatabase,
-    private val publicDb: FrostPublicDatabase
-) :
-    FrostDao,
-    FrostPrivateDao by privateDb,
-    FrostPublicDao by publicDb {
+  private val privateDb: FrostPrivateDatabase,
+  private val publicDb: FrostPublicDatabase
+) : FrostDao, FrostPrivateDao by privateDb, FrostPublicDao by publicDb {
 
-    override fun close() {
-        privateDb.close()
-        publicDb.close()
+  override fun close() {
+    privateDb.close()
+    publicDb.close()
+  }
+
+  companion object {
+
+    private fun <T : RoomDatabase> RoomDatabase.Builder<T>.frostBuild() =
+      if (BuildConfig.DEBUG) {
+        fallbackToDestructiveMigration().build()
+      } else {
+        build()
+      }
+
+    fun create(context: Context): FrostDatabase {
+      val privateDb =
+        Room.databaseBuilder(
+            context,
+            FrostPrivateDatabase::class.java,
+            FrostPrivateDatabase.DATABASE_NAME
+          )
+          .addMigrations(COOKIES_MIGRATION_1_2)
+          .frostBuild()
+      val publicDb =
+        Room.databaseBuilder(
+            context,
+            FrostPublicDatabase::class.java,
+            FrostPublicDatabase.DATABASE_NAME
+          )
+          .frostBuild()
+      return FrostDatabase(privateDb, publicDb)
     }
-
-    companion object {
-
-        private fun <T : RoomDatabase> RoomDatabase.Builder<T>.frostBuild() =
-            if (BuildConfig.DEBUG) {
-                fallbackToDestructiveMigration().build()
-            } else {
-                build()
-            }
-
-        fun create(context: Context): FrostDatabase {
-            val privateDb = Room.databaseBuilder(
-                context, FrostPrivateDatabase::class.java,
-                FrostPrivateDatabase.DATABASE_NAME
-            ).addMigrations(COOKIES_MIGRATION_1_2).frostBuild()
-            val publicDb = Room.databaseBuilder(
-                context, FrostPublicDatabase::class.java,
-                FrostPublicDatabase.DATABASE_NAME
-            ).frostBuild()
-            return FrostDatabase(privateDb, publicDb)
-        }
-    }
+  }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    @Provides
-    @Singleton
-    fun frostDatabase(@ApplicationContext context: Context): FrostDatabase =
-        FrostDatabase.create(context)
+  @Provides
+  @Singleton
+  fun frostDatabase(@ApplicationContext context: Context): FrostDatabase =
+    FrostDatabase.create(context)
 
-    @Provides
-    @Singleton
-    fun cookieDao(frostDatabase: FrostDatabase): CookieDao = frostDatabase.cookieDao()
+  @Provides
+  @Singleton
+  fun cookieDao(frostDatabase: FrostDatabase): CookieDao = frostDatabase.cookieDao()
 
-    @Provides
-    @Singleton
-    fun cacheDao(frostDatabase: FrostDatabase): CacheDao = frostDatabase.cacheDao()
+  @Provides
+  @Singleton
+  fun cacheDao(frostDatabase: FrostDatabase): CacheDao = frostDatabase.cacheDao()
 
-    @Provides
-    @Singleton
-    fun notifDao(frostDatabase: FrostDatabase): NotificationDao = frostDatabase.notifDao()
+  @Provides
+  @Singleton
+  fun notifDao(frostDatabase: FrostDatabase): NotificationDao = frostDatabase.notifDao()
 
-    @Provides
-    @Singleton
-    fun genericDao(frostDatabase: FrostDatabase): GenericDao = frostDatabase.genericDao()
+  @Provides
+  @Singleton
+  fun genericDao(frostDatabase: FrostDatabase): GenericDao = frostDatabase.genericDao()
 }

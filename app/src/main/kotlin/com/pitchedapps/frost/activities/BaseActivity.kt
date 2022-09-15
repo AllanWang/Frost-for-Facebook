@@ -28,48 +28,40 @@ import com.pitchedapps.frost.utils.ActivityThemer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-/**
- * Created by Allan Wang on 2017-06-12.
- */
+/** Created by Allan Wang on 2017-06-12. */
 @AndroidEntryPoint
 abstract class BaseActivity : KauBaseActivity() {
 
-    @Inject
-    lateinit var fbCookie: FbCookie
+  @Inject lateinit var fbCookie: FbCookie
 
-    @Inject
-    lateinit var prefs: Prefs
+  @Inject lateinit var prefs: Prefs
 
-    @Inject
-    lateinit var themeProvider: ThemeProvider
+  @Inject lateinit var themeProvider: ThemeProvider
 
-    @Inject
-    lateinit var activityThemer: ActivityThemer
+  @Inject lateinit var activityThemer: ActivityThemer
 
-    /**
-     * Inherited consumer to customize back press
-     */
-    protected open fun backConsumer(): Boolean = false
+  /** Inherited consumer to customize back press */
+  protected open fun backConsumer(): Boolean = false
 
-    final override fun onBackPressed() {
-        if (this is SearchViewHolder && searchViewOnBackPress()) return
-        if (this is VideoViewHolder && videoOnBackPress()) return
-        if (backConsumer()) return
-        super.onBackPressed()
-    }
+  final override fun onBackPressed() {
+    if (this is SearchViewHolder && searchViewOnBackPress()) return
+    if (this is VideoViewHolder && videoOnBackPress()) return
+    if (backConsumer()) return
+    super.onBackPressed()
+  }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (this !is WebOverlayActivityBase) activityThemer.setFrostTheme()
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    if (this !is WebOverlayActivityBase) activityThemer.setFrostTheme()
+  }
 
-    override fun onStop() {
-        if (this is VideoViewHolder) videoOnStop()
-        super.onStop()
-    }
+  override fun onStop() {
+    if (this is VideoViewHolder) videoOnStop()
+    super.onStop()
+  }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (this is VideoViewHolder) videoViewer?.updateLocation()
-    }
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    if (this is VideoViewHolder) videoViewer?.updateLocation()
+  }
 }

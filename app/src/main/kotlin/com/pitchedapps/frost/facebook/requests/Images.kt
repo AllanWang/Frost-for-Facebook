@@ -24,23 +24,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 
-/**
- * Created by Allan Wang on 29/12/17.
- */
+/** Created by Allan Wang on 29/12/17. */
 
-/**
- * Attempts to get the fbcdn url of the supplied image redirect url
- */
+/** Attempts to get the fbcdn url of the supplied image redirect url */
 suspend fun String.getFullSizedImageUrl(url: String, timeout: Long = 3000): String? =
-    withContext(Dispatchers.IO) {
-        try {
-            withTimeout(timeout) {
-                val redirect = requestBuilder().url(url).get().call()
-                    .execute().body?.string() ?: return@withTimeout null
-                FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
-            }
-        } catch (e: Exception) {
-            L.e(e) { "Failed to load full size image url" }
-            null
-        }
+  withContext(Dispatchers.IO) {
+    try {
+      withTimeout(timeout) {
+        val redirect =
+          requestBuilder().url(url).get().call().execute().body?.string() ?: return@withTimeout null
+        FB_REDIRECT_URL_MATCHER.find(redirect)[1]?.formattedFbUrl
+      }
+    } catch (e: Exception) {
+      L.e(e) { "Failed to load full size image url" }
+      null
     }
+  }

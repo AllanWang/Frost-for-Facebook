@@ -36,17 +36,30 @@ internal fun String.cleanJsoup(): String = Jsoup.clean(this, PrivacyWhitelist())
 
 class PrivacyWhitelist : Safelist() {
 
-    val blacklistAttrs = arrayOf("style", "aria-label", "rel")
-    val blacklistTags = arrayOf(
-        "body", "html", "head", "i", "b", "u", "style", "script",
-        "br", "p", "span", "ul", "ol", "li"
+  val blacklistAttrs = arrayOf("style", "aria-label", "rel")
+  val blacklistTags =
+    arrayOf(
+      "body",
+      "html",
+      "head",
+      "i",
+      "b",
+      "u",
+      "style",
+      "script",
+      "br",
+      "p",
+      "span",
+      "ul",
+      "ol",
+      "li"
     )
 
-    override fun isSafeAttribute(tagName: String, el: Element, attr: Attribute): Boolean {
-        val key = attr.key
-        if (key == "href") attr.setValue("-")
-        return key !in blacklistAttrs
-    }
+  override fun isSafeAttribute(tagName: String, el: Element, attr: Attribute): Boolean {
+    val key = attr.key
+    if (key == "href") attr.setValue("-")
+    return key !in blacklistAttrs
+  }
 
-    override fun isSafeTag(tag: String) = tag !in blacklistTags
+  override fun isSafeTag(tag: String) = tag !in blacklistTags
 }
