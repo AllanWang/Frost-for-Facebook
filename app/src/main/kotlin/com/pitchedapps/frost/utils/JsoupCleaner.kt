@@ -19,7 +19,7 @@ package com.pitchedapps.frost.utils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Attribute
 import org.jsoup.nodes.Element
-import org.jsoup.safety.Whitelist
+import org.jsoup.safety.Safelist
 
 /**
  * Created by Allan Wang on 2017-08-10.
@@ -34,7 +34,7 @@ internal fun String.cleanText(): String = replace(Regex(">(?s).+?<"), "><")
 
 internal fun String.cleanJsoup(): String = Jsoup.clean(this, PrivacyWhitelist())
 
-class PrivacyWhitelist : Whitelist() {
+class PrivacyWhitelist : Safelist() {
 
     val blacklistAttrs = arrayOf("style", "aria-label", "rel")
     val blacklistTags = arrayOf(
