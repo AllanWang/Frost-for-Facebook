@@ -31,20 +31,21 @@ enum class CssHider(private vararg val items: String) : InjectorContract {
     "#mJewelNav",
     "[data-sigil=MTopBlueBarHeader]",
     "#header-notices",
-    "[data-sigil*=m-promo-jewel-header]"
+    "[data-sigil*=m-promo-jewel-header]",
   ),
-  ADS("article[data-xt*=sponsor]", "article[data-store*=sponsor]"),
+  ADS("article[data-xt*=sponsor]", "article[data-store*=sponsor]", "article[data-ft*=sponsor]"),
   PEOPLE_YOU_MAY_KNOW("article._d2r"),
   SUGGESTED_GROUPS("article[data-ft*=\"ei\":]"),
+
   // Is it really this simple?
-  SUGGESTED_POSTS("article[data-ft*=recommendation]"),
+  SUGGESTED_POSTS("article[data-store*=recommendation]", "article[data-ft*=recommendation]"),
   COMPOSER("#MComposer"),
   MESSENGER("._s15", "[data-testid=info_panel]", "js_i"),
   NON_RECENT("article:not([data-store*=actor_name])"),
   STORIES(
     "#MStoriesTray",
     // Sub element with just the tray; title is not a part of this
-    "[data-testid=story_tray]"
+    "[data-testid=story_tray]",
   ),
   POST_ACTIONS("footer [data-sigil=\"ufi-inline-actions\"]"),
   POST_REACTIONS("footer [data-sigil=\"reactions-bling-bar\"]");

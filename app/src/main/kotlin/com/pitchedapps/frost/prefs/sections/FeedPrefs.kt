@@ -39,8 +39,6 @@ interface FeedPrefs : PrefsBase {
 
   var showSuggestedPosts: Boolean
 
-  var showFacebookAds: Boolean
-
   var showStories: Boolean
 
   var mainActivityLayoutType: Int
@@ -84,12 +82,6 @@ class FeedPrefsImpl @Inject internal constructor(factory: KPrefFactory, oldPrefs
     )
 
   override var showSuggestedPosts: Boolean by kpref("suggested_posts_feed", true)
-
-  override var showFacebookAds: Boolean by
-    kpref(
-      "facebook_ads",
-      oldPrefs.showFacebookAds, /* false */
-    )
 
   override var showStories: Boolean by kpref("show_stories", oldPrefs.showStories /* true */)
 
