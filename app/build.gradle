@@ -208,8 +208,8 @@ android {
 }
 
 node {
-    version = '13.8.0'
-    npmVersion = '6.13.7'
+    version = '17.0.1'
+    npmVersion = '8.19.2'
     download = true
     nodeModulesDir = file("${project.projectDir}/src/web")
 }
