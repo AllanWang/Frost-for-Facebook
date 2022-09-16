@@ -298,6 +298,7 @@ abstract class WebOverlayActivityBase(private val userAgent: String = USER_AGENT
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     val url = web.currentUrl.formattedFbUrl
     when (item.itemId) {
+      R.id.action_refresh -> web.reload(animate = true)
       R.id.action_copy_link -> copyToClipboard(url)
       R.id.action_share -> shareText(url)
       R.id.action_open_in_browser -> startLink(url)

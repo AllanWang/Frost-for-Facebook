@@ -68,6 +68,10 @@ fun SettingsActivity.getBehaviourPrefs(): KPrefAdapterBuilder.() -> Unit = {
     descRes = R.string.viewpager_swipe_desc
   }
 
+  checkbox(R.string.swipe_to_refresh, prefs::swipeToRefresh, { prefs.swipeToRefresh = it }) {
+    descRes = R.string.swipe_to_refresh_desc
+  }
+
   checkbox(
     R.string.force_message_bottom,
     prefs::messageScrollToBottom,

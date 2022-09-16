@@ -26,14 +26,20 @@ import android.widget.ListView
 import androidx.core.widget.ListViewCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnChildScrollUpCallback
+import com.pitchedapps.frost.prefs.Prefs
 import com.pitchedapps.frost.utils.L
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Variant that forbids refreshing if child layout is not at the top Inspired by
  * https://github.com/slapperwan/gh4a/blob/master/app/src/main/java/com/gh4a/widget/SwipeRefreshLayout.java
  */
+@AndroidEntryPoint
 class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
   SwipeRefreshLayout(context, attrs) {
+
+  @Inject lateinit var prefs: Prefs
 
   private var preventRefresh: Boolean = false
   private var downY: Float = -1f
@@ -61,6 +67,9 @@ class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: Attr
   }
 
   override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+    if (!prefs.swipeToRefresh) {
+      return false
+    }
     if (ev.action != MotionEvent.ACTION_DOWN && preventRefresh) {
       return false
     }
@@ -77,6 +86,10 @@ class SwipeRefreshLayout @JvmOverloads constructor(context: Context, attrs: Attr
       }
     }
     return super.onInterceptTouchEvent(ev)
+  }
+
+  override fun onStartNestedScroll(child: View, target: View, nestedScrollAxes: Int): Boolean {
+    return prefs.swipeToRefresh && super.onStartNestedScroll(child, target, nestedScrollAxes)
   }
 
   override fun onNestedScroll(

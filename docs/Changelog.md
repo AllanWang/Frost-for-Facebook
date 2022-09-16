@@ -4,6 +4,7 @@
 * Improve loading process
 * Add option to hide recommended for you posts
 * Fix menu tab loading
+* Add option to disable swipe to refresh (settings > behaviour)
 
 ## v3.1.2
 * Fix loading full size images
