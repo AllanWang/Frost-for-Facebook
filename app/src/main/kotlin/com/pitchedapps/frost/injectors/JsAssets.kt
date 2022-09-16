@@ -30,11 +30,10 @@ import kotlinx.coroutines.withContext
 
 /**
  * Created by Allan Wang on 2017-05-31. Mapping of the available assets The enum name must match the
- * css file name
+ * js file name
  */
 enum class JsAssets(private val singleLoad: Boolean = true) : InjectorContract {
   MENU,
-  MENU_QUICK(singleLoad = false),
   CLICK_A,
   CONTEXT_A,
   MEDIA,

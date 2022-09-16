@@ -32,8 +32,8 @@ import com.pitchedapps.frost.utils.isIndependent
 import com.pitchedapps.frost.utils.launchImageActivity
 import com.pitchedapps.frost.utils.showWebContextMenu
 import com.pitchedapps.frost.views.FrostWebView
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /** Created by Allan Wang on 2017-06-01. */
 @FrostWebScoped
@@ -87,7 +87,7 @@ internal constructor(
       activity.showWebContextMenu(
         WebContext(url.takeIf { it.isIndependent }, text),
         fbCookie,
-        prefs
+        prefs,
       )
     }
   }
@@ -136,10 +136,8 @@ internal constructor(
 
   @JavascriptInterface
   fun isReady() {
-    if (web.frostWebClient !is FrostWebViewClientMenu) {
-      L.v { "JSI is ready" }
-      refreshEmit(false)
-    }
+    L.v { "JSI is ready" }
+    refreshEmit(false)
   }
 
   @JavascriptInterface
@@ -168,5 +166,6 @@ internal constructor(
     this.isScrolling = scrolling
   }
 
-  @JavascriptInterface fun isScrolling(): Boolean = isScrolling
+  @JavascriptInterface
+  fun isScrolling(): Boolean = isScrolling
 }

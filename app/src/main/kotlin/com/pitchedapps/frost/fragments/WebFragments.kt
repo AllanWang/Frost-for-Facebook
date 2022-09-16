@@ -25,7 +25,6 @@ import com.pitchedapps.frost.injectors.JsActions
 import com.pitchedapps.frost.utils.L
 import com.pitchedapps.frost.views.FrostWebView
 import com.pitchedapps.frost.web.FrostWebViewClient
-import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import com.pitchedapps.frost.web.FrostWebViewClientMessenger
 
 /**
@@ -41,7 +40,6 @@ class WebFragment : BaseFragment() {
   fun client(web: FrostWebView) =
     when (baseEnum) {
       FbItem.MESSENGER -> FrostWebViewClientMessenger(web)
-      FbItem.MENU -> FrostWebViewClientMenu(web)
       else -> FrostWebViewClient(web)
     }
 

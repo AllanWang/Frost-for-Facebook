@@ -46,7 +46,6 @@ import com.pitchedapps.frost.web.FrostWebClientEntryPoint
 import com.pitchedapps.frost.web.FrostWebComponentBuilder
 import com.pitchedapps.frost.web.FrostWebEntryPoint
 import com.pitchedapps.frost.web.FrostWebViewClient
-import com.pitchedapps.frost.web.FrostWebViewClientMenu
 import com.pitchedapps.frost.web.FrostWebViewClientMessenger
 import com.pitchedapps.frost.web.NestedWebView
 import dagger.hilt.EntryPoints
@@ -107,7 +106,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     frostWebClient =
       when (parent.baseEnum) {
         FbItem.MESSENGER -> FrostWebViewClientMessenger(this)
-        FbItem.MENU -> FrostWebViewClientMenu(this)
         else -> clientEntryPoint.webClient()
       }
     webViewClient = frostWebClient
