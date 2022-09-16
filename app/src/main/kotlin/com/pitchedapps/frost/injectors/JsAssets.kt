@@ -33,7 +33,6 @@ import kotlinx.coroutines.withContext
  * js file name
  */
 enum class JsAssets(private val singleLoad: Boolean = true) : InjectorContract {
-  MENU,
   CLICK_A,
   CONTEXT_A,
   MEDIA,
