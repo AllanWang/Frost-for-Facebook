@@ -4,6 +4,11 @@
     tools:context="com.pitchedapps.frost.activities.WebOverlayActivity">
 
     <item
+        android:id="@+id/action_refresh"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_copy_link"
         android:title="@string/copy_link"
         app:showAsAction="never" />
