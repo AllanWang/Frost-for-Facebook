@@ -2,6 +2,8 @@
 
 ## v3.2.0
 * Improve loading process
+* Add option to hide recommended for you posts
+* Fix menu tab loading
 
 ## v3.1.2
 * Fix loading full size images

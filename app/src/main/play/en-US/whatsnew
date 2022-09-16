@@ -1,3 +1,5 @@
 v3.2.0
 
 * Improve loading process
+* Add option to hide recommended for you posts
+* Fix menu tab loading
