@@ -14,6 +14,8 @@
     <string name="suggested_friends_desc">Show \"People You May Know\" in the feed</string>
     <string name="suggested_groups">Suggested Groups</string>
     <string name="suggested_groups_desc">Show \"Suggested Groups\" in the feed</string>
+    <string name="suggested_posts">Suggested Posts</string>
+    <string name="suggested_posts_desc">Show \"Suggested for you\" in the feed</string>
     <string name="show_stories">Show Stories</string>
     <string name="show_stories_desc">Show stories in the feed</string>
     <string name="show_post_actions">Show Post Actions</string>

@@ -34,7 +34,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
         title(R.string.newsfeed_sort)
         listItemsSingleChoice(
           items = FeedSort.values().map { string(it.textRes) },
-          initialSelection = item.pref
+          initialSelection = item.pref,
         ) { _, index, _ ->
           if (item.pref != index) {
             item.pref = index
@@ -52,7 +52,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.aggressiveRecents = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.aggressive_recents_desc
   }
@@ -63,7 +63,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showComposer = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.composer_desc
   }
@@ -74,7 +74,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showCreateFab = it
       setFrostResult(REQUEST_FAB)
-    }
+    },
   ) {
     descRes = R.string.create_fab_desc
   }
@@ -85,7 +85,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showSuggestedFriends = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.suggested_friends_desc
   }
@@ -96,9 +96,20 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showSuggestedGroups = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.suggested_groups_desc
+  }
+
+  checkbox(
+    R.string.suggested_posts,
+    prefs::showSuggestedPosts,
+    {
+      prefs.showSuggestedPosts = it
+      shouldRefreshMain()
+    },
+  ) {
+    descRes = R.string.suggested_posts_desc
   }
 
   checkbox(
@@ -107,7 +118,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showStories = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.show_stories_desc
   }
@@ -118,7 +129,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showPostActions = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.show_post_actions_desc
   }
@@ -129,7 +140,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.showPostReactions = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.show_post_reactions_desc
   }
@@ -140,7 +151,7 @@ fun SettingsActivity.getFeedPrefs(): KPrefAdapterBuilder.() -> Unit = {
     {
       prefs.fullSizeImage = it
       shouldRefreshMain()
-    }
+    },
   ) {
     descRes = R.string.full_size_image_desc
   }

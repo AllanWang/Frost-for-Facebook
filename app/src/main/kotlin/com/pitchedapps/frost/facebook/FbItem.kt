@@ -45,13 +45,7 @@ enum class FbItem(
   FRIENDS(R.string.friends, GoogleMaterial.Icon.gmd_person_add, "friends/center/requests"),
   GROUPS(R.string.groups, GoogleMaterial.Icon.gmd_group, "groups"),
   MARKETPLACE(R.string.marketplace, GoogleMaterial.Icon.gmd_store, "marketplace"),
-
-  /*
-   * Unlike other urls, menus cannot be linked directly as it is a soft reference. Instead, we can
-   * pick any url with the blue bar and manually click to enter the menu.
-   * We pick home.php as some back interactions default to home regardless of the base url.
-   */
-  MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "home.php"),
+  MENU(R.string.menu, GoogleMaterial.Icon.gmd_menu, "bookmarks"),
   MESSAGES(R.string.messages, MaterialDesignIconic.Icon.gmi_comments, "messages"),
   MESSENGER(
     R.string.messenger,

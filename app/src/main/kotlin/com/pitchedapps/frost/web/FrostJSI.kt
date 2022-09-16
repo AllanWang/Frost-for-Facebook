@@ -87,7 +87,7 @@ internal constructor(
       activity.showWebContextMenu(
         WebContext(url.takeIf { it.isIndependent }, text),
         fbCookie,
-        prefs
+        prefs,
       )
     }
   }
@@ -136,10 +136,8 @@ internal constructor(
 
   @JavascriptInterface
   fun isReady() {
-    if (web.frostWebClient !is FrostWebViewClientMenu) {
-      L.v { "JSI is ready" }
-      refreshEmit(false)
-    }
+    L.v { "JSI is ready" }
+    refreshEmit(false)
   }
 
   @JavascriptInterface

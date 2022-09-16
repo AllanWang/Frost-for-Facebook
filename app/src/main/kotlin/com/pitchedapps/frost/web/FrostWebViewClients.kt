@@ -113,6 +113,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
       CssHider.STORIES.maybe(!prefs.showStories),
       CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
       CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+      CssHider.SUGGESTED_POSTS.maybe(!prefs.showSuggestedPosts),
       themeProvider.injector(ThemeCategory.FACEBOOK),
       CssHider.NON_RECENT.maybe(
         (web.url?.contains("?sk=h_chr") ?: false) && prefs.aggressiveRecents
@@ -269,49 +270,6 @@ private const val EMIT_THEME = 0b1
 private const val EMIT_ID = 0b10
 private const val EMIT_COMPLETE = EMIT_THEME or EMIT_ID
 private const val EMIT_FINISH = 0
-
-/** Client variant for the menu view */
-class FrostWebViewClientMenu(web: FrostWebView) : FrostWebViewClient(web) {
-
-  override fun onPageFinished(view: WebView, url: String?) {
-    super.onPageFinished(view, url)
-    if (url == null) {
-      return
-    }
-    jsInject(JsAssets.MENU, prefs = prefs)
-  }
-
-  /*
-   * We do not inject headers as they include the menu flyout.
-   * Instead, we remove the flyout margins within the js script so that it covers the header.
-   */
-  override val facebookJsInjectors: List<InjectorContract> =
-    super.facebookJsInjectors - CssHider.HEADER + CssAsset.Menu
-
-  override fun emit(flag: Int) {
-    super.emit(flag)
-    when (flag) {
-      EMIT_FINISH -> {
-        super.injectAndFinish()
-      }
-    }
-  }
-
-  /*
-   * Facebook doesn't properly load back to the menu even in standard browsers.
-   * Instead, if we detect the base soft url, we will manually click the menu item
-   */
-  override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
-    super.doUpdateVisitedHistory(view, url, isReload)
-    if (url?.startsWith(FbItem.MENU.url) == true) {
-      jsInject(JsAssets.MENU_QUICK, prefs = prefs)
-    }
-  }
-
-  override fun onPageFinishedActions(url: String) {
-    // Skip
-  }
-}
 
 class FrostWebViewClientMessenger(web: FrostWebView) : FrostWebViewClient(web) {
 

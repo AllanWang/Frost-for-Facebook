@@ -37,6 +37,8 @@ interface FeedPrefs : PrefsBase {
 
   var showSuggestedGroups: Boolean
 
+  var showSuggestedPosts: Boolean
+
   var showFacebookAds: Boolean
 
   var showStories: Boolean
@@ -58,24 +60,44 @@ class FeedPrefsImpl @Inject internal constructor(factory: KPrefFactory, oldPrefs
   override var feedSort: Int by kpref("feed_sort", oldPrefs.feedSort /* FeedSort.DEFAULT.ordinal */)
 
   override var aggressiveRecents: Boolean by
-    kpref("aggressive_recents", oldPrefs.aggressiveRecents /* false */)
+    kpref(
+      "aggressive_recents",
+      oldPrefs.aggressiveRecents, /* false */
+    )
 
   override var showComposer: Boolean by
-    kpref("status_composer_feed", oldPrefs.showComposer /* true */)
+    kpref(
+      "status_composer_feed",
+      oldPrefs.showComposer, /* true */
+    )
 
   override var showSuggestedFriends: Boolean by
-    kpref("suggested_friends_feed", oldPrefs.showSuggestedFriends /* true */)
+    kpref(
+      "suggested_friends_feed",
+      oldPrefs.showSuggestedFriends, /* true */
+    )
 
   override var showSuggestedGroups: Boolean by
-    kpref("suggested_groups_feed", oldPrefs.showSuggestedGroups /* true */)
+    kpref(
+      "suggested_groups_feed",
+      oldPrefs.showSuggestedGroups, /* true */
+    )
+
+  override var showSuggestedPosts: Boolean by kpref("suggested_posts_feed", true)
 
   override var showFacebookAds: Boolean by
-    kpref("facebook_ads", oldPrefs.showFacebookAds /* false */)
+    kpref(
+      "facebook_ads",
+      oldPrefs.showFacebookAds, /* false */
+    )
 
   override var showStories: Boolean by kpref("show_stories", oldPrefs.showStories /* true */)
 
   override var mainActivityLayoutType: Int by
-    kpref("main_activity_layout_type", oldPrefs.mainActivityLayoutType /* 0 */)
+    kpref(
+      "main_activity_layout_type",
+      oldPrefs.mainActivityLayoutType, /* 0 */
+    )
 
   override val mainActivityLayout: MainActivityLayout
     get() = MainActivityLayout(mainActivityLayoutType)

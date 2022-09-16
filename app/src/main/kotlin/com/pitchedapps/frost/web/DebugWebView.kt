@@ -113,6 +113,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
           CssHider.STORIES.maybe(!prefs.showStories),
           CssHider.PEOPLE_YOU_MAY_KNOW.maybe(!prefs.showSuggestedFriends),
           CssHider.SUGGESTED_GROUPS.maybe(!prefs.showSuggestedGroups),
+          CssHider.SUGGESTED_POSTS.maybe(!prefs.showSuggestedPosts),
           themeProvider.injector(ThemeCategory.FACEBOOK),
           CssHider.NON_RECENT.maybe(
             (url?.contains("?sk=h_chr") ?: false) && prefs.aggressiveRecents
