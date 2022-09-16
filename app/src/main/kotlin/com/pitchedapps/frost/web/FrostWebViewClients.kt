@@ -118,7 +118,7 @@ open class FrostWebViewClient(val web: FrostWebView) : BaseWebViewClient() {
       CssHider.NON_RECENT.maybe(
         (web.url?.contains("?sk=h_chr") ?: false) && prefs.aggressiveRecents
       ),
-      CssHider.ADS.maybe(!prefs.showFacebookAds),
+      CssHider.ADS,
       CssHider.POST_ACTIONS.maybe(!prefs.showPostActions),
       CssHider.POST_REACTIONS.maybe(!prefs.showPostReactions),
       CssAsset.FullSizeImage.maybe(prefs.fullSizeImage),

@@ -77,8 +77,6 @@ class OldPrefs @Inject internal constructor(factory: KPrefFactory) :
 
   var showSuggestedGroups: Boolean by kpref("suggested_groups_feed", true)
 
-  var showFacebookAds: Boolean by kpref("facebook_ads", false)
-
   var showStories: Boolean by kpref("show_stories", true)
 
   var animate: Boolean by kpref("fancy_animations", true)
