@@ -14,28 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.hilt
+package com.pitchedapps.frost.components
 
-import com.pitchedapps.frost.components.Core
-import com.pitchedapps.frost.components.FrostDataStore
-import com.pitchedapps.frost.components.UseCases
-import com.pitchedapps.frost.extension.ExtensionModelConverter
+import androidx.datastore.core.DataStore
+import com.pitchedapps.frost.proto.Account
+import com.pitchedapps.frost.proto.settings.Appearance
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
-/**
- * Components for Mozilla
- *
- * Modelled off of Focus:
- * https://github.com/mozilla-mobile/focus-android/blob/main/app/src/main/java/org/mozilla/focus/Components.kt
- * but with hilt
- */
 @Singleton
-class FrostComponents
+class FrostDataStore
 @Inject
 internal constructor(
-  val core: Core,
-  val useCases: UseCases,
-  val extensionModelConverter: ExtensionModelConverter,
-  val dataStore: FrostDataStore,
-)
+  private val accountProvider: Provider<DataStore<Account>>,
+  private val appearanceProvider: Provider<DataStore<Appearance>>,
+) {
+  val account: DataStore<Account>
+    get() = accountProvider.get()
+
+  val appearance: DataStore<Appearance>
+    get() = appearanceProvider.get()
+}

@@ -20,6 +20,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.pitchedapps.frost.FrostApp
+import com.pitchedapps.frost.hilt.FrostComponents
 
 inline fun <reified T : Activity> Context.launchActivity(
   clearStack: Boolean = false,
@@ -38,3 +40,6 @@ inline fun <reified T : Activity> Context.launchActivity(
     finish()
   }
 }
+
+val Context.components: FrostComponents
+  get() = (applicationContext as FrostApp).componentsProvider.get()

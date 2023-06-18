@@ -20,10 +20,15 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.hilt.FrostComponents
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltAndroidApp
 class FrostApp : Application() {
+
+  @Inject lateinit var componentsProvider: Provider<FrostComponents>
 
   override fun onCreate() {
     super.onCreate()
@@ -48,7 +53,7 @@ class FrostApp : Application() {
           override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
             logger.atFine().log("Activity %s created", activity.localClassName)
           }
-        }
+        },
       )
     }
   }
