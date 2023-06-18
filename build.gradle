@@ -13,6 +13,7 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.21-1.0.11' apply false
     id 'com.diffplug.spotless' version '6.19.0' apply false
     id 'com.google.protobuf' version '0.9.3' apply false
+    id 'app.cash.sqldelight' version "2.0.0-rc01" apply false
 }
 
 tasks.register('clean', Delete) {

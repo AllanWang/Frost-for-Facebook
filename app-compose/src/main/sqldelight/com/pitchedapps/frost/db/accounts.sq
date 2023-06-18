@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS account (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT,
+    avatar TEXT,
+    facebook_cookie TEXT,
+    messenger_cookie TEXT
+);
+
+count:
+SELECT COUNT(*) FROM account;
+
+insertNew:
+INSERT INTO account DEFAULT VALUES;
+
+insert:
+INSERT OR REPLACE INTO account (id, name, avatar, facebook_cookie, messenger_cookie) VALUES (?, ?, ?, ?,  ?);
+
+delete:
+DELETE FROM account WHERE id == ?;
+
+select:
+SELECT *
+FROM account WHERE id == ?;
+
+selectAll:
+SELECT *
+FROM account;
+
+selectAllDisplay:
+SELECT id, name, avatar
+FROM account;

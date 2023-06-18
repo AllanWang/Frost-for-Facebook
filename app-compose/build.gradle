@@ -5,6 +5,7 @@ plugins {
     id "dagger.hilt.android.plugin"
     id "com.google.devtools.ksp"
     id "com.google.protobuf"
+    id "app.cash.sqldelight"
 }
 
 apply from: '../spotless.gradle'
@@ -242,6 +243,8 @@ dependencies {
 
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("com.google.protobuf:protobuf-kotlin-lite:3.23.3")
+
+    implementation("app.cash.sqldelight:android-driver:2.0.0-rc01")
 }
 
 protobuf {
@@ -271,5 +274,13 @@ configurations {
     configureEach {
         // https://stackoverflow.com/q/69817925
         exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+    }
+}
+
+sqldelight {
+    databases {
+        register("FrostDb") {
+            packageName.set("com.pitchedapps.frost.db")
+        }
     }
 }
