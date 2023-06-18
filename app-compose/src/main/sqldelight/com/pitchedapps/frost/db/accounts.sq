@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS account (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     avatar TEXT,
     facebook_cookie TEXT,
@@ -15,8 +15,10 @@ INSERT INTO account DEFAULT VALUES;
 insert:
 INSERT OR REPLACE INTO account (id, name, avatar, facebook_cookie, messenger_cookie) VALUES (?, ?, ?, ?,  ?);
 
-delete:
-DELETE FROM account WHERE id == ?;
+delete {
+  DELETE FROM account WHERE id == (:id);
+  DELETE FROM notifications WHERE id == (:id);
+}
 
 select:
 SELECT *
