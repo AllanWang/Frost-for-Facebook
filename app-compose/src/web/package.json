@@ -9,9 +9,7 @@
   },
   "dependencies": {
     "@types/firefox-webext-browser": "^111.0.1",
-    "compile": "0.0.2",
-    "run": "^1.4.0",
-    "sass": "^1.62.1",
-    "typescript": "^5.0.4"
+    "sass": "^1.63.4",
+    "typescript": "^5.1.3"
   }
 }
