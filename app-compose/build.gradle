@@ -4,6 +4,7 @@ plugins {
     id "kotlin-kapt"
     id "dagger.hilt.android.plugin"
     id "com.google.devtools.ksp"
+    id "com.google.protobuf"
 }
 
 apply from: '../spotless.gradle'
@@ -238,6 +239,32 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:${composeVersion}")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("com.google.protobuf:protobuf-kotlin-lite:3.23.3")
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.22.3'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+                kotlin {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }
 
 configurations {

@@ -20,14 +20,18 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import com.pitchedapps.frost.components.UseCases
 import com.pitchedapps.frost.extension.ExtensionModelConverter
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.hilt.FrostComponents
+import com.pitchedapps.frost.proto.Account
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.concept.engine.Engine
 
@@ -41,10 +45,11 @@ internal constructor(
   val store: BrowserStore,
   val useCases: UseCases,
   val extensionModelConverter: ExtensionModelConverter,
+  val accountDataStore: DataStore<Account>,
 ) : ViewModel() {
   var tabs: List<MainTabItem> by mutableStateOf(FbItem.defaults().map { it.tab(context) })
 
-  var contextId: String by mutableStateOf("")
+  var contextIdFlow: Flow<String> = accountDataStore.data.map { it.accountId }
 
   var tabIndex: Int by mutableStateOf(0)
 }

@@ -26,6 +26,7 @@ import androidx.compose.material.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,7 +43,9 @@ import mozilla.components.concept.engine.Engine
 fun MainScreen(modifier: Modifier = Modifier) {
   val vm: MainScreenViewModel = viewModel()
 
-  if (vm.contextId.isEmpty()) return // Not ready
+  val contextId by vm.contextIdFlow.collectAsState(initial = "")
+
+  if (contextId.isEmpty()) return // Not ready
 
   DisposableEffect(vm.store) {
     val feature =
@@ -61,7 +64,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
     modifier = modifier,
     engine = vm.engine,
     store = vm.store,
-    contextId = vm.contextId,
+    contextId = contextId,
     useCases = vm.useCases,
     tabIndex = vm.tabIndex,
     tabs = vm.tabs,
