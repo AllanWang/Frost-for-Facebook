@@ -237,6 +237,7 @@ dependencies {
     // Material design icons
     implementation("androidx.compose.material:material-icons-core:${composeVersion}")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
+    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
 }
 
 configurations {

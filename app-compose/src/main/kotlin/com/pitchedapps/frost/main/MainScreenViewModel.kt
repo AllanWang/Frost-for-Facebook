@@ -16,15 +16,42 @@
  */
 package com.pitchedapps.frost.main
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.pitchedapps.frost.components.UseCases
+import com.pitchedapps.frost.extension.ExtensionModelConverter
+import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.hilt.FrostComponents
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.concept.engine.Engine
 
 @HiltViewModel
-class MainScreenViewModel @Inject internal constructor() : ViewModel() {
+class MainScreenViewModel
+@Inject
+internal constructor(
+  @ApplicationContext context: Context,
+  val components: FrostComponents,
+  val engine: Engine,
+  val store: BrowserStore,
+  val useCases: UseCases,
+  val extensionModelConverter: ExtensionModelConverter,
+) : ViewModel() {
+  var tabs: List<MainTabItem> by mutableStateOf(FbItem.defaults().map { it.tab(context) })
+
+  var contextId: String by mutableStateOf("")
 
   var tabIndex: Int by mutableStateOf(0)
 }
+
+private fun FbItem.tab(context: Context) =
+  MainTabItem(
+    title = context.getString(titleId),
+    icon = icon,
+    url = url,
+  )
