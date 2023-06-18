@@ -3,6 +3,8 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
       <module name="Frost-for-Facebook.buildSrc" target="11" />
+      <module name="Frost-for-Facebook.buildSrc.main" target="11" />
+      <module name="Frost-for-Facebook.buildSrc.test" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

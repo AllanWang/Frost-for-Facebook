@@ -1,37 +1,18 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
     dependencies {
-        classpath kau.Plugins.android
-        classpath kau.Plugins.kotlin
-        classpath kau.Plugins.spotless
-        classpath kau.Plugins.dexCount
-        classpath kau.Plugins.hilt
-        classpath kau.Plugins.gitVersion
+        classpath('com.google.dagger:hilt-android-gradle-plugin:2.43.2')
     }
-
-    wrapper.setDistributionType(Wrapper.DistributionType.ALL)
 }
 
-task generateChangelogMd() {
-    def changelog = kau.ChangelogGenerator.generate("${project.rootDir}/app/src/main/res/xml/frost_changelog.xml", "${project.rootDir}/docs/Changelog.md")
-    // If we have no changelog, something is wrong
-    def entry = changelog[0]
-    def whatsNewFile = new File("${project.rootDir}/app/src/main/play/en-US/whatsnew")
-    if (!whatsNewFile.exists()) {
-        // Throw exceptions so that moving this file will require us to update the script
-        throw new RuntimeException("Whatsnew file not found")
-    }
-    whatsNewFile.withWriter { writer ->
-        writer.write(entry.version)
-        writer.write("\n")
-        entry.items.each {
-            writer.write("\n* ${it}")
-        }
-    }
+plugins {
+    id 'com.android.application' version '8.0.2' apply false
+    id 'com.android.library' version '8.0.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.21' apply false
+    // https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin
+    id 'com.google.devtools.ksp' version '1.8.21-1.0.11' apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
 }
