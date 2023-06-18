@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.pitchedapps.frost">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application
+        android:name=".FrostApp"
+        android:allowBackup="true"
+        android:extractNativeLibs="false"
+        android:fullBackupContent="@xml/frost_backup_rules"
+        android:icon="@mipmap/ic_launcher_round"
+        android:label="@string/frost_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/FrostTheme"
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute">
+
+        <activity
+            android:name=".StartActivity"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@style/FrostTheme.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--
+        Config changes taken from Fenix with:
+        locale
+        addition
+
+        https://github.com/mozilla-mobile/fenix/blob/main/app/src/main/AndroidManifest.xml
+        -->
+<!--        <activity-->
+<!--            android:name=".activities.MainActivity"-->
+<!--            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"-->
+<!--            android:hardwareAccelerated="true"-->
+<!--            android:label="@string/frost_name" />-->
+<!--        -->
+<!--        <activity-->
+<!--            android:name=".activities.FrostWebActivity"-->
+<!--            android:autoRemoveFromRecents="true"-->
+<!--            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"-->
+<!--            android:exported="true"-->
+<!--            android:hardwareAccelerated="true"-->
+<!--            android:label="@string/frost_web"-->
+<!--            android:launchMode="singleInstance"-->
+<!--            android:taskAffinity="com.pitchedapps.frost.single.web"-->
+<!--            android:theme="@style/FrostTheme.Overlay.Slide">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.SEND" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <data android:mimeType="text/plain" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter-->
+<!--                android:autoVerify="true"-->
+<!--                tools:ignore="UnusedAttribute">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data-->
+<!--                    android:host="m.facebook.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="m.facebook.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="mobile.facebook.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="mobile.facebook.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="touch.facebook.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="touch.facebook.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="fb.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="fb.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="fb.me"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="fb.me"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="facebook.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="facebook.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="www.facebook.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="www.facebook.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="messenger.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="messenger.com"-->
+<!--                    android:scheme="https" />-->
+<!--                <data-->
+<!--                    android:host="www.messenger.com"-->
+<!--                    android:scheme="http" />-->
+<!--                <data-->
+<!--                    android:host="www.messenger.com"-->
+<!--                    android:scheme="https" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

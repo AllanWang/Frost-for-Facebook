@@ -1,0 +1,24 @@
+<resources>
+
+    <style name="FrostTheme" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <style name="FrostTheme.Transparent">
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="FrostTheme.Overlay">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="FrostTheme.Splash" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:navigationBarColor">@color/frost_splash_background</item>
+        <item name="colorPrimaryDark">@color/frost_splash_background</item>
+        <item name="colorAccent">@color/frost_splash_background</item>
+    </style>
+
+</resources>

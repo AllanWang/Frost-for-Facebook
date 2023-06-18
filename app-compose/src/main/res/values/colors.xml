@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="frost_splash_background">@color/facebook_blue</color>
+    <color name="facebook_blue">#3b5998</color>
+    <color name="facebook_blue_light">#6183C8</color>
+    <color name="facebook_blue_dark">#2e4b86</color>
+    <color name="frost_notification_accent">@color/facebook_blue</color>
+</resources>
