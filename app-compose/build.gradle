@@ -6,6 +6,8 @@ plugins {
     id "com.google.devtools.ksp"
 }
 
+apply from: '../spotless.gradle'
+
 android {
     compileSdk 33
 

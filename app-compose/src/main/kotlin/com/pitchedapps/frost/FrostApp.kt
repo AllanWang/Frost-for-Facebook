@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Allan Wang
+ * Copyright 2023 Allan Wang
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,8 @@ package com.pitchedapps.frost
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import com.google.common.flogger.FluentLogger
 import dagger.hilt.android.HiltAndroidApp
-import java.util.Random
-import javax.inject.Inject
 
 @HiltAndroidApp
 class FrostApp : Application() {
@@ -35,7 +32,9 @@ class FrostApp : Application() {
       registerActivityLifecycleCallbacks(
         object : ActivityLifecycleCallbacks {
           override fun onActivityPaused(activity: Activity) {}
+
           override fun onActivityResumed(activity: Activity) {}
+
           override fun onActivityStarted(activity: Activity) {}
 
           override fun onActivityDestroyed(activity: Activity) {
