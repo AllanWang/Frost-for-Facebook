@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="refresh">Refresh</string>
+    <string name="share_link">Share Link</string>
+    <string name="local_service_name" translatable="false">Local Frost Service</string>
+    <string name="open_link">Open Link</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="copy_text">Copy Text</string>
+    <string name="debug_image_link_subject" translatable="false">Frost for Facebook: Image Link Debug</string>
+    <string name="open_in_browser">Open in browser</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="experimental_disclaimer_info">Experimental features may be unstable and may never make it to production. Use at your own risk, send feedback, and feel free to disable them if they don\'t work well.</string>
+
+    <string name="verbose_logging">Verbose Logging</string>
+    <string name="verbose_logging_desc">Enable verbose logging to help with crash reports. Logging will only be sent once an error is encountered, so repeat the issue to notify the dev. This will automatically be disabled if the app restarts.</string>
+    <string name="restart_frost">Restart Frost</string>
+    <string name="restart_frost_desc">Launch a cold restart for the application.</string>
+
+</resources>

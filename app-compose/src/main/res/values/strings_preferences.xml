@@ -1,0 +1,32 @@
+<resources>
+    <string name="appearance">Appearance</string>
+    <string name="appearance_desc">Theme, Items to display, etc</string>
+
+    <string name="notifications_desc">Frequency, filters, ringtones, etc</string>
+
+    <string name="newsfeed">News Feed</string>
+    <string name="newsfeed_desc">Define what items appear in the newsfeed</string>
+
+    <string name="behaviour">Behaviour</string>
+    <string name="behaviour_desc">Define how the app interacts in certain settings</string>
+
+    <string name="security">Security</string>
+    <string name="security_desc">Lock screen, biometrics, etc</string>
+
+    <string name="network">Network</string>
+    <string name="network_desc">Define options that affect metered networks</string>
+
+    <string name="experimental">Experimental</string>
+    <string name="experimental_desc">Enable early access to potentially unstable features</string>
+
+    <string name="about_frost">About Frost for Facebook</string>
+    <string name="about_frost_desc">Version, Credits, and FAQs</string>
+
+    <string name="help_translate">Help Translate</string>
+    <string name="help_translate_desc">Frost is translated through crowdin. Contribute if you want it in your language!</string>
+
+    <string name="debug_frost">Frost Debugger</string>
+    <string name="debug_frost_desc">Send html data to help with debugging.</string>
+
+    <string name="replay_intro">Replay Introduction</string>
+</resources>

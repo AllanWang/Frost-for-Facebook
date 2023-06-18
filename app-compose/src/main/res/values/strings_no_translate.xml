@@ -1,0 +1,16 @@
+<resources>
+    <string name="dev_name" translatable="false">Pitched Apps</string>
+    <string name="translation_url" translatable="false">https://crwd.in/frost-for-facebook</string>
+    <string name="github" translatable="false">GitHub</string>
+    <string name="github_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook</string>
+    <string name="github_downloads_url" translatable="false">https://github.com/AllanWang/Frost-for-Facebook/releases</string>
+    <string name="fdroid_url" translatable="false">https://f-droid.org/en/packages/com.pitchedapps.frost</string>
+    <string name="reddit_url" translatable="false">https://www.reddit.com/r/FrostForFacebook</string>
+    <string name="frost_prefix" translatable="false">Frost for Facebook:</string>
+    <string name="feedback" translatable="false">Feedback</string>
+    <string name="bug_report" translatable="false">Bug Report</string>
+    <string name="debug_report" translatable="false">Debug Report</string>
+    <string name="theme_issue" translatable="false">Theme Issue</string>
+    <string name="feature_request" translatable="false">Feature Request</string>
+    <string name="reset_notif_epoch" translatable="false">Reset Notif Epoch</string>
+</resources>

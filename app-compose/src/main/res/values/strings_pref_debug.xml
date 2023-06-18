@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="debug_toast_enabled">Debugging section is enabled! Go back to settings.</string>
+    <string name="debug_toast_already_enabled">Debugging section is already enabled. Go back to settings.</string>
+
+    <string name="debug_disclaimer_info">Though most private content is automatically removed in the report, some sensitive info may still be visible.
+        \nPlease have a look at the debug report before sending it.
+        \n\nClicking one of the options below will prepare an email response with the web page data.
+    </string>
+
+    <string name="debug_incomplete">Incomplete report</string>
+
+    <string name="debug_report_email_title" translatable="false">Frost for Facebook: Debug Report</string>
+
+    <string name="debug_web">Debug from the Web</string>
+    <string name="debug_web_desc">Navigate to the page with an issue and send the resources for debugging.</string>
+
+    <string name="parsing_data">Parsing Data</string>
+
+    <string name="debug_parsers">Debug Parsers</string>
+    <string name="debug_parsers_desc">Launch one of the available parsers to debug its response data</string>
+</resources>
