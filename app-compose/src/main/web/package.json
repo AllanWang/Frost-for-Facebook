@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/frostcore/css",
+    "scss-watch": "sass --no-source-map --style compressed --update scss:assets/frostcore/css --watch"
+  },
+  "license": "MPL-2.0",
+  "repository": {
+    "url": "https://github.com/AllanWang/Frost-for-Facebook"
+  },
+  "dependencies": {
+    "@types/firefox-webext-browser": "^111.0.1",
+    "compile": "0.0.2",
+    "run": "^1.4.0",
+    "sass": "^1.62.1",
+    "typescript": "^5.0.4"
+  }
+}

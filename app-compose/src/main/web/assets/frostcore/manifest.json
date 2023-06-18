@@ -1,0 +1,44 @@
+{
+    "manifest_version": 3,
+    "name": "frostcore",
+    "version": "1.0.0",
+    "description": "Core web extension for Frost",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "frost_gecko_core@pitchedapps"
+        }
+    },
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "background": {
+        "scripts": [
+            "js/background/cookies.js"
+        ]
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "js/frost.js"
+            ]
+        },
+        {
+            "matches": [
+                "*://*.facebook.com/*"
+            ],
+            "js": [
+                "js/click_a.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "cookies",
+        "tabs",
+        "nativeMessaging",
+        "nativeMessagingFromContent",
+        "geckoViewAddons"
+    ]
+}

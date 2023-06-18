@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es3",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "isolatedModules": false,
+    "lib": [
+      "ES2017",
+      "dom"
+    ],
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "removeComments": true,
+    "outDir": "assets/frostcore/js"
+  },
+  "include": [
+    "ts",
+    "typings"
+  ]
+}
