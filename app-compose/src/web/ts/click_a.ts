@@ -48,7 +48,7 @@
             return false
         }
         const url = _parentUrl(target, 2);
-        return chordata.loadUrl(url);
+        return frost.loadUrl(url);
     };
 
     const _frostLaunchpadClick: EventHandler = async (e, target) => {
@@ -57,7 +57,7 @@
         }
         console.log('Clicked launchpad');
         const url = _parentUrl(target, 5);
-        return chordata.loadUrl(url);
+        return frost.loadUrl(url);
     };
 
     const handlers: EventHandler[] = [_frostLaunchpadClick, _frostGeneral];

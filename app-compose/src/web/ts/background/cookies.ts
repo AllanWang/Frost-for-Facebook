@@ -1,6 +1,6 @@
 async function readCookies() {
 
-    const application = "chordataTestChannelBackground"
+    const application = "frostBackgroundChannel"
 
     browser.runtime.sendNativeMessage(application, "start cookie fetch")
 

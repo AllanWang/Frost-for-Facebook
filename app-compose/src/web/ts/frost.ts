@@ -4,7 +4,7 @@
  * No idea if this is good practice.
  */
 const frost = (function () {
-    const application = "frostContentChannel"
+    const application = "frostChannel"
 
     async function sendMessage<T>(message: ExtensionModel): Promise<T> {
         return browser.runtime.sendNativeMessage(application, message)

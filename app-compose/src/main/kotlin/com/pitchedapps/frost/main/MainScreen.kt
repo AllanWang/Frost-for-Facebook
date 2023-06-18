@@ -17,27 +17,17 @@
 package com.pitchedapps.frost.main
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import mozilla.components.browser.state.helper.Target
-import mozilla.components.browser.state.store.BrowserStore
-import mozilla.components.concept.engine.Engine
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
@@ -63,14 +53,14 @@ fun MainTabRow(
 
 @Composable
 private fun MainTabItem(item: MainTabItem, selected: Boolean, modifier: Modifier = Modifier) {
-  val alpha by animateFloatAsState(
-    targetValue = if (selected) 1f else ContentAlpha.medium,
-    label = "Tab Alpha",
-  )
+  val alpha by
+    animateFloatAsState(
+      targetValue = if (selected) 1f else ContentAlpha.medium,
+      label = "Tab Alpha",
+    )
   Icon(
     modifier = modifier.alpha(alpha),
     contentDescription = item.title,
     imageVector = item.icon,
   )
 }
-
