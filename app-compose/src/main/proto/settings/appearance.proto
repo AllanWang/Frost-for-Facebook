@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "com.pitchedapps.frost.proto.settings";
+option java_multiple_files = true;
+
+message Appearance {
+    // Tab identifiers for main screen
+    repeated string main_tabs = 1;
+
+    enum MainTabLayout {
+        TOP = 0;
+        BOTTOM = 1;
+        // Bare bones layout without custom tabs
+        COMPACT = 2;
+    }
+
+    MainTabLayout main_tab_layout = 2;
+}

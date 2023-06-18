@@ -103,7 +103,7 @@ enum class FbItem(
   companion object {
     private val values = values().associateBy { it.key }
 
-    fun valueOf(key: String) = values[key]
+    fun fromKey(key: String) = values[key]
 
     fun defaults() = listOf(Feed, Messages, Notifications, Menu)
   }

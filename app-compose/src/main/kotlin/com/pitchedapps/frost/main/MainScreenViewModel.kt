@@ -27,6 +27,7 @@ import com.pitchedapps.frost.extension.ExtensionModelConverter
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.hilt.FrostComponents
 import com.pitchedapps.frost.proto.Account
+import com.pitchedapps.frost.proto.settings.Appearance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -45,11 +46,16 @@ internal constructor(
   val store: BrowserStore,
   val useCases: UseCases,
   val extensionModelConverter: ExtensionModelConverter,
-  val accountDataStore: DataStore<Account>,
+  accountDataStore: DataStore<Account>,
+  appearanceDataStore: DataStore<Appearance>,
 ) : ViewModel() {
-  var tabs: List<MainTabItem> by mutableStateOf(FbItem.defaults().map { it.tab(context) })
 
-  var contextIdFlow: Flow<String> = accountDataStore.data.map { it.accountId }
+  val tabsFlow: Flow<List<MainTabItem>> =
+    appearanceDataStore.data.map { appearance ->
+      appearance.mainTabsList.mapNotNull { FbItem.fromKey(it)?.tab(context) }
+    }
+
+  val contextIdFlow: Flow<String> = accountDataStore.data.map { it.accountId }
 
   var tabIndex: Int by mutableStateOf(0)
 }
