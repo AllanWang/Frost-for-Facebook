@@ -17,16 +17,11 @@
 package com.pitchedapps.frost
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.webkit.CookieManager
 import androidx.appcompat.app.AppCompatActivity
 import com.pitchedapps.frost.ext.launchActivity
 import com.pitchedapps.frost.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StartActivity : AppCompatActivity() {
@@ -35,7 +30,13 @@ class StartActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
 
     // TODO may add work in the future
-    launchActivity<MainActivity>()
+    launchActivity<MainActivity>(
+      intentBuilder = {
+        flags =
+          Intent.FLAG_ACTIVITY_NEW_TASK or
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+            Intent.FLAG_ACTIVITY_SINGLE_TOP
+      },
+    )
   }
-
 }
