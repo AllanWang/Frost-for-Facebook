@@ -22,9 +22,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,11 +38,25 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.pitchedapps.frost.compose.FrostCoreExtensionEffect
 import com.pitchedapps.frost.compose.FrostWeb
 import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.components
 import mozilla.components.browser.state.helper.Target
+
+@Composable
+fun MainScreen2(modifier: Modifier) {
+  //  Scaffold(
+  //    modifier = modifier,
+  //    topBar = {
+  //      MainTopBar(modifier = modifier)
+  //    },
+  //  )
+}
+
+@Composable
+fun MainTopBar(modifier: Modifier) {
+  //  TopAppBar(title = { /*TODO*/ })
+}
 
 /**
  * Screen for MainActivity.
@@ -53,9 +70,10 @@ fun MainScreen(modifier: Modifier = Modifier, tabs: List<MainTabItem>) {
 
   if (tabs.isEmpty()) return // not ready
 
+  //  val contextId = GeckoContextId("test-context")
   val contextId = vm.contextIdFlow.collectAsState(initial = null).value ?: return // not ready
 
-  FrostCoreExtensionEffect()
+  LaunchedEffect(vm) { vm.frostCoreExtension.installContent() }
 
   val onTabSelect =
     remember(vm) {
@@ -95,9 +113,12 @@ private fun MainContainer(
   }
 
   Column(modifier = modifier) {
+    MainHeader(
+      modifier = Modifier.statusBarsPadding(),
+      title = tabs.getOrNull(tabIndex)?.title ?: "",
+    )
     if (tabs.size > 1) {
       MainTabRow(
-        modifier = Modifier.statusBarsPadding(),
         selectedIndex = tabIndex,
         items = tabs,
         onTabSelect = onTabSelect,
@@ -111,6 +132,18 @@ private fun MainContainer(
       target = Target.SelectedTab,
     )
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainHeader(
+  title: String,
+  modifier: Modifier = Modifier,
+) {
+  TopAppBar(
+    modifier = modifier,
+    title = { Text(text = title) },
+  )
 }
 
 @Composable

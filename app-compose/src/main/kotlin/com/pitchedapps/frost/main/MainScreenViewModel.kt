@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
+import com.pitchedapps.frost.extension.FrostCoreExtension
 import com.pitchedapps.frost.hilt.FrostComponents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,6 +38,7 @@ class MainScreenViewModel
 internal constructor(
   @ApplicationContext context: Context,
   val components: FrostComponents,
+  val frostCoreExtension: FrostCoreExtension,
 ) : ViewModel() {
 
   val contextIdFlow: Flow<GeckoContextId?> =

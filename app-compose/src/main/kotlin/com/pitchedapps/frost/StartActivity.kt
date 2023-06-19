@@ -25,6 +25,7 @@ import com.pitchedapps.frost.db.FrostDb
 import com.pitchedapps.frost.ext.FrostAccountId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.launchActivity
+import com.pitchedapps.frost.extension.FrostCoreExtension
 import com.pitchedapps.frost.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,8 +46,8 @@ import kotlinx.coroutines.withContext
 class StartActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
   @Inject lateinit var frostDb: FrostDb
-
   @Inject lateinit var dataStore: FrostDataStore
+  @Inject lateinit var frostCoreExtension: FrostCoreExtension
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -54,7 +55,9 @@ class StartActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     launch {
       val id = withContext(Dispatchers.IO) { getCurrentAccountId() }
 
-      logger.atInfo().log("Starting Frost with id %d", id)
+      frostCoreExtension.install()
+
+      logger.atInfo().log("Starting Frost with id %s", id)
 
       launchActivity<MainActivity>(
         intentBuilder = {

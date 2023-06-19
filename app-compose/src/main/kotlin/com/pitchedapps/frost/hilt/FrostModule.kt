@@ -154,7 +154,7 @@ object FrostModule {
       if (action is EngineAction.LoadUrlAction) {
         logger.atInfo().log("BrowserAction: LoadUrlAction %s", action.url)
       } else {
-        logger.atFine().log("BrowserAction: %s - %s", action::class.simpleName, action)
+        logger.atInfo().log("BrowserAction: %s - %s", action::class.simpleName, action)
       }
       next(action)
     }

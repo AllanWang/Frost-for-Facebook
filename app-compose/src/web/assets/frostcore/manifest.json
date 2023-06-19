@@ -1,5 +1,5 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "frostcore",
     "version": "1.0.0",
     "description": "Core web extension for Frost",
@@ -8,9 +8,6 @@
             "id": "frost_gecko_core@pitchedapps"
         }
     },
-    "host_permissions": [
-        "*://*/*"
-    ],
     "background": {
         "scripts": [
             "js/background/cookies.js"
@@ -35,10 +32,17 @@
         }
     ],
     "permissions": [
+        "<all_urls>",
+        "activeTab",
+        "contextMenus",
+        "contextualIdentities",
         "cookies",
+        "history",
+        "management",
         "tabs",
         "nativeMessaging",
         "nativeMessagingFromContent",
-        "geckoViewAddons"
+        "geckoViewAddons",
+        "webRequest"
     ]
 }

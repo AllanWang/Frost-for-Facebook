@@ -16,18 +16,18 @@
  */
 package com.pitchedapps.frost.extension
 
+import androidx.lifecycle.LifecycleOwner
 import com.google.common.flogger.FluentLogger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.mapNotNull
 import mozilla.components.browser.state.selector.findCustomTabOrSelectedTab
 import mozilla.components.browser.state.store.BrowserStore
+import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.webextension.MessageHandler
 import mozilla.components.concept.engine.webextension.Port
-import mozilla.components.concept.engine.webextension.WebExtensionRuntime
-import mozilla.components.lib.state.ext.flowScoped
-import mozilla.components.support.base.feature.LifecycleAwareFeature
+import mozilla.components.lib.state.ext.flow
 import mozilla.components.support.ktx.kotlinx.coroutines.flow.ifChanged
 import mozilla.components.support.webextensions.WebExtensionController
 import org.json.JSONObject
@@ -39,49 +39,56 @@ import org.json.JSONObject
  *
  * https://github.com/mozilla-mobile/android-components/blob/main/components/feature/accounts/src/main/java/mozilla/components/feature/accounts/FxaWebChannelFeature.kt
  */
-class FrostCoreExtension(
-  private val customTabSessionId: String? = null,
-  private val runtime: WebExtensionRuntime,
+@Singleton
+class FrostCoreExtension
+@Inject
+internal constructor(
+  private val engine: Engine,
   private val store: BrowserStore,
   private val converter: ExtensionModelConverter,
-) : LifecycleAwareFeature {
+) {
 
   private val extensionController =
     WebExtensionController(
       WEB_CHANNEL_EXTENSION_ID,
       WEB_CHANNEL_EXTENSION_URL,
-      WEB_CHANNEL_MESSAGING_ID
+      WEB_CHANNEL_MESSAGING_ID,
     )
 
-  private var scope: CoroutineScope? = null
-
-  override fun start() {
-    logger.atInfo().log("start")
+  fun install() {
+    logger.atInfo().log("extension background start")
     val messageHandler = FrostBackgroundMessageHandler()
     extensionController.registerBackgroundMessageHandler(
       messageHandler,
       WEB_CHANNEL_BACKGROUND_MESSAGING_ID,
     )
 
-    extensionController.install(runtime)
-
-    scope =
-      store.flowScoped { flow ->
-        flow
-          .mapNotNull { state -> state.findCustomTabOrSelectedTab(customTabSessionId) }
-          .ifChanged { it.engineState.engineSession }
-          .collect {
-            it.engineState.engineSession?.let { engineSession ->
-              logger.atInfo().log("Register content message handler ${it.id}")
-              registerContentMessageHandler(engineSession)
-            }
-          }
-      }
+    extensionController.install(
+      engine,
+      onSuccess = {
+        logger.atInfo().log("extension install success")
+        extensionController.sendBackgroundMessage(
+          JSONObject().apply { put("test", 0) },
+          WEB_CHANNEL_BACKGROUND_MESSAGING_ID
+        )
+      },
+      onError = { t -> logger.atWarning().withCause(t).log("extension install failure") },
+    )
   }
 
-  override fun stop() {
-    logger.atInfo().log("stop")
-    scope?.cancel()
+  suspend fun installContent(owner: LifecycleOwner? = null, customTabSessionId: String? = null) {
+    logger.atInfo().log("extension content start")
+
+    store
+      .flow(owner)
+      .mapNotNull { state -> state.findCustomTabOrSelectedTab(customTabSessionId) }
+      .ifChanged { it.engineState.engineSession }
+      .collect {
+        it.engineState.engineSession?.let { engineSession ->
+          logger.atInfo().log("Register content message handler ${it.id}")
+          registerContentMessageHandler(engineSession)
+        }
+      }
   }
 
   private fun registerContentMessageHandler(engineSession: EngineSession) {
