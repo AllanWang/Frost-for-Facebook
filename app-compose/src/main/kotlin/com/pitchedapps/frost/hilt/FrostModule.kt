@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.hilt
 
 import android.content.Context
+import android.graphics.Color
 import androidx.core.app.NotificationManagerCompat
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.BuildConfig
@@ -93,6 +94,7 @@ object FrostModule {
     val settings =
       GeckoRuntimeSettings.Builder()
         .consoleOutput(BuildConfig.DEBUG)
+        .useMaxScreenDepth(true)
         .loginAutofillEnabled(true)
         //        .debugLogging(false)
         .debugLogging(BuildConfig.DEBUG)
@@ -111,7 +113,7 @@ object FrostModule {
   @Provides
   @Singleton
   fun settings(@Frost userAgent: Optional<String>): Settings {
-    return DefaultSettings(userAgentString = userAgent.getOrNull())
+    return DefaultSettings(userAgentString = userAgent.getOrNull(), clearColor = Color.TRANSPARENT)
   }
 
   @Provides

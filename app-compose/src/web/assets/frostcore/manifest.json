@@ -28,6 +28,9 @@
             ],
             "js": [
                 "js/click_a.js"
+            ],
+            "css": [
+                "css/facebook/themes/material_glass.css"
             ]
         }
     ],
