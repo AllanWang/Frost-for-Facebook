@@ -144,8 +144,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "com.google.android.material:material:1.9.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
@@ -236,6 +234,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:${composeVersion}")
     // Material Design
     implementation("androidx.compose.material:material:${composeVersion}")
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha02'
     // Material design icons
     implementation("androidx.compose.material:material-icons-core:${composeVersion}")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")

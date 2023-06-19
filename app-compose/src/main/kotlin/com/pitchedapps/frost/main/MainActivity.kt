@@ -19,14 +19,12 @@ package com.pitchedapps.frost.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.compose.FrostTheme
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.tab
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,7 +38,7 @@ class MainActivity : ComponentActivity() {
     val tabs = FbItem.defaults().map { it.tab(this) } // TODO allow custom tabs
 
     setContent {
-      MaterialTheme {
+      FrostTheme {
         MainScreen(
           tabs = tabs,
         )

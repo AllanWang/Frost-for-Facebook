@@ -1,6 +1,8 @@
 <resources>
 
     <style name="FrostTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/facebook_blue</item>
+        <item name="colorPrimaryDark">@color/facebook_blue_dark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>

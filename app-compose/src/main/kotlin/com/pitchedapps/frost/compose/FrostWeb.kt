@@ -51,7 +51,7 @@ fun FrostWeb(engine: Engine, store: BrowserStore, target: Target, modifier: Modi
           // Added on top of Mozilla's WebContent observe values
           tab?.content?.progress,
         )
-      }
+      },
     )
 
   Box(modifier = modifier) {
@@ -65,7 +65,7 @@ private fun ProgressBar(progress: Int?, modifier: Modifier = Modifier) {
   val shouldDisplay = progress != null && progress in 0 until 100
   LinearProgressIndicator(
     modifier = modifier.alpha(if (shouldDisplay) 1f else 0f).height(2.dp),
-    progress = if (progress == null) 0f else progress.toFloat() * 0.01f
+    progress = if (progress == null) 0f else progress.toFloat() * 0.01f,
   )
 }
 
@@ -81,7 +81,7 @@ private data class WebContentState(
       return WebContentState(
         id = tab.id,
         engineSession = tab.engineState.engineSession,
-        canGoBack = tab.content.canGoBack
+        canGoBack = tab.content.canGoBack,
       )
     }
   }
@@ -93,6 +93,10 @@ private data class WebContentState(
  *
  * WebView from Accompanist:
  * https://github.com/google/accompanist/blob/main/web/src/main/java/com/google/accompanist/web/WebView.kt
+ *
+ * Blinking Bug: Switching tabs causes an empty state where nothing is rendered. Not as noticeable
+ * on light themes, but it's a full black screen on dark mode. May be related to
+ * https://github.com/mozilla-mobile/fenix/issues/1901
  */
 @Composable
 private fun WebContent(engine: Engine, store: BrowserStore, state: WebContentState?) {
@@ -120,6 +124,6 @@ private fun WebContent(engine: Engine, store: BrowserStore, state: WebContentSta
           engineView.render(session)
         }
       }
-    }
+    },
   )
 }
