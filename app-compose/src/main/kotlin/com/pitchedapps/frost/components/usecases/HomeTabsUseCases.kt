@@ -83,7 +83,11 @@ class HomeTabsUseCases @Inject internal constructor(private val store: BrowserSt
     ) {
       //      if (action is ContentAction.UpdateUrlAction) {
       //        logger.atInfo().log("url update %s", action)
-      //        action.sessionId
+      //        if (action.sessionId == context.state.tabs[0].id) {
+      //          val customTab = context.state.tabs[3]
+      //          context.dispatch(EngineAction.LoadUrlAction(tabId = customTab.id, url =
+      // action.url))
+      //        }
       //        return
       //      }
       next(action)
