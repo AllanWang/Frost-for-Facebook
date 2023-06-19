@@ -21,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.ext.GeckoContextId
+import com.pitchedapps.frost.ext.idData
+import com.pitchedapps.frost.ext.toHomeContextId
 import com.pitchedapps.frost.hilt.FrostComponents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,22 +39,8 @@ internal constructor(
   val components: FrostComponents,
 ) : ViewModel() {
 
-  val tabsFlow: Flow<List<MainTabItem>> =
-    components.dataStore.appearance.data
-      .map { appearance ->
-        appearance.mainTabsList.mapNotNull { FbItem.fromKey(it) }.takeIf { it.isNotEmpty() }
-          ?: FbItem.defaults()
-      }
-      .map { items -> items.map { it.tab(context) } }
-
-  val contextIdFlow: Flow<String> = components.dataStore.account.data.map { it.accountId }
+  val contextIdFlow: Flow<GeckoContextId?> =
+    components.dataStore.account.idData.map { it?.toHomeContextId() }
 
   var tabIndex: Int by mutableStateOf(0)
 }
-
-private fun FbItem.tab(context: Context) =
-  MainTabItem(
-    title = context.getString(titleId),
-    icon = icon,
-    url = url,
-  )

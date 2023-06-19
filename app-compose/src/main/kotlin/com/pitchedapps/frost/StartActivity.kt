@@ -19,24 +19,65 @@ package com.pitchedapps.frost
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.components.FrostDataStore
+import com.pitchedapps.frost.db.FrostDb
+import com.pitchedapps.frost.ext.FrostAccountId
+import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.launchActivity
 import com.pitchedapps.frost.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class StartActivity : AppCompatActivity() {
+class StartActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+
+  @Inject lateinit var frostDb: FrostDb
+
+  @Inject lateinit var dataStore: FrostDataStore
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    // TODO may add work in the future
-    launchActivity<MainActivity>(
-      intentBuilder = {
-        flags =
-          Intent.FLAG_ACTIVITY_NEW_TASK or
-            Intent.FLAG_ACTIVITY_CLEAR_TOP or
-            Intent.FLAG_ACTIVITY_SINGLE_TOP
-      },
-    )
+    launch {
+      val id = withContext(Dispatchers.IO) { getCurrentAccountId() }
+
+      logger.atInfo().log("Starting Frost with id %d", id)
+
+      launchActivity<MainActivity>(
+        intentBuilder = {
+          flags =
+            Intent.FLAG_ACTIVITY_NEW_TASK or
+              Intent.FLAG_ACTIVITY_CLEAR_TOP or
+              Intent.FLAG_ACTIVITY_SINGLE_TOP
+        },
+      )
+    }
+  }
+
+  private suspend fun getCurrentAccountId(): FrostAccountId {
+    val currentId = dataStore.account.idData.firstOrNull()
+    if (currentId != null) return currentId
+
+    val newId = getAnyAccountId()
+    dataStore.account.updateData { it.toBuilder().setAccountId(newId).build() }
+    return FrostAccountId(newId)
+  }
+
+  private fun getAnyAccountId(): Long {
+    val account = frostDb.accountsQueries.selectAll().executeAsOneOrNull()
+    if (account != null) return account.id
+    frostDb.accountsQueries.insertNew()
+    return frostDb.accountsQueries.selectAll().executeAsOne().id
+  }
+
+  companion object {
+    private val logger = FluentLogger.forEnclosingClass()
   }
 }

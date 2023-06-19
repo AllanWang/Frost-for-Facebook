@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.facebook
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons.Default as MaterialIcons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -38,6 +39,7 @@ import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.main.MainTabItem
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.GlobeAmericas
@@ -108,6 +110,14 @@ enum class FbItem(
     fun defaults() = listOf(Feed, Messages, Notifications, Menu)
   }
 }
+
+fun FbItem.tab(context: Context) =
+  MainTabItem(
+    title = context.getString(titleId),
+    icon = icon,
+    url = url,
+  )
+
 
 /// ** Note that this url only works if a query (?q=) is provided */
 // _SEARCH("search", R.string.kau_search, GoogleMaterial.Icon.gmd_search, "search/top"),

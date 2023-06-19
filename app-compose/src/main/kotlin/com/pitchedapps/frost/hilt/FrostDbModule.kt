@@ -21,6 +21,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.pitchedapps.frost.db.FrostDb
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -30,6 +31,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FrostDbModule {
   @Singleton
+  @Provides
   fun frostDb(@ApplicationContext context: Context): FrostDb {
     val driver: SqlDriver = AndroidSqliteDriver(FrostDb.Schema, context, "frost.db")
     return FrostDb(driver)

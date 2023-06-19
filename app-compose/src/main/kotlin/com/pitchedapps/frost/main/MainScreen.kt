@@ -19,6 +19,8 @@ package com.pitchedapps.frost.main
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.Tab
@@ -35,20 +37,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.compose.FrostCoreExtensionEffect
 import com.pitchedapps.frost.compose.FrostWeb
+import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.components
 import mozilla.components.browser.state.helper.Target
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, tabs: List<MainTabItem>) {
   val vm: MainScreenViewModel = viewModel()
 
-  val contextId by vm.contextIdFlow.collectAsState(initial = "")
+  if (tabs.isEmpty()) return // not ready
 
-  if (contextId.isEmpty()) return // Not ready
-
-  val tabs by vm.tabsFlow.collectAsState(initial = emptyList())
-
-  if (tabs.isEmpty()) return // Not ready
+  val contextId = vm.contextIdFlow.collectAsState(initial = null).value ?: return // not ready
 
   FrostCoreExtensionEffect()
 
@@ -77,7 +76,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
 @Composable
 private fun MainContainer(
-  contextId: String,
+  contextId: GeckoContextId,
   tabIndex: Int,
   tabs: List<MainTabItem>,
   onTabSelect: (Int) -> Unit,
@@ -85,18 +84,25 @@ private fun MainContainer(
 ) {
   val components = LocalContext.current.components
 
-  LaunchedEffect(contextId) {
+  LaunchedEffect(contextId, tabs) {
     components.useCases.homeTabs.createHomeTabs(contextId, tabIndex, tabs.map { it.url })
   }
 
   Column(modifier = modifier) {
-    MainTabRow(selectedIndex = tabIndex, items = tabs, onTabSelect = onTabSelect)
+    if (tabs.size > 1) {
+      MainTabRow(
+        modifier = Modifier.statusBarsPadding(),
+        selectedIndex = tabIndex,
+        items = tabs,
+        onTabSelect = onTabSelect,
+      )
+    }
     // For tab switching, must use SelectedTab
     // https://github.com/mozilla-mobile/android-components/issues/12798
     FrostWeb(
       engine = components.core.engine,
       store = components.core.store,
-      target = Target.SelectedTab
+      target = Target.SelectedTab,
     )
   }
 }
@@ -126,7 +132,7 @@ private fun MainTabItem(item: MainTabItem, selected: Boolean, modifier: Modifier
       label = "Tab Alpha",
     )
   Icon(
-    modifier = modifier.alpha(alpha),
+    modifier = modifier.alpha(alpha).size(24.dp),
     contentDescription = item.title,
     imageVector = item.icon,
   )

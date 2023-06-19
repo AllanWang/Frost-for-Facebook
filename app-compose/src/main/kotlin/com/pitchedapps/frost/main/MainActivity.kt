@@ -19,12 +19,14 @@ package com.pitchedapps.frost.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.tab
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -32,9 +34,18 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    logger.atInfo().log("onCreate main activity activity")
+    logger.atInfo().log("onCreate main activity")
     WindowCompat.setDecorFitsSystemWindows(window, false)
-    setContent { MaterialTheme { MainScreen(modifier = Modifier.systemBarsPadding()) } }
+
+    val tabs = FbItem.defaults().map { it.tab(this) } // TODO allow custom tabs
+
+    setContent {
+      MaterialTheme {
+        MainScreen(
+          tabs = tabs,
+        )
+      }
+    }
   }
 
   companion object {

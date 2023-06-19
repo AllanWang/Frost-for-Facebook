@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.components.usecases
 
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.ext.GeckoContextId
 import javax.inject.Inject
 import javax.inject.Singleton
 import mozilla.components.browser.state.action.BrowserAction
@@ -32,14 +33,14 @@ import mozilla.components.lib.state.MiddlewareContext
 @Singleton
 class HomeTabsUseCases @Inject internal constructor(private val store: BrowserStore) {
   fun createHomeTabs(
-    contextId: String,
+    contextId: GeckoContextId,
     selectedIndex: Int,
     urls: List<String>
   ): List<TabSessionState> {
     store.dispatch(TabListAction.RemoveAllTabsAction())
     if (urls.isEmpty()) return emptyList()
     val tabs =
-      urls.mapIndexed { i, url -> createTab(id = tabId(i), url = url, contextId = contextId) }
+      urls.mapIndexed { i, url -> createTab(id = tabId(i), url = url, contextId = contextId.id) }
     store.dispatch(TabListAction.AddMultipleTabsAction(tabs))
     // Preload all tabs
     for (tab in tabs) {
