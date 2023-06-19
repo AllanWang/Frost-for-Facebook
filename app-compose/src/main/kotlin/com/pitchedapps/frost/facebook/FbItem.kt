@@ -44,6 +44,12 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.GlobeAmericas
 
+/**
+ * Fb page info.
+ *
+ * All pages here are independent, in that they can be loaded directly. [key] must be final, as it
+ * is used to store tab info.
+ */
 enum class FbItem(
   val key: String,
   @StringRes val titleId: Int,
@@ -111,7 +117,8 @@ enum class FbItem(
   }
 }
 
-fun FbItem.tab(context: Context) =
+/** Converts [FbItem] to [MainTabItem]. */
+fun FbItem.tab(context: Context): MainTabItem =
   MainTabItem(
     title = context.getString(titleId),
     icon = icon,

@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 
+/** Main Frost compose theme. */
 @Composable
 fun FrostTheme(
   isDarkTheme: Boolean = isSystemInDarkTheme(),

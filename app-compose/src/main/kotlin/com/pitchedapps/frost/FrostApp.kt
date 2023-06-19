@@ -25,6 +25,7 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import javax.inject.Provider
 
+/** Frost Application. */
 @HiltAndroidApp
 class FrostApp : Application() {
 

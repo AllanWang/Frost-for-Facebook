@@ -27,6 +27,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/** Module containing SQL injections. */
 @Module
 @InstallIn(SingletonComponent::class)
 object FrostDbModule {

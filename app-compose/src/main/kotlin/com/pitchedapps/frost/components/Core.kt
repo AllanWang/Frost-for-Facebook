@@ -25,6 +25,11 @@ import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.permission.SitePermissionsStorage
 import org.mozilla.geckoview.GeckoRuntime
 
+/**
+ * Core injections.
+ *
+ * All injections here are providers to avoid cyclic dependencies.
+ */
 @Singleton
 class Core
 @Inject

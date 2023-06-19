@@ -33,6 +33,8 @@ import mozilla.components.support.webextensions.WebExtensionController
 import org.json.JSONObject
 
 /**
+ * Frost's built in extension.
+ *
  * Structure based off of
  *
  * https://github.com/mozilla-mobile/android-components/blob/main/components/feature/accounts/src/main/java/mozilla/components/feature/accounts/FxaWebChannelFeature.kt

@@ -24,9 +24,17 @@ import mozilla.components.browser.state.selector.findTab
 import mozilla.components.browser.state.state.createTab
 import mozilla.components.browser.state.store.BrowserStore
 
+/** Use cases for the floating tabs, located in an overlay activity. */
 @Singleton
 class FloatingTabsUseCases @Inject internal constructor(private val store: BrowserStore) {
 
+  /**
+   * Create or update the floating tab url.
+   *
+   * There is at most one floating tab at all times.
+   *
+   * TODO: Add context id.
+   */
   fun createFloatingTab(url: String) {
     if (store.state.findTab(TAB_ID) == null) {
       val tab = createTab(url = url, id = TAB_ID)
@@ -35,11 +43,13 @@ class FloatingTabsUseCases @Inject internal constructor(private val store: Brows
     store.dispatch(EngineAction.LoadUrlAction(tabId = TAB_ID, url = url))
   }
 
+  /** Remove floating tab screen. */
   fun removeFloatingTab() {
     store.dispatch(TabListAction.RemoveTabAction(tabId = TAB_ID))
   }
 
   companion object {
+    /** Unique tab id for floating screen. */
     const val TAB_ID = "floating_tab_id"
   }
 }

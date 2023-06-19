@@ -23,7 +23,6 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.components.usecases.HomeTabsUseCases
 import com.pitchedapps.frost.main.MainActivity
-import dagger.BindsOptionalOf
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,12 +58,14 @@ import org.mozilla.geckoview.GeckoRuntimeSettings
 
 @Qualifier annotation class Frost
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface FrostBindModule {
-  @BindsOptionalOf @Frost fun userAgent(): String
-}
+// TODO check if needed; as of now, user agents are in singleton components.
+// @Module
+// @InstallIn(SingletonComponent::class)
+// interface FrostBindModule {
+//  @BindsOptionalOf @Frost fun userAgent(): String
+// }
 
+/** Module containing core Mozilla injections. */
 @Module
 @InstallIn(SingletonComponent::class)
 object FrostModule {

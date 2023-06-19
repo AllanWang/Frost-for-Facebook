@@ -26,6 +26,11 @@ import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.tab
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Main activity.
+ *
+ * Contains tab layouts for browsing.
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

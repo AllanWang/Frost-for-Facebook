@@ -35,6 +35,12 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Start activity.
+ *
+ * This is the launcher activity, and should not be moved/renamed. The activity itself is transient,
+ * and will launch another activity without history after doing initialization work.
+ */
 @AndroidEntryPoint
 class StartActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 

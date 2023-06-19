@@ -33,6 +33,7 @@ import mozilla.components.feature.addons.update.AddonUpdater
 import mozilla.components.feature.addons.update.DefaultAddonUpdater
 import mozilla.components.support.base.android.NotificationsDelegate
 
+/** Injections related to addons. */
 @Module
 @InstallIn(SingletonComponent::class)
 object FrostAddOnsModule {

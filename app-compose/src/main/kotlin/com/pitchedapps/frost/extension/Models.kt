@@ -25,6 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import org.json.JSONObject
 
+/** Model for messages between Frost native and Frost web extension. */
 object ExtensionType {
   const val TEST = "type-test"
   const val URL_CLICK = "url-click"

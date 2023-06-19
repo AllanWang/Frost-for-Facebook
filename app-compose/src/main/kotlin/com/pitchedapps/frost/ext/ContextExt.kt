@@ -23,6 +23,7 @@ import android.os.Bundle
 import com.pitchedapps.frost.FrostApp
 import com.pitchedapps.frost.hilt.FrostComponents
 
+/** Launches new activities. */
 inline fun <reified T : Activity> Context.launchActivity(
   clearStack: Boolean = false,
   bundleBuilder: Bundle.() -> Unit = {},
@@ -41,5 +42,6 @@ inline fun <reified T : Activity> Context.launchActivity(
   }
 }
 
+/** Component access through application context. */
 val Context.components: FrostComponents
   get() = (applicationContext as FrostApp).componentsProvider.get()

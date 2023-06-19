@@ -36,6 +36,11 @@ import mozilla.components.concept.engine.Engine
 import mozilla.components.concept.engine.EngineSession
 import mozilla.components.concept.engine.EngineView
 
+/**
+ * Simple Frost web view, with progress bar.
+ *
+ * TODO add swipe?
+ */
 @Composable
 fun FrostWeb(engine: Engine, store: BrowserStore, target: Target, modifier: Modifier = Modifier) {
   val selectedTab by
@@ -124,6 +129,6 @@ private fun WebContent(engine: Engine, store: BrowserStore, state: WebContentSta
           engineView.render(session)
         }
       }
-    },
+    }
   )
 }

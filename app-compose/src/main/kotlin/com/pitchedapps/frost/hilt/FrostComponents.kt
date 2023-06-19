@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Components for Mozilla
+ * Main components containing other core components.
  *
  * Modelled off of Focus:
  * https://github.com/mozilla-mobile/focus-android/blob/main/app/src/main/java/org/mozilla/focus/Components.kt

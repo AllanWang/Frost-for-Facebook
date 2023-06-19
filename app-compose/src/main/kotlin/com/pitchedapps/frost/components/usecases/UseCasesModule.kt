@@ -30,6 +30,7 @@ import mozilla.components.feature.downloads.DownloadsUseCases
 import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 
+/** Module for Mozilla use cases. */
 @Module
 @InstallIn(SingletonComponent::class)
 class UseCasesModule {

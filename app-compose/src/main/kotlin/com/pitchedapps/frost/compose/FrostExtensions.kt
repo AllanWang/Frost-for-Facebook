@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.pitchedapps.frost.ext.components
 import com.pitchedapps.frost.extension.FrostCoreExtension
 
+/** Disposable effect to attack [FrostCoreExtension]. */
 @Composable
 fun FrostCoreExtensionEffect() {
   val components = LocalContext.current.components

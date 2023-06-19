@@ -30,8 +30,15 @@ import mozilla.components.browser.state.store.BrowserStore
 import mozilla.components.lib.state.Middleware
 import mozilla.components.lib.state.MiddlewareContext
 
+/** Use cases for the home screen. */
 @Singleton
 class HomeTabsUseCases @Inject internal constructor(private val store: BrowserStore) {
+
+  /**
+   * Create the provided tabs.
+   *
+   * If there are existing tabs, they will be replaced.
+   */
   fun createHomeTabs(
     contextId: GeckoContextId,
     selectedIndex: Int,
@@ -62,6 +69,7 @@ class HomeTabsUseCases @Inject internal constructor(private val store: BrowserSt
     store.dispatch(TabListAction.SelectTabAction(tabId(index)))
   }
 
+  /** Reload tab contents based on index. */
   fun reloadTab(index: Int) {
     store.dispatch(EngineAction.ReloadAction(tabId(index)))
   }

@@ -23,7 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.idData
-import com.pitchedapps.frost.ext.toHomeContextId
+import com.pitchedapps.frost.ext.toContextId
 import com.pitchedapps.frost.hilt.FrostComponents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,7 +40,7 @@ internal constructor(
 ) : ViewModel() {
 
   val contextIdFlow: Flow<GeckoContextId?> =
-    components.dataStore.account.idData.map { it?.toHomeContextId() }
+    components.dataStore.account.idData.map { it?.toContextId() }
 
   var tabIndex: Int by mutableStateOf(0)
 }

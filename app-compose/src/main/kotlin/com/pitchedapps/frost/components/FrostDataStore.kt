@@ -23,6 +23,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
+/** DataStore injections. */
 @Singleton
 class FrostDataStore
 @Inject

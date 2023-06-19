@@ -24,7 +24,7 @@ import mozilla.components.feature.session.SessionUseCases
 import mozilla.components.feature.tabs.TabsUseCases
 
 /**
- * Collection of use cases.
+ * Collection of frost use cases.
  *
  * Note that included use cases are not lazily loaded.
  */

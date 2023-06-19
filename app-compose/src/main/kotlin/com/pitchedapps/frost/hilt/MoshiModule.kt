@@ -28,6 +28,7 @@ import okio.Buffer
 import org.json.JSONException
 import org.json.JSONObject
 
+/** Module containing Moshi injections. */
 @Module
 @InstallIn(SingletonComponent::class)
 object MoshiModule {

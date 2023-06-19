@@ -41,6 +41,12 @@ import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.components
 import mozilla.components.browser.state.helper.Target
 
+/**
+ * Screen for MainActivity.
+ *
+ * Note that [tabs] are passed in without listening to a datastore as they should be effectively
+ * fixed. We don't want to update tabs as soon as users change the tabs in settingss.
+ */
 @Composable
 fun MainScreen(modifier: Modifier = Modifier, tabs: List<MainTabItem>) {
   val vm: MainScreenViewModel = viewModel()
