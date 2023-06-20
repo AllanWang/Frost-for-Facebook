@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.web
+package com.pitchedapps.frost.web.state
 
 /**
  * See
@@ -23,7 +23,7 @@ package com.pitchedapps.frost.web
  * For firefox example
  */
 internal object FrostWebReducer {
-  fun reduce(state: FrostWebState, action: FrostAction): FrostWebState {
+  fun reduce(state: FrostWebState, action: FrostWebAction): FrostWebState {
     return when (action) {
       is InitAction -> state
       is UpdateUrlAction -> state.copy(url = action.url)

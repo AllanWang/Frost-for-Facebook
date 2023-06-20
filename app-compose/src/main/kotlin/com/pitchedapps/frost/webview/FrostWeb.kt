@@ -17,8 +17,8 @@
 package com.pitchedapps.frost.webview
 
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
-import com.pitchedapps.frost.web.FrostLoggerMiddleware
-import com.pitchedapps.frost.web.FrostWebStore
+import com.pitchedapps.frost.web.state.FrostLoggerMiddleware
+import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides

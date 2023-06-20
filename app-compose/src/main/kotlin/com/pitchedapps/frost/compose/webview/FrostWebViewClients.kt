@@ -26,10 +26,10 @@ import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.isExplicitIntent
 import com.pitchedapps.frost.web.FrostWebHelper
-import com.pitchedapps.frost.web.FrostWebStore
-import com.pitchedapps.frost.web.UpdateNavigationAction
-import com.pitchedapps.frost.web.UpdateProgressAction
-import com.pitchedapps.frost.web.UpdateTitleAction
+import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.web.state.UpdateNavigationAction
+import com.pitchedapps.frost.web.state.UpdateProgressAction
+import com.pitchedapps.frost.web.state.UpdateTitleAction
 import java.io.ByteArrayInputStream
 import javax.inject.Inject
 

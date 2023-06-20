@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.web
+package com.pitchedapps.frost.web.state
 
 import mozilla.components.lib.state.Action
 
@@ -24,27 +24,29 @@ import mozilla.components.lib.state.Action
  *
  * For firefox example
  */
-sealed interface FrostAction : Action
+sealed interface FrostWebAction : Action
 
 /**
- * [FrostAction] dispatched to indicate that the store is initialized and ready to use. This action
- * is dispatched automatically before any other action is processed. Its main purpose is to trigger
- * initialization logic in middlewares. The action itself has no effect on the [FrostWebState].
+ * [FrostWebAction] dispatched to indicate that the store is initialized and ready to use. This
+ * action is dispatched automatically before any other action is processed. Its main purpose is to
+ * trigger initialization logic in middlewares. The action itself has no effect on the
+ * [FrostWebState].
  */
-object InitAction : FrostAction
+object InitAction : FrostWebAction
 
 /** Action indicating current url state. */
-data class UpdateUrlAction(val url: String) : FrostAction
+data class UpdateUrlAction(val url: String) : FrostWebAction
 
 /** Action indicating current title state. */
-data class UpdateTitleAction(val title: String?) : FrostAction
+data class UpdateTitleAction(val title: String?) : FrostWebAction
 
-data class UpdateNavigationAction(val canGoBack: Boolean, val canGoForward: Boolean) : FrostAction
+data class UpdateNavigationAction(val canGoBack: Boolean, val canGoForward: Boolean) :
+  FrostWebAction
 
-data class UpdateProgressAction(val progress: Int) : FrostAction
+data class UpdateProgressAction(val progress: Int) : FrostWebAction
 
 /** Action triggered by user, leading to transient state changes. */
-sealed interface UserAction : FrostAction {
+sealed interface UserAction : FrostWebAction {
 
   /** Action to load new url. */
   data class LoadUrlAction(val url: String) : UserAction
@@ -55,7 +57,7 @@ sealed interface UserAction : FrostAction {
 }
 
 /** Response triggered by webview, indicating [UserAction] fulfillment. */
-sealed interface ResponseAction : FrostAction {
+sealed interface ResponseAction : FrostWebAction {
 
   data class LoadUrlResponseAction(val url: String) : ResponseAction
 

@@ -14,31 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.web
+package com.pitchedapps.frost.web.state
 
-import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.google.common.flogger.FluentLogger
 import mozilla.components.lib.state.Middleware
-import mozilla.components.lib.state.Store
+import mozilla.components.lib.state.MiddlewareContext
 
-/**
- * See
- * https://github.com/mozilla-mobile/firefox-android/blob/main/android-components/components/browser/state/src/main/java/mozilla/components/browser/state/store/BrowserStore.kt
- *
- * For firefox example.
- */
-class FrostWebStore(
-  tag: String,
-  initialState: FrostWebState = FrostWebState(),
-  middleware: List<Middleware<FrostWebState, FrostAction>> = emptyList(),
-) :
-  Store<FrostWebState, FrostAction>(
-    initialState,
-    FrostWebReducer::reduce,
-    middleware,
-    "FrostStore-$tag",
+class FrostLoggerMiddleware(private val tag: String) : Middleware<FrostWebState, FrostWebAction> {
+  override fun invoke(
+    context: MiddlewareContext<FrostWebState, FrostWebAction>,
+    next: (FrostWebAction) -> Unit,
+    action: FrostWebAction
   ) {
-  init {
-    dispatch(InitAction)
-    dispatch(UserAction.LoadUrlAction(FB_URL_BASE))
+    logger.atInfo().log("FrostWebAction-%s: %s - %s", tag, action::class.simpleName, action)
+    next(action)
+  }
+
+  companion object {
+    private val logger = FluentLogger.forEnclosingClass()
   }
 }

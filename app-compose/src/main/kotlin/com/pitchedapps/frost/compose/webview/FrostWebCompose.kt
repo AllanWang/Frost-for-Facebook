@@ -30,9 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.children
-import com.pitchedapps.frost.web.FrostWebState
-import com.pitchedapps.frost.web.FrostWebStore
-import com.pitchedapps.frost.web.ResponseAction
+import com.pitchedapps.frost.web.state.FrostWebState
+import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.web.state.ResponseAction
 import com.pitchedapps.frost.webview.FrostWebScoped
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

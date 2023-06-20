@@ -21,9 +21,9 @@ import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.google.common.flogger.FluentLogger
-import com.pitchedapps.frost.web.FrostWebStore
-import com.pitchedapps.frost.web.UpdateProgressAction
-import com.pitchedapps.frost.web.UpdateTitleAction
+import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.web.state.UpdateProgressAction
+import com.pitchedapps.frost.web.state.UpdateTitleAction
 import javax.inject.Inject
 
 /** The default chrome client */
