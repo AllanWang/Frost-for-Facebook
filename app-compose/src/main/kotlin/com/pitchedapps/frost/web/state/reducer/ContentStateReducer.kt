@@ -16,12 +16,12 @@
  */
 package com.pitchedapps.frost.web.state.reducer
 
-import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.Action
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateNavigationAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateUrlAction
+import com.pitchedapps.frost.web.state.TabAction.ResponseAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseAction
 import com.pitchedapps.frost.web.state.TabAction.UserAction
@@ -42,7 +42,7 @@ internal object ContentStateReducer {
           canGoForward = action.canGoForward,
         )
       is UpdateTitleAction -> state.copy(title = action.title)
-      is TabAction.UserAction ->
+      is UserAction ->
         state.copy(
           transientState =
             FrostTransientWebReducer.reduce(
@@ -50,7 +50,7 @@ internal object ContentStateReducer {
               action,
             ),
         )
-      is TabAction.ResponseAction ->
+      is ResponseAction ->
         state.copy(
           transientState =
             FrostTransientFulfillmentWebReducer.reduce(
@@ -73,7 +73,7 @@ private object FrostTransientWebReducer {
 }
 
 private object FrostTransientFulfillmentWebReducer {
-  fun reduce(state: TransientWebState, action: TabAction.ResponseAction): TransientWebState {
+  fun reduce(state: TransientWebState, action: ResponseAction): TransientWebState {
     return when (action) {
       is LoadUrlResponseAction ->
         if (state.targetUrl == action.url) state.copy(targetUrl = null) else state
