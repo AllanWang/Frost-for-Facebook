@@ -22,8 +22,6 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.compose.FrostTheme
-import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.tab
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -40,14 +38,12 @@ class MainActivity : ComponentActivity() {
     logger.atInfo().log("onCreate main activity")
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
-    val tabs = FbItem.defaults().map { it.tab(this) } // TODO allow custom tabs
-
     setContent {
       FrostTheme {
         //        MainScreen(
         //          tabs = tabs,
         //        )
-        MainScreen2()
+        MainScreenWebView()
       }
     }
   }

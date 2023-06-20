@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.web.state
 
 import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.facebook.FbItem
 import mozilla.components.lib.state.Action
 
 /**
@@ -34,6 +35,11 @@ sealed interface FrostWebAction : Action
  * [FrostWebState].
  */
 object InitAction : FrostWebAction
+
+/** Actions affecting multiple tabs */
+sealed interface TabListAction : FrostWebAction {
+  data class SetHomeTabs(val data: List<FbItem>) : TabListAction
+}
 
 /** Action affecting a single tab */
 data class TabAction(val tabId: WebTargetId, val action: Action) : FrostWebAction {

@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.web.state
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.pitchedapps.frost.ext.FrostAccountId
 import com.pitchedapps.frost.ext.WebTargetId
 import mozilla.components.lib.state.State
@@ -60,14 +61,22 @@ data class AuthWebState(
 data class TabWebState(
   val id: WebTargetId,
   val userId: AuthWebState.AuthUser,
-  val baseUrl: String? = null,
-  val url: String? = null,
+  val baseUrl: String,
+  val url: String,
+  val icon: ImageVector? = null,
   val title: String? = null,
   val progress: Int = 100,
+  val loading: Boolean = false,
   val canGoBack: Boolean = false,
   val canGoForward: Boolean = false,
   val transientState: TransientWebState = TransientWebState(),
-)
+) {
+  companion object {
+    fun homeTabId(index: Int): WebTargetId = WebTargetId("home-tab--$index")
+
+    val FLOATING_TAB_ID = WebTargetId("floating-tab")
+  }
+}
 
 /**
  * Transient web state.

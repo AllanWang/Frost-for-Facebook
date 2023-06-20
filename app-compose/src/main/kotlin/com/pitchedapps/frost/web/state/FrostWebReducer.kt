@@ -18,6 +18,7 @@ package com.pitchedapps.frost.web.state
 
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.reducer.ContentStateReducer
+import com.pitchedapps.frost.web.state.reducer.TabListReducer
 
 /**
  * See
@@ -29,6 +30,7 @@ internal object FrostWebReducer {
   fun reduce(state: FrostWebState, action: FrostWebAction): FrostWebState {
     return when (action) {
       is InitAction -> state
+      is TabListAction -> TabListReducer.reduce(state, action)
       is TabAction ->
         state.updateTabState(action.tabId) { ContentStateReducer.reduce(it, action.action) }
     }

@@ -21,13 +21,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.GeckoContextId
-import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
 import com.pitchedapps.frost.extension.FrostCoreExtension
 import com.pitchedapps.frost.hilt.FrostComponents
+import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.webview.FrostWebComposer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,14 +41,13 @@ internal constructor(
   @ApplicationContext context: Context,
   val components: FrostComponents,
   val frostCoreExtension: FrostCoreExtension,
-  // sample: FrostWebEntrySample,
-  frostWebComposer: FrostWebComposer,
+  val store: FrostWebStore,
+  val frostWebComposer: FrostWebComposer,
+// sample: FrostWebEntrySample,
 ) : ViewModel() {
 
   val contextIdFlow: Flow<GeckoContextId?> =
     components.dataStore.account.idData.map { it?.toContextId() }
 
   var tabIndex: Int by mutableStateOf(0)
-
-  val frostWebCompose: FrostWebCompose = frostWebComposer.create(WebTargetId("test"))
 }
