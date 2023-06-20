@@ -16,6 +16,8 @@
  */
 package com.pitchedapps.frost.web.state
 
+import com.pitchedapps.frost.ext.FrostAccountId
+import com.pitchedapps.frost.ext.WebTargetId
 import mozilla.components.lib.state.State
 
 /**
@@ -25,6 +27,39 @@ import mozilla.components.lib.state.State
  * for Firefox example.
  */
 data class FrostWebState(
+  val auth: AuthWebState = AuthWebState(),
+  val homeTabs: List<TabWebState> = emptyList(),
+  var floatingTab: TabWebState? = null,
+) : State
+
+/**
+ * Auth web state.
+ *
+ * Unlike GeckoView, WebView currently has a singleton cookie manager.
+ *
+ * Cookies are tied to the entire app, rather than per tab.
+ *
+ * @param currentUser User based on loaded cookies
+ * @param homeUser User selected for home screen
+ */
+data class AuthWebState(
+  val currentUser: AuthUser = AuthUser.Unknown,
+  val homeUser: AuthUser = AuthUser.Unknown,
+) {
+  sealed interface AuthUser {
+    data class User(val id: FrostAccountId) : AuthUser
+
+    data class Transitioning(val targetId: FrostAccountId?) : AuthUser
+
+    object LoggedOut : AuthUser
+
+    object Unknown : AuthUser
+  }
+}
+
+data class TabWebState(
+  val id: WebTargetId,
+  val userId: AuthWebState.AuthUser,
   val baseUrl: String? = null,
   val url: String? = null,
   val title: String? = null,
@@ -32,7 +67,7 @@ data class FrostWebState(
   val canGoBack: Boolean = false,
   val canGoForward: Boolean = false,
   val transientState: TransientWebState = TransientWebState(),
-) : State
+)
 
 /**
  * Transient web state.

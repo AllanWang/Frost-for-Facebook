@@ -20,17 +20,31 @@ import com.google.common.flogger.FluentLogger
 import mozilla.components.lib.state.Middleware
 import mozilla.components.lib.state.MiddlewareContext
 
-class FrostLoggerMiddleware(private val tag: String) : Middleware<FrostWebState, FrostWebAction> {
+typealias FrostWebMiddleware = Middleware<FrostWebState, FrostWebAction>
+
+class FrostLoggerMiddleware : FrostWebMiddleware {
   override fun invoke(
     context: MiddlewareContext<FrostWebState, FrostWebAction>,
     next: (FrostWebAction) -> Unit,
     action: FrostWebAction
   ) {
-    logger.atInfo().log("FrostWebAction-%s: %s - %s", tag, action::class.simpleName, action)
+    logger.atInfo().log("FrostWebAction: %s - %s", action::class.simpleName, action)
     next(action)
   }
 
   companion object {
     private val logger = FluentLogger.forEnclosingClass()
+  }
+}
+
+class FrostCookieMiddleware : FrostWebMiddleware {
+  override fun invoke(
+    context: MiddlewareContext<FrostWebState, FrostWebAction>,
+    next: (FrostWebAction) -> Unit,
+    action: FrostWebAction
+  ) {
+    when (action) {
+      else -> next(action)
+    }
   }
 }

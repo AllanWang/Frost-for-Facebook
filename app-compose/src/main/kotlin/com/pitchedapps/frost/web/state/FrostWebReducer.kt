@@ -16,6 +16,9 @@
  */
 package com.pitchedapps.frost.web.state
 
+import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.web.state.reducer.ContentStateReducer
+
 /**
  * See
  * https://github.com/mozilla-mobile/firefox-android/blob/main/android-components/components/browser/state/src/main/java/mozilla/components/browser/state/reducer/BrowserStateReducer.kt
@@ -26,50 +29,36 @@ internal object FrostWebReducer {
   fun reduce(state: FrostWebState, action: FrostWebAction): FrostWebState {
     return when (action) {
       is InitAction -> state
-      is UpdateUrlAction -> state.copy(url = action.url)
-      is UpdateProgressAction -> state.copy(progress = action.progress)
-      is UpdateNavigationAction ->
-        state.copy(
-          canGoBack = action.canGoBack,
-          canGoForward = action.canGoForward,
-        )
-      is UpdateTitleAction -> state.copy(title = action.title)
-      is UserAction ->
-        state.copy(
-          transientState =
-            FrostTransientWebReducer.reduce(
-              state.transientState,
-              action,
-            ),
-        )
-      is ResponseAction ->
-        state.copy(
-          transientState =
-            FrostTransientFulfillmentWebReducer.reduce(
-              state.transientState,
-              action,
-            ),
-        )
+      is TabAction ->
+        state.updateTabState(action.tabId) { ContentStateReducer.reduce(it, action.action) }
     }
   }
 }
 
-private object FrostTransientWebReducer {
-  fun reduce(state: TransientWebState, action: UserAction): TransientWebState {
-    return when (action) {
-      is UserAction.LoadUrlAction -> state.copy(targetUrl = action.url)
-      is UserAction.GoBackAction -> state.copy(navStep = state.navStep - 1)
-      is UserAction.GoForwardAction -> state.copy(navStep = state.navStep + 1)
-    }
-  }
+internal fun FrostWebState.updateTabState(
+  tabId: WebTargetId,
+  update: (TabWebState) -> TabWebState,
+): FrostWebState {
+  val floatingTabMatch = floatingTab?.takeIf { it.id == tabId }
+  if (floatingTabMatch != null) return copy(floatingTab = update(floatingTabMatch))
+
+  val newHomeTabs = homeTabs.updateTabs(tabId, update)
+  if (newHomeTabs != null) return copy(homeTabs = newHomeTabs)
+  return this
 }
 
-private object FrostTransientFulfillmentWebReducer {
-  fun reduce(state: TransientWebState, action: ResponseAction): TransientWebState {
-    return when (action) {
-      is ResponseAction.LoadUrlResponseAction ->
-        if (state.targetUrl == action.url) state.copy(targetUrl = null) else state
-      is ResponseAction.WebStepResponseAction -> state.copy(navStep = state.navStep - action.steps)
-    }
-  }
+/**
+ * Finds the corresponding tab in the list and replaces it using [update].
+ *
+ * @param tabId ID of the tab to change.
+ * @param update Returns a new version of the tab state.
+ */
+internal fun List<TabWebState>.updateTabs(
+  tabId: WebTargetId,
+  update: (TabWebState) -> TabWebState,
+): List<TabWebState>? {
+  val tabIndex = indexOfFirst { it.id == tabId }
+  if (tabIndex == -1) return null
+
+  return subList(0, tabIndex) + update(get(tabIndex)) + subList(tabIndex + 1, size)
 }

@@ -21,14 +21,24 @@ import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.UpdateProgressAction
-import com.pitchedapps.frost.web.state.UpdateTitleAction
+import com.pitchedapps.frost.web.state.TabAction
+import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
+import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
+import com.pitchedapps.frost.web.state.get
+import com.pitchedapps.frost.webview.FrostWeb
 import javax.inject.Inject
 
 /** The default chrome client */
-class FrostChromeClient @Inject internal constructor(private val store: FrostWebStore) :
+class FrostChromeClient
+@Inject
+internal constructor(@FrostWeb private val tabId: WebTargetId, private val store: FrostWebStore) :
   WebChromeClient() {
+
+  private fun FrostWebStore.dispatch(action: TabAction.Action) {
+    dispatch(TabAction(tabId = tabId, action = action))
+  }
 
   override fun getDefaultVideoPoster(): Bitmap? =
     super.getDefaultVideoPoster() ?: Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
@@ -48,7 +58,8 @@ class FrostChromeClient @Inject internal constructor(private val store: FrostWeb
 
   override fun onProgressChanged(view: WebView, newProgress: Int) {
     super.onProgressChanged(view, newProgress)
-    if (store.state.progress == 100) return
+    // TODO remove?
+    if (store.state[tabId]?.progress == 100) return
     store.dispatch(UpdateProgressAction(newProgress))
   }
 

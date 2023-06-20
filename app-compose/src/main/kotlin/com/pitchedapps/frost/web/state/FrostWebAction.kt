@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.web.state
 
+import com.pitchedapps.frost.ext.WebTargetId
 import mozilla.components.lib.state.Action
 
 /**
@@ -34,32 +35,40 @@ sealed interface FrostWebAction : Action
  */
 object InitAction : FrostWebAction
 
-/** Action indicating current url state. */
-data class UpdateUrlAction(val url: String) : FrostWebAction
+/** Action affecting a single tab */
+data class TabAction(val tabId: WebTargetId, val action: Action) : FrostWebAction {
+  sealed interface Action
 
-/** Action indicating current title state. */
-data class UpdateTitleAction(val title: String?) : FrostWebAction
+  sealed interface ContentAction : Action {
 
-data class UpdateNavigationAction(val canGoBack: Boolean, val canGoForward: Boolean) :
-  FrostWebAction
+    /** Action indicating current url state. */
+    data class UpdateUrlAction(val url: String) : ContentAction
 
-data class UpdateProgressAction(val progress: Int) : FrostWebAction
+    /** Action indicating current title state. */
+    data class UpdateTitleAction(val title: String?) : ContentAction
 
-/** Action triggered by user, leading to transient state changes. */
-sealed interface UserAction : FrostWebAction {
+    data class UpdateNavigationAction(val canGoBack: Boolean, val canGoForward: Boolean) :
+      ContentAction
 
-  /** Action to load new url. */
-  data class LoadUrlAction(val url: String) : UserAction
+    data class UpdateProgressAction(val progress: Int) : ContentAction
+  }
 
-  object GoBackAction : UserAction
+  /** Action triggered by user, leading to transient state changes. */
+  sealed interface UserAction : Action {
 
-  object GoForwardAction : UserAction
-}
+    /** Action to load new url. */
+    data class LoadUrlAction(val url: String) : UserAction
 
-/** Response triggered by webview, indicating [UserAction] fulfillment. */
-sealed interface ResponseAction : FrostWebAction {
+    object GoBackAction : UserAction
 
-  data class LoadUrlResponseAction(val url: String) : ResponseAction
+    object GoForwardAction : UserAction
+  }
 
-  data class WebStepResponseAction(val steps: Int) : ResponseAction
+  /** Response triggered by webview, indicating [UserAction] fulfillment. */
+  sealed interface ResponseAction : Action {
+
+    data class LoadUrlResponseAction(val url: String) : ResponseAction
+
+    data class WebStepResponseAction(val steps: Int) : ResponseAction
+  }
 }

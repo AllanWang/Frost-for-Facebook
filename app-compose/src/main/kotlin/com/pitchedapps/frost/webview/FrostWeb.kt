@@ -16,18 +16,10 @@
  */
 package com.pitchedapps.frost.webview
 
-import com.pitchedapps.frost.compose.webview.FrostWebCompose
-import com.pitchedapps.frost.web.state.FrostLoggerMiddleware
-import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.ext.WebTargetId
 import dagger.BindsInstance
-import dagger.Module
-import dagger.Provides
 import dagger.hilt.DefineComponent
-import dagger.hilt.EntryPoint
-import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import javax.inject.Inject
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -45,38 +37,11 @@ annotation class FrostWebScoped
 
 @FrostWebScoped @DefineComponent(parent = ViewModelComponent::class) interface FrostWebComponent
 
+/** Using this component seems to be buggy, leading to an invalid param tabId error. */
 @DefineComponent.Builder
 interface FrostWebComponentBuilder {
-  fun id(@BindsInstance @FrostWeb id: String): FrostWebComponentBuilder
+
+  @BindsInstance fun tabId(@FrostWeb tabId: WebTargetId): FrostWebComponentBuilder
 
   fun build(): FrostWebComponent
-}
-
-@Module
-@InstallIn(FrostWebComponent::class)
-internal object FrostWebModule {
-
-  @Provides
-  @FrostWebScoped
-  fun frostStore(@FrostWeb id: String): FrostWebStore {
-    val logger = FrostLoggerMiddleware(id)
-
-    return FrostWebStore(tag = id, middleware = listOf(logger))
-  }
-}
-
-class FrostWebComposer
-@Inject
-internal constructor(private val frostWebComponentBuilder: FrostWebComponentBuilder) {
-  fun create(id: String): FrostWebCompose {
-    val frostWebComponent = frostWebComponentBuilder.id(id).build()
-    val frostWebEntryPoint = EntryPoints.get(frostWebComponent, FrostWebEntryPoint::class.java)
-    return frostWebEntryPoint.frostWebCompose()
-  }
-
-  @EntryPoint
-  @InstallIn(FrostWebComponent::class)
-  interface FrostWebEntryPoint {
-    fun frostWebCompose(): FrostWebCompose
-  }
 }

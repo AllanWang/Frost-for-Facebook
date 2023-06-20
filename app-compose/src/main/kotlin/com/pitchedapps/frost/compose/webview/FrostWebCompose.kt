@@ -30,11 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.children
-import com.pitchedapps.frost.web.state.FrostWebState
+import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.ResponseAction
-import com.pitchedapps.frost.webview.FrostWebScoped
-import javax.inject.Inject
+import com.pitchedapps.frost.web.state.TabAction
+import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
+import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseAction
+import com.pitchedapps.frost.web.state.TabWebState
+import com.pitchedapps.frost.web.state.get
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -43,14 +46,16 @@ import kotlinx.coroutines.launch
 import mozilla.components.lib.state.ext.flow
 import mozilla.components.lib.state.ext.observeAsState
 
-@FrostWebScoped
-class FrostWebCompose
-@Inject
-internal constructor(
+class FrostWebCompose(
+  val tabId: WebTargetId,
   private val store: FrostWebStore,
   private val client: FrostWebViewClient,
   private val chromeClient: FrostChromeClient,
 ) {
+
+  private fun FrostWebStore.dispatch(action: TabAction.Action) {
+    dispatch(TabAction(tabId = tabId, action = action))
+  }
 
   /**
    * Webview implementation in compose
@@ -96,20 +101,20 @@ internal constructor(
     webView?.let { wv ->
       val lifecycleOwner = LocalLifecycleOwner.current
 
-      val canGoBack by store.observeAsState(initialValue = false) { it.canGoBack }
+      val canGoBack by store.observeAsState(initialValue = false) { it[tabId]?.canGoBack == true }
 
       BackHandler(captureBackPresses && canGoBack) { wv.goBack() }
 
       LaunchedEffect(wv, store) {
-        fun storeFlow(action: suspend Flow<FrostWebState>.() -> Unit) = launch {
-          store.flow(lifecycleOwner).action()
+        fun storeFlow(action: suspend Flow<TabWebState>.() -> Unit) = launch {
+          store.flow(lifecycleOwner).mapNotNull { it[tabId] }.action()
         }
 
         storeFlow {
           mapNotNull { it.transientState.targetUrl }
             .distinctUntilChanged()
             .collect { url ->
-              store.dispatch(ResponseAction.LoadUrlResponseAction(url))
+              store.dispatch(LoadUrlResponseAction(url))
               wv.loadUrl(url)
             }
         }
@@ -118,9 +123,11 @@ internal constructor(
             .distinctUntilChanged()
             .filter { it != 0 }
             .collect { steps ->
-              store.dispatch(ResponseAction.WebStepResponseAction(steps))
+              store.dispatch(WebStepResponseAction(steps))
               if (wv.canGoBackOrForward(steps)) {
                 wv.goBackOrForward(steps)
+              } else {
+                logger.atWarning().log("web %s cannot go back %d steps", tabId, steps)
               }
             }
         }
@@ -168,6 +175,10 @@ internal constructor(
         onDispose(wv)
       },
     )
+  }
+
+  companion object {
+    private val logger = FluentLogger.forEnclosingClass()
   }
 }
 

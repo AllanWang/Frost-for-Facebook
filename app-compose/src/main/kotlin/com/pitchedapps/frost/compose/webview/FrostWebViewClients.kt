@@ -22,14 +22,17 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.isExplicitIntent
 import com.pitchedapps.frost.web.FrostWebHelper
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.UpdateNavigationAction
-import com.pitchedapps.frost.web.state.UpdateProgressAction
-import com.pitchedapps.frost.web.state.UpdateTitleAction
+import com.pitchedapps.frost.web.state.TabAction
+import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateNavigationAction
+import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
+import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
+import com.pitchedapps.frost.webview.FrostWeb
 import java.io.ByteArrayInputStream
 import javax.inject.Inject
 
@@ -61,8 +64,15 @@ abstract class BaseWebViewClient : WebViewClient() {
 /** The default webview client */
 class FrostWebViewClient
 @Inject
-internal constructor(private val store: FrostWebStore, override val webHelper: FrostWebHelper) :
-  BaseWebViewClient() {
+internal constructor(
+  @FrostWeb private val tabId: WebTargetId,
+  private val store: FrostWebStore,
+  override val webHelper: FrostWebHelper
+) : BaseWebViewClient() {
+
+  private fun FrostWebStore.dispatch(action: TabAction.Action) {
+    dispatch(TabAction(tabId = tabId, action = action))
+  }
 
   /** True if current url supports refresh. See [doUpdateVisitedHistory] for updates */
   internal var urlSupportsRefresh: Boolean = true

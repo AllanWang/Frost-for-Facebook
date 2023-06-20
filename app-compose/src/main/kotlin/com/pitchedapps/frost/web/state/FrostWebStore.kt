@@ -16,7 +16,7 @@
  */
 package com.pitchedapps.frost.web.state
 
-import com.pitchedapps.frost.facebook.FB_URL_BASE
+import com.pitchedapps.frost.ext.WebTargetId
 import mozilla.components.lib.state.Middleware
 import mozilla.components.lib.state.Store
 
@@ -27,7 +27,6 @@ import mozilla.components.lib.state.Store
  * For firefox example.
  */
 class FrostWebStore(
-  tag: String,
   initialState: FrostWebState = FrostWebState(),
   middleware: List<Middleware<FrostWebState, FrostWebAction>> = emptyList(),
 ) :
@@ -35,10 +34,14 @@ class FrostWebStore(
     initialState,
     FrostWebReducer::reduce,
     middleware,
-    "FrostStore-$tag",
+    "FrostStore",
   ) {
   init {
     dispatch(InitAction)
-    dispatch(UserAction.LoadUrlAction(FB_URL_BASE))
   }
+}
+
+operator fun FrostWebState.get(tabId: WebTargetId): TabWebState? {
+  if (floatingTab?.id == tabId) return floatingTab
+  return homeTabs.find { it.id == tabId }
 }

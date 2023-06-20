@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.GeckoContextId
+import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
 import com.pitchedapps.frost.extension.FrostCoreExtension
@@ -49,5 +50,5 @@ internal constructor(
 
   var tabIndex: Int by mutableStateOf(0)
 
-  val frostWebCompose: FrostWebCompose = frostWebComposer.create("test")
+  val frostWebCompose: FrostWebCompose = frostWebComposer.create(WebTargetId("test"))
 }
