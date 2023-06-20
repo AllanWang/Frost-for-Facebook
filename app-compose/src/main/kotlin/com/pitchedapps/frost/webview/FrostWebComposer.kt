@@ -16,9 +16,7 @@
  */
 package com.pitchedapps.frost.webview
 
-import com.pitchedapps.frost.compose.webview.FrostChromeClient
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
-import com.pitchedapps.frost.compose.webview.FrostWebViewClient
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.FrostWebHelper
 import com.pitchedapps.frost.web.state.FrostWebStore
