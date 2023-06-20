@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.compose.webview
 
-import android.content.Context
 import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.activity.compose.BackHandler
@@ -30,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.children
+import androidx.core.widget.NestedScrollView
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.view.NestedWebView
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
@@ -73,7 +74,6 @@ class FrostWebCompose(
    *   will be subsequently overwritten after this lambda is called.
    * @param onDispose Called when the WebView is destroyed. Provides a bundle which can be saved if
    *   you need to save and restore state in this WebView.
-   * @param factory An optional WebView factory for using a custom subclass of WebView
    */
   @Composable
   fun WebView(
@@ -81,7 +81,6 @@ class FrostWebCompose(
     captureBackPresses: Boolean = true,
     onCreated: (WebView) -> Unit = {},
     onDispose: (WebView) -> Unit = {},
-    factory: ((Context) -> WebView)? = null,
   ) {
 
     var webView by remember { mutableStateOf<WebView?>(null) }
@@ -125,7 +124,7 @@ class FrostWebCompose(
     AndroidView(
       factory = { context ->
         val childView =
-          (factory?.invoke(context) ?: WebView(context))
+          NestedWebView(context)
             .apply {
               onCreated(this)
 
@@ -150,7 +149,7 @@ class FrostWebCompose(
         // Workaround a crash on certain devices that expect WebView to be
         // wrapped in a ViewGroup.
         // b/243567497
-        val parentLayout = FrameLayout(context)
+        val parentLayout = NestedScrollView(context)
         parentLayout.layoutParams =
           FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,

@@ -18,17 +18,27 @@ package com.pitchedapps.frost.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.webview.FrostWebComposer
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mozilla.components.lib.state.ext.observeAsState
 
 @Composable
@@ -55,7 +65,29 @@ private fun MainScreenWebContainer(
   val homeTabs by store.observeAsState(initialValue = emptyList()) { it.homeTabs }
   val homeTabComposables = remember(homeTabs) { homeTabs.map { frostWebComposer.create(it.id) } }
 
-  Box(modifier = modifier) { homeTabComposables.firstOrNull()?.WebView() }
+  PullRefresh(modifier = modifier, store = store) { homeTabComposables.firstOrNull()?.WebView() }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun PullRefresh(modifier: Modifier, store: FrostWebStore, content: @Composable () -> Unit) {
+  val refreshScope = rememberCoroutineScope()
+  var refreshing by remember { mutableStateOf(false) }
+
+  fun refresh() =
+    refreshScope.launch {
+      refreshing = true
+      delay(1500)
+      refreshing = false
+    }
+
+  val state = rememberPullRefreshState(refreshing, ::refresh)
+
+  Box(modifier.pullRefresh(state)) {
+    content()
+
+    PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
