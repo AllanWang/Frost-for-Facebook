@@ -23,6 +23,7 @@ import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.components.usecases.HomeTabsUseCases
 import com.pitchedapps.frost.main.MainActivity
+import com.pitchedapps.frost.web.FrostAdBlock
 import dagger.BindsOptionalOf
 import dagger.Module
 import dagger.Provides
@@ -63,6 +64,8 @@ import org.mozilla.geckoview.GeckoRuntimeSettings
 @InstallIn(SingletonComponent::class)
 interface FrostBindModule {
   @BindsOptionalOf @Frost fun userAgent(): String
+
+  @BindsOptionalOf fun adBlock(): FrostAdBlock
 }
 
 /** Module containing core Mozilla injections. */

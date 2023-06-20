@@ -44,9 +44,10 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       FrostTheme {
-        MainScreen(
-          tabs = tabs,
-        )
+        //        MainScreen(
+        //          tabs = tabs,
+        //        )
+        MainScreen2()
       }
     }
   }

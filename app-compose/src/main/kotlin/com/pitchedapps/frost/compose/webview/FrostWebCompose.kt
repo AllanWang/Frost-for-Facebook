@@ -1,0 +1,186 @@
+/*
+ * Copyright 2021 Allan Wang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.pitchedapps.frost.compose.webview
+
+import android.content.Context
+import android.webkit.WebView
+import android.widget.FrameLayout
+import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.children
+import com.pitchedapps.frost.web.FrostWebState
+import com.pitchedapps.frost.web.FrostWebStore
+import com.pitchedapps.frost.web.ResponseAction
+import com.pitchedapps.frost.webview.FrostWebScoped
+import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
+import mozilla.components.lib.state.ext.flow
+import mozilla.components.lib.state.ext.observeAsState
+
+@FrostWebScoped
+class FrostWebCompose
+@Inject
+internal constructor(
+  private val store: FrostWebStore,
+  private val client: FrostWebViewClient,
+  private val chromeClient: FrostChromeClient,
+) {
+
+  /**
+   * Webview implementation in compose
+   *
+   * Based off of
+   * https://github.com/google/accompanist/blob/main/web/src/main/java/com/google/accompanist/web/WebView.kt
+   */
+  /**
+   * A wrapper around the Android View WebView to provide a basic WebView composable.
+   *
+   * If you require more customisation you are most likely better rolling your own and using this
+   * wrapper as an example.
+   *
+   * The WebView attempts to set the layoutParams based on the Compose modifier passed in. If it is
+   * incorrectly sizing, use the layoutParams composable function instead.
+   *
+   * @param state The webview state holder where the Uri to load is defined.
+   * @param modifier A compose modifier
+   * @param captureBackPresses Set to true to have this Composable capture back presses and navigate
+   *   the WebView back.
+   * @param navigator An optional navigator object that can be used to control the WebView's
+   *   navigation from outside the composable.
+   * @param onCreated Called when the WebView is first created, this can be used to set additional
+   *   settings on the WebView. WebChromeClient and WebViewClient should not be set here as they
+   *   will be subsequently overwritten after this lambda is called.
+   * @param onDispose Called when the WebView is destroyed. Provides a bundle which can be saved if
+   *   you need to save and restore state in this WebView.
+   * @param client Provides access to WebViewClient via subclassing
+   * @param chromeClient Provides access to WebChromeClient via subclassing
+   * @param factory An optional WebView factory for using a custom subclass of WebView
+   */
+  @Composable
+  fun WebView(
+    modifier: Modifier = Modifier,
+    captureBackPresses: Boolean = true,
+    onCreated: (WebView) -> Unit = {},
+    onDispose: (WebView) -> Unit = {},
+    factory: ((Context) -> WebView)? = null,
+  ) {
+
+    var webView by remember { mutableStateOf<WebView?>(null) }
+
+    webView?.let { wv ->
+      val lifecycleOwner = LocalLifecycleOwner.current
+
+      val canGoBack by store.observeAsState(initialValue = false) { it.canGoBack }
+
+      BackHandler(captureBackPresses && canGoBack) { wv.goBack() }
+
+      LaunchedEffect(wv, store) {
+        fun storeFlow(action: suspend Flow<FrostWebState>.() -> Unit) = launch {
+          store.flow(lifecycleOwner).action()
+        }
+
+        storeFlow {
+          mapNotNull { it.transientState.targetUrl }
+            .distinctUntilChanged()
+            .collect { url ->
+              store.dispatch(ResponseAction.LoadUrlResponseAction(url))
+              wv.loadUrl(url)
+            }
+        }
+        storeFlow {
+          mapNotNull { it.transientState.navStep }
+            .distinctUntilChanged()
+            .filter { it != 0 }
+            .collect { steps ->
+              store.dispatch(ResponseAction.WebStepResponseAction(steps))
+              if (wv.canGoBackOrForward(steps)) {
+                wv.goBackOrForward(steps)
+              }
+            }
+        }
+      }
+    }
+
+    AndroidView(
+      factory = { context ->
+        val childView =
+          (factory?.invoke(context) ?: WebView(context))
+            .apply {
+              onCreated(this)
+
+              this.layoutParams =
+                FrameLayout.LayoutParams(
+                  FrameLayout.LayoutParams.MATCH_PARENT,
+                  FrameLayout.LayoutParams.MATCH_PARENT,
+                )
+
+              //        state.viewState?.let {
+              //          this.restoreState(it)
+              //        }
+
+              webChromeClient = chromeClient
+              webViewClient = client
+            }
+            .also { webView = it }
+
+        // Workaround a crash on certain devices that expect WebView to be
+        // wrapped in a ViewGroup.
+        // b/243567497
+        val parentLayout = FrameLayout(context)
+        parentLayout.layoutParams =
+          FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+          )
+        parentLayout.addView(childView)
+
+        parentLayout
+      },
+      modifier = modifier,
+      onRelease = { parentFrame ->
+        val wv = parentFrame.children.first() as WebView
+        onDispose(wv)
+      },
+    )
+  }
+}
+
+
+//  override fun onReceivedError(
+//    view: WebView,
+//    request: WebResourceRequest?,
+//    error: WebResourceError?
+//  ) {
+//    super.onReceivedError(view, request, error)
+//
+//    if (error != null) {
+//      state.errorsForCurrentRequest.add(WebViewError(request, error))
+//    }
+//  }
+// }

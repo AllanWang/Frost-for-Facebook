@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -44,18 +45,20 @@ import com.pitchedapps.frost.ext.components
 import mozilla.components.browser.state.helper.Target
 
 @Composable
-fun MainScreen2(modifier: Modifier) {
-  //  Scaffold(
-  //    modifier = modifier,
-  //    topBar = {
-  //      MainTopBar(modifier = modifier)
-  //    },
-  //  )
+fun MainScreen2(modifier: Modifier = Modifier) {
+  val vm: MainScreenViewModel = viewModel()
+  Scaffold(
+    modifier = modifier,
+    topBar = { MainTopBar(modifier = modifier) },
+  ) { paddingValues ->
+    vm.frostWebCompose.WebView(modifier = Modifier.padding(paddingValues))
+  }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(modifier: Modifier) {
-  //  TopAppBar(title = { /*TODO*/ })
+fun MainTopBar(modifier: Modifier = Modifier) {
+  TopAppBar(title = { Text(text = "Title") })
 }
 
 /**
