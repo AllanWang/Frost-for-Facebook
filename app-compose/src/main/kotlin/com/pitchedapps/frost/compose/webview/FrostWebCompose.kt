@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.ext.WebTargetId
@@ -84,6 +83,8 @@ class FrostWebCompose(
   ) {
 
     var webView by remember { mutableStateOf<WebView?>(null) }
+
+    logger.atInfo().log("Webview %s %s", tabId, webView?.hashCode())
 
     webView?.let { wv ->
       val lifecycleOwner = LocalLifecycleOwner.current
@@ -164,7 +165,7 @@ class FrostWebCompose(
       },
       modifier = modifier,
       onRelease = { parentFrame ->
-        val wv = parentFrame.children.first() as WebView
+        val wv = parentFrame.getChildAt(0) as WebView
         onDispose(wv)
         logger.atInfo().log("Released webview for %s", tabId)
       },

@@ -16,8 +16,11 @@
  */
 package com.pitchedapps.frost.main
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -30,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabListAction.SelectHomeTab
@@ -111,7 +116,34 @@ private fun MainScreenWebContainer(
     modifier = modifier,
     store = store,
   ) {
-    homeTabComposables.find { it.tabId == selectedTab }?.WebView()
+    MainPager(selectedTab, items = homeTabComposables)
+    //    homeTabComposables.find { it.tabId == selectedTab }?.WebView()
+
+    //    MultiViewContainer(store = store)
+
+    //    SampleContainer(selectedTab = selectedTab, items = items)
+  }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MainPager(selectedTab: WebTargetId?, items: List<FrostWebCompose>) {
+
+  val pagerState = rememberPagerState { items.size }
+
+  LaunchedEffect(selectedTab, items) {
+    val i = items.indexOfFirst { it.tabId == selectedTab }
+    if (i != -1) {
+      pagerState.scrollToPage(i)
+    }
+  }
+
+  HorizontalPager(
+    state = pagerState,
+    userScrollEnabled = false,
+    beyondBoundsPageCount = 10, // Do not allow view release
+  ) { page ->
+    items[page].WebView()
   }
 }
 
