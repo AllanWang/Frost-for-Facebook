@@ -37,8 +37,8 @@ import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseAction
-import com.pitchedapps.frost.web.state.TabWebState
 import com.pitchedapps.frost.web.state.get
+import com.pitchedapps.frost.web.state.state.ContentState
 import com.pitchedapps.frost.webview.FrostChromeClient
 import com.pitchedapps.frost.webview.FrostWebViewClient
 import kotlinx.coroutines.flow.Flow
@@ -88,13 +88,14 @@ class FrostWebCompose(
     webView?.let { wv ->
       val lifecycleOwner = LocalLifecycleOwner.current
 
-      val canGoBack by store.observeAsState(initialValue = false) { it[tabId]?.canGoBack == true }
+      val canGoBack by
+        store.observeAsState(initialValue = false) { it[tabId]?.content?.canGoBack == true }
 
       BackHandler(captureBackPresses && canGoBack) { wv.goBack() }
 
       LaunchedEffect(wv, store) {
-        fun storeFlow(action: suspend Flow<TabWebState>.() -> Unit) = launch {
-          store.flow(lifecycleOwner).mapNotNull { it[tabId] }.action()
+        fun storeFlow(action: suspend Flow<ContentState>.() -> Unit) = launch {
+          store.flow(lifecycleOwner).mapNotNull { it[tabId]?.content }.action()
         }
 
         storeFlow {
@@ -128,6 +129,8 @@ class FrostWebCompose(
             .apply {
               onCreated(this)
 
+              logger.atInfo().log("Created webview for %s", tabId)
+
               this.layoutParams =
                 FrameLayout.LayoutParams(
                   FrameLayout.LayoutParams.MATCH_PARENT,
@@ -141,7 +144,7 @@ class FrostWebCompose(
               webChromeClient = chromeClient
               webViewClient = client
 
-              val url = store.state[tabId]?.url
+              val url = store.state[tabId]?.content?.url
               if (url != null) loadUrl(url)
             }
             .also { webView = it }
@@ -163,6 +166,7 @@ class FrostWebCompose(
       onRelease = { parentFrame ->
         val wv = parentFrame.children.first() as WebView
         onDispose(wv)
+        logger.atInfo().log("Released webview for %s", tabId)
       },
     )
   }

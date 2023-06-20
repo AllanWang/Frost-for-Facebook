@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.filled.Today
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.main.MainTabItem
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -118,8 +119,9 @@ enum class FbItem(
 }
 
 /** Converts [FbItem] to [MainTabItem]. */
-fun FbItem.tab(context: Context): MainTabItem =
+fun FbItem.tab(context: Context, id: WebTargetId): MainTabItem =
   MainTabItem(
+    id = id,
     title = context.getString(titleId),
     icon = icon,
     url = url,

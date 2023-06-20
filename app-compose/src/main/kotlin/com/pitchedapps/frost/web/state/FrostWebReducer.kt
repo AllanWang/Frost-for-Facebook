@@ -19,6 +19,10 @@ package com.pitchedapps.frost.web.state
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.reducer.ContentStateReducer
 import com.pitchedapps.frost.web.state.reducer.TabListReducer
+import com.pitchedapps.frost.web.state.state.FloatingTabSessionState
+import com.pitchedapps.frost.web.state.state.HomeTabSessionState
+import com.pitchedapps.frost.web.state.state.SessionState
+import javax.inject.Inject
 
 /**
  * See
@@ -26,25 +30,35 @@ import com.pitchedapps.frost.web.state.reducer.TabListReducer
  *
  * For firefox example
  */
-internal object FrostWebReducer {
+class FrostWebReducer
+@Inject
+internal constructor(
+  private val tabListReducer: TabListReducer,
+  private val contentStateReducer: ContentStateReducer
+) {
   fun reduce(state: FrostWebState, action: FrostWebAction): FrostWebState {
     return when (action) {
       is InitAction -> state
-      is TabListAction -> TabListReducer.reduce(state, action)
+      is TabListAction -> tabListReducer.reduce(state, action)
       is TabAction ->
-        state.updateTabState(action.tabId) { ContentStateReducer.reduce(it, action.action) }
+        state.updateTabState(action.tabId) { session ->
+          val newContent = contentStateReducer.reduce(session.content, action.action)
+          session.createCopy(content = newContent)
+        }
     }
   }
 }
 
+@Suppress("Unchecked_Cast")
 internal fun FrostWebState.updateTabState(
   tabId: WebTargetId,
-  update: (TabWebState) -> TabWebState,
+  update: (SessionState) -> SessionState,
 ): FrostWebState {
   val floatingTabMatch = floatingTab?.takeIf { it.id == tabId }
-  if (floatingTabMatch != null) return copy(floatingTab = update(floatingTabMatch))
+  if (floatingTabMatch != null)
+    return copy(floatingTab = update(floatingTabMatch) as FloatingTabSessionState)
 
-  val newHomeTabs = homeTabs.updateTabs(tabId, update)
+  val newHomeTabs = homeTabs.updateTabs(tabId, update) as List<HomeTabSessionState>?
   if (newHomeTabs != null) return copy(homeTabs = newHomeTabs)
   return this
 }
@@ -55,12 +69,11 @@ internal fun FrostWebState.updateTabState(
  * @param tabId ID of the tab to change.
  * @param update Returns a new version of the tab state.
  */
-internal fun List<TabWebState>.updateTabs(
+internal fun <T : SessionState> List<T>.updateTabs(
   tabId: WebTargetId,
-  update: (TabWebState) -> TabWebState,
-): List<TabWebState>? {
+  update: (T) -> T,
+): List<SessionState>? {
   val tabIndex = indexOfFirst { it.id == tabId }
   if (tabIndex == -1) return null
-
   return subList(0, tabIndex) + update(get(tabIndex)) + subList(tabIndex + 1, size)
 }

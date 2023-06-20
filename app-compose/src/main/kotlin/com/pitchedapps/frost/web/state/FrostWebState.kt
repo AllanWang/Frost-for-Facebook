@@ -16,9 +16,10 @@
  */
 package com.pitchedapps.frost.web.state
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.pitchedapps.frost.ext.FrostAccountId
 import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.web.state.state.FloatingTabSessionState
+import com.pitchedapps.frost.web.state.state.HomeTabSessionState
 import mozilla.components.lib.state.State
 
 /**
@@ -29,8 +30,9 @@ import mozilla.components.lib.state.State
  */
 data class FrostWebState(
   val auth: AuthWebState = AuthWebState(),
-  val homeTabs: List<TabWebState> = emptyList(),
-  var floatingTab: TabWebState? = null,
+  val selectedHomeTab: WebTargetId? = null,
+  val homeTabs: List<HomeTabSessionState> = emptyList(),
+  var floatingTab: FloatingTabSessionState? = null,
 ) : State
 
 /**
@@ -57,40 +59,3 @@ data class AuthWebState(
     object Unknown : AuthUser
   }
 }
-
-data class TabWebState(
-  val id: WebTargetId,
-  val userId: AuthWebState.AuthUser,
-  val baseUrl: String,
-  val url: String,
-  val icon: ImageVector? = null,
-  val title: String? = null,
-  val progress: Int = 100,
-  val loading: Boolean = false,
-  val canGoBack: Boolean = false,
-  val canGoForward: Boolean = false,
-  val transientState: TransientWebState = TransientWebState(),
-) {
-  companion object {
-    fun homeTabId(index: Int): WebTargetId = WebTargetId("home-tab--$index")
-
-    val FLOATING_TAB_ID = WebTargetId("floating-tab")
-  }
-}
-
-/**
- * Transient web state.
- *
- * While we typically don't want to store this, our webview is not a composable, and requires a
- * bridge to handle events.
- *
- * This state is not a list of pending actions, but rather a snapshot of the expected changes so
- * that conflicting events can be ignored.
- *
- * @param targetUrl url destination if nonnull
- * @param navStep pending steps. Positive = steps forward, negative = steps backward
- */
-data class TransientWebState(
-  val targetUrl: String? = null,
-  val navStep: Int = 0,
-)

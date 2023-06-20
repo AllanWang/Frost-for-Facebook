@@ -22,7 +22,10 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.compose.FrostTheme
+import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import mozilla.components.lib.state.ext.observeAsState
 
 /**
  * Main activity.
@@ -31,6 +34,8 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+  @Inject lateinit var store: FrostWebStore
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -43,7 +48,12 @@ class MainActivity : ComponentActivity() {
         //        MainScreen(
         //          tabs = tabs,
         //        )
-        MainScreenWebView()
+
+        val tabs =
+          store.observeAsState(initialValue = null) { it.homeTabs.map { it.tab } }.value
+            ?: return@FrostTheme
+
+        MainScreenWebView(homeTabs = tabs)
       }
     }
   }

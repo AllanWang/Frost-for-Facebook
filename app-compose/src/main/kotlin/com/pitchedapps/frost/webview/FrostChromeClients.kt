@@ -55,7 +55,7 @@ class FrostChromeClient(private val tabId: WebTargetId, private val store: Frost
   override fun onProgressChanged(view: WebView, newProgress: Int) {
     super.onProgressChanged(view, newProgress)
     // TODO remove?
-    if (store.state[tabId]?.progress == 100) return
+    if (store.state[tabId]?.content?.progress == 100) return
     store.dispatch(UpdateProgressAction(newProgress))
   }
 

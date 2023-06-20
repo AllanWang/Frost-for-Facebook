@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.web.state
 
 import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.web.state.state.SessionState
 import mozilla.components.lib.state.Middleware
 import mozilla.components.lib.state.Store
 
@@ -28,11 +29,12 @@ import mozilla.components.lib.state.Store
  */
 class FrostWebStore(
   initialState: FrostWebState = FrostWebState(),
+  frostWebReducer: FrostWebReducer,
   middleware: List<Middleware<FrostWebState, FrostWebAction>> = emptyList(),
 ) :
   Store<FrostWebState, FrostWebAction>(
     initialState,
-    FrostWebReducer::reduce,
+    frostWebReducer::reduce,
     middleware,
     "FrostStore",
   ) {
@@ -41,7 +43,7 @@ class FrostWebStore(
   }
 }
 
-operator fun FrostWebState.get(tabId: WebTargetId): TabWebState? {
+operator fun FrostWebState.get(tabId: WebTargetId): SessionState? {
   if (floatingTab?.id == tabId) return floatingTab
   return homeTabs.find { it.id == tabId }
 }

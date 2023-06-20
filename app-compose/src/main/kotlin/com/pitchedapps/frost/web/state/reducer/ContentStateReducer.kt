@@ -28,11 +28,13 @@ import com.pitchedapps.frost.web.state.TabAction.UserAction
 import com.pitchedapps.frost.web.state.TabAction.UserAction.GoBackAction
 import com.pitchedapps.frost.web.state.TabAction.UserAction.GoForwardAction
 import com.pitchedapps.frost.web.state.TabAction.UserAction.LoadUrlAction
-import com.pitchedapps.frost.web.state.TabWebState
-import com.pitchedapps.frost.web.state.TransientWebState
+import com.pitchedapps.frost.web.state.state.ContentState
+import com.pitchedapps.frost.web.state.state.TransientWebState
+import javax.inject.Inject
 
-internal object ContentStateReducer {
-  fun reduce(state: TabWebState, action: Action): TabWebState {
+internal class ContentStateReducer @Inject internal constructor() {
+
+  fun reduce(state: ContentState, action: Action): ContentState {
     return when (action) {
       is UpdateUrlAction -> state.copy(url = action.url)
       is UpdateProgressAction -> state.copy(progress = action.progress)

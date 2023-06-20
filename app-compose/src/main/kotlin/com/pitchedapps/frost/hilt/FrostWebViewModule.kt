@@ -20,6 +20,7 @@ import android.webkit.CookieManager
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.BuildConfig
 import com.pitchedapps.frost.web.state.FrostLoggerMiddleware
+import com.pitchedapps.frost.web.state.FrostWebReducer
 import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.Module
 import dagger.Provides
@@ -38,11 +39,9 @@ object FrostWebViewModule {
 
   @Provides
   @Singleton
-  fun frostWebStore(): FrostWebStore {
+  fun frostWebStore(frostWebReducer: FrostWebReducer): FrostWebStore {
     val middleware = buildList { if (BuildConfig.DEBUG) add(FrostLoggerMiddleware()) }
 
-    val store = FrostWebStore(middleware = middleware)
-
-    return store
+    return FrostWebStore(frostWebReducer = frostWebReducer, middleware = middleware)
   }
 }

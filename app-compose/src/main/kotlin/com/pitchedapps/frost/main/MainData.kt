@@ -17,6 +17,12 @@
 package com.pitchedapps.frost.main
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.pitchedapps.frost.ext.WebTargetId
 
 /** Data representation of a single main tab entry. */
-data class MainTabItem(val title: String, val icon: ImageVector, val url: String)
+data class MainTabItem(
+  val id: WebTargetId,
+  val title: String,
+  val icon: ImageVector,
+  val url: String
+)

@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.FrostWebState
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.TabWebState
+import com.pitchedapps.frost.web.state.state.SessionState
 import mozilla.components.lib.state.Store
 import mozilla.components.lib.state.ext.observeAsComposableState
 
@@ -35,20 +35,20 @@ import mozilla.components.lib.state.ext.observeAsComposableState
  */
 sealed class Target {
   /**
-   * Looks up this target in the given [FrostWebStore] and returns the matching [TabWebState] if
+   * Looks up this target in the given [FrostWebStore] and returns the matching [SessionState] if
    * available. Otherwise returns `null`.
    *
    * @param store to lookup this target in.
    */
-  fun lookupIn(store: FrostWebStore): TabWebState? = lookupIn(store.state)
+  fun lookupIn(store: FrostWebStore): SessionState? = lookupIn(store.state)
 
   /**
-   * Looks up this target in the given [FrostWebState] and returns the matching [TabWebState] if
+   * Looks up this target in the given [FrostWebState] and returns the matching [SessionState] if
    * available. Otherwise returns `null`.
    *
    * @param state to lookup this target in.
    */
-  abstract fun lookupIn(state: FrostWebState): TabWebState?
+  abstract fun lookupIn(state: FrostWebState): SessionState?
 
   /**
    * Observes this target and represents the mapped state (using [map]) via [State].
@@ -60,14 +60,14 @@ sealed class Target {
    * [LifecycleOwner] moves to the [Lifecycle.State.DESTROYED] state.
    *
    * @param store that should get observed
-   * @param observe function that maps a [TabWebState] to the (sub) state that should get observed
+   * @param observe function that maps a [SessionState] to the (sub) state that should get observed
    *   for changes.
    */
   @Composable
   fun <R> observeAsComposableStateFrom(
     store: FrostWebStore,
-    observe: (TabWebState?) -> R,
-  ): State<TabWebState?> {
+    observe: (SessionState?) -> R,
+  ): State<SessionState?> {
     return store.observeAsComposableState(
       map = { state -> lookupIn(state) },
       observe = { state -> observe(lookupIn(state)) },
@@ -75,13 +75,13 @@ sealed class Target {
   }
 
   data class HomeTab(val id: WebTargetId) : Target() {
-    override fun lookupIn(state: FrostWebState): TabWebState? {
+    override fun lookupIn(state: FrostWebState): SessionState? {
       return state.homeTabs.find { it.id == id }
     }
   }
 
   object FloatingTab : Target() {
-    override fun lookupIn(state: FrostWebState): TabWebState? {
+    override fun lookupIn(state: FrostWebState): SessionState? {
       return state.floatingTab
     }
   }

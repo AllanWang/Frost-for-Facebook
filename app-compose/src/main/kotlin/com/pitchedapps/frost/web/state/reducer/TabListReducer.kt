@@ -16,29 +16,42 @@
  */
 package com.pitchedapps.frost.web.state.reducer
 
+import android.content.Context
 import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.facebook.tab
 import com.pitchedapps.frost.web.state.AuthWebState
 import com.pitchedapps.frost.web.state.FrostWebState
 import com.pitchedapps.frost.web.state.TabListAction
 import com.pitchedapps.frost.web.state.TabListAction.SetHomeTabs
-import com.pitchedapps.frost.web.state.TabWebState
+import com.pitchedapps.frost.web.state.state.ContentState
+import com.pitchedapps.frost.web.state.state.HomeTabSessionState
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-internal object TabListReducer {
+internal class TabListReducer
+@Inject
+internal constructor(
+  @ApplicationContext private val context: Context,
+) {
   fun reduce(state: FrostWebState, action: TabListAction): FrostWebState {
     return when (action) {
       is SetHomeTabs -> {
-        val tabs = action.data.mapIndexed { i, fbItem -> fbItem.toTab(i, state.auth) }
+        val tabs =
+          action.data.mapIndexed { i, fbItem -> fbItem.toHomeTabSession(context, i, state.auth) }
         state.copy(homeTabs = tabs)
       }
+      is TabListAction.SelectHomeTab -> state.copy(selectedHomeTab = action.id)
     }
   }
 }
 
-private fun FbItem.toTab(i: Int, auth: AuthWebState): TabWebState =
-  TabWebState(
-    id = TabWebState.homeTabId(i),
+private fun FbItem.toHomeTabSession(
+  context: Context,
+  i: Int,
+  auth: AuthWebState
+): HomeTabSessionState =
+  HomeTabSessionState(
     userId = auth.currentUser,
-    baseUrl = url,
-    url = url,
-    icon = icon,
+    content = ContentState(url = url),
+    tab = tab(context, id = HomeTabSessionState.homeTabId(i)),
   )

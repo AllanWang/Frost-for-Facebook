@@ -32,7 +32,7 @@ import com.pitchedapps.frost.main.MainActivity
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabListAction
-import com.pitchedapps.frost.web.state.TabWebState
+import com.pitchedapps.frost.web.state.state.HomeTabSessionState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +72,7 @@ class StartActivity : AppCompatActivity() {
       // Test something scrollable
       store.dispatch(
         TabAction(
-          tabId = TabWebState.homeTabId(0),
+          tabId = HomeTabSessionState.homeTabId(0),
           TabAction.ContentAction.UpdateUrlAction(
             "https://github.com/AllanWang/Frost-for-Facebook"
           ),
@@ -80,7 +80,7 @@ class StartActivity : AppCompatActivity() {
       )
       store.dispatch(
         TabAction(
-          tabId = TabWebState.homeTabId(1),
+          tabId = HomeTabSessionState.homeTabId(1),
           TabAction.ContentAction.UpdateUrlAction("https://github.com/AllanWang/KAU"),
         ),
       )
