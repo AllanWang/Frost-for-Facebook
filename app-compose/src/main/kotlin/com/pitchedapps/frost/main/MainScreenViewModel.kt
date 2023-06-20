@@ -42,6 +42,7 @@ internal constructor(
   @ApplicationContext context: Context,
   val components: FrostComponents,
   val frostCoreExtension: FrostCoreExtension,
+  // sample: FrostWebEntrySample,
   frostWebComposer: FrostWebComposer,
 ) : ViewModel() {
 

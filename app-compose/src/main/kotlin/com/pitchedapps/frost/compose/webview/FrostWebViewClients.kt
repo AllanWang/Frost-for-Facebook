@@ -32,9 +32,7 @@ import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateNavigationAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
-import com.pitchedapps.frost.webview.FrostWeb
 import java.io.ByteArrayInputStream
-import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -62,10 +60,8 @@ abstract class BaseWebViewClient : WebViewClient() {
 }
 
 /** The default webview client */
-class FrostWebViewClient
-@Inject
-internal constructor(
-  @FrostWeb private val tabId: WebTargetId,
+class FrostWebViewClient(
+  private val tabId: WebTargetId,
   private val store: FrostWebStore,
   override val webHelper: FrostWebHelper
 ) : BaseWebViewClient() {

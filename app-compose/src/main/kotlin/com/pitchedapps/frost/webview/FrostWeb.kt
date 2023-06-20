@@ -16,10 +16,20 @@
  */
 package com.pitchedapps.frost.webview
 
+import android.webkit.WebViewClient
+import com.pitchedapps.frost.compose.webview.FrostWebViewClient
 import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.web.FrostWebHelper
+import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.BindsInstance
+import dagger.Module
+import dagger.Provides
 import dagger.hilt.DefineComponent
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.EntryPoint
+import dagger.hilt.EntryPoints
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Inject
 import javax.inject.Qualifier
 import javax.inject.Scope
 
@@ -35,13 +45,44 @@ annotation class FrostWebScoped
 
 @Qualifier annotation class FrostWeb
 
-@FrostWebScoped @DefineComponent(parent = ViewModelComponent::class) interface FrostWebComponent
+@FrostWebScoped @DefineComponent(parent = SingletonComponent::class) interface FrostWebComponent
 
-/** Using this component seems to be buggy, leading to an invalid param tabId error. */
 @DefineComponent.Builder
 interface FrostWebComponentBuilder {
 
   @BindsInstance fun tabId(@FrostWeb tabId: WebTargetId): FrostWebComponentBuilder
 
   fun build(): FrostWebComponent
+}
+
+@Module
+@InstallIn(FrostWebComponent::class)
+internal object FrostWebModule {
+
+  @Provides
+  fun client(
+    @FrostWeb tabId: WebTargetId,
+    store: FrostWebStore,
+    webHelper: FrostWebHelper
+  ): WebViewClient = FrostWebViewClient(tabId, store, webHelper)
+}
+
+/**
+ * Using this injection seems to be buggy, leading to an invalid param tabId error:
+ *
+ * Cause: not a valid name: tabId-4xHwVBUParam
+ */
+class FrostWebEntrySample
+@Inject
+internal constructor(private val frostWebComponentBuilder: FrostWebComponentBuilder) {
+  fun test(tabId: WebTargetId): WebViewClient {
+    val component = frostWebComponentBuilder.tabId(tabId).build()
+    return EntryPoints.get(component, FrostWebEntryPoint::class.java).client()
+  }
+
+  @EntryPoint
+  @InstallIn(FrostWebComponent::class)
+  interface FrostWebEntryPoint {
+    fun client(): WebViewClient
+  }
 }
