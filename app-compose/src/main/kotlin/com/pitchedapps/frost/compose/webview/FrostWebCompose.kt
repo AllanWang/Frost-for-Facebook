@@ -38,6 +38,7 @@ import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseA
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseAction
 import com.pitchedapps.frost.web.state.get
 import com.pitchedapps.frost.web.state.state.ContentState
+import com.pitchedapps.frost.web.usecases.UseCases
 import com.pitchedapps.frost.webview.FrostChromeClient
 import com.pitchedapps.frost.webview.FrostWeb
 import com.pitchedapps.frost.webview.FrostWebScoped
@@ -59,6 +60,7 @@ internal constructor(
   private val store: FrostWebStore,
   private val client: FrostWebViewClient,
   private val chromeClient: FrostChromeClient,
+  private val useCases: UseCases,
 ) {
 
   private fun FrostWebStore.dispatch(action: TabAction.Action) {
@@ -90,15 +92,13 @@ internal constructor(
 
     var webView by remember { mutableStateOf<WebView?>(null) }
 
-    logger.atInfo().log("Webview %s %s", tabId, webView?.hashCode())
-
     webView?.let { wv ->
       val lifecycleOwner = LocalLifecycleOwner.current
 
       val canGoBack by
         store.observeAsState(initialValue = false) { it[tabId]?.content?.canGoBack == true }
 
-      BackHandler(captureBackPresses && canGoBack) { wv.goBack() }
+      BackHandler(captureBackPresses && canGoBack) { useCases.tabs.requests.goBack(tabId) }
 
       LaunchedEffect(wv, store) {
         fun storeFlow(action: suspend Flow<ContentState>.() -> Unit) = launch {
@@ -170,6 +170,10 @@ internal constructor(
       onRelease = { parentFrame ->
         val wv = parentFrame.getChildAt(0) as WebView
         onDispose(wv)
+        // We don't want to release webviews while the activity is active as they take time to be
+        // recreated (+ loading time)
+        // Keeping is fine since we should have < 10 webviews active in the entire app.
+        // Release should only happen after the main screen is complete
         logger.atInfo().log("Released webview for %s", tabId)
       },
     )
