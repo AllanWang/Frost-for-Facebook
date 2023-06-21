@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.components.usecases
+package com.pitchedapps.frost.web.usecases
 
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.facebook.FbItem
@@ -31,7 +31,7 @@ class HomeTabsUseCases @Inject internal constructor(private val store: FrostWebS
    *
    * If there are existing tabs, they will be replaced.
    */
-  fun createHomeTabs(items: List<FbItem>) {
+  fun setHomeTabs(items: List<FbItem>) {
     store.dispatch(SetHomeTabs(items))
   }
 

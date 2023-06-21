@@ -31,7 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.widget.NestedScrollView
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.ext.WebTargetId
-import com.pitchedapps.frost.view.NestedWebView
+import com.pitchedapps.frost.view.FrostWebView
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
@@ -39,7 +39,10 @@ import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseA
 import com.pitchedapps.frost.web.state.get
 import com.pitchedapps.frost.web.state.state.ContentState
 import com.pitchedapps.frost.webview.FrostChromeClient
+import com.pitchedapps.frost.webview.FrostWeb
+import com.pitchedapps.frost.webview.FrostWebScoped
 import com.pitchedapps.frost.webview.FrostWebViewClient
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -48,8 +51,11 @@ import kotlinx.coroutines.launch
 import mozilla.components.lib.state.ext.flow
 import mozilla.components.lib.state.ext.observeAsState
 
-class FrostWebCompose(
-  val tabId: WebTargetId,
+@FrostWebScoped
+class FrostWebCompose
+@Inject
+internal constructor(
+  @FrostWeb val tabId: WebTargetId,
   private val store: FrostWebStore,
   private val client: FrostWebViewClient,
   private val chromeClient: FrostChromeClient,
@@ -126,7 +132,7 @@ class FrostWebCompose(
     AndroidView(
       factory = { context ->
         val childView =
-          NestedWebView(context)
+          FrostWebView(context)
             .apply {
               onCreated(this)
 
@@ -150,9 +156,6 @@ class FrostWebCompose(
             }
             .also { webView = it }
 
-        // Workaround a crash on certain devices that expect WebView to be
-        // wrapped in a ViewGroup.
-        // b/243567497
         val parentLayout = NestedScrollView(context)
         parentLayout.layoutParams =
           FrameLayout.LayoutParams(
@@ -176,17 +179,3 @@ class FrostWebCompose(
     private val logger = FluentLogger.forEnclosingClass()
   }
 }
-
-
-//  override fun onReceivedError(
-//    view: WebView,
-//    request: WebResourceRequest?,
-//    error: WebResourceError?
-//  ) {
-//    super.onReceivedError(view, request, error)
-//
-//    if (error != null) {
-//      state.errorsForCurrentRequest.add(WebViewError(request, error))
-//    }
-//  }
-// }

@@ -21,6 +21,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
+import com.pitchedapps.frost.R
 import com.pitchedapps.frost.compose.FrostTheme
 import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,8 @@ class MainActivity : ComponentActivity() {
   @Inject lateinit var store: FrostWebStore
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    // TODO make configurable
+    setTheme(R.style.FrostTheme_Transparent)
     super.onCreate(savedInstanceState)
 
     logger.atInfo().log("onCreate main activity")

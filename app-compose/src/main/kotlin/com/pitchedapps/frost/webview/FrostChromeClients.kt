@@ -27,9 +27,13 @@ import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
 import com.pitchedapps.frost.web.state.get
+import javax.inject.Inject
 
 /** The default chrome client */
-class FrostChromeClient(private val tabId: WebTargetId, private val store: FrostWebStore) :
+@FrostWebScoped
+class FrostChromeClient
+@Inject
+internal constructor(@FrostWeb private val tabId: WebTargetId, private val store: FrostWebStore) :
   WebChromeClient() {
 
   private fun FrostWebStore.dispatch(action: TabAction.Action) {

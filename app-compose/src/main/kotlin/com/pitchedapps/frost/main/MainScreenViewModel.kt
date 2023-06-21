@@ -21,10 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.pitchedapps.frost.components.FrostComponents
 import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
-import com.pitchedapps.frost.hilt.FrostComponents
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.webview.FrostWebComposer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +41,6 @@ internal constructor(
   val components: FrostComponents,
   val store: FrostWebStore,
   val frostWebComposer: FrostWebComposer,
-// sample: FrostWebEntrySample,
 ) : ViewModel() {
 
   val contextIdFlow: Flow<GeckoContextId?> =

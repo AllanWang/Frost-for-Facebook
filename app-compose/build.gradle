@@ -206,6 +206,10 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin-lite:3.23.3")
 
     implementation("app.cash.sqldelight:android-driver:2.0.0-rc01")
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation("org.apache.commons:commons-text:1.10.0")
+
 }
 
 protobuf {

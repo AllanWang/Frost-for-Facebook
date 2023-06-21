@@ -21,14 +21,19 @@ import com.pitchedapps.frost.proto.Account
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/*
+ * Cannot use inline value classes with Dagger due to Kapt:
+ * https://github.com/google/dagger/issues/2930
+ */
+
 /**
  * Representation of unique frost account id.
  *
  * Account ids are identifiers specific to Frost, and group ids/info from other sites.
  */
-@JvmInline value class FrostAccountId(val id: Long)
+data class FrostAccountId(val id: Long)
 
-@JvmInline value class WebTargetId(val id: String)
+data class WebTargetId(val id: String)
 
 /**
  * Representation of gecko context id.

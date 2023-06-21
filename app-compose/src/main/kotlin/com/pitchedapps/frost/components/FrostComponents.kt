@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.webview
+package com.pitchedapps.frost.components
 
-import com.pitchedapps.frost.compose.webview.FrostWebCompose
-import com.pitchedapps.frost.ext.WebTargetId
-import com.pitchedapps.frost.web.FrostWebHelper
-import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.web.usecases.UseCases
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class FrostWebComposer
+/**
+ * Main components containing other core components.
+ *
+ * Modelled off of Focus:
+ * https://github.com/mozilla-mobile/focus-android/blob/main/app/src/main/java/org/mozilla/focus/Components.kt
+ * but with hilt
+ */
+@Singleton
+class FrostComponents
 @Inject
 internal constructor(
-  private val store: FrostWebStore,
-  private val webHelper: FrostWebHelper,
-) {
-
-  fun create(tabId: WebTargetId): FrostWebCompose {
-    val client = FrostWebViewClient(tabId, store, webHelper)
-    val chromeClient = FrostChromeClient(tabId, store)
-    return FrostWebCompose(tabId, store, client, chromeClient)
-  }
-}
+  val core: Core,
+  val useCases: UseCases,
+  val dataStore: FrostDataStore,
+)

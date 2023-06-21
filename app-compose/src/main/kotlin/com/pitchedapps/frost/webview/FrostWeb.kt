@@ -16,18 +16,14 @@
  */
 package com.pitchedapps.frost.webview
 
-import android.webkit.WebViewClient
+import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
-import com.pitchedapps.frost.web.FrostWebHelper
-import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.BindsInstance
-import dagger.Module
-import dagger.Provides
 import dagger.hilt.DefineComponent
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
 import javax.inject.Inject
 import javax.inject.Qualifier
 import javax.inject.Scope
@@ -44,26 +40,14 @@ annotation class FrostWebScoped
 
 @Qualifier annotation class FrostWeb
 
-@FrostWebScoped @DefineComponent(parent = SingletonComponent::class) interface FrostWebComponent
+@FrostWebScoped @DefineComponent(parent = ViewModelComponent::class) interface FrostWebComponent
 
 @DefineComponent.Builder
 interface FrostWebComponentBuilder {
 
-  @BindsInstance fun tabId(@FrostWeb tabId: WebTargetId): FrostWebComponentBuilder
+  fun tabId(@BindsInstance @FrostWeb tabId: WebTargetId): FrostWebComponentBuilder
 
   fun build(): FrostWebComponent
-}
-
-@Module
-@InstallIn(FrostWebComponent::class)
-internal object FrostWebModule {
-
-  @Provides
-  fun client(
-    @FrostWeb tabId: WebTargetId,
-    store: FrostWebStore,
-    webHelper: FrostWebHelper
-  ): WebViewClient = FrostWebViewClient(tabId, store, webHelper)
 }
 
 /**
@@ -71,17 +55,17 @@ internal object FrostWebModule {
  *
  * Cause: not a valid name: tabId-4xHwVBUParam
  */
-class FrostWebEntrySample
+class FrostWebComposer
 @Inject
 internal constructor(private val frostWebComponentBuilder: FrostWebComponentBuilder) {
-  fun test(tabId: WebTargetId): WebViewClient {
+  fun create(tabId: WebTargetId): FrostWebCompose {
     val component = frostWebComponentBuilder.tabId(tabId).build()
-    return EntryPoints.get(component, FrostWebEntryPoint::class.java).client()
+    return EntryPoints.get(component, FrostWebEntryPoint::class.java).compose()
   }
 
   @EntryPoint
   @InstallIn(FrostWebComponent::class)
   interface FrostWebEntryPoint {
-    fun client(): WebViewClient
+    fun compose(): FrostWebCompose
   }
 }

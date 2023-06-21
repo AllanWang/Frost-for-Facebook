@@ -17,6 +17,7 @@
 package com.pitchedapps.frost.webview
 
 import android.graphics.Bitmap
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
@@ -26,13 +27,16 @@ import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.facebook.FACEBOOK_BASE_COM
 import com.pitchedapps.frost.facebook.WWW_FACEBOOK_COM
 import com.pitchedapps.frost.facebook.isExplicitIntent
+import com.pitchedapps.frost.facebook.isFacebookUrl
 import com.pitchedapps.frost.web.FrostWebHelper
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateNavigationAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
+import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import java.io.ByteArrayInputStream
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -60,10 +64,14 @@ abstract class BaseWebViewClient : WebViewClient() {
 }
 
 /** The default webview client */
-class FrostWebViewClient(
-  private val tabId: WebTargetId,
+@FrostWebScoped
+class FrostWebViewClient
+@Inject
+internal constructor(
+  @FrostWeb private val tabId: WebTargetId,
   private val store: FrostWebStore,
-  override val webHelper: FrostWebHelper
+  override val webHelper: FrostWebHelper,
+  private val frostJsInjectors: FrostJsInjectors,
 ) : BaseWebViewClient() {
 
   private fun FrostWebStore.dispatch(action: TabAction.Action) {
@@ -130,19 +138,23 @@ class FrostWebViewClient(
     //        refresh.offer(true)
   }
 
-  //  private fun injectBackgroundColor() {
-  //    web?.setBackgroundColor(
-  //      when {
-  //        isMain -> Color.TRANSPARENT
-  //        web.url.isFacebookUrl -> themeProvider.bgColor.withAlpha(255)
-  //        else -> Color.WHITE
-  //      }
-  //    )
-  //  }
+  //    private fun WebView.injectBackgroundColor(url: String?) {
+  //      setBackgroundColor(
+  //        when {
+  //          isMain -> Color.TRANSPARENT
+  //          url.isFacebookUrl -> themeProvider.bgColor.withAlpha(255)
+  //          else -> Color.WHITE
+  //        }
+  //      )
+  //    }
 
-  //  override fun onPageCommitVisible(view: WebView, url: String?) {
-  //    super.onPageCommitVisible(view, url)
-  //    injectBackgroundColor()
+  override fun onPageCommitVisible(view: WebView, url: String?) {
+    super.onPageCommitVisible(view, url)
+
+    when {
+      url.isFacebookUrl -> frostJsInjectors.facebookInjectOnPageCommitVisible(view, url)
+    }
+  }
   //    when {
   //      url.isFacebookUrl -> {
   //        v { "FB Page commit visible" }
@@ -245,6 +257,14 @@ class FrostWebViewClient(
       return true
     }
     return super.shouldOverrideUrlLoading(view, request)
+  }
+
+  override fun onReceivedError(
+    view: WebView?,
+    request: WebResourceRequest?,
+    error: WebResourceError?
+  ) {
+    super.onReceivedError(view, request, error)
   }
 
   companion object {

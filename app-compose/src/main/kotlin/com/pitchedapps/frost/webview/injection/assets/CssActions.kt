@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Allan Wang
+ * Copyright 2020 Allan Wang
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,26 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.hilt
+package com.pitchedapps.frost.webview.injection.assets
 
-import com.pitchedapps.frost.components.Core
-import com.pitchedapps.frost.components.FrostDataStore
-import com.pitchedapps.frost.components.UseCases
-import javax.inject.Inject
-import javax.inject.Singleton
+import android.webkit.WebView
+import com.pitchedapps.frost.webview.injection.JsBuilder
+import com.pitchedapps.frost.webview.injection.JsInjector
 
-/**
- * Main components containing other core components.
- *
- * Modelled off of Focus:
- * https://github.com/mozilla-mobile/focus-android/blob/main/app/src/main/java/org/mozilla/focus/Components.kt
- * but with hilt
- */
-@Singleton
-class FrostComponents
-@Inject
-internal constructor(
-  val core: Core,
-  val useCases: UseCases,
-  val dataStore: FrostDataStore,
-)
+/** Small misc inline css assets */
+enum class CssActions(private val content: String) : JsInjector {
+  FullSizeImage(
+    "div._4prr[style*=\"max-width\"][style*=\"max-height\"]{max-width:none !important;max-height:none !important}",
+  );
+
+  private val injector: JsInjector =
+    JsBuilder().css(content).single("css-small-assets-$name").build()
+
+  override fun inject(webView: WebView) {
+    injector.inject(webView)
+  }
+}

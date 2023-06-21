@@ -38,7 +38,11 @@ internal constructor(
       is SetHomeTabs -> {
         val tabs =
           action.data.mapIndexed { i, fbItem -> fbItem.toHomeTabSession(context, i, state.auth) }
-        state.copy(homeTabs = tabs)
+        val selectedTab = action.selectedTab?.let { HomeTabSessionState.homeTabId(it) }
+        state.copy(
+          homeTabs = tabs,
+          selectedHomeTab = selectedTab,
+        )
       }
       is TabListAction.SelectHomeTab -> state.copy(selectedHomeTab = action.id)
     }

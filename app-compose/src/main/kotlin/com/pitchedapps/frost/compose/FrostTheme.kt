@@ -27,6 +27,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 /** Main Frost compose theme. */
@@ -34,13 +35,14 @@ import androidx.compose.ui.platform.LocalContext
 fun FrostTheme(
   isDarkTheme: Boolean = isSystemInDarkTheme(),
   isDynamicColor: Boolean = true,
+  transparent: Boolean = true,
   modifier: Modifier = Modifier,
   content: @Composable () -> Unit
 ) {
   val context = LocalContext.current
   val dynamicColor = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
   val colorScheme =
-    remember(dynamicColor, isDarkTheme) {
+    remember(dynamicColor, isDarkTheme, transparent) {
       when {
         dynamicColor && isDarkTheme -> {
           dynamicDarkColorScheme(context)
@@ -53,5 +55,11 @@ fun FrostTheme(
       }
     }
 
-  MaterialTheme(colorScheme = colorScheme) { Surface(modifier = modifier, content = content) }
+  MaterialTheme(colorScheme = colorScheme) {
+    Surface(
+      modifier = modifier,
+      color = if (transparent) Color.Transparent else MaterialTheme.colorScheme.surface,
+      content = content,
+    )
+  }
 }

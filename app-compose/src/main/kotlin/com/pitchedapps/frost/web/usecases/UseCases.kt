@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.components
+package com.pitchedapps.frost.web.usecases
 
-import com.pitchedapps.frost.components.usecases.HomeTabsUseCases
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,4 +29,5 @@ class UseCases
 @Inject
 internal constructor(
   val homeTabs: HomeTabsUseCases,
+  val tabs: TabUseCases,
 )
