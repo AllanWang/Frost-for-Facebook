@@ -28,8 +28,24 @@ class FrostLoggerMiddleware : FrostWebMiddleware {
     next: (FrostWebAction) -> Unit,
     action: FrostWebAction
   ) {
-    logger.atInfo().log("FrostWebAction: %s - %s", action::class.simpleName, action)
+    if (logInfo(action)) {
+      logger.atInfo().log("FrostWebAction: %s", action)
+    } else {
+      logger.atFine().log("FrostWebAction: %s", action)
+    }
     next(action)
+  }
+
+  private fun logInfo(action: FrostWebAction): Boolean {
+    when (action) {
+      is TabAction ->
+        when (action.action) {
+          is TabAction.ContentAction.UpdateProgressAction -> return false
+          else -> {}
+        }
+      else -> {}
+    }
+    return true
   }
 
   companion object {

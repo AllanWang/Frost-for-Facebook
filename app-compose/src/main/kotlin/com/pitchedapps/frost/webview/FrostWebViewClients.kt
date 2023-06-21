@@ -32,6 +32,7 @@ import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateNavigationAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
+import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import java.io.ByteArrayInputStream
 
 /**
@@ -63,7 +64,8 @@ abstract class BaseWebViewClient : WebViewClient() {
 class FrostWebViewClient(
   private val tabId: WebTargetId,
   private val store: FrostWebStore,
-  override val webHelper: FrostWebHelper
+  override val webHelper: FrostWebHelper,
+  private val frostJsInjectors: FrostJsInjectors,
 ) : BaseWebViewClient() {
 
   private fun FrostWebStore.dispatch(action: TabAction.Action) {
@@ -140,8 +142,10 @@ class FrostWebViewClient(
   //    )
   //  }
 
-  //  override fun onPageCommitVisible(view: WebView, url: String?) {
-  //    super.onPageCommitVisible(view, url)
+  override fun onPageCommitVisible(view: WebView, url: String?) {
+    super.onPageCommitVisible(view, url)
+    frostJsInjectors.injectOnPageCommitVisible(view, url)
+  }
   //    injectBackgroundColor()
   //    when {
   //      url.isFacebookUrl -> {

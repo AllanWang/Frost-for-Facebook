@@ -20,6 +20,7 @@ import android.webkit.WebViewClient
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.FrostWebHelper
 import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
@@ -62,8 +63,9 @@ internal object FrostWebModule {
   fun client(
     @FrostWeb tabId: WebTargetId,
     store: FrostWebStore,
-    webHelper: FrostWebHelper
-  ): WebViewClient = FrostWebViewClient(tabId, store, webHelper)
+    webHelper: FrostWebHelper,
+    frostJsInjectors: FrostJsInjectors,
+  ): WebViewClient = FrostWebViewClient(tabId, store, webHelper, frostJsInjectors)
 }
 
 /**

@@ -21,15 +21,20 @@ import android.app.Application
 import android.os.Bundle
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.hilt.FrostComponents
+import com.pitchedapps.frost.webview.injection.FrostJsInjectors
+import com.pitchedapps.frost.webview.injection.assets.JsAssets
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /** Frost Application. */
 @HiltAndroidApp
 class FrostApp : Application() {
 
   @Inject lateinit var componentsProvider: Provider<FrostComponents>
+  @Inject lateinit var frostJsInjectors: Provider<FrostJsInjectors>
 
   override fun onCreate() {
     super.onCreate()
@@ -57,6 +62,13 @@ class FrostApp : Application() {
         },
       )
     }
+
+    MainScope().launch { setup() }
+  }
+
+  private suspend fun setup() {
+    JsAssets.load(this)
+    frostJsInjectors.get().load()
   }
 
   companion object {

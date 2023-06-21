@@ -18,7 +18,7 @@ package com.pitchedapps.frost
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.components.FrostDataStore
@@ -46,7 +46,7 @@ import kotlinx.coroutines.withContext
  * and will launch another activity without history after doing initialization work.
  */
 @AndroidEntryPoint
-class StartActivity : AppCompatActivity() {
+class StartActivity : ComponentActivity() {
 
   @Inject lateinit var frostDb: FrostDb
 
@@ -65,14 +65,14 @@ class StartActivity : AppCompatActivity() {
       // TODO load real tabs
       store.dispatch(TabListAction.SetHomeTabs(data = listOf(FbItem.Feed, FbItem.Menu)))
       // Test something scrollable
-      store.dispatch(
-        TabAction(
-          tabId = HomeTabSessionState.homeTabId(0),
-          TabAction.ContentAction.UpdateUrlAction(
-            "https://github.com/AllanWang/Frost-for-Facebook"
-          ),
-        ),
-      )
+      //      store.dispatch(
+      //        TabAction(
+      //          tabId = HomeTabSessionState.homeTabId(0),
+      //          TabAction.ContentAction.UpdateUrlAction(
+      //            "https://github.com/AllanWang/Frost-for-Facebook"
+      //          ),
+      //        ),
+      //      )
       store.dispatch(
         TabAction(
           tabId = HomeTabSessionState.homeTabId(1),

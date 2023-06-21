@@ -20,6 +20,7 @@ import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.FrostWebHelper
 import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import javax.inject.Inject
 
 class FrostWebComposer
@@ -27,10 +28,11 @@ class FrostWebComposer
 internal constructor(
   private val store: FrostWebStore,
   private val webHelper: FrostWebHelper,
+  private val frostJsInjectors: FrostJsInjectors,
 ) {
 
   fun create(tabId: WebTargetId): FrostWebCompose {
-    val client = FrostWebViewClient(tabId, store, webHelper)
+    val client = FrostWebViewClient(tabId, store, webHelper, frostJsInjectors)
     val chromeClient = FrostChromeClient(tabId, store)
     return FrostWebCompose(tabId, store, client, chromeClient)
   }
