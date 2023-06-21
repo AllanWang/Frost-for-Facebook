@@ -16,21 +16,16 @@
  */
 package com.pitchedapps.frost.compose.effects
 
-import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.platform.inspectable
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 /**
@@ -52,18 +47,15 @@ internal constructor(
   private val animationScope: CoroutineScope,
 ) {
 
-  private val job = SupervisorJob()
-
-  private var _rotation by mutableFloatStateOf(0f)
+  private val rotationAnimatable = Animatable(0f)
 
   internal val rotation
-    get() = _rotation
+    get() = rotationAnimatable.value
 
   fun shake() {
-    job.cancelChildren()
-    animationScope.launch(job) {
-      animate(
-        _rotation,
+    animationScope.launch {
+      rotationAnimatable.stop()
+      rotationAnimatable.animateTo(
         0f,
         initialVelocity = 200f,
         animationSpec =
@@ -71,9 +63,7 @@ internal constructor(
             dampingRatio = 0.3f,
             stiffness = 200f,
           ),
-      ) { value, _ ->
-        _rotation = value
-      }
+      )
     }
   }
 }
