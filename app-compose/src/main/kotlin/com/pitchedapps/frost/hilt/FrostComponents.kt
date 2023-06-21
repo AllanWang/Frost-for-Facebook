@@ -19,7 +19,6 @@ package com.pitchedapps.frost.hilt
 import com.pitchedapps.frost.components.Core
 import com.pitchedapps.frost.components.FrostDataStore
 import com.pitchedapps.frost.components.UseCases
-import com.pitchedapps.frost.extension.ExtensionModelConverter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +35,5 @@ class FrostComponents
 internal constructor(
   val core: Core,
   val useCases: UseCases,
-  val extensionModelConverter: ExtensionModelConverter,
   val dataStore: FrostDataStore,
 )

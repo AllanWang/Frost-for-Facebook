@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModel
 import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
-import com.pitchedapps.frost.extension.FrostCoreExtension
 import com.pitchedapps.frost.hilt.FrostComponents
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.webview.FrostWebComposer
@@ -40,7 +39,6 @@ class MainScreenViewModel
 internal constructor(
   @ApplicationContext context: Context,
   val components: FrostComponents,
-  val frostCoreExtension: FrostCoreExtension,
   val store: FrostWebStore,
   val frostWebComposer: FrostWebComposer,
 // sample: FrostWebEntrySample,
