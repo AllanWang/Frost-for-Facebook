@@ -52,8 +52,11 @@ import kotlinx.coroutines.launch
 import mozilla.components.lib.state.ext.observeAsState
 
 @Composable
-fun MainScreenWebView(modifier: Modifier = Modifier, homeTabs: List<MainTabItem>) {
+fun MainScreenWebView(modifier: Modifier = Modifier) {
   val vm: MainScreenViewModel = viewModel()
+
+  val homeTabs =
+    vm.store.observeAsState(initialValue = null) { it.homeTabs.map { it.tab } }.value ?: return
 
   val selectedHomeTab by vm.store.observeAsState(initialValue = null) { it.selectedHomeTab }
 

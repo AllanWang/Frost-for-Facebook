@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.main.MainTabItem
+import com.pitchedapps.frost.tabselector.TabData
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.GlobeAmericas
@@ -125,6 +126,13 @@ fun FbItem.tab(context: Context, id: WebTargetId): MainTabItem =
     title = context.getString(titleId),
     icon = icon,
     url = url,
+  )
+
+fun FbItem.tab(context: Context): TabData =
+  TabData(
+    key = key,
+    title = context.getString(titleId),
+    icon = icon,
   )
 
 
