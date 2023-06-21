@@ -20,7 +20,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import com.google.common.flogger.FluentLogger
-import com.pitchedapps.frost.hilt.FrostComponents
+import com.pitchedapps.frost.components.FrostComponents
 import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import com.pitchedapps.frost.webview.injection.assets.JsAssets
 import dagger.hilt.android.HiltAndroidApp

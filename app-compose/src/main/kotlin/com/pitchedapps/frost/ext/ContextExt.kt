@@ -21,7 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.pitchedapps.frost.FrostApp
-import com.pitchedapps.frost.hilt.FrostComponents
+import com.pitchedapps.frost.components.FrostComponents
 
 /** Launches new activities. */
 inline fun <reified T : Activity> Context.launchActivity(

@@ -38,7 +38,7 @@ object InitAction : FrostWebAction
 
 /** Actions affecting multiple tabs */
 sealed interface TabListAction : FrostWebAction {
-  data class SetHomeTabs(val data: List<FbItem>) : TabListAction
+  data class SetHomeTabs(val data: List<FbItem>, val selectedTab: Int? = 0) : TabListAction
 
   data class SelectHomeTab(val id: WebTargetId) : TabListAction
 }

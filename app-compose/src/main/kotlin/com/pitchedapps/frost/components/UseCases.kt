@@ -16,7 +16,7 @@
  */
 package com.pitchedapps.frost.components
 
-import com.pitchedapps.frost.components.usecases.HomeTabsUseCases
+import com.pitchedapps.frost.web.usecases.HomeTabsUseCases
 import javax.inject.Inject
 import javax.inject.Singleton
 
