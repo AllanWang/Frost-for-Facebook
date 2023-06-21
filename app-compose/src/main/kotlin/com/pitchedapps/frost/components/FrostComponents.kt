@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.components
 
+import com.pitchedapps.frost.web.usecases.UseCases
 import javax.inject.Inject
 import javax.inject.Singleton
 

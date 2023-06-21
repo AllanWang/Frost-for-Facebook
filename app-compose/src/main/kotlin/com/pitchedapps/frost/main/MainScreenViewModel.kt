@@ -41,7 +41,6 @@ internal constructor(
   val components: FrostComponents,
   val store: FrostWebStore,
   val frostWebComposer: FrostWebComposer,
-// sample: FrostWebEntrySample,
 ) : ViewModel() {
 
   val contextIdFlow: Flow<GeckoContextId?> =

@@ -29,9 +29,7 @@ import com.pitchedapps.frost.ext.launchActivity
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.main.MainActivity
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.TabAction
-import com.pitchedapps.frost.web.state.TabListAction
-import com.pitchedapps.frost.web.state.state.HomeTabSessionState
+import com.pitchedapps.frost.web.usecases.UseCases
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +51,7 @@ class StartActivity : ComponentActivity() {
   @Inject lateinit var dataStore: FrostDataStore
 
   @Inject lateinit var store: FrostWebStore
+  @Inject lateinit var useCases: UseCases
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -63,22 +62,7 @@ class StartActivity : ComponentActivity() {
       logger.atInfo().log("Starting Frost with id %s", id)
 
       // TODO load real tabs
-      store.dispatch(TabListAction.SetHomeTabs(data = listOf(FbItem.Feed, FbItem.Menu)))
-      // Test something scrollable
-      //      store.dispatch(
-      //        TabAction(
-      //          tabId = HomeTabSessionState.homeTabId(0),
-      //          TabAction.ContentAction.UpdateUrlAction(
-      //            "https://github.com/AllanWang/Frost-for-Facebook"
-      //          ),
-      //        ),
-      //      )
-      store.dispatch(
-        TabAction(
-          tabId = HomeTabSessionState.homeTabId(1),
-          TabAction.ContentAction.UpdateUrlAction("https://github.com/AllanWang/KAU"),
-        ),
-      )
+      useCases.homeTabs.setHomeTabs(listOf(FbItem.Feed, FbItem.Menu))
 
       launchActivity<MainActivity>(
         intentBuilder = {

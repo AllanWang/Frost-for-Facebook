@@ -36,6 +36,7 @@ import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAct
 import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
 import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import java.io.ByteArrayInputStream
+import javax.inject.Inject
 
 /**
  * Created by Allan Wang on 2017-05-31.
@@ -63,8 +64,11 @@ abstract class BaseWebViewClient : WebViewClient() {
 }
 
 /** The default webview client */
-class FrostWebViewClient(
-  private val tabId: WebTargetId,
+@FrostWebScoped
+class FrostWebViewClient
+@Inject
+internal constructor(
+  @FrostWeb private val tabId: WebTargetId,
   private val store: FrostWebStore,
   override val webHelper: FrostWebHelper,
   private val frostJsInjectors: FrostJsInjectors,

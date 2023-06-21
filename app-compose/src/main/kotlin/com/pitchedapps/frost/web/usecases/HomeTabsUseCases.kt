@@ -31,7 +31,7 @@ class HomeTabsUseCases @Inject internal constructor(private val store: FrostWebS
    *
    * If there are existing tabs, they will be replaced.
    */
-  fun createHomeTabs(items: List<FbItem>) {
+  fun setHomeTabs(items: List<FbItem>) {
     store.dispatch(SetHomeTabs(items))
   }
 

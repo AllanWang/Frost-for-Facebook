@@ -39,7 +39,10 @@ import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseA
 import com.pitchedapps.frost.web.state.get
 import com.pitchedapps.frost.web.state.state.ContentState
 import com.pitchedapps.frost.webview.FrostChromeClient
+import com.pitchedapps.frost.webview.FrostWeb
+import com.pitchedapps.frost.webview.FrostWebScoped
 import com.pitchedapps.frost.webview.FrostWebViewClient
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -48,8 +51,11 @@ import kotlinx.coroutines.launch
 import mozilla.components.lib.state.ext.flow
 import mozilla.components.lib.state.ext.observeAsState
 
-class FrostWebCompose(
-  val tabId: WebTargetId,
+@FrostWebScoped
+class FrostWebCompose
+@Inject
+internal constructor(
+  @FrostWeb val tabId: WebTargetId,
   private val store: FrostWebStore,
   private val client: FrostWebViewClient,
   private val chromeClient: FrostChromeClient,
