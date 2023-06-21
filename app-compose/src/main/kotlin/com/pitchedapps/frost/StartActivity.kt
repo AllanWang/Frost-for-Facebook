@@ -26,7 +26,6 @@ import com.pitchedapps.frost.db.FrostDb
 import com.pitchedapps.frost.ext.FrostAccountId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.launchActivity
-import com.pitchedapps.frost.extension.FrostCoreExtension
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.main.MainActivity
 import com.pitchedapps.frost.web.state.FrostWebStore
@@ -53,8 +52,6 @@ class StartActivity : AppCompatActivity() {
 
   @Inject lateinit var dataStore: FrostDataStore
 
-  @Inject lateinit var frostCoreExtension: FrostCoreExtension
-
   @Inject lateinit var store: FrostWebStore
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,8 +59,6 @@ class StartActivity : AppCompatActivity() {
 
     lifecycleScope.launch {
       val id = withContext(Dispatchers.IO) { getCurrentAccountId() }
-
-      // frostCoreExtension.install()
 
       logger.atInfo().log("Starting Frost with id %s", id)
 

@@ -16,48 +16,23 @@
  */
 package com.pitchedapps.frost.components.usecases
 
-import com.google.common.flogger.FluentLogger
-import com.pitchedapps.frost.ext.GeckoContextId
+import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.facebook.FbItem
+import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.web.state.TabListAction.SelectHomeTab
+import com.pitchedapps.frost.web.state.TabListAction.SetHomeTabs
 import javax.inject.Inject
-import javax.inject.Singleton
-import mozilla.components.browser.state.action.BrowserAction
-import mozilla.components.browser.state.action.EngineAction
-import mozilla.components.browser.state.action.TabListAction
-import mozilla.components.browser.state.state.BrowserState
-import mozilla.components.browser.state.state.TabSessionState
-import mozilla.components.browser.state.state.createTab
-import mozilla.components.browser.state.store.BrowserStore
-import mozilla.components.lib.state.Middleware
-import mozilla.components.lib.state.MiddlewareContext
 
 /** Use cases for the home screen. */
-@Singleton
-class HomeTabsUseCases @Inject internal constructor(private val store: BrowserStore) {
+class HomeTabsUseCases @Inject internal constructor(private val store: FrostWebStore) {
 
   /**
    * Create the provided tabs.
    *
    * If there are existing tabs, they will be replaced.
    */
-  fun createHomeTabs(
-    contextId: GeckoContextId,
-    selectedIndex: Int,
-    urls: List<String>
-  ): List<TabSessionState> {
-    store.dispatch(TabListAction.RemoveAllTabsAction())
-    if (urls.isEmpty()) return emptyList()
-    val tabs =
-      urls.mapIndexed { i, url -> createTab(id = tabId(i), url = url, contextId = contextId.id) }
-    store.dispatch(TabListAction.AddMultipleTabsAction(tabs))
-    // Preload all tabs
-    for (tab in tabs) {
-      store.dispatch(EngineAction.LoadUrlAction(tab.id, tab.content.url))
-      //      if (tab.content.url == MESSENGER_URL) {
-      //        store.dispatch(EngineAction.ToggleDesktopModeAction(tab.id, enable = true))
-      //      }
-    }
-    selectHomeTab(selectedIndex)
-    return tabs
+  fun createHomeTabs(items: List<FbItem>) {
+    store.dispatch(SetHomeTabs(items))
   }
 
   /**
@@ -65,51 +40,7 @@ class HomeTabsUseCases @Inject internal constructor(private val store: BrowserSt
    *
    * If the index is OOB, the selected tab will be null.
    */
-  fun selectHomeTab(index: Int) {
-    store.dispatch(TabListAction.SelectTabAction(tabId(index)))
-  }
-
-  /** Reload tab contents based on index. */
-  fun reloadTab(index: Int) {
-    store.dispatch(EngineAction.ReloadAction(tabId(index)))
-  }
-
-  // Cannot use injection
-  class HomeMiddleware : Middleware<BrowserState, BrowserAction> {
-    override fun invoke(
-      context: MiddlewareContext<BrowserState, BrowserAction>,
-      next: (BrowserAction) -> Unit,
-      action: BrowserAction
-    ) {
-      //      if (action is ContentAction.UpdateUrlAction) {
-      //        logger.atInfo().log("url update %s", action)
-      //        if (action.sessionId == context.state.tabs[0].id) {
-      //          val customTab = context.state.tabs[3]
-      //          context.dispatch(EngineAction.LoadUrlAction(tabId = customTab.id, url =
-      // action.url))
-      //        }
-      //        return
-      //      }
-      next(action)
-      //      when (action) {
-      //        is ContentAction.UpdateUrlAction -> {
-      //          logger.atInfo().log("url update %s", action)
-      //          action.sessionId
-      //        }
-      //        else -> next(action)
-      //      }
-    }
-
-    companion object {
-      private val logger = FluentLogger.forEnclosingClass()
-    }
-  }
-
-  companion object {
-    private const val PREFIX = "frost-home"
-
-    private fun isHomeTab(id: String): Boolean = id.startsWith(PREFIX)
-
-    private fun tabId(index: Int) = "$PREFIX--$index"
+  fun selectHomeTab(tabId: WebTargetId) {
+    store.dispatch(SelectHomeTab(tabId))
   }
 }

@@ -175,53 +175,14 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
 
-    // https://maven.mozilla.org/?prefix=maven2/org/mozilla/geckoview/geckoview-beta/
-    def geckoviewChannel = "beta"
-    def geckoviewVersion = "105.0.20220908185813"
-//    implementation "org.mozilla.geckoview:geckoview-${geckoviewChannel}:${geckoviewVersion}"
-
     // https://maven.mozilla.org/maven2/org/mozilla/components/browser-engine-gecko/maven-metadata.xml
     // https://github.com/mozilla-mobile/reference-browser/blob/master/buildSrc/src/main/java/AndroidComponents.kt
     // https://nightly.maven.mozilla.org/maven2/org/mozilla/components/browser-engine-gecko/maven-metadata.xml
     def mozillaAndroidComponents = "116.0.20230617040331"
 
-    implementation "org.mozilla.components:browser-engine-gecko:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:browser-domains:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:browser-icons:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:browser-menu:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:browser-session-storage:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:browser-state:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:browser-toolbar:${mozillaAndroidComponents}"
-
-    implementation "org.mozilla.components:concept-engine:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:concept-menu:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:concept-storage:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:concept-toolbar:${mozillaAndroidComponents}"
-
-    implementation "org.mozilla.components:feature-app-links:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-addons:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-autofill:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-awesomebar:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-contextmenu:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-downloads:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-findinpage:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-logins:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-media:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-prompts:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-push:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-session:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-sitepermissions:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-tabs:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-toolbar:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:feature-webnotifications:${mozillaAndroidComponents}"
-
-    implementation "org.mozilla.components:support-ktx:${mozillaAndroidComponents}"
-    implementation "org.mozilla.components:support-webextensions:${mozillaAndroidComponents}"
-
-    implementation "org.mozilla.components:ui-autocomplete:${mozillaAndroidComponents}"
-
-    implementation "org.mozilla.components:compose-engine:${mozillaAndroidComponents}"
     implementation "org.mozilla.components:lib-state:${mozillaAndroidComponents}"
+    // Kept for reference; not needed
+    implementation "org.mozilla.components:browser-state:${mozillaAndroidComponents}"
 
     // Compose
     def composeVersion = "1.4.3"

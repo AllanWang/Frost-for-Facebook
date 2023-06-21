@@ -16,7 +16,6 @@
  */
 package com.pitchedapps.frost.hilt
 
-import com.pitchedapps.frost.extension.ExtensionType
 import com.squareup.moshi.*
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -37,7 +36,7 @@ object MoshiModule {
   @Singleton
   fun moshi(): Moshi {
     return Moshi.Builder()
-      .add(ExtensionType.moshiFactory())
+      // .add(ExtensionType.moshiFactory())
       .add(JSONObjectAdapter())
       .addLast(KotlinJsonAdapterFactory())
       .build()
