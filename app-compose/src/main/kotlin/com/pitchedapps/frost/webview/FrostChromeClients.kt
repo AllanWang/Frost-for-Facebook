@@ -23,22 +23,19 @@ import android.webkit.WebView
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.TabAction
-import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
-import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
 import com.pitchedapps.frost.web.state.get
+import com.pitchedapps.frost.web.usecases.TabUseCases
 import javax.inject.Inject
 
 /** The default chrome client */
 @FrostWebScoped
 class FrostChromeClient
 @Inject
-internal constructor(@FrostWeb private val tabId: WebTargetId, private val store: FrostWebStore) :
-  WebChromeClient() {
-
-  private fun FrostWebStore.dispatch(action: TabAction.Action) {
-    dispatch(TabAction(tabId = tabId, action = action))
-  }
+internal constructor(
+  @FrostWeb private val tabId: WebTargetId,
+  private val store: FrostWebStore,
+  private val tabUseCases: TabUseCases,
+) : WebChromeClient() {
 
   override fun getDefaultVideoPoster(): Bitmap? =
     super.getDefaultVideoPoster() ?: Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
@@ -53,14 +50,15 @@ internal constructor(@FrostWeb private val tabId: WebTargetId, private val store
   override fun onReceivedTitle(view: WebView, title: String) {
     super.onReceivedTitle(view, title)
     if (title.startsWith("http")) return
-    store.dispatch(UpdateTitleAction(title))
+    tabUseCases.updateTitle(tabId, title)
   }
 
   override fun onProgressChanged(view: WebView, newProgress: Int) {
     super.onProgressChanged(view, newProgress)
     // TODO remove?
     if (store.state[tabId]?.content?.progress == 100) return
-    store.dispatch(UpdateProgressAction(newProgress))
+    // view progress is for current page
+    tabUseCases.updateProgress(tabId, view.progress)
   }
 
   //  override fun onShowFileChooser(

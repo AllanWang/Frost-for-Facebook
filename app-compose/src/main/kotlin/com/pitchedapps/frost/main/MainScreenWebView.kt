@@ -46,7 +46,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.TabListAction.SelectHomeTab
 import com.pitchedapps.frost.webview.FrostWebComposer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -66,7 +65,7 @@ fun MainScreenWebView(modifier: Modifier = Modifier, homeTabs: List<MainTabItem>
       MainBottomBar(
         selectedTab = selectedHomeTab,
         items = homeTabs,
-        onSelect = { vm.store.dispatch(SelectHomeTab(it)) },
+        onSelect = { vm.useCases.homeTabs.selectHomeTab(it) },
       )
     },
   ) { paddingValues ->

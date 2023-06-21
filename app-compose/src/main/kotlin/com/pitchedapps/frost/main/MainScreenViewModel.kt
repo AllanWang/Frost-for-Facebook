@@ -26,6 +26,7 @@ import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
 import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.web.usecases.UseCases
 import com.pitchedapps.frost.webview.FrostWebComposer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -40,6 +41,7 @@ internal constructor(
   @ApplicationContext context: Context,
   val components: FrostComponents,
   val store: FrostWebStore,
+  val useCases: UseCases,
   val frostWebComposer: FrostWebComposer,
 ) : ViewModel() {
 

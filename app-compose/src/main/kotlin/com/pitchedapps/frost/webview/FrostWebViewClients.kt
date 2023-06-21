@@ -30,10 +30,7 @@ import com.pitchedapps.frost.facebook.isExplicitIntent
 import com.pitchedapps.frost.facebook.isFacebookUrl
 import com.pitchedapps.frost.web.FrostWebHelper
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.TabAction
-import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateNavigationAction
-import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateProgressAction
-import com.pitchedapps.frost.web.state.TabAction.ContentAction.UpdateTitleAction
+import com.pitchedapps.frost.web.usecases.TabUseCases
 import com.pitchedapps.frost.webview.injection.FrostJsInjectors
 import java.io.ByteArrayInputStream
 import javax.inject.Inject
@@ -72,11 +69,8 @@ internal constructor(
   private val store: FrostWebStore,
   override val webHelper: FrostWebHelper,
   private val frostJsInjectors: FrostJsInjectors,
+  private val tabUseCases: TabUseCases,
 ) : BaseWebViewClient() {
-
-  private fun FrostWebStore.dispatch(action: TabAction.Action) {
-    dispatch(TabAction(tabId = tabId, action = action))
-  }
 
   /** True if current url supports refresh. See [doUpdateVisitedHistory] for updates */
   internal var urlSupportsRefresh: Boolean = true
@@ -84,11 +78,10 @@ internal constructor(
   override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
     super.doUpdateVisitedHistory(view, url, isReload)
     urlSupportsRefresh = webHelper.allowUrlSwipeToRefresh(url)
-    store.dispatch(
-      UpdateNavigationAction(
-        canGoBack = view.canGoBack(),
-        canGoForward = view.canGoForward(),
-      ),
+    tabUseCases.updateNavigation(
+      tabId,
+      canGoBack = view.canGoBack(),
+      canGoForward = view.canGoForward(),
     )
     //    web.parent.swipeAllowedByPage = urlSupportsRefresh
     //    view.jsInject(JsAssets.AUTO_RESIZE_TEXTAREA.maybe(prefs.autoExpandTextBox), prefs = prefs)
@@ -132,8 +125,8 @@ internal constructor(
 
   override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
     super.onPageStarted(view, url, favicon)
-    store.dispatch(UpdateProgressAction(0))
-    store.dispatch(UpdateTitleAction(null))
+    tabUseCases.updateProgress(tabId, 0)
+    tabUseCases.updateTitle(tabId, null)
     //    v { "loading $url ${web.settings.userAgentString}" }
     //        refresh.offer(true)
   }

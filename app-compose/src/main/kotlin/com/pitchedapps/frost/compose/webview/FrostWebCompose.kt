@@ -33,12 +33,9 @@ import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.ext.WebTargetId
 import com.pitchedapps.frost.view.FrostWebView
 import com.pitchedapps.frost.web.state.FrostWebStore
-import com.pitchedapps.frost.web.state.TabAction
-import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
-import com.pitchedapps.frost.web.state.TabAction.ResponseAction.WebStepResponseAction
 import com.pitchedapps.frost.web.state.get
 import com.pitchedapps.frost.web.state.state.ContentState
-import com.pitchedapps.frost.web.usecases.UseCases
+import com.pitchedapps.frost.web.usecases.TabUseCases
 import com.pitchedapps.frost.webview.FrostChromeClient
 import com.pitchedapps.frost.webview.FrostWeb
 import com.pitchedapps.frost.webview.FrostWebScoped
@@ -60,12 +57,8 @@ internal constructor(
   private val store: FrostWebStore,
   private val client: FrostWebViewClient,
   private val chromeClient: FrostChromeClient,
-  private val useCases: UseCases,
+  private val tabUseCases: TabUseCases,
 ) {
-
-  private fun FrostWebStore.dispatch(action: TabAction.Action) {
-    dispatch(TabAction(tabId = tabId, action = action))
-  }
 
   /**
    * Webview implementation in compose
@@ -98,7 +91,7 @@ internal constructor(
       val canGoBack by
         store.observeAsState(initialValue = false) { it[tabId]?.content?.canGoBack == true }
 
-      BackHandler(captureBackPresses && canGoBack) { useCases.tabs.requests.goBack(tabId) }
+      BackHandler(captureBackPresses && canGoBack) { tabUseCases.requests.goBack(tabId) }
 
       LaunchedEffect(wv, store) {
         fun storeFlow(action: suspend Flow<ContentState>.() -> Unit) = launch {
@@ -109,7 +102,7 @@ internal constructor(
           mapNotNull { it.transientState.targetUrl }
             .distinctUntilChanged()
             .collect { url ->
-              store.dispatch(LoadUrlResponseAction(url))
+              tabUseCases.responses.respondUrl(tabId, url)
               wv.loadUrl(url)
             }
         }
@@ -118,7 +111,7 @@ internal constructor(
             .distinctUntilChanged()
             .filter { it != 0 }
             .collect { steps ->
-              store.dispatch(WebStepResponseAction(steps))
+              tabUseCases.responses.respondSteps(tabId, steps)
               if (wv.canGoBackOrForward(steps)) {
                 wv.goBackOrForward(steps)
               } else {

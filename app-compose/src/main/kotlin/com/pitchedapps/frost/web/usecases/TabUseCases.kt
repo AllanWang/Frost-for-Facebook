@@ -41,6 +41,15 @@ internal constructor(
     )
   }
 
+  fun updateProgress(tabId: WebTargetId, progress: Int) {
+    store.dispatch(
+      TabAction(
+        tabId = tabId,
+        action = TabAction.ContentAction.UpdateProgressAction(progress),
+      ),
+    )
+  }
+
   fun updateNavigation(tabId: WebTargetId, canGoBack: Boolean, canGoForward: Boolean) {
     store.dispatch(
       TabAction(
