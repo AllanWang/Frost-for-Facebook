@@ -14,15 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.pitchedapps.frost.main
+package com.pitchedapps.frost.webview
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
+import com.pitchedapps.frost.web.FrostWebHelper
+import com.pitchedapps.frost.web.state.FrostWebStore
+import javax.inject.Inject
 
-/** Data representation of a single main tab entry. */
-data class MainTabItem(
-  val id: WebTargetId,
-  val title: String,
-  val icon: ImageVector,
-  val url: String
-)
+class FrostWebComposer
+@Inject
+internal constructor(
+  private val store: FrostWebStore,
+  private val webHelper: FrostWebHelper,
+) {
+
+  fun create(tabId: WebTargetId): FrostWebCompose {
+    val client = FrostWebViewClient(tabId, store, webHelper)
+    val chromeClient = FrostChromeClient(tabId, store)
+    return FrostWebCompose(tabId, store, client, chromeClient)
+  }
+}

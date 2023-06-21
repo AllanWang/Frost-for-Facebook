@@ -22,9 +22,10 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.compose.FrostTheme
-import com.pitchedapps.frost.facebook.FbItem
-import com.pitchedapps.frost.facebook.tab
+import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import mozilla.components.lib.state.ext.observeAsState
 
 /**
  * Main activity.
@@ -34,19 +35,25 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+  @Inject lateinit var store: FrostWebStore
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     logger.atInfo().log("onCreate main activity")
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
-    val tabs = FbItem.defaults().map { it.tab(this) } // TODO allow custom tabs
-
     setContent {
       FrostTheme {
-        MainScreen(
-          tabs = tabs,
-        )
+        //        MainScreen(
+        //          tabs = tabs,
+        //        )
+
+        val tabs =
+          store.observeAsState(initialValue = null) { it.homeTabs.map { it.tab } }.value
+            ?: return@FrostTheme
+
+        MainScreenWebView(homeTabs = tabs)
       }
     }
   }

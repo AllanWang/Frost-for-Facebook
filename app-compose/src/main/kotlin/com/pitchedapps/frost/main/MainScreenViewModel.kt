@@ -26,6 +26,8 @@ import com.pitchedapps.frost.ext.idData
 import com.pitchedapps.frost.ext.toContextId
 import com.pitchedapps.frost.extension.FrostCoreExtension
 import com.pitchedapps.frost.hilt.FrostComponents
+import com.pitchedapps.frost.web.state.FrostWebStore
+import com.pitchedapps.frost.webview.FrostWebComposer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -39,6 +41,9 @@ internal constructor(
   @ApplicationContext context: Context,
   val components: FrostComponents,
   val frostCoreExtension: FrostCoreExtension,
+  val store: FrostWebStore,
+  val frostWebComposer: FrostWebComposer,
+// sample: FrostWebEntrySample,
 ) : ViewModel() {
 
   val contextIdFlow: Flow<GeckoContextId?> =

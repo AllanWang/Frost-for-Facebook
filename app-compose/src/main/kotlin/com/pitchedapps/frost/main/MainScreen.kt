@@ -43,21 +43,6 @@ import com.pitchedapps.frost.ext.GeckoContextId
 import com.pitchedapps.frost.ext.components
 import mozilla.components.browser.state.helper.Target
 
-@Composable
-fun MainScreen2(modifier: Modifier) {
-  //  Scaffold(
-  //    modifier = modifier,
-  //    topBar = {
-  //      MainTopBar(modifier = modifier)
-  //    },
-  //  )
-}
-
-@Composable
-fun MainTopBar(modifier: Modifier) {
-  //  TopAppBar(title = { /*TODO*/ })
-}
-
 /**
  * Screen for MainActivity.
  *

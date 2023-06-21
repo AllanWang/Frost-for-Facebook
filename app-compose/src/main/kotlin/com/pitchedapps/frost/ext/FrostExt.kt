@@ -28,6 +28,8 @@ import kotlinx.coroutines.flow.map
  */
 @JvmInline value class FrostAccountId(val id: Long)
 
+@JvmInline value class WebTargetId(val id: String)
+
 /**
  * Representation of gecko context id.
  *
