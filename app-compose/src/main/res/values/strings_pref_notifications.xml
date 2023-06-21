@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_frequency">Notification Frequency</string>
+    <string name="no_notifications">No Notifications</string>
+    <string name="notification_keywords">Keywords</string>
+    <string name="notification_keywords_desc">Does not notify when notification contains any of these keys.</string>
+    <string name="add_keyword">Add Keyword</string>
+    <string name="hint_keyword">Type keyword and press +</string>
+    <string name="empty_keyword">Empty Keyword</string>
+    <string name="notification_general">Enable general notifications</string>
+    <string name="notification_general_desc">Get general notifications for your current account.</string>
+    <string name="notification_general_all_accounts">Notify from all accounts</string>
+    <string name="notification_general_all_accounts_desc">Get general notifications for every account that is logged in.</string>
+    <string name="notification_messages">Enable message notifications</string>
+    <string name="notification_messages_desc">Get instant message notifications for your current account.</string>
+    <string name="notification_messages_all_accounts">Notify messages from all accounts</string>
+    <string name="notification_messages_all_accounts_desc">Get instant message notifications from all accounts</string>
+    <string name="notification_fetch_now">Fetch Notifications Now</string>
+    <string name="notification_fetch_now_desc">Trigger the notification fetcher once.</string>
+    <string name="notification_fetch_success">Fetching Notifications…</string>
+    <string name="notification_fetch_fail">Couldn\'t fetch notifications</string>
+    <string name="notification_sound">Notification sound</string>
+    <string name="notification_channel">Customize notification channels</string>
+    <string name="notification_channel_desc">Modify sound, vibration, priority, etc</string>
+
+    <string name="notification_ringtone">Notification Ringtone</string>
+    <string name="message_ringtone">Message Ringtone</string>
+    <string name="select_ringtone">Select Ringtone</string>
+
+    <string name="notification_vibrate">Notification vibration</string>
+    <string name="notification_lights">Notification lights</string>
+
+</resources>

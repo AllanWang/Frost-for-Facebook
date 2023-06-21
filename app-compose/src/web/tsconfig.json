@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "ES6",
+      "dom"
+    ],
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "removeComments": true,
+    "outDir": "assets/frost/js"
+  },
+  "include": [
+    "ts",
+    "typings"
+  ]
+}

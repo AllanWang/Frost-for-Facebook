@@ -1,0 +1,252 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "kotlin-kapt"
+    id "dagger.hilt.android.plugin"
+    id "com.google.devtools.ksp"
+    id "com.google.protobuf"
+    id "app.cash.sqldelight"
+}
+
+apply from: '../spotless.gradle'
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.pitchedapps.frost"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled = true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // GeckoView
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1571175
+    // Replaces `android.bundle.enableUncompressedNativeLibs = false` in gradle.properties
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
+    composeOptions {
+        // https://developer.android.com/jetpack/androidx/releases/compose-compiler
+        kotlinCompilerExtensionVersion = "1.4.7"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            applicationIdSuffix ".compose.debug"
+            versionNameSuffix "-compose-debug"
+            signingConfig signingConfigs.debug
+            resValue "string", "frost_name", "Frost Compose Debug"
+            resValue "string", "frost_web", "Frost Compose Web Debug"
+
+            // kotlinOptions.freeCompilerArgs += compilerArgs
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.assets.srcDirs += ['src/web/assets']
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.all {
+            outputFileName = "${project.APP_ID}-${variant.buildType.name}.apk"
+        }
+    }
+
+    namespace 'com.pitchedapps.frost'
+
+    def testKeystoreFile = file('../files/test.keystore')
+    def testPropFile = file('../files/test.properties')
+    def withTestSigning = testKeystoreFile.exists() && testPropFile.exists()
+
+    def releaseKeystoreFile = file('../files/release.keystore')
+    def releasePropFile = file('../files/release.properties')
+    def withReleaseSigning = releaseKeystoreFile.exists() && releasePropFile.exists()
+
+    signingConfigs {
+
+        debug {
+            storeFile file("../files/debug.keystore")
+            storePassword "debugKey"
+            keyAlias "debugKey"
+            keyPassword "debugKey"
+        }
+
+        if (withTestSigning) {
+            def testProps = new Properties()
+            testPropFile.withInputStream { testProps.load(it) }
+
+            test {
+                storeFile testKeystoreFile
+                storePassword testProps.getProperty('storePassword')
+                keyAlias testProps.getProperty('keyAlias')
+                keyPassword testProps.getProperty('keyPassword')
+            }
+        }
+
+        if (withReleaseSigning) {
+            def releaseProps = new Properties()
+            releasePropFile.withInputStream { releaseProps.load(it) }
+
+            release {
+                storeFile releaseKeystoreFile
+                storePassword releaseProps.getProperty('storePassword')
+                keyAlias releaseProps.getProperty('keyAlias')
+                keyPassword releaseProps.getProperty('keyPassword')
+            }
+        }
+
+    }
+}
+
+// Select the Glean from GeckoView.
+// `service-sync-logins` requires Glean, which pulls in glean-native,
+// but that's also provided by geckoview-omni, so now we need to select which one to use.
+project.configurations.configureEach {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.mozilla.telemetry:glean-native") {
+        def toBeSelected = candidates.find { it.id instanceof ModuleComponentIdentifier && it.id.module.contains('geckoview') }
+        if (toBeSelected != null) {
+            select(toBeSelected)
+        }
+        because 'use GeckoView Glean instead of standalone Glean'
+    }
+}
+
+dependencies {
+
+    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "com.google.android.material:material:1.9.0"
+
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
+
+    implementation "androidx.multidex:multidex:2.0.1"
+
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "com.google.truth:truth:1.1.3"
+    testImplementation "org.json:json:20220320"
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+
+    def hilt = "2.46.1"
+    implementation "com.google.dagger:hilt-android:${hilt}"
+    kapt "com.google.dagger:hilt-android-compiler:${hilt}"
+
+    testImplementation "com.google.dagger:hilt-android:${hilt}"
+    kaptTest "com.google.dagger:hilt-android-compiler:${hilt}"
+
+    def flogger = "0.7.1"
+    implementation "com.google.flogger:flogger:${flogger}"
+    implementation "com.google.flogger:flogger-system-backend:${flogger}"
+
+    def moshi = "1.14.0"
+    implementation "com.squareup.moshi:moshi-kotlin:${moshi}"
+    implementation "com.squareup.moshi:moshi-adapters:${moshi}"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:${moshi}"
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1"
+
+    // https://maven.mozilla.org/maven2/org/mozilla/components/browser-engine-gecko/maven-metadata.xml
+    // https://github.com/mozilla-mobile/reference-browser/blob/master/buildSrc/src/main/java/AndroidComponents.kt
+    // https://nightly.maven.mozilla.org/maven2/org/mozilla/components/browser-engine-gecko/maven-metadata.xml
+    def mozillaAndroidComponents = "116.0.20230617040331"
+
+    implementation "org.mozilla.components:lib-state:${mozillaAndroidComponents}"
+    // Kept for reference; not needed
+    implementation "org.mozilla.components:browser-state:${mozillaAndroidComponents}"
+
+    // Compose
+    def composeVersion = "1.4.3"
+
+    implementation("androidx.compose.ui:ui:${composeVersion}")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    // Tooling support (Previews, etc.)
+    implementation("androidx.compose.ui:ui-tooling:${composeVersion}")
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    implementation("androidx.compose.foundation:foundation:${composeVersion}")
+    // Material Design
+    implementation("androidx.compose.material:material:${composeVersion}")
+    implementation 'androidx.compose.material3:material3:1.2.0-alpha02'
+    // Material design icons
+    implementation("androidx.compose.material:material-icons-core:${composeVersion}")
+    implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
+    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
+
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("com.google.protobuf:protobuf-kotlin-lite:3.23.3")
+
+    implementation("app.cash.sqldelight:android-driver:2.0.0-rc01")
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation("org.apache.commons:commons-text:1.10.0")
+
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.22.3'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+                kotlin {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}
+
+configurations {
+    configureEach {
+        // https://stackoverflow.com/q/69817925
+        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+    }
+}
+
+sqldelight {
+    databases {
+        register("FrostDb") {
+            packageName.set("com.pitchedapps.frost.db")
+            schemaOutputDirectory.set(file("src/main/sqldelight/databases"))
+        }
+    }
+}

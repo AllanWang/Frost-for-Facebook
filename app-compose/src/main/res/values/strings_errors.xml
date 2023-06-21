@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="null_url_overlay">Empty URL given to overlay; exiting</string>
+    <string name="invalid_share_url">Invalid Share URL</string>
+    <string name="invalid_share_url_desc">You have shared a block of text that is not a URL. The text has been copied to your clipboard, so you may share it manually  yourself.</string>
+    <string name="no_download_manager">No Download Manager</string>
+    <string name="no_download_manager_desc">The download manager is not enabled. Would you like to enable it to allow downloads?</string>
+    <string name="error_generic">An error occurred.</string>
+    <string name="video_load_failed">Failed to load video</string>
+    <string name="error_notification">An error occurred when fetching notifications</string>
+    <string name="error_sdk">Your device\'s SDK (%d) is incompatible. Frost only supports Lollipop (SDK 21) and above</string>
+    <string name="error_webview">Your device does not seem to have a webview. Please add or enable one.</string>
+    <string name="image_not_found">Image not found.</string>
+</resources>

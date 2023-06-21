@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pick_image">Pick Image</string>
+    <string name="download">Download</string>
+    <string name="downloading">Downloading…</string>
+    <string name="image_download_success">Image downloaded</string>
+    <string name="image_download_fail">Image failed to download</string>
+    <string name="image_share_failed">Failed to share image</string>
+
+    <string name="downloading_video">Downloading Video</string>
+    <string name="downloaded_video">Video Downloaded</string>
+    <string name="downloading_file">Downloading File</string>
+    <string name="downloaded_file">File Downloaded</string>
+
+    <string name="error_invalid_download">Invalid download attempt</string>
+</resources>

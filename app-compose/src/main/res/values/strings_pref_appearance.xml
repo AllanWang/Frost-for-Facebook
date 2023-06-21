@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="theme_customization">Theme Customization</string>
+
+    <string name="theme">Theme</string>
+    <string name="text_color">Text Color</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="background_color">Background Color</string>
+    <string name="header_color">Header Color</string>
+    <string name="icon_color">Icon Color</string>
+
+    <string name="global_customization">Global Customization</string>
+
+    <string name="main_activity_layout">Main Activity Layout</string>
+    <string name="main_activity_layout_desc">Set Main Activity Layout</string>
+
+    <string name="main_tabs">Main Activity Tabs</string>
+    <string name="main_tabs_desc">Customize which tabs you\'ll see in your main activity</string>
+
+    <string name="tint_nav">Tint Nav Bar</string>
+    <string name="tint_nav_desc">Navigation bar will be the same color as the header</string>
+    <string name="web_text_scaling">Web Text Scaling</string>
+    <string name="web_text_scaling_desc">Text Scaling Example; Long press the percentage text to reset.</string>
+
+    <string name="enforce_black_media_bg">Enforce black media background</string>
+    <string name="enforce_black_media_bg_desc">Make media backgrounds black; default is the selected background above</string>
+</resources>

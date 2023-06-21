@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="auto_refresh_feed">Auto Refresh Feed</string>
+    <string name="auto_refresh_feed_desc">Refresh the feed after 30 minutes of inactivity</string>
+    <string name="fancy_animations">Fancy Animations</string>
+    <string name="fancy_animations_desc">Reveal webviews using ripples and animate transitions</string>
+    <string name="overlay_swipe">Enable Overlays</string>
+    <string name="overlay_swipe_desc">Pressing most links will launch in a new overlay so you can easily swipe back to the original page. Note that this does result in slightly longer loads given that the whole page is reloaded.</string>
+    <string name="overlay_full_screen_swipe">Overlay Full Screen Swipe to Dismiss</string>
+    <string name="overlay_full_screen_swipe_desc">Swipe right from anywhere on the overlaying web to close the browser. If disabled, only swiping from the left edge will move it.</string>
+    <string name="open_links_in_default">Open Links in Default App</string>
+    <string name="open_links_in_default_desc">When possible, open links in the default app rather than through the Frost web overlay</string>
+    <string name="viewpager_swipe">Viewpager Swipe</string>
+    <string name="viewpager_swipe_desc">Allow swiping between the pages in the main view to switch tabs. By default, the swiping automatically stops when you long press on an item, such as the like button. Disabling this will prevent page swiping altogether.</string>
+    <string name="swipe_to_refresh">Swipe to Refresh</string>
+    <string name="swipe_to_refresh_desc">Allow swiping down to refresh</string>
+    <string name="search_bar">Search Bar</string>
+    <string name="search_bar_desc">Enable the search bar instead of a search overlay</string>
+    <string name="force_message_bottom">Force Message Bottom</string>
+    <string name="force_message_bottom_desc">When loading a message thread, trigger a scroll to the bottom of the page rather than loading the page as is.</string>
+    <string name="enable_pip">Enable PIP</string>
+    <string name="enable_pip_desc">Enable picture in picture videos</string>
+    <string name="autoplay_settings">Autoplay Settings</string>
+    <string name="autoplay_settings_desc">Open Facebook\'s auto play settings. Note that it must be disabled for PIP to work.</string>
+    <string name="exit_confirmation">Exit Confirmation</string>
+    <string name="exit_confirmation_desc">Show confirmation dialog before exiting the app</string>
+    <string name="auto_expand_text_box">Auto expand text box</string>
+    <string name="auto_expand_text_box_desc">Increase text box height while typing. Disable if there are scroll issues.</string>
+
+</resources>

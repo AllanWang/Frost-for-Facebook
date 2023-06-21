@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER NOT NULL PRIMARY KEY,
+    facebook_notifications INTEGER,
+    facebook_messages INTEGER,
+    facebook_friends INTEGER,
+    messenger_notifications INTEGER
+);
+
+insertNew:
+INSERT OR IGNORE INTO notifications (id) VALUES (?);
+
+insert:
+INSERT OR REPLACE INTO notifications (id,facebook_notifications, facebook_messages, facebook_friends, messenger_notifications) VALUES (?,?,?,?,?);
+
+select:
+SELECT *
+FROM notifications WHERE id == ?;
+
+selectAll:
+SELECT *
+FROM notifications;

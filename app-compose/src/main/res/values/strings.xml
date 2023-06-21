@@ -1,0 +1,82 @@
+<resources>
+    <string name="feed">Feed</string>
+    <string name="most_recent">Most Recent</string>
+    <string name="top_stories">Top Stories</string>
+    <string name="profile">Profile</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="events">Events</string>
+    <string name="friends">Friends</string>
+    <string name="messages">Messages</string>
+    <string name="messenger">Messenger</string>
+    <string name="notifications">Notifications</string>
+    <string name="activity_log">Activity Log</string>
+    <string name="pages">Pages</string>
+    <string name="groups">Groups</string>
+    <string name="saved">Saved</string>
+    <string name="birthdays">Birthdays</string>
+    <string name="chat">Chat</string>
+    <string name="photos">Photos</string>
+    <string name="marketplace">Marketplace</string>
+    <string name="menu">Menu</string>
+    <string name="settings">Settings</string>
+    <string name="notes">Notes</string>
+    <string name="on_this_day">On This Day</string>
+
+    <string name="loading_account">Getting everything ready…</string>
+    <string name="welcome">Welcome %s</string>
+    <string name="select_facebook_account">Select Facebook Account</string>
+    <string name="account_not_found">Current account is not in the database</string>
+
+    <string name="frost_notifications">Frost Notifications</string>
+    <string name="requires_custom_theme">Requires custom theme</string>
+
+    <string name="share">Share</string>
+
+    <string name="web_overlay_swipe_hint">Swipe right to go back to the previous window.</string>
+    <string name="profile_picture">Profile Picture</string>
+
+    <string name="new_message">New Message</string>
+    <string name="no_text">No text</string>
+
+    <string name="show_all_results">Show All Results</string>
+
+    <string name="frost_description">Frost is a fully themable,
+        fully functional alternative to the official Facebook app, made from scratch and proudly open sourced.</string>
+
+    <string name="faq_title">Frost FAQ</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string name="html_extraction_error">An error occurred in the html extraction.</string>
+    <string name="html_extraction_cancelled">The request has been cancelled.</string>
+    <string name="html_extraction_timeout">The request has timed out.</string>
+    <string name="file_chooser_not_found">File chooser not found</string>
+
+    <string name="top_bar">Top Bar</string>
+    <string name="bottom_bar">Bottom Bar</string>
+
+    <string name="pip" translatable="false">PIP</string>
+    <string name="preview">Preview</string>
+    <string name="options">Options</string>
+    <string name="tab_customizer_instructions">Long press and drag to rearrange the top icons.</string>
+
+    <string name="no_new_notifications">No new notifications found</string>
+
+    <!--Biometrics-->
+    <string name="biometrics_prompt_title">Authenticate Frost</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <!--
+    Template used to display human readable string;
+    For instance:
+    Today at 1:23 PM
+    Mar 13 at 9:00 AM
+
+    The first element is the day, and the second element is the time
+    -->
+    <string name="time_template">%1$s at %2$s</string>
+
+    <string name="disclaimer">Disclaimer</string>
+
+</resources>

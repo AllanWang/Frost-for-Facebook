@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "com.pitchedapps.frost.proto";
+option java_multiple_files = true;
+
+message Account {
+    // Current account id
+    optional int64 account_id = 1;
+}

@@ -1,0 +1,4 @@
+<resources>
+    <string name="network_media_on_metered">Disable images on metered network.</string>
+    <string name="network_media_on_metered_desc">If a metered network is detected, Frost will automatically stop all images and videos from loading.</string>
+</resources>

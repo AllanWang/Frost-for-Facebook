@@ -11,7 +11,18 @@
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/com.pitchedapps.frost)
     
-**This project is no longer actively maintained**. I still use it, but I've largely been off of Facebook for years. Bugs relating to logins are region dependent, and web wrappers don't have stable APIs, so please use at your own discretion.
+**This project is undergoing a full rewrite**. The latest snapshot of the old project is available at https://github.com/AllanWang/Frost-for-Facebook/tree/legacy.
+
+While a rewrite isn't necessary to keep the project going, I wanted to take some time to learn new things, and also to support some big features:
+
+* Views to compose. This will make things a lot more structured, and will simplify dynamic colors/themes, which I've included in my projects well before Material You.
+* WebView to GeckoView. This will add support for web extensions, and provide more functionality. Admittedly, this has been a huge pain to learn, and there are things that are far easier with webviews, but I think I'm at a point where I've answered my main questions.
+  * Web extensions allows for actual ad blocks, and theme updates without pushing new apks 
+* I intend on adding notification support for friend requests, though that could have been done with the old build
+
+The direction I'm taking Frost v4.0.0 is to simplify a lot of things, and to leverage other extensions/libraries where possible. GeckoView also makes it easier to support multi account, in case I want to extend this beyond Facebook at some point in the future.
+
+---
 
 **Note** Some keystores are public for the sake of automatic builds and consistent signing across devices.
 This means that others can build apps with the same signature. The only valid download sources are through my github releases and F-Droid.
