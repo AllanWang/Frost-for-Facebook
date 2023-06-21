@@ -16,9 +16,12 @@
  */
 package com.pitchedapps.frost.tabselector
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -37,6 +40,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.pitchedapps.frost.compose.effects.rememberShakeState
+import com.pitchedapps.frost.compose.effects.shake
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.tab
 
@@ -63,6 +68,7 @@ fun TabSelectorScreen(modifier: Modifier = Modifier) {
   )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabSelector(
   modifier: Modifier,
@@ -74,7 +80,17 @@ fun TabSelector(
     modifier = modifier,
     columns = GridCells.Fixed(4),
   ) {
-    items(unselected, key = { it.key }) { TabItem(data = it) }
+    items(unselected, key = { it.key }) {
+      val shakeState = rememberShakeState()
+      TabItem(
+        modifier =
+          Modifier.animateItemPlacement().shake(shakeState).clickable {
+            shakeState.shake()
+            //            onSelect(listOf(it))
+          },
+        data = it,
+      )
+    }
   }
 }
 
@@ -88,7 +104,7 @@ fun TabItem(
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Icon(
-      modifier = Modifier.padding(4.dp),
+      modifier = Modifier.padding(4.dp).size(24.dp),
       imageVector = data.icon,
       contentDescription = data.title,
     )
