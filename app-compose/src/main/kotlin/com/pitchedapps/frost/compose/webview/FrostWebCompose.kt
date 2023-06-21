@@ -31,7 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.widget.NestedScrollView
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.ext.WebTargetId
-import com.pitchedapps.frost.view.NestedWebView
+import com.pitchedapps.frost.view.FrostWebView
 import com.pitchedapps.frost.web.state.FrostWebStore
 import com.pitchedapps.frost.web.state.TabAction
 import com.pitchedapps.frost.web.state.TabAction.ResponseAction.LoadUrlResponseAction
@@ -126,7 +126,7 @@ class FrostWebCompose(
     AndroidView(
       factory = { context ->
         val childView =
-          NestedWebView(context)
+          FrostWebView(context)
             .apply {
               onCreated(this)
 
@@ -150,9 +150,6 @@ class FrostWebCompose(
             }
             .also { webView = it }
 
-        // Workaround a crash on certain devices that expect WebView to be
-        // wrapped in a ViewGroup.
-        // b/243567497
         val parentLayout = NestedScrollView(context)
         parentLayout.layoutParams =
           FrameLayout.LayoutParams(
@@ -176,17 +173,3 @@ class FrostWebCompose(
     private val logger = FluentLogger.forEnclosingClass()
   }
 }
-
-
-//  override fun onReceivedError(
-//    view: WebView,
-//    request: WebResourceRequest?,
-//    error: WebResourceError?
-//  ) {
-//    super.onReceivedError(view, request, error)
-//
-//    if (error != null) {
-//      state.errorsForCurrentRequest.add(WebViewError(request, error))
-//    }
-//  }
-// }

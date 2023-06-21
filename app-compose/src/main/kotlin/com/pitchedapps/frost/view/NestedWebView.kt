@@ -30,7 +30,7 @@ import androidx.core.view.ViewCompat
  *
  * Webview extension that handles nested scrolls
  */
-class NestedWebView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
+open class NestedWebView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
   WebView(context, attrs, defStyleAttr), NestedScrollingChild3 {
 
   // No JvmOverloads due to hilt
@@ -109,21 +109,17 @@ class NestedWebView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
   override fun isNestedScrollingEnabled() = childHelper.isNestedScrollingEnabled
 
-  override fun startNestedScroll(axes: Int, type: Int): Boolean {
-    TODO("not implemented")
-  }
+  override fun startNestedScroll(axes: Int, type: Int): Boolean =
+    childHelper.startNestedScroll(axes, type)
 
   override fun startNestedScroll(axes: Int) = childHelper.startNestedScroll(axes)
 
-  override fun stopNestedScroll(type: Int) {
-    TODO("not implemented")
-  }
+  override fun stopNestedScroll(type: Int) = childHelper.stopNestedScroll(type)
 
   override fun stopNestedScroll() = childHelper.stopNestedScroll()
 
-  override fun hasNestedScrollingParent(type: Int): Boolean {
-    TODO("not implemented")
-  }
+  override fun hasNestedScrollingParent(type: Int): Boolean =
+    childHelper.hasNestedScrollingParent(type)
 
   override fun hasNestedScrollingParent() = childHelper.hasNestedScrollingParent()
 

@@ -24,7 +24,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
-import javax.inject.Singleton
 
 @Qualifier annotation class Frost
 
@@ -54,7 +53,7 @@ object FrostModule {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0"
 
   private const val USER_AGENT_WINDOWS_FROST =
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.90 Safari/537.36"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36"
 
-  @Provides @Singleton @Frost fun userAgent(): String = USER_AGENT_WINDOWS_FROST
+  @Provides @Frost fun userAgent(): String = USER_AGENT_WINDOWS_FROST
 }

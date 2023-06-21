@@ -20,6 +20,8 @@ import android.content.Context
 import android.webkit.WebView
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.webview.injection.assets.JsActions
+import com.pitchedapps.frost.webview.injection.assets.JsAssets
+import com.pitchedapps.frost.webview.injection.assets.inject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.BufferedReader
 import java.io.FileNotFoundException
@@ -37,9 +39,9 @@ internal constructor(
 
   @Volatile private var theme: JsInjector = JsInjector.EMPTY
 
-  fun injectOnPageCommitVisible(view: WebView, url: String?) {
+  fun facebookInjectOnPageCommitVisible(view: WebView, url: String?) {
     logger.atInfo().log("inject page commit visible %b", theme != JsInjector.EMPTY)
-    theme.inject(view)
+    listOf(theme, JsAssets.CLICK_A).inject(view)
   }
 
   private fun getTheme(): JsInjector {
@@ -49,7 +51,8 @@ internal constructor(
           .open("frost/css/facebook/themes/material_glass.css")
           .bufferedReader()
           .use(BufferedReader::readText)
-      JsBuilder().css(content).build()
+      logger.atInfo().log("css %s", content)
+      JsBuilder().css(content).single("material_glass").build()
     } catch (e: FileNotFoundException) {
       logger.atSevere().withCause(e).log("CssAssets file not found")
       JsActions.EMPTY

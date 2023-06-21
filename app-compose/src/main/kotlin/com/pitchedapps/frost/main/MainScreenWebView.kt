@@ -41,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
@@ -59,6 +60,7 @@ fun MainScreenWebView(modifier: Modifier = Modifier, homeTabs: List<MainTabItem>
 
   Scaffold(
     modifier = modifier,
+    containerColor = Color.Transparent,
     topBar = { MainTopBar(modifier = modifier) },
     bottomBar = {
       MainBottomBar(

@@ -75,3 +75,7 @@ enum class JsAssets(private val singleLoad: Boolean = true) : JsInjector {
       withContext(Dispatchers.IO) { JsAssets.values().forEach { it.load(context) } }
   }
 }
+
+fun List<JsInjector>.inject(webView: WebView) {
+  forEach { it.inject(webView) }
+}

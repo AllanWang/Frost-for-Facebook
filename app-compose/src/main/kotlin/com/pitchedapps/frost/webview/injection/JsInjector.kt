@@ -75,7 +75,6 @@ class JsBuilder {
     val tag = this.tag
     val builder =
       StringBuilder().apply {
-        append("!function(){")
         if (css.isNotBlank()) {
           val cssMin = css.replace(Regex("\\s*\n\\s*"), "")
           append("var a=document.createElement('style');")
@@ -89,16 +88,18 @@ class JsBuilder {
           append(js)
         }
       }
-    var content = builder.append("}()").toString()
+    var content = builder.toString()
     if (tag != null) {
       content = singleInjector(tag, content)
     }
-    return content
+    return wrapAnonymous(content)
   }
+
+  private fun wrapAnonymous(body: String) = "(function(){$body})();"
 
   private fun singleInjector(tag: String, content: String) =
     """
-      if (!window.hasOwnProperty("$tag") {
+      if (!window.hasOwnProperty("$tag")) {
         console.log("Registering $tag");
         window.$tag = true;
         $content
