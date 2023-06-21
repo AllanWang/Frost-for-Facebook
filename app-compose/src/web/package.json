@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/frostcore/css",
-    "scss-watch": "sass --no-source-map --style compressed --update scss:assets/frostcore/css --watch"
+    "compile": "tsc -p tsconfig.json && sass --no-source-map --style compressed --update scss:assets/frost/css",
+    "scss-watch": "sass --no-source-map --style compressed --update scss:assets/frost/css --watch"
   },
   "license": "MPL-2.0",
   "repository": {

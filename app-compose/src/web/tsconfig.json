@@ -16,7 +16,7 @@
     "allowUnreachableCode": true,
     "allowUnusedLabels": true,
     "removeComments": true,
-    "outDir": "assets/frostcore/js"
+    "outDir": "assets/frost/js"
   },
   "include": [
     "ts",

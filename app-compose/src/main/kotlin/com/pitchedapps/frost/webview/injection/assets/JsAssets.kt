@@ -50,7 +50,7 @@ enum class JsAssets(private val singleLoad: Boolean = true) : JsInjector {
   private fun injectorBlocking(context: Context): JsInjector {
     return try {
       val content =
-        context.assets.open("frostcore/js/$file").bufferedReader().use(BufferedReader::readText)
+        context.assets.open("frost/js/$file").bufferedReader().use(BufferedReader::readText)
       JsBuilder().js(content).run { if (singleLoad) single(name) else this }.build()
     } catch (e: FileNotFoundException) {
       logger.atWarning().withCause(e).log("JsAssets file not found")

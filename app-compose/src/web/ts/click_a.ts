@@ -1,6 +1,5 @@
-(async function () {
+(function () {
     let prevented = false;
-
 
     /**
      * Go up at most [depth] times, to retrieve a parent matching the provided predicate
@@ -40,29 +39,29 @@
     /**
      * Given event and target, return true if handled and false otherwise.
      */
-    type EventHandler = (e: Event, target: HTMLElement) => Promise<Boolean>
+    type EventHandler = (e: Event, target: HTMLElement) => Boolean
 
-    const _frostGeneral: EventHandler = async (e, target) => {
+    const _frostGeneral: EventHandler = (e, target) => {
         // We now disable clicks for the main notification page
         if (document.getElementById("notifications_list")) {
             return false
         }
         const url = _parentUrl(target, 2);
-        return frost.loadUrl(url);
+        return Frost.loadUrl(url);
     };
 
-    const _frostLaunchpadClick: EventHandler = async (e, target) => {
+    const _frostLaunchpadClick: EventHandler = (e, target) => {
         if (!_parentEl(target, 6, (el) => el.id === 'launchpad')) {
             return false
         }
         console.log('Clicked launchpad');
         const url = _parentUrl(target, 5);
-        return frost.loadUrl(url);
+        return Frost.loadUrl(url);
     };
 
     const handlers: EventHandler[] = [_frostLaunchpadClick, _frostGeneral];
 
-    const _frostAClick = async (e: Event) => {
+    const _frostAClick = (e: Event) => {
         if (prevented) {
             console.log("Click intercept prevented");
             return
@@ -75,9 +74,8 @@
             console.log("No element found");
             return
         }
-        // TODO cannot use await here; copy logic over here
         for (const h of handlers) {
-            if (await h(e, target)) {
+            if (h(e, target)) {
                 e.stopPropagation();
                 e.preventDefault();
                 return

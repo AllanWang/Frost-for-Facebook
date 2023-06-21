@@ -42,11 +42,11 @@ internal constructor(
     theme.inject(view)
   }
 
-  fun getTheme(): JsInjector {
+  private fun getTheme(): JsInjector {
     return try {
       val content =
         context.assets
-          .open("frostcore/css/facebook/themes/material_glass.css")
+          .open("frost/css/facebook/themes/material_glass.css")
           .bufferedReader()
           .use(BufferedReader::readText)
       JsBuilder().css(content).build()
