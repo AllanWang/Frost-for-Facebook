@@ -87,7 +87,7 @@ fun TabSelector(
   unselected: List<TabData>,
   onSelect: (List<TabData>) -> Unit
 ) {
-  val draggableState = rememberDraggableState()
+  val draggableState = rememberDraggableState<TabData>()
 
   DragContainer(modifier = modifier, draggableState = draggableState) {
     Column(modifier = Modifier.statusBarsPadding()) {
@@ -96,7 +96,7 @@ fun TabSelector(
         columns = GridCells.Fixed(4),
       ) {
         items(unselected, key = { it.key }) {
-          DragTarget(key = it.key, draggableState = draggableState) { isDragging ->
+          DragTarget(key = it.key, data = it, draggableState = draggableState) { isDragging ->
             TabItem(
               modifier =
                 Modifier.thenIf(!isDragging) {
@@ -124,7 +124,7 @@ fun TabSelector(
 @Composable
 fun TabBottomBar(
   modifier: Modifier = Modifier,
-  draggableState: DraggableState,
+  draggableState: DraggableState<TabData>,
   items: List<TabData>
 ) {
   NavigationBar(modifier = modifier) {
@@ -133,7 +133,7 @@ fun TabBottomBar(
 
       val alpha by
         animateFloatAsState(
-          targetValue = if (dropTargetState.hoverKey == null) 1f else 0f,
+          targetValue = if (!dropTargetState.isHovered) 1f else 0.3f,
           label = "Nav Item Alpha",
         )
 
@@ -141,10 +141,13 @@ fun TabBottomBar(
         modifier = Modifier.dropTarget(dropTargetState),
         icon = {
           //          println(dropTargetState.hoverKey)
+
+          val iconItem = dropTargetState.hoverData ?: item
+
           Icon(
             modifier = Modifier.size(24.dp).alpha(alpha),
-            imageVector = item.icon,
-            contentDescription = item.title,
+            imageVector = iconItem.icon,
+            contentDescription = iconItem.title,
           )
         },
         selected = false,

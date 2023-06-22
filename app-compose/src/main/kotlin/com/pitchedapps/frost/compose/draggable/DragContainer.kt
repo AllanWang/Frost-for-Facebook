@@ -38,9 +38,9 @@ import com.pitchedapps.frost.ext.toIntOffset
  */
 
 @Composable
-fun DragContainer(
+fun <T> DragContainer(
   modifier: Modifier = Modifier,
-  draggableState: DraggableState,
+  draggableState: DraggableState<T>,
   content: @Composable () -> Unit
 ) {
   Box(modifier = modifier) {
@@ -61,26 +61,28 @@ fun DragContainer(
  * dragged.
  */
 @Composable
-fun DragTarget(
+fun <T> DragTarget(
   key: String = "",
-  draggableState: DraggableState,
-  content: @Composable (isDragging: Boolean) -> Unit
+  data: T,
+  draggableState: DraggableState<T>,
+  content: DraggableComposeContent,
 ) {
 
   val dragTargetState =
     draggableState.rememberDragTarget(
       key = key,
+      data = data,
       content = content,
     )
 
   Box(
     modifier = Modifier.dragTarget(dragTargetState),
   ) {
-    content(false)
+    content(isDragging = false)
   }
 }
 
-private fun Modifier.dragTarget(dragTargetState: DragTargetState): Modifier {
+private fun <T> Modifier.dragTarget(dragTargetState: DragTargetState<T>): Modifier {
   return onGloballyPositioned {
       dragTargetState.windowPosition = it.positionInWindow()
       dragTargetState.size = it.size
@@ -111,7 +113,7 @@ private fun Modifier.dragTarget(dragTargetState: DragTargetState): Modifier {
     .alpha(if (dragTargetState.isDragging) 0f else 1f)
 }
 
-fun Modifier.dropTarget(dropTargetState: DropTargetState): Modifier {
+fun <T> Modifier.dropTarget(dropTargetState: DropTargetState<T>): Modifier {
   return onGloballyPositioned { dropTargetState.bounds = it.boundsInWindow() }
 }
 
@@ -125,14 +127,14 @@ fun Modifier.dropTarget(dropTargetState: DropTargetState): Modifier {
  * fillMaxWidth in a grid, but would have a full parent width here without the sizing constraints.
  */
 @Composable
-private fun DraggingContents(draggableState: DraggableState) {
+private fun <T> DraggingContents(draggableState: DraggableState<T>) {
   for (target in draggableState.targets) {
     DraggingContent(target = target)
   }
 }
 
 @Composable
-private fun DraggingContent(target: DragTargetState) {
+private fun <T> DraggingContent(target: DragTargetState<T>) {
   val density = LocalDensity.current
   Box(
     modifier =
