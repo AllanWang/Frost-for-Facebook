@@ -100,7 +100,14 @@ fun TabSelector(
   unselected: List<TabData>,
   onSelect: (List<TabData>) -> Unit
 ) {
-  val draggableState = rememberDraggableState<TabData>()
+  val draggableState =
+    rememberDraggableState<TabData>(
+      onDrop = { _, dragData, dropTarget ->
+        onSelect(
+          selected.map { if (it.key == dropTarget) dragData else it },
+        )
+      },
+    )
 
   DragContainer(modifier = modifier, draggableState = draggableState) {
     Column(modifier = Modifier.statusBarsPadding()) {
@@ -196,7 +203,7 @@ fun DraggingTabItem(
     transition.animateColor(label = "Background") {
       if (it)
         MaterialTheme.colorScheme.surfaceVariant.copy(
-          LocalRippleTheme.current.rippleAlpha().pressedAlpha
+          LocalRippleTheme.current.rippleAlpha().pressedAlpha,
         )
       else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.85f)
     }

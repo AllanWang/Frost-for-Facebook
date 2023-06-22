@@ -27,12 +27,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.IntSize
 
-@Composable
-fun <T> rememberDraggableState(): DraggableState<T> {
-  return remember { DraggableStateImpl() }
+typealias DraggableComposeContent = @Composable (isDragging: Boolean) -> Unit
+
+fun interface OnDrop<T> {
+  fun onDrop(dragTarget: String, dragData: T, dropTarget: String)
 }
 
-typealias DraggableComposeContent = @Composable (isDragging: Boolean) -> Unit
+@Composable
+fun <T> rememberDraggableState(onDrop: OnDrop<T>): DraggableState<T> {
+  return remember(onDrop) { DraggableStateImpl(onDrop) }
+}
 
 interface DraggableState<T> {
 
@@ -58,7 +62,7 @@ interface DraggableState<T> {
   @Composable fun rememberDropTarget(key: String): DropTargetState<T>
 }
 
-class DraggableStateImpl<T> : DraggableState<T> {
+class DraggableStateImpl<T>(private val onDrop: OnDrop<T>) : DraggableState<T> {
   private val activeDragTargets = mutableStateMapOf<String, DragTargetState<T>>()
 
   private val dropTargets = mutableStateMapOf<String, DropTargetState<T>>()
@@ -79,9 +83,13 @@ class DraggableStateImpl<T> : DraggableState<T> {
   }
 
   override fun onDragEnd(key: String) {
-    activeDragTargets.remove(key)
+    val dragTarget = activeDragTargets.remove(key)
     for ((dropKey, dropTarget) in dropTargets) {
       if (dropTarget.hoverKey == key) {
+        if (dragTarget != null) {
+          onDrop.onDrop(dragTarget = key, dragData = dragTarget.data, dropTarget = dropKey)
+        }
+
         setHover(dragKey = null, dropKey)
         // Check other drag targets in case one meets drag requirements
         checkForDrop(dropKey)
