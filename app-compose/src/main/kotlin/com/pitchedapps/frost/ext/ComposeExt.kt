@@ -34,3 +34,13 @@ fun Offset.toIntOffset() = IntOffset(x.roundToInt(), y.roundToInt())
 fun IntSize.toDpSize(density: Density): DpSize {
   return with(density) { DpSize(width.toDp(), height.toDp()) }
 }
+
+/**
+ * Helper for functions that take in nullable compose lambdas.
+ *
+ * If the input is null, return null. Otherwise, return the provided composable lambda.
+ */
+fun <T> T?.optionalCompose(action: @Composable (T) -> Unit): (@Composable () -> Unit)? {
+  if (this == null) return null
+  return { action(this) }
+}
