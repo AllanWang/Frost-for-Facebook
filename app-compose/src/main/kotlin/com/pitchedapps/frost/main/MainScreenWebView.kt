@@ -19,6 +19,7 @@ package com.pitchedapps.frost.main
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
@@ -52,8 +54,11 @@ import kotlinx.coroutines.launch
 import mozilla.components.lib.state.ext.observeAsState
 
 @Composable
-fun MainScreenWebView(modifier: Modifier = Modifier, homeTabs: List<MainTabItem>) {
+fun MainScreenWebView(modifier: Modifier = Modifier) {
   val vm: MainScreenViewModel = viewModel()
+
+  val homeTabs =
+    vm.store.observeAsState(initialValue = null) { it.homeTabs.map { it.tab } }.value ?: return
 
   val selectedHomeTab by vm.store.observeAsState(initialValue = null) { it.selectedHomeTab }
 
@@ -95,7 +100,13 @@ fun MainBottomBar(
   NavigationBar(modifier = modifier) {
     items.forEach { item ->
       NavigationBarItem(
-        icon = { Icon(item.icon, contentDescription = item.title) },
+        icon = {
+          Icon(
+            modifier = Modifier.size(24.dp),
+            imageVector = item.icon,
+            contentDescription = item.title,
+          )
+        },
         selected = selectedTab == item.id,
         onClick = { onSelect(item.id) },
       )

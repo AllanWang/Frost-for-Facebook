@@ -18,6 +18,7 @@ package com.pitchedapps.frost.compose
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
@@ -27,16 +28,15 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 /** Main Frost compose theme. */
 @Composable
 fun FrostTheme(
+  modifier: Modifier = Modifier,
   isDarkTheme: Boolean = isSystemInDarkTheme(),
   isDynamicColor: Boolean = true,
   transparent: Boolean = true,
-  modifier: Modifier = Modifier,
   content: @Composable () -> Unit
 ) {
   val context = LocalContext.current
@@ -57,8 +57,8 @@ fun FrostTheme(
 
   MaterialTheme(colorScheme = colorScheme) {
     Surface(
-      modifier = modifier,
-      color = if (transparent) Color.Transparent else MaterialTheme.colorScheme.surface,
+      modifier = modifier.fillMaxSize(),
+      //      color = if (transparent) Color.Transparent else MaterialTheme.colorScheme.surface,
       content = content,
     )
   }

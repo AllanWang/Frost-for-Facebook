@@ -23,10 +23,10 @@ import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.compose.FrostTheme
+import com.pitchedapps.frost.tabselector.TabSelectorScreen
 import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import mozilla.components.lib.state.ext.observeAsState
 
 /**
  * Main activity.
@@ -52,11 +52,9 @@ class MainActivity : ComponentActivity() {
         //          tabs = tabs,
         //        )
 
-        val tabs =
-          store.observeAsState(initialValue = null) { it.homeTabs.map { it.tab } }.value
-            ?: return@FrostTheme
+        TabSelectorScreen()
 
-        MainScreenWebView(homeTabs = tabs)
+        //        MainScreenWebView()
       }
     }
   }
