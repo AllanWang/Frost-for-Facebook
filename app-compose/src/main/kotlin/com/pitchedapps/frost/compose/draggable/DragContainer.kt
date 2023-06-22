@@ -22,13 +22,16 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
@@ -62,11 +65,12 @@ fun DragContainer(
  * depending on drag state. Keep this in mind based on the isDragging flag.
  *
  * [key] is used to distinguish between multiple dragging targets. If only one should be used at a
- * time, this can be nullable. If there is a key conflict, only the first target will be dragged.
+ * time, this can be the same key. If there is a key conflict, only the first target will be
+ * dragged.
  */
 @Composable
 fun DragTarget(
-  key: String? = null,
+  key: String = "",
   draggableState: DraggableState,
   content: @Composable BoxScope.(isDragging: Boolean) -> Unit
 ) {
@@ -86,30 +90,25 @@ fun DragTarget(
         .pointerInput(Unit) {
           detectDragGesturesAfterLongPress(
             onDragStart = {
-              if (draggableState.targets.containsKey(key)) {
-                // We are already dragging an item with the same key, ignore
-                isDragging = false
-                return@detectDragGesturesAfterLongPress
-              }
-              isDragging = true
-
-              draggableState.targets[key] =
-                DraggingTargetState(
-                  composable = content,
-                  size = size,
-                  dragPosition = positionInWindow,
-                )
+              isDragging =
+                draggableState.onDragStart(key) {
+                  DraggingTargetState(
+                    composable = content,
+                    size = size,
+                    dragPosition = positionInWindow,
+                  )
+                }
             },
             onDrag = { _, offset ->
-              if (!isDragging) return@detectDragGesturesAfterLongPress
-              val target = draggableState.targets[key] ?: return@detectDragGesturesAfterLongPress
-              target.dragPosition += offset
+              if (isDragging) {
+                draggableState.onDrag(key, offset)
+              }
             },
             onDragEnd = {
               if (isDragging) {
-                draggableState.targets.remove(key)
+                draggableState.onDragEnd(key)
+                isDragging = false
               }
-              isDragging = false
             },
           )
         },
@@ -117,6 +116,35 @@ fun DragTarget(
     if (!isDragging) {
       content(false)
     }
+  }
+}
+
+fun Modifier.dropTarget(key: String, draggableState: DraggableState): Modifier {
+  return onGloballyPositioned { draggableState.onDropUpdateBounds(key, it.boundsInWindow()) }
+}
+
+@Composable
+fun <T> DropTarget(
+  draggableState: DraggableState,
+  onDrop: (T) -> Unit,
+  content: @Composable BoxScope.(isHovering: Boolean, data: T?) -> Unit
+) {
+  var hoverKey: String? by remember { mutableStateOf(null) }
+
+  var hoverData: T? by remember { mutableStateOf(null) }
+
+  var bounds: Rect by remember { mutableStateOf(Rect.Zero) }
+
+  LaunchedEffect(hoverKey, bounds, draggableState) {
+    //    hoverKey = draggableState.getHoverKey(hoverKey, bounds)
+
+    //    println("asdf new hover key $hoverKey")
+  }
+
+  Box(
+    modifier = Modifier.onGloballyPositioned { bounds = it.boundsInWindow() },
+  ) {
+    content(hoverKey != null, hoverData)
   }
 }
 
@@ -131,7 +159,7 @@ fun DragTarget(
  */
 @Composable
 private fun DraggingContents(draggableState: DraggableState) {
-  for (target in draggableState.targets.values) {
+  for (target in draggableState.targets) {
     DraggingContent(target = target)
   }
 }

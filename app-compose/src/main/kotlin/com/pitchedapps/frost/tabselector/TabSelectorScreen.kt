@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.tabselector
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -33,18 +34,22 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pitchedapps.frost.compose.draggable.DragContainer
 import com.pitchedapps.frost.compose.draggable.DragTarget
+import com.pitchedapps.frost.compose.draggable.DraggableState
+import com.pitchedapps.frost.compose.draggable.dropTarget
 import com.pitchedapps.frost.compose.draggable.rememberDraggableState
 import com.pitchedapps.frost.compose.effects.rememberShakeState
 import com.pitchedapps.frost.compose.effects.shake
@@ -108,19 +113,39 @@ fun TabSelector(
         }
       }
 
-      TabBottomBar(modifier = Modifier.navigationBarsPadding(), items = selected)
+      TabBottomBar(
+        modifier = Modifier.navigationBarsPadding(),
+        draggableState = draggableState,
+        items = selected,
+      )
     }
   }
 }
 
 @Composable
-fun TabBottomBar(modifier: Modifier = Modifier, items: List<TabData>) {
+fun TabBottomBar(
+  modifier: Modifier = Modifier,
+  draggableState: DraggableState,
+  items: List<TabData>
+) {
   NavigationBar(modifier = modifier) {
     items.forEach { item ->
+      val key = item.key
+
+      val hasHoverKey by derivedStateOf { draggableState.dropTarget(key)?.hoverKey != null }
+
+      val alpha by
+        animateFloatAsState(
+          targetValue = if (!hasHoverKey) 1f else 0f,
+          label = "Nav Item Alpha",
+        )
+
       NavigationBarItem(
+        modifier = Modifier.dropTarget(key, draggableState),
         icon = {
+          //          println(dropTargetState.hoverKey)
           Icon(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(24.dp).alpha(alpha),
             imageVector = item.icon,
             contentDescription = item.title,
           )
