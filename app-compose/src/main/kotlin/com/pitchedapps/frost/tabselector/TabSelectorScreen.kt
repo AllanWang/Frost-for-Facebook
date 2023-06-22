@@ -34,7 +34,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -130,18 +129,16 @@ fun TabBottomBar(
 ) {
   NavigationBar(modifier = modifier) {
     items.forEach { item ->
-      val key = item.key
-
-      val hasHoverKey by derivedStateOf { draggableState.dropTarget(key)?.hoverKey != null }
+      val dropTargetState = draggableState.rememberDropTarget(item.key)
 
       val alpha by
         animateFloatAsState(
-          targetValue = if (!hasHoverKey) 1f else 0f,
+          targetValue = if (dropTargetState.hoverKey == null) 1f else 0f,
           label = "Nav Item Alpha",
         )
 
       NavigationBarItem(
-        modifier = Modifier.dropTarget(key, draggableState),
+        modifier = Modifier.dropTarget(dropTargetState),
         icon = {
           //          println(dropTargetState.hoverKey)
           Icon(

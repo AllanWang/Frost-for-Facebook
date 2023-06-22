@@ -16,8 +16,8 @@
  */
 package com.pitchedapps.frost.compose.draggable
 
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +34,7 @@ fun rememberDraggableState(): DraggableState {
 
 interface DraggableState {
 
-  val targets: Collection<DraggingTargetState>
+  val targets: Collection<DragTargetState>
 
   /**
    * Being drag for target [key].
@@ -44,39 +44,43 @@ interface DraggableState {
    * Returns true if the request is accepted. It is the caller's responsibility to not propagate
    * drag events if the request is denied.
    */
-  fun onDragStart(key: String, targetState: () -> DraggingTargetState): Boolean
+  fun onDragStart(key: String, dragTargetState: DragTargetState): Boolean
 
   fun onDrag(key: String, offset: Offset)
 
   fun onDragEnd(key: String)
 
-  fun onDropUpdateBounds(key: String, bounds: Rect)
+  @Composable
+  fun rememberDragTarget(
+    key: String,
+    content: @Composable (isDragging: Boolean) -> Unit
+  ): DragTargetState
 
-  fun dropTarget(key: String): DropTargetState?
+  @Composable fun rememberDropTarget(key: String): DropTargetState
 }
 
 class DraggableStateImpl : DraggableState {
-  private val dragTargets = mutableStateMapOf<String, DraggingTargetState>()
+  private val activeDragTargets = mutableStateMapOf<String, DragTargetState>()
 
   private val dropTargets = mutableStateMapOf<String, DropTargetState>()
 
-  override val targets: Collection<DraggingTargetState>
-    get() = dragTargets.values
+  override val targets: Collection<DragTargetState>
+    get() = activeDragTargets.values
 
-  override fun onDragStart(key: String, targetState: () -> DraggingTargetState): Boolean {
-    if (key in dragTargets) return false
-    dragTargets[key] = targetState()
+  override fun onDragStart(key: String, dragTargetState: DragTargetState): Boolean {
+    if (key in activeDragTargets) return false
+    activeDragTargets[key] = dragTargetState
     return true
   }
 
   override fun onDrag(key: String, offset: Offset) {
-    val position = dragTargets[key] ?: return
+    val position = activeDragTargets[key] ?: return
     position.dragPosition += offset
     checkForDrag(key)
   }
 
   override fun onDragEnd(key: String) {
-    dragTargets.remove(key)
+    activeDragTargets.remove(key)
     for ((dropKey, dropTarget) in dropTargets) {
       if (dropTarget.hoverKey == key) {
         setHover(dragKey = null, dropKey)
@@ -86,42 +90,56 @@ class DraggableStateImpl : DraggableState {
     }
   }
 
-  override fun onDropUpdateBounds(key: String, bounds: Rect) {
-    dropTargets.getOrPut(key) { DropTargetState() }.bounds = bounds
-    checkForDrop(key)
+  @Composable
+  override fun rememberDragTarget(
+    key: String,
+    content: @Composable (isDragging: Boolean) -> Unit
+  ): DragTargetState {
+    val target =
+      remember(key, content, this) {
+        DragTargetState(key = key, draggableState = this, composable = content)
+      }
+    DisposableEffect(target) { onDispose { activeDragTargets.remove(key) } }
+    return target
   }
 
-  override fun dropTarget(key: String): DropTargetState? {
-    return dropTargets[key]
+  @Composable
+  override fun rememberDropTarget(key: String): DropTargetState {
+    val target = remember(key, this) { DropTargetState(key, this) }
+    DisposableEffect(target) {
+      dropTargets[key] = target
+
+      onDispose { dropTargets.remove(key) }
+    }
+    return target
   }
 
   private fun setHover(dragKey: String?, dropKey: String) {
     val dropTarget = dropTargets[dropKey] ?: return
     dropTarget.hoverKey = dragKey
-    println("asdf update $dragKey $dropKey")
   }
 
   /** Returns true if drag target exists and is within bounds */
   private fun DropTargetState.hasValidDragTarget(): Boolean {
     val currentKey = hoverKey ?: return false // no target
-    val dragTarget = dragTargets[currentKey] ?: return false // target not valid
+    val dragTarget = activeDragTargets[currentKey] ?: return false // target not valid
     return dragTarget.within(bounds)
   }
 
   /** Check if drag target fits in drop */
-  private fun checkForDrop(dropKey: String) {
+  internal fun checkForDrop(dropKey: String) {
     val dropTarget = dropTargets[dropKey] ?: return
     val bounds = dropTarget.bounds
     if (dropTarget.hasValidDragTarget()) return
 
     // Find first target that matches
-    val dragKey = dragTargets.entries.firstOrNull { it.value.within(bounds) }?.key
+    val dragKey = activeDragTargets.entries.firstOrNull { it.value.within(bounds) }?.key
     setHover(dragKey = dragKey, dropKey = dropKey)
   }
 
   /** Check drops for drag target fit */
-  private fun checkForDrag(dragKey: String) {
-    val dragTarget = dragTargets[dragKey] ?: return
+  internal fun checkForDrag(dragKey: String) {
+    val dragTarget = activeDragTargets[dragKey] ?: return
     for ((dropKey, dropTarget) in dropTargets) {
       // Do not override targets that are valid
       if (dropTarget.hasValidDragTarget()) continue
@@ -134,23 +152,30 @@ class DraggableStateImpl : DraggableState {
   }
 }
 
-private fun DraggingTargetState?.within(bounds: Rect): Boolean {
+private fun DragTargetState?.within(bounds: Rect): Boolean {
   if (this == null) return false
   val center = dragPosition + Offset(size.width * 0.5f, size.height * 0.5f)
   return bounds.contains(center)
 }
 
 /** State for individual dragging target. */
-class DraggingTargetState(
-  val composable: @Composable BoxScope.(isDragging: Boolean) -> Unit,
-  val size: IntSize,
-  dragPosition: Offset
+class DragTargetState(
+  val key: String,
+  val draggableState: DraggableStateImpl,
+  val composable: @Composable (isDragging: Boolean) -> Unit
 ) {
-  var dragPosition by mutableStateOf(dragPosition)
+  var isDragging by mutableStateOf(false)
+  var windowPosition = Offset.Zero
+  var dragPosition by mutableStateOf(Offset.Zero)
+  var size: IntSize by mutableStateOf(IntSize.Zero)
 }
 
-class DropTargetState {
+class DropTargetState(private val key: String, private val draggableState: DraggableStateImpl) {
   var hoverKey: String? by mutableStateOf(null)
   var hoverData: String? by mutableStateOf(null)
   var bounds: Rect = Rect.Zero
+    set(value) {
+      field = value
+      draggableState.checkForDrop(key)
+    }
 }

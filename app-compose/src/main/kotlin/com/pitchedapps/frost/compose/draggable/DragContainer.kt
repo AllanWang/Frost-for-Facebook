@@ -18,24 +18,16 @@ package com.pitchedapps.frost.compose.draggable
 
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntSize
 import com.pitchedapps.frost.ext.toDpSize
 import com.pitchedapps.frost.ext.toIntOffset
 
@@ -72,80 +64,55 @@ fun DragContainer(
 fun DragTarget(
   key: String = "",
   draggableState: DraggableState,
-  content: @Composable BoxScope.(isDragging: Boolean) -> Unit
+  content: @Composable (isDragging: Boolean) -> Unit
 ) {
 
-  var isDragging by remember { mutableStateOf(false) }
-
-  var positionInWindow by remember { mutableStateOf(Offset.Zero) }
-
-  var size by remember { mutableStateOf(IntSize.Zero) }
+  val dragTargetState =
+    draggableState.rememberDragTarget(
+      key = key,
+      content = content,
+    )
 
   Box(
-    modifier =
-      Modifier.onGloballyPositioned {
-          positionInWindow = it.positionInWindow()
-          size = it.size
-        }
-        .pointerInput(Unit) {
-          detectDragGesturesAfterLongPress(
-            onDragStart = {
-              isDragging =
-                draggableState.onDragStart(key) {
-                  DraggingTargetState(
-                    composable = content,
-                    size = size,
-                    dragPosition = positionInWindow,
-                  )
-                }
-            },
-            onDrag = { _, offset ->
-              if (isDragging) {
-                draggableState.onDrag(key, offset)
-              }
-            },
-            onDragEnd = {
-              if (isDragging) {
-                draggableState.onDragEnd(key)
-                isDragging = false
-              }
-            },
-          )
-        },
+    modifier = Modifier.dragTarget(dragTargetState),
   ) {
-    if (!isDragging) {
-      content(false)
+    content(false)
+  }
+}
+
+private fun Modifier.dragTarget(dragTargetState: DragTargetState): Modifier {
+  return onGloballyPositioned {
+      dragTargetState.windowPosition = it.positionInWindow()
+      dragTargetState.size = it.size
     }
-  }
+    .pointerInput(dragTargetState) {
+      val draggableState = dragTargetState.draggableState
+      val key = dragTargetState.key
+
+      detectDragGesturesAfterLongPress(
+        onDragStart = {
+          dragTargetState.dragPosition = dragTargetState.windowPosition
+          dragTargetState.isDragging = draggableState.onDragStart(key, dragTargetState)
+        },
+        onDrag = { _, offset ->
+          if (dragTargetState.isDragging) {
+            draggableState.onDrag(key, offset)
+          }
+        },
+        onDragEnd = {
+          if (dragTargetState.isDragging) {
+            draggableState.onDragEnd(key)
+            dragTargetState.isDragging = false
+          }
+        },
+      )
+    }
+    // We still need to draw to track size changes
+    .alpha(if (dragTargetState.isDragging) 0f else 1f)
 }
 
-fun Modifier.dropTarget(key: String, draggableState: DraggableState): Modifier {
-  return onGloballyPositioned { draggableState.onDropUpdateBounds(key, it.boundsInWindow()) }
-}
-
-@Composable
-fun <T> DropTarget(
-  draggableState: DraggableState,
-  onDrop: (T) -> Unit,
-  content: @Composable BoxScope.(isHovering: Boolean, data: T?) -> Unit
-) {
-  var hoverKey: String? by remember { mutableStateOf(null) }
-
-  var hoverData: T? by remember { mutableStateOf(null) }
-
-  var bounds: Rect by remember { mutableStateOf(Rect.Zero) }
-
-  LaunchedEffect(hoverKey, bounds, draggableState) {
-    //    hoverKey = draggableState.getHoverKey(hoverKey, bounds)
-
-    //    println("asdf new hover key $hoverKey")
-  }
-
-  Box(
-    modifier = Modifier.onGloballyPositioned { bounds = it.boundsInWindow() },
-  ) {
-    content(hoverKey != null, hoverData)
-  }
+fun Modifier.dropTarget(dropTargetState: DropTargetState): Modifier {
+  return onGloballyPositioned { dropTargetState.bounds = it.boundsInWindow() }
 }
 
 /**
@@ -165,12 +132,12 @@ private fun DraggingContents(draggableState: DraggableState) {
 }
 
 @Composable
-private fun DraggingContent(target: DraggingTargetState) {
+private fun DraggingContent(target: DragTargetState) {
   val density = LocalDensity.current
   Box(
     modifier =
       Modifier.size(target.size.toDpSize(density)).offset { target.dragPosition.toIntOffset() },
   ) {
-    target.composable(this, true)
+    target.composable(true)
   }
 }
