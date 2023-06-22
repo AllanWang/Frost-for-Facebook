@@ -43,7 +43,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.pitchedapps.frost.compose.DragContainer
+import com.pitchedapps.frost.compose.draggable.DragContainer
+import com.pitchedapps.frost.compose.draggable.DragTarget
+import com.pitchedapps.frost.compose.draggable.rememberDraggableState
 import com.pitchedapps.frost.compose.effects.rememberShakeState
 import com.pitchedapps.frost.compose.effects.shake
 import com.pitchedapps.frost.ext.thenIf
@@ -81,24 +83,25 @@ fun TabSelector(
   unselected: List<TabData>,
   onSelect: (List<TabData>) -> Unit
 ) {
-  DragContainer(modifier = modifier) {
+  val draggableState = rememberDraggableState()
+
+  DragContainer(modifier = modifier, draggableState = draggableState) {
     Column(modifier = Modifier.statusBarsPadding()) {
       LazyVerticalGrid(
         modifier = Modifier.weight(1f),
         columns = GridCells.Fixed(4),
       ) {
         items(unselected, key = { it.key }) {
-          this@DragContainer.DragTarget(key = it.key) { isDragging ->
-            val shakeState = rememberShakeState()
-
+          DragTarget(key = it.key, draggableState = draggableState) { isDragging ->
             TabItem(
               modifier =
-                Modifier.thenIf(!isDragging) { Modifier.animateItemPlacement() }
-                  .shake(shakeState)
-                  .clickable {
+                Modifier.thenIf(!isDragging) {
+                  val shakeState = rememberShakeState()
+                  Modifier.animateItemPlacement().shake(shakeState).clickable {
                     shakeState.shake()
                     //            onSelect(listOf(it))
-                  },
+                  }
+                },
               data = it,
             )
           }

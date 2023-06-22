@@ -16,7 +16,21 @@
  */
 package com.pitchedapps.frost.ext
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import kotlin.math.roundToInt
 
-fun Modifier.thenIf(condition: Boolean, action: () -> Modifier): Modifier =
+@Composable
+fun Modifier.thenIf(condition: Boolean, action: @Composable () -> Modifier): Modifier =
   if (condition) then(action()) else this
+
+fun Offset.toIntOffset() = IntOffset(x.roundToInt(), y.roundToInt())
+
+fun IntSize.toDpSize(density: Density): DpSize {
+  return with(density) { DpSize(width.toDp(), height.toDp()) }
+}
