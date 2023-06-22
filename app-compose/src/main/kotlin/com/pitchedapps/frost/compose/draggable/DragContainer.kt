@@ -107,6 +107,12 @@ private fun <T> Modifier.dragTarget(dragTargetState: DragTargetState<T>): Modifi
             dragTargetState.isDragging = false
           }
         },
+        onDragCancel = {
+          if (dragTargetState.isDragging) {
+            draggableState.onDragEnd(key)
+            dragTargetState.isDragging = false
+          }
+        }
       )
     }
     // We still need to draw to track size changes
