@@ -63,7 +63,9 @@ class FrostApp : Application() {
       )
     }
 
-    MainScope().launch { setup() }
+    MainScope().launch {
+      //      setup()
+    }
   }
 
   private suspend fun setup() {

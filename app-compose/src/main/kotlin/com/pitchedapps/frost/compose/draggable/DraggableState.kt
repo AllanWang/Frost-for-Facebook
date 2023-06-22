@@ -18,6 +18,7 @@ package com.pitchedapps.frost.compose.draggable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +36,12 @@ fun interface OnDrop<T> {
 /** Create draggable state, which will store and create all target states. */
 @Composable
 fun <T> rememberDraggableState(onDrop: OnDrop<T>): DraggableState<T> {
-  return remember(onDrop) { DraggableStateImpl(onDrop) }
+  // State must be remembered without keys, or else updates will clear draggable data
+  val state = remember { DraggableStateImpl(onDrop) }
+
+  LaunchedEffect(onDrop) { state.onDrop = onDrop }
+
+  return state
 }
 
 /**
@@ -114,7 +120,7 @@ interface DropTargetState<T> {
   var bounds: Rect
 }
 
-private class DraggableStateImpl<T>(private val onDrop: OnDrop<T>) : DraggableState<T> {
+private class DraggableStateImpl<T>(var onDrop: OnDrop<T>) : DraggableState<T> {
 
   override var windowPosition: Offset by mutableStateOf(Offset.Zero)
 
@@ -241,6 +247,7 @@ private class DragTargetStateImpl<T>(
     if (!isDragging) return
     draggableState.activeDragTargets.remove(key)
     draggableState.cleanUpDrag(this)
+    isDragging = false
   }
 }
 
