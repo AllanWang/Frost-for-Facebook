@@ -27,8 +27,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.IntSize
 
-typealias DraggableComposeContent = @Composable (isDragging: Boolean) -> Unit
-
 fun interface OnDrop<T> {
   fun onDrop(dragTarget: String, dragData: T, dropTarget: String)
 }
@@ -57,7 +55,7 @@ interface DraggableState<T> {
   fun onDragEnd(key: String)
 
   @Composable
-  fun rememberDragTarget(key: String, data: T, content: DraggableComposeContent): DragTargetState<T>
+  fun rememberDragTarget(key: String, data: T, content: @Composable () -> Unit): DragTargetState<T>
 
   @Composable fun rememberDropTarget(key: String): DropTargetState<T>
 }
@@ -101,11 +99,11 @@ class DraggableStateImpl<T>(private val onDrop: OnDrop<T>) : DraggableState<T> {
   override fun rememberDragTarget(
     key: String,
     data: T,
-    content: DraggableComposeContent,
+    content: @Composable () -> Unit,
   ): DragTargetState<T> {
     val target =
       remember(key, data, content, this) {
-        DragTargetState(key = key, data = data, draggableState = this, composable = content)
+        DragTargetState(key = key, data = data, draggableState = this, dragComposable = content)
       }
     DisposableEffect(target) { onDispose { activeDragTargets.remove(key) } }
     return target
@@ -174,7 +172,7 @@ class DragTargetState<T>(
   val key: String,
   val data: T,
   val draggableState: DraggableStateImpl<T>,
-  val composable: DraggableComposeContent,
+  val dragComposable: @Composable () -> Unit,
 ) {
   var isDragging by mutableStateOf(false)
   var windowPosition = Offset.Zero

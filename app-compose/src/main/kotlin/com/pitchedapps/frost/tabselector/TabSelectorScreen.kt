@@ -60,8 +60,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pitchedapps.frost.compose.draggable.DragContainer
-import com.pitchedapps.frost.compose.draggable.DragTarget
 import com.pitchedapps.frost.compose.draggable.DraggableState
+import com.pitchedapps.frost.compose.draggable.dragTarget
 import com.pitchedapps.frost.compose.draggable.dropTarget
 import com.pitchedapps.frost.compose.draggable.rememberDraggableState
 import com.pitchedapps.frost.compose.effects.rememberShakeState
@@ -116,22 +116,19 @@ fun TabSelector(
         columns = GridCells.Fixed(4),
       ) {
         items(unselected, key = { it.key }) { data ->
-          DragTarget(key = data.key, data = data, draggableState = draggableState) { isDragging ->
-            if (isDragging) {
-              // In dragging box
+          val dragTargetState =
+            draggableState.rememberDragTarget(key = data.key, data = data) {
               DraggingTabItem(data = data)
-            } else {
-              // In LazyVerticalGrid
-
-              val shakeState = rememberShakeState()
-
-              TabItem(
-                modifier = Modifier.animateItemPlacement().shake(shakeState),
-                data = data,
-                onClick = { shakeState.shake() },
-              )
             }
-          }
+
+          val shakeState = rememberShakeState()
+
+          TabItem(
+            modifier =
+              Modifier.animateItemPlacement().dragTarget(dragTargetState).shake(shakeState),
+            data = data,
+            onClick = { shakeState.shake() },
+          )
         }
       }
 

@@ -37,6 +37,11 @@ import com.pitchedapps.frost.ext.toIntOffset
  * https://blog.canopas.com/android-drag-and-drop-ui-element-in-jetpack-compose-14922073b3f1
  */
 
+/**
+ * Container for drag interactions.
+ *
+ * This must hold all drag and drop targets.
+ */
 @Composable
 fun <T> DragContainer(
   modifier: Modifier = Modifier,
@@ -51,38 +56,12 @@ fun <T> DragContainer(
 }
 
 /**
- * Drag target.
+ * Drag target modifier.
  *
- * The [content] composable may be composed where [DragTarget] is defined, or in [DraggingContents]
- * depending on drag state. Keep this in mind based on the isDragging flag.
- *
- * [key] is used to distinguish between multiple dragging targets. If only one should be used at a
- * time, this can be the same key. If there is a key conflict, only the first target will be
- * dragged.
+ * This should be applied to the composable that will be dragged. The modifier will capture
+ * positions and hide (alpha 0) the target when dragging.
  */
-@Composable
-fun <T> DragTarget(
-  key: String = "",
-  data: T,
-  draggableState: DraggableState<T>,
-  content: DraggableComposeContent,
-) {
-
-  val dragTargetState =
-    draggableState.rememberDragTarget(
-      key = key,
-      data = data,
-      content = content,
-    )
-
-  Box(
-    modifier = Modifier.dragTarget(dragTargetState),
-  ) {
-    content(isDragging = false)
-  }
-}
-
-private fun <T> Modifier.dragTarget(dragTargetState: DragTargetState<T>): Modifier {
+fun <T> Modifier.dragTarget(dragTargetState: DragTargetState<T>): Modifier {
   return onGloballyPositioned {
       dragTargetState.windowPosition = it.positionInWindow()
       dragTargetState.size = it.size
@@ -112,13 +91,19 @@ private fun <T> Modifier.dragTarget(dragTargetState: DragTargetState<T>): Modifi
             draggableState.onDragEnd(key)
             dragTargetState.isDragging = false
           }
-        }
+        },
       )
     }
     // We still need to draw to track size changes
     .alpha(if (dragTargetState.isDragging) 0f else 1f)
 }
 
+/**
+ * Drop target modifier.
+ *
+ * This should be applied to targets that capture drag targets. The modifier will listen to
+ * composable bounds.
+ */
 fun <T> Modifier.dropTarget(dropTargetState: DropTargetState<T>): Modifier {
   return onGloballyPositioned { dropTargetState.bounds = it.boundsInWindow() }
 }
@@ -146,6 +131,6 @@ private fun <T> DraggingContent(target: DragTargetState<T>) {
     modifier =
       Modifier.size(target.size.toDpSize(density)).offset { target.dragPosition.toIntOffset() },
   ) {
-    target.composable(true)
+    target.dragComposable()
   }
 }
