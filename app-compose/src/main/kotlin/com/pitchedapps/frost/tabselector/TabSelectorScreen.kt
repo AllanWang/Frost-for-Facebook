@@ -23,6 +23,8 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -34,12 +36,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,9 +52,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -63,7 +66,6 @@ import com.pitchedapps.frost.compose.draggable.dropTarget
 import com.pitchedapps.frost.compose.draggable.rememberDraggableState
 import com.pitchedapps.frost.compose.effects.rememberShakeState
 import com.pitchedapps.frost.compose.effects.shake
-import com.pitchedapps.frost.ext.thenIf
 import com.pitchedapps.frost.facebook.FbItem
 import com.pitchedapps.frost.facebook.tab
 
@@ -117,11 +119,9 @@ fun TabSelector(
               val shakeState = rememberShakeState()
 
               TabItem(
-                modifier =
-                  Modifier.animateItemPlacement().shake(shakeState).clickable {
-                    shakeState.shake()
-                  },
+                modifier = Modifier.animateItemPlacement().shake(shakeState),
                 data = data,
+                onClick = { shakeState.shake() },
               )
             }
           }
@@ -191,10 +191,14 @@ fun DraggingTabItem(
 
   val scale by transition.animateFloat(label = "Scale") { if (it) 1f else 1.3f }
 
+  // Same color as ripple values
   val color by
     transition.animateColor(label = "Background") {
-      if (it) Color.Transparent
-      else MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.85f)
+      if (it)
+        MaterialTheme.colorScheme.surfaceVariant.copy(
+          LocalRippleTheme.current.rippleAlpha().pressedAlpha
+        )
+      else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.85f)
     }
 
   TabItem(
@@ -215,16 +219,26 @@ fun TabItem(
   modifier: Modifier = Modifier,
   iconBackground: Color = Color.Unspecified,
   labelAlpha: Float = 1f,
+  onClick: () -> Unit = {}
 ) {
+
+  val interactionSource = remember { MutableInteractionSource() }
+
   Column(
-    modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
+    modifier
+      .clickable(onClick = onClick, interactionSource = interactionSource, indication = null)
+      .fillMaxWidth()
+      .padding(horizontal = 8.dp, vertical = 8.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Icon(
       modifier =
-        Modifier.thenIf(iconBackground.isSpecified) {
-            Modifier.background(iconBackground, CircleShape)
-          }
+        Modifier.clip(CircleShape)
+          .background(iconBackground)
+          .indication(
+            interactionSource,
+            rememberRipple(color = MaterialTheme.colorScheme.surfaceVariant),
+          )
           .padding(12.dp)
           .size(24.dp),
       imageVector = data.icon,
