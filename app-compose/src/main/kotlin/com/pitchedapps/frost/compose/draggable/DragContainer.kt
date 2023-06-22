@@ -41,6 +41,10 @@ import com.pitchedapps.frost.ext.toIntOffset
  * Container for drag interactions.
  *
  * This must hold all drag and drop targets.
+ *
+ * If a composable cannot be used, any container can add the [Modifier.dragContainer] call, and have
+ * a [DraggingContents] positioned in the same window space (ie in a Box, or with the appropriate
+ * offsets to match).
  */
 @Composable
 fun <T> DragContainer(
@@ -48,11 +52,20 @@ fun <T> DragContainer(
   draggableState: DraggableState<T>,
   content: @Composable () -> Unit
 ) {
-  Box(modifier = modifier) {
+  Box(modifier = modifier.dragContainer(draggableState)) {
     content()
 
     DraggingContents(draggableState = draggableState)
   }
+}
+
+/**
+ * Drag container modifier.
+ *
+ * Containers must hold all drag and drop targets, along with [DraggingContents].
+ */
+fun Modifier.dragContainer(draggableState: DraggableState<*>): Modifier {
+  return onGloballyPositioned { draggableState.windowPosition = it.positionInWindow() }
 }
 
 /**
@@ -61,37 +74,17 @@ fun <T> DragContainer(
  * This should be applied to the composable that will be dragged. The modifier will capture
  * positions and hide (alpha 0) the target when dragging.
  */
-fun <T> Modifier.dragTarget(dragTargetState: DragTargetState<T>): Modifier {
+fun Modifier.dragTarget(dragTargetState: DragTargetState<*>): Modifier {
   return onGloballyPositioned {
       dragTargetState.windowPosition = it.positionInWindow()
       dragTargetState.size = it.size
     }
     .pointerInput(dragTargetState) {
-      val draggableState = dragTargetState.draggableState
-      val key = dragTargetState.key
-
       detectDragGesturesAfterLongPress(
-        onDragStart = {
-          dragTargetState.dragPosition = dragTargetState.windowPosition
-          dragTargetState.isDragging = draggableState.onDragStart(key, dragTargetState)
-        },
-        onDrag = { _, offset ->
-          if (dragTargetState.isDragging) {
-            draggableState.onDrag(key, offset)
-          }
-        },
-        onDragEnd = {
-          if (dragTargetState.isDragging) {
-            draggableState.onDragEnd(key)
-            dragTargetState.isDragging = false
-          }
-        },
-        onDragCancel = {
-          if (dragTargetState.isDragging) {
-            draggableState.onDragEnd(key)
-            dragTargetState.isDragging = false
-          }
-        },
+        onDragStart = { dragTargetState.onDragStart() },
+        onDrag = { _, offset -> dragTargetState.onDrag(offset) },
+        onDragEnd = { dragTargetState.onDragEnd() },
+        onDragCancel = { dragTargetState.onDragEnd() },
       )
     }
     // We still need to draw to track size changes
@@ -118,18 +111,20 @@ fun <T> Modifier.dropTarget(dropTargetState: DropTargetState<T>): Modifier {
  * fillMaxWidth in a grid, but would have a full parent width here without the sizing constraints.
  */
 @Composable
-private fun <T> DraggingContents(draggableState: DraggableState<T>) {
+fun <T> DraggingContents(draggableState: DraggableState<T>) {
   for (target in draggableState.targets) {
-    DraggingContent(target = target)
+    DraggingContent(draggableState = draggableState, target = target)
   }
 }
 
 @Composable
-private fun <T> DraggingContent(target: DragTargetState<T>) {
+private fun <T> DraggingContent(draggableState: DraggableState<T>, target: DragTargetState<T>) {
   val density = LocalDensity.current
   Box(
     modifier =
-      Modifier.size(target.size.toDpSize(density)).offset { target.dragPosition.toIntOffset() },
+      Modifier.size(target.size.toDpSize(density)).offset {
+        (target.dragPosition - draggableState.windowPosition).toIntOffset()
+      },
   ) {
     target.dragComposable()
   }
