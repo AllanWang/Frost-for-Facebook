@@ -16,24 +16,32 @@
  */
 package com.pitchedapps.frost.tabselector
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +49,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -95,19 +106,24 @@ fun TabSelector(
         modifier = Modifier.weight(1f),
         columns = GridCells.Fixed(4),
       ) {
-        items(unselected, key = { it.key }) {
-          DragTarget(key = it.key, data = it, draggableState = draggableState) { isDragging ->
-            TabItem(
-              modifier =
-                Modifier.thenIf(!isDragging) {
-                  val shakeState = rememberShakeState()
+        items(unselected, key = { it.key }) { data ->
+          DragTarget(key = data.key, data = data, draggableState = draggableState) { isDragging ->
+            if (isDragging) {
+              // In dragging box
+              DraggingTabItem(data = data)
+            } else {
+              // In LazyVerticalGrid
+
+              val shakeState = rememberShakeState()
+
+              TabItem(
+                modifier =
                   Modifier.animateItemPlacement().shake(shakeState).clickable {
                     shakeState.shake()
-                    //            onSelect(listOf(it))
-                  }
-                },
-              data = it,
-            )
+                  },
+                data = data,
+              )
+            }
           }
         }
       }
@@ -140,8 +156,6 @@ fun TabBottomBar(
       NavigationBarItem(
         modifier = Modifier.dropTarget(dropTargetState),
         icon = {
-          //          println(dropTargetState.hoverKey)
-
           val iconItem = dropTargetState.hoverData ?: item
 
           Icon(
@@ -157,22 +171,69 @@ fun TabBottomBar(
   }
 }
 
+/**
+ * Our dragging tab item is fairly different from the original, so we'll just make a copy to add the
+ * animations.
+ *
+ * Animations are done as one shot events from a default
+ */
+@Composable
+fun DraggingTabItem(
+  data: TabData,
+  modifier: Modifier = Modifier,
+) {
+
+  var startState by remember { mutableStateOf(true) }
+
+  LaunchedEffect(Unit) { startState = false }
+
+  val transition = updateTransition(targetState = startState, label = "One Shot")
+
+  val scale by transition.animateFloat(label = "Scale") { if (it) 1f else 1.3f }
+
+  val color by
+    transition.animateColor(label = "Background") {
+      if (it) Color.Transparent
+      else MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.85f)
+    }
+
+  TabItem(
+    modifier =
+      modifier.graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+      },
+    iconBackground = color,
+    labelAlpha = 0f,
+    data = data,
+  )
+}
+
 @Composable
 fun TabItem(
   data: TabData,
   modifier: Modifier = Modifier,
+  iconBackground: Color = Color.Unspecified,
+  labelAlpha: Float = 1f,
 ) {
   Column(
     modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     Icon(
-      modifier = Modifier.padding(4.dp).size(24.dp),
+      modifier =
+        Modifier.thenIf(iconBackground.isSpecified) {
+            Modifier.background(iconBackground, CircleShape)
+          }
+          .padding(12.dp)
+          .size(24.dp),
       imageVector = data.icon,
       contentDescription = data.title,
     )
     Text(
-      modifier = Modifier.padding(bottom = 4.dp),
+      // Weird offset is to accommodate the icon background, which is only used when the label is
+      // hidden
+      modifier = Modifier.offset(y = (-4).dp).alpha(labelAlpha),
       text = data.title,
       minLines = 2,
       maxLines = 2,
