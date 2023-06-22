@@ -17,22 +17,16 @@
 package com.pitchedapps.frost.compose.settings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.LayoutScopeMarker
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.Checkbox as MaterialCheckbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
@@ -90,67 +84,14 @@ private fun SettingsListItemPreview() {
 
 private object SettingsContentScopeImpl : SettingsContentScope
 
-@LayoutScopeMarker
-interface SettingsContentScope {
-  @Composable
-  fun <T, R> T.rememberSetting(getter: T.() -> R, setter: T.(R) -> Unit): SettingState<R> {
-    return remember(this) {
-      object : SettingState<R> {
-        override var value: R
-          get() = getter()
-          set(value) {
-            setter(value)
-          }
-      }
-    }
-  }
-
-  @Composable
-  fun <T> MutableState<T>.asSettingState(): SettingState<T> {
-    return remember(this) {
-      object : SettingState<T> {
-        override var value: T by this@asSettingState
-      }
-    }
-  }
-}
-
-interface SettingsContent {
-
-  fun onClick()
-
-  @Composable fun compose()
-}
-
 private class SettingsContentClickOnly(private val action: () -> Unit) : SettingsContent {
 
   override fun onClick() {
     action()
   }
 
-  @Composable final override fun compose() = Unit
-}
-
-@Stable
-interface SettingState<T> {
-  var value: T
+  @Composable override fun compose() = Unit
 }
 
 fun SettingsContentScope.click(action: () -> Unit): SettingsContent =
   SettingsContentClickOnly(action)
-
-fun SettingsContentScope.checkbox(state: SettingState<Boolean>): SettingsContent =
-  object : SettingsContent {
-
-    override fun onClick() {
-      state.value = !state.value
-    }
-
-    @Composable
-    override fun compose() {
-      MaterialCheckbox(
-        checked = state.value,
-        onCheckedChange = { state.value = it },
-      )
-    }
-  }

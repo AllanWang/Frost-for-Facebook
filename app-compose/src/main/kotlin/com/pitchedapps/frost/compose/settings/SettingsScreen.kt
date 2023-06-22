@@ -32,7 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun SettingsScreenPreview() {
 
-  data class Model(val check1: Boolean = false)
+  data class Model(
+    val check1: Boolean = false,
+    val switch1: Boolean = false,
+    val switch2: Boolean = false,
+  )
 
   var state by remember { mutableStateOf(Model()) }
 
@@ -59,6 +63,32 @@ fun SettingsScreenPreview() {
             state.rememberSetting(
               getter = { state.check1 },
               setter = { state = state.copy(check1 = it) },
+            ),
+          )
+        }
+      },
+      {
+        SettingsListItem(
+          title = "Switch 1",
+        ) {
+          switch(
+            state.rememberSetting(
+              getter = { state.switch1 },
+              setter = { state = state.copy(switch1 = it) },
+            ),
+          )
+        }
+      },
+      {
+        SettingsListItem(
+          title = "Switch 2",
+          description = "Enabled by switch 1",
+        ) {
+          switch(
+            state.rememberSetting(
+              enabler = { state.switch1 },
+              getter = { state.switch2 },
+              setter = { state = state.copy(switch2 = it) },
             ),
           )
         }
