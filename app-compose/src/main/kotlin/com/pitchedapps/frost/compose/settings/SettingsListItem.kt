@@ -18,16 +18,22 @@ package com.pitchedapps.frost.compose.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,60 +44,54 @@ import com.pitchedapps.frost.ext.thenIf
 @Composable
 fun SettingsListItem(
   modifier: Modifier = Modifier,
-  icon: ImageVector? = null,
   title: String,
+  enabled: Boolean = true,
+  icon: ImageVector? = null,
   description: String? = null,
-  content: (@Composable SettingsContentScope.() -> SettingsContent)? = null
+  onClick: (() -> Unit)? = null,
+  content: (@Composable () -> Unit)? = null
 ) {
-  val settingsContent = content?.invoke(SettingsContentScopeImpl)
-
+  val alpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
   ListItem(
     modifier =
-      modifier.thenIf(settingsContent != null) {
-        Modifier.clickable(
-          onClick = settingsContent!!::onClick,
-        )
+      modifier.thenIf(onClick != null) {
+        Modifier.clickable(enabled = enabled) { onClick?.invoke() }
       },
     leadingContent =
       icon.optionalCompose {
         Icon(
-          modifier = Modifier.size(24.dp),
+          modifier = Modifier.size(24.dp).alpha(alpha),
           imageVector = it,
           contentDescription = null,
         )
       },
-    headlineContent = { Text(text = title) },
-    supportingContent = description.optionalCompose { Text(text = it) },
-    trailingContent =
-      settingsContent.takeIf { it !is SettingsContentClickOnly }.optionalCompose { it.compose() },
+    headlineContent = { Text(modifier = Modifier.alpha(alpha), text = title) },
+    supportingContent =
+      description.optionalCompose {
+        Text(
+          modifier = Modifier.alpha(alpha),
+          text = it,
+        )
+      },
+    trailingContent = content,
   )
 }
 
 @Preview
 @Composable
 private fun SettingsListItemPreview() {
-  val state = remember { mutableStateOf(false) }
+  var state by remember { mutableStateOf(false) }
+
   MaterialTheme {
     SettingsListItem(
       icon = Icons.Outlined.Person,
       title = "Test Title",
       description = "Test Description",
     ) {
-      checkbox(state.asSettingState())
+      Checkbox(
+        checked = state,
+        onCheckedChange = { state = it },
+      )
     }
   }
 }
-
-private object SettingsContentScopeImpl : SettingsContentScope
-
-private class SettingsContentClickOnly(private val action: () -> Unit) : SettingsContent {
-
-  override fun onClick() {
-    action()
-  }
-
-  @Composable override fun compose() = Unit
-}
-
-fun SettingsContentScope.click(action: () -> Unit): SettingsContent =
-  SettingsContentClickOnly(action)
