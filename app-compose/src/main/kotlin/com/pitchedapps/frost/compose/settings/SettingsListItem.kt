@@ -25,7 +25,6 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +36,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pitchedapps.frost.compose.FrostPreview
 import com.pitchedapps.frost.ext.optionalCompose
 import com.pitchedapps.frost.ext.thenIf
 
@@ -82,7 +82,7 @@ fun SettingsListItem(
 private fun SettingsListItemPreview() {
   var state by remember { mutableStateOf(false) }
 
-  MaterialTheme {
+  FrostPreview {
     SettingsListItem(
       icon = Icons.Outlined.Person,
       title = "Test Title",

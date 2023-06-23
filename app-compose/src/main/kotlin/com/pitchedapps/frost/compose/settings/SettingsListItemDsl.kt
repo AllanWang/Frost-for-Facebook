@@ -16,10 +16,18 @@
  */
 package com.pitchedapps.frost.compose.settings
 
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+
+@Composable
+fun LazyListScope.settingsListDsl(content: @Composable SettingsListDsl.() -> Unit) {
+  val items = SettingsDsl.settingsListDsl(content)
+  items(items) { compose -> compose() }
+}
 
 @Composable
 fun SettingsDsl.settingsListDsl(

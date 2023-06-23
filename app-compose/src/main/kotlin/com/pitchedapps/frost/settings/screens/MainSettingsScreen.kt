@@ -25,12 +25,12 @@ import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.TrendingUp
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pitchedapps.frost.R
+import com.pitchedapps.frost.compose.FrostPreview
 import com.pitchedapps.frost.compose.settings.SettingsListDsl
 
 @Composable
@@ -86,5 +86,5 @@ fun MainSettingsScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun MainSettingsScreenPreview() {
-  MaterialTheme { MainSettingsScreen() }
+  FrostPreview { MainSettingsScreen() }
 }
