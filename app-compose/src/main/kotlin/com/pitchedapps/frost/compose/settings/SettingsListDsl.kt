@@ -28,7 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SettingsListDsl(modifier: Modifier = Modifier, content: SettingsListDsl.() -> Unit) {
+fun SettingsListDsl(
+  modifier: Modifier = Modifier,
+  content: @Composable SettingsListDsl.() -> Unit
+) {
   val items = SettingsDsl.settingsListDsl(content)
 
   LazyColumn(modifier = modifier) { items(items) { compose -> compose() } }

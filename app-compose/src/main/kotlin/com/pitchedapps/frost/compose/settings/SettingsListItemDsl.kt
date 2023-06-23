@@ -21,7 +21,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 
-fun SettingsDsl.settingsListDsl(content: SettingsListDsl.() -> Unit): List<@Composable () -> Unit> {
+@Composable
+fun SettingsDsl.settingsListDsl(
+  content: @Composable SettingsListDsl.() -> Unit
+): List<@Composable () -> Unit> {
   val data = SettingsListDslData()
   data.content()
   return data.items
@@ -41,7 +44,16 @@ private class SettingsListDslData : SettingsListDsl {
     description: String?,
     onClick: (() -> Unit)?
   ) {
-    addCompose {}
+    addCompose {
+      SettingsListItem(
+        icon = icon,
+        title = title,
+        enabled = enabled,
+        description = description,
+        onClick = onClick,
+        content = null,
+      )
+    }
   }
 
   override fun description(text: String, icon: ImageVector?) {}
