@@ -19,20 +19,12 @@ package com.pitchedapps.frost.main
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,8 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
@@ -62,17 +52,13 @@ fun MainScreenWebView(modifier: Modifier = Modifier) {
 
   val selectedHomeTab by vm.store.observeAsState(initialValue = null) { it.selectedHomeTab }
 
-  Scaffold(
-    modifier = modifier,
-    containerColor = Color.Transparent,
-    topBar = { MainTopBar(modifier = modifier) },
-    bottomBar = {
-      MainBottomBar(
-        selectedTab = selectedHomeTab,
-        items = homeTabs,
-        onSelect = { vm.useCases.homeTabs.selectHomeTab(it) },
-      )
-    },
+  MainScreenContainer(
+    drawerItems = emptyList(),
+    drawerSelectedIndex = -1,
+    drawerOnSelect = {},
+    navItems = homeTabs.map { it.toTab() },
+    navSelectedIndex = selectedHomeTab?.let { id -> homeTabs.indexOfFirst { it.id == id } } ?: -1,
+    navOnSelect = { vm.useCases.homeTabs.selectHomeTab((homeTabs[it].id)) },
   ) { paddingValues ->
     MainScreenWebContainer(
       modifier = Modifier.padding(paddingValues),
@@ -81,36 +67,6 @@ fun MainScreenWebView(modifier: Modifier = Modifier) {
       store = vm.store,
       frostWebComposer = vm.frostWebComposer,
     )
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MainTopBar(modifier: Modifier = Modifier) {
-  TopAppBar(modifier = modifier, title = { Text(text = "Title") })
-}
-
-@Composable
-fun MainBottomBar(
-  modifier: Modifier = Modifier,
-  selectedTab: WebTargetId?,
-  items: List<MainTabItem>,
-  onSelect: (WebTargetId) -> Unit
-) {
-  NavigationBar(modifier = modifier) {
-    items.forEach { item ->
-      NavigationBarItem(
-        icon = {
-          Icon(
-            modifier = Modifier.size(24.dp),
-            imageVector = item.icon,
-            contentDescription = item.title,
-          )
-        },
-        selected = selectedTab == item.id,
-        onClick = { onSelect(item.id) },
-      )
-    }
   }
 }
 
