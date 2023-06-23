@@ -23,7 +23,6 @@ import androidx.core.view.WindowCompat
 import com.google.common.flogger.FluentLogger
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.compose.FrostTheme
-import com.pitchedapps.frost.tabselector.TabSelectorScreen
 import com.pitchedapps.frost.web.state.FrostWebStore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -52,9 +51,9 @@ class MainActivity : ComponentActivity() {
         //          tabs = tabs,
         //        )
 
-        TabSelectorScreen()
+        //        TabSelectorScreen()
 
-        //        MainScreenWebView()
+        MainScreenWebView()
       }
     }
   }
