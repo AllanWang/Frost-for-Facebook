@@ -34,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pitchedapps.frost.compose.webview.FrostWebCompose
 import com.pitchedapps.frost.ext.WebTargetId
@@ -59,9 +60,9 @@ fun MainScreenWebView(modifier: Modifier = Modifier) {
     navItems = homeTabs.map { it.toTab() },
     navSelectedIndex = selectedHomeTab?.let { id -> homeTabs.indexOfFirst { it.id == id } } ?: -1,
     navOnSelect = { vm.useCases.homeTabs.selectHomeTab((homeTabs[it].id)) },
-  ) { paddingValues ->
+  ) { paddingValues, nestedScrollConnection ->
     MainScreenWebContainer(
-      modifier = Modifier.padding(paddingValues),
+      modifier = Modifier.padding(paddingValues).nestedScroll(nestedScrollConnection),
       selectedTab = selectedHomeTab,
       items = homeTabs,
       store = vm.store,

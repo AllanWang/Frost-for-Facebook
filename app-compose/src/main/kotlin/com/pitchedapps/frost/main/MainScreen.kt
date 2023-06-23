@@ -32,6 +32,8 @@ import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +43,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +53,7 @@ import com.pitchedapps.frost.facebook.tab
 import com.pitchedapps.frost.tabselector.TabData
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenContainer(
   modifier: Modifier = Modifier,
@@ -59,15 +63,17 @@ fun MainScreenContainer(
   navItems: List<TabData>,
   navSelectedIndex: Int,
   navOnSelect: (Int) -> Unit,
-  content: @Composable (PaddingValues) -> Unit,
+  content: @Composable (PaddingValues, NestedScrollConnection) -> Unit,
 ) {
 
   val drawerState = rememberDrawerState(DrawerValue.Closed)
   val scope = rememberCoroutineScope()
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
   ModalNavigationDrawer(
     modifier = modifier,
     drawerState = drawerState,
+    gesturesEnabled = false,
     drawerContent = {
       MainModalDrawerContent(
         items = drawerItems,
@@ -85,7 +91,7 @@ fun MainScreenContainer(
   ) {
     Scaffold(
       containerColor = Color.Transparent,
-      topBar = { MainTopBar() },
+      topBar = { MainTopBar(scrollBehavior = scrollBehavior) },
       bottomBar = {
         MainBottomBar(
           selectedIndex = navSelectedIndex,
@@ -93,7 +99,7 @@ fun MainScreenContainer(
           onSelect = { navOnSelect(it) },
         )
       },
-      content = content,
+      content = { paddingValues -> content(paddingValues, scrollBehavior.nestedScrollConnection) },
     )
   }
 }
@@ -129,12 +135,15 @@ private fun MainModalDrawerContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(modifier: Modifier = Modifier) {
-  TopAppBar(modifier = modifier, title = { Text(text = "Title") })
+private fun MainTopBar(
+  modifier: Modifier = Modifier,
+  scrollBehavior: TopAppBarScrollBehavior? = null
+) {
+  TopAppBar(modifier = modifier, scrollBehavior = scrollBehavior, title = { Text(text = "Title") })
 }
 
 @Composable
-fun MainBottomBar(
+private fun MainBottomBar(
   modifier: Modifier = Modifier,
   selectedIndex: Int,
   items: List<TabData>,
@@ -161,7 +170,7 @@ fun MainBottomBar(
 
 @Composable
 @Preview
-fun MainScreenContainerPreview() {
+private fun MainScreenContainerPreview() {
   val context = LocalContext.current
 
   val drawerItems = remember { FbItem.values().map { it.tab(context) } }
@@ -180,6 +189,7 @@ fun MainScreenContainerPreview() {
       navItems = navItems,
       navSelectedIndex = navSelectedIndex,
       navOnSelect = { navSelectedIndex = it },
-    ) {}
+    ) { _, _ ->
+    }
   }
 }
