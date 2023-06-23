@@ -48,85 +48,41 @@
             android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
             android:hardwareAccelerated="true" />
 
-        <!--        <activity-->
-        <!--            android:name=".activities.FrostWebActivity"-->
-        <!--            android:autoRemoveFromRecents="true"-->
-        <!--            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"-->
-        <!--            android:exported="true"-->
-        <!--            android:hardwareAccelerated="true"-->
-        <!--            android:label="@string/frost_web"-->
-        <!--            android:launchMode="singleInstance"-->
-        <!--            android:taskAffinity="com.pitchedapps.frost.single.web"-->
-        <!--            android:theme="@style/FrostTheme.Overlay.Slide">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.SEND" />-->
-        <!--                <category android:name="android.intent.category.DEFAULT" />-->
-        <!--                <data android:mimeType="text/plain" />-->
-        <!--            </intent-filter>-->
-        <!--            <intent-filter-->
-        <!--                android:autoVerify="true"-->
-        <!--                tools:ignore="UnusedAttribute">-->
-        <!--                <action android:name="android.intent.action.VIEW" />-->
+        <activity
+            android:name=".overlay.WebOverlayActivity"
+            android:autoRemoveFromRecents="true"
+            android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize|layoutDirection|smallestScreenSize|screenLayout|locale"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:label="@string/frost_web"
+            android:launchMode="singleInstance"
+            android:taskAffinity="com.pitchedapps.frost.single.web"
+            android:theme="@style/FrostTheme.Overlay.Slide">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
 
-        <!--                <category android:name="android.intent.category.DEFAULT" />-->
-        <!--                <category android:name="android.intent.category.BROWSABLE" />-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-        <!--                <data-->
-        <!--                    android:host="m.facebook.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="m.facebook.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="mobile.facebook.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="mobile.facebook.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="touch.facebook.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="touch.facebook.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="fb.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="fb.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="fb.me"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="fb.me"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="facebook.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="facebook.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="www.facebook.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="www.facebook.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="messenger.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="messenger.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--                <data-->
-        <!--                    android:host="www.messenger.com"-->
-        <!--                    android:scheme="http" />-->
-        <!--                <data-->
-        <!--                    android:host="www.messenger.com"-->
-        <!--                    android:scheme="https" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <data android:host="m.facebook.com" />
+                <data android:host="mobile.facebook.com" />
+                <data android:host="touch.facebook.com" />
+                <data android:host="fb.com" />
+                <data android:host="fb.me" />
+                <data android:host="facebook.com" />
+                <data android:host="www.facebook.com" />
+                <data android:host="messenger.com" />
+                <data android:host="www.messenger.com" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
