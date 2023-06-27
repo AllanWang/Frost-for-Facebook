@@ -41,4 +41,5 @@ Dragging between two visual elements is done similarly with views and compose:
 
 With compose, it is extremely easy to listen to global coordinates, and to add/alter visual elements immediately in the next frame. We simply have listeners for all offsets, and a composable that optionally draws content. The same is possible with views, but takes a bit more coordination to actually add and remove the views. For dragging specifically, compose provides helpers including `detectDragGesturesAfterLongPress`, which does most of the work needed. No need for a `SimpleOnGestureListener`.
 
-![Demo](https://user-images.githubusercontent.com/6251823/247897796-83a1ed67-d21a-4a4a-bef6-98c171fca655.mp4)
+https://github.com/AllanWang/Frost-for-Facebook/assets/6251823/0cef497c-cbdc-4597-870f-a38ef8d23b35
+
