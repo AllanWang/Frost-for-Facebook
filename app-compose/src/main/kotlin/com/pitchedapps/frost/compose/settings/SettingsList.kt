@@ -16,9 +16,12 @@
  */
 package com.pitchedapps.frost.compose.settings
 
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,19 +31,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pitchedapps.frost.compose.FrostPreview
 
 @Composable
-fun SettingsListDsl(
+fun SettingsList(
   modifier: Modifier = Modifier,
-  content: @Composable SettingsListDsl.() -> Unit
+  data: List<SettingsListItemData>,
 ) {
-  val items = SettingsDsl.settingsListDsl(content)
-
-  LazyColumn(modifier = modifier) { items(items) { compose -> compose() } }
+  LazyColumn(modifier = modifier) { items(data) { SettingsListItem(data = it) } }
 }
 
 @Preview
 @Composable
-fun SettingsListDslPreview() {
+fun SettingsListPreview() {
 
+  @Immutable
   data class Model(
     val check1: Boolean = false,
     val switch1: Boolean = false,
@@ -49,31 +51,37 @@ fun SettingsListDslPreview() {
 
   var state by remember { mutableStateOf(Model()) }
 
-  FrostPreview {
-    SettingsListDsl {
-      checkbox(
-        title = "Check 1",
-        checked = state.check1,
-        onCheckedChanged = { state = state.copy(check1 = it) },
-      )
-      checkbox(
-        title = "Check 1",
-        description = "Linked again",
-        checked = state.check1,
-        onCheckedChanged = { state = state.copy(check1 = it) },
-      )
-      switch(
-        title = "Switch 1",
-        checked = state.switch1,
-        onCheckedChanged = { state = state.copy(switch1 = it) },
-      )
-      switch(
-        title = "Switch 2",
-        enabled = state.switch1,
-        description = "Enabled by switch 1",
-        checked = state.switch2,
-        onCheckedChanged = { state = state.copy(switch2 = it) },
+  val data by remember {
+    derivedStateOf {
+      listOf(
+        SettingsListItemData.Checkbox(
+          title = "Check 1",
+          checked = state.check1,
+          onCheckChanged = { state = state.copy(check1 = it) },
+        ),
+        SettingsListItemData.Checkbox(
+          title = "Check 1",
+          description = "Linked again",
+          checked = state.check1,
+          onCheckChanged = { state = state.copy(check1 = it) },
+        ),
+        SettingsListItemData.Switch(
+          title = "Switch 1",
+          checked = state.switch1,
+          onCheckChanged = { state = state.copy(switch1 = it) },
+        ),
+        SettingsListItemData.Switch(
+          title = "Switch 2",
+          enabled = state.switch1,
+          description = "Enabled by switch 1",
+          checked = state.switch2,
+          onCheckChanged = { state = state.copy(switch2 = it) },
+        ),
       )
     }
+  }
+
+  FrostPreview {
+    SettingsList(modifier = Modifier.systemBarsPadding(), data = data)
   }
 }

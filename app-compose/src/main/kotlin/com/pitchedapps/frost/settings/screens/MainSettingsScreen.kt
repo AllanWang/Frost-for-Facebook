@@ -16,6 +16,7 @@
  */
 package com.pitchedapps.frost.settings.screens
 
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons.Outlined as MaterialIcons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
@@ -31,60 +32,59 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pitchedapps.frost.R
 import com.pitchedapps.frost.compose.FrostPreview
-import com.pitchedapps.frost.compose.settings.SettingsListDsl
+import com.pitchedapps.frost.compose.settings.SettingsList
+import com.pitchedapps.frost.compose.settings.SettingsListItemData
 
 @Composable
 fun MainSettingsScreen(modifier: Modifier = Modifier) {
-  SettingsListDsl(modifier = modifier) {
-    item(
+
+  val data = listOf(
+    SettingsListItemData.Item(
       icon = MaterialIcons.Palette,
       title = stringResource(id = R.string.appearance),
       description = stringResource(id = R.string.appearance_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.TrendingUp,
       title = stringResource(id = R.string.behaviour),
       description = stringResource(id = R.string.behaviour_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.Newspaper,
       title = stringResource(id = R.string.newsfeed),
       description = stringResource(id = R.string.newsfeed_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.Notifications,
       title = stringResource(id = R.string.notifications),
       description = stringResource(id = R.string.notifications_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.Lock,
       title = stringResource(id = R.string.security),
       description = stringResource(id = R.string.security_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.Info,
       title = stringResource(id = R.string.about_frost),
       description = stringResource(id = R.string.about_frost_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.Translate,
       title = stringResource(id = R.string.help_translate),
       description = stringResource(id = R.string.help_translate_desc),
-    )
-    item(
+    ),
+    SettingsListItemData.Item(
       icon = MaterialIcons.Replay,
       title = stringResource(id = R.string.replay_intro),
-    )
-    //    item(
-    //      icon = MaterialIcons.Science,
-    //      title = stringResource(id = R.string.experimental),
-    //      description = stringResource(id = R.string.experimental_desc),
-    //    )
-  }
+    ),
+  )
+
+  SettingsList(modifier = modifier, data = data)
 }
 
 @Preview
 @Composable
 fun MainSettingsScreenPreview() {
-  FrostPreview { MainSettingsScreen() }
+  FrostPreview { MainSettingsScreen(modifier = Modifier.systemBarsPadding()) }
 }
