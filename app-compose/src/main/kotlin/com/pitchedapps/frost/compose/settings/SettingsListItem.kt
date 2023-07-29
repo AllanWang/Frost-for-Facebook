@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,11 +41,62 @@ import com.pitchedapps.frost.compose.FrostPreview
 import com.pitchedapps.frost.ext.optionalCompose
 import com.pitchedapps.frost.ext.thenIf
 
+/**
+ * Settings list item based on [SettingsListItemData]
+ */
+@Composable
+fun SettingsListItem(
+  data: SettingsListItemData,
+  modifier: Modifier = Modifier,
+) {
+  val onClick: (() -> Unit)?
+  val content: (@Composable () -> Unit)?
+
+  when (data) {
+    is SettingsListItemData.Item -> {
+      onClick = null
+      content = null
+    }
+
+    is SettingsListItemData.Checkbox -> {
+      onClick = { data.onCheckChanged(!data.checked) }
+      content = {
+        Checkbox(
+          enabled = data.enabled,
+          checked = data.checked,
+          onCheckedChange = data.onCheckChanged,
+        )
+      }
+    }
+
+    is SettingsListItemData.Switch -> {
+      onClick = { data.onCheckChanged(!data.checked) }
+      content = {
+        Switch(
+          enabled = data.enabled,
+          checked = data.checked,
+          onCheckedChange = data.onCheckChanged,
+        )
+      }
+    }
+  }
+
+  SettingsListItem(
+    title = data.title,
+    modifier = modifier,
+    enabled = data.enabled,
+    icon = data.icon,
+    description = data.description,
+    onClick = onClick,
+    content = content,
+  )
+}
+
 /** Basic building block for settings */
 @Composable
 fun SettingsListItem(
-  modifier: Modifier = Modifier,
   title: String,
+  modifier: Modifier = Modifier,
   enabled: Boolean = true,
   icon: ImageVector? = null,
   description: String? = null,
@@ -54,25 +106,27 @@ fun SettingsListItem(
   val alpha = if (enabled) LocalContentAlpha.current else ContentAlpha.disabled
   ListItem(
     modifier =
-      modifier.thenIf(onClick != null) {
-        Modifier.clickable(enabled = enabled) { onClick?.invoke() }
-      },
+    modifier.thenIf(onClick != null) {
+      Modifier.clickable(enabled = enabled) { onClick?.invoke() }
+    },
     leadingContent =
-      icon.optionalCompose {
-        Icon(
-          modifier = Modifier.size(24.dp).alpha(alpha),
-          imageVector = it,
-          contentDescription = null,
-        )
-      },
+    icon.optionalCompose {
+      Icon(
+        modifier = Modifier
+          .size(24.dp)
+          .alpha(alpha),
+        imageVector = it,
+        contentDescription = null,
+      )
+    },
     headlineContent = { Text(modifier = Modifier.alpha(alpha), text = title) },
     supportingContent =
-      description.optionalCompose {
-        Text(
-          modifier = Modifier.alpha(alpha),
-          text = it,
-        )
-      },
+    description.optionalCompose {
+      Text(
+        modifier = Modifier.alpha(alpha),
+        text = it,
+      )
+    },
     trailingContent = content,
   )
 }
