@@ -8,7 +8,7 @@ buildscript {
 
 plugins {
     // https://mvnrepository.com/artifact/com.android.application/com.android.application.gradle.plugin?repo=google
-    id 'com.android.application' version '8.1.0-beta04' apply false
+    id 'com.android.application' version '8.2.0' apply false
     id 'com.android.library' version '8.0.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.21' apply false
     // https://mvnrepository.com/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin
